@@ -1,0 +1,12 @@
+[
+{
+	"modid": "StorageDrawers",
+	"name": "Storage Drawers",
+	"description": "Multi-drawers storage blocks for quick storage and retrieval.",
+	"version": "1.0.0",
+	"credits": "By jaquadro",
+	"logoFile": "",
+	"url": "http://www.jaquadro.com/",
+	"authors": [ "jaquadro" ]
+}
+]
