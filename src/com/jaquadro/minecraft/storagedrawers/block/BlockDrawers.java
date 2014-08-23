@@ -3,21 +3,24 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
+import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockDrawers extends BlockContainer
+public class BlockDrawers extends BlockContainer implements IExtendedBlockClickHandler
 {
     @SideOnly(Side.CLIENT)
     private IIcon iconSide;
@@ -91,6 +94,33 @@ public class BlockDrawers extends BlockContainer
         int countAdded = tileDrawers.putItemsIntoSlot(slot, item);
 
         return countAdded > 0;
+    }
+
+    @Override
+    public void onBlockClicked (World world, int x, int y, int z, EntityPlayer player) {
+        if (world.isRemote) {
+            MovingObjectPosition posn = Minecraft.getMinecraft().objectMouseOver;
+            float hitX = (float)(posn.hitVec.xCoord - posn.blockX);
+            float hitY = (float)(posn.hitVec.yCoord - posn.blockY);
+            float hitZ = (float)(posn.hitVec.zCoord - posn.blockZ);
+
+            StorageDrawers.network.sendToServer(new BlockClickMessage(x, y, z, posn.sideHit, hitX, hitY, hitZ));
+        }
+    }
+
+    @Override
+    public void onBlockClicked (World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+        x += y;
+    }
+
+    @Override
+    public boolean removedByPlayer (World world, EntityPlayer player, int x, int y, int z) {
+        if (player.capabilities.isCreativeMode && !player.isSneaking()) {
+            onBlockClicked(world, x, y, z, player);
+            return false;
+        }
+
+        return super.removedByPlayer(world, player, x, y, z);
     }
 
     @Override

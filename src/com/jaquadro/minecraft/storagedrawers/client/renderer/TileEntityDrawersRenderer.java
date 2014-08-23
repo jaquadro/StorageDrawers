@@ -34,6 +34,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     private double itemOffset2X[] = new double[] { .5, .5 };
     private double itemOffset2Y[] = new double[] { 10.25, 2.25 };
 
+    private double itemOffset4X[] = new double[] { .25, .25, .75, .75 };
+    private double itemOffset4Y[] = new double[] { 10.25, 2.25, 10.25, 2.25 };
+
     @Override
     public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime) {
         TileEntityDrawers tileDrawers = (TileEntityDrawers) tile;
