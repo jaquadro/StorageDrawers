@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
+import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -10,6 +11,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.common.util.RotationHelper;
 import org.lwjgl.opengl.GL11;
 
 public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
@@ -40,13 +43,20 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     @Override
     public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime) {
         TileEntityDrawers tileDrawers = (TileEntityDrawers) tile;
+        if (tileDrawers == null)
+            return;
 
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
 
         GL11.glEnable(GL11.GL_LIGHTING);
 
+        double depth = 1;
         double unit = .0625;
+
+        Block block = tile.getWorldObj().getBlock(tile.xCoord, tile.yCoord, tile.zCoord);
+        if (block instanceof BlockDrawers)
+            depth = ((BlockDrawers) block).halfDepth ? .5 : 1;
 
         itemRenderer.setRenderManager(RenderManager.instance);
 
@@ -55,13 +65,46 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             if (itemStack != null) {
                 GL11.glPushMatrix();
 
-                if (itemStack.getItemSpriteNumber() == 0 && itemStack.getItem() instanceof ItemBlock && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType())) {
-                    GL11.glTranslated(itemOffset2X[i], unit * (itemOffset2Y[i] + 1.25), 1 - unit * 2);
+                boolean blockType = itemStack.getItemSpriteNumber() == 0
+                    && itemStack.getItem() instanceof ItemBlock
+                    && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType());
+
+
+                double xunit = itemOffset2X[i];
+                double zunit = blockType ? 2 * unit : unit;
+
+                double xc = 0, zc = 0;
+                float r = 0;
+                switch (tileDrawers.getDirection()) {
+                    case 3:
+                        xc = xunit;
+                        zc = depth - zunit;
+                        r = 180;
+                        break;
+                    case 2:
+                        xc = 1 - xunit;
+                        zc = 1 - depth + zunit;
+                        break;
+                    case 5:
+                        xc = depth - zunit;
+                        zc = xunit;
+                        r = -90;
+                        break;
+                    case 4:
+                        xc = 1 - depth + zunit;
+                        zc = 1 - xunit;
+                        r = 90;
+                        break;
+                }
+
+                if (blockType) {
+                    GL11.glTranslated(xc, unit * (itemOffset2Y[i] + 1.25), zc);
                     GL11.glScaled(1, 1, 1);
-                    GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+                    GL11.glRotatef(r - 90.0F, 0.0F, 1.0F, 0.0F);
                 } else {
-                    GL11.glTranslated(itemOffset2X[i], unit * itemOffset2Y[i], 1 - unit);
+                    GL11.glTranslated(xc, unit * itemOffset2Y[i], zc);
                     GL11.glScaled(.6, .6, .6);
+                    GL11.glRotatef(r, 0.0F, 1.0F, 0.0F);
                 }
 
                 EntityItem itemEnt = new EntityItem(null, 0, 0, 0, itemStack);

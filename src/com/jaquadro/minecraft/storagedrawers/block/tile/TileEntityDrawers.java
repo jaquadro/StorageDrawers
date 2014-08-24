@@ -72,6 +72,7 @@ public class TileEntityDrawers extends TileEntity
         }
     }
 
+    private int direction;
     private DrawerData[] data;
 
     public TileEntityDrawers () {
@@ -80,6 +81,14 @@ public class TileEntityDrawers extends TileEntity
             data[i] = new DrawerData();
             data[i].stackSlots = 1;
         }
+    }
+
+    public int getDirection () {
+        return direction;
+    }
+
+    public void setDirection (int direction) {
+        this.direction = direction % 6;
     }
 
     public int getSlotCount () {
@@ -120,10 +129,12 @@ public class TileEntityDrawers extends TileEntity
         if (data[slot].count == 0)
             data[slot].reset();
 
+        //invalidate();
+
         return stack;
     }
 
-    public int putItemsIntoSlot (int slot, ItemStack stack) {
+    public int putItemsIntoSlot (int slot, ItemStack stack, int count) {
         if (data[slot].item == null) {
             data[slot].item = stack.getItem();
             data[slot].meta = stack.getItemDamage();
@@ -138,16 +149,22 @@ public class TileEntityDrawers extends TileEntity
         else if (data[slot].attrs != null && !data[slot].attrs.equals(stack.getTagCompound()))
             return 0;
 
-        int count = Math.min(data[slot].remainingCapacity(), stack.stackSize);
-        data[slot].count += count;
-        stack.stackSize -= count;
+        int countAdded = Math.min(data[slot].remainingCapacity(), stack.stackSize);
+        countAdded = Math.min(countAdded, count);
 
-        return count;
+        data[slot].count += countAdded;
+        stack.stackSize -= countAdded;
+
+        //invalidate();
+
+        return countAdded;
     }
 
     @Override
     public void readFromNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
+
+        direction = tag.getByte("Dir");
 
         NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
         data = new DrawerData[slots.tagCount()];
@@ -162,6 +179,8 @@ public class TileEntityDrawers extends TileEntity
     @Override
     public void writeToNBT (NBTTagCompound tag) {
         super.writeToNBT(tag);
+
+        tag.setByte("Dir", (byte)direction);
 
         NBTTagList slots = new NBTTagList();
         for (int i = 0; i < data.length; i++) {

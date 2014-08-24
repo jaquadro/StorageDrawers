@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers;
 
 import com.jaquadro.minecraft.storagedrawers.core.CommonProxy;
+import com.jaquadro.minecraft.storagedrawers.core.ForgeEventHandler;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import cpw.mods.fml.common.Mod;
@@ -11,6 +12,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mod(modid = StorageDrawers.MOD_ID, name = StorageDrawers.MOD_NAME, version = StorageDrawers.MOD_VERSION)
 public class StorageDrawers
@@ -41,6 +43,8 @@ public class StorageDrawers
     @Mod.EventHandler
     public void init (FMLInitializationEvent event) {
         proxy.registerRenderers();
+
+        MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
     }
 
     @Mod.EventHandler

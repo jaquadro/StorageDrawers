@@ -12,16 +12,27 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class BlockDrawers extends BlockContainer implements IExtendedBlockClickHandler
 {
+    public final boolean halfDepth;
+    public final int drawerCount;
+
     @SideOnly(Side.CLIENT)
     private IIcon iconSide;
 
@@ -31,19 +42,16 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @SideOnly(Side.CLIENT)
     private IIcon iconFront4;
 
-    public BlockDrawers (String blockName) {
+    public BlockDrawers (String blockName, int drawerCount, boolean halfDepth) {
         super(Material.wood);
+
+        this.drawerCount = drawerCount;
+        this.halfDepth = halfDepth;
 
         setCreativeTab(CreativeTabs.tabDecorations);
         setHardness(2.5f);
         setStepSound(Block.soundTypeWood);
         setBlockName(blockName);
-    }
-
-    @Override
-    public void onBlockAdded (World world, int x, int y, int z) {
-        super.onBlockAdded(world, x, y, z);
-        setBlockDirection(world, x, y, z);
     }
 
     @Override
@@ -61,24 +69,70 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         return ClientProxy.drawersRenderID;
     }
 
-    private void setBlockDirection (World world, int x, int y, int z) {
-        if (!world.isRemote) {
-            Block blockZNeg = world.getBlock(x, y, z - 1);
-            Block blockZPos = world.getBlock(x, y, z + 1);
-            Block blockXNeg = world.getBlock(x - 1, y, z);
-            Block blockXPos = world.getBlock(x + 1, y, z);
+    @Override
+    public void setBlockBoundsBasedOnState (IBlockAccess blockAccess, int x, int y, int z) {
+        TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
+        if (tile == null) {
+            setBlockBounds(0, 0, 0, 1, 1, 1);
+            return;
+        }
 
-            byte dir = 3;
-            if (blockZNeg.func_149730_j() && !blockZPos.func_149730_j())
-                dir = 3;
-            if (blockZPos.func_149730_j() && !blockZNeg.func_149730_j())
-                dir = 2;
-            if (blockXNeg.func_149730_j() && !blockXPos.func_149730_j())
-                dir = 5;
-            if (blockXPos.func_149730_j() && !blockXNeg.func_149730_j())
-                dir = 4;
+        float depth = halfDepth ? .5f : 1;
+        switch (tile.getDirection()) {
+            case 2:
+                setBlockBounds(0, 0, 1 - depth, 1, 1, 1);
+                break;
+            case 3:
+                setBlockBounds(0, 0, 0, 1, 1, depth);
+                break;
+            case 4:
+                setBlockBounds(1 - depth, 0, 0, 1, 1, 1);
+                break;
+            case 5:
+                setBlockBounds(0, 0, 0, depth, 1, 1);
+                break;
+        }
+    }
 
-            world.setBlockMetadataWithNotify(x, y, z, dir, 2);
+    @Override
+    public void setBlockBoundsForItemRender () {
+        if (halfDepth)
+            setBlockBounds(0, 0, 0, 1, 1, .5f);
+        else
+            setBlockBounds(0, 0, 0, 1, 1, 1);
+    }
+
+    @Override
+    public void addCollisionBoxesToList (World world, int x, int y, int z, AxisAlignedBB aabb, List list, Entity entity) {
+        setBlockBoundsBasedOnState(world, x, y, z);
+        super.addCollisionBoxesToList(world, x, y, z, aabb, list, entity);
+    }
+
+    @Override
+    public void onBlockPlacedBy (World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
+        TileEntityDrawers tile = getTileEntitySafe(world, x, y, z);
+        if (tile.getDirection() > 1)
+            return;
+
+        int quadrant = MathHelper.floor_double((entity.rotationYaw * 4f / 360f) + .5) & 3;
+        switch (quadrant) {
+            case 0:
+                tile.setDirection(2);
+                break;
+            case 1:
+                tile.setDirection(5);
+                break;
+            case 2:
+                tile.setDirection(3);
+                break;
+            case 3:
+                tile.setDirection(4);
+                break;
+        }
+
+        if (world.isRemote) {
+            tile.invalidate();
+            world.markBlockForUpdate(x, y, z);
         }
     }
 
@@ -89,9 +143,15 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             return false;
 
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, x, y, z);
+        if (tileDrawers.getDirection() != side)
+            return false;
+
         int slot = (hitY > .5) ? 0 : 1;
 
-        int countAdded = tileDrawers.putItemsIntoSlot(slot, item);
+        int countAdded = tileDrawers.putItemsIntoSlot(slot, item, 1);
+
+        //if (countAdded > 0)
+        //    world.markBlockForUpdate(x, y, z);
 
         return countAdded > 0;
     }
@@ -110,14 +170,34 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public void onBlockClicked (World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        x += y;
+        TileEntityDrawers tileDrawers = getTileEntitySafe(world, x, y, z);
+        if (tileDrawers.getDirection() != side)
+            return;
+
+        int slot = (hitY > .5) ? 0 : 1;
+
+        ItemStack item = tileDrawers.takeItemsFromSlot(slot, 1);
+        if (item != null && item.stackSize > 0) {
+            dropItemStack(world, x, y, z, player, item);
+            world.markBlockForUpdate(x, y, z);
+        }
+    }
+
+    private void dropItemStack (World world, int x, int y, int z, EntityPlayer player, ItemStack stack) {
+        EntityItem entity = new EntityItem(world, player.posX, player.posY, player.posZ, stack);
+        world.spawnEntityInWorld(entity);
     }
 
     @Override
     public boolean removedByPlayer (World world, EntityPlayer player, int x, int y, int z) {
-        if (player.capabilities.isCreativeMode && !player.isSneaking()) {
-            onBlockClicked(world, x, y, z, player);
-            return false;
+        if (world.isRemote && player.capabilities.isCreativeMode && !player.isSneaking()) {
+            TileEntityDrawers tile = getTileEntity(world, x, y, z);
+            MovingObjectPosition posn = Minecraft.getMinecraft().objectMouseOver;
+
+            if (tile.getDirection() == posn.sideHit) {
+                onBlockClicked(world, x, y, z, player);
+                return false;
+            }
         }
 
         return super.removedByPlayer(world, player, x, y, z);
@@ -145,10 +225,16 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public IIcon getIcon (int side, int meta) {
-        if (side == meta)
-            return iconFront2;
-        else
-            return iconSide;
+        return drawerCount == 2 ? iconFront2 : iconFront4;
+    }
+
+    @Override
+    public IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side) {
+        TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
+        if (tile == null || side == tile.getDirection())
+            return drawerCount == 2 ? iconFront2 : iconFront4;
+
+        return iconSide;
     }
 
     @Override

@@ -310,7 +310,7 @@ public class ModularBoxRenderer
         if ((cutFlags & TEST_ZNEG_XNEG) != 0) {
             renderer.setRenderBounds(xNeg, yNeg + unit, zNeg, xNeg + unit, yPos - unit, zNeg + unit);
             if ((cutFlags & CUT_ZNEG) != 0 && (connectedFlags & CONNECT_XNEG) == 0)
-                renderCutFace(FACE_XNEG, renderer, block, x, y, z);
+                renderCutFace(FACE_ZNEG, renderer, block, x, y, z);
             if ((cutFlags & CUT_XNEG) != 0 && (connectedFlags & CONNECT_ZNEG) == 0)
                 renderCutFace(FACE_XNEG, renderer, block, x, y, z);
         }
