@@ -146,14 +146,42 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (tileDrawers.getDirection() != side)
             return false;
 
-        int slot = (hitY > .5) ? 0 : 1;
-
+        int slot = getDrawerSlot(side, hitX, hitY, hitZ);
         int countAdded = tileDrawers.putItemsIntoSlot(slot, item, 1);
 
         //if (countAdded > 0)
         //    world.markBlockForUpdate(x, y, z);
 
         return countAdded > 0;
+    }
+
+    private int getDrawerSlot (int side, float hitX, float hitY, float hitZ) {
+        if (drawerCount == 2)
+            return hitTop(hitY) ? 0 : 1;
+
+        if (hitLeft(side, hitX, hitZ))
+            return hitTop(hitY) ? 0 : 1;
+        else
+            return hitTop(hitY) ? 2 : 3;
+    }
+
+    private boolean hitTop (float hitY) {
+        return hitY > .5;
+    }
+
+    private boolean hitLeft (int side, float hitX, float hitZ) {
+        switch (side) {
+            case 2:
+                return hitX > .5;
+            case 3:
+                return hitX < .5;
+            case 4:
+                return hitZ > .5;
+            case 5:
+                return hitZ < .5;
+            default:
+                return true;
+        }
     }
 
     @Override

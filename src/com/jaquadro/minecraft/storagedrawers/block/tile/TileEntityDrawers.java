@@ -13,8 +13,6 @@ import net.minecraftforge.common.util.Constants;
 public class TileEntityDrawers extends TileEntity
 {
     private class DrawerData {
-        public int stackSlots;
-
         public Item item;
         public int meta;
         public int count;
@@ -25,8 +23,6 @@ public class TileEntityDrawers extends TileEntity
         }
 
         public void writeToNBT (NBTTagCompound tag) {
-            tag.setInteger("StackSlots", stackSlots);
-
             if (item != null) {
                 tag.setShort("Item", (short) Item.getIdFromItem(item));
                 tag.setShort("Meta", (short) meta);
@@ -38,8 +34,6 @@ public class TileEntityDrawers extends TileEntity
         }
 
         public void readFromNBT (NBTTagCompound tag) {
-            stackSlots = tag.getInteger("StackSlots");
-
             if (tag.hasKey("Item")) {
                 item = Item.getItemById(tag.getShort("Item"));
                 meta = tag.getShort("Meta");
@@ -61,7 +55,7 @@ public class TileEntityDrawers extends TileEntity
             if (item == null)
                 return 0;
 
-            return item.getItemStackLimit(null) * stackSlots;
+            return item.getItemStackLimit(null) * stackCapacity();
         }
 
         public int remainingCapacity () {
@@ -70,17 +64,21 @@ public class TileEntityDrawers extends TileEntity
 
             return maxCapacity() - count;
         }
+
+        public int stackCapacity () {
+            return drawerCount * drawerCapacity;
+        }
     }
 
     private int direction;
+    private int drawerCount = 2;
+    private int drawerCapacity = 1;
+    private int level = 1;
+
     private DrawerData[] data;
 
     public TileEntityDrawers () {
-        data = new DrawerData[2];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = new DrawerData();
-            data[i].stackSlots = 1;
-        }
+        setDrawerCount(2);
     }
 
     public int getDirection () {
@@ -89,6 +87,18 @@ public class TileEntityDrawers extends TileEntity
 
     public void setDirection (int direction) {
         this.direction = direction % 6;
+    }
+
+    public void setDrawerCount (int count) {
+        drawerCount = count;
+
+        data = new DrawerData[drawerCount];
+        for (int i = 0; i < data.length; i++)
+            data[i] = new DrawerData();
+    }
+
+    public void setDrawerCapacity (int stackCount) {
+        drawerCapacity = stackCount;
     }
 
     public int getSlotCount () {
@@ -129,8 +139,6 @@ public class TileEntityDrawers extends TileEntity
         if (data[slot].count == 0)
             data[slot].reset();
 
-        //invalidate();
-
         return stack;
     }
 
@@ -155,8 +163,6 @@ public class TileEntityDrawers extends TileEntity
         data[slot].count += countAdded;
         stack.stackSize -= countAdded;
 
-        //invalidate();
-
         return countAdded;
     }
 
@@ -165,8 +171,11 @@ public class TileEntityDrawers extends TileEntity
         super.readFromNBT(tag);
 
         direction = tag.getByte("Dir");
+        drawerCapacity = tag.getByte("Cap");
+        level = tag.getByte("Lev");
 
         NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
+        drawerCount = slots.tagCount();
         data = new DrawerData[slots.tagCount()];
 
         for (int i = 0; i < data.length; i++) {
@@ -181,6 +190,8 @@ public class TileEntityDrawers extends TileEntity
         super.writeToNBT(tag);
 
         tag.setByte("Dir", (byte)direction);
+        tag.setByte("Cap", (byte)drawerCapacity);
+        tag.setByte("Lev", (byte)level);
 
         NBTTagList slots = new NBTTagList();
         for (int i = 0; i < data.length; i++) {

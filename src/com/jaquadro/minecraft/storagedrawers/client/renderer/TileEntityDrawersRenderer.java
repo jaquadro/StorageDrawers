@@ -51,16 +51,19 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         GL11.glEnable(GL11.GL_LIGHTING);
 
+        int drawerCount = 2;
         double depth = 1;
         double unit = .0625;
 
         Block block = tile.getWorldObj().getBlock(tile.xCoord, tile.yCoord, tile.zCoord);
-        if (block instanceof BlockDrawers)
+        if (block instanceof BlockDrawers) {
             depth = ((BlockDrawers) block).halfDepth ? .5 : 1;
+            drawerCount = ((BlockDrawers) block).drawerCount;
+        }
 
         itemRenderer.setRenderManager(RenderManager.instance);
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < drawerCount; i++) {
             ItemStack itemStack = tileDrawers.getSingleItemStack(i);
             if (itemStack != null) {
                 GL11.glPushMatrix();
@@ -70,7 +73,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                     && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType());
 
 
-                double xunit = itemOffset2X[i];
+                double xunit = (drawerCount == 2) ? itemOffset2X[i] : itemOffset4X[i];
+                double yunit = (drawerCount == 2) ? itemOffset2Y[i] : itemOffset4Y[i];
                 double zunit = blockType ? 2 * unit : unit;
 
                 double xc = 0, zc = 0;
@@ -98,11 +102,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 }
 
                 if (blockType) {
-                    GL11.glTranslated(xc, unit * (itemOffset2Y[i] + 1.25), zc);
+                    GL11.glTranslated(xc, unit * (yunit + 1.25), zc);
                     GL11.glScaled(1, 1, 1);
                     GL11.glRotatef(r - 90.0F, 0.0F, 1.0F, 0.0F);
                 } else {
-                    GL11.glTranslated(xc, unit * itemOffset2Y[i], zc);
+                    GL11.glTranslated(xc, unit * yunit, zc);
                     GL11.glScaled(.6, .6, .6);
                     GL11.glRotatef(r, 0.0F, 1.0F, 0.0F);
                 }

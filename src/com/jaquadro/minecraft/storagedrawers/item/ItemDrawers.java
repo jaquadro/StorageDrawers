@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWood;
@@ -21,8 +22,18 @@ public class ItemDrawers extends ItemMultiTexture
             return false;
 
         TileEntityDrawers tile = (TileEntityDrawers) world.getTileEntity(x, y, z);
-        if (tile != null  && side > 1)
-            tile.setDirection(ForgeDirection.OPPOSITES[side]);
+        if (tile != null) {
+            if (side > 1)
+                tile.setDirection(ForgeDirection.OPPOSITES[side]);
+
+            BlockDrawers block = (BlockDrawers) field_150939_a;
+            tile.setDrawerCount(block.drawerCount);
+
+            if (block.drawerCount == 2)
+                tile.setDrawerCapacity(block.halfDepth ? 4 : 8);
+            else if (block.drawerCount == 4)
+                tile.setDrawerCapacity(block.halfDepth ? 2 : 4);
+        }
 
         return true;
     }
