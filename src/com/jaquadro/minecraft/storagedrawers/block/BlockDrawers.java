@@ -12,6 +12,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockWood;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -20,6 +21,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -29,6 +31,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Random;
 
 public class BlockDrawers extends BlockContainer implements IExtendedBlockClickHandler
 {
@@ -57,7 +60,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         this.halfDepth = halfDepth;
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
-        setHardness(2.5f);
+        setHardness(5f);
         setStepSound(Block.soundTypeWood);
         setBlockName(blockName);
     }
@@ -245,6 +248,52 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    public void breakBlock (World world, int x, int y, int z, Block block, int meta) {
+        TileEntityDrawers tile = getTileEntity(world, x, y, z);
+        if (tile != null) {
+            for (int i = 0; i < tile.getDrawerCount(); i++) {
+                while (tile.getItemCount(i) > 0) {
+                    ItemStack stack = tile.takeItemsFromSlot(i, tile.getStackSize(i));
+                    if (stack == null || stack.stackSize == 0)
+                        break;
+
+                    dropStackInBatches(world, x, y, z, stack);
+                }
+            }
+
+            world.func_147453_f(x, y, z, block);
+        }
+
+        super.breakBlock(world, x, y, z, block, meta);
+    }
+
+    private void dropStackInBatches (World world, int x, int y, int z, ItemStack stack) {
+        Random rand = world.rand;
+
+        float ex = rand.nextFloat() * .8f + .1f;
+        float ey = rand.nextFloat() * .8f + .1f;
+        float ez = rand.nextFloat() * .8f + .1f;
+
+        EntityItem entity;
+        for (; stack.stackSize > 0; world.spawnEntityInWorld(entity)) {
+            int stackPartSize = rand.nextInt(21) + 10;
+            if (stackPartSize > stack.stackSize)
+                stackPartSize = stack.stackSize;
+
+            stack.stackSize -= stackPartSize;
+            entity = new EntityItem(world, x + ex, y + ey, z + ez, new ItemStack(stack.getItem(), stackPartSize, stack.getItemDamage()));
+
+            float motionUnit = .05f;
+            entity.motionX = rand.nextGaussian() * motionUnit;
+            entity.motionY = rand.nextGaussian() * motionUnit + .2f;
+            entity.motionZ = rand.nextGaussian() * motionUnit;
+
+            if (stack.hasTagCompound())
+                entity.getEntityItem().setTagCompound((NBTTagCompound)stack.getTagCompound().copy());
+        }
+    }
+
+    @Override
     public TileEntityDrawers createNewTileEntity (World world, int meta) {
         return new TileEntityDrawers();
     }
@@ -263,6 +312,26 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
         return tile;
     }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean addHitEffects (World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer) {
+        TileEntity tile = worldObj.getTileEntity(target.blockX, target.blockY, target.blockZ);
+        if (tile instanceof TileEntityDrawers) {
+            if (((TileEntityDrawers) tile).getDirection() == target.sideHit)
+                return true;
+        }
+
+        return super.addHitEffects(worldObj, target, effectRenderer);
+    }
+
+    /*@Override
+    @SideOnly(Side.CLIENT)
+    public boolean addDestroyEffects (World world, int x, int y, int z, int meta, EffectRenderer effectRenderer) {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile instanceof TileEntityDrawers)
+        return super.addDestroyEffects(world, x, y, z, meta, effectRenderer);
+    }*/
 
     @Override
     public void getSubBlocks (Item item, CreativeTabs creativeTabs, List list) {

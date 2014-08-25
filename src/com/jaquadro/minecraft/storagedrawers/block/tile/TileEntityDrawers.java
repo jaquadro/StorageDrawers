@@ -89,6 +89,10 @@ public class TileEntityDrawers extends TileEntity
         this.direction = direction % 6;
     }
 
+    public int getDrawerCount () {
+        return drawerCount;
+    }
+
     public void setDrawerCount (int count) {
         drawerCount = count;
 
@@ -111,6 +115,10 @@ public class TileEntityDrawers extends TileEntity
 
     public int getItemMeta (int slot) {
         return data[slot].meta;
+    }
+
+    public int getItemCount (int slot) {
+        return data[slot].count;
     }
 
     public int getStackSize (int slot) {

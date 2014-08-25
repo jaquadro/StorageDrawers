@@ -9,7 +9,7 @@ public class ForgeEventHandler
 {
     @SubscribeEvent
     public void playerInteracts (PlayerInteractEvent event) {
-        if (event.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK) {
+        if (event.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK && event.entityPlayer.capabilities.isCreativeMode) {
             TileEntity tile = event.world.getTileEntity(event.x, event.y, event.z);
             if (tile instanceof TileEntityDrawers) {
                 int dir = ((TileEntityDrawers) tile).getDirection();

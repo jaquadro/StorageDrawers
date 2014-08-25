@@ -51,15 +51,15 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         GL11.glEnable(GL11.GL_LIGHTING);
 
-        int drawerCount = 2;
+        int drawerCount = tileDrawers.getDrawerCount();
         double depth = 1;
         double unit = .0625;
 
         Block block = tile.getWorldObj().getBlock(tile.xCoord, tile.yCoord, tile.zCoord);
-        if (block instanceof BlockDrawers) {
+        if (block instanceof BlockDrawers)
             depth = ((BlockDrawers) block).halfDepth ? .5 : 1;
-            drawerCount = ((BlockDrawers) block).drawerCount;
-        }
+        else
+            return;
 
         itemRenderer.setRenderManager(RenderManager.instance);
 
