@@ -1,0 +1,29 @@
+itemGroup.storageDrawers=Storage Drawers
+
+tile.fullDrawers2.oak.name=Oak Drawers 1x2
+tile.fullDrawers2.spruce.name=Spruce Drawers 1x2
+tile.fullDrawers2.birch.name=Birch Drawers 1x2
+tile.fullDrawers2.jungle.name=Jungle Drawers 1x2
+tile.fullDrawers2.acacia.name=Acacia Drawers 1x2
+tile.fullDrawers2.big_oak.name=Dark Oak Drawers 1x2
+
+tile.fullDrawers4.oak.name=Oak Drawers 2x2
+tile.fullDrawers4.spruce.name=Spruce Drawers 2x2
+tile.fullDrawers4.birch.name=Birch Drawers 2x2
+tile.fullDrawers4.jungle.name=Jungle Drawers 2x2
+tile.fullDrawers4.acacia.name=Acacia Drawers 2x2
+tile.fullDrawers4.big_oak.name=Dark Oak Drawers 2x2
+
+tile.halfDrawers2.oak.name=Compact Oak Drawers 1x2
+tile.halfDrawers2.spruce.name=Compact Spruce Drawers 1x2
+tile.halfDrawers2.birch.name=Compact Birch Drawers 1x2
+tile.halfDrawers2.jungle.name=Compact Jungle Drawers 1x2
+tile.halfDrawers2.acacia.name=Compact Acacia Drawers 1x2
+tile.halfDrawers2.big_oak.name=Compact Dark Oak Drawers 1x2
+
+tile.halfDrawers4.oak.name=Compact Oak Drawers 2x2
+tile.halfDrawers4.spruce.name=Compact Spruce Drawers 2x2
+tile.halfDrawers4.birch.name=Compact Birch Drawers 2x2
+tile.halfDrawers4.jungle.name=Compact Jungle Drawers 2x2
+tile.halfDrawers4.acacia.name=Compact Acacia Drawers 2x2
+tile.halfDrawers4.big_oak.name=Compact Dark Oak Drawers 2x2

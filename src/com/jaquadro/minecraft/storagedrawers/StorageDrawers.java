@@ -1,8 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers;
 
-import com.jaquadro.minecraft.storagedrawers.core.CommonProxy;
-import com.jaquadro.minecraft.storagedrawers.core.ForgeEventHandler;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -23,6 +21,7 @@ public class StorageDrawers
     static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.";
 
     public static final ModBlocks blocks = new ModBlocks();
+    public static final ModRecipes recipes = new ModRecipes();
 
     public static SimpleNetworkWrapper network;
 
@@ -49,6 +48,6 @@ public class StorageDrawers
 
     @Mod.EventHandler
     public void postInit (FMLPostInitializationEvent event) {
-
+        recipes.init();
     }
 }

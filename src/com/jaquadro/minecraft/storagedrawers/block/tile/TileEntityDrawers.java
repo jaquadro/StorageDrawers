@@ -66,7 +66,7 @@ public class TileEntityDrawers extends TileEntity
         }
 
         public int stackCapacity () {
-            return drawerCount * drawerCapacity;
+            return level * drawerCapacity;
         }
     }
 
@@ -113,6 +113,13 @@ public class TileEntityDrawers extends TileEntity
         return data[slot].meta;
     }
 
+    public int getStackSize (int slot) {
+        if (data[slot].item == null)
+            return 0;
+
+        return data[slot].item.getItemStackLimit(null);
+    }
+
     public ItemStack getSingleItemStack (int slot) {
         if (data[slot].item == null)
             return null;
@@ -133,10 +140,11 @@ public class TileEntityDrawers extends TileEntity
 
         ItemStack stack = new ItemStack(data[slot].item, 1, data[slot].meta);
         stack.stackSize = Math.min(stack.getMaxStackSize(), count);
+        stack.stackSize = Math.min(stack.stackSize, data[slot].count);
         stack.setTagCompound(data[slot].attrs);
 
         data[slot].count -= stack.stackSize;
-        if (data[slot].count == 0)
+        if (data[slot].count <= 0)
             data[slot].reset();
 
         return stack;

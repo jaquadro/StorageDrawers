@@ -24,7 +24,7 @@ public class ItemDrawers extends ItemMultiTexture
         TileEntityDrawers tile = (TileEntityDrawers) world.getTileEntity(x, y, z);
         if (tile != null) {
             if (side > 1)
-                tile.setDirection(ForgeDirection.OPPOSITES[side]);
+                tile.setDirection(side);
 
             BlockDrawers block = (BlockDrawers) field_150939_a;
             tile.setDrawerCount(block.drawerCount);

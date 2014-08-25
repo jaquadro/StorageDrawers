@@ -3,11 +3,13 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
+import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockWood;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -34,13 +36,19 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     public final int drawerCount;
 
     @SideOnly(Side.CLIENT)
-    private IIcon iconSide;
+    private IIcon[] iconSide;
 
     @SideOnly(Side.CLIENT)
-    private IIcon iconFront2;
+    private IIcon[] iconSideV;
 
     @SideOnly(Side.CLIENT)
-    private IIcon iconFront4;
+    private IIcon[] iconSideH;
+
+    @SideOnly(Side.CLIENT)
+    private IIcon[] iconFront2;
+
+    @SideOnly(Side.CLIENT)
+    private IIcon[] iconFront4;
 
     public BlockDrawers (String blockName, int drawerCount, boolean halfDepth) {
         super(Material.wood);
@@ -48,7 +56,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         this.drawerCount = drawerCount;
         this.halfDepth = halfDepth;
 
-        setCreativeTab(CreativeTabs.tabDecorations);
+        setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(2.5f);
         setStepSound(Block.soundTypeWood);
         setBlockName(blockName);
@@ -147,7 +155,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             return false;
 
         int slot = getDrawerSlot(side, hitX, hitY, hitZ);
-        int countAdded = tileDrawers.putItemsIntoSlot(slot, item, 1);
+        int countAdded = tileDrawers.putItemsIntoSlot(slot, item, item.stackSize);
 
         //if (countAdded > 0)
         //    world.markBlockForUpdate(x, y, z);
@@ -202,9 +210,14 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (tileDrawers.getDirection() != side)
             return;
 
-        int slot = (hitY > .5) ? 0 : 1;
+        int slot = getDrawerSlot(side, hitX, hitY, hitZ);
 
-        ItemStack item = tileDrawers.takeItemsFromSlot(slot, 1);
+        ItemStack item = null;
+        if (player.isSneaking())
+            item = tileDrawers.takeItemsFromSlot(slot, tileDrawers.getStackSize(slot));
+        else
+            item = tileDrawers.takeItemsFromSlot(slot, 1);
+
         if (item != null && item.stackSize > 0) {
             dropItemStack(world, x, y, z, player, item);
             world.markBlockForUpdate(x, y, z);
@@ -218,7 +231,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public boolean removedByPlayer (World world, EntityPlayer player, int x, int y, int z) {
-        if (world.isRemote && player.capabilities.isCreativeMode && !player.isSneaking()) {
+        if (world.isRemote && player.capabilities.isCreativeMode) {
             TileEntityDrawers tile = getTileEntity(world, x, y, z);
             MovingObjectPosition posn = Minecraft.getMinecraft().objectMouseOver;
 
@@ -252,23 +265,78 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List list) {
+        for (int i = 0; i < BlockWood.field_150096_a.length; i++)
+            list.add(new ItemStack(item, 1, i));
+    }
+
+    @Override
     public IIcon getIcon (int side, int meta) {
-        return drawerCount == 2 ? iconFront2 : iconFront4;
+        meta %= BlockWood.field_150096_a.length;
+
+        switch (side) {
+            case 0:
+            case 1:
+                return halfDepth ? iconSideV[meta] : iconSide[meta];
+            case 2:
+            case 3:
+                return halfDepth ? iconSideV[meta] : iconSide[meta];
+            case 4:
+                return drawerCount == 2 ? iconFront2[meta] : iconFront4[meta];
+            case 5:
+                return iconSide[meta];
+        }
+
+        return null;
     }
 
     @Override
     public IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side) {
+        int meta = blockAccess.getBlockMetadata(x, y, z) % BlockWood.field_150096_a.length;
+
         TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
         if (tile == null || side == tile.getDirection())
-            return drawerCount == 2 ? iconFront2 : iconFront4;
+            return drawerCount == 2 ? iconFront2[meta] : iconFront4[meta];
 
-        return iconSide;
+        switch (side) {
+            case 0:
+            case 1:
+                if (halfDepth) {
+                    switch (tile.getDirection()) {
+                        case 2:
+                        case 3:
+                            return iconSideH[meta];
+                        case 4:
+                        case 5:
+                            return iconSideV[meta];
+                    }
+                }
+                break;
+            default:
+                if (halfDepth)
+                    return iconSideV[meta];
+                break;
+        }
+
+        return iconSide[meta];
     }
 
     @Override
     public void registerBlockIcons (IIconRegister register) {
-        iconFront2 = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_front_2");
-        iconFront4 = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_front_4");
-        iconSide = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_side");
+        String[] subtex = BlockWood.field_150096_a;
+
+        iconSide = new IIcon[subtex.length];
+        iconSideH = new IIcon[subtex.length];
+        iconSideV = new IIcon[subtex.length];
+        iconFront2 = new IIcon[subtex.length];
+        iconFront4 = new IIcon[subtex.length];
+
+        for (int i = 0; i < subtex.length; i++) {
+            iconFront2[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_front_2");
+            iconFront4[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_front_4");
+            iconSide[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side");
+            iconSideV[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side_v");
+            iconSideH[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side_h");
+        }
     }
 }
