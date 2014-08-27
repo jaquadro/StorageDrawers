@@ -75,7 +75,16 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         renderExterior(block, x, y, z, side, renderer);
 
+        if (tile.getLevel() > 1) {
+            for (int i = 0; i < 6; i++)
+                boxRenderer.setIcon(block.getOverlayIcon(world, x, y, z, i, tile.getLevel()), i);
+
+            renderExterior(block, x, y, z, side, renderer);
+        }
+
         boxRenderer.setUnit(0);
+        for (int i = 0; i < 6; i++)
+            boxRenderer.setIcon(block.getIcon(world, x, y, z, i), i);
         boxRenderer.setInteriorIcon(block.getIcon(world, x, y, z, side), ForgeDirection.OPPOSITES[side]);
 
         renderInterior(block, x, y, z, side, renderer);

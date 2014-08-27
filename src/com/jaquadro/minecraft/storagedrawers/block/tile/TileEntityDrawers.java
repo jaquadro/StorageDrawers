@@ -8,6 +8,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.Constants;
 
 public class TileEntityDrawers extends TileEntity
@@ -99,6 +100,14 @@ public class TileEntityDrawers extends TileEntity
         data = new DrawerData[drawerCount];
         for (int i = 0; i < data.length; i++)
             data[i] = new DrawerData();
+    }
+
+    public int getLevel () {
+        return level;
+    }
+
+    public void setLevel (int level) {
+        this.level = MathHelper.clamp_int(level, 1, 6);
     }
 
     public void setDrawerCapacity (int stackCount) {

@@ -1,5 +1,11 @@
 itemGroup.storageDrawers=Storage Drawers
 
+item.upgrade.iron.name=Drawer Upgrade (II)
+item.upgrade.gold.name=Drawer Upgrade (III)
+item.upgrade.obsidian.name=Drawer Upgrade (IV)
+item.upgrade.diamond.name=Drawer Upgrade (V)
+item.upgrade.emerald.name=Drawer Upgrade (VI)
+
 tile.fullDrawers2.oak.name=Oak Drawers 1x2
 tile.fullDrawers2.spruce.name=Spruce Drawers 1x2
 tile.fullDrawers2.birch.name=Birch Drawers 1x2
@@ -27,3 +33,6 @@ tile.halfDrawers4.birch.name=Compact Birch Drawers 2x2
 tile.halfDrawers4.jungle.name=Compact Jungle Drawers 2x2
 tile.halfDrawers4.acacia.name=Compact Acacia Drawers 2x2
 tile.halfDrawers4.big_oak.name=Compact Dark Oak Drawers 2x2
+
+storageDrawers.drawers.description=Holds %d stacks per drawer
+storageDrawers.upgrade.description=Increases storage to %d times base value

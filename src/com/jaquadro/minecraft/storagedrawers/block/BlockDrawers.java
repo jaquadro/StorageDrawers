@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
+import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -40,18 +41,23 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @SideOnly(Side.CLIENT)
     private IIcon[] iconSide;
-
     @SideOnly(Side.CLIENT)
     private IIcon[] iconSideV;
-
     @SideOnly(Side.CLIENT)
     private IIcon[] iconSideH;
-
     @SideOnly(Side.CLIENT)
     private IIcon[] iconFront2;
-
     @SideOnly(Side.CLIENT)
     private IIcon[] iconFront4;
+
+    @SideOnly(Side.CLIENT)
+    private IIcon[] iconOverlay;
+    @SideOnly(Side.CLIENT)
+    private IIcon[] iconOverlayV;
+    @SideOnly(Side.CLIENT)
+    private IIcon[] iconOverlayH;
+    @SideOnly(Side.CLIENT)
+    private IIcon[] iconOverlayCross;
 
     public BlockDrawers (String blockName, int drawerCount, boolean halfDepth) {
         super(Material.wood);
@@ -150,10 +156,23 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @Override
     public boolean onBlockActivated (World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         ItemStack item = player.inventory.getCurrentItem();
-        if (item == null)
+        if (item == null || item.getItem() == null)
             return false;
 
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, x, y, z);
+
+        if (item.getItem() == ModItems.upgrade) {
+            tileDrawers.setLevel(item.getItemDamage());
+            world.markBlockForUpdate(x, y, z);
+
+            if (player != null && !player.capabilities.isCreativeMode) {
+                if (--item.stackSize <= 0)
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+            }
+
+            return true;
+        }
+
         if (tileDrawers.getDirection() != side)
             return false;
 
@@ -250,6 +269,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @Override
     public void breakBlock (World world, int x, int y, int z, Block block, int meta) {
         TileEntityDrawers tile = getTileEntity(world, x, y, z);
+        if (tile.getLevel() > 1)
+            dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgrade, 1, tile.getLevel()));
+        
         if (tile != null) {
             for (int i = 0; i < tile.getDrawerCount(); i++) {
                 while (tile.getItemCount(i) > 0) {
@@ -340,6 +362,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IIcon getIcon (int side, int meta) {
         meta %= BlockWood.field_150096_a.length;
 
@@ -360,12 +383,30 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side) {
+        return getIcon(blockAccess, x, y, z, side, 0);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public IIcon getOverlayIcon (IBlockAccess blockAccess, int x, int y, int z, int side, int level) {
+        if (level == 0)
+            return null;
+
+        return getIcon(blockAccess, x, y, z, side, level);
+    }
+
+    @SideOnly(Side.CLIENT)
+    private IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side, int level) {
         int meta = blockAccess.getBlockMetadata(x, y, z) % BlockWood.field_150096_a.length;
 
         TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
-        if (tile == null || side == tile.getDirection())
-            return drawerCount == 2 ? iconFront2[meta] : iconFront4[meta];
+        if (tile == null || side == tile.getDirection()) {
+            if (drawerCount == 2)
+                return (level > 0) ? iconOverlay[level] : iconFront2[meta];
+            else
+                return (level > 0) ? iconOverlay[level] : iconFront4[meta];
+        }
 
         switch (side) {
             case 0:
@@ -374,23 +415,24 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                     switch (tile.getDirection()) {
                         case 2:
                         case 3:
-                            return iconSideH[meta];
+                            return (level > 0) ? iconOverlayH[level] : iconSideH[meta];
                         case 4:
                         case 5:
-                            return iconSideV[meta];
+                            return (level > 0) ? iconOverlayV[level] : iconSideV[meta];
                     }
                 }
                 break;
             default:
                 if (halfDepth)
-                    return iconSideV[meta];
+                    return (level > 0) ? iconOverlayV[level] : iconSideV[meta];
                 break;
         }
 
-        return iconSide[meta];
+        return (level > 0) ? iconOverlay[level] : iconSide[meta];
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerBlockIcons (IIconRegister register) {
         String[] subtex = BlockWood.field_150096_a;
 
@@ -406,6 +448,20 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             iconSide[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side");
             iconSideV[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side_v");
             iconSideH[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side_h");
+        }
+
+        String[] overlays = new String[] { null, null, "iron", "gold", "obsidian", "diamond", "emerald" };
+
+        iconOverlay = new IIcon[overlays.length];
+        iconOverlayH = new IIcon[overlays.length];
+        iconOverlayV = new IIcon[overlays.length];
+        iconOverlayCross = new IIcon[overlays.length];
+
+        for (int i = 2; i < overlays.length; i++) {
+            iconOverlay[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i]);
+            iconOverlayV[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i] + "_v");
+            iconOverlayH[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i] + "_h");
+            iconOverlayCross[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i] + "_cross");
         }
     }
 }

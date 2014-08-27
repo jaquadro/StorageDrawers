@@ -21,6 +21,7 @@ public class StorageDrawers
     static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.";
 
     public static final ModBlocks blocks = new ModBlocks();
+    public static final ModItems items = new ModItems();
     public static final ModRecipes recipes = new ModRecipes();
 
     public static SimpleNetworkWrapper network;
@@ -37,6 +38,7 @@ public class StorageDrawers
         network.registerMessage(BlockClickMessage.Handler.class, BlockClickMessage.class, 0, Side.SERVER);
 
         blocks.init();
+        items.init();
     }
 
     @Mod.EventHandler
