@@ -1,5 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,8 +12,9 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityDrawers extends TileEntity
+public class TileEntityDrawers extends TileEntity implements ISidedInventory
 {
     private class DrawerData {
         public Item item;
@@ -78,6 +81,8 @@ public class TileEntityDrawers extends TileEntity
 
     private DrawerData[] data;
 
+    private int[] autoSides = new int[] { 0, 1 };
+
     public TileEntityDrawers () {
         setDrawerCount(2);
     }
@@ -88,6 +93,7 @@ public class TileEntityDrawers extends TileEntity
 
     public void setDirection (int direction) {
         this.direction = direction % 6;
+        autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction] };
     }
 
     public int getDrawerCount () {
@@ -152,13 +158,9 @@ public class TileEntityDrawers extends TileEntity
     }
 
     public ItemStack takeItemsFromSlot (int slot, int count) {
-        if (data[slot].item == null)
+        ItemStack stack = getItemsFromSlot(slot, count);
+        if (stack == null)
             return null;
-
-        ItemStack stack = new ItemStack(data[slot].item, 1, data[slot].meta);
-        stack.stackSize = Math.min(stack.getMaxStackSize(), count);
-        stack.stackSize = Math.min(stack.stackSize, data[slot].count);
-        stack.setTagCompound(data[slot].attrs);
 
         data[slot].count -= stack.stackSize;
         if (data[slot].count <= 0)
@@ -174,12 +176,7 @@ public class TileEntityDrawers extends TileEntity
             data[slot].attrs = stack.getTagCompound();
         }
 
-        if (data[slot].item != stack.getItem() || data[slot].meta != stack.getItemDamage())
-            return 0;
-
-        if ((data[slot].attrs == null || stack.getTagCompound() == null) && data[slot].attrs != stack.getTagCompound())
-            return 0;
-        else if (data[slot].attrs != null && !data[slot].attrs.equals(stack.getTagCompound()))
+        if (!itemMatchesForSlot(slot, stack))
             return 0;
 
         int countAdded = Math.min(data[slot].remainingCapacity(), stack.stackSize);
@@ -189,6 +186,30 @@ public class TileEntityDrawers extends TileEntity
         stack.stackSize -= countAdded;
 
         return countAdded;
+    }
+
+    private ItemStack getItemsFromSlot (int slot, int count) {
+        if (data[slot].item == null)
+            return null;
+
+        ItemStack stack = new ItemStack(data[slot].item, 1, data[slot].meta);
+        stack.stackSize = Math.min(stack.getMaxStackSize(), count);
+        stack.stackSize = Math.min(stack.stackSize, data[slot].count);
+        stack.setTagCompound(data[slot].attrs);
+
+        return stack;
+    }
+
+    private boolean itemMatchesForSlot (int slot, ItemStack stack) {
+        if (data[slot].item != stack.getItem() || data[slot].meta != stack.getItemDamage())
+            return false;
+
+        if ((data[slot].attrs == null || stack.getTagCompound() == null) && data[slot].attrs != stack.getTagCompound())
+            return false;
+        else if (data[slot].attrs != null && !data[slot].attrs.equals(stack.getTagCompound()))
+            return false;
+
+        return true;
     }
 
     @Override
@@ -208,6 +229,8 @@ public class TileEntityDrawers extends TileEntity
             data[i] = new DrawerData();
             data[i].readFromNBT(slot);
         }
+
+        autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction] };
     }
 
     @Override
@@ -240,5 +263,128 @@ public class TileEntityDrawers extends TileEntity
     public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity pkt) {
         readFromNBT(pkt.func_148857_g());
         getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
+    }
+
+
+    @Override
+    public int getSizeInventory () {
+        return drawerCount;
+    }
+
+    @Override
+    public ItemStack getStackInSlot (int slot) {
+        if (slot >= getSizeInventory())
+            return null;
+
+        return getItemsFromSlot(slot, getStackSize(slot));
+    }
+
+    @Override
+    public ItemStack decrStackSize (int slot, int count) {
+        if (slot >= getSizeInventory())
+            return null;
+
+        ItemStack stack = takeItemsFromSlot(slot, count);
+        if (stack != null && !worldObj.isRemote)
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+
+        return stack;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing (int slot) {
+        return null;
+    }
+
+    @Override
+    public void setInventorySlotContents (int slot, ItemStack itemStack) {
+        if (slot >= getSizeInventory())
+            return;
+
+        int count = putItemsIntoSlot(slot, itemStack, itemStack.stackSize);
+
+        if (count > 0 && !worldObj.isRemote)
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+
+    @Override
+    public String getInventoryName () {
+        return null;
+    }
+
+    @Override
+    public boolean hasCustomInventoryName () {
+        return false;
+    }
+
+    @Override
+    public int getInventoryStackLimit () {
+        return 64;
+    }
+
+    @Override
+    public boolean isUseableByPlayer (EntityPlayer player) {
+        return false;
+    }
+
+    @Override
+    public void openInventory () {
+
+    }
+
+    @Override
+    public void closeInventory () {
+
+    }
+
+    @Override
+    public boolean isItemValidForSlot (int slot, ItemStack itemStack) {
+        if (slot >= getSizeInventory())
+            return false;
+
+        if (data[slot].item == null)
+            return true;
+
+        if (!itemMatchesForSlot(slot, itemStack))
+            return false;
+
+        if (data[slot].remainingCapacity() < itemStack.stackSize)
+            return false;
+
+        return true;
+    }
+
+    private static final int[] drawerSlots0 = new int[0];
+    private static final int[] drawerSlots2 = new int[] { 0, 1 };
+    private static final int[] drawerSlots4 = new int[] { 0, 1, 2, 3 };
+
+    @Override
+    public int[] getAccessibleSlotsFromSide (int side) {
+        for (int i = 0; i < autoSides.length; i++) {
+            if (side == autoSides[i])
+                return (drawerCount == 2) ? drawerSlots2 : drawerSlots4;
+        }
+
+        return drawerSlots0;
+    }
+
+    @Override
+    public boolean canInsertItem (int slot, ItemStack stack, int side) {
+        if (slot >= getSizeInventory())
+            return false;
+
+        int[] validSides = getAccessibleSlotsFromSide(side);
+        for (int i = 0; i < validSides.length; i++) {
+            if (side == validSides[i]) {
+                return isItemValidForSlot(slot, stack);
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean canExtractItem (int slot, ItemStack stack, int side) {
+        return false;
     }
 }
