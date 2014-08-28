@@ -271,7 +271,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         TileEntityDrawers tile = getTileEntity(world, x, y, z);
         if (tile.getLevel() > 1)
             dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgrade, 1, tile.getLevel()));
-        
+
         if (tile != null) {
             for (int i = 0; i < tile.getDrawerCount(); i++) {
                 while (tile.getItemCount(i) > 0) {
@@ -403,9 +403,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
         if (tile == null || side == tile.getDirection()) {
             if (drawerCount == 2)
-                return (level > 0) ? iconOverlay[level] : iconFront2[meta];
+                return (level > 0) ? iconOverlayH[level] : iconFront2[meta];
             else
-                return (level > 0) ? iconOverlay[level] : iconFront4[meta];
+                return (level > 0) ? iconOverlayCross[level] : iconFront4[meta];
         }
 
         switch (side) {

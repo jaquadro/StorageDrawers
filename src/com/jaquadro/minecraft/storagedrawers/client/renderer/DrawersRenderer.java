@@ -83,8 +83,8 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         }
 
         boxRenderer.setUnit(0);
-        for (int i = 0; i < 6; i++)
-            boxRenderer.setIcon(block.getIcon(world, x, y, z, i), i);
+        //for (int i = 0; i < 6; i++)
+        //    boxRenderer.setIcon(block.getIcon(world, x, y, z, i), i);
         boxRenderer.setInteriorIcon(block.getIcon(world, x, y, z, side), ForgeDirection.OPPOSITES[side]);
 
         renderInterior(block, x, y, z, side, renderer);
@@ -115,7 +115,9 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
                 break;
         }
 
-        if (block.drawerCount == 2) {
+        boxRenderer.renderExterior(renderer, block, x, y, z, xMin, 0, zMin, xMax, 1, zMax, 0, ModularBoxRenderer.sideCut[side]);
+
+        /*if (block.drawerCount == 2) {
             boxRenderer.renderExterior(renderer, block, x, y, z, xMin, 0, zMin, xMax, .5, zMax, 0, ModularBoxRenderer.sideCut[side]);
             boxRenderer.renderExterior(renderer, block, x, y, z, xMin, .5, zMin, xMax, 1, zMax, 0, ModularBoxRenderer.sideCut[side]);
         }
@@ -136,7 +138,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
                     boxRenderer.renderExterior(renderer, block, x, y, z, xMin, .5, .5, xMax, 1, 1, 0, ModularBoxRenderer.sideCut[side]);
                     break;
             }
-        }
+        }*/
     }
 
     private void renderInterior (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
@@ -163,7 +165,9 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
                 break;
         }
 
-        if (block.drawerCount == 2) {
+        boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit, zMin, xMax, 1 - unit, zMax, 0, ModularBoxRenderer.sideCut[side]);
+
+        /*if (block.drawerCount == 2) {
             boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit, zMin, xMax, unit * 7, zMax, 0, ModularBoxRenderer.sideCut[side]);
             boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit * 9, zMin, xMax, 1 - unit, zMax, 0, ModularBoxRenderer.sideCut[side]);
         }
@@ -184,7 +188,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
                     boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit * 9, .5 + unit, xMax, 1 - unit, 1 - unit, 0, ModularBoxRenderer.sideCut[side]);
                     break;
             }
-        }
+        }*/
     }
 
     @Override
