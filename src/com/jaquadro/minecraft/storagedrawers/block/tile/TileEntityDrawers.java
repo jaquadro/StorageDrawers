@@ -80,6 +80,8 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
     private int level = 1;
 
     private DrawerData[] data;
+    private ItemStack[] snapshotItems;
+    private int[] snapshotCounts;
 
     private int[] autoSides = new int[] { 0, 1 };
 
@@ -106,6 +108,9 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
         data = new DrawerData[drawerCount];
         for (int i = 0; i < data.length; i++)
             data[i] = new DrawerData();
+
+        snapshotItems = new ItemStack[count];
+        snapshotCounts = new int[count];
     }
 
     public int getLevel () {
@@ -231,6 +236,8 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
         }
 
         autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction] };
+        snapshotItems = new ItemStack[drawerCount];
+        snapshotCounts = new int[drawerCount];
     }
 
     @Override
@@ -265,6 +272,23 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
         getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
     }
 
+    @Override
+    public void markDirty () {
+        for (int i = 0; i < drawerCount; i++) {
+            if (snapshotItems[i] != null && snapshotItems[i].stackSize != snapshotCounts[i]) {
+                int diff = snapshotItems[i].stackSize - snapshotCounts[i];
+                if (diff > 0)
+                    putItemsIntoSlot(i, snapshotItems[i], diff);
+                else
+                    takeItemsFromSlot(i, -diff);
+
+                snapshotItems[i].stackSize = 64 - Math.min(63, data[i].remainingCapacity());
+                snapshotCounts[i] = snapshotItems[i].stackSize;
+            }
+        }
+
+        super.markDirty();
+    }
 
     @Override
     public int getSizeInventory () {
@@ -276,7 +300,18 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
         if (slot >= getSizeInventory())
             return null;
 
-        return getItemsFromSlot(slot, getStackSize(slot));
+        ItemStack stack = getItemsFromSlot(slot, getStackSize(slot));
+        if (stack != null) {
+            stack.stackSize = 64 - Math.min(63, data[slot].remainingCapacity());
+            snapshotItems[slot] = stack;
+            snapshotCounts[slot] = stack.stackSize;
+        }
+        else {
+            snapshotItems[slot] = null;
+            snapshotCounts[slot] = 0;
+        }
+
+        return stack;
     }
 
     @Override
