@@ -408,9 +408,8 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
         if (slot >= getSizeInventory())
             return false;
 
-        int[] validSides = getAccessibleSlotsFromSide(side);
-        for (int i = 0; i < validSides.length; i++) {
-            if (side == validSides[i]) {
+        for (int i = 0; i < autoSides.length; i++) {
+            if (side == autoSides[i]) {
                 return isItemValidForSlot(slot, stack);
             }
         }
