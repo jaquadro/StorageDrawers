@@ -17,13 +17,24 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TileEntityDrawers extends TileEntity implements ISidedInventory
 {
     private class DrawerData {
-        public Item item;
+        private Item item;
         public int meta;
         public int count;
         public NBTTagCompound attrs;
 
+        private ItemStack protoStack;
+
         public DrawerData () {
             reset();
+        }
+
+        public Item getItem () {
+            return item;
+        }
+
+        public void setItem (Item item) {
+            this.item = item;
+            protoStack = new ItemStack(item);
         }
 
         public void writeToNBT (NBTTagCompound tag) {
@@ -45,6 +56,8 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
 
                 if (tag.hasKey("Tags"))
                     attrs = tag.getCompoundTag("Tags");
+
+                protoStack = new ItemStack(item);
             }
         }
 
@@ -59,7 +72,10 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
             if (item == null)
                 return 0;
 
-            return item.getItemStackLimit(null) * stackCapacity();
+            protoStack.setItemDamage(meta);
+            protoStack.setTagCompound(attrs);
+
+            return item.getItemStackLimit(protoStack) * stackCapacity();
         }
 
         public int remainingCapacity () {
@@ -142,17 +158,17 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
     }
 
     public int getStackSize (int slot) {
-        if (data[slot].item == null)
+        if (data[slot].getItem() == null)
             return 0;
 
-        return data[slot].item.getItemStackLimit(null);
+        return data[slot].getItem().getItemStackLimit(null);
     }
 
     public ItemStack getSingleItemStack (int slot) {
-        if (data[slot].item == null)
+        if (data[slot].getItem() == null)
             return null;
 
-        ItemStack stack = new ItemStack(data[slot].item, 1, data[slot].meta);
+        ItemStack stack = new ItemStack(data[slot].getItem(), 1, data[slot].meta);
         stack.setTagCompound(data[slot].attrs);
 
         return stack;
@@ -175,8 +191,8 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
     }
 
     public int putItemsIntoSlot (int slot, ItemStack stack, int count) {
-        if (data[slot].item == null) {
-            data[slot].item = stack.getItem();
+        if (data[slot].getItem() == null) {
+            data[slot].setItem(stack.getItem());
             data[slot].meta = stack.getItemDamage();
             data[slot].attrs = stack.getTagCompound();
         }
@@ -194,10 +210,10 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
     }
 
     private ItemStack getItemsFromSlot (int slot, int count) {
-        if (data[slot].item == null)
+        if (data[slot].getItem() == null)
             return null;
 
-        ItemStack stack = new ItemStack(data[slot].item, 1, data[slot].meta);
+        ItemStack stack = new ItemStack(data[slot].getItem(), 1, data[slot].meta);
         stack.stackSize = Math.min(stack.getMaxStackSize(), count);
         stack.stackSize = Math.min(stack.stackSize, data[slot].count);
         stack.setTagCompound(data[slot].attrs);
@@ -206,7 +222,7 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
     }
 
     private boolean itemMatchesForSlot (int slot, ItemStack stack) {
-        if (data[slot].item != stack.getItem() || data[slot].meta != stack.getItemDamage())
+        if (data[slot].getItem() != stack.getItem() || data[slot].meta != stack.getItemDamage())
             return false;
 
         if ((data[slot].attrs == null || stack.getTagCompound() == null) && data[slot].attrs != stack.getTagCompound())
@@ -377,7 +393,7 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
         if (slot >= getSizeInventory())
             return false;
 
-        if (data[slot].item == null)
+        if (data[slot].getItem() == null)
             return true;
 
         if (!itemMatchesForSlot(slot, itemStack))
