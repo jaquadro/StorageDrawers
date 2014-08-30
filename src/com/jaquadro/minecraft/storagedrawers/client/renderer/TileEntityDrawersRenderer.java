@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.client.renderer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -11,8 +12,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.common.util.RotationHelper;
 import org.lwjgl.opengl.GL11;
 
 public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
@@ -111,9 +110,15 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                     GL11.glRotatef(r, 0.0F, 1.0F, 0.0F);
                 }
 
+                Minecraft mc = Minecraft.getMinecraft();
+                boolean cache = mc.gameSettings.fancyGraphics;
+                mc.gameSettings.fancyGraphics = true;
+
                 EntityItem itemEnt = new EntityItem(null, 0, 0, 0, itemStack);
                 itemEnt.hoverStart = 0;
                 itemRenderer.doRender(itemEnt, 0, 0, 0, 0, 0);
+
+                mc.gameSettings.fancyGraphics = cache;
 
                 GL11.glPopMatrix();
             }
