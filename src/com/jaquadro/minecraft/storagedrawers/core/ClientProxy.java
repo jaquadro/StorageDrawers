@@ -8,8 +8,6 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy
 {
-    public static int drawersRenderID;
-
     @Override
     public void registerRenderers () {
         drawersRenderID = RenderingRegistry.getNextAvailableRenderId();

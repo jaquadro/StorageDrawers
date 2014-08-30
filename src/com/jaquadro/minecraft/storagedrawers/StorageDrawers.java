@@ -17,7 +17,7 @@ public class StorageDrawers
 {
     public static final String MOD_ID = "StorageDrawers";
     public static final String MOD_NAME = "Storage Drawers";
-    public static final String MOD_VERSION = "1.0.0";
+    public static final String MOD_VERSION = "1.0.1";
     static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.";
 
     public static final ModBlocks blocks = new ModBlocks();

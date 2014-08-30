@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
@@ -198,6 +199,6 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
     @Override
     public int getRenderId () {
-        return ClientProxy.drawersRenderID;
+        return StorageDrawers.proxy.drawersRenderID;
     }
 }

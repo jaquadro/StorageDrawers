@@ -83,7 +83,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public int getRenderType () {
-        return ClientProxy.drawersRenderID;
+        return StorageDrawers.proxy.drawersRenderID;
     }
 
     @Override
