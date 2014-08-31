@@ -2,9 +2,11 @@ package com.jaquadro.minecraft.storagedrawers;
 
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -12,7 +14,7 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = StorageDrawers.MOD_ID, name = StorageDrawers.MOD_NAME, version = StorageDrawers.MOD_VERSION)
+@Mod(modid = StorageDrawers.MOD_ID, name = StorageDrawers.MOD_NAME, version = StorageDrawers.MOD_VERSION, dependencies = "after:waila;")
 public class StorageDrawers
 {
     public static final String MOD_ID = "StorageDrawers";
@@ -39,6 +41,10 @@ public class StorageDrawers
 
         blocks.init();
         items.init();
+
+        if (Loader.isModLoaded("Waila")) {
+            FMLInterModComms.sendMessage("Waila", "register", SOURCE_PATH + "compat.WailaProvider.registerProvider");
+        }
     }
 
     @Mod.EventHandler
