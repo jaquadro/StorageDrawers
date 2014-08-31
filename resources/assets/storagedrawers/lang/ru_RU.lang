@@ -1,0 +1,38 @@
+itemGroup.storageDrawers=Storage Drawers
+
+item.upgrade.iron.name=Улучшение ящиков (II)
+item.upgrade.gold.name=Улучшение ящиков (III)
+item.upgrade.obsidian.name=Улучшение ящиков (IV)
+item.upgrade.diamond.name=Улучшение ящиков (V)
+item.upgrade.emerald.name=Улучшение ящиков (VI)
+
+tile.fullDrawers2.oak.name=Ящик из дуба 1x2
+tile.fullDrawers2.spruce.name=Ящик из ели 1x2
+tile.fullDrawers2.birch.name=Ящик из берёзы 1x2
+tile.fullDrawers2.jungle.name=Ящик из тропического дерева 1x2
+tile.fullDrawers2.acacia.name=Ящик из акации 1x2
+tile.fullDrawers2.big_oak.name=Ящик из тёмного дуба 1x2
+
+tile.fullDrawers4.oak.name=Ящик из дуба 2x2
+tile.fullDrawers4.spruce.name=Ящик из ели 2x2
+tile.fullDrawers4.birch.name=Ящик из берёзы 2x2
+tile.fullDrawers4.jungle.name=Ящик из тропического дерева 2x2
+tile.fullDrawers4.acacia.name=Ящик из акации 2x2
+tile.fullDrawers4.big_oak.name=Ящик из тёмного дуба 2x2
+
+tile.halfDrawers2.oak.name=Компактный ящик из дуба 1x2
+tile.halfDrawers2.spruce.name=Компактный ящик из ели 1x2
+tile.halfDrawers2.birch.name=Компактный ящик из берёзы 1x2
+tile.halfDrawers2.jungle.name=Компактный ящик из тропического дерева 1x2
+tile.halfDrawers2.acacia.name=Компактный ящик из акации 1x2
+tile.halfDrawers2.big_oak.name=Компактный ящик из тёмного дуба 1x2
+
+tile.halfDrawers4.oak.name=Компактный ящик из дуба 2x2
+tile.halfDrawers4.spruce.name=Компактный ящик из ели 2x2
+tile.halfDrawers4.birch.name=Компактный ящик из берёзы 2x2
+tile.halfDrawers4.jungle.name=Компактный ящик из тропического дерева 2x2
+tile.halfDrawers4.acacia.name=Компактный ящик из акации 2x2
+tile.halfDrawers4.big_oak.name=Компактный ящик из тёмного дуба 2x2
+
+storageDrawers.drawers.description=Хранит %d стеков в ящике
+storageDrawers.upgrade.description=Увеличивает хранилище в %d раз по сравнению с базовым
