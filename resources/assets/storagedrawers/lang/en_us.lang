@@ -36,3 +36,7 @@ tile.halfDrawers4.big_oak.name=Compact Dark Oak Drawers 2x2
 
 storageDrawers.drawers.description=Holds %d stacks per drawer
 storageDrawers.upgrade.description=Increases storage to %d times base value
+
+storageDrawers.waila.empty=Empty
+storageDrawers.waila.level=Upgrade Level: %s
+storageDrawers.waila.drawer=Drawer #%s: %s
