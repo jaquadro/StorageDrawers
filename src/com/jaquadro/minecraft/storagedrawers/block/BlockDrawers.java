@@ -2,7 +2,6 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
@@ -313,6 +312,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             if (stack.hasTagCompound())
                 entity.getEntityItem().setTagCompound((NBTTagCompound)stack.getTagCompound().copy());
         }
+    }
+
+    @Override
+    public int damageDropped (int meta) {
+        return meta;
     }
 
     @Override
