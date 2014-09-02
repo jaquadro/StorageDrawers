@@ -234,6 +234,11 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
     }
 
     @Override
+    public boolean canUpdate () {
+        return false;
+    }
+
+    @Override
     public void readFromNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
 
