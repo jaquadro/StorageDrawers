@@ -1,0 +1,42 @@
+itemGroup.storageDrawers=Storage Drawers
+
+item.upgrade.iron.name=Mejora para Cajonera (II)
+item.upgrade.gold.name=Mejora para Cajonera (III)
+item.upgrade.obsidian.name=Mejora para Cajonera (IV)
+item.upgrade.diamond.name=Mejora para Cajonera (V)
+item.upgrade.emerald.name=Mejora para Cajonera (VI)
+
+tile.fullDrawers2.oak.name=Cajonera de Roble 1x2
+tile.fullDrawers2.spruce.name=Cajonera de Abeto 1x2
+tile.fullDrawers2.birch.name=Cajonera de Abedul 1x2
+tile.fullDrawers2.jungle.name=Cajonera de Selva 1x2
+tile.fullDrawers2.acacia.name=Cajonera de Acacia 1x2
+tile.fullDrawers2.big_oak.name=Cajonera de Roble Oscuro 1x2
+
+tile.fullDrawers4.oak.name=Cajonera de Roble 2x2
+tile.fullDrawers4.spruce.name=Cajonera de Abeto 2x2
+tile.fullDrawers4.birch.name=Cajonera de Abedul 2x2
+tile.fullDrawers4.jungle.name=Cajonera de Selva 2x2
+tile.fullDrawers4.acacia.name=Cajonera de Acacia 2x2
+tile.fullDrawers4.big_oak.name=Cajonera de Roble Oscuro 2x2
+
+tile.halfDrawers2.oak.name=Cajonera de Roble Compacta 1x2
+tile.halfDrawers2.spruce.name=Cajonera de Abeto Compacta 1x2
+tile.halfDrawers2.birch.name=Cajonera de Abedul Compacta 1x2
+tile.halfDrawers2.jungle.name=Cajonera de Selva Compacta 1x2
+tile.halfDrawers2.acacia.name=Cajonera de Acacia Compacta 1x2
+tile.halfDrawers2.big_oak.name=Cajonera de Roble Oscuro Compacta 1x2
+
+tile.halfDrawers4.oak.name=Cajonera de Roble Compacta 2x2
+tile.halfDrawers4.spruce.name=Cajonera de Abeto Compacta 2x2
+tile.halfDrawers4.birch.name=Cajonera de Abedul Compacta 2x2
+tile.halfDrawers4.jungle.name=Cajonera de Selva Compacta 2x2
+tile.halfDrawers4.acacia.name=Cajonera de Acacia Compacta 2x2
+tile.halfDrawers4.big_oak.name=Cajonera de Roble Oscuro Compacta 2x2
+
+storageDrawers.drawers.description=Almacena %d stacks por cajón
+storageDrawers.upgrade.description=Multiplica la capacidad por %d
+
+storageDrawers.waila.empty=Vacía
+storageDrawers.waila.level=Nivel de mejora: %s
+storageDrawers.waila.drawer=Cajonera #%s: %s
