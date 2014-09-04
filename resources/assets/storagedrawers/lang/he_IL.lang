@@ -34,8 +34,6 @@ tile.halfDrawers4.jungle.name=מגירות עץ ג'ונגל קטנות 2x2
 tile.halfDrawers4.acacia.name=מגירות שיטה קטנות 2x2
 tile.halfDrawers4.big_oak.name=מגירות אלון כהה קטנות 2x2
 
-storageDrawers.drawers.description=Holds %d stacks per drawer
-storageDrawers.upgrade.description=Increases storage to %d times base value
 storageDrawers.drawers.description=מכיל %d ערימות בכל מגירה
 storageDrawers.upgrade.description=מכפיל את כמות האכסון ב־%d
 
