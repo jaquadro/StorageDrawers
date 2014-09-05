@@ -303,7 +303,7 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
                 else
                     takeItemsFromSlot(i, -diff);
 
-                snapshotItems[i].stackSize = 64 - Math.min(63, data[i].remainingCapacity());
+                snapshotItems[i].stackSize = 64 - Math.min(64, data[i].remainingCapacity());
                 snapshotCounts[i] = snapshotItems[i].stackSize;
             }
         }
@@ -323,7 +323,7 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
 
         ItemStack stack = getItemsFromSlot(slot, getStackSize(slot));
         if (stack != null) {
-            stack.stackSize = 64 - Math.min(63, data[slot].remainingCapacity());
+            stack.stackSize = 64 - Math.min(64, data[slot].remainingCapacity());
             snapshotItems[slot] = stack;
             snapshotCounts[slot] = stack.stackSize;
         }
@@ -357,10 +357,25 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
         if (slot >= getSizeInventory())
             return;
 
-        int count = putItemsIntoSlot(slot, itemStack, itemStack.stackSize);
+        int insertCount = itemStack.stackSize;
+        if (snapshotItems[slot] != null)
+            insertCount = itemStack.stackSize - snapshotCounts[slot];
 
-        if (count > 0 && !worldObj.isRemote)
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        if (insertCount > 0) {
+            int count = putItemsIntoSlot(slot, itemStack, insertCount);
+            if (count > 0 && !worldObj.isRemote)
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+        else if (insertCount < 0) {
+            ItemStack rmStack = takeItemsFromSlot(slot, -insertCount);
+            if (rmStack != null && rmStack.stackSize > 0 && !worldObj.isRemote)
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+
+        if (snapshotItems[slot] != null) {
+            snapshotItems[slot].stackSize = 64 - Math.min(64, data[slot].remainingCapacity());
+            snapshotCounts[slot] = snapshotItems[slot].stackSize;
+        }
     }
 
     @Override
