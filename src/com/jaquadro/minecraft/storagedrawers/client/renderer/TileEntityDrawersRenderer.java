@@ -77,27 +77,37 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
                 double xunit = (drawerCount == 2) ? itemOffset2X[i] : itemOffset4X[i];
                 double yunit = (drawerCount == 2) ? itemOffset2Y[i] : itemOffset4Y[i];
-                double zunit = blockType ? 2 * unit : unit;
+                double zunit = blockType ? 1.95 * unit : unit;
 
                 double xc = 0, zc = 0;
+                double itemDepth = depth;
                 float r = 0;
+
+                if (blockType) {
+                    Block itemBlock = Block.getBlockFromItem(itemStack.getItem());
+                    itemBlock.setBlockBoundsForItemRender();
+                    
+                    double zDepth = 1 - itemBlock.getBlockBoundsMaxZ();
+                    itemDepth += zDepth * zunit; // zDepth;
+                }
+
                 switch (tileDrawers.getDirection()) {
                     case 3:
                         xc = xunit;
-                        zc = depth - zunit;
+                        zc = itemDepth - zunit;
                         r = 180;
                         break;
                     case 2:
                         xc = 1 - xunit;
-                        zc = 1 - depth + zunit;
+                        zc = 1 - itemDepth + zunit;
                         break;
                     case 5:
-                        xc = depth - zunit;
+                        xc = itemDepth - zunit;
                         zc = xunit;
                         r = -90;
                         break;
                     case 4:
-                        xc = 1 - depth + zunit;
+                        xc = 1 - itemDepth + zunit;
                         zc = 1 - xunit;
                         r = 90;
                         break;
