@@ -162,6 +162,10 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
         return data[slot].count;
     }
 
+    public int getItemCapacity (int slot) {
+        return data[slot].maxCapacity();
+    }
+
     public int getStackSize (int slot) {
         if (data[slot].getItem() == null)
             return 0;

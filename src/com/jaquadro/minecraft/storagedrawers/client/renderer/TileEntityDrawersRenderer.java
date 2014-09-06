@@ -86,7 +86,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 if (blockType) {
                     Block itemBlock = Block.getBlockFromItem(itemStack.getItem());
                     itemBlock.setBlockBoundsForItemRender();
-                    
+
                     double zDepth = 1 - itemBlock.getBlockBoundsMaxZ();
                     itemDepth += zDepth * zunit; // zDepth;
                 }
