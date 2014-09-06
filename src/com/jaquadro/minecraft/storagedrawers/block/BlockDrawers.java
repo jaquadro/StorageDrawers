@@ -154,29 +154,28 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public boolean onBlockActivated (World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        ItemStack item = player.inventory.getCurrentItem();
-        if (item == null || item.getItem() == null)
-            return false;
-
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, x, y, z);
+        ItemStack item = player.inventory.getCurrentItem();
 
-        if (item.getItem() == ModItems.upgrade) {
-            tileDrawers.setLevel(item.getItemDamage());
-            world.markBlockForUpdate(x, y, z);
+        if (item != null && item.getItem() != null) {
+            if (item.getItem() == ModItems.upgrade) {
+                tileDrawers.setLevel(item.getItemDamage());
+                world.markBlockForUpdate(x, y, z);
 
-            if (player != null && !player.capabilities.isCreativeMode) {
-                if (--item.stackSize <= 0)
-                    player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                if (player != null && !player.capabilities.isCreativeMode) {
+                    if (--item.stackSize <= 0)
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                }
+
+                return true;
             }
-
-            return true;
         }
 
         if (tileDrawers.getDirection() != side)
             return false;
 
         int slot = getDrawerSlot(side, hitX, hitY, hitZ);
-        int countAdded = tileDrawers.putItemsIntoSlot(slot, item, item.stackSize);
+        int countAdded = tileDrawers.interactPutItemsIntoSlot(slot, player);
 
         //if (countAdded > 0)
         //    world.markBlockForUpdate(x, y, z);

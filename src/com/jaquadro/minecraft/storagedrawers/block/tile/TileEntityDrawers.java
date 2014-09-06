@@ -14,6 +14,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.UUID;
+
 public class TileEntityDrawers extends TileEntity implements ISidedInventory
 {
     private class DrawerData {
@@ -100,6 +102,9 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
     private int[] snapshotCounts;
 
     private int[] autoSides = new int[] { 0, 1 };
+
+    private long lastClickTime;
+    private UUID lastClickUUID;
 
     public TileEntityDrawers () {
         setDrawerCount(2);
@@ -188,6 +193,32 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
             data[slot].reset();
 
         return stack;
+    }
+
+    public int interactPutItemsIntoSlot (int slot, EntityPlayer player) {
+        int count = 0;
+
+        ItemStack currentStack = player.inventory.getCurrentItem();
+        if (currentStack != null)
+            count += putItemsIntoSlot(slot, currentStack, currentStack.stackSize);
+
+        if (worldObj.getWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID)) {
+            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                ItemStack subStack = player.inventory.getStackInSlot(i);
+                if (subStack != null) {
+                    int subCount = putItemsIntoSlot(slot, subStack, subStack.stackSize);
+                    if (subCount > 0 && subStack.stackSize == 0)
+                        player.inventory.setInventorySlotContents(i, null);
+
+                    count += subCount;
+                }
+            }
+        }
+
+        lastClickTime = worldObj.getWorldTime();
+        lastClickUUID = player.getPersistentID();
+
+        return count;
     }
 
     public int putItemsIntoSlot (int slot, ItemStack stack, int count) {
