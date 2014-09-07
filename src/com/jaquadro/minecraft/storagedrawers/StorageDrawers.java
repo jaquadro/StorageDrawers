@@ -1,7 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers;
 
+import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -9,12 +12,15 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = StorageDrawers.MOD_ID, name = StorageDrawers.MOD_NAME, version = StorageDrawers.MOD_VERSION, dependencies = "after:waila;")
+import java.io.File;
+
+@Mod(modid = StorageDrawers.MOD_ID, name = StorageDrawers.MOD_NAME, version = StorageDrawers.MOD_VERSION, dependencies = "after:waila;", guiFactory = StorageDrawers.SOURCE_PATH + "core.ModGuiFactory")
 public class StorageDrawers
 {
     public static final String MOD_ID = "StorageDrawers";
@@ -27,6 +33,7 @@ public class StorageDrawers
     public static final ModRecipes recipes = new ModRecipes();
 
     public static SimpleNetworkWrapper network;
+    public static ConfigManager config;
 
     @Mod.Instance(MOD_ID)
     public static StorageDrawers instance;
@@ -36,6 +43,8 @@ public class StorageDrawers
 
     @Mod.EventHandler
     public void preInit (FMLPreInitializationEvent event) {
+        config = new ConfigManager(new File(event.getModConfigurationDirectory(), MOD_ID + ".cfg"));
+
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
         network.registerMessage(BlockClickMessage.Handler.class, BlockClickMessage.class, 0, Side.SERVER);
 
@@ -51,11 +60,18 @@ public class StorageDrawers
     public void init (FMLInitializationEvent event) {
         proxy.registerRenderers();
 
+        FMLCommonHandler.instance().bus().register(instance);
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
     }
 
     @Mod.EventHandler
     public void postInit (FMLPostInitializationEvent event) {
         recipes.init();
+    }
+
+    @SubscribeEvent
+    public void onConfigChanged (ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.modID.equals(MOD_ID))
+            config.syncConfig();
     }
 }

@@ -1,11 +1,13 @@
 itemGroup.storageDrawers=Storage Drawers
 
+# Items
 item.upgrade.iron.name=Drawer Upgrade (II)
 item.upgrade.gold.name=Drawer Upgrade (III)
 item.upgrade.obsidian.name=Drawer Upgrade (IV)
 item.upgrade.diamond.name=Drawer Upgrade (V)
 item.upgrade.emerald.name=Drawer Upgrade (VI)
 
+# Blocks
 tile.fullDrawers2.oak.name=Oak Drawers 1x2
 tile.fullDrawers2.spruce.name=Spruce Drawers 1x2
 tile.fullDrawers2.birch.name=Birch Drawers 1x2
@@ -37,6 +39,24 @@ tile.halfDrawers4.big_oak.name=Compact Dark Oak Drawers 2x2
 storageDrawers.drawers.description=Holds %d stacks per drawer
 storageDrawers.upgrade.description=Increases storage to %d times base value
 
+# Integration
 storageDrawers.waila.empty=Empty
 storageDrawers.waila.level=Upgrade Level: %s
 storageDrawers.waila.drawer=Drawer #%s: %s
+
+# Configuration
+storageDrawers.config.title=Storage Drawers Configuration
+
+storageDrawers.config.general=General Settings
+storageDrawers.config.general.tooltip=This and that.
+
+storageDrawers.config.blocks=Block Settings
+storageDrawers.config.blocks.tooltip=Configure individual storage blocks.
+
+storageDrawers.config.blocks.fullDrawers2=Drawers 1x2
+storageDrawers.config.blocks.fullDrawers4=Drawers 2x2
+storageDrawers.config.blocks.halfDrawers2=Compact Drawers 1x2
+storageDrawers.config.blocks.halfDrawers4=Compact Drawers 2x2
+
+storageDrawers.config.upgrades=Upgrade Settings
+storageDrawers.config.upgrades.tooltip=Configure individual storage upgrades.
