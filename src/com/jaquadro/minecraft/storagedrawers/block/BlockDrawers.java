@@ -180,7 +180,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         //if (countAdded > 0)
         //    world.markBlockForUpdate(x, y, z);
 
-        return countAdded > 0;
+        return true;
     }
 
     private int getDrawerSlot (int side, float hitX, float hitY, float hitZ) {
