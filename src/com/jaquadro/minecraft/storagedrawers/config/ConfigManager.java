@@ -7,6 +7,7 @@ import net.minecraftforge.common.config.Property;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +65,7 @@ public class ConfigManager
     public final ConfigSection sectionBlocksHalfDrawers1x2 = new ConfigSection(blockSections, sectionBlocks, "halfdrawers2", "blocks.halfDrawers2");
     public final ConfigSection sectionBlocksHalfDrawers2x2 = new ConfigSection(blockSections, sectionBlocks, "halfdrawers4", "blocks.halfDrawers4");
 
-    public Map<String, ConfigCategory> blockSubcategories;
+    public Map<String, ConfigSection> blockSectionsMap = new HashMap<String, ConfigSection>();
 
     private Property itemRenderType;
 
@@ -74,32 +75,35 @@ public class ConfigManager
         for (ConfigSection section : sections)
             section.getCategory();
 
-        for (ConfigSection section : blockSections)
+        for (ConfigSection section : blockSections) {
             section.getCategory();
+            blockSectionsMap.put(section.name, section);
+        }
 
         syncConfig();
     }
 
     public void syncConfig () {
-        itemRenderType = config.get(Configuration.CATEGORY_GENERAL, "Item Render Type", "fancy", null, new String[] { "fancy", "fast" });
+        itemRenderType = config.get(Configuration.CATEGORY_GENERAL, "itemRenderType", "fancy", null, new String[] { "fancy", "fast" });
+        itemRenderType.setLanguageKey(LANG_PREFIX + "prop.itemRenderType");
 
-        config.get(sectionBlocksFullDrawers1x2.getQualifiedName(), "enabled", true);
-        config.get(sectionBlocksFullDrawers1x2.getQualifiedName(), "baseStorage", 8);
+        config.get(sectionBlocksFullDrawers1x2.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
+        config.get(sectionBlocksFullDrawers1x2.getQualifiedName(), "baseStorage", 8).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
 
-        config.get(sectionBlocksFullDrawers2x2.getQualifiedName(), "enabled", true);
-        config.get(sectionBlocksFullDrawers2x2.getQualifiedName(), "baseStorage", 4);
+        config.get(sectionBlocksFullDrawers2x2.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
+        config.get(sectionBlocksFullDrawers2x2.getQualifiedName(), "baseStorage", 4).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
 
-        config.get(sectionBlocksHalfDrawers1x2.getQualifiedName(), "enabled", true);
-        config.get(sectionBlocksHalfDrawers1x2.getQualifiedName(), "baseStorage", 4);
+        config.get(sectionBlocksHalfDrawers1x2.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
+        config.get(sectionBlocksHalfDrawers1x2.getQualifiedName(), "baseStorage", 4).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
 
-        config.get(sectionBlocksHalfDrawers2x2.getQualifiedName(), "enabled", true);
-        config.get(sectionBlocksHalfDrawers2x2.getQualifiedName(), "baseStorage", 2);
+        config.get(sectionBlocksHalfDrawers2x2.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
+        config.get(sectionBlocksHalfDrawers2x2.getQualifiedName(), "baseStorage", 2).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
 
         if (config.hasChanged())
             config.save();
     }
 
-    public boolean fancyItemRenderEnabled () {
+    public boolean isFancyItemRenderEnabled () {
         if (itemRenderType.getString().equals("fancy"))
             return true;
         return false;
@@ -109,7 +113,19 @@ public class ConfigManager
         return config.toString();
     }
 
-    private String getBlockName (Block block) {
-        return block.getUnlocalizedName().replace("tile.", "");
+    public boolean isBlockEnabled (String blockName) {
+        if (!blockSectionsMap.containsKey(blockName))
+            return false;
+
+        ConfigSection section = blockSectionsMap.get(blockName);
+        return section.getCategory().get("enabled").getBoolean();
+    }
+
+    public int getBlockBaseStorage (String blockName) {
+        if (!blockSectionsMap.containsKey(blockName))
+            return 0;
+
+        ConfigSection section = blockSectionsMap.get(blockName);
+        return section.getCategory().get("baseStorage").getInt();
     }
 }
