@@ -80,6 +80,13 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
             return item.getItemStackLimit(protoStack) * stackCapacity();
         }
 
+        public int stackSize () {
+            if (item == null)
+                return 0;
+
+            return item.getItemStackLimit(protoStack);
+        }
+
         public int remainingCapacity () {
             if (item == null)
                 return 0;
@@ -163,10 +170,7 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
     }
 
     public int getStackSize (int slot) {
-        if (data[slot].getItem() == null)
-            return 0;
-
-        return data[slot].getItem().getItemStackLimit(null);
+        return data[slot].stackSize();
     }
 
     public ItemStack getSingleItemStack (int slot) {
