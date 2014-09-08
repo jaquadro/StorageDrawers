@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
@@ -138,16 +139,18 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     private float itemOffset4X[] = new float[] { .25f, .25f, .75f, .75f };
     private float itemOffset4Y[] = new float[] { 10.25f, 2.25f, 10.25f, 2.25f };
 
+    private RenderBlocks renderBlocks = new RenderBlocks();
+
     @Override
     public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime) {
         TileEntityDrawers tileDrawers = (TileEntityDrawers) tile;
         if (tileDrawers == null)
             return;
 
+        saveGLState();
+
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
-
-        //GL11.glEnable(GL11.GL_LIGHTING);
 
         int drawerCount = tileDrawers.getDrawerCount();
         float depth = 1;
@@ -161,7 +164,16 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         itemRenderer.setRenderManager(RenderManager.instance);
 
+        ForgeDirection side = ForgeDirection.getOrientation(tileDrawers.getDirection());
+        int ambLight = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ, 0);
+        int lu = ambLight % 65536;
+        int lv = ambLight / 65536;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lu, lv);
+
         for (int i = 0; i < drawerCount; i++) {
+            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glDisable(GL11.GL_LIGHTING);
+
             ItemStack itemStack = tileDrawers.getSingleItemStack(i);
             if (itemStack != null) {
                 GL11.glPushMatrix();
@@ -209,17 +221,15 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 boolean cache = mc.gameSettings.fancyGraphics;
                 mc.gameSettings.fancyGraphics = true;
 
-                ForgeDirection side = ForgeDirection.getOrientation(tileDrawers.getDirection());
-
                 if (StorageDrawers.config.isFancyItemRenderEnabled()) {
                     if (blockType) {
                         GL11.glTranslatef(xc, unit * (yunit + 1.25f), zc);
                         GL11.glScalef(1, 1, 1);
-                        GL11.glRotatef(getRotationYForSide(side, side) - 90.0F, 0.0F, 1.0F, 0.0F);
+                        GL11.glRotatef(getRotationYForSide(side) - 90.0F, 0.0F, 1.0F, 0.0F);
                     } else {
                         GL11.glTranslatef(xc, unit * yunit, zc);
                         GL11.glScalef(.6f, .6f, .6f);
-                        GL11.glRotatef(getRotationYForSide(side, side), 0.0F, 1.0F, 0.0F);
+                        GL11.glRotatef(getRotationYForSide(side), 0.0F, 1.0F, 0.0F);
                     }
 
                     EntityItem itemEnt = new EntityItem(null, 0, 0, 0, itemStack);
@@ -227,10 +237,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                     itemRenderer.doRender(itemEnt, 0, 0, 0, 0, 0);
                 }
                 else {
-                    alignRendering(side, side);
-                    moveRendering(.25f, xunit * 16 - 2, yunit, .999f - depth + unit);
+                    alignRendering(side);
+                    moveRendering(.25f, getOffsetXForSide(side, xunit) * 16 - 2, 12.5f - yunit, .999f - depth + unit);
 
-                    itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0);
+                    if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
+                        itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0, true);
                 }
 
                 mc.gameSettings.fancyGraphics = cache;
@@ -240,12 +251,14 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         }
 
         GL11.glPopMatrix();
+
+        loadGLState();
     }
 
-    private void alignRendering (ForgeDirection side, ForgeDirection orientation) {
+    private void alignRendering (ForgeDirection side) {
         GL11.glTranslatef(.5f, .5f, .5f);
         GL11.glRotatef(180f, 0, 0, 1f);     // Render is upside-down: correct it.
-        GL11.glRotatef(getRotationYForSide(side, orientation), 0, 1, 0);
+        GL11.glRotatef(getRotationYForSide(side), 0, 1, 0);
         GL11.glTranslatef(-.5f, -.5f, -.5f);
     }
 
@@ -258,7 +271,33 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
     private static final float[] sideRotationY = { 0, 0, 0, 2, 3, 1 };
 
-    private float getRotationYForSide (ForgeDirection side, ForgeDirection orientation) {
+    private float getRotationYForSide (ForgeDirection side) {
         return sideRotationY[side.ordinal()] * 90;
+    }
+
+    private static final float[] offsetX = { 0, 0, 0, 0, 1, 1 };
+
+    private float getOffsetXForSide (ForgeDirection side, float x) {
+        return Math.abs(offsetX[side.ordinal()] - x);
+    }
+
+    private boolean blendEnabled;
+    private boolean lightEnabled;
+
+    private void saveGLState () {
+        blendEnabled = GL11.glGetBoolean(GL11.GL_BLEND);
+        lightEnabled = GL11.glGetBoolean(GL11.GL_LIGHTING);
+    }
+
+    private void loadGLState () {
+        if (blendEnabled)
+            GL11.glEnable(GL11.GL_BLEND);
+        else
+            GL11.glDisable(GL11.GL_BLEND);
+
+        if (lightEnabled)
+            GL11.glEnable(GL11.GL_LIGHTING);
+        else
+            GL11.glDisable(GL11.GL_LIGHTING);
     }
 }
