@@ -1,7 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -49,14 +51,17 @@ public class ItemDrawers extends ItemMultiTexture
     @SideOnly(Side.CLIENT)
     public void addInformation (ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         Block block = Block.getBlockFromItem(itemStack.getItem());
+        ConfigManager config = StorageDrawers.config;
 
         int count = 0;
         if (block == ModBlocks.fullDrawers2)
-            count = 8;
-        else if (block == ModBlocks.fullDrawers4 || block == ModBlocks.halfDrawers2)
-            count = 4;
+            count = config.getBlockBaseStorage("fulldrawers2");
+        else if (block == ModBlocks.fullDrawers4)
+            count = config.getBlockBaseStorage("fulldrawers4");
+        else if (block == ModBlocks.halfDrawers2)
+            count = config.getBlockBaseStorage("halfdrawers2");
         else if (block == ModBlocks.halfDrawers4)
-            count = 2;
+            count = config.getBlockBaseStorage("halfdrawers4");
 
         list.add(StatCollector.translateToLocalFormatted("storageDrawers.drawers.description", count));
     }
