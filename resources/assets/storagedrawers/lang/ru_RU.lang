@@ -37,6 +37,6 @@ tile.halfDrawers4.big_oak.name=Компактный ящик из тёмного
 storageDrawers.drawers.description=Хранит %d стеков в ящике
 storageDrawers.upgrade.description=Увеличивает хранилище в %d раз по сравнению с базовым
 
-storageDrawers.waila.empty=Empty
-storageDrawers.waila.level=Upgrade Level: %s
-storageDrawers.waila.drawer=Drawer #%s: %s
+storageDrawers.waila.empty=Пусто
+storageDrawers.waila.level=Уровень улучшения: %s
+storageDrawers.waila.drawer=Ящик #%s: %s
