@@ -1,0 +1,69 @@
+itemGroup.storageDrawers=储物抽屉
+
+# Items
+item.upgrade.iron.name=抽屉容量升级 (II)
+item.upgrade.gold.name=抽屉容量升级 (III)
+item.upgrade.obsidian.name=抽屉容量升级 (IV)
+item.upgrade.diamond.name=抽屉容量升级 (V)
+item.upgrade.emerald.name=抽屉容量升级 (VI)
+
+# Blocks
+tile.fullDrawers2.oak.name=橡木抽屉 (1x2)
+tile.fullDrawers2.spruce.name=云杉木抽屉 (1x2)
+tile.fullDrawers2.birch.name=白桦木抽屉 (1x2)
+tile.fullDrawers2.jungle.name=丛林木抽屉 (1x2)
+tile.fullDrawers2.acacia.name=金合欢木抽屉 (1x2)
+tile.fullDrawers2.big_oak.name=深色橡木抽屉 (1x2)
+
+tile.fullDrawers4.oak.name=橡木抽屉 (2x2)
+tile.fullDrawers4.spruce.name=云杉木抽屉 (2x2)
+tile.fullDrawers4.birch.name=白桦木抽屉 (2x2)
+tile.fullDrawers4.jungle.name=丛林木抽屉 (2x2)
+tile.fullDrawers4.acacia.name=金合欢木抽屉 (2x2)
+tile.fullDrawers4.big_oak.name=深色橡木抽屉 (2x2)
+
+tile.halfDrawers2.oak.name=小型橡木抽屉 (1x2)
+tile.halfDrawers2.spruce.name=小型云杉木抽屉 (1x2)
+tile.halfDrawers2.birch.name=小型白桦木抽屉 (1x2)
+tile.halfDrawers2.jungle.name=小型丛林木抽屉 (1x2)
+tile.halfDrawers2.acacia.name=小型金合欢木抽屉 (1x2)
+tile.halfDrawers2.big_oak.name=小型深色橡木抽屉 (1x2)
+
+tile.halfDrawers4.oak.name=小型橡木抽屉 (2x2)
+tile.halfDrawers4.spruce.name=小型云杉木抽屉 (2x2)
+tile.halfDrawers4.birch.name=小型白桦木抽屉 (2x2)
+tile.halfDrawers4.jungle.name=小型丛林木抽屉 (2x2)
+tile.halfDrawers4.acacia.name=小型金合欢木抽屉 (2x2)
+tile.halfDrawers4.big_oak.name=小型深色橡木抽屉 (2x2)
+
+storageDrawers.drawers.description=每个抽屉门可以储存 %d 组同类物品
+storageDrawers.upgrade.description=将抽屉容量升级为其基础容量的 %d 倍
+
+# Integration
+storageDrawers.waila.empty=空的
+storageDrawers.waila.level=抽屉等级: %s
+storageDrawers.waila.drawer=抽屉门 #%s: %s
+
+# Configuration
+storageDrawers.config.title=储物抽屉模组配置
+
+storageDrawers.config.general=一般设定
+storageDrawers.config.general.tooltip=各种各样的一般设定.
+
+storageDrawers.config.blocks=抽屉设定
+storageDrawers.config.blocks.tooltip=设置关于储物抽屉的配置.
+
+storageDrawers.config.blocks.fullDrawers2=1x2 抽屉
+storageDrawers.config.blocks.fullDrawers4=2x2 抽屉
+storageDrawers.config.blocks.halfDrawers2=1x2 小型抽屉
+storageDrawers.config.blocks.halfDrawers4=2x2 小型抽屉
+
+storageDrawers.config.upgrades=升级设定
+storageDrawers.config.upgrades.tooltip=设置关于升级抽屉的配置.
+
+storageDrawers.config.prop.itemRenderType=物品渲染设定
+storageDrawers.config.prop.itemRenderType.tooltip=调整是否渲染3D物品
+storageDrawers.config.prop.enabled=启用
+storageDrawers.config.prop.enabled.tooltip=在游戏中启用本模组中的物品.
+storageDrawers.config.prop.baseStorage=基础容量
+storageDrawers.config.prop.baseStorage.tooltip=每个抽屉门可容纳的物品组数量
