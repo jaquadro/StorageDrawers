@@ -26,6 +26,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
 public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
@@ -53,22 +54,28 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         @Override
         public void renderItemIntoGUI (FontRenderer fontRenderer, TextureManager texManager, ItemStack itemStack, int x, int y, boolean renderEffect) {
-            if (itemStack.getItemSpriteNumber() == 0 && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType()))
+            if (itemStack.getItemSpriteNumber() == 0 && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType())) {
                 super.renderItemIntoGUI(fontRenderer, texManager, itemStack, x, y, renderEffect);
-            else if (itemStack.getItem().requiresMultipleRenderPasses())
-                renderItemIntoGUIMultiPass(texManager, itemStack, x, y, renderEffect);
-            else
-                super.renderItemIntoGUI(fontRenderer, texManager, itemStack, x, y, renderEffect);
-        }
+                return;
+            }
 
-        private void renderItemIntoGUIMultiPass (TextureManager texManager, ItemStack itemStack, int x, int y, boolean renderEffect) {
             Item item = itemStack.getItem();
             int meta = itemStack.getItemDamage();
 
+            ResourceLocation loc = itemStack.getItem().requiresMultipleRenderPasses()
+                ? (item.getSpriteNumber() == 0 ? TextureMap.locationBlocksTexture : TextureMap.locationItemsTexture)
+                : (texManager.getResourceLocation(itemStack.getItemSpriteNumber()));
+
             for (int i = 0; i < item.getRenderPasses(meta); ++i) {
                 OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-                texManager.bindTexture(item.getSpriteNumber() == 0 ? TextureMap.locationBlocksTexture : TextureMap.locationItemsTexture);
-                IIcon icon = item.getIcon(itemStack, i);
+                texManager.bindTexture(loc);
+
+                IIcon icon = itemStack.getItem().requiresMultipleRenderPasses()
+                    ? item.getIcon(itemStack, i)
+                    : itemStack.getIconIndex();
+
+                if (icon == null)
+                    continue;
 
                 int color = itemStack.getItem().getColorFromItemStack(itemStack, i);
                 float r = (float)(color >> 16 & 255) / 255.0F;
@@ -76,21 +83,25 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 float b = (float)(color & 255) / 255.0F;
 
                 if (renderWithColor)
-                    GL11.glColor4f(r, g, b, 1.0F);
+                    GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0F);
 
                 GL11.glDisable(GL11.GL_LIGHTING);
+                //GL11.glEnable(GL11.GL_LIGHTING);
+                GL11.glEnable(GL11.GL_BLEND);
                 GL11.glEnable(GL11.GL_ALPHA_TEST);
 
                 renderIcon(x, y, icon, 16, 16);
 
                 GL11.glDisable(GL11.GL_ALPHA_TEST);
+                GL11.glDisable(GL11.GL_BLEND);
+                //GL11.glDisable(GL11.GL_LIGHTING);
                 GL11.glEnable(GL11.GL_LIGHTING);
 
                 if (renderEffect && itemStack.hasEffect(i))
                     renderEffect(texManager, x, y);
             }
 
-            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL11.GL_CULL_FACE);
         }
 
         @Override
@@ -141,6 +152,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
     private RenderBlocks renderBlocks = new RenderBlocks();
 
+    private float brightness;
+
     @Override
     public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime) {
         TileEntityDrawers tileDrawers = (TileEntityDrawers) tile;
@@ -170,9 +183,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         int lv = ambLight / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lu, lv);
 
+        brightness = tile.getWorldObj().getLightBrightness(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ);
+
         for (int i = 0; i < drawerCount; i++) {
             GL11.glDisable(GL11.GL_BLEND);
-            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL11.GL_LIGHTING);
 
             ItemStack itemStack = tileDrawers.getSingleItemStack(i);
             if (itemStack != null) {
