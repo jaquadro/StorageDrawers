@@ -50,9 +50,18 @@ public class ConfigManager
         }
     }
 
+    private class ConfigCache {
+        public int level2Mult;
+        public int level3Mult;
+        public int level4Mult;
+        public int level5Mult;
+        public int level6Mult;
+    }
+
     private static final String LANG_PREFIX = "storageDrawers.config.";
 
     private final Configuration config;
+    private final ConfigCache cache;
 
     public final List<ConfigSection> sections = new ArrayList<ConfigSection>();
     public final ConfigSection sectionGeneral = new ConfigSection(sections, "general", "general");
@@ -69,8 +78,11 @@ public class ConfigManager
 
     private Property itemRenderType;
 
+
+
     public ConfigManager (File file) {
         config = new Configuration(file);
+        cache = new ConfigCache();
 
         for (ConfigSection section : sections)
             section.getCategory();
@@ -98,6 +110,12 @@ public class ConfigManager
 
         config.get(sectionBlocksHalfDrawers2x2.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksHalfDrawers2x2.getQualifiedName(), "baseStorage", 2).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
+
+        cache.level2Mult = config.get(sectionUpgrades.getQualifiedName(), "level2Mult", 2).setLanguageKey(LANG_PREFIX + "upgrades.level2Mult").setRequiresWorldRestart(true).getInt();
+        cache.level3Mult = config.get(sectionUpgrades.getQualifiedName(), "level3Mult", 3).setLanguageKey(LANG_PREFIX + "upgrades.level3Mult").setRequiresWorldRestart(true).getInt();
+        cache.level4Mult = config.get(sectionUpgrades.getQualifiedName(), "level4Mult", 5).setLanguageKey(LANG_PREFIX + "upgrades.level4Mult").setRequiresWorldRestart(true).getInt();
+        cache.level5Mult = config.get(sectionUpgrades.getQualifiedName(), "level5Mult", 8).setLanguageKey(LANG_PREFIX + "upgrades.level5Mult").setRequiresWorldRestart(true).getInt();
+        cache.level6Mult = config.get(sectionUpgrades.getQualifiedName(), "level6Mult", 13).setLanguageKey(LANG_PREFIX + "upgrades.level6Mult").setRequiresWorldRestart(true).getInt();
 
         if (config.hasChanged())
             config.save();
@@ -127,5 +145,16 @@ public class ConfigManager
 
         ConfigSection section = blockSectionsMap.get(blockName);
         return section.getCategory().get("baseStorage").getInt();
+    }
+
+    public int getStorageUpgradeMultiplier (int level) {
+        switch (level) {
+            case 2: return cache.level2Mult;
+            case 3: return cache.level3Mult;
+            case 4: return cache.level4Mult;
+            case 5: return cache.level5Mult;
+            case 6: return cache.level6Mult;
+            default: return 1;
+        }
     }
 }

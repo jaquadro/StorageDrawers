@@ -1,5 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -95,7 +97,8 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
         }
 
         public int stackCapacity () {
-            return level * drawerCapacity;
+            ConfigManager config = StorageDrawers.config;
+            return config.getStorageUpgradeMultiplier(level) * drawerCapacity;
         }
     }
 

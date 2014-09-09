@@ -61,6 +61,12 @@ storageDrawers.config.blocks.halfDrawers4=Compact Drawers 2x2
 storageDrawers.config.upgrades=Upgrade Settings
 storageDrawers.config.upgrades.tooltip=Configure individual storage upgrades.
 
+storageDrawers.config.upgrades.level2Mult=Storage Multiplier (II)
+storageDrawers.config.upgrades.level3Mult=Storage Multiplier (III)
+storageDrawers.config.upgrades.level4Mult=Storage Multiplier (IV)
+storageDrawers.config.upgrades.level5Mult=Storage Multiplier (V)
+storageDrawers.config.upgrades.level6Mult=Storage Multiplier (VI)
+
 storageDrawers.config.prop.itemRenderType=Item Render Type
 storageDrawers.config.prop.itemRenderType.tooltip=Render items in 3D or flat.
 storageDrawers.config.prop.enabled=Enabled
