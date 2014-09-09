@@ -76,7 +76,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         renderExterior(block, x, y, z, side, renderer);
 
-        if (tile.getLevel() > 1) {
+        if (tile.getLevel() > 1 && StorageDrawers.config.cache.renderStorageUpgrades) {
             for (int i = 0; i < 6; i++)
                 boxRenderer.setIcon(block.getOverlayIcon(world, x, y, z, i, tile.getLevel()), i);
 

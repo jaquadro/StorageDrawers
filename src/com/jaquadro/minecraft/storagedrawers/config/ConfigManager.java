@@ -50,7 +50,12 @@ public class ConfigManager
         }
     }
 
-    private class ConfigCache {
+    public class ConfigCache {
+        public boolean enableIndicatorUpgrades;
+        public boolean enableStorageUpgrades;
+        public boolean renderStorageUpgrades;
+        public String itemRenderType;
+
         public int level2Mult;
         public int level3Mult;
         public int level4Mult;
@@ -61,7 +66,7 @@ public class ConfigManager
     private static final String LANG_PREFIX = "storageDrawers.config.";
 
     private final Configuration config;
-    private final ConfigCache cache;
+    public final ConfigCache cache;
 
     public final List<ConfigSection> sections = new ArrayList<ConfigSection>();
     public final ConfigSection sectionGeneral = new ConfigSection(sections, "general", "general");
@@ -76,7 +81,7 @@ public class ConfigManager
 
     public Map<String, ConfigSection> blockSectionsMap = new HashMap<String, ConfigSection>();
 
-    private Property itemRenderType;
+    //private Property itemRenderType;
 
 
 
@@ -96,8 +101,10 @@ public class ConfigManager
     }
 
     public void syncConfig () {
-        itemRenderType = config.get(Configuration.CATEGORY_GENERAL, "itemRenderType", "fancy", null, new String[] { "fancy", "fast" });
-        itemRenderType.setLanguageKey(LANG_PREFIX + "prop.itemRenderType");
+        cache.enableIndicatorUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableIndicatorUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableIndicatorUpgrades").setRequiresMcRestart(true).getBoolean();
+        cache.enableStorageUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableStorageUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableStorageUpgrades").setRequiresMcRestart(true).getBoolean();
+        cache.itemRenderType = config.get(Configuration.CATEGORY_GENERAL, "itemRenderType", "fancy", null, new String[] { "fancy", "fast" }).setLanguageKey(LANG_PREFIX + "prop.itemRenderType").getString();
+        cache.renderStorageUpgrades = config.get(Configuration.CATEGORY_GENERAL, "renderStorageUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.renderStorageUpgrades").getBoolean();
 
         config.get(sectionBlocksFullDrawers1x2.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksFullDrawers1x2.getQualifiedName(), "baseStorage", 8).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
@@ -122,9 +129,7 @@ public class ConfigManager
     }
 
     public boolean isFancyItemRenderEnabled () {
-        if (itemRenderType.getString().equals("fancy"))
-            return true;
-        return false;
+        return cache.itemRenderType.equals("fancy");
     }
 
     public String getPath () {

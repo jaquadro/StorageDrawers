@@ -69,6 +69,9 @@ storageDrawers.config.upgrades.level6Mult=Storage Multiplier (VI)
 
 storageDrawers.config.prop.itemRenderType=Item Render Type
 storageDrawers.config.prop.itemRenderType.tooltip=Render items in 3D or flat.
+storageDrawers.config.prop.enableIndicatorUpgrades=Enable Indicator Upgrades
+storageDrawers.config.prop.enableStorageUpgrades=Enable Storage Upgrades
+storageDrawers.config.prop.renderStorageUpgrades=Render Storage Upgrades
 storageDrawers.config.prop.enabled=Enabled
 storageDrawers.config.prop.enabled.tooltip=Enable block in game.
 storageDrawers.config.prop.baseStorage=Base Storage
