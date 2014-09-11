@@ -40,3 +40,36 @@ storageDrawers.upgrade.description=Multiplica la capacidad por %d
 storageDrawers.waila.empty=Vacía
 storageDrawers.waila.level=Nivel de mejora: %s
 storageDrawers.waila.drawer=Cajonera #%s: %s
+
+# Configuration
+storageDrawers.config.title=Configuración de Storage Drawers
+
+storageDrawers.config.general=Configuración General
+storageDrawers.config.general.tooltip=Esto y aquello.
+
+storageDrawers.config.blocks=Configuración de Bloques
+storageDrawers.config.blocks.tooltip=Configura los bloques de almacenamiento individuales.
+
+storageDrawers.config.blocks.fullDrawers2=Cajoneras 1x2
+storageDrawers.config.blocks.fullDrawers4=Cajoneras 2x2
+storageDrawers.config.blocks.halfDrawers2=Cajoneras Compactas 1x2
+storageDrawers.config.blocks.halfDrawers4=Cajoneras Compactas 2x2
+
+storageDrawers.config.upgrades=Configuración de las Mejoras
+storageDrawers.config.upgrades.tooltip=Configura las mejoras de capacidad individuales.
+
+storageDrawers.config.upgrades.level2Mult=Multiplicador de Capacidad (II)
+storageDrawers.config.upgrades.level3Mult=Multiplicador de Capacidad (III)
+storageDrawers.config.upgrades.level4Mult=Multiplicador de Capacidad (IV)
+storageDrawers.config.upgrades.level5Mult=Mupliplicador de Capacidad (V)
+storageDrawers.config.upgrades.level6Mult=Multiplicador de Capacidad (VI)
+
+storageDrawers.config.prop.itemRenderType=Tipo de renderizado de los ítems
+storageDrawers.config.prop.itemRenderType.tooltip=Renderiza los ítems en 3D o plano. 
+storageDrawers.config.prop.enableIndicatorUpgrades=Enable Indicator Upgrades
+storageDrawers.config.prop.enableStorageUpgrades=Permite las mejoras de capacidad. 
+storageDrawers.config.prop.renderStorageUpgrades=Renderiza las mejoras de capacidad. 
+storageDrawers.config.prop.enabled=Permitido
+storageDrawers.config.prop.enabled.tooltip=Permitir el bloque en el juego.
+storageDrawers.config.prop.baseStorage=Capacidad básica. 
+storageDrawers.config.prop.baseStorage.tooltip=Número de stacks permitidos en cada cajón.
