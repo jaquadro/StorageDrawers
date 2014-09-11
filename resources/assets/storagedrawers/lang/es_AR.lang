@@ -66,7 +66,7 @@ storageDrawers.config.upgrades.level6Mult=Multiplicador de Capacidad (VI)
 
 storageDrawers.config.prop.itemRenderType=Tipo de renderizado de los ítems
 storageDrawers.config.prop.itemRenderType.tooltip=Renderiza los ítems en 3D o plano. 
-storageDrawers.config.prop.enableIndicatorUpgrades=Enable Indicator Upgrades
+storageDrawers.config.prop.enableIndicatorUpgrades=Permitir los indicadores de estado.
 storageDrawers.config.prop.enableStorageUpgrades=Permite las mejoras de capacidad. 
 storageDrawers.config.prop.renderStorageUpgrades=Renderiza las mejoras de capacidad. 
 storageDrawers.config.prop.enabled=Permitido
