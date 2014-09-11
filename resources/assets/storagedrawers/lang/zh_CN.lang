@@ -48,10 +48,10 @@ storageDrawers.waila.drawer=抽屉门 #%s: %s
 storageDrawers.config.title=储物抽屉模组配置
 
 storageDrawers.config.general=一般设定
-storageDrawers.config.general.tooltip=各种各样的一般设定.
+storageDrawers.config.general.tooltip=各种各样的普通设定
 
 storageDrawers.config.blocks=抽屉设定
-storageDrawers.config.blocks.tooltip=设置关于储物抽屉的配置.
+storageDrawers.config.blocks.tooltip=设定关于储物抽屉的配置
 
 storageDrawers.config.blocks.fullDrawers2=1x2 抽屉
 storageDrawers.config.blocks.fullDrawers4=2x2 抽屉
@@ -59,11 +59,17 @@ storageDrawers.config.blocks.halfDrawers2=1x2 小型抽屉
 storageDrawers.config.blocks.halfDrawers4=2x2 小型抽屉
 
 storageDrawers.config.upgrades=升级设定
-storageDrawers.config.upgrades.tooltip=设置关于升级抽屉的配置.
+storageDrawers.config.upgrades.tooltip=设定关于升级抽屉的配置
+
+storageDrawers.config.upgrades.level2Mult=抽屉容量翻倍升级 (II)
+storageDrawers.config.upgrades.level3Mult=抽屉容量翻倍升级 (III)
+storageDrawers.config.upgrades.level4Mult=抽屉容量翻倍升级 (IV)
+storageDrawers.config.upgrades.level5Mult=抽屉容量翻倍升级 (V)
+storageDrawers.config.upgrades.level6Mult=抽屉容量翻倍升级 (VI)
 
 storageDrawers.config.prop.itemRenderType=物品渲染设定
 storageDrawers.config.prop.itemRenderType.tooltip=调整是否渲染3D物品
 storageDrawers.config.prop.enabled=启用
 storageDrawers.config.prop.enabled.tooltip=在游戏中启用本模组中的物品.
 storageDrawers.config.prop.baseStorage=基础容量
-storageDrawers.config.prop.baseStorage.tooltip=每个抽屉门可容纳的物品组数量
+storageDrawers.config.prop.baseStorage.tooltip=设定每个抽屉门可容纳的物品组数量
