@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.item;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersBase;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import cpw.mods.fml.relauncher.Side;
@@ -30,18 +31,21 @@ public class ItemDrawers extends ItemMultiTexture
         if (!super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, metadata))
             return false;
 
-        TileEntityDrawers tile = (TileEntityDrawers) world.getTileEntity(x, y, z);
+        TileEntityDrawersBase tile = (TileEntityDrawersBase) world.getTileEntity(x, y, z);
         if (tile != null) {
             if (side > 1)
                 tile.setDirection(side);
 
             BlockDrawers block = (BlockDrawers) field_150939_a;
-            tile.setDrawerCount(block.drawerCount);
+            if (tile instanceof TileEntityDrawers)
+                ((TileEntityDrawers)tile).setDrawerCount(block.drawerCount);
 
             if (block.drawerCount == 2)
                 tile.setDrawerCapacity(block.halfDepth ? 4 : 8);
             else if (block.drawerCount == 4)
                 tile.setDrawerCapacity(block.halfDepth ? 2 : 4);
+            else if (block.drawerCount == 3)
+                tile.setDrawerCapacity(8);
         }
 
         return true;

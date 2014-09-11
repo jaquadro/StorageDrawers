@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.client.renderer;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersBase;
 import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
@@ -62,7 +63,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
     }
 
     private boolean renderWorldBlock (IBlockAccess world, int x, int y, int z, BlockDrawers block, int modelId, RenderBlocks renderer) {
-        TileEntityDrawers tile = block.getTileEntity(world, x, y, z);
+        TileEntityDrawersBase tile = block.getTileEntity(world, x, y, z);
         if (tile == null)
             return false;
 

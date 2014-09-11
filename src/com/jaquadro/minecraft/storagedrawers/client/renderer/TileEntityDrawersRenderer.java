@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.client.renderer;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -150,13 +151,16 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     private float itemOffset4X[] = new float[] { .25f, .25f, .75f, .75f };
     private float itemOffset4Y[] = new float[] { 10.25f, 2.25f, 10.25f, 2.25f };
 
+    private float itemOffset3X[] = new float[] { .5f, .25f, .75f };
+    private float itemOffset3Y[] = new float[] { 10.25f, 2.25f, 2.25f };
+
     private RenderBlocks renderBlocks = new RenderBlocks();
 
     private float brightness;
 
     @Override
     public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime) {
-        TileEntityDrawers tileDrawers = (TileEntityDrawers) tile;
+        TileEntityDrawersBase tileDrawers = (TileEntityDrawersBase) tile;
         if (tileDrawers == null)
             return;
 
@@ -197,9 +201,22 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                     && itemStack.getItem() instanceof ItemBlock
                     && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType());
 
+                float xunit, yunit;
+                if (drawerCount == 2) {
+                    xunit = itemOffset2X[i];
+                    yunit = itemOffset2Y[i];
+                }
+                else if (drawerCount == 3) {
+                    xunit = itemOffset3X[i];
+                    yunit = itemOffset3Y[i];
+                }
+                else {
+                    xunit = itemOffset4X[i];
+                    yunit = itemOffset4Y[i];
+                }
 
-                float xunit = (drawerCount == 2) ? itemOffset2X[i] : itemOffset4X[i];
-                float yunit = (drawerCount == 2) ? itemOffset2Y[i] : itemOffset4Y[i];
+                //float xunit = (drawerCount == 2) ? itemOffset2X[i] : itemOffset4X[i];
+                //float yunit = (drawerCount == 2) ? itemOffset2Y[i] : itemOffset4Y[i];
                 float zunit = blockType ? 1.95f * unit : unit;
 
                 float xc = 0, zc = 0;

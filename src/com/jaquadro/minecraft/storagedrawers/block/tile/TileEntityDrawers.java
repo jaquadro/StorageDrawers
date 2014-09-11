@@ -18,9 +18,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.UUID;
 
-public class TileEntityDrawers extends TileEntity implements ISidedInventory
+public class TileEntityDrawers extends TileEntityDrawersBase implements IStorageProvider, ISidedInventory
 {
-    private class DrawerData {
+    /*private class DrawerData {
         private Item item;
         public int meta;
         public int count;
@@ -100,12 +100,12 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
             ConfigManager config = StorageDrawers.config;
             return config.getStorageUpgradeMultiplier(level) * drawerCapacity;
         }
-    }
+    }*/
 
-    private int direction;
+    //private int direction;
     private int drawerCount = 2;
-    private int drawerCapacity = 1;
-    private int level = 1;
+    //private int drawerCapacity = 1;
+    //private int level = 1;
 
     private DrawerData[] data;
     private ItemStack[] snapshotItems;
@@ -120,14 +120,14 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
         setDrawerCount(2);
     }
 
-    public int getDirection () {
+    /*public int getDirection () {
         return direction;
     }
 
     public void setDirection (int direction) {
         this.direction = direction % 6;
         autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction] };
-    }
+    }*/
 
     public int getDrawerCount () {
         return drawerCount;
@@ -138,13 +138,13 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
 
         data = new DrawerData[drawerCount];
         for (int i = 0; i < data.length; i++)
-            data[i] = new DrawerData();
+            data[i] = new DrawerData(this, i);
 
         snapshotItems = new ItemStack[count];
         snapshotCounts = new int[count];
     }
 
-    public int getLevel () {
+    /*public int getLevel () {
         return level;
     }
 
@@ -154,26 +154,14 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
 
     public void setDrawerCapacity (int stackCount) {
         drawerCapacity = stackCount;
-    }
-
-    public int getSlotCount () {
-        return data.length;
-    }
-
-    public Item getItem (int slot) {
-        return data[slot].item;
-    }
-
-    public int getItemMeta (int slot) {
-        return data[slot].meta;
-    }
+    }*/
 
     public int getItemCount (int slot) {
         return data[slot].count;
     }
 
-    public int getStackSize (int slot) {
-        return data[slot].stackSize();
+    public int getItemStackSize (int slot) {
+        return data[slot].itemStackMaxSize();
     }
 
     public ItemStack getSingleItemStack (int slot) {
@@ -272,6 +260,12 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
     }
 
     @Override
+    public int getSlotCapacity (int slot) {
+        ConfigManager config = StorageDrawers.config;
+        return config.getStorageUpgradeMultiplier(getLevel()) * getDrawerCapacity();
+    }
+
+    @Override
     public boolean canUpdate () {
         return false;
     }
@@ -280,21 +274,16 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
     public void readFromNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
 
-        direction = tag.getByte("Dir");
-        drawerCapacity = tag.getByte("Cap");
-        level = tag.getByte("Lev");
-
         NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
         drawerCount = slots.tagCount();
         data = new DrawerData[slots.tagCount()];
 
         for (int i = 0; i < data.length; i++) {
             NBTTagCompound slot = slots.getCompoundTagAt(i);
-            data[i] = new DrawerData();
+            data[i] = new DrawerData(this, i);
             data[i].readFromNBT(slot);
         }
 
-        autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction] };
         snapshotItems = new ItemStack[drawerCount];
         snapshotCounts = new int[drawerCount];
     }
@@ -302,10 +291,6 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
     @Override
     public void writeToNBT (NBTTagCompound tag) {
         super.writeToNBT(tag);
-
-        tag.setByte("Dir", (byte)direction);
-        tag.setByte("Cap", (byte)drawerCapacity);
-        tag.setByte("Lev", (byte)level);
 
         NBTTagList slots = new NBTTagList();
         for (int i = 0; i < data.length; i++) {
@@ -359,7 +344,7 @@ public class TileEntityDrawers extends TileEntity implements ISidedInventory
         if (slot >= getSizeInventory())
             return null;
 
-        ItemStack stack = getItemsFromSlot(slot, getStackSize(slot));
+        ItemStack stack = getItemsFromSlot(slot, getItemStackSize(slot));
         if (stack != null) {
             stack.stackSize = 64 - Math.min(64, data[slot].remainingCapacity());
             snapshotItems[slot] = stack;

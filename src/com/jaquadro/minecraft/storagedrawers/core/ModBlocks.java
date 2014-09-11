@@ -1,7 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
@@ -15,12 +17,14 @@ public class ModBlocks
     public static BlockDrawers fullDrawers4;
     public static BlockDrawers halfDrawers2;
     public static BlockDrawers halfDrawers4;
+    public static BlockCompDrawers compDrawers;
 
     public void init () {
         fullDrawers2 = new BlockDrawers("fullDrawers2", 2, false);
         fullDrawers4 = new BlockDrawers("fullDrawers4", 4, false);
         halfDrawers2 = new BlockDrawers("halfDrawers2", 2, true);
         halfDrawers4 = new BlockDrawers("halfDrawers4", 4, true);
+        compDrawers = new BlockCompDrawers("compDrawers");
 
         ConfigManager config = StorageDrawers.config;
 
@@ -40,6 +44,9 @@ public class ModBlocks
             GameRegistry.registerBlock(halfDrawers4, ItemDrawers.class, "halfDrawers4");
             GameRegistry.registerTileEntity(TileEntityDrawers.class, ModBlocks.getQualifiedName(halfDrawers4));
         }
+
+        GameRegistry.registerBlock(compDrawers, ItemDrawers.class, "compDrawers");
+        GameRegistry.registerTileEntity(TileEntityCompDrawers.class, ModBlocks.getQualifiedName(compDrawers));
     }
 
     public static String getQualifiedName (Block block) {
