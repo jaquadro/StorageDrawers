@@ -24,6 +24,7 @@ import java.util.List;
 
 public class TileEntityCompDrawers extends TileEntityDrawersBase implements IStorageProvider
 {
+    private static InventoryLookup lookup1 = new InventoryLookup(1, 1);
     private static InventoryLookup lookup2 = new InventoryLookup(2, 2);
     private static InventoryLookup lookup3 = new InventoryLookup(3, 3);
 
@@ -227,8 +228,10 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
     }
 
     private int remainingCapacity () {
-        ConfigManager config = StorageDrawers.config;
-        return getDrawerCapacity() * config.getStorageUpgradeMultiplier(getLevel()) * convRate[0] - pooledCount;
+        if (!isSlotValid(0))
+            return 0;
+
+        return data[0].maxCapacity() * convRate[0] - pooledCount;
     }
 
 
@@ -300,11 +303,24 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
 
         setupLookup(lookup3, stack);
         ItemStack match = cm.findMatchingRecipe(lookup3, worldObj);
-        if (match != null)
-            return match;
 
-        setupLookup(lookup2, stack);
-        return cm.findMatchingRecipe(lookup2, worldObj);
+        if (match == null) {
+            setupLookup(lookup2, stack);
+            match = cm.findMatchingRecipe(lookup2, worldObj);
+        }
+
+        if (match != null) {
+            int size = lookupSizeResult;
+
+            setupLookup(lookup1, match);
+            ItemStack comp = cm.findMatchingRecipe(lookup1, worldObj);
+            if (comp == null || !comp.isItemEqual(stack) || !ItemStack.areItemStackTagsEqual(comp, stack) || comp.stackSize != size)
+                return null;
+
+            lookupSizeResult = size;
+        }
+
+        return match;
     }
 
     private ItemStack findLowerTier (ItemStack stack) {
@@ -329,8 +345,12 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
                 match = tryMatch(stack, ((ShapedRecipes) recipe).recipeItems);
 
             if (match != null) {
-                lookupSizeResult = recipe.getRecipeSize();
-                return match;
+                setupLookup(lookup1, stack);
+                ItemStack comp = cm.findMatchingRecipe(lookup1, worldObj);
+                if (comp != null && comp.isItemEqual(match) && ItemStack.areItemStackTagsEqual(comp, match) && comp.stackSize == recipe.getRecipeSize()) {
+                    lookupSizeResult = recipe.getRecipeSize();
+                    return match;
+                }
             }
         }
 
