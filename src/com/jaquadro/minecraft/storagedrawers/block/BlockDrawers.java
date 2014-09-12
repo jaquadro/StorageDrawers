@@ -178,8 +178,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         int slot = getDrawerSlot(side, hitX, hitY, hitZ);
         int countAdded = tileDrawers.interactPutItemsIntoSlot(slot, player);
 
-        //if (countAdded > 0)
-        //    world.markBlockForUpdate(x, y, z);
+        if (countAdded > 0)
+            world.markBlockForUpdate(x, y, z);
 
         return true;
     }

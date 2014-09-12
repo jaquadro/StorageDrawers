@@ -22,7 +22,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class TileEntityCompDrawers extends TileEntityDrawersBase implements IStorageProvider
+public class TileEntityCompDrawers extends TileEntityDrawersBase implements IStorageProvider, ISidedInventory
 {
     private static InventoryLookup lookup1 = new InventoryLookup(1, 1);
     private static InventoryLookup lookup2 = new InventoryLookup(2, 2);
@@ -154,6 +154,8 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
         lastClickTime = worldObj.getWorldTime();
         lastClickUUID = player.getPersistentID();
 
+        markDirty();
+
         return count;
     }
 
@@ -241,7 +243,13 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
         return data[0].maxCapacity() * convRate[0] - pooledCount;
     }
 
+    private int remainingCapacity (int slot) {
+        if (!isSlotValid(slot))
+            return 0;
 
+        int adjCapacity = data[slot].maxCapacity() * convRate[slot] - pooledCount;
+        return adjCapacity / convRate[slot];
+    }
 
     private boolean isSlotValid (int slot) {
         return data[slot] != null && data[slot].getItem() != null;
@@ -435,6 +443,152 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
             inv.setInventorySlotContents(i, stack);
 
         lookupSizeResult = inv.getSizeInventory();
+    }
+
+    @Override
+    public int getSizeInventory () {
+        return 3;
+    }
+
+    @Override
+    public ItemStack getStackInSlot (int slot) {
+        if (slot >= getSizeInventory())
+            return null;
+
+        ItemStack stack = getItemsFromSlot(slot, getItemStackSize(slot));
+        if (stack != null) {
+            stack.stackSize = 64 - Math.min(64, remainingCapacity(slot));
+            snapshotItems[slot] = stack;
+            snapshotCounts[slot] = stack.stackSize;
+        }
+        else {
+            snapshotItems[slot] = null;
+            snapshotCounts[slot] = 0;
+        }
+
+        return stack;
+    }
+
+    @Override
+    public ItemStack decrStackSize (int slot, int count) {
+        if (slot >= getSizeInventory())
+            return null;
+
+        ItemStack stack = takeItemsFromSlot(slot, count);
+        if (stack != null && !worldObj.isRemote)
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+
+        return stack;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing (int slot) {
+        return null;
+    }
+
+    @Override
+    public void setInventorySlotContents (int slot, ItemStack itemStack) {
+        if (slot >= getSizeInventory())
+            return;
+
+        int insertCount = itemStack.stackSize;
+        if (snapshotItems[slot] != null)
+            insertCount = itemStack.stackSize - snapshotCounts[slot];
+
+        if (insertCount > 0) {
+            int count = putItemsIntoSlot(slot, itemStack, insertCount);
+            if (count > 0 && !worldObj.isRemote)
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+        else if (insertCount < 0) {
+            ItemStack rmStack = takeItemsFromSlot(slot, -insertCount);
+            if (rmStack != null && rmStack.stackSize > 0 && !worldObj.isRemote)
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+
+        if (snapshotItems[slot] != null) {
+            snapshotItems[slot].stackSize = 64 - Math.min(64, remainingCapacity(slot));
+            snapshotCounts[slot] = snapshotItems[slot].stackSize;
+        }
+    }
+
+    @Override
+    public String getInventoryName () {
+        return null;
+    }
+
+    @Override
+    public boolean hasCustomInventoryName () {
+        return false;
+    }
+
+    @Override
+    public int getInventoryStackLimit () {
+        return 64;
+    }
+
+    @Override
+    public boolean isUseableByPlayer (EntityPlayer player) {
+        return false;
+    }
+
+    @Override
+    public void openInventory () {
+
+    }
+
+    @Override
+    public void closeInventory () {
+
+    }
+
+    @Override
+    public boolean isItemValidForSlot (int slot, ItemStack itemStack) {
+        if (slot >= getSizeInventory())
+            return false;
+
+        if (!isSlotValid(0))
+            return true;
+
+        if (!itemMatchesForSlot(slot, itemStack))
+            return false;
+
+        if (remainingCapacity(slot) < itemStack.stackSize)
+            return false;
+
+        return true;
+    }
+
+    private static final int[] drawerSlots0 = new int[0];
+    private static final int[] drawerSlots3 = new int[] { 0, 1, 2 };
+
+    @Override
+    public int[] getAccessibleSlotsFromSide (int side) {
+        for (int i = 0; i < autoSides.length; i++) {
+            if (side == autoSides[i])
+                return drawerSlots3;
+        }
+
+        return drawerSlots0;
+    }
+
+    @Override
+    public boolean canInsertItem (int slot, ItemStack stack, int side) {
+        if (slot >= getSizeInventory())
+            return false;
+
+        for (int i = 0; i < autoSides.length; i++) {
+            if (side == autoSides[i]) {
+                return isItemValidForSlot(slot, stack);
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean canExtractItem (int slot, ItemStack stack, int side) {
+        return false;
     }
 }
 
