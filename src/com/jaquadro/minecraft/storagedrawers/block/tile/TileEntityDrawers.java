@@ -160,6 +160,10 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         return data[slot].count;
     }
 
+    public int getItemCapacity (int slot) {
+        return data[slot].maxCapacity();
+    }
+
     public int getItemStackSize (int slot) {
         return data[slot].itemStackMaxSize();
     }

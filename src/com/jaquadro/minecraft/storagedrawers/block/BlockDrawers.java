@@ -59,6 +59,13 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @SideOnly(Side.CLIENT)
     private IIcon[] iconOverlayCross;
 
+    @SideOnly(Side.CLIENT)
+    private IIcon iconIndicatorOn;
+    @SideOnly(Side.CLIENT)
+    private IIcon iconIndicatorAmber;
+    @SideOnly(Side.CLIENT)
+    private IIcon iconIndicatorOff;
+
     public BlockDrawers (String blockName, int drawerCount, boolean halfDepth) {
         super(Material.wood);
 
@@ -401,6 +408,25 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @SideOnly(Side.CLIENT)
+    public IIcon getIndicatorIcon (boolean on) {
+        return on ? iconIndicatorOn : iconIndicatorAmber;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public IIcon getIndicatorIcon (int level) {
+        switch (level) {
+            case 0:
+                return iconIndicatorOff;
+            case 1:
+                return iconIndicatorAmber;
+            case 2:
+                return iconIndicatorOn;
+            default:
+                return iconIndicatorOff;
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
     private IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side, int level) {
         int meta = blockAccess.getBlockMetadata(x, y, z) % BlockWood.field_150096_a.length;
 
@@ -467,5 +493,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             iconOverlayH[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i] + "_h");
             iconOverlayCross[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i] + "_cross");
         }
+
+        iconIndicatorOff = register.registerIcon(StorageDrawers.MOD_ID + ":indicator_off");
+        iconIndicatorAmber = register.registerIcon(StorageDrawers.MOD_ID + ":indicator_amber");
+        iconIndicatorOn = register.registerIcon(StorageDrawers.MOD_ID + ":indicator_on");
     }
 }

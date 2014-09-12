@@ -53,6 +53,8 @@ public abstract class TileEntityDrawersBase extends TileEntity
 
     public abstract int getItemStackSize (int slot);
 
+    public abstract int getItemCapacity (int slot);
+
     public abstract ItemStack getSingleItemStack (int slot);
 
     @Override

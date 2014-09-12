@@ -22,6 +22,8 @@ import org.lwjgl.opengl.GL11;
 
 public class DrawersRenderer implements ISimpleBlockRenderingHandler
 {
+    private static final double unit = .0625f;
+
     private ModularBoxRenderer boxRenderer = new ModularBoxRenderer();
 
     @Override
@@ -33,7 +35,6 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
     }
 
     private void renderInventoryBlock (BlockDrawers block, int metadata, int modelId, RenderBlocks renderer) {
-        double unit = .0625;
         int side = 4;
 
         boxRenderer.setUnit(unit);
@@ -91,7 +92,79 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         renderInterior(block, x, y, z, side, renderer);
 
+        boxRenderer.setIcon(block.getIndicatorIcon(false));
+        /*if (block.drawerCount == 2)
+            boxRenderer.renderExterior(renderer, block, x, y, z, unit * 14, unit * 1, unit * 15, unit * 15, unit * 15, unit * 15.5, 0,
+                ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_ZNEG);
+        else
+            boxRenderer.renderExterior(renderer, block, x, y, z, unit * 7, unit * 1, unit * 15, unit * 9, unit * 15, unit * 15.5, 0,
+                ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_ZNEG);*/
+
+        /*if (block.drawerCount == 2) {
+            boxRenderer.renderExterior(renderer, block, x, y, z, unit * 6, unit * 14, unit * 15, unit * 10, unit * 15, unit * 15.05, 0,
+                ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG);
+            boxRenderer.renderExterior(renderer, block, x, y, z, unit * 6, unit * 6, unit * 15, unit * 10, unit * 7, unit * 15.05, 0,
+                ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG);
+        }*/
+
+        renderHandleIndicator(block, x, y, z, side, renderer);
+
+        /*boxRenderer.renderExterior(renderer, block, x, y, z, unit * 14, unit * 14, unit * 15, unit * 15, unit * 15, unit * 16, 0,
+            ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_ZNEG);
+        if (block.drawerCount == 4)
+            boxRenderer.renderExterior(renderer, block, x, y, z, unit * 1, unit * 14, unit * 15, unit * 2, unit * 15, unit * 16, 0,
+                ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG);*/
+
         return true;
+    }
+
+    //private static double[] handleIndicatorX = new double[] { unit * 6, unit * 10, unit * 3, unit * 4, unit * 11, unit * 12 };
+    //private static double[] handleIndicatorXN = new double[] { 1 - unit * 6, 1 - unit * 10, 1 - unit * 3, 1 - unit * 4, 1 - unit * 11, 1 - unit * 12 };
+    //private static double[] handleIndicatorZ = new double[] { unit * 15.05, unit * 15.05, unit * 15.05, unit * 15.05, unit * 15.05, unit * 15.05 };
+    //private static double[] handleIndicatorZN = new double[] { unit * .95, unit * .95, unit * .95, unit * .95, unit * .96, unit * .95 };
+
+    private void renderHandleIndicator (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
+        TileEntityDrawersBase tile = block.getTileEntity(renderer.blockAccess, x, y, z);
+
+        double depth = block.halfDepth ? .5 : 1;
+        int cut2 = ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZPOS;
+        int cut3 = ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG;
+        int cut4 = ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_ZNEG | ModularBoxRenderer.CUT_ZPOS;
+        int cut5 = ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG | ModularBoxRenderer.CUT_ZPOS;
+
+        if (block.drawerCount == 2) {
+            int iconIndex0 = (tile.getItemCapacity(0) > 0 && tile.getItemCount(0) == tile.getItemCapacity(0)) ? 2
+                : (tile.getItemCapacity(0) > 0 && tile.getItemCount(0) / tile.getItemCapacity(0) > .75) ? 1 : 0;
+            int iconIndex1 = (tile.getItemCapacity(1) > 0 && tile.getItemCount(1) == tile.getItemCapacity(1)) ? 2
+                : (tile.getItemCapacity(1) > 0 && tile.getItemCount(1) / tile.getItemCapacity(1) > .75) ? 1 : 0;
+
+            switch (side) {
+                case 2:
+                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex0));
+                    boxRenderer.renderExterior(renderer, block, x, y, z, 1 - unit * 10, unit * 14, 1 - depth + unit * .95, 1 - unit * 6, unit * 15, 1 - depth + unit * 1, 0, cut2);
+                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex1));
+                    boxRenderer.renderExterior(renderer, block, x, y, z, 1 - unit * 10, unit * 6, 1 - depth + unit * .95, 1 - unit * 6, unit * 7, 1 - depth + unit * 1, 0, cut2);
+                    break;
+                case 3:
+                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex0));
+                    boxRenderer.renderExterior(renderer, block, x, y, z, unit * 6, unit * 14, depth - unit * 1, unit * 10, unit * 15, depth - unit * .95, 0, cut3);
+                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex1));
+                    boxRenderer.renderExterior(renderer, block, x, y, z, unit * 6, unit * 6, depth - unit * 1, unit * 10, unit * 7, depth - unit * .95, 0, cut3);
+                    break;
+                case 4:
+                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex0));
+                    boxRenderer.renderExterior(renderer, block, x, y, z, 1 - depth + unit * .95, unit * 14, 1 - unit * 10, 1 - depth + unit * 1, unit * 15, 1 - unit * 6, 0, cut4);
+                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex1));
+                    boxRenderer.renderExterior(renderer, block, x, y, z, 1 - depth + unit * .95, unit * 6, 1 - unit * 10, 1 - depth + unit * 1, unit * 7, 1 - unit * 6, 0, cut4);
+                    break;
+                case 5:
+                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex0));
+                    boxRenderer.renderExterior(renderer, block, x, y, z, depth - unit * 1, unit * 14, unit * 6, depth - unit * .95, unit * 15, unit * 10, 0, cut5);
+                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex1));
+                    boxRenderer.renderExterior(renderer, block, x, y, z, depth - unit * 1, unit * 6, unit * 6, depth - unit * .95, unit * 7, unit * 10, 0, cut5);
+                    break;
+            }
+        }
     }
 
     private void renderExterior (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {

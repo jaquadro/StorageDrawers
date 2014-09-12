@@ -60,6 +60,13 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
         return pooledCount / convRate[slot];
     }
 
+    public int getItemCapacity (int slot) {
+        if (!isSlotValid(slot))
+            return 0;
+
+        return data[slot].maxCapacity() * convRate[slot];
+    }
+
     public int getItemStackSize (int slot) {
         return data[slot].itemStackMaxSize();
     }
