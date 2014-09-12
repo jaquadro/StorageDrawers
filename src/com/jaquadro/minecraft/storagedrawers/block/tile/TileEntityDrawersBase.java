@@ -16,7 +16,7 @@ public abstract class TileEntityDrawersBase extends TileEntity
     private int drawerCapacity = 1;
     private int level = 1;
 
-    private int[] autoSides = new int[] { 0, 1 };
+    protected int[] autoSides = new int[] { 0, 1 };
 
     public int getDirection () {
         return direction;
