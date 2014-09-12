@@ -89,4 +89,11 @@ public class DrawerData
 
         return maxCapacity() - count;
     }
+
+    public boolean areItemsEqual (ItemStack stack) {
+        if (protoStack == null || stack == null)
+            return false;
+
+        return protoStack.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(protoStack, stack);
+    }
 }

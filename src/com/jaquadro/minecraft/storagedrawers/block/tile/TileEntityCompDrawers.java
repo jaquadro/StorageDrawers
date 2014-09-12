@@ -106,8 +106,15 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
     }
 
     public int putItemsIntoSlot (int slot, ItemStack stack, int count) {
-        if (!isSlotValid(0))
+        if (!isSlotValid(0)) {
             populateSlots(stack);
+            if (isSlotValid(0) && data[0].areItemsEqual(stack))
+                slot = 0;
+            else if (isSlotValid(1) && data[1].areItemsEqual(stack))
+                slot = 1;
+            else if (isSlotValid(2) && data[2].areItemsEqual(stack))
+                slot = 2;
+        }
 
         if (!itemMatchesForSlot(slot, stack))
             return 0;
