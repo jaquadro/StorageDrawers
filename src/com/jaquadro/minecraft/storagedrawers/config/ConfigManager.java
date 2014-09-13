@@ -78,6 +78,7 @@ public class ConfigManager
     public final ConfigSection sectionBlocksFullDrawers2x2 = new ConfigSection(blockSections, sectionBlocks, "fulldrawers4", "blocks.fullDrawers4");
     public final ConfigSection sectionBlocksHalfDrawers1x2 = new ConfigSection(blockSections, sectionBlocks, "halfdrawers2", "blocks.halfDrawers2");
     public final ConfigSection sectionBlocksHalfDrawers2x2 = new ConfigSection(blockSections, sectionBlocks, "halfdrawers4", "blocks.halfDrawers4");
+    public final ConfigSection sectionBlocksCompDrawers = new ConfigSection(blockSections, sectionBlocks, "compDrawers", "blocks.compDrawers");
 
     public Map<String, ConfigSection> blockSectionsMap = new HashMap<String, ConfigSection>();
 
@@ -117,6 +118,9 @@ public class ConfigManager
 
         config.get(sectionBlocksHalfDrawers2x2.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksHalfDrawers2x2.getQualifiedName(), "baseStorage", 2).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
+
+        config.get(sectionBlocksCompDrawers.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
+        config.get(sectionBlocksCompDrawers.getQualifiedName(), "baseStorage", 8).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
 
         cache.level2Mult = config.get(sectionUpgrades.getQualifiedName(), "level2Mult", 2).setLanguageKey(LANG_PREFIX + "upgrades.level2Mult").setRequiresWorldRestart(true).getInt();
         cache.level3Mult = config.get(sectionUpgrades.getQualifiedName(), "level3Mult", 3).setLanguageKey(LANG_PREFIX + "upgrades.level3Mult").setRequiresWorldRestart(true).getInt();

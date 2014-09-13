@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.item.ItemCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -45,7 +46,7 @@ public class ModBlocks
             GameRegistry.registerTileEntity(TileEntityDrawers.class, ModBlocks.getQualifiedName(halfDrawers4));
         }
 
-        GameRegistry.registerBlock(compDrawers, ItemDrawers.class, "compDrawers");
+        GameRegistry.registerBlock(compDrawers, ItemCompDrawers.class, "compDrawers");
         GameRegistry.registerTileEntity(TileEntityCompDrawers.class, ModBlocks.getQualifiedName(compDrawers));
     }
 

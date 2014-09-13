@@ -43,6 +43,8 @@ tile.halfDrawers4.jungle.name=Compact Jungle Drawers 2x2
 tile.halfDrawers4.acacia.name=Compact Acacia Drawers 2x2
 tile.halfDrawers4.big_oak.name=Compact Dark Oak Drawers 2x2
 
+tile.compDrawers.name=Compacting Drawer
+
 storageDrawers.drawers.description=Holds %d stacks per drawer
 storageDrawers.upgrade.description=Increases storage to %d times base value
 
@@ -64,6 +66,7 @@ storageDrawers.config.blocks.fullDrawers2=Drawers 1x2
 storageDrawers.config.blocks.fullDrawers4=Drawers 2x2
 storageDrawers.config.blocks.halfDrawers2=Compact Drawers 1x2
 storageDrawers.config.blocks.halfDrawers4=Compact Drawers 2x2
+storageDrawers.config.blocks.compDrawers=Compacting Drawer
 
 storageDrawers.config.upgrades=Upgrade Settings
 storageDrawers.config.upgrades.tooltip=Configure individual storage upgrades.

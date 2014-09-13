@@ -40,12 +40,7 @@ public class ItemDrawers extends ItemMultiTexture
             if (tile instanceof TileEntityDrawers)
                 ((TileEntityDrawers)tile).setDrawerCount(block.drawerCount);
 
-            if (block.drawerCount == 2)
-                tile.setDrawerCapacity(block.halfDepth ? 4 : 8);
-            else if (block.drawerCount == 4)
-                tile.setDrawerCapacity(block.halfDepth ? 2 : 4);
-            else if (block.drawerCount == 3)
-                tile.setDrawerCapacity(8);
+            tile.setDrawerCapacity(getCapacityForBlock(block));
         }
 
         return true;
@@ -55,9 +50,13 @@ public class ItemDrawers extends ItemMultiTexture
     @SideOnly(Side.CLIENT)
     public void addInformation (ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         Block block = Block.getBlockFromItem(itemStack.getItem());
-        ConfigManager config = StorageDrawers.config;
+        list.add(StatCollector.translateToLocalFormatted("storageDrawers.drawers.description", getCapacityForBlock(block)));
+    }
 
+    private int getCapacityForBlock (Block block) {
+        ConfigManager config = StorageDrawers.config;
         int count = 0;
+
         if (block == ModBlocks.fullDrawers2)
             count = config.getBlockBaseStorage("fulldrawers2");
         else if (block == ModBlocks.fullDrawers4)
@@ -66,7 +65,9 @@ public class ItemDrawers extends ItemMultiTexture
             count = config.getBlockBaseStorage("halfdrawers2");
         else if (block == ModBlocks.halfDrawers4)
             count = config.getBlockBaseStorage("halfdrawers4");
+        else if (block == ModBlocks.compDrawers)
+            count = config.getBlockBaseStorage("compDrawers");
 
-        list.add(StatCollector.translateToLocalFormatted("storageDrawers.drawers.description", count));
+        return count;
     }
 }

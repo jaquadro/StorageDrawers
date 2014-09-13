@@ -67,7 +67,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     private IIcon iconIndicatorOff;
 
     public BlockDrawers (String blockName, int drawerCount, boolean halfDepth) {
-        super(Material.wood);
+        this(Material.wood, blockName, drawerCount, halfDepth);
+    }
+
+    protected BlockDrawers (Material material, String blockName, int drawerCount, boolean halfDepth) {
+        super(material);
 
         this.drawerCount = drawerCount;
         this.halfDepth = halfDepth;
