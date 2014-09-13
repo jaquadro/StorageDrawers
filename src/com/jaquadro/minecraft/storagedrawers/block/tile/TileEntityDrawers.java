@@ -20,92 +20,7 @@ import java.util.UUID;
 
 public class TileEntityDrawers extends TileEntityDrawersBase implements IStorageProvider, ISidedInventory
 {
-    /*private class DrawerData {
-        private Item item;
-        public int meta;
-        public int count;
-        public NBTTagCompound attrs;
-
-        private ItemStack protoStack;
-
-        public DrawerData () {
-            reset();
-        }
-
-        public Item getItem () {
-            return item;
-        }
-
-        public void setItem (Item item) {
-            this.item = item;
-            protoStack = new ItemStack(item);
-        }
-
-        public void writeToNBT (NBTTagCompound tag) {
-            if (item != null) {
-                tag.setShort("Item", (short) Item.getIdFromItem(item));
-                tag.setShort("Meta", (short) meta);
-                tag.setInteger("Count", count);
-
-                if (attrs != null)
-                    tag.setTag("Tags", attrs);
-            }
-        }
-
-        public void readFromNBT (NBTTagCompound tag) {
-            if (tag.hasKey("Item")) {
-                item = Item.getItemById(tag.getShort("Item"));
-                meta = tag.getShort("Meta");
-                count = tag.getInteger("Count");
-
-                if (tag.hasKey("Tags"))
-                    attrs = tag.getCompoundTag("Tags");
-
-                protoStack = new ItemStack(item);
-            }
-        }
-
-        public void reset () {
-            item = null;
-            meta = 0;
-            count = 0;
-            attrs = null;
-        }
-
-        public int maxCapacity () {
-            if (item == null)
-                return 0;
-
-            protoStack.setItemDamage(meta);
-            protoStack.setTagCompound(attrs);
-
-            return item.getItemStackLimit(protoStack) * stackCapacity();
-        }
-
-        public int stackSize () {
-            if (item == null)
-                return 0;
-
-            return item.getItemStackLimit(protoStack);
-        }
-
-        public int remainingCapacity () {
-            if (item == null)
-                return 0;
-
-            return maxCapacity() - count;
-        }
-
-        public int stackCapacity () {
-            ConfigManager config = StorageDrawers.config;
-            return config.getStorageUpgradeMultiplier(level) * drawerCapacity;
-        }
-    }*/
-
-    //private int direction;
     private int drawerCount = 2;
-    //private int drawerCapacity = 1;
-    //private int level = 1;
 
     private DrawerData[] data;
     private ItemStack[] snapshotItems;
@@ -119,15 +34,6 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
     public TileEntityDrawers () {
         setDrawerCount(2);
     }
-
-    /*public int getDirection () {
-        return direction;
-    }
-
-    public void setDirection (int direction) {
-        this.direction = direction % 6;
-        autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction] };
-    }*/
 
     public int getDrawerCount () {
         return drawerCount;
@@ -143,18 +49,6 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         snapshotItems = new ItemStack[count];
         snapshotCounts = new int[count];
     }
-
-    /*public int getLevel () {
-        return level;
-    }
-
-    public void setLevel (int level) {
-        this.level = MathHelper.clamp_int(level, 1, 6);
-    }
-
-    public void setDrawerCapacity (int stackCount) {
-        drawerCapacity = stackCount;
-    }*/
 
     public int getItemCount (int slot) {
         return data[slot].count;

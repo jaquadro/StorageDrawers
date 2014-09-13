@@ -87,35 +87,14 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         }
 
         boxRenderer.setUnit(0);
-        //for (int i = 0; i < 6; i++)
-        //    boxRenderer.setIcon(block.getIcon(world, x, y, z, i), i);
         boxRenderer.setInteriorIcon(block.getIcon(world, x, y, z, side), ForgeDirection.OPPOSITES[side]);
 
         renderInterior(block, x, y, z, side, renderer);
 
         boxRenderer.setIcon(block.getIndicatorIcon(false));
-        /*if (block.drawerCount == 2)
-            boxRenderer.renderExterior(renderer, block, x, y, z, unit * 14, unit * 1, unit * 15, unit * 15, unit * 15, unit * 15.5, 0,
-                ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_ZNEG);
-        else
-            boxRenderer.renderExterior(renderer, block, x, y, z, unit * 7, unit * 1, unit * 15, unit * 9, unit * 15, unit * 15.5, 0,
-                ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_ZNEG);*/
-
-        /*if (block.drawerCount == 2) {
-            boxRenderer.renderExterior(renderer, block, x, y, z, unit * 6, unit * 14, unit * 15, unit * 10, unit * 15, unit * 15.05, 0,
-                ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG);
-            boxRenderer.renderExterior(renderer, block, x, y, z, unit * 6, unit * 6, unit * 15, unit * 10, unit * 7, unit * 15.05, 0,
-                ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG);
-        }*/
 
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
             renderHandleIndicator(block, x, y, z, side, renderer, tile.getStatusLevel());
-
-        /*boxRenderer.renderExterior(renderer, block, x, y, z, unit * 14, unit * 14, unit * 15, unit * 15, unit * 15, unit * 16, 0,
-            ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_ZNEG);
-        if (block.drawerCount == 4)
-            boxRenderer.renderExterior(renderer, block, x, y, z, unit * 1, unit * 14, unit * 15, unit * 2, unit * 15, unit * 16, 0,
-                ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG);*/
 
         return true;
     }
@@ -217,29 +196,6 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         }
 
         boxRenderer.renderExterior(renderer, block, x, y, z, xMin, 0, zMin, xMax, 1, zMax, 0, ModularBoxRenderer.sideCut[side]);
-
-        /*if (block.drawerCount == 2) {
-            boxRenderer.renderExterior(renderer, block, x, y, z, xMin, 0, zMin, xMax, .5, zMax, 0, ModularBoxRenderer.sideCut[side]);
-            boxRenderer.renderExterior(renderer, block, x, y, z, xMin, .5, zMin, xMax, 1, zMax, 0, ModularBoxRenderer.sideCut[side]);
-        }
-        else if (block.drawerCount == 4) {
-            switch (side) {
-                case 2:
-                case 3:
-                    boxRenderer.renderExterior(renderer, block, x, y, z, 0, 0, zMin, .5, .5, zMax, 0, ModularBoxRenderer.sideCut[side]);
-                    boxRenderer.renderExterior(renderer, block, x, y, z, 0, .5, zMin, .5, 1, zMax, 0, ModularBoxRenderer.sideCut[side]);
-                    boxRenderer.renderExterior(renderer, block, x, y, z, .5, 0, zMin, 1, .5, zMax, 0, ModularBoxRenderer.sideCut[side]);
-                    boxRenderer.renderExterior(renderer, block, x, y, z, .5, .5, zMin, 1, 1, zMax, 0, ModularBoxRenderer.sideCut[side]);
-                    break;
-                case 4:
-                case 5:
-                    boxRenderer.renderExterior(renderer, block, x, y, z, xMin, 0, 0, xMax, .5, .5, 0, ModularBoxRenderer.sideCut[side]);
-                    boxRenderer.renderExterior(renderer, block, x, y, z, xMin, .5, 0, xMax, 1, .5, 0, ModularBoxRenderer.sideCut[side]);
-                    boxRenderer.renderExterior(renderer, block, x, y, z, xMin, 0, .5, xMax, .5, 1, 0, ModularBoxRenderer.sideCut[side]);
-                    boxRenderer.renderExterior(renderer, block, x, y, z, xMin, .5, .5, xMax, 1, 1, 0, ModularBoxRenderer.sideCut[side]);
-                    break;
-            }
-        }*/
     }
 
     private void renderInterior (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
@@ -267,29 +223,6 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         }
 
         boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit, zMin, xMax, 1 - unit, zMax, 0, ModularBoxRenderer.sideCut[side]);
-
-        /*if (block.drawerCount == 2) {
-            boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit, zMin, xMax, unit * 7, zMax, 0, ModularBoxRenderer.sideCut[side]);
-            boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit * 9, zMin, xMax, 1 - unit, zMax, 0, ModularBoxRenderer.sideCut[side]);
-        }
-        else if (block.drawerCount == 4) {
-            switch (side) {
-                case 2:
-                case 3:
-                    boxRenderer.renderInterior(renderer, block, x, y, z, unit, unit, zMin, .5 - unit, unit * 7, zMax, 0, ModularBoxRenderer.sideCut[side]);
-                    boxRenderer.renderInterior(renderer, block, x, y, z, unit, unit * 9, zMin, .5 - unit, 1 - unit, zMax, 0, ModularBoxRenderer.sideCut[side]);
-                    boxRenderer.renderInterior(renderer, block, x, y, z, .5 + unit, unit, zMin, 1 - unit, unit * 7, zMax, 0, ModularBoxRenderer.sideCut[side]);
-                    boxRenderer.renderInterior(renderer, block, x, y, z, .5 + unit, unit * 9, zMin, 1 - unit, 1 - unit, zMax, 0, ModularBoxRenderer.sideCut[side]);
-                    break;
-                case 4:
-                case 5:
-                    boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit, unit, xMax, unit * 7, .5 - unit, 0, ModularBoxRenderer.sideCut[side]);
-                    boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit * 9, unit, xMax, 1 - unit, .5 - unit, 0, ModularBoxRenderer.sideCut[side]);
-                    boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit, .5 + unit, xMax, unit * 7, 1 - unit, 0, ModularBoxRenderer.sideCut[side]);
-                    boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit * 9, .5 + unit, xMax, 1 - unit, 1 - unit, 0, ModularBoxRenderer.sideCut[side]);
-                    break;
-            }
-        }*/
     }
 
     @Override
