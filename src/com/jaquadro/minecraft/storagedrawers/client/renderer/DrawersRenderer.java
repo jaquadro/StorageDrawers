@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersBase;
@@ -118,52 +119,73 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         return true;
     }
 
-    //private static double[] handleIndicatorX = new double[] { unit * 6, unit * 10, unit * 3, unit * 4, unit * 11, unit * 12 };
-    //private static double[] handleIndicatorXN = new double[] { 1 - unit * 6, 1 - unit * 10, 1 - unit * 3, 1 - unit * 4, 1 - unit * 11, 1 - unit * 12 };
-    //private static double[] handleIndicatorZ = new double[] { unit * 15.05, unit * 15.05, unit * 15.05, unit * 15.05, unit * 15.05, unit * 15.05 };
-    //private static double[] handleIndicatorZN = new double[] { unit * .95, unit * .95, unit * .95, unit * .95, unit * .96, unit * .95 };
+    private static final int[] cut = new int[] {
+        ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZPOS,
+        ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG,
+        ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_ZNEG | ModularBoxRenderer.CUT_ZPOS,
+        ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG | ModularBoxRenderer.CUT_ZPOS,
+    };
+
+    private static final float[][][] indicatorsX2 = new float[][][] {
+        { { 6, 6 }, { 6, 6 } },
+        { { 6, 6 }, { 6, 6 } },
+        { { .95f, .95f }, { 8.95f, 8.95f } },
+        { { 15, 15 }, { 7, 7 } },
+    };
+    private static final float[][][] indicatorsX4 = new float[][][] {
+        { { 11, 11, 3, 3 }, { 11, 11, 3, 3 } },
+        { { 3, 3, 11, 11 }, { 3, 3, 11, 11 } },
+        { { .95f, .95f, .95f, .95f }, { 8.95f, 8.95f, 8.95f, 8.95f } },
+        { { 15, 15, 15, 15 }, { 7, 7, 7, 7 } },
+    };
+
+    private static final float[][] indicatorsX2Len = new float[][] {
+        { 4, 4 }, { 4, 4 }, { .05f, .05f }, { .05f, .05f },
+    };
+    private static final float[][] indicatorsX4Len = new float[][] {
+        { 2, 2, 2, 2 }, { 2, 2, 2, 2 }, {.05f, .05f, .05f, .05f }, { .05f, .05f, .05f, .05f },
+    };
+
+    private static final float[] indicatorsY2 = new float[]  { 14, 6 };
+    private static final float[] indicatorsY4 = new float[] { 14, 6, 14, 6 };
 
     private void renderHandleIndicator (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
+        if (side < 2 || side > 5)
+            return;
+
         TileEntityDrawersBase tile = block.getTileEntity(renderer.blockAccess, x, y, z);
 
-        double depth = block.halfDepth ? .5 : 1;
-        int cut2 = ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZPOS;
-        int cut3 = ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG;
-        int cut4 = ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_ZNEG | ModularBoxRenderer.CUT_ZPOS;
-        int cut5 = ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG | ModularBoxRenderer.CUT_ZPOS;
+        int d = block.halfDepth ? 1 : 0;
+        int xi = side - 2;
+        int zi = (xi + 2) % 4;
 
-        if (block.drawerCount == 2) {
-            int iconIndex0 = (tile.getItemCapacity(0) > 0 && tile.getItemCount(0) == tile.getItemCapacity(0)) ? 2
-                : (tile.getItemCapacity(0) > 0 && tile.getItemCount(0) / tile.getItemCapacity(0) > .75) ? 1 : 0;
-            int iconIndex1 = (tile.getItemCapacity(1) > 0 && tile.getItemCount(1) == tile.getItemCapacity(1)) ? 2
-                : (tile.getItemCapacity(1) > 0 && tile.getItemCount(1) / tile.getItemCapacity(1) > .75) ? 1 : 0;
+        int count;
+        float[][][] indX = null;
+        float[][] indXLen = null;
+        float[] indY = null;
 
-            switch (side) {
-                case 2:
-                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex0));
-                    boxRenderer.renderExterior(renderer, block, x, y, z, 1 - unit * 10, unit * 14, 1 - depth + unit * .95, 1 - unit * 6, unit * 15, 1 - depth + unit * 1, 0, cut2);
-                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex1));
-                    boxRenderer.renderExterior(renderer, block, x, y, z, 1 - unit * 10, unit * 6, 1 - depth + unit * .95, 1 - unit * 6, unit * 7, 1 - depth + unit * 1, 0, cut2);
-                    break;
-                case 3:
-                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex0));
-                    boxRenderer.renderExterior(renderer, block, x, y, z, unit * 6, unit * 14, depth - unit * 1, unit * 10, unit * 15, depth - unit * .95, 0, cut3);
-                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex1));
-                    boxRenderer.renderExterior(renderer, block, x, y, z, unit * 6, unit * 6, depth - unit * 1, unit * 10, unit * 7, depth - unit * .95, 0, cut3);
-                    break;
-                case 4:
-                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex0));
-                    boxRenderer.renderExterior(renderer, block, x, y, z, 1 - depth + unit * .95, unit * 14, 1 - unit * 10, 1 - depth + unit * 1, unit * 15, 1 - unit * 6, 0, cut4);
-                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex1));
-                    boxRenderer.renderExterior(renderer, block, x, y, z, 1 - depth + unit * .95, unit * 6, 1 - unit * 10, 1 - depth + unit * 1, unit * 7, 1 - unit * 6, 0, cut4);
-                    break;
-                case 5:
-                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex0));
-                    boxRenderer.renderExterior(renderer, block, x, y, z, depth - unit * 1, unit * 14, unit * 6, depth - unit * .95, unit * 15, unit * 10, 0, cut5);
-                    boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex1));
-                    boxRenderer.renderExterior(renderer, block, x, y, z, depth - unit * 1, unit * 6, unit * 6, depth - unit * .95, unit * 7, unit * 10, 0, cut5);
-                    break;
-            }
+        if (block.drawerCount == 2 || block instanceof BlockCompDrawers) {
+            count = (block instanceof BlockCompDrawers) ? 1 : 2;
+            indX = indicatorsX2;
+            indXLen = indicatorsX2Len;
+            indY = indicatorsY2;
+        }
+        else if (block.drawerCount == 4) {
+            count = 4;
+            indX = indicatorsX4;
+            indXLen = indicatorsX4Len;
+            indY = indicatorsY4;
+        }
+        else
+            return;
+
+        for (int i = 0; i < count; i++) {
+            int iconIndex = (tile.getItemCapacity(i) > 0 && tile.getItemCount(i) == tile.getItemCapacity(i)) ? 2
+                : (tile.getItemCapacity(i) > 0 && (float)tile.getItemCount(i) / tile.getItemCapacity(i) > .75) ? 1 : 0;
+
+            boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex));
+            boxRenderer.renderExterior(renderer, block, x, y, z, indX[xi][d][i] * unit, indY[i] * unit, indX[zi][d][i] * unit,
+                (indX[xi][d][i] + indXLen[xi][i]) * unit, (indY[i] + 1) * unit, (indX[zi][d][i] + indXLen[zi][i]) * unit, 0, cut[xi]);
         }
     }
 
