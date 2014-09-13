@@ -13,6 +13,7 @@ import net.minecraft.block.BlockWood;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -22,7 +23,15 @@ import java.util.List;
 public class BlockCompDrawers extends BlockDrawers
 {
     @SideOnly(Side.CLIENT)
-    private IIcon[][] iconFront;
+    private IIcon[] iconFront;
+
+    @SideOnly(Side.CLIENT)
+    private IIcon[] iconFrontInd;
+
+    @SideOnly(Side.CLIENT)
+    private IIcon iconSide;
+    @SideOnly(Side.CLIENT)
+    private IIcon iconSideEtched;
 
     public BlockCompDrawers (String blockName) {
         super(blockName, 3, false);
@@ -45,46 +54,60 @@ public class BlockCompDrawers extends BlockDrawers
     }
 
     @Override
+    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List list) {
+        list.add(new ItemStack(item, 1, 0));
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon (int side, int meta) {
-        if (side == 4) {
-            meta %= BlockWood.field_150096_a.length;
-            return iconFront[0][meta];
+        switch (side) {
+            case 0:
+            case 1:
+                return iconSide;
+            case 4:
+                return iconFront[0];
+            default:
+                return iconSideEtched;
         }
-
-        return super.getIcon(side, meta);
     }
 
     @Override
     public IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side) {
         TileEntityDrawersBase tile = getTileEntity(blockAccess, x, y, z);
         if (tile == null || side == tile.getDirection()) {
-            int meta = blockAccess.getBlockMetadata(x, y, z) % BlockWood.field_150096_a.length;
-
             if (tile == null)
-                return iconFront[0][meta];
+                return iconFront[0];
             else if (tile.getItemStackSize(2) > 0)
-                return iconFront[2][meta];
+                return iconFront[2];
             else if (tile.getItemStackSize(1) > 0)
-                return iconFront[1][meta];
+                return iconFront[1];
             else
-                return iconFront[0][meta];
+                return iconFront[0];
         }
 
-        return super.getIcon(blockAccess, x, y, z, side);
+        switch (side) {
+            case 0:
+            case 1:
+                return iconSide;
+            default:
+                return iconSideEtched;
+        }
     }
 
     @Override
     public void registerBlockIcons (IIconRegister register) {
         super.registerBlockIcons(register);
-        String[] subtex = BlockWood.field_150096_a;
 
-        iconFront = new IIcon[3][subtex.length];
+        iconFront = new IIcon[3];
+        iconFrontInd = new IIcon[3];
 
-        for (int i = 0; i < subtex.length; i++) {
-            iconFront[0][i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_comp_0");
-            iconFront[1][i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_comp_1");
-            iconFront[2][i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_comp_2");
+        for (int i = 0; i < 3; i++) {
+            iconFront[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_front_" + i);
+            iconFrontInd[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_front_" + i + "_ind");
         }
+
+        iconSide = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_side");
+        iconSideEtched = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_side_2");
     }
 }

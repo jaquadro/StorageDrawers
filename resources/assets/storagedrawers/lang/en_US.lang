@@ -1,11 +1,18 @@
 itemGroup.storageDrawers=Storage Drawers
 
 # Items
-item.upgrade.iron.name=Drawer Upgrade (II)
-item.upgrade.gold.name=Drawer Upgrade (III)
-item.upgrade.obsidian.name=Drawer Upgrade (IV)
-item.upgrade.diamond.name=Drawer Upgrade (V)
-item.upgrade.emerald.name=Drawer Upgrade (VI)
+item.upgradeTemplate.name=Upgrade Template
+item.upgrade.iron.name=Storage Upgrade (II)
+item.upgrade.gold.name=Storage Upgrade (III)
+item.upgrade.obsidian.name=Storage Upgrade (IV)
+item.upgrade.diamond.name=Storage Upgrade (V)
+item.upgrade.emerald.name=Storage Upgrade (VI)
+item.upgradeStatus.level1.name=Status Upgrade (I)
+item.upgradeStatus.level1.description=Shows full storage
+item.upgradeStatus.level2.name=Status Upgrade (II)
+item.upgradeStatus.level2.description=Shows near-full storage
+item.upgradeStatus.level3.name=Status Upgrade (III)
+item.upgradeStatus.level3.description=Shows fill level
 
 # Blocks
 tile.fullDrawers2.oak.name=Oak Drawers 1x2

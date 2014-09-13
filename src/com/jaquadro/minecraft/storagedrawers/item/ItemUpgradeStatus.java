@@ -15,14 +15,14 @@ import net.minecraft.util.StatCollector;
 
 import java.util.List;
 
-public class ItemUpgrade extends Item
+public class ItemUpgradeStatus extends Item
 {
-    public static final String[] iconNames = new String[] { null, null, "iron", "gold", "obsidian", "diamond", "emerald" };
+    public static final String[] iconNames = new String[] { null, "level1", "level2", "level3" };
 
     @SideOnly(Side.CLIENT)
     private IIcon[] icons;
 
-    public ItemUpgrade (String name) {
+    public ItemUpgradeStatus (String name) {
         setUnlocalizedName(name);
         setHasSubtypes(true);
         setMaxDamage(0);
@@ -47,8 +47,8 @@ public class ItemUpgrade extends Item
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation (ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
-        int mult = StorageDrawers.config.getStorageUpgradeMultiplier(itemStack.getItemDamage());
-        list.add(StatCollector.translateToLocalFormatted("storageDrawers.upgrade.description", mult));
+        String name = getUnlocalizedName(itemStack);
+        list.add(StatCollector.translateToLocalFormatted(name + ".description"));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ItemUpgrade extends Item
 
         for (int i = 0; i < iconNames.length; i++) {
             if (iconNames[i] != null)
-                icons[i] = register.registerIcon(StorageDrawers.MOD_ID + ":upgrade_" + iconNames[i]);
+                icons[i] = register.registerIcon(StorageDrawers.MOD_ID + ":upgrade_status_" + iconNames[i]);
         }
     }
 }

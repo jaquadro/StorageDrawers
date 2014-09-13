@@ -108,7 +108,8 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
                 ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG);
         }*/
 
-        renderHandleIndicator(block, x, y, z, side, renderer);
+        if (StorageDrawers.config.cache.enableIndicatorUpgrades)
+            renderHandleIndicator(block, x, y, z, side, renderer, tile.getStatusLevel());
 
         /*boxRenderer.renderExterior(renderer, block, x, y, z, unit * 14, unit * 14, unit * 15, unit * 15, unit * 15, unit * 16, 0,
             ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_XPOS | ModularBoxRenderer.CUT_ZNEG);
@@ -149,8 +150,8 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
     private static final float[] indicatorsY2 = new float[]  { 14, 6 };
     private static final float[] indicatorsY4 = new float[] { 14, 6, 14, 6 };
 
-    private void renderHandleIndicator (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
-        if (side < 2 || side > 5)
+    private void renderHandleIndicator (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, int level) {
+        if (level <= 0 || side < 2 || side > 5)
             return;
 
         TileEntityDrawersBase tile = block.getTileEntity(renderer.blockAccess, x, y, z);
@@ -180,8 +181,11 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
             return;
 
         for (int i = 0; i < count; i++) {
-            int iconIndex = (tile.getItemCapacity(i) > 0 && tile.getItemCount(i) == tile.getItemCapacity(i)) ? 2
-                : (tile.getItemCapacity(i) > 0 && (float)tile.getItemCount(i) / tile.getItemCapacity(i) > .75) ? 1 : 0;
+            int iconIndex = 0;
+            if (level == 2)
+                iconIndex = (tile.getItemCapacity(i) > 0 && (float)tile.getItemCount(i) / tile.getItemCapacity(i) > .75) ? 1 : iconIndex;
+            if (level >= 1)
+                iconIndex = (tile.getItemCapacity(i) > 0 && tile.getItemCount(i) == tile.getItemCapacity(i)) ? 2 : iconIndex;
 
             boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex));
             boxRenderer.renderExterior(renderer, block, x, y, z, indX[xi][d][i] * unit, indY[i] * unit, indX[zi][d][i] * unit,

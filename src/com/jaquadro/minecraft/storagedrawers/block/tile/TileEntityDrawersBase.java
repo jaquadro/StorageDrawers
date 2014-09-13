@@ -15,6 +15,7 @@ public abstract class TileEntityDrawersBase extends TileEntity
     private int direction;
     private int drawerCapacity = 1;
     private int level = 1;
+    private int statusLevel = 0;
 
     protected int[] autoSides = new int[] { 0, 1 };
 
@@ -33,6 +34,14 @@ public abstract class TileEntityDrawersBase extends TileEntity
 
     public void setLevel (int level) {
         this.level = MathHelper.clamp_int(level, 1, 6);
+    }
+
+    public int getStatusLevel () {
+        return statusLevel;
+    }
+
+    public void setStatusLevel (int level) {
+        this.statusLevel = MathHelper.clamp_int(level, 1, 3);
     }
 
     public int getDrawerCapacity () {
@@ -65,6 +74,10 @@ public abstract class TileEntityDrawersBase extends TileEntity
         drawerCapacity = tag.getByte("Cap");
         level = tag.getByte("Lev");
 
+        statusLevel = 0;
+        if (tag.hasKey("Stat"))
+            statusLevel = tag.getByte("Stat");
+
         autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction] };
     }
 
@@ -75,6 +88,9 @@ public abstract class TileEntityDrawersBase extends TileEntity
         tag.setByte("Dir", (byte)direction);
         tag.setByte("Cap", (byte)drawerCapacity);
         tag.setByte("Lev", (byte)level);
+
+        if (statusLevel > 0)
+            tag.setByte("Stat", (byte)statusLevel);
     }
 
     @Override
