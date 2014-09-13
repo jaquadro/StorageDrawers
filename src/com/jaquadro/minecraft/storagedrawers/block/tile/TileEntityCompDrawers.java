@@ -64,7 +64,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
         if (!isSlotValid(slot))
             return 0;
 
-        return data[slot].maxCapacity() * convRate[slot];
+        return data[slot].maxCapacity();
     }
 
     public int getItemStackSize (int slot) {
@@ -184,6 +184,8 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
             data[i].readFromNBT(slot);
         }
 
+        pooledCount = tag.getInteger("Count");
+
         for (int i = 0; i < convRate.length; i++)
             convRate[i] = 0;
 
@@ -208,6 +210,8 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
             data[i].writeToNBT(slot);
             slots.appendTag(slot);
         }
+
+        tag.setInteger("Count", pooledCount);
 
         if (convRate[0] > 0)
             tag.setByte("Conv0", (byte)convRate[0]);
