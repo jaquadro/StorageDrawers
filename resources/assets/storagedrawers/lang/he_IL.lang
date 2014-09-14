@@ -1,11 +1,20 @@
 itemGroup.storageDrawers=מגירות אכסון
 
+# Items
+item.upgradeTemplate.name=Upgrade Template
 item.upgrade.iron.name=שדרוג למגירה (2)
 item.upgrade.gold.name=שדרוג למגירה (3)
 item.upgrade.obsidian.name=שדרוג למגירה (4)
 item.upgrade.diamond.name=שדרוג למגירה (5)
 item.upgrade.emerald.name=שדרוג למגירה (6)
+item.upgradeStatus.level1.name=Status Upgrade (I)
+item.upgradeStatus.level1.description=Shows full storage
+item.upgradeStatus.level2.name=Status Upgrade (II)
+item.upgradeStatus.level2.description=Shows near-full storage
+item.upgradeStatus.level3.name=Status Upgrade (III)
+item.upgradeStatus.level3.description=Shows fill level
 
+# Blocks
 tile.fullDrawers2.oak.name=מגירות אלון 1x2
 tile.fullDrawers2.spruce.name=מגירות אשוח 1x2
 tile.fullDrawers2.birch.name=מגירות ליבנה 1x2
@@ -34,9 +43,46 @@ tile.halfDrawers4.jungle.name=מגירות עץ ג'ונגל קטנות 2x2
 tile.halfDrawers4.acacia.name=מגירות שיטה קטנות 2x2
 tile.halfDrawers4.big_oak.name=מגירות אלון כהה קטנות 2x2
 
+tile.compDrawers.name=Compacting Drawer
+
 storageDrawers.drawers.description=מכיל %d ערימות בכל מגירה
 storageDrawers.upgrade.description=מכפיל את כמות האכסון ב־%d
 
+# Integration
 storageDrawers.waila.empty=ריק
 storageDrawers.waila.level=רמת שדרוג: %s
 storageDrawers.waila.drawer=מגירה #%s: %s
+
+# Configuration
+storageDrawers.config.title=Storage Drawers Configuration
+
+storageDrawers.config.general=General Settings
+storageDrawers.config.general.tooltip=This and that.
+
+storageDrawers.config.blocks=Block Settings
+storageDrawers.config.blocks.tooltip=Configure individual storage blocks.
+
+storageDrawers.config.blocks.fullDrawers2=Drawers 1x2
+storageDrawers.config.blocks.fullDrawers4=Drawers 2x2
+storageDrawers.config.blocks.halfDrawers2=Compact Drawers 1x2
+storageDrawers.config.blocks.halfDrawers4=Compact Drawers 2x2
+storageDrawers.config.blocks.compDrawers=Compacting Drawer
+
+storageDrawers.config.upgrades=Upgrade Settings
+storageDrawers.config.upgrades.tooltip=Configure individual storage upgrades.
+
+storageDrawers.config.upgrades.level2Mult=Storage Multiplier (II)
+storageDrawers.config.upgrades.level3Mult=Storage Multiplier (III)
+storageDrawers.config.upgrades.level4Mult=Storage Multiplier (IV)
+storageDrawers.config.upgrades.level5Mult=Storage Multiplier (V)
+storageDrawers.config.upgrades.level6Mult=Storage Multiplier (VI)
+
+storageDrawers.config.prop.itemRenderType=Item Render Type
+storageDrawers.config.prop.itemRenderType.tooltip=Render items in 3D or flat.
+storageDrawers.config.prop.enableIndicatorUpgrades=Enable Indicator Upgrades
+storageDrawers.config.prop.enableStorageUpgrades=Enable Storage Upgrades
+storageDrawers.config.prop.renderStorageUpgrades=Render Storage Upgrades
+storageDrawers.config.prop.enabled=Enabled
+storageDrawers.config.prop.enabled.tooltip=Enable block in game.
+storageDrawers.config.prop.baseStorage=Base Storage
+storageDrawers.config.prop.baseStorage.tooltip=Number of stacks held per drawer.

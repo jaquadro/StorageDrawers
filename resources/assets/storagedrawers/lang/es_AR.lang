@@ -1,11 +1,20 @@
 itemGroup.storageDrawers=Storage Drawers
 
+# Items
+item.upgradeTemplate.name=Upgrade Template
 item.upgrade.iron.name=Mejora para Cajonera (II)
 item.upgrade.gold.name=Mejora para Cajonera (III)
 item.upgrade.obsidian.name=Mejora para Cajonera (IV)
 item.upgrade.diamond.name=Mejora para Cajonera (V)
 item.upgrade.emerald.name=Mejora para Cajonera (VI)
+item.upgradeStatus.level1.name=Status Upgrade (I)
+item.upgradeStatus.level1.description=Shows full storage
+item.upgradeStatus.level2.name=Status Upgrade (II)
+item.upgradeStatus.level2.description=Shows near-full storage
+item.upgradeStatus.level3.name=Status Upgrade (III)
+item.upgradeStatus.level3.description=Shows fill level
 
+# Blocks
 tile.fullDrawers2.oak.name=Cajonera de Roble 1x2
 tile.fullDrawers2.spruce.name=Cajonera de Abeto 1x2
 tile.fullDrawers2.birch.name=Cajonera de Abedul 1x2
@@ -34,9 +43,12 @@ tile.halfDrawers4.jungle.name=Cajonera de Selva Compacta 2x2
 tile.halfDrawers4.acacia.name=Cajonera de Acacia Compacta 2x2
 tile.halfDrawers4.big_oak.name=Cajonera de Roble Oscuro Compacta 2x2
 
+tile.compDrawers.name=Compacting Drawer
+
 storageDrawers.drawers.description=Almacena %d stacks por cajón
 storageDrawers.upgrade.description=Multiplica la capacidad por %d
 
+# Integration
 storageDrawers.waila.empty=Vacía
 storageDrawers.waila.level=Nivel de mejora: %s
 storageDrawers.waila.drawer=Cajonera #%s: %s
@@ -54,6 +66,7 @@ storageDrawers.config.blocks.fullDrawers2=Cajoneras 1x2
 storageDrawers.config.blocks.fullDrawers4=Cajoneras 2x2
 storageDrawers.config.blocks.halfDrawers2=Cajoneras Compactas 1x2
 storageDrawers.config.blocks.halfDrawers4=Cajoneras Compactas 2x2
+storageDrawers.config.blocks.compDrawers=Compacting Drawer
 
 storageDrawers.config.upgrades=Configuración de las Mejoras
 storageDrawers.config.upgrades.tooltip=Configura las mejoras de capacidad individuales.
