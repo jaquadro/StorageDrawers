@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers;
 
+import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
@@ -34,6 +35,7 @@ public class StorageDrawers
 
     public static SimpleNetworkWrapper network;
     public static ConfigManager config;
+    public static CompTierRegistry compRegistry;
 
     @Mod.Instance(MOD_ID)
     public static StorageDrawers instance;
@@ -47,6 +49,8 @@ public class StorageDrawers
 
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
         network.registerMessage(BlockClickMessage.Handler.class, BlockClickMessage.class, 0, Side.SERVER);
+
+        compRegistry = new CompTierRegistry();
 
         blocks.init();
         items.init();

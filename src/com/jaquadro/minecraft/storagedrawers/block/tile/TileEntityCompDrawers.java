@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
@@ -329,6 +330,12 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
     }
 
     private ItemStack findHigherTier (ItemStack stack) {
+        CompTierRegistry.Record record = StorageDrawers.compRegistry.findHigherTier(stack);
+        if (record != null) {
+            lookupSizeResult = record.convRate;
+            return record.upper;
+        }
+
         CraftingManager cm = CraftingManager.getInstance();
 
         setupLookup(lookup3, stack);
@@ -354,6 +361,12 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
     }
 
     private ItemStack findLowerTier (ItemStack stack) {
+        CompTierRegistry.Record record = StorageDrawers.compRegistry.findLowerTier(stack);
+        if (record != null) {
+            lookupSizeResult = record.convRate;
+            return record.lower;
+        }
+
         CraftingManager cm = CraftingManager.getInstance();
         List recipeList = cm.getRecipeList();
 
