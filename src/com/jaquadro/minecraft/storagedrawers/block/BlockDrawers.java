@@ -227,9 +227,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             case 3:
                 return hitX < .5;
             case 4:
-                return hitZ > .5;
-            case 5:
                 return hitZ < .5;
+            case 5:
+                return hitZ > .5;
             default:
                 return true;
         }

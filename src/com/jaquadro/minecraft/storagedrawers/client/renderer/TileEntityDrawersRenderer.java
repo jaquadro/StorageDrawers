@@ -241,11 +241,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                         break;
                     case 5:
                         xc = itemDepth - zunit;
-                        zc = xunit;
+                        zc = 1 - xunit;
                         break;
                     case 4:
                         xc = 1 - itemDepth + zunit;
-                        zc = 1 - xunit;
+                        zc = xunit;
                         break;
                 }
 
