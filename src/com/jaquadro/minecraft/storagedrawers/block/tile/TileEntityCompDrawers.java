@@ -60,6 +60,14 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
         return pooledCount / convRate[slot];
     }
 
+    public int getItemRemainderCount (int slot) {
+        int count = getItemCount(slot);
+        if (slot > 0)
+            count -= getItemCount(slot - 1) * (convRate[slot - 1] / convRate[slot]);
+
+        return count;
+    }
+
     public int getItemCapacity (int slot) {
         if (!isSlotValid(slot))
             return 0;
