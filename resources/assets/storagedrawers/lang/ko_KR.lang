@@ -1,20 +1,20 @@
 #author TeamMMKP(puyo061)
 
-itemGroup.storageDrawers=스토리지 드로워즈
+itemGroup.storageDrawers=스토리지 드로워즈[Storage Drawers]
 
 # Items
-item.upgradeTemplate.name=Upgrade Template
+item.upgradeTemplate.name=업데이트 견본
 item.upgrade.iron.name=서랍 업그레이드 (II)
 item.upgrade.gold.name=서랍 업그레이드 (III)
 item.upgrade.obsidian.name=서랍 업그레이드 (IV)
 item.upgrade.diamond.name=서랍 업그레이드 (V)
 item.upgrade.emerald.name=서랍 업그레이드 (VI)
-item.upgradeStatus.level1.name=Status Upgrade (I)
-item.upgradeStatus.level1.description=Shows full storage
-item.upgradeStatus.level2.name=Status Upgrade (II)
-item.upgradeStatus.level2.description=Shows near-full storage
-item.upgradeStatus.level3.name=Status Upgrade (III)
-item.upgradeStatus.level3.description=Shows fill level
+item.upgradeStatus.level1.name=동상 업그레이드 (I)
+item.upgradeStatus.level1.description=전제 스토리지 표시
+item.upgradeStatus.level2.name=동상 업그레이드e (II)
+item.upgradeStatus.level2.description=대부분의 스토리지 표시
+item.upgradeStatus.level3.name=동상 업그레이드 (III)
+item.upgradeStatus.level3.description=레벨 표시
 
 # Blocks
 tile.fullDrawers2.oak.name=참나무 서랍 1x2
@@ -45,10 +45,10 @@ tile.halfDrawers4.jungle.name=조밀한 정글나무 서랍 2x2
 tile.halfDrawers4.acacia.name=조밀한 아카시아 서랍 2x2
 tile.halfDrawers4.big_oak.name=조밀한 짙은 참나무 참나무 서랍 2x2
 
-tile.compDrawers.name=Compacting Drawer
+tile.compDrawers.name=압축 서랍
 
 storageDrawers.drawers.description=서랍당 %d 스택을 보유 가능합니다.
-storageDrawers.upgrade.description=Increases storage to %d times base value
+storageDrawers.upgrade.description=기준보다 %d배 더 많은 적제량
 
 # Integration
 storageDrawers.waila.empty=비어있음
@@ -56,35 +56,35 @@ storageDrawers.waila.level=업그레이드 레벨: %s
 storageDrawers.waila.drawer=서랍 #%s: %s
 
 # Configuration
-storageDrawers.config.title=Storage Drawers Configuration
+storageDrawers.config.title=스토리지 드로워즈 설정
 
-storageDrawers.config.general=General Settings
-storageDrawers.config.general.tooltip=This and that.
+storageDrawers.config.general=기본 설정
+storageDrawers.config.general.tooltip=이것 저것
 
-storageDrawers.config.blocks=Block Settings
-storageDrawers.config.blocks.tooltip=Configure individual storage blocks.
+storageDrawers.config.blocks=블록 설정
+storageDrawers.config.blocks.tooltip=개별 스토리지 설정
 
-storageDrawers.config.blocks.fullDrawers2=Drawers 1x2
-storageDrawers.config.blocks.fullDrawers4=Drawers 2x2
-storageDrawers.config.blocks.halfDrawers2=Compact Drawers 1x2
-storageDrawers.config.blocks.halfDrawers4=Compact Drawers 2x2
-storageDrawers.config.blocks.compDrawers=Compacting Drawer
+storageDrawers.config.blocks.fullDrawers2=서랍 1x2
+storageDrawers.config.blocks.fullDrawers4=서랍 2x2
+storageDrawers.config.blocks.halfDrawers2=압축서랍 1x2
+storageDrawers.config.blocks.halfDrawers4=압축서랍 2x2
+storageDrawers.config.blocks.compDrawers=압축서랍
 
-storageDrawers.config.upgrades=Upgrade Settings
-storageDrawers.config.upgrades.tooltip=Configure individual storage upgrades.
+storageDrawers.config.upgrades=업그레이드 설정
+storageDrawers.config.upgrades.tooltip=스토리지 업그레이드 설정
 
-storageDrawers.config.upgrades.level2Mult=Storage Multiplier (II)
-storageDrawers.config.upgrades.level3Mult=Storage Multiplier (III)
-storageDrawers.config.upgrades.level4Mult=Storage Multiplier (IV)
-storageDrawers.config.upgrades.level5Mult=Storage Multiplier (V)
-storageDrawers.config.upgrades.level6Mult=Storage Multiplier (VI)
+storageDrawers.config.upgrades.level2Mult=스토리지 증가 (II)
+storageDrawers.config.upgrades.level3Mult=스토리지 증가 (III)
+storageDrawers.config.upgrades.level4Mult=스토리지 증가 (IV)
+storageDrawers.config.upgrades.level5Mult=스토리지 증가 (V)
+storageDrawers.config.upgrades.level6Mult=스토리지 증가 (VI)
 
-storageDrawers.config.prop.itemRenderType=Item Render Type
-storageDrawers.config.prop.itemRenderType.tooltip=Render items in 3D or flat.
-storageDrawers.config.prop.enableIndicatorUpgrades=Enable Indicator Upgrades
-storageDrawers.config.prop.enableStorageUpgrades=Enable Storage Upgrades
-storageDrawers.config.prop.renderStorageUpgrades=Render Storage Upgrades
-storageDrawers.config.prop.enabled=Enabled
-storageDrawers.config.prop.enabled.tooltip=Enable block in game.
-storageDrawers.config.prop.baseStorage=Base Storage
-storageDrawers.config.prop.baseStorage.tooltip=Number of stacks held per drawer.
+storageDrawers.config.prop.itemRenderType=아이템 렌더링 타입
+storageDrawers.config.prop.itemRenderType.tooltip=입체감있게 혹은 평평하게 렌더링
+storageDrawers.config.prop.enableIndicatorUpgrades=업그레이드 표시 활성화
+storageDrawers.config.prop.enableStorageUpgrades=스토리지 업그레이드 활성화
+storageDrawers.config.prop.renderStorageUpgrades=렌더 스토리지 업그레이드
+storageDrawers.config.prop.enabled=활성화
+storageDrawers.config.prop.enabled.tooltip=인게임 블럭 활성화
+storageDrawers.config.prop.baseStorage=베이스 스토리지
+storageDrawers.config.prop.baseStorage.tooltip=서랍에 저장되어있는 스택을 표시

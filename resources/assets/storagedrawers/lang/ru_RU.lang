@@ -1,18 +1,18 @@
 itemGroup.storageDrawers=Storage Drawers
 
 # Items
-item.upgradeTemplate.name=Upgrade Template
+item.upgradeTemplate.name=Шаблон обновления
 item.upgrade.iron.name=Улучшение ящиков (II)
 item.upgrade.gold.name=Улучшение ящиков (III)
 item.upgrade.obsidian.name=Улучшение ящиков (IV)
 item.upgrade.diamond.name=Улучшение ящиков (V)
 item.upgrade.emerald.name=Улучшение ящиков (VI)
-item.upgradeStatus.level1.name=Status Upgrade (I)
-item.upgradeStatus.level1.description=Shows full storage
-item.upgradeStatus.level2.name=Status Upgrade (II)
-item.upgradeStatus.level2.description=Shows near-full storage
-item.upgradeStatus.level3.name=Status Upgrade (III)
-item.upgradeStatus.level3.description=Shows fill level
+item.upgradeStatus.level1.name=Улучшение индикатора (I)
+item.upgradeStatus.level1.description=Показывает, когда ящик заполнен целиком
+item.upgradeStatus.level2.name=Улучшение индикатора (II)
+item.upgradeStatus.level2.description=Показывает, когда ящик заполнен наполовину
+item.upgradeStatus.level3.name=Улучшение индикатора (III)
+item.upgradeStatus.level3.description=Показывает уровень заполнения
 
 # Blocks
 tile.fullDrawers2.oak.name=Ящик из дуба 1x2
@@ -43,7 +43,7 @@ tile.halfDrawers4.jungle.name=Компактный ящик из тропиче�
 tile.halfDrawers4.acacia.name=Компактный ящик из акации 2x2
 tile.halfDrawers4.big_oak.name=Компактный ящик из тёмного дуба 2x2
 
-tile.compDrawers.name=Compacting Drawer
+tile.compDrawers.name=Компрессионный ящик
 
 storageDrawers.drawers.description=Хранит %d стеков в ящике
 storageDrawers.upgrade.description=Увеличивает хранилище в %d раз по сравнению с базовым
@@ -54,35 +54,35 @@ storageDrawers.waila.level=Уровень улучшения: %s
 storageDrawers.waila.drawer=Ящик #%s: %s
 
 # Configuration
-storageDrawers.config.title=Storage Drawers Configuration
+storageDrawers.config.title=Настройки Storage Drawers
 
-storageDrawers.config.general=General Settings
-storageDrawers.config.general.tooltip=This and that.
+storageDrawers.config.general=Основные настройки
+storageDrawers.config.general.tooltip=Всякое-разное.
 
-storageDrawers.config.blocks=Block Settings
-storageDrawers.config.blocks.tooltip=Configure individual storage blocks.
+storageDrawers.config.blocks=Настройки блоков
+storageDrawers.config.blocks.tooltip=Настройки для ящиков.
 
-storageDrawers.config.blocks.fullDrawers2=Drawers 1x2
-storageDrawers.config.blocks.fullDrawers4=Drawers 2x2
-storageDrawers.config.blocks.halfDrawers2=Compact Drawers 1x2
-storageDrawers.config.blocks.halfDrawers4=Compact Drawers 2x2
-storageDrawers.config.blocks.compDrawers=Compacting Drawer
+storageDrawers.config.blocks.fullDrawers2=Ящики 1x2
+storageDrawers.config.blocks.fullDrawers4=Ящики 2x2
+storageDrawers.config.blocks.halfDrawers2=Компактные ящики 1x2
+storageDrawers.config.blocks.halfDrawers4=Компактные ящики 2x2
+storageDrawers.config.blocks.compDrawers=Компрессионный ящик
 
-storageDrawers.config.upgrades=Upgrade Settings
-storageDrawers.config.upgrades.tooltip=Configure individual storage upgrades.
+storageDrawers.config.upgrades=Настройки улучшений
+storageDrawers.config.upgrades.tooltip=Настройки улучшений для ящиков.
 
-storageDrawers.config.upgrades.level2Mult=Storage Multiplier (II)
-storageDrawers.config.upgrades.level3Mult=Storage Multiplier (III)
-storageDrawers.config.upgrades.level4Mult=Storage Multiplier (IV)
-storageDrawers.config.upgrades.level5Mult=Storage Multiplier (V)
-storageDrawers.config.upgrades.level6Mult=Storage Multiplier (VI)
+storageDrawers.config.upgrades.level2Mult=Множитель хранения (II)
+storageDrawers.config.upgrades.level3Mult=Множитель хранения (III)
+storageDrawers.config.upgrades.level4Mult=Множитель хранения (IV)
+storageDrawers.config.upgrades.level5Mult=Множитель хранения (V)
+storageDrawers.config.upgrades.level6Mult=Множитель хранения (VI)
 
-storageDrawers.config.prop.itemRenderType=Item Render Type
-storageDrawers.config.prop.itemRenderType.tooltip=Render items in 3D or flat.
-storageDrawers.config.prop.enableIndicatorUpgrades=Enable Indicator Upgrades
-storageDrawers.config.prop.enableStorageUpgrades=Enable Storage Upgrades
-storageDrawers.config.prop.renderStorageUpgrades=Render Storage Upgrades
-storageDrawers.config.prop.enabled=Enabled
-storageDrawers.config.prop.enabled.tooltip=Enable block in game.
-storageDrawers.config.prop.baseStorage=Base Storage
-storageDrawers.config.prop.baseStorage.tooltip=Number of stacks held per drawer.
+storageDrawers.config.prop.itemRenderType=Тип отрисовки предметов
+storageDrawers.config.prop.itemRenderType.tooltip=Отрисовывает предметы 3D или плоско.
+storageDrawers.config.prop.enableIndicatorUpgrades=Включить улучшения для индикаторов
+storageDrawers.config.prop.enableStorageUpgrades=Включить улучшения для ящиков
+storageDrawers.config.prop.renderStorageUpgrades=Показывать произведённые улучшения визуально
+storageDrawers.config.prop.enabled=Включено
+storageDrawers.config.prop.enabled.tooltip=Включает блок или возможность в игре.
+storageDrawers.config.prop.baseStorage=Базовое хранилище
+storageDrawers.config.prop.baseStorage.tooltip=Количество стеков предметов, хранимое ящиком.
