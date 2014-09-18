@@ -290,10 +290,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @Override
     public void breakBlock (World world, int x, int y, int z, Block block, int meta) {
         TileEntityDrawersBase tile = getTileEntity(world, x, y, z);
-        if (tile.getLevel() > 1)
-            dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgrade, 1, tile.getLevel()));
 
         if (tile != null) {
+            if (tile.getLevel() > 1)
+                dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgrade, 1, tile.getLevel()));
+
             for (int i = 0; i < tile.getDrawerCount(); i++) {
                 while (tile.getItemCount(i) > 0) {
                     ItemStack stack = tile.takeItemsFromSlot(i, tile.getItemStackSize(i));
