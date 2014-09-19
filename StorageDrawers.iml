@@ -4,8 +4,9 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/api" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
@@ -14,18 +15,18 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.1.1210-new/forgeSrc-1.7.10-10.13.1.1210-new.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.0.1208/forgeSrc-1.7.10-10.13.0.1208.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.1.1210-new/forgeSrc-1.7.10-10.13.1.1210-new-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.0.1208/forgeSrc-1.7.10-10.13.0.1208-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.minecraft/launchwrapper/1.11/9c0592c6e1e9ea296a70948081bd4cc84dda1289/launchwrapper-1.11.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.minecraft/launchwrapper/1.9/116f2aad5b0c68353ebed66cd463517db6522f7e/launchwrapper-1.9.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -34,13 +35,13 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-debug-all/5.0.3/f9e364ae2a66ce2a543012a4668856e84e5dab74/asm-debug-all-5.0.3.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-debug-all/4.1/dd6ba5c392d4102458494e29f54f70ac534ec2a2/asm-debug-all-4.1.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-debug-all/5.0.3/c87547fa477f7dc22c5e3c5ddfc6dfac726e5b15/asm-debug-all-5.0.3-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-debug-all/4.1/7fb1108a191ea7b62b03225ced300ca8832dbe7a/asm-debug-all-4.1-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-debug-all/5.0.3/f0f24f6666c1a15c7e202e91610476bd4ce59368/asm-debug-all-5.0.3-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-debug-all/4.1/1c218d5a0b8b932a1528b74069aa6973dcfcea74/asm-debug-all-4.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -200,7 +201,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mojang/realms/1.3.5/807ae355ee63583becd7ea60e76aab1532bb42e/realms-1.3.5.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mojang/realms/1.3.1/f78f5a841b1cf9d50c3382acdbeb7d3078e454d6/realms-1.3.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -649,7 +650,7 @@
     <orderEntry type="module-library" exported="" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="file://$USER_HOME$/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.1.1210-new/start" />
+          <root url="file://$USER_HOME$/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.0.1208/start" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

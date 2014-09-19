@@ -341,12 +341,12 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
         setupLookup(lookup3, stack);
         ItemStack match = cm.findMatchingRecipe(lookup3, worldObj);
 
-        if (match == null) {
+        if (match == null || match.getItem() == null) {
             setupLookup(lookup2, stack);
             match = cm.findMatchingRecipe(lookup2, worldObj);
         }
 
-        if (match != null) {
+        if (match != null && match.getItem() != null) {
             int size = lookupSizeResult;
 
             setupLookup(lookup1, match);

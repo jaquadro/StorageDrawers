@@ -31,6 +31,12 @@ public class DrawerData
         protoStack = new ItemStack(item);
     }
 
+    public void setItem (Item item, int meta) {
+        this.item = item;
+        this.meta = meta;
+        protoStack = new ItemStack(item, 1, meta);
+    }
+
     public void writeToNBT (NBTTagCompound tag) {
         if (item != null) {
             tag.setShort("Item", (short) Item.getIdFromItem(item));
@@ -48,10 +54,13 @@ public class DrawerData
             meta = tag.getShort("Meta");
             count = tag.getInteger("Count");
 
+            attrs = null;
             if (tag.hasKey("Tags"))
                 attrs = tag.getCompoundTag("Tags");
 
             protoStack = new ItemStack(item);
+            protoStack.setItemDamage(meta);
+            protoStack.setTagCompound(attrs);
         }
     }
 
@@ -60,6 +69,7 @@ public class DrawerData
         meta = 0;
         count = 0;
         attrs = null;
+        protoStack = null;
     }
 
     public int stackCapacity () {
@@ -93,6 +103,9 @@ public class DrawerData
     public boolean areItemsEqual (ItemStack stack) {
         if (protoStack == null || stack == null)
             return false;
+
+        protoStack.setItemDamage(meta);
+        protoStack.setTagCompound(attrs);
 
         return protoStack.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(protoStack, stack);
     }

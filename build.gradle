@@ -22,7 +22,7 @@ group= "com.jaquadro.storagedrawers" // http://maven.apache.org/guides/mini/guid
 archivesBaseName = "StorageDrawers"
 
 minecraft {
-    version = "1.7.10-10.13.1.1210-new"
+    version = "1.7.10-10.13.0.1208"
     assetDir = "runtime/assets"
 }
 
