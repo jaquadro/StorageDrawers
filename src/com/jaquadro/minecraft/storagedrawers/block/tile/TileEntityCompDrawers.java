@@ -442,7 +442,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
             ItemStack item1 = (ItemStack)item;
             for (int i = 1, n = list.length; i < n; i++) {
                 Object item2 = list[i];
-                if (item2.getClass() != ItemStack.class)
+                if (item2 == null || item2.getClass() != ItemStack.class)
                     return null;
                 if (!item1.isItemEqual((ItemStack)item2))
                     return null;
