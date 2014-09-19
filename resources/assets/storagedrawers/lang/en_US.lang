@@ -86,3 +86,5 @@ storageDrawers.config.prop.enabled=Enabled
 storageDrawers.config.prop.enabled.tooltip=Enable block in game.
 storageDrawers.config.prop.baseStorage=Base Storage
 storageDrawers.config.prop.baseStorage.tooltip=Number of stacks held per drawer.
+storageDrawers.config.prop.recipeOutput=Recipe Output
+storageDrawers.config.prop.recipeOutput.tooltip=Number of items from single crafting.

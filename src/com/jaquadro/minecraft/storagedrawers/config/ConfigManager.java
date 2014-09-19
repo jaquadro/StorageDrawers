@@ -109,18 +109,23 @@ public class ConfigManager
 
         config.get(sectionBlocksFullDrawers1x2.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksFullDrawers1x2.getQualifiedName(), "baseStorage", 8).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
+        config.get(sectionBlocksFullDrawers1x2.getQualifiedName(), "recipeOutput", 2).setLanguageKey(LANG_PREFIX + "prop.recipeOutput").setRequiresMcRestart(true);
 
         config.get(sectionBlocksFullDrawers2x2.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksFullDrawers2x2.getQualifiedName(), "baseStorage", 4).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
+        config.get(sectionBlocksFullDrawers2x2.getQualifiedName(), "recipeOutput", 4).setLanguageKey(LANG_PREFIX + "prop.recipeOutput").setRequiresMcRestart(true);
 
         config.get(sectionBlocksHalfDrawers1x2.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksHalfDrawers1x2.getQualifiedName(), "baseStorage", 4).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
+        config.get(sectionBlocksHalfDrawers1x2.getQualifiedName(), "recipeOutput", 2).setLanguageKey(LANG_PREFIX + "prop.recipeOutput").setRequiresMcRestart(true);
 
         config.get(sectionBlocksHalfDrawers2x2.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksHalfDrawers2x2.getQualifiedName(), "baseStorage", 2).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
+        config.get(sectionBlocksHalfDrawers2x2.getQualifiedName(), "recipeOutput", 4).setLanguageKey(LANG_PREFIX + "prop.recipeOutput").setRequiresMcRestart(true);
 
         config.get(sectionBlocksCompDrawers.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksCompDrawers.getQualifiedName(), "baseStorage", 8).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
+        config.get(sectionBlocksCompDrawers.getQualifiedName(), "recipeOutput", 1).setLanguageKey(LANG_PREFIX + "prop.recipeOutput").setRequiresMcRestart(true);
 
         cache.level2Mult = config.get(sectionUpgrades.getQualifiedName(), "level2Mult", 2).setLanguageKey(LANG_PREFIX + "upgrades.level2Mult").setRequiresWorldRestart(true).getInt();
         cache.level3Mult = config.get(sectionUpgrades.getQualifiedName(), "level3Mult", 3).setLanguageKey(LANG_PREFIX + "upgrades.level3Mult").setRequiresWorldRestart(true).getInt();
@@ -154,6 +159,14 @@ public class ConfigManager
 
         ConfigSection section = blockSectionsMap.get(blockName);
         return section.getCategory().get("baseStorage").getInt();
+    }
+
+    public int getBlockRecipeOutput (String blockName) {
+        if (!blockSectionsMap.containsKey(blockName))
+            return 0;
+
+        ConfigSection section = blockSectionsMap.get(blockName);
+        return section.getCategory().get("recipeOutput").getInt();
     }
 
     public int getStorageUpgradeMultiplier (int level) {
