@@ -24,6 +24,7 @@ public class CompTierRegistry
         register(new ItemStack(Blocks.brick_block), new ItemStack(Items.brick), 4);
         register(new ItemStack(Blocks.nether_brick), new ItemStack(Items.netherbrick), 4);
         register(new ItemStack(Blocks.quartz_block), new ItemStack(Items.quartz), 4);
+        register(new ItemStack(Blocks.melon_block), new ItemStack(Items.melon), 9);
     }
 
     public void register (ItemStack upper, ItemStack lower, int convRate) {
