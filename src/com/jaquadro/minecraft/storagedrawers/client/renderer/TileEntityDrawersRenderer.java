@@ -307,7 +307,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         return sideRotationY[side.ordinal()] * 90;
     }
 
-    private static final float[] offsetX = { 0, 0, 0, 0, 1, 1 };
+    private static final float[] offsetX = { 0, 0, 0, 0, 0, 0 };
 
     private float getOffsetXForSide (ForgeDirection side, float x) {
         return Math.abs(offsetX[side.ordinal()] - x);
