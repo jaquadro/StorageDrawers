@@ -66,14 +66,11 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         if (data[slot].getItem() == null)
             return null;
 
-        ItemStack stack = new ItemStack(data[slot].getItem(), 1, data[slot].meta);
-        stack.setTagCompound(data[slot].attrs);
-
-        return stack;
+        return data[slot].getReadOnlyItemStack();
     }
 
     public NBTTagCompound getItemAttrs (int slot) {
-        return data[slot].attrs;
+        return data[slot].getAttrs();
     }
 
     public ItemStack takeItemsFromSlot (int slot, int count) {
@@ -115,13 +112,10 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
     }
 
     public int putItemsIntoSlot (int slot, ItemStack stack, int count) {
-        if (data[slot].getItem() == null) {
-            data[slot].setItem(stack.getItem());
-            data[slot].meta = stack.getItemDamage();
-            data[slot].attrs = stack.getTagCompound();
-        }
+        if (data[slot].getItem() == null)
+            data[slot].setItem(stack);
 
-        if (!itemMatchesForSlot(slot, stack))
+        if (!data[slot].areItemsEqual(stack))
             return 0;
 
         int countAdded = Math.min(data[slot].remainingCapacity(), stack.stackSize);
@@ -137,24 +131,11 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         if (data[slot].getItem() == null)
             return null;
 
-        ItemStack stack = new ItemStack(data[slot].getItem(), 1, data[slot].meta);
+        ItemStack stack = data[slot].getNewItemStack();
         stack.stackSize = Math.min(stack.getMaxStackSize(), count);
         stack.stackSize = Math.min(stack.stackSize, data[slot].count);
-        stack.setTagCompound(data[slot].attrs);
 
         return stack;
-    }
-
-    private boolean itemMatchesForSlot (int slot, ItemStack stack) {
-        if (data[slot].getItem() != stack.getItem() || data[slot].meta != stack.getItemDamage())
-            return false;
-
-        if ((data[slot].attrs == null || stack.getTagCompound() == null) && data[slot].attrs != stack.getTagCompound())
-            return false;
-        else if (data[slot].attrs != null && !data[slot].attrs.equals(stack.getTagCompound()))
-            return false;
-
-        return true;
     }
 
     @Override
@@ -337,7 +318,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         if (data[slot].getItem() == null)
             return true;
 
-        if (!itemMatchesForSlot(slot, itemStack))
+        if (!data[slot].areItemsEqual(itemStack))
             return false;
 
         if (data[slot].remainingCapacity() < itemStack.stackSize)

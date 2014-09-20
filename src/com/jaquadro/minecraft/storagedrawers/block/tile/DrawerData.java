@@ -3,73 +3,118 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DrawerData
 {
+    private static final ItemStack nullStack = new ItemStack((Item)null);
+
     private int slot;
-    private Item item;
-    public int meta;
+    //private Item item;
+    //private int meta;
     public int count;
-    public NBTTagCompound attrs;
+    //private NBTTagCompound attrs;
 
     private IStorageProvider storageProvider;
     private ItemStack protoStack;
 
+    private List<ItemStack> oreDictMatches;
+
     public DrawerData (IStorageProvider storageProvider, int slot) {
         this.storageProvider = storageProvider;
         this.slot = slot;
+        this.protoStack = nullStack;
 
         reset();
     }
 
     public Item getItem () {
-        return item;
+        return protoStack.getItem();
     }
 
-    public void setItem (Item item) {
-        this.item = item;
-        protoStack = new ItemStack(item);
+    public int getMeta () {
+        return protoStack.getItemDamage();
+    }
+
+    public NBTTagCompound getAttrs () {
+        return protoStack.getTagCompound();
+    }
+
+    public void setAttrs (NBTTagCompound attrs) {
+        if (protoStack != nullStack)
+            protoStack.setTagCompound(attrs);
     }
 
     public void setItem (Item item, int meta) {
-        this.item = item;
-        this.meta = meta;
+        setItem(item, meta, null);
+    }
+
+    public void setItem (Item item, int meta, NBTTagCompound attrs) {
         protoStack = new ItemStack(item, 1, meta);
+        protoStack.setTagCompound(attrs);
+
+        int[] oreIDs = OreDictionary.getOreIDs(protoStack);
+        if (oreIDs.length == 0)
+            oreDictMatches = null;
+        else if (oreIDs.length == 1)
+            oreDictMatches = OreDictionary.getOres(OreDictionary.getOreName(oreIDs[0]));
+        else {
+            oreDictMatches = new ArrayList<ItemStack>();
+            for (int id : oreIDs) {
+                List<ItemStack> list = OreDictionary.getOres(OreDictionary.getOreName(id));
+                for (ItemStack oreItem : list)
+                    oreDictMatches.add(oreItem);
+            }
+        }
+    }
+
+    public void setItem (ItemStack stack) {
+        setItem(stack.getItem(), stack.getItemDamage(), stack.getTagCompound());
+    }
+
+    // Can't actually enforce write access, so take this as a severe advisory.
+    // Don't needlessly force me to feed the Garbage Collector, folks.
+    public ItemStack getReadOnlyItemStack () {
+        return protoStack;
+    }
+
+    public ItemStack getNewItemStack () {
+        if (protoStack == null)
+            return null;
+
+        return protoStack.copy();
     }
 
     public void writeToNBT (NBTTagCompound tag) {
-        if (item != null) {
-            tag.setShort("Item", (short) Item.getIdFromItem(item));
-            tag.setShort("Meta", (short) meta);
+        if (protoStack.getItem() != null) {
+            tag.setShort("Item", (short) Item.getIdFromItem(protoStack.getItem()));
+            tag.setShort("Meta", (short) protoStack.getItemDamage());
             tag.setInteger("Count", count);
 
-            if (attrs != null)
-                tag.setTag("Tags", attrs);
+            if (protoStack.getTagCompound() != null)
+                tag.setTag("Tags", protoStack.getTagCompound());
         }
     }
 
     public void readFromNBT (NBTTagCompound tag) {
+        protoStack = nullStack;
+
         if (tag.hasKey("Item")) {
-            item = Item.getItemById(tag.getShort("Item"));
-            meta = tag.getShort("Meta");
+            setItem(Item.getItemById(tag.getShort("Item")), tag.getShort("Meta"));
             count = tag.getInteger("Count");
 
-            attrs = null;
             if (tag.hasKey("Tags"))
-                attrs = tag.getCompoundTag("Tags");
-
-            protoStack = new ItemStack(item);
-            protoStack.setItemDamage(meta);
-            protoStack.setTagCompound(attrs);
+                protoStack.setTagCompound(tag.getCompoundTag("Tags"));
         }
     }
 
     public void reset () {
-        item = null;
-        meta = 0;
         count = 0;
-        attrs = null;
-        protoStack = null;
+        protoStack = nullStack;
+        oreDictMatches = null;
     }
 
     public int stackCapacity () {
@@ -77,24 +122,21 @@ public class DrawerData
     }
 
     public int itemStackMaxSize () {
-        if (item == null)
+        if (protoStack.getItem() == null)
             return 0;
 
-        return item.getItemStackLimit(protoStack);
+        return protoStack.getItem().getItemStackLimit(protoStack);
     }
 
     public int maxCapacity () {
-        if (item == null)
+        if (protoStack.getItem() == null)
             return 0;
 
-        protoStack.setItemDamage(meta);
-        protoStack.setTagCompound(attrs);
-
-        return item.getItemStackLimit(protoStack) * stackCapacity();
+        return protoStack.getItem().getItemStackLimit(protoStack) * stackCapacity();
     }
 
     public int remainingCapacity () {
-        if (item == null)
+        if (protoStack.getItem() == null)
             return 0;
 
         return maxCapacity() - count;
@@ -103,9 +145,6 @@ public class DrawerData
     public boolean areItemsEqual (ItemStack stack) {
         if (protoStack == null || stack == null)
             return false;
-
-        protoStack.setItemDamage(meta);
-        protoStack.setTagCompound(attrs);
 
         return protoStack.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(protoStack, stack);
     }

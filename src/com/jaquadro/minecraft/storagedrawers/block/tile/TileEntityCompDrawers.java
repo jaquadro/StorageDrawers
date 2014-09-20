@@ -80,10 +80,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
         if (!isSlotValid(slot))
             return null;
 
-        ItemStack stack = new ItemStack(data[slot].getItem(), 1, data[slot].meta);
-        stack.setTagCompound(data[slot].attrs);
-
-        return stack;
+        return data[slot].getReadOnlyItemStack();
     }
 
     private ItemStack getItemsFromSlot (int slot, int count) {
@@ -94,9 +91,8 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
         if (adjCount > pooledCount)
             count = pooledCount / convRate[slot];
 
-        ItemStack stack = new ItemStack(data[slot].getItem(), 1, data[slot].meta);
+        ItemStack stack = data[slot].getNewItemStack();
         stack.stackSize = Math.min(stack.getMaxStackSize(), count);
-        stack.setTagCompound(data[slot].attrs);
 
         return stack;
     }
@@ -128,7 +124,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
                 slot = 2;
         }
 
-        if (!itemMatchesForSlot(slot, stack))
+        if (!data[slot].areItemsEqual(stack))
             return 0;
 
         count = Math.min(count, stack.stackSize);
@@ -271,20 +267,6 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
         return data[slot] != null && data[slot].getItem() != null;
     }
 
-    private boolean itemMatchesForSlot (int slot, ItemStack stack) {
-        if (!isSlotValid(slot))
-            return false;
-        if (data[slot].getItem() != stack.getItem() || data[slot].meta != stack.getItemDamage())
-            return false;
-
-        if ((data[slot].attrs == null || stack.getTagCompound() == null) && data[slot].attrs != stack.getTagCompound())
-            return false;
-        else if (data[slot].attrs != null && !data[slot].attrs.equals(stack.getTagCompound()))
-            return false;
-
-        return true;
-    }
-
     private void populateSlots (ItemStack stack) {
         int index = 0;
 
@@ -322,10 +304,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
     }
 
     private void populateSlot (int slot, ItemStack stack, int conversion) {
-        data[slot].setItem(stack.getItem());
-        data[slot].meta = stack.getItemDamage();
-        data[slot].attrs = stack.getTagCompound();
-
+        data[slot].setItem(stack);
         convRate[slot] = conversion;
     }
 
@@ -578,7 +557,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
         if (!isSlotValid(0))
             return true;
 
-        if (!itemMatchesForSlot(slot, itemStack))
+        if (!data[slot].areItemsEqual(itemStack))
             return false;
 
         if (remainingCapacity(slot) < itemStack.stackSize)
