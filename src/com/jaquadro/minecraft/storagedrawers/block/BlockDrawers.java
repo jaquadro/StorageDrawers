@@ -384,8 +384,12 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public void getSubBlocks (Item item, CreativeTabs creativeTabs, List list) {
-        for (int i = 0; i < BlockWood.field_150096_a.length; i++)
-            list.add(new ItemStack(item, 1, i));
+        list.add(new ItemStack(item, 1, 0));
+
+        if (StorageDrawers.config.cache.creativeTabVanillaWoods) {
+            for (int i = 1; i < BlockWood.field_150096_a.length; i++)
+                list.add(new ItemStack(item, 1, i));
+        }
     }
 
     @Override
