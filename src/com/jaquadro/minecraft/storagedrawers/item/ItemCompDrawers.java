@@ -30,7 +30,7 @@ public class ItemCompDrawers extends ItemBlock
             if (side > 1)
                 tile.setDirection(side);
 
-            int initCapacity = StorageDrawers.config.getBlockBaseStorage("compDrawers");
+            int initCapacity = StorageDrawers.config.getBlockBaseStorage("compdrawers");
             tile.setDrawerCapacity(initCapacity);
         }
 
@@ -42,7 +42,7 @@ public class ItemCompDrawers extends ItemBlock
     public void addInformation (ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         ConfigManager config = StorageDrawers.config;
 
-        int count = config.getBlockBaseStorage("compDrawers");
+        int count = config.getBlockBaseStorage("compdrawers");
         list.add(StatCollector.translateToLocalFormatted("storageDrawers.drawers.description", count));
     }
 }

@@ -16,34 +16,34 @@ public class ModRecipes
         ConfigManager config = StorageDrawers.config;
 
         for (int i = 0; i < BlockWood.field_150096_a.length; i++) {
-            if (config.isBlockEnabled("fullDrawers2"))
-                GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers2, config.getBlockRecipeOutput("fullDrawers2"), i), "xyx", "xxx", "xyx",
+            if (config.isBlockEnabled("fulldrawers2"))
+                GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers2, config.getBlockRecipeOutput("fulldrawers2"), i), "xyx", "xxx", "xyx",
                     'x', new ItemStack(Blocks.planks, 1, i), 'y', Blocks.chest);
-            if (config.isBlockEnabled("halfDrawers2"))
-                GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers2, config.getBlockRecipeOutput("halfDrawers2"), i), "xyx", "xxx", "xyx",
+            if (config.isBlockEnabled("halfdrawers2"))
+                GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers2, config.getBlockRecipeOutput("halfdrawers2"), i), "xyx", "xxx", "xyx",
                     'x', new ItemStack(Blocks.wooden_slab, 1, i), 'y', Blocks.chest);
-            if (config.isBlockEnabled("fullDrawers4"))
-                GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers4, config.getBlockRecipeOutput("fullDrawers4"), i), "yxy", "xxx", "yxy",
+            if (config.isBlockEnabled("fulldrawers4"))
+                GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers4, config.getBlockRecipeOutput("fulldrawers4"), i), "yxy", "xxx", "yxy",
                     'x', new ItemStack(Blocks.planks, 1, i), 'y', Blocks.chest);
-            if (config.isBlockEnabled("halfDrawers4"))
-                GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers4, config.getBlockRecipeOutput("halfDrawers4"), i), "yxy", "xxx", "yxy",
+            if (config.isBlockEnabled("halfdrawers4"))
+                GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers4, config.getBlockRecipeOutput("halfdrawers4"), i), "yxy", "xxx", "yxy",
                     'x', new ItemStack(Blocks.wooden_slab, 1, i), 'y', Blocks.chest);
         }
 
-        if (config.isBlockEnabled("compDrawers"))
-            GameRegistry.addRecipe(new ItemStack(ModBlocks.compDrawers, config.getBlockRecipeOutput("compDrawers")), "xxx", "zwz", "xyx",
+        if (config.isBlockEnabled("compdrawers"))
+            GameRegistry.addRecipe(new ItemStack(ModBlocks.compDrawers, config.getBlockRecipeOutput("compdrawers")), "xxx", "zwz", "xyx",
                 'x', new ItemStack(Blocks.stone), 'y', Items.iron_ingot, 'z', new ItemStack(Blocks.piston), 'w', new ItemStack(ModBlocks.fullDrawers2, 1, OreDictionary.WILDCARD_VALUE));
 
-        if (config.isBlockEnabled("fullDrawers2"))
+        if (config.isBlockEnabled("fulldrawers2"))
             GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
                 'x', Items.stick, 'y', new ItemStack(ModBlocks.fullDrawers2, 1, OreDictionary.WILDCARD_VALUE));
-        if (config.isBlockEnabled("halfDrawers2"))
+        if (config.isBlockEnabled("halfdrawers2"))
             GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
                 'x', Items.stick, 'y', new ItemStack(ModBlocks.halfDrawers2, 1, OreDictionary.WILDCARD_VALUE));
-        if (config.isBlockEnabled("fullDrawers4"))
+        if (config.isBlockEnabled("fulldrawers4"))
             GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
                 'x', Items.stick, 'y', new ItemStack(ModBlocks.fullDrawers4, 1, OreDictionary.WILDCARD_VALUE));
-        if (config.isBlockEnabled("halfDrawers4"))
+        if (config.isBlockEnabled("halfdrawers4"))
             GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
                 'x', Items.stick, 'y', new ItemStack(ModBlocks.halfDrawers4, 1, OreDictionary.WILDCARD_VALUE));
 
