@@ -330,7 +330,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
 
             setupLookup(lookup1, match);
             ItemStack comp = cm.findMatchingRecipe(lookup1, worldObj);
-            if (comp == null || !comp.isItemEqual(stack) || !ItemStack.areItemStackTagsEqual(comp, stack) || comp.stackSize != size)
+            if (!DrawerData.areItemsEqual(comp, stack) || comp.stackSize != size)
                 return null;
 
             lookupSizeResult = size;
@@ -354,7 +354,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
             ItemStack match = null;
 
             ItemStack output = recipe.getRecipeOutput();
-            if (output == null || !stack.isItemEqual(recipe.getRecipeOutput()))
+            if (!DrawerData.areItemsEqual(stack, output))
                 continue;
 
             if (recipe instanceof ShapelessOreRecipe)
@@ -369,7 +369,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
             if (match != null) {
                 setupLookup(lookup1, stack);
                 ItemStack comp = cm.findMatchingRecipe(lookup1, worldObj);
-                if (comp != null && comp.isItemEqual(match) && ItemStack.areItemStackTagsEqual(comp, match) && comp.stackSize == recipe.getRecipeSize()) {
+                if (DrawerData.areItemsEqual(match, comp) && comp.stackSize == recipe.getRecipeSize()) {
                     lookupSizeResult = recipe.getRecipeSize();
                     return match;
                 }

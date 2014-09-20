@@ -165,4 +165,35 @@ public class DrawerData
 
         return ItemStack.areItemStackTagsEqual(protoStack, stack);
     }
+
+    public static boolean areItemsEqual (ItemStack stack1, ItemStack stack2) {
+        if (stack1 == null || stack2 == null)
+            return false;
+        if (stack1.getItem() == null || stack2.getItem() == null)
+            return false;
+
+        if (!stack1.isItemEqual(stack2)) {
+            int[] ids1 = OreDictionary.getOreIDs(stack1);
+            int[] ids2 = OreDictionary.getOreIDs(stack2);
+            if (ids1.length == 0 || ids2.length == 0)
+                return false;
+
+            boolean oreMatch = false;
+
+            BRK_ORE_MATCH:
+            for (int i = 0; i < ids1.length; i++) {
+                for (int j = 0; j < ids2.length; j++) {
+                    if (ids1[i] == ids2[j]) {
+                        oreMatch = true;
+                        break BRK_ORE_MATCH;
+                    }
+                }
+            }
+
+            if (!oreMatch)
+                return false;
+        }
+
+        return ItemStack.areItemStackTagsEqual(stack1, stack2);
+    }
 }
