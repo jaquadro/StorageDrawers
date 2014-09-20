@@ -1,6 +1,6 @@
 #author TeamMMKP(puyo061)
 
-itemGroup.storageDrawers=스토리지 드로워즈[Storage Drawers]
+itemGroup.storageDrawers=스토리지 드로워즈[스토리지 Drawers]
 
 # Items
 item.upgradeTemplate.name=업데이트 견본
@@ -72,6 +72,27 @@ storageDrawers.config.blocks.compDrawers=압축서랍
 
 storageDrawers.config.upgrades=업그레이드 설정
 storageDrawers.config.upgrades.tooltip=스토리지 업그레이드 설정
+
+storageDrawers.config.upgrades.level2Mult=스토리지 승수 (II)
+storageDrawers.config.upgrades.level3Mult=스토리지 승수 (III)
+storageDrawers.config.upgrades.level4Mult=스토리지 승수 (IV)
+storageDrawers.config.upgrades.level5Mult=스토리지 승수 (V)
+storageDrawers.config.upgrades.level6Mult=스토리지 승수 (VI)
+
+
+storageDrawers.config.prop.itemRenderType=아이템 렌더 타입
+storageDrawers.config.prop.itemRenderType.tooltip=아이템을 3D혹은 평평하게 렌더링합니다
+storageDrawers.config.prop.enableIndicatorUpgrades=지표 업그레이드 활성화
+storageDrawers.config.prop.enableStorageUpgrades=스토리지 업그레이드 활성화
+storageDrawers.config.prop.renderStorageUpgrades=스토리지 업그레이드 렌더링
+storageDrawers.config.prop.creativeTabVanillaWoods=크리에이티브탭 바닐라 나무
+storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Enable all vanilla wood styles on creative tab.
+storageDrawers.config.prop.enabled=Enabled
+storageDrawers.config.prop.enabled.tooltip=Enable block in game.
+storageDrawers.config.prop.baseStorage=Base 스토리지
+storageDrawers.config.prop.baseStorage.tooltip=Number of stacks held per drawer.
+storageDrawers.config.prop.recipeOutput=Recipe Output
+storageDrawers.config.prop.recipeOutput.tooltip=Number of items from single crafting.
 
 storageDrawers.config.upgrades.level2Mult=스토리지 증가 (II)
 storageDrawers.config.upgrades.level3Mult=스토리지 증가 (III)
