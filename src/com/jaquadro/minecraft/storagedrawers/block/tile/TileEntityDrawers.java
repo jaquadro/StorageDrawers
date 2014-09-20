@@ -26,8 +26,6 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
     private ItemStack[] snapshotItems;
     private int[] snapshotCounts;
 
-    private int[] autoSides = new int[] { 0, 1 };
-
     private long lastClickTime;
     private UUID lastClickUUID;
 

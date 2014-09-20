@@ -25,7 +25,12 @@ public abstract class TileEntityDrawersBase extends TileEntity
 
     public void setDirection (int direction) {
         this.direction = direction % 6;
-        autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction] };
+        autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction], 2, 3 };
+
+        if (direction == 2 || direction == 3) {
+            autoSides[3] = 4;
+            autoSides[4] = 5;
+        }
     }
 
     public int getLevel () {
@@ -70,15 +75,14 @@ public abstract class TileEntityDrawersBase extends TileEntity
     public void readFromNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
 
-        direction = tag.getByte("Dir");
+        setDirection(tag.getByte("Dir"));
+
         drawerCapacity = tag.getByte("Cap");
         level = tag.getByte("Lev");
 
         statusLevel = 0;
         if (tag.hasKey("Stat"))
             statusLevel = tag.getByte("Stat");
-
-        autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction] };
     }
 
     @Override
