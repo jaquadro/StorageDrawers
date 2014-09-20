@@ -10,7 +10,7 @@ item.upgrade.emerald.name=抽屉容量升级 (VI)
 item.upgradeStatus.level1.name=状态显示升级 (I)
 item.upgradeStatus.level1.description=抽屉装满时亮起提示灯
 item.upgradeStatus.level2.name=状态显示升级 (II)
-item.upgradeStatus.level2.description=抽屉快要装满时亮起提示灯
+item.upgradeStatus.level2.description=抽屉将近装满时亮起提示灯
 item.upgradeStatus.level3.name=状态显示升级 (III)
 item.upgradeStatus.level3.description=显示抽屉容量等级
 
@@ -57,7 +57,7 @@ storageDrawers.waila.drawer=抽屉门 #%s: %s
 storageDrawers.config.title=储物抽屉模组配置
 
 storageDrawers.config.general=一般设定
-storageDrawers.config.general.tooltip=各种各样的普通设定
+storageDrawers.config.general.tooltip=各种通用设定
 
 storageDrawers.config.blocks=抽屉设定
 storageDrawers.config.blocks.tooltip=设定关于储物抽屉的配置
@@ -77,16 +77,16 @@ storageDrawers.config.upgrades.level4Mult=抽屉容量翻倍升级 (IV)
 storageDrawers.config.upgrades.level5Mult=抽屉容量翻倍升级 (V)
 storageDrawers.config.upgrades.level6Mult=抽屉容量翻倍升级 (VI)
 
-storageDrawers.config.prop.itemRenderType=物品渲染设定
-storageDrawers.config.prop.itemRenderType.tooltip=调整是否渲染3D物品
+storageDrawers.config.prop.itemRenderType=存储物品显示设定
+storageDrawers.config.prop.itemRenderType.tooltip=设定抽屉是否渲染3D物品
 storageDrawers.config.prop.enableIndicatorUpgrades=允许状态显示升级
 storageDrawers.config.prop.enableStorageUpgrades=允许容量升级
-storageDrawers.config.prop.renderStorageUpgrades=渲染容量升级
-storageDrawers.config.prop.creativeTabVanillaWoods=Creative Tab Vanilla Woods
-storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Enable all vanilla wood styles on creative tab.
+storageDrawers.config.prop.renderStorageUpgrades=渲染容量升级显示
+storageDrawers.config.prop.creativeTabVanillaWoods=显示所有种类抽屉
+storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=允许创造模式窗口或NEI中显示所有种类抽屉
 storageDrawers.config.prop.enabled=启用
-storageDrawers.config.prop.enabled.tooltip=在游戏中启用本模组中的物品.
+storageDrawers.config.prop.enabled.tooltip=在游戏中启用该物品
 storageDrawers.config.prop.baseStorage=基础容量
-storageDrawers.config.prop.baseStorage.tooltip=设定每个抽屉门可容纳的物品组数量
-storageDrawers.config.prop.recipeOutput=Recipe Output
-storageDrawers.config.prop.recipeOutput.tooltip=Number of items from single crafting.
+storageDrawers.config.prop.baseStorage.tooltip=设定每个抽屉门中可存储的物品组数量
+storageDrawers.config.prop.recipeOutput=合成数量
+storageDrawers.config.prop.recipeOutput.tooltip=设定使用默认合成公式可合成多少抽屉
