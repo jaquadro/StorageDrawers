@@ -145,7 +145,24 @@ public class DrawerData
     public boolean areItemsEqual (ItemStack stack) {
         if (protoStack == null || stack == null)
             return false;
+        if (protoStack.getItem() == null || stack.getItem() == null)
+            return false;
 
-        return protoStack.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(protoStack, stack);
+        if (!protoStack.isItemEqual(stack)) {
+            if (oreDictMatches == null)
+                return false;
+
+            boolean oreMatch = false;
+            for (int i = 0; i < oreDictMatches.size(); i++) {
+                oreMatch |= stack.isItemEqual(oreDictMatches.get(i));
+                if (oreMatch)
+                    break;
+            }
+
+            if (!oreMatch)
+                return false;
+        }
+
+        return ItemStack.areItemStackTagsEqual(protoStack, stack);
     }
 }
