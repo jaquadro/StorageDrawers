@@ -49,6 +49,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     private IIcon[] iconFront2;
     @SideOnly(Side.CLIENT)
     private IIcon[] iconFront4;
+    @SideOnly(Side.CLIENT)
+    private IIcon[] iconTrim;
 
     @SideOnly(Side.CLIENT)
     private IIcon[] iconOverlay;
@@ -57,7 +59,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @SideOnly(Side.CLIENT)
     private IIcon[] iconOverlayH;
     @SideOnly(Side.CLIENT)
-    private IIcon[] iconOverlayCross;
+    private IIcon[] iconOverlayTrim;
 
     @SideOnly(Side.CLIENT)
     private IIcon iconIndicatorOn;
@@ -392,6 +394,12 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
     }
 
+    @SideOnly(Side.CLIENT)
+    public IIcon getIconTrim (int meta) {
+        meta %= BlockWood.field_150096_a.length;
+        return iconTrim[meta];
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon (int side, int meta) {
@@ -428,6 +436,14 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @SideOnly(Side.CLIENT)
+    public IIcon getOverlayIconTrim (int level) {
+        if (level == 0)
+            return null;
+
+        return iconOverlayTrim[level];
+    }
+
+    @SideOnly(Side.CLIENT)
     public IIcon getIndicatorIcon (boolean on) {
         return on ? iconIndicatorOn : iconIndicatorAmber;
     }
@@ -453,9 +469,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         TileEntityDrawersBase tile = getTileEntity(blockAccess, x, y, z);
         if (tile == null || side == tile.getDirection()) {
             if (drawerCount == 2)
-                return (level > 0) ? iconOverlayH[level] : iconFront2[meta];
+                return iconFront2[meta];
             else
-                return (level > 0) ? iconOverlayCross[level] : iconFront4[meta];
+                return iconFront4[meta];
         }
 
         switch (side) {
@@ -491,6 +507,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         iconSideV = new IIcon[subtex.length];
         iconFront2 = new IIcon[subtex.length];
         iconFront4 = new IIcon[subtex.length];
+        iconTrim = new IIcon[subtex.length];
 
         for (int i = 0; i < subtex.length; i++) {
             iconFront2[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_front_2");
@@ -498,6 +515,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             iconSide[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side");
             iconSideV[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side_v");
             iconSideH[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side_h");
+            iconTrim[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_trim");
         }
 
         String[] overlays = new String[] { null, null, "iron", "gold", "obsidian", "diamond", "emerald" };
@@ -505,13 +523,13 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         iconOverlay = new IIcon[overlays.length];
         iconOverlayH = new IIcon[overlays.length];
         iconOverlayV = new IIcon[overlays.length];
-        iconOverlayCross = new IIcon[overlays.length];
+        iconOverlayTrim = new IIcon[overlays.length];
 
         for (int i = 2; i < overlays.length; i++) {
             iconOverlay[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i]);
             iconOverlayV[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i] + "_v");
             iconOverlayH[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i] + "_h");
-            iconOverlayCross[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i] + "_cross");
+            iconOverlayTrim[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i] + "_trim");
         }
 
         iconIndicatorOff = register.registerIcon(StorageDrawers.MOD_ID + ":indicator_off");

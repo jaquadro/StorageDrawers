@@ -32,6 +32,8 @@ public class BlockCompDrawers extends BlockDrawers
     private IIcon[][] iconFrontInd;
 
     @SideOnly(Side.CLIENT)
+    private IIcon iconTrim;
+    @SideOnly(Side.CLIENT)
     private IIcon iconSide;
     @SideOnly(Side.CLIENT)
     private IIcon iconSideEtched;
@@ -61,6 +63,12 @@ public class BlockCompDrawers extends BlockDrawers
     @Override
     public void getSubBlocks (Item item, CreativeTabs creativeTabs, List list) {
         list.add(new ItemStack(item, 1, 0));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIconTrim (int meta) {
+        return iconTrim;
     }
 
     @Override
@@ -131,6 +139,7 @@ public class BlockCompDrawers extends BlockDrawers
                 iconFrontInd[i][j] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_front_" + i + "_ind" + j);
         }
 
+        iconTrim = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_trim");
         iconSide = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_side");
         iconSideEtched = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_side_2");
     }

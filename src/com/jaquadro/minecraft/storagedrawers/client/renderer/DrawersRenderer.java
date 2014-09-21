@@ -70,18 +70,25 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
             return false;
 
         int side = tile.getDirection();
+        int meta = world.getBlockMetadata(x, y, z);
 
         double unit = .0625;
         boxRenderer.setUnit(unit);
         boxRenderer.setColor(ModularBoxRenderer.COLOR_WHITE);
         for (int i = 0; i < 6; i++)
-            boxRenderer.setIcon(block.getIcon(world, x, y, z, i), i);
+            boxRenderer.setExteriorIcon(block.getIcon(world, x, y, z, i), i);
+
+        boxRenderer.setCutIcon(block.getIconTrim(meta));
+        boxRenderer.setInteriorIcon(block.getIconTrim(meta));
 
         renderExterior(block, x, y, z, side, renderer);
 
         if (tile.getLevel() > 1 && StorageDrawers.config.cache.renderStorageUpgrades) {
             for (int i = 0; i < 6; i++)
-                boxRenderer.setIcon(block.getOverlayIcon(world, x, y, z, i, tile.getLevel()), i);
+                boxRenderer.setExteriorIcon(block.getOverlayIcon(world, x, y, z, i, tile.getLevel()), i);
+
+            boxRenderer.setCutIcon(block.getOverlayIconTrim(tile.getLevel()));
+            boxRenderer.setInteriorIcon(block.getOverlayIconTrim(tile.getLevel()));
 
             renderExterior(block, x, y, z, side, renderer);
         }
