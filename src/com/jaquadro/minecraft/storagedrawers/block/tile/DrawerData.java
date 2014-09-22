@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -59,15 +60,19 @@ public class DrawerData
         int[] oreIDs = OreDictionary.getOreIDs(protoStack);
         if (oreIDs.length == 0)
             oreDictMatches = null;
-        else if (oreIDs.length == 1)
-            oreDictMatches = OreDictionary.getOres(OreDictionary.getOreName(oreIDs[0]));
         else {
             oreDictMatches = new ArrayList<ItemStack>();
             for (int id : oreIDs) {
+                if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(id)))
+                    continue;
+
                 List<ItemStack> list = OreDictionary.getOres(OreDictionary.getOreName(id));
                 for (ItemStack oreItem : list)
                     oreDictMatches.add(oreItem);
             }
+
+            if (oreDictMatches.size() == 0)
+                oreDictMatches = null;
         }
     }
 
@@ -154,6 +159,10 @@ public class DrawerData
 
             boolean oreMatch = false;
             for (int i = 0; i < oreDictMatches.size(); i++) {
+                ItemStack candidate = oreDictMatches.get(i);
+                if (candidate == null || candidate.getItemDamage() == OreDictionary.WILDCARD_VALUE)
+                    continue;
+
                 oreMatch |= stack.isItemEqual(oreDictMatches.get(i));
                 if (oreMatch)
                     break;
@@ -182,7 +191,13 @@ public class DrawerData
 
             BRK_ORE_MATCH:
             for (int i = 0; i < ids1.length; i++) {
+                if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(ids1[i])))
+                    continue;
+
                 for (int j = 0; j < ids2.length; j++) {
+                    if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(ids2[i])))
+                        continue;
+
                     if (ids1[i] == ids2[j]) {
                         oreMatch = true;
                         break BRK_ORE_MATCH;
