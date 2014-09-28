@@ -40,7 +40,8 @@ public class CompTierRegistry
         if (stack == null || stack.getItem() == null)
             return null;
 
-        for (Record r : records) {
+        for (int i = 0, n = records.size(); i < n; i++) {
+            Record r = records.get(i);
             if (stack.isItemEqual(r.lower) && ItemStack.areItemStackTagsEqual(stack, r.lower))
                 return r;
         }
@@ -52,7 +53,8 @@ public class CompTierRegistry
         if (stack == null || stack.getItem() == null)
             return null;
 
-        for (Record r : records) {
+        for (int i = 0, n = records.size(); i < n; i++) {
+            Record r = records.get(i);
             if (stack.isItemEqual(r.upper) && ItemStack.areItemStackTagsEqual(stack, r.upper))
                 return r;
         }

@@ -37,7 +37,7 @@ public class OreDictRegistry
         if (blacklist.contains(entry))
             return true;
 
-        for (int i = 0; i < blacklistPrefix.size(); i++) {
+        for (int i = 0, n = blacklistPrefix.size(); i < n; i++) {
             if (entry.startsWith(blacklistPrefix.get(i)))
                 return true;
         }

@@ -54,7 +54,7 @@ public class ItemUpgradeStatus extends Item
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems (Item item, CreativeTabs creativeTabs, List list) {
-        for (int i = 0; i < iconNames.length; i++) {
+        for (int i = 0, n = iconNames.length; i < n; i++) {
             if (iconNames[i] != null)
                 list.add(new ItemStack(item, 1, i));
         }
@@ -65,7 +65,7 @@ public class ItemUpgradeStatus extends Item
     public void registerIcons (IIconRegister register) {
         icons = new IIcon[iconNames.length];
 
-        for (int i = 0; i < iconNames.length; i++) {
+        for (int i = 0, n = iconNames.length; i < n; i++) {
             if (iconNames[i] != null)
                 icons[i] = register.registerIcon(StorageDrawers.MOD_ID + ":upgrade_status_" + iconNames[i]);
         }

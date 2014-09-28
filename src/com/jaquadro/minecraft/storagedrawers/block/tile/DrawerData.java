@@ -67,8 +67,8 @@ public class DrawerData
                     continue;
 
                 List<ItemStack> list = OreDictionary.getOres(OreDictionary.getOreName(id));
-                for (ItemStack oreItem : list)
-                    oreDictMatches.add(oreItem);
+                for (int i = 0, n = list.size(); i < n; i++)
+                    oreDictMatches.add(list.get(i));
             }
 
             if (oreDictMatches.size() == 0)
@@ -190,15 +190,15 @@ public class DrawerData
             boolean oreMatch = false;
 
             BRK_ORE_MATCH:
-            for (int i = 0; i < ids1.length; i++) {
-                if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(ids1[i])))
+            for (int oreIndexLeft : ids1) {
+                if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(oreIndexLeft)))
                     continue;
 
-                for (int j = 0; j < ids2.length; j++) {
-                    if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(ids2[j])))
+                for (int oreIndexRight : ids2) {
+                    if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(oreIndexRight)))
                         continue;
 
-                    if (ids1[i] == ids2[j]) {
+                    if (oreIndexLeft == oreIndexRight) {
                         oreMatch = true;
                         break BRK_ORE_MATCH;
                     }

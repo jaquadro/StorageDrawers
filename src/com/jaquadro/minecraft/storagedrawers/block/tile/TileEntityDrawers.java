@@ -41,7 +41,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         drawerCount = count;
 
         data = new DrawerData[drawerCount];
-        for (int i = 0; i < data.length; i++)
+        for (int i = 0, n = data.length; i < n; i++)
             data[i] = new DrawerData(this, i);
 
         snapshotItems = new ItemStack[count];
@@ -91,7 +91,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
             count += putItemsIntoSlot(slot, currentStack, currentStack.stackSize);
 
         if (worldObj.getWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID)) {
-            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+            for (int i = 0, n = player.inventory.getSizeInventory(); i < n; i++) {
                 ItemStack subStack = player.inventory.getStackInSlot(i);
                 if (subStack != null) {
                     int subCount = putItemsIntoSlot(slot, subStack, subStack.stackSize);
@@ -155,7 +155,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         drawerCount = slots.tagCount();
         data = new DrawerData[slots.tagCount()];
 
-        for (int i = 0; i < data.length; i++) {
+        for (int i = 0, n = data.length; i < n; i++) {
             NBTTagCompound slot = slots.getCompoundTagAt(i);
             data[i] = new DrawerData(this, i);
             data[i].readFromNBT(slot);
@@ -170,9 +170,9 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         super.writeToNBT(tag);
 
         NBTTagList slots = new NBTTagList();
-        for (int i = 0; i < data.length; i++) {
+        for (DrawerData drawer : data) {
             NBTTagCompound slot = new NBTTagCompound();
-            data[i].writeToNBT(slot);
+            drawer.writeToNBT(slot);
             slots.appendTag(slot);
         }
 
@@ -331,8 +331,8 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public int[] getAccessibleSlotsFromSide (int side) {
-        for (int i = 0; i < autoSides.length; i++) {
-            if (side == autoSides[i])
+        for (int aside : autoSides) {
+            if (side == aside)
                 return (drawerCount == 2) ? drawerSlots2 : drawerSlots4;
         }
 
@@ -344,8 +344,8 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         if (slot >= getSizeInventory())
             return false;
 
-        for (int i = 0; i < autoSides.length; i++) {
-            if (side == autoSides[i]) {
+        for (int aside : autoSides) {
+            if (side == aside) {
                 return isItemValidForSlot(slot, stack);
             }
         }
