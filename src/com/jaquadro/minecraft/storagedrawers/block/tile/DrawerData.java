@@ -195,7 +195,7 @@ public class DrawerData
                     continue;
 
                 for (int j = 0; j < ids2.length; j++) {
-                    if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(ids2[i])))
+                    if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(ids2[j])))
                         continue;
 
                     if (ids1[i] == ids2[j]) {
