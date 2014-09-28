@@ -1,18 +1,18 @@
 itemGroup.storageDrawers=Storage Drawers
 
 # Items
-item.upgradeTemplate.name=Upgrade Template
+item.upgradeTemplate.name=Plantilla de Mejora
 item.upgrade.iron.name=Mejora para Cajonera (II)
 item.upgrade.gold.name=Mejora para Cajonera (III)
 item.upgrade.obsidian.name=Mejora para Cajonera (IV)
 item.upgrade.diamond.name=Mejora para Cajonera (V)
 item.upgrade.emerald.name=Mejora para Cajonera (VI)
-item.upgradeStatus.level1.name=Status Upgrade (I)
-item.upgradeStatus.level1.description=Shows full storage
-item.upgradeStatus.level2.name=Status Upgrade (II)
-item.upgradeStatus.level2.description=Shows near-full storage
-item.upgradeStatus.level3.name=Status Upgrade (III)
-item.upgradeStatus.level3.description=Shows fill level
+item.upgradeStatus.level1.name=Status Mejora (I)
+item.upgradeStatus.level1.description=Muestra que el cajón está lleno
+item.upgradeStatus.level2.name=Status Mejora (II)
+item.upgradeStatus.level2.description=Muestra que el cajón está casi lleno
+item.upgradeStatus.level3.name=Status Mejora (III)
+item.upgradeStatus.level3.description=Muestra el nivel de llenado
 
 # Blocks
 tile.fullDrawers2.oak.name=Cajonera de Roble 1x2
@@ -43,7 +43,7 @@ tile.halfDrawers4.jungle.name=Cajonera de Selva Compacta 2x2
 tile.halfDrawers4.acacia.name=Cajonera de Acacia Compacta 2x2
 tile.halfDrawers4.big_oak.name=Cajonera de Roble Oscuro Compacta 2x2
 
-tile.compDrawers.name=Compacting Drawer
+tile.compDrawers.name=Cajonera Compactadora
 
 storageDrawers.drawers.description=Almacena %d stacks por cajón
 storageDrawers.upgrade.description=Multiplica la capacidad por %d
@@ -66,7 +66,7 @@ storageDrawers.config.blocks.fullDrawers2=Cajoneras 1x2
 storageDrawers.config.blocks.fullDrawers4=Cajoneras 2x2
 storageDrawers.config.blocks.halfDrawers2=Cajoneras Compactas 1x2
 storageDrawers.config.blocks.halfDrawers4=Cajoneras Compactas 2x2
-storageDrawers.config.blocks.compDrawers=Compacting Drawer
+storageDrawers.config.blocks.compDrawers=Cajonera Compactadora
 
 storageDrawers.config.upgrades=Configuración de las Mejoras
 storageDrawers.config.upgrades.tooltip=Configura las mejoras de capacidad individuales.
@@ -82,11 +82,11 @@ storageDrawers.config.prop.itemRenderType.tooltip=Renderiza los ítems en 3D o p
 storageDrawers.config.prop.enableIndicatorUpgrades=Permitir los indicadores de estado.
 storageDrawers.config.prop.enableStorageUpgrades=Permite las mejoras de capacidad. 
 storageDrawers.config.prop.renderStorageUpgrades=Renderiza las mejoras de capacidad.
-storageDrawers.config.prop.creativeTabVanillaWoods=Creative Tab Vanilla Woods
-storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Enable all vanilla wood styles on creative tab.
+storageDrawers.config.prop.creativeTabVanillaWoods=Maderas de Minecraft normal en modo creativo
+storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Permite todos los tipos de madera de Minecraft normal en creativo.
 storageDrawers.config.prop.enabled=Permitido
 storageDrawers.config.prop.enabled.tooltip=Permitir el bloque en el juego.
 storageDrawers.config.prop.baseStorage=Capacidad básica. 
 storageDrawers.config.prop.baseStorage.tooltip=Número de stacks permitidos en cada cajón.
-storageDrawers.config.prop.recipeOutput=Recipe Output
-storageDrawers.config.prop.recipeOutput.tooltip=Number of items from single crafting.
+storageDrawers.config.prop.recipeOutput=Resultado de la Receta
+storageDrawers.config.prop.recipeOutput.tooltip=Número de ítems por cada crafteo.
