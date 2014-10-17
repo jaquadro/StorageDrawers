@@ -521,7 +521,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
 
     @Override
     public String getInventoryName () {
-        return null;
+        return "container.compDrawers";
     }
 
     @Override

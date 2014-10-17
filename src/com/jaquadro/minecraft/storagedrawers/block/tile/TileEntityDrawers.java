@@ -226,8 +226,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
             stack.stackSize = 64 - Math.min(64, data[slot].remainingCapacity());
             snapshotItems[slot] = stack;
             snapshotCounts[slot] = stack.stackSize;
-        }
-        else {
+        } else {
             snapshotItems[slot] = null;
             snapshotCounts[slot] = 0;
         }
@@ -254,7 +253,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public void setInventorySlotContents (int slot, ItemStack itemStack) {
-        if (slot >= getSizeInventory())
+        if (slot >= getSizeInventory() || itemStack == null)
             return;
 
         int insertCount = itemStack.stackSize;
@@ -265,8 +264,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
             int count = putItemsIntoSlot(slot, itemStack, insertCount);
             if (count > 0 && !worldObj.isRemote)
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
-        else if (insertCount < 0) {
+        } else if (insertCount < 0) {
             ItemStack rmStack = takeItemsFromSlot(slot, -insertCount);
             if (rmStack != null && rmStack.stackSize > 0 && !worldObj.isRemote)
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -280,7 +278,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public String getInventoryName () {
-        return null;
+        return "container.drawers";
     }
 
     @Override
@@ -295,7 +293,10 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public boolean isUseableByPlayer (EntityPlayer player) {
-        return false;
+        if (worldObj.getTileEntity(xCoord, yCoord, zCoord) != this)
+            return false;
+
+        return player.getDistanceSq(xCoord + .5, yCoord + .5, zCoord + .5) <= 64;
     }
 
     @Override

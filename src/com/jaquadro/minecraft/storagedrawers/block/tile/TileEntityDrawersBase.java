@@ -1,21 +1,26 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public abstract class TileEntityDrawersBase extends TileEntity
+public abstract class TileEntityDrawersBase extends TileEntity implements ISidedInventory
 {
     private int direction;
     private int drawerCapacity = 1;
     private int level = 1;
     private int statusLevel = 0;
+    private ItemStack[] upgrades = new ItemStack[5];
 
     protected int[] autoSides = new int[] { 0, 1 };
 
@@ -71,6 +76,20 @@ public abstract class TileEntityDrawersBase extends TileEntity
 
     public abstract ItemStack getSingleItemStack (int slot);
 
+    public ItemStack getUpgrade (int slot) {
+        if (slot < 0 || slot >= upgrades.length)
+            return null;
+
+        return upgrades[slot];
+    }
+
+    public void setUpgrade (int slot, ItemStack upgrade) {
+        if (slot < 0 || slot >= upgrades.length)
+            return;
+
+        upgrades[slot] = upgrade;
+    }
+
     @Override
     public void readFromNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
@@ -83,6 +102,19 @@ public abstract class TileEntityDrawersBase extends TileEntity
         statusLevel = 0;
         if (tag.hasKey("Stat"))
             statusLevel = tag.getByte("Stat");
+
+        for (int i = 0, n = upgrades.length; i < n; i++)
+            upgrades[i] = null;
+
+        if (tag.hasKey("Upgrades")) {
+            NBTTagList list = tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0, n = list.tagCount(); i < n; i++) {
+                NBTTagCompound uTag = list.getCompoundTagAt(i);
+
+                ItemStack item = new ItemStack(Item.getItemById(uTag.getShort("Item")), 1, uTag.getShort("Meta"));
+                upgrades[uTag.getByte("Slot")] = item;
+            }
+        }
     }
 
     @Override
@@ -95,6 +127,24 @@ public abstract class TileEntityDrawersBase extends TileEntity
 
         if (statusLevel > 0)
             tag.setByte("Stat", (byte)statusLevel);
+
+        if (getUpgradeCount() > 0) {
+            NBTTagList list = new NBTTagList();
+
+            for (int i = 0, n = upgrades.length; i < n; i++) {
+                if (upgrades[i] == null)
+                    continue;
+
+                NBTTagCompound uTag = new NBTTagCompound();
+                uTag.setByte("Slot", (byte)i);
+                uTag.setShort("Item", (short) Item.getIdFromItem(upgrades[i].getItem()));
+                uTag.setShort("Meta", (short) upgrades[i].getItemDamage());
+
+                list.appendTag(uTag);
+            }
+
+            tag.setTag("Upgrades", list);
+        }
     }
 
     @Override
@@ -109,5 +159,13 @@ public abstract class TileEntityDrawersBase extends TileEntity
     public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity pkt) {
         readFromNBT(pkt.func_148857_g());
         getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
+    }
+
+    private int getUpgradeCount () {
+        int count = 0;
+        for (ItemStack item : upgrades)
+            count += (item != null) ? 1 : 0;
+
+        return count;
     }
 }

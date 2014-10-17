@@ -1,5 +1,8 @@
 itemGroup.storageDrawers=Storage Drawers
 
+container.drawers=Drawers
+storageDrawers.container.upgrades=Upgrades
+
 # Items
 item.upgradeTemplate.name=Upgrade Template
 item.upgrade.iron.name=Storage Upgrade (II)
