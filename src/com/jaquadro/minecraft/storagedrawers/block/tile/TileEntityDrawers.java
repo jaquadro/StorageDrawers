@@ -218,7 +218,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public ItemStack getStackInSlot (int slot) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return null;
 
         ItemStack stack = getItemsFromSlot(slot, getItemStackSize(slot));
@@ -237,7 +237,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public ItemStack decrStackSize (int slot, int count) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return null;
 
         ItemStack stack = takeItemsFromSlot(slot, count);
@@ -254,7 +254,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public void setInventorySlotContents (int slot, ItemStack itemStack) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return;
 
         int insertCount = itemStack.stackSize;
@@ -310,7 +310,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack itemStack) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return false;
 
         if (data[slot].getItem() == null)
@@ -341,7 +341,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public boolean canInsertItem (int slot, ItemStack stack, int side) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return false;
 
         for (int aside : autoSides) {

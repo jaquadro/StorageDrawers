@@ -87,7 +87,7 @@ public class DrawerData
     }
 
     public ItemStack getNewItemStack () {
-        if (protoStack == null)
+        if (protoStack == nullStack)
             return null;
 
         return protoStack.copy();
