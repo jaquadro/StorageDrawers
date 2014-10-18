@@ -306,13 +306,17 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 mc.gameSettings.fancyGraphics = true;
 
                 if (StorageDrawers.config.isFancyItemRenderEnabled()) {
+                    float yAdj = 0;
+                    if (drawerCount == 2 || drawerCount == 4)
+                        yAdj = -.5f;
+
                     if (blockType) {
-                        GL11.glTranslatef(xc, unit * (yunit + 1.25f), zc);
+                        GL11.glTranslatef(xc, unit * (yunit + 1.75f + yAdj), zc);
                         GL11.glScalef(1, 1, 1);
-                        GL11.glRotatef(getRotationYForSide(side) - 90.0F, 0.0F, 1.0F, 0.0F);
+                        GL11.glRotatef(getRotationYForSide(side) + 90.0F, 0.0F, 1.0F, 0.0F);
                     } else {
-                        GL11.glTranslatef(xc, unit * yunit, zc);
-                        GL11.glScalef(.6f, .6f, .6f);
+                        GL11.glTranslatef(xc, unit * (yunit + 0.75f + yAdj), zc);
+                        GL11.glScalef(.5f, .5f, .5f);
                         GL11.glRotatef(getRotationYForSide(side), 0.0F, 1.0F, 0.0F);
                     }
 
@@ -357,7 +361,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         GL11.glScalef(size, size, 1);
     }
 
-    private static final float[] sideRotationY = { 0, 0, 0, 2, 3, 1 };
+    private static final float[] sideRotationY = { 0, 0, 0, 2, 1, 3 };
 
     private float getRotationYForSide (ForgeDirection side) {
         return sideRotationY[side.ordinal()] * 90;
