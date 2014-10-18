@@ -29,12 +29,16 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import java.util.List;
+
 @SideOnly(Side.CLIENT)
 public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 {
     private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
 
     private RenderItem itemRenderer = new RenderItem() {
+        private RenderBlocks renderBlocksRi = new RenderBlocks();
+
         @Override
         public byte getMiniBlockCount (ItemStack stack, byte original) {
             return 1;
@@ -56,7 +60,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         @Override
         public void renderItemIntoGUI (FontRenderer fontRenderer, TextureManager texManager, ItemStack itemStack, int x, int y, boolean renderEffect) {
             if (itemStack.getItemSpriteNumber() == 0 && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType())) {
-                super.renderItemIntoGUI(fontRenderer, texManager, itemStack, x, y, renderEffect);
+                renderItemIntoGUIBlock(fontRenderer, texManager, itemStack, x, y, renderEffect);
                 return;
             }
 
@@ -87,7 +91,6 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                     GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0F);
 
                 GL11.glDisable(GL11.GL_LIGHTING);
-                //GL11.glEnable(GL11.GL_LIGHTING);
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glEnable(GL11.GL_ALPHA_TEST);
 
@@ -95,14 +98,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
                 GL11.glDisable(GL11.GL_ALPHA_TEST);
                 GL11.glDisable(GL11.GL_BLEND);
-                //GL11.glDisable(GL11.GL_LIGHTING);
                 GL11.glEnable(GL11.GL_LIGHTING);
 
                 if (renderEffect && itemStack.hasEffect(i))
                     renderEffect(texManager, x, y);
             }
-
-            GL11.glEnable(GL11.GL_CULL_FACE);
         }
 
         @Override
@@ -143,6 +143,52 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 tessellator.draw();
             }
         }
+
+        private void renderItemIntoGUIBlock (FontRenderer fontRenderer, TextureManager texManager, ItemStack itemStack, int x, int y, boolean renderEffect) {
+            texManager.bindTexture(TextureMap.locationBlocksTexture);
+            Block block = Block.getBlockFromItem(itemStack.getItem());
+            GL11.glEnable(GL11.GL_ALPHA_TEST);
+
+            if (block.getRenderBlockPass() != 0) {
+                GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+                GL11.glEnable(GL11.GL_BLEND);
+                OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+            }
+            else {
+                GL11.glAlphaFunc(GL11.GL_GREATER, 0.5F);
+                GL11.glDisable(GL11.GL_BLEND);
+            }
+
+            GL11.glPushMatrix();
+            GL11.glTranslatef(x - 2, y + 3, zLevel - 3);
+            GL11.glScalef(10, 10, 10);
+            GL11.glTranslatef(1, 0.5f, 1);
+            GL11.glScalef(1, 1, -1);
+            GL11.glRotatef(210, 1, 0, 0);
+            GL11.glRotatef(45, 0, 1, 0);
+
+            int color = itemStack.getItem().getColorFromItemStack(itemStack, 0);
+            float r = (float)(color >> 16 & 255) / 255.0F;
+            float g = (float)(color >> 8 & 255) / 255.0F;
+            float b = (float)(color & 255) / 255.0F;
+
+            if (this.renderWithColor)
+                GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0F);
+
+            GL11.glDisable(GL11.GL_LIGHTING);
+
+            GL11.glRotatef(-90, 0, 1, 0);
+            this.renderBlocksRi.useInventoryTint = this.renderWithColor;
+            this.renderBlocksRi.renderBlockAsItem(block, itemStack.getItemDamage(), brightness);
+            this.renderBlocksRi.useInventoryTint = true;
+
+            GL11.glEnable(GL11.GL_LIGHTING);
+
+            if (block.getRenderBlockPass() == 0)
+                GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+
+            GL11.glPopMatrix();
+        }
     };
 
     private float itemOffset2X[] = new float[] { .5f, .5f };
@@ -152,11 +198,17 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     private float itemOffset4Y[] = new float[] { 10.25f, 2.25f, 10.25f, 2.25f };
 
     private float itemOffset3X[] = new float[] { .5f, .25f, .75f };
-    private float itemOffset3Y[] = new float[] { 10.25f, 2.25f, 2.25f };
+    private float itemOffset3Y[] = new float[] { 9.75f, 2.25f, 2.25f };
 
     private RenderBlocks renderBlocks = new RenderBlocks();
 
     private float brightness;
+
+    private static int[] glStateRender = { GL11.GL_LIGHTING, GL11.GL_BLEND };
+    private List<int[]> savedGLStateRender = GLUtil.makeGLState(glStateRender);
+
+    private static int[] glStateItemRender = { GL11.GL_LIGHTING, GL11.GL_ALPHA_TEST, GL11.GL_BLEND };
+    private List<int[]> savedGLStateItemRender = GLUtil.makeGLState(glStateItemRender);
 
     @Override
     public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime) {
@@ -164,7 +216,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         if (tileDrawers == null)
             return;
 
-        saveGLState();
+        GLUtil.saveGLState(savedGLStateRender, glStateRender);
 
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
@@ -187,7 +239,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         int lv = ambLight / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lu, lv);
 
-        brightness = tile.getWorldObj().getLightBrightness(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ);
+        brightness = tile.getWorldObj().getLightBrightness(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ) * 1.25f;
+        if (brightness > 1)
+            brightness = 1;
 
         for (int i = 0; i < drawerCount; i++) {
             GL11.glDisable(GL11.GL_BLEND);
@@ -215,8 +269,6 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                     yunit = itemOffset4Y[i];
                 }
 
-                //float xunit = (drawerCount == 2) ? itemOffset2X[i] : itemOffset4X[i];
-                //float yunit = (drawerCount == 2) ? itemOffset2Y[i] : itemOffset4Y[i];
                 float zunit = blockType ? 1.95f * unit : unit;
 
                 float xc = 0, zc = 0;
@@ -270,10 +322,14 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 }
                 else {
                     alignRendering(side);
-                    moveRendering(.25f, getOffsetXForSide(side, xunit) * 16 - 2, 12.5f - yunit, .999f - depth + unit);
+                    moveRendering(.25f, getOffsetXForSide(side, xunit) * 16 - 2, 12.25f - yunit, .999f - depth + unit);
+
+                    GLUtil.saveGLState(savedGLStateItemRender, glStateItemRender);
 
                     if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
                         itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0, true);
+
+                    GLUtil.restoreGLState(savedGLStateItemRender);
                 }
 
                 mc.gameSettings.fancyGraphics = cache;
@@ -284,7 +340,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         GL11.glPopMatrix();
 
-        loadGLState();
+        GLUtil.restoreGLState(savedGLStateRender);
     }
 
     private void alignRendering (ForgeDirection side) {
@@ -311,25 +367,5 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
     private float getOffsetXForSide (ForgeDirection side, float x) {
         return Math.abs(offsetX[side.ordinal()] - x);
-    }
-
-    private boolean blendEnabled;
-    private boolean lightEnabled;
-
-    private void saveGLState () {
-        blendEnabled = GL11.glGetBoolean(GL11.GL_BLEND);
-        lightEnabled = GL11.glGetBoolean(GL11.GL_LIGHTING);
-    }
-
-    private void loadGLState () {
-        if (blendEnabled)
-            GL11.glEnable(GL11.GL_BLEND);
-        else
-            GL11.glDisable(GL11.GL_BLEND);
-
-        if (lightEnabled)
-            GL11.glEnable(GL11.GL_LIGHTING);
-        else
-            GL11.glDisable(GL11.GL_LIGHTING);
     }
 }
