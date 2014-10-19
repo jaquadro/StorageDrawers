@@ -350,7 +350,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     private void alignRendering (ForgeDirection side) {
         GL11.glTranslatef(.5f, .5f, .5f);
         GL11.glRotatef(180f, 0, 0, 1f);     // Render is upside-down: correct it.
-        GL11.glRotatef(getRotationYForSide(side), 0, 1, 0);
+        GL11.glRotatef(getRotationYForSide2D(side), 0, 1, 0);
         GL11.glTranslatef(-.5f, -.5f, -.5f);
     }
 
@@ -365,6 +365,12 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
     private float getRotationYForSide (ForgeDirection side) {
         return sideRotationY[side.ordinal()] * 90;
+    }
+
+    private static final float[] sideRotationY2D = { 0, 0, 0, 2, 3, 1 };
+
+    private float getRotationYForSide2D (ForgeDirection side) {
+        return sideRotationY2D[side.ordinal()] * 90;
     }
 
     private static final float[] offsetX = { 0, 0, 0, 0, 0, 0 };
