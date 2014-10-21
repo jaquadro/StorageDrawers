@@ -91,4 +91,4 @@ storageDrawers.config.prop.enabled.tooltip=인게임 블럭 활성화
 storageDrawers.config.prop.baseStorage=베이스 스토리지
 storageDrawers.config.prop.baseStorage.tooltip=서랍에 저장되어있는 스택을 표시
 storageDrawers.config.prop.recipeOutput=레시피 출력
-storageDrawers.config.prop.recipeOutput.tooltip=Number of items from single crafting.
+storageDrawers.config.prop.recipeOutput.tooltip=단독제작시 아이템 갯수 표기
