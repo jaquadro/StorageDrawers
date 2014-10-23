@@ -260,7 +260,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
         if (!isSlotValid(slot))
             return 0;
 
-        int adjCapacity = data[slot].maxCapacity() * convRate[slot] - pooledCount;
+        int adjCapacity = data[0].maxCapacity() * convRate[0] - pooledCount;
         return adjCapacity / convRate[slot];
     }
 
