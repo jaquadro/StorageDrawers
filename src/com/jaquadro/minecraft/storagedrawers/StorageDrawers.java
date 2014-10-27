@@ -4,7 +4,6 @@ import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.config.OreDictRegistry;
 import com.jaquadro.minecraft.storagedrawers.core.*;
-import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -28,13 +27,12 @@ public class StorageDrawers
 {
     public static final String MOD_ID = "StorageDrawers";
     public static final String MOD_NAME = "Storage Drawers";
-    public static final String MOD_VERSION = "1.1.6";
+    public static final String MOD_VERSION = "1.1.7";
     static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.";
 
     public static final ModBlocks blocks = new ModBlocks();
     public static final ModItems items = new ModItems();
     public static final ModRecipes recipes = new ModRecipes();
-    public static final ModIntegration integration = new ModIntegration();
 
     public static SimpleNetworkWrapper network;
     public static ConfigManager config;
@@ -69,17 +67,13 @@ public class StorageDrawers
     public void init (FMLInitializationEvent event) {
         proxy.registerRenderers();
 
-        NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
         FMLCommonHandler.instance().bus().register(instance);
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
-
-        integration.init();
     }
 
     @Mod.EventHandler
     public void postInit (FMLPostInitializationEvent event) {
         recipes.init();
-        integration.postInit();
     }
 
     @SubscribeEvent

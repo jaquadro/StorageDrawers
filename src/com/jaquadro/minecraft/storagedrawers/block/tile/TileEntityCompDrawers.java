@@ -225,6 +225,11 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
     }
 
     @Override
+    public void clientUpdateCount (int slot, int count) {
+        pooledCount = count;
+    }
+
+    @Override
     public void markDirty () {
         for (int i = 0; i < 3; i++) {
             if (snapshotItems[i] != null && snapshotItems[i].stackSize != snapshotCounts[i]) {
@@ -234,7 +239,8 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
                 else
                     takeItemsFromSlot(i, -diff);
 
-                snapshotItems[i].stackSize = 64 - Math.min(64, data[i].remainingCapacity());
+                int itemStackLimit = getItemStackSize(i);
+                snapshotItems[i].stackSize = itemStackLimit - Math.min(itemStackLimit, data[i].remainingCapacity());
                 snapshotCounts[i] = snapshotItems[i].stackSize;
             }
         }
@@ -259,7 +265,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
         if (!isSlotValid(slot))
             return 0;
 
-        int adjCapacity = data[slot].maxCapacity() * convRate[slot] - pooledCount;
+        int adjCapacity = data[0].maxCapacity() * convRate[0] - pooledCount;
         return adjCapacity / convRate[slot];
     }
 
@@ -459,12 +465,13 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
 
     @Override
     public ItemStack getStackInSlot (int slot) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return null;
 
-        ItemStack stack = getItemsFromSlot(slot, getItemStackSize(slot));
+        int itemStackLimit = getItemStackSize(slot);
+        ItemStack stack = getItemsFromSlot(slot, itemStackLimit);
         if (stack != null) {
-            stack.stackSize = 64 - Math.min(64, remainingCapacity(slot));
+            stack.stackSize = itemStackLimit - Math.min(itemStackLimit, remainingCapacity(slot));
             snapshotItems[slot] = stack;
             snapshotCounts[slot] = stack.stackSize;
         }
@@ -478,7 +485,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
 
     @Override
     public ItemStack decrStackSize (int slot, int count) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return null;
 
         ItemStack stack = takeItemsFromSlot(slot, count);
@@ -495,7 +502,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
 
     @Override
     public void setInventorySlotContents (int slot, ItemStack itemStack) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return;
 
         int insertCount = itemStack.stackSize;
@@ -514,7 +521,8 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
         }
 
         if (snapshotItems[slot] != null) {
-            snapshotItems[slot].stackSize = 64 - Math.min(64, remainingCapacity(slot));
+            int itemStackLimit = getItemStackSize(slot);
+            snapshotItems[slot].stackSize = itemStackLimit - Math.min(itemStackLimit, remainingCapacity(slot));
             snapshotCounts[slot] = snapshotItems[slot].stackSize;
         }
     }
@@ -551,7 +559,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
 
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack itemStack) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return false;
 
         if (!isSlotValid(0))
@@ -581,7 +589,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
 
     @Override
     public boolean canInsertItem (int slot, ItemStack stack, int side) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return false;
 
         for (int aside : autoSides) {

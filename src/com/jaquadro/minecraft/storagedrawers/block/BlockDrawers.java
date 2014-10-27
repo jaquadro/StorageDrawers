@@ -173,7 +173,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         ItemStack item = player.inventory.getCurrentItem();
 
         if (item != null && item.getItem() != null) {
-            if (item.getItem() == ModItems.upgrade) {
+            if (item.getItem() == ModItems.upgrade  && item.getItemDamage() != tileDrawers.getLevel()) {
                 tileDrawers.setLevel(item.getItemDamage());
                 world.markBlockForUpdate(x, y, z);
 
@@ -184,7 +184,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-            else if (item.getItem() == ModItems.upgradeStatus) {
+            else if (item.getItem() == ModItems.upgradeStatus && item.getItemDamage() != tileDrawers.getStatusLevel()) {
                 tileDrawers.setStatusLevel(item.getItemDamage());
                 world.markBlockForUpdate(x, y, z);
 
@@ -301,6 +301,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (tile != null) {
             if (tile.getLevel() > 1)
                 dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgrade, 1, tile.getLevel()));
+            if (tile.getStatusLevel() > 0)
+                dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgradeStatus, 1, tile.getStatusLevel()));
 
             for (int i = 0; i < tile.getDrawerCount(); i++) {
                 while (tile.getItemCount(i) > 0) {

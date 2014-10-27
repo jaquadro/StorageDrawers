@@ -180,6 +180,11 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
     }
 
     @Override
+    public void clientUpdateCount (int slot, int count) {
+        data[slot].count = count;
+    }
+
+    @Override
     public Packet getDescriptionPacket () {
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
@@ -203,7 +208,8 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
                 else
                     takeItemsFromSlot(i, -diff);
 
-                snapshotItems[i].stackSize = 64 - Math.min(64, data[i].remainingCapacity());
+                int itemStackLimit = getItemStackSize(i);
+                snapshotItems[i].stackSize = itemStackLimit - Math.min(itemStackLimit, data[i].remainingCapacity());
                 snapshotCounts[i] = snapshotItems[i].stackSize;
             }
         }
@@ -218,15 +224,17 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public ItemStack getStackInSlot (int slot) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return null;
 
-        ItemStack stack = getItemsFromSlot(slot, getItemStackSize(slot));
+        int itemStackLimit = getItemStackSize(slot);
+        ItemStack stack = getItemsFromSlot(slot, itemStackLimit);
         if (stack != null) {
-            stack.stackSize = 64 - Math.min(64, data[slot].remainingCapacity());
+            stack.stackSize = itemStackLimit - Math.min(itemStackLimit, data[slot].remainingCapacity());
             snapshotItems[slot] = stack;
             snapshotCounts[slot] = stack.stackSize;
-        } else {
+        }
+        else {
             snapshotItems[slot] = null;
             snapshotCounts[slot] = 0;
         }
@@ -236,7 +244,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public ItemStack decrStackSize (int slot, int count) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return null;
 
         ItemStack stack = takeItemsFromSlot(slot, count);
@@ -253,7 +261,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public void setInventorySlotContents (int slot, ItemStack itemStack) {
-        if (slot >= getSizeInventory() || itemStack == null)
+        if (slot < 0 || slot >= getSizeInventory())
             return;
 
         int insertCount = itemStack.stackSize;
@@ -264,21 +272,23 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
             int count = putItemsIntoSlot(slot, itemStack, insertCount);
             if (count > 0 && !worldObj.isRemote)
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        } else if (insertCount < 0) {
+        }
+        else if (insertCount < 0) {
             ItemStack rmStack = takeItemsFromSlot(slot, -insertCount);
             if (rmStack != null && rmStack.stackSize > 0 && !worldObj.isRemote)
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
 
         if (snapshotItems[slot] != null) {
-            snapshotItems[slot].stackSize = 64 - Math.min(64, data[slot].remainingCapacity());
+            int itemStackLimit = getItemStackSize(slot);
+            snapshotItems[slot].stackSize = itemStackLimit - Math.min(itemStackLimit, data[slot].remainingCapacity());
             snapshotCounts[slot] = snapshotItems[slot].stackSize;
         }
     }
 
     @Override
     public String getInventoryName () {
-        return "container.drawers";
+        return null;
     }
 
     @Override
@@ -293,10 +303,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public boolean isUseableByPlayer (EntityPlayer player) {
-        if (worldObj.getTileEntity(xCoord, yCoord, zCoord) != this)
-            return false;
-
-        return player.getDistanceSq(xCoord + .5, yCoord + .5, zCoord + .5) <= 64;
+        return false;
     }
 
     @Override
@@ -311,7 +318,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack itemStack) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return false;
 
         if (data[slot].getItem() == null)
@@ -342,7 +349,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public boolean canInsertItem (int slot, ItemStack stack, int side) {
-        if (slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory())
             return false;
 
         for (int aside : autoSides) {

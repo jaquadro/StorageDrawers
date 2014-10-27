@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -168,4 +169,7 @@ public abstract class TileEntityDrawersBase extends TileEntity implements ISided
 
         return count;
     }
+}
+
+    public abstract void clientUpdateCount (int slot, int count);
 }

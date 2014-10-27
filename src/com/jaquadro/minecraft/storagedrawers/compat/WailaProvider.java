@@ -39,7 +39,6 @@ public class WailaProvider
         public List<String> getWailaBody (ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
             TileEntityDrawersBase tile = (TileEntityDrawersBase) accessor.getTileEntity();
 
-            currenttip.add(StatCollector.translateToLocalFormatted("storageDrawers.waila.level", tile.getLevel()));
             for (int i = 0; i < tile.getDrawerCount(); i++) {
                 String name = StatCollector.translateToLocal("storageDrawers.waila.empty");
                 ItemStack stack = tile.getSingleItemStack(i);

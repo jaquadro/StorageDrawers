@@ -9,10 +9,6 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
-        //maven {
-        //    name 'CB Maven FS'
-        //    url "http://chickenbones.net/maven/"
-        //}
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
@@ -21,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.1.6"
+version = "1.7.10-1.1.7"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
 
@@ -59,9 +55,6 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    //compile "codechicken:CodeChickenLib:${config.cb_minecraft_version}-${config.code_chicken_lib_version}:dev"
-    //compile "codechicken:CodeChickenCore:${config.cb_minecraft_version}-${config.code_chicken_core_version}:dev"
-    //compile "codechicken:NotEnoughItems:${config.cb_minecraft_version}-${config.nei_version}:dev"
 }
 
 processResources
