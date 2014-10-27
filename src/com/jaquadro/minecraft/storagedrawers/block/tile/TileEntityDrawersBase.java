@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -110,4 +111,6 @@ public abstract class TileEntityDrawersBase extends TileEntity
         readFromNBT(pkt.func_148857_g());
         getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
     }
+
+    public abstract void clientUpdateCount (int slot, int count);
 }

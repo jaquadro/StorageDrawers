@@ -225,6 +225,11 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
     }
 
     @Override
+    public void clientUpdateCount (int slot, int count) {
+        pooledCount = count;
+    }
+
+    @Override
     public void markDirty () {
         for (int i = 0; i < 3; i++) {
             if (snapshotItems[i] != null && snapshotItems[i].stackSize != snapshotCounts[i]) {

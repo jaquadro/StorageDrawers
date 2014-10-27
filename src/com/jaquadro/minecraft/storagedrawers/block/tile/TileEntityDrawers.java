@@ -180,6 +180,11 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
     }
 
     @Override
+    public void clientUpdateCount (int slot, int count) {
+        data[slot].count = count;
+    }
+
+    @Override
     public Packet getDescriptionPacket () {
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
