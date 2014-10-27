@@ -169,7 +169,6 @@ public abstract class TileEntityDrawersBase extends TileEntity implements ISided
 
         return count;
     }
-}
 
     public abstract void clientUpdateCount (int slot, int count);
 }

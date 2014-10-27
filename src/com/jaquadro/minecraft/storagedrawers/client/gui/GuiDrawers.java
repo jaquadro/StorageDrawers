@@ -19,7 +19,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import scala.tools.nsc.doc.model.Object;
 
 public class GuiDrawers extends GuiContainer
 {
