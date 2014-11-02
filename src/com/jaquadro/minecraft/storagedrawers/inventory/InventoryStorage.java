@@ -1,16 +1,58 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersBase;
+import cpw.mods.fml.common.asm.transformers.ItemStackTransformer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 public class InventoryStorage implements IInventory
 {
+    private static class InventorySnapshot {
+        private ItemStack[] snapshotItems;
+        private int[] snapshotCounts;
+
+        public InventorySnapshot (int size) {
+            snapshotItems = new ItemStack[size];
+            snapshotCounts = new int[snapshotItems.length];
+        }
+
+        public ItemStack takeSnapshot (ItemStack stack, int slot) {
+            if (stack != null) {
+                snapshotItems[slot] = stack;
+                snapshotCounts[slot] = stack.stackSize;
+            }
+            else {
+                snapshotItems[slot] = null;
+                snapshotCounts[slot] = 0;
+            }
+
+            return stack;
+        }
+
+        public int getDiff (int slot) {
+            if (snapshotItems[slot] == null)
+                return 0;
+
+            return snapshotItems[slot].stackSize - snapshotCounts[slot];
+        }
+
+        public int splitDiff (int slot) {
+            int diff = getDiff(slot);
+            if (diff != 0) {
+                snapshotCounts[slot] = snapshotItems[slot].stackSize;
+            }
+
+            return diff;
+        }
+    }
+
     private TileEntityDrawersBase tile;
+    private InventorySnapshot snapshot;
 
     public InventoryStorage (TileEntityDrawersBase tileEntity) {
         tile = tileEntity;
+        snapshot = new InventorySnapshot(tile.getSizeInventory());
     }
 
     @Override
@@ -27,12 +69,12 @@ public class InventoryStorage implements IInventory
         stack = stack.copy();
         stack.stackSize = tile.getItemCount(slot);
 
-        return stack;
+        return snapshot.takeSnapshot(stack, slot);
     }
 
     @Override
     public ItemStack decrStackSize (int slot, int count) {
-        return tile.decrStackSize(slot, count);
+        return snapshot.takeSnapshot(tile.decrStackSize(slot, count), slot);
     }
 
     @Override
@@ -57,11 +99,18 @@ public class InventoryStorage implements IInventory
 
     @Override
     public int getInventoryStackLimit () {
-        return Integer.MAX_VALUE;
+        int limit = tile.getInventoryStackLimit();
+        return (limit > 64) ? 64 : limit;
     }
 
     @Override
     public void markDirty () {
+        for (int i = 0, n = getSizeInventory(); i < n; i++) {
+            int diff = snapshot.splitDiff(i);
+            if (diff != 0)
+                tile.getStackInSlot(i).stackSize += diff;
+        }
+
         tile.markDirty();
     }
 

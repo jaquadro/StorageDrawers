@@ -502,7 +502,7 @@ public class TileEntityCompDrawers extends TileEntityDrawersBase implements ISto
 
     @Override
     public void setInventorySlotContents (int slot, ItemStack itemStack) {
-        if (slot < 0 || slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory() || itemStack == null)
             return;
 
         int insertCount = itemStack.stackSize;

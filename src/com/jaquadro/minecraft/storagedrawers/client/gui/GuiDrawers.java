@@ -20,11 +20,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import java.util.List;
+
 public class GuiDrawers extends GuiContainer
 {
     private static final ResourceLocation guiTextures2 = new ResourceLocation("storagedrawers", "textures/gui/drawers_2.png");
     private static final ResourceLocation guiTextures4 = new ResourceLocation("storagedrawers", "textures/gui/drawers_4.png");
     private static final ResourceLocation guiTexturesComp = new ResourceLocation("storagedrawers", "textures/gui/drawers_comp.png");
+
+    private static final int smDisabledX = 176;
+    private static final int smDisabledY = 0;
 
     private static final Object[] empty = new Object[0];
 
@@ -75,6 +80,15 @@ public class GuiDrawers extends GuiContainer
         int guiX = (width - xSize) / 2;
         int guiY = (height - ySize) / 2;
         drawTexturedModalRect(guiX, guiY, 0, 0, xSize, ySize);
+
+        if (inventorySlots instanceof ContainerDrawers) {
+            ContainerDrawers container = (ContainerDrawers) inventorySlots;
+            List<Slot> storageSlots = container.getStorageSlots();
+            for (int i = 0, n = storageSlots.size(); i < n; i++) {
+                Slot slot = container.getSlot(i);
+                drawTexturedModalRect(guiX + slot.xDisplayPosition, guiY + slot.yDisplayPosition, smDisabledX, smDisabledY, 16, 16);
+            }
+        }
     }
 
     private RenderItem setItemRender (RenderItem renderItem) {

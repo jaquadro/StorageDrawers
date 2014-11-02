@@ -288,7 +288,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public String getInventoryName () {
-        return null;
+        return "container.drawers";
     }
 
     @Override
@@ -303,7 +303,11 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public boolean isUseableByPlayer (EntityPlayer player) {
-        return false;
+        if (worldObj.getTileEntity(xCoord, yCoord, zCoord) != this)
+            return false;
+
+        return player.getDistanceSq(xCoord + .5, yCoord + .5, zCoord + .5) <= 64;
+
     }
 
     @Override
