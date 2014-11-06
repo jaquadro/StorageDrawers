@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.inventory.InventoryStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -20,11 +21,51 @@ import java.util.UUID;
 
 public class TileEntityDrawers extends TileEntityDrawersBase implements IStorageProvider, ISidedInventory
 {
+    private class DrawerInventoryStack extends InventoryStack
+    {
+        private int slot;
+
+        public DrawerInventoryStack (int slot) {
+            this.slot = slot;
+            init();
+        }
+
+        @Override
+        protected ItemStack getNewItemStack () {
+            return data[slot].getNewItemStack();
+        }
+
+        @Override
+        protected int getItemStackSize () {
+            return data[slot].itemStackMaxSize();
+        }
+
+        @Override
+        protected int getItemCount () {
+            return data[slot].count;
+        }
+
+        @Override
+        protected int getItemCapacity () {
+            return data[slot].maxCapacity();
+        }
+
+        @Override
+        protected void applyDiff (int diff) {
+            if (diff != 0) {
+                if (diff > 0)
+                    putItemsIntoSlot(slot, getNativeStack(), diff);
+                else
+                    takeItemsFromSlot(slot, -diff);
+            }
+        }
+    }
+
     private int drawerCount = 2;
 
     private DrawerData[] data;
-    private ItemStack[] snapshotItems;
-    private int[] snapshotCounts;
+    //private ItemStack[] snapshotItems;
+    //private int[] snapshotCounts;
 
     private long lastClickTime;
     private UUID lastClickUUID;
@@ -44,8 +85,9 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         for (int i = 0, n = data.length; i < n; i++)
             data[i] = new DrawerData(this, i);
 
-        snapshotItems = new ItemStack[count];
-        snapshotCounts = new int[count];
+        inventoryStacks = new InventoryStack[count];
+        //snapshotItems = new ItemStack[count];
+        //snapshotCounts = new int[count];
     }
 
     public int getItemCount (int slot) {
@@ -77,8 +119,10 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
             return null;
 
         data[slot].count -= stack.stackSize;
-        if (data[slot].count <= 0)
+        if (data[slot].count <= 0) {
             data[slot].reset();
+            inventoryStacks[slot] = null;
+        }
 
         return stack;
     }
@@ -110,8 +154,11 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
     }
 
     public int putItemsIntoSlot (int slot, ItemStack stack, int count) {
-        if (data[slot].getItem() == null)
+        if (data[slot].getItem() == null) {
             data[slot].setItem(stack);
+            inventoryStacks[slot] = new DrawerInventoryStack(slot);
+            inventoryStacks[slot].markDirty();
+        }
 
         if (!data[slot].areItemsEqual(stack))
             return 0;
@@ -155,14 +202,19 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         drawerCount = slots.tagCount();
         data = new DrawerData[slots.tagCount()];
 
+        inventoryStacks = new InventoryStack[drawerCount];
+
         for (int i = 0, n = data.length; i < n; i++) {
             NBTTagCompound slot = slots.getCompoundTagAt(i);
             data[i] = new DrawerData(this, i);
             data[i].readFromNBT(slot);
+            if (data[i].getItem() != null)
+                inventoryStacks[i] = new DrawerInventoryStack(i);
         }
 
-        snapshotItems = new ItemStack[drawerCount];
-        snapshotCounts = new int[drawerCount];
+
+        //snapshotItems = new ItemStack[drawerCount];
+        //snapshotCounts = new int[drawerCount];
     }
 
     @Override
@@ -201,7 +253,10 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
     @Override
     public void markDirty () {
         for (int i = 0; i < drawerCount; i++) {
-            if (snapshotItems[i] != null && snapshotItems[i].stackSize != snapshotCounts[i]) {
+            if (inventoryStacks[i] != null)
+                inventoryStacks[i].markDirty();
+
+            /*if (snapshotItems[i] != null && snapshotItems[i].stackSize != snapshotCounts[i]) {
                 int diff = snapshotItems[i].stackSize - snapshotCounts[i];
                 if (diff > 0)
                     putItemsIntoSlot(i, snapshotItems[i], diff);
@@ -211,7 +266,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
                 int itemStackLimit = getItemStackSize(i);
                 snapshotItems[i].stackSize = itemStackLimit - Math.min(itemStackLimit, data[i].remainingCapacity());
                 snapshotCounts[i] = snapshotItems[i].stackSize;
-            }
+            }*/
         }
 
         super.markDirty();
@@ -219,7 +274,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public int getSizeInventory () {
-        return drawerCount;
+        return drawerCount * 3;
     }
 
     @Override
@@ -227,7 +282,23 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         if (slot < 0 || slot >= getSizeInventory())
             return null;
 
-        int itemStackLimit = getItemStackSize(slot);
+        int baseSlot = slot % drawerCount;
+        InventoryStack invStack = inventoryStacks[baseSlot];
+        if (invStack == null)
+            return null;
+
+        invStack.markDirty();
+
+        int groupSlot = slot / drawerCount;
+        switch (groupSlot) {
+            case 0: return invStack.getInStack();
+            case 1: return invStack.getOutStack();
+            case 2: return invStack.getNativeStack();
+        }
+
+        return null;
+
+        /*int itemStackLimit = getItemStackSize(baseSlot);
         ItemStack stack = getItemsFromSlot(slot, itemStackLimit);
         if (stack != null) {
             stack.stackSize = itemStackLimit - Math.min(itemStackLimit, data[slot].remainingCapacity());
@@ -239,7 +310,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
             snapshotCounts[slot] = 0;
         }
 
-        return stack;
+        return stack;*/
     }
 
     @Override
@@ -247,9 +318,13 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         if (slot < 0 || slot >= getSizeInventory())
             return null;
 
-        ItemStack stack = takeItemsFromSlot(slot, count);
+        int baseSlot = slot % drawerCount;
+        ItemStack stack = takeItemsFromSlot(baseSlot, count);
         if (stack != null && !worldObj.isRemote)
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+
+        if (inventoryStacks[baseSlot] != null)
+            inventoryStacks[baseSlot].markDirty();
 
         return stack;
     }
@@ -264,26 +339,43 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         if (slot < 0 || slot >= getSizeInventory())
             return;
 
-        int insertCount = itemStack.stackSize;
-        if (snapshotItems[slot] != null)
-            insertCount = itemStack.stackSize - snapshotCounts[slot];
+        int baseSlot = slot % drawerCount;
+        int slotGroup = slot / drawerCount;
+        int insertCount = 0;
+
+        if (slotGroup == 0) {
+            insertCount = (itemStack != null) ? itemStack.stackSize : 0;
+            if (inventoryStacks[baseSlot] != null)
+                insertCount -= inventoryStacks[baseSlot].getInStack().stackSize;
+        }
+        else if (slotGroup == 1) {
+            insertCount = (itemStack != null) ? itemStack.stackSize : 0;
+            if (inventoryStacks[baseSlot] != null)
+                insertCount -= inventoryStacks[baseSlot].getOutStack().stackSize;
+        }
+
+        //if (snapshotItems[slot] != null)
+        //    insertCount = itemStack.stackSize - snapshotCounts[slot];
 
         if (insertCount > 0) {
-            int count = putItemsIntoSlot(slot, itemStack, insertCount);
+            int count = putItemsIntoSlot(baseSlot, itemStack, insertCount);
             if (count > 0 && !worldObj.isRemote)
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
         else if (insertCount < 0) {
-            ItemStack rmStack = takeItemsFromSlot(slot, -insertCount);
+            ItemStack rmStack = takeItemsFromSlot(baseSlot, -insertCount);
             if (rmStack != null && rmStack.stackSize > 0 && !worldObj.isRemote)
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
 
-        if (snapshotItems[slot] != null) {
+        if (inventoryStacks[baseSlot] != null)
+            inventoryStacks[baseSlot].markDirty();
+
+        /*if (snapshotItems[slot] != null) {
             int itemStackLimit = getItemStackSize(slot);
             snapshotItems[slot].stackSize = itemStackLimit - Math.min(itemStackLimit, data[slot].remainingCapacity());
             snapshotCounts[slot] = snapshotItems[slot].stackSize;
-        }
+        }*/
     }
 
     @Override
@@ -321,21 +413,22 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
         if (slot < 0 || slot >= getSizeInventory())
             return false;
 
-        if (data[slot].getItem() == null)
+        int baseSlot = slot % drawerCount;
+        if (data[baseSlot].getItem() == null)
             return true;
 
-        if (!data[slot].areItemsEqual(itemStack))
+        if (!data[baseSlot].areItemsEqual(itemStack))
             return false;
 
-        if (data[slot].remainingCapacity() < itemStack.stackSize)
+        if (data[baseSlot].remainingCapacity() < itemStack.stackSize)
             return false;
 
         return true;
     }
 
     private static final int[] drawerSlots0 = new int[0];
-    private static final int[] drawerSlots2 = new int[] { 0, 1 };
-    private static final int[] drawerSlots4 = new int[] { 0, 1, 2, 3 };
+    private static final int[] drawerSlots2 = new int[] { 0, 1, 2, 3 };
+    private static final int[] drawerSlots4 = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
 
     @Override
     public int[] getAccessibleSlotsFromSide (int side) {
@@ -349,7 +442,7 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public boolean canInsertItem (int slot, ItemStack stack, int side) {
-        if (slot < 0 || slot >= getSizeInventory())
+        if (slot < 0 || slot >= getSizeInventory() / 3)
             return false;
 
         for (int aside : autoSides) {
@@ -363,6 +456,10 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public boolean canExtractItem (int slot, ItemStack stack, int side) {
-        return false;
+        int baseUnit = getSizeInventory() / 3;
+        if (slot < baseUnit || slot >= 2 * baseUnit)
+            return false;
+
+        return true;
     }
 }

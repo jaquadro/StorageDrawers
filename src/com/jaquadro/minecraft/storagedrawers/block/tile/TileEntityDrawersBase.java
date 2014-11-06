@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.storagedrawers.inventory.InventoryStack;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,8 @@ public abstract class TileEntityDrawersBase extends TileEntity
     private int statusLevel = 0;
 
     protected int[] autoSides = new int[] { 0, 1 };
+
+    protected InventoryStack[] inventoryStacks;
 
     public int getDirection () {
         return direction;
