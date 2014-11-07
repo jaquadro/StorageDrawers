@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.config.OreDictRegistry;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
+import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
@@ -51,6 +52,7 @@ public class StorageDrawers
 
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
         network.registerMessage(BlockClickMessage.Handler.class, BlockClickMessage.class, 0, Side.SERVER);
+        network.registerMessage(CountUpdateMessage.Handler.class, CountUpdateMessage.class, 1, Side.CLIENT);
 
         compRegistry = new CompTierRegistry();
         oreDictRegistry = new OreDictRegistry();

@@ -3,6 +3,9 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.InventoryStack;
+import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -124,6 +127,9 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
             inventoryStacks[slot] = null;
         }
 
+        if (!worldObj.isRemote)
+            syncClientCount(slot);
+
         return stack;
     }
 
@@ -168,6 +174,9 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
         data[slot].count += countAdded;
         stack.stackSize -= countAdded;
+
+        if (!worldObj.isRemote)
+            syncClientCount(slot);
 
         return countAdded;
     }
@@ -233,7 +242,17 @@ public class TileEntityDrawers extends TileEntityDrawersBase implements IStorage
 
     @Override
     public void clientUpdateCount (int slot, int count) {
-        data[slot].count = count;
+        if (data[slot].count != count) {
+            data[slot].count = count;
+            getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
+        }
+    }
+
+    protected void syncClientCount (int slot) {
+        IMessage message = new CountUpdateMessage(xCoord, yCoord, zCoord, slot, data[slot].count);
+        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 500);
+
+        StorageDrawers.network.sendToAllAround(message, targetPoint);
     }
 
     @Override
