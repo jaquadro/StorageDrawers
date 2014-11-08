@@ -75,6 +75,12 @@ public abstract class TileEntityDrawersBase extends TileEntity
 
     public abstract ItemStack getSingleItemStack (int slot);
 
+    public abstract void setStoredItemCount (int slot, int count);
+
+    public abstract boolean isItemValidForDrawer (int slot, ItemStack item);
+
+    public abstract void setStoredItemPrototype (int slot, ItemStack protoItem);
+
     @Override
     public void readFromNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
