@@ -19,7 +19,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import java.util.*;
 import java.util.List;
 
-public class TileEntityCompDrawers extends TileEntityDrawersBase implements IStorageProvider, ISidedInventory
+/*public class TileEntityCompDrawers extends TileEntityDrawersBase implements IStorageProvider, ISidedInventory
 {
     private static InventoryLookup lookup1 = new InventoryLookup(1, 1);
     private static InventoryLookup lookup2 = new InventoryLookup(2, 2);
@@ -645,4 +645,4 @@ class InventoryLookup extends InventoryCrafting
         stackList[slot] = stack;
     }
 }
-
+*/

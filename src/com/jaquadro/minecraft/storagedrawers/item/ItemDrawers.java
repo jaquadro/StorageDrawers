@@ -3,7 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.item;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersBase;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import cpw.mods.fml.relauncher.Side;
@@ -11,12 +11,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWood;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
@@ -31,14 +29,14 @@ public class ItemDrawers extends ItemMultiTexture
         if (!super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, metadata))
             return false;
 
-        TileEntityDrawersBase tile = (TileEntityDrawersBase) world.getTileEntity(x, y, z);
+        TileEntityDrawers tile = (TileEntityDrawers) world.getTileEntity(x, y, z);
         if (tile != null) {
             if (side > 1)
                 tile.setDirection(side);
 
             BlockDrawers block = (BlockDrawers) field_150939_a;
-            if (tile instanceof TileEntityDrawers)
-                ((TileEntityDrawers)tile).setDrawerCount(block.drawerCount);
+            if (tile instanceof TileEntityDrawersStandard)
+                ((TileEntityDrawersStandard)tile).setDrawerCount(block.drawerCount);
 
             tile.setDrawerCapacity(getCapacityForBlock(block));
         }

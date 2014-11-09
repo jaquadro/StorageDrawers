@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 public interface IDrawer
 {
@@ -79,4 +80,8 @@ public interface IDrawer
      * A drawer set with an item type and 0 count is not considered empty.
      */
     boolean isEmpty ();
+
+    public void writeToNBT (NBTTagCompound tag);
+
+    public void readFromNBT (NBTTagCompound tag);
 }

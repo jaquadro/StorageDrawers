@@ -1,9 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -27,7 +27,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import java.util.List;
 
@@ -212,7 +211,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
     @Override
     public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime) {
-        TileEntityDrawersBase tileDrawers = (TileEntityDrawersBase) tile;
+        TileEntityDrawers tileDrawers = (TileEntityDrawers) tile;
         if (tileDrawers == null)
             return;
 
@@ -247,7 +246,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_LIGHTING);
 
-            ItemStack itemStack = tileDrawers.getSingleItemStack(i);
+            IDrawer drawer = tileDrawers.getDrawer(i);
+            ItemStack itemStack = drawer.getStoredItemPrototype();
             if (itemStack != null) {
                 GL11.glPushMatrix();
 

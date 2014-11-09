@@ -1,16 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityCompDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersBase;
-import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import cpw.mods.fml.common.registry.GameData;
-import cpw.mods.fml.common.registry.GameRegistry;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockWood;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -56,8 +52,8 @@ public class BlockCompDrawers extends BlockDrawers
     }
 
     @Override
-    public TileEntityDrawersBase createNewTileEntity (World world, int meta) {
-        return new TileEntityCompDrawers();
+    public TileEntityDrawers createNewTileEntity (World world, int meta) {
+        return new TileEntityDrawersComp();
     }
 
     @Override
@@ -87,29 +83,30 @@ public class BlockCompDrawers extends BlockDrawers
 
     @Override
     public IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side) {
-        TileEntityDrawersBase tile = getTileEntity(blockAccess, x, y, z);
+        TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
         if (tile == null)
             return iconFront[0];
 
         if (side == tile.getDirection()) {
             if (tile.getStatusLevel() != 3) {
-                if (tile.getItemStackSize(2) > 0)
+                if (tile.getDrawer(2).getStoredItemStackSize() > 0)
                     return iconFront[2];
-                else if (tile.getItemStackSize(1) > 0)
+                else if (tile.getDrawer(1).getStoredItemStackSize() > 0)
                     return iconFront[1];
                 else
                     return iconFront[0];
             }
             else {
+                IDrawer main = tile.getDrawer(0);
                 int plev = 0;
-                if (tile.getItemCapacity(0) != 0) {
-                    float pfull = (float) tile.getItemCount(0) / tile.getItemCapacity(0);
+                if (main.getMaxCapacity() != 0) {
+                    float pfull = (float) main.getStoredItemCount() / main.getMaxCapacity();
                     plev = MathHelper.clamp_int((int) (pfull * 6.99), 0, 6);
                 }
 
-                if (tile.getItemStackSize(2) > 0)
+                if (tile.getDrawer(2).getStoredItemStackSize() > 0)
                     return iconFrontInd[2][plev];
-                else if (tile.getItemStackSize(1) > 0)
+                else if (tile.getDrawer(1).getStoredItemStackSize() > 0)
                     return iconFrontInd[1][plev];
                 else
                     return iconFrontInd[0][plev];

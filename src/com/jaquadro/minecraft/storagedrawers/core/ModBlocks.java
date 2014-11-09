@@ -3,8 +3,8 @@ package com.jaquadro.minecraft.storagedrawers.core;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityCompDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
@@ -31,24 +31,24 @@ public class ModBlocks
 
         if (config.isBlockEnabled("fulldrawers2")) {
             GameRegistry.registerBlock(fullDrawers2, ItemDrawers.class, "fullDrawers2");
-            GameRegistry.registerTileEntity(TileEntityDrawers.class, ModBlocks.getQualifiedName(fullDrawers2));
+            GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers2));
         }
         if (config.isBlockEnabled("fulldrawers4")) {
             GameRegistry.registerBlock(fullDrawers4, ItemDrawers.class, "fullDrawers4");
-            GameRegistry.registerTileEntity(TileEntityDrawers.class, ModBlocks.getQualifiedName(fullDrawers4));
+            GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers4));
         }
         if (config.isBlockEnabled("halfdrawers2")) {
             GameRegistry.registerBlock(halfDrawers2, ItemDrawers.class, "halfDrawers2");
-            GameRegistry.registerTileEntity(TileEntityDrawers.class, ModBlocks.getQualifiedName(halfDrawers2));
+            GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(halfDrawers2));
         }
         if (config.isBlockEnabled("halfdrawers4")) {
             GameRegistry.registerBlock(halfDrawers4, ItemDrawers.class, "halfDrawers4");
-            GameRegistry.registerTileEntity(TileEntityDrawers.class, ModBlocks.getQualifiedName(halfDrawers4));
+            GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(halfDrawers4));
         }
 
         if (config.isBlockEnabled("compdrawers")) {
             GameRegistry.registerBlock(compDrawers, ItemCompDrawers.class, "compDrawers");
-            GameRegistry.registerTileEntity(TileEntityCompDrawers.class, ModBlocks.getQualifiedName(compDrawers));
+            GameRegistry.registerTileEntity(TileEntityDrawersComp.class, ModBlocks.getQualifiedName(compDrawers));
         }
     }
 

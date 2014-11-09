@@ -13,9 +13,17 @@ public abstract class InventoryStack
     private int outCount;
 
     public void init () {
+        reset();
+    }
+
+    public void reset () {
         nativeStack = getNewItemStack();
         inStack = getNewItemStack();
         outStack = getNewItemStack();
+
+        nativeCount = 0;
+        inCount = 0;
+        outCount = 0;
 
         refresh();
     }
@@ -57,13 +65,19 @@ public abstract class InventoryStack
         int itemCount = getItemCount();
         int remainingLimit = getItemCapacity() - itemCount;
 
-        nativeCount = itemCount;
-        nativeStack.stackSize = nativeCount;
+        if (nativeStack != null) {
+            nativeCount = itemCount;
+            nativeStack.stackSize = nativeCount;
+        }
 
-        inCount = itemStackLimit - Math.min(itemStackLimit, remainingLimit);
-        inStack.stackSize = inCount;
+        if (inStack != null) {
+            inCount = itemStackLimit - Math.min(itemStackLimit, remainingLimit);
+            inStack.stackSize = inCount;
+        }
 
-        outCount = Math.min(itemStackLimit, itemCount);
-        outStack.stackSize = outCount;
+        if (outStack != null) {
+            outCount = Math.min(itemStackLimit, itemCount);
+            outStack.stackSize = outCount;
+        }
     }
 }

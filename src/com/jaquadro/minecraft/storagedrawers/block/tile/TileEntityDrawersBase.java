@@ -11,7 +11,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
-
+/*
 public abstract class TileEntityDrawersBase extends TileEntity
 {
     private int direction;
@@ -122,4 +122,4 @@ public abstract class TileEntityDrawersBase extends TileEntity
     }
 
     public abstract void clientUpdateCount (int slot, int count);
-}
+}*/

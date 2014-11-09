@@ -1,22 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersBase;
-import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
@@ -65,7 +56,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
     }
 
     private boolean renderWorldBlock (IBlockAccess world, int x, int y, int z, BlockDrawers block, int modelId, RenderBlocks renderer) {
-        TileEntityDrawersBase tile = block.getTileEntity(world, x, y, z);
+        TileEntityDrawers tile = block.getTileEntity(world, x, y, z);
         if (tile == null)
             return false;
 
@@ -83,12 +74,12 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         renderExterior(block, x, y, z, side, renderer);
 
-        if (tile.getLevel() > 1 && StorageDrawers.config.cache.renderStorageUpgrades) {
+        if (tile.getStorageLevel() > 1 && StorageDrawers.config.cache.renderStorageUpgrades) {
             for (int i = 0; i < 6; i++)
-                boxRenderer.setExteriorIcon(block.getOverlayIcon(world, x, y, z, i, tile.getLevel()), i);
+                boxRenderer.setExteriorIcon(block.getOverlayIcon(world, x, y, z, i, tile.getStorageLevel()), i);
 
-            boxRenderer.setCutIcon(block.getOverlayIconTrim(tile.getLevel()));
-            boxRenderer.setInteriorIcon(block.getOverlayIconTrim(tile.getLevel()));
+            boxRenderer.setCutIcon(block.getOverlayIconTrim(tile.getStorageLevel()));
+            boxRenderer.setInteriorIcon(block.getOverlayIconTrim(tile.getStorageLevel()));
 
             renderExterior(block, x, y, z, side, renderer);
         }
@@ -140,7 +131,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         if (level <= 0 || side < 2 || side > 5)
             return;
 
-        TileEntityDrawersBase tile = block.getTileEntity(renderer.blockAccess, x, y, z);
+        TileEntityDrawers tile = block.getTileEntity(renderer.blockAccess, x, y, z);
 
         int d = block.halfDepth ? 1 : 0;
         int xi = side - 2;
@@ -167,11 +158,12 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
             return;
 
         for (int i = 0; i < count; i++) {
+            IDrawer drawer = tile.getDrawer(i);
             int iconIndex = 0;
             if (level == 2)
-                iconIndex = (tile.getItemCapacity(i) > 0 && (float)tile.getItemCount(i) / tile.getItemCapacity(i) > .75) ? 1 : iconIndex;
+                iconIndex = (drawer.getMaxCapacity() > 0 && (float)drawer.getStoredItemCount() / drawer.getMaxCapacity() > .75) ? 1 : iconIndex;
             if (level >= 1)
-                iconIndex = (tile.getItemCapacity(i) > 0 && tile.getItemCount(i) == tile.getItemCapacity(i)) ? 2 : iconIndex;
+                iconIndex = (drawer.getMaxCapacity() > 0 && drawer.getStoredItemCount() == drawer.getMaxCapacity()) ? 2 : iconIndex;
 
             boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex));
             boxRenderer.renderExterior(renderer, block, x, y, z, indX[xi][d][i] * unit, indY[i] * unit, indX[zi][d][i] * unit,

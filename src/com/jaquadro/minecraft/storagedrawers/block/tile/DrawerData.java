@@ -9,6 +9,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
 public class DrawerData
 {
     private static final ItemStack nullStack = new ItemStack((Item)null);
@@ -211,4 +212,4 @@ public class DrawerData
 
         return ItemStack.areItemStackTagsEqual(stack1, stack2);
     }
-}
+}*/

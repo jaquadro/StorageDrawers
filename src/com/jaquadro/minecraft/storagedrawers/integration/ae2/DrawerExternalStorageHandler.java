@@ -6,7 +6,6 @@ import appeng.api.storage.IExternalStorageHandler;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.StorageChannel;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 

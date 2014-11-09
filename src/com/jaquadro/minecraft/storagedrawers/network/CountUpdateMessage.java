@@ -1,6 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.network;
 
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersBase;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -53,8 +53,8 @@ public class CountUpdateMessage implements IMessage
             if (ctx.side == Side.CLIENT) {
                 World world = Minecraft.getMinecraft().theWorld;
                 TileEntity tileEntity = world.getTileEntity(message.x, message.y, message.z);
-                if (tileEntity instanceof TileEntityDrawersBase) {
-                    ((TileEntityDrawersBase) tileEntity).clientUpdateCount(message.slot, message.count);
+                if (tileEntity instanceof TileEntityDrawers) {
+                    ((TileEntityDrawers) tileEntity).clientUpdateCount(message.slot, message.count);
                 }
             }
 

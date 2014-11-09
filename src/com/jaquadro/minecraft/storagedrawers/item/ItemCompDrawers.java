@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersBase;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -25,7 +25,7 @@ public class ItemCompDrawers extends ItemBlock
         if (!super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, metadata))
             return false;
 
-        TileEntityDrawersBase tile = (TileEntityDrawersBase) world.getTileEntity(x, y, z);
+        TileEntityDrawers tile = (TileEntityDrawers) world.getTileEntity(x, y, z);
         if (tile != null) {
             if (side > 1)
                 tile.setDirection(side);
