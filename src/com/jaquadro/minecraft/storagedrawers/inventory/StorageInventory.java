@@ -242,7 +242,6 @@ public class StorageInventory implements IDrawerInventory
         if (drawer == null)
             return false;
 
-        // TODO: Is it valid to accept an item if its stack size is larger than available storage?
         switch (getInventorySlotType(slot)) {
             case INPUT:
                 return drawer.canItemBeStored(item);
