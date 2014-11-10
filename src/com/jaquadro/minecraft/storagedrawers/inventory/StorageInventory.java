@@ -10,6 +10,8 @@ import net.minecraft.item.ItemStack;
 
 public class StorageInventory implements IDrawerInventory
 {
+    private static final int[] emptySlots = new int[0];
+
     private final IDrawerGroup group;
     private final ISideManager sideMan;
 
@@ -26,7 +28,7 @@ public class StorageInventory implements IDrawerInventory
 
     @Override
     public int getDrawerSlot (int inventorySlot) {
-        return inventorySlot % SlotType.values.length;
+        return inventorySlot % group.getDrawerCount();
     }
 
     @Override
@@ -41,7 +43,13 @@ public class StorageInventory implements IDrawerInventory
 
     @Override
     public int[] getAccessibleSlotsFromSide (int side) {
-        return sideMan.getSlotsForSide(side);
+        int[] autoSides = sideMan.getSlotsForSide(side);
+        for (int aside : autoSides) {
+            if (side == aside)
+                return inventorySlots;
+        }
+
+        return emptySlots;
     }
 
     @Override
