@@ -215,11 +215,6 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         if (tileDrawers == null)
             return;
 
-        GLUtil.saveGLState(savedGLStateRender, glStateRender);
-
-        GL11.glPushMatrix();
-        GL11.glTranslated(x, y, z);
-
         int drawerCount = tileDrawers.getDrawerCount();
         float depth = 1;
         float unit = .0625f;
@@ -229,6 +224,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             depth = ((BlockDrawers) block).halfDepth ? .5f : 1;
         else
             return;
+
+        GLUtil.saveGLState(savedGLStateRender, glStateRender);
+
+        GL11.glPushMatrix();
+        GL11.glTranslated(x, y, z);
 
         itemRenderer.setRenderManager(RenderManager.instance);
 
