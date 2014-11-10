@@ -30,8 +30,8 @@ public class DrawerData implements IDrawer, IInventoryAdapter
         storageProvider = provider;
         this.slot = slot;
 
+        protoStack = nullStack;
         inventoryStack = new DrawerInventoryStack();
-        reset();
     }
 
     @Override
@@ -55,9 +55,14 @@ public class DrawerData implements IDrawer, IInventoryAdapter
 
     @Override
     public void setStoredItem (ItemStack itemPrototype, int amount) {
+        setStoredItem(itemPrototype, amount, true);
+    }
+
+    private void setStoredItem (ItemStack itemPrototype, int amount, boolean mark) {
         if (itemPrototype == null) {
             reset();
-            storageProvider.markDirty(slot);
+            if (mark)
+                storageProvider.markDirty(slot);
             return;
         }
 
@@ -65,10 +70,11 @@ public class DrawerData implements IDrawer, IInventoryAdapter
         protoStack.stackSize = 1;
 
         refreshOreDictMatches();
-        setStoredItemCount(amount);
+        setStoredItemCount(amount, mark, false);
         inventoryStack.reset();
 
-        storageProvider.markDirty(slot);
+        if (mark)
+            storageProvider.markDirty(slot);
     }
 
     @Override
@@ -81,12 +87,26 @@ public class DrawerData implements IDrawer, IInventoryAdapter
 
     @Override
     public void setStoredItemCount (int amount) {
+        setStoredItemCount(amount, true, true);
+    }
+
+    public void setStoredItemCount (int amount, boolean mark, boolean clearOnEmpty) {
         if (storageProvider.isCountCentrallyManaged())
             storageProvider.setSlotCount(amount);
         else
             count = amount;
 
-        storageProvider.markAmountDirty(slot);
+        if (amount == 0) {
+            if (clearOnEmpty) {
+                protoStack = nullStack;
+                oreDictMatches = null;
+                inventoryStack.reset();
+                if (mark)
+                    storageProvider.markDirty(slot);
+            }
+        }
+        else if (mark)
+            storageProvider.markAmountDirty(slot);
     }
 
     @Override
@@ -146,20 +166,23 @@ public class DrawerData implements IDrawer, IInventoryAdapter
     }
 
     public void readFromNBT (NBTTagCompound tag) {
-        reset();
-
         if (tag.hasKey("Item") && tag.hasKey("Count")) {
             ItemStack stack = new ItemStack(Item.getItemById(tag.getShort("Item")));
             stack.setItemDamage(tag.getShort("Meta"));
             if (tag.hasKey("Tags"))
                 stack.setTagCompound(tag.getCompoundTag("Tags"));
 
-            setStoredItem(stack, tag.getInteger("Count"));
+            setStoredItem(stack, tag.getInteger("Count"), false);
+        }
+        else {
+            protoStack = nullStack;
+            oreDictMatches = null;
+            inventoryStack.reset();
         }
     }
 
     private void reset () {
-        setStoredItemCount(0);
+        setStoredItemCount(0, false, true);
         protoStack = nullStack;
         oreDictMatches = null;
         inventoryStack.reset();

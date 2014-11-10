@@ -39,6 +39,9 @@ public class DefaultStorageProvider implements IStorageProvider
 
     @Override
     public void markAmountDirty (int slot) {
+        if (tile.getWorldObj().isRemote)
+            return;
+
         int count = group.getDrawer(slot).getStoredItemCount();
 
         IMessage message = new CountUpdateMessage(tile.xCoord, tile.yCoord, tile.zCoord, slot, count);
