@@ -33,7 +33,7 @@ public class StorageInventory implements IDrawerInventory
 
     @Override
     public SlotType getInventorySlotType (int inventorySlot) {
-        return SlotType.values[inventorySlot / SlotType.values.length];
+        return SlotType.values[inventorySlot / group.getDrawerCount()];
     }
 
     @Override
