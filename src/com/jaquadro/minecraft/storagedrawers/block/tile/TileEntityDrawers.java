@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.StorageInventory;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.DrawerData;
@@ -30,6 +31,8 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     private IDrawer[] drawers;
     private IDrawerInventory inventory;
 
+    private int[] autoSides = new int[] { 0, 1 };
+
     private int direction;
     private int drawerCapacity = 1;
     private int storageLevel = 1;
@@ -44,12 +47,16 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     protected abstract IStorageProvider getStorageProvider ();
 
+    protected ISideManager getSideManager () {
+        return new DefaultSideManager();
+    }
+
     protected void initWithDrawerCount (int drawerCount) {
         drawers = new IDrawer[drawerCount];
         for (int i = 0; i < drawerCount; i++)
             drawers[i] = new DrawerData(getStorageProvider(), i);
 
-        inventory = new StorageInventory(this);
+        inventory = new StorageInventory(this, getSideManager());
     }
 
     public int getDirection () {
@@ -58,13 +65,13 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     public void setDirection (int direction) {
         this.direction = direction % 6;
-        // TODO: Deal with sides
-        /*autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction], 2, 3 };
+
+        autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction], 2, 3 };
 
         if (direction == 2 || direction == 3) {
             autoSides[3] = 4;
             autoSides[4] = 5;
-        }*/
+        }
     }
 
     public int getStorageLevel () {
@@ -191,7 +198,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             drawers[i].readFromNBT(slot);
         }
 
-        inventory = new StorageInventory(this);
+        inventory = new StorageInventory(this, getSideManager());
     }
 
     @Override
@@ -222,7 +229,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     @Override
     public void markDirty () {
-
+        inventory.markDirty();
         super.markDirty();
     }
 
@@ -347,5 +354,13 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack stack) {
         return inventory.isItemValidForSlot(slot, stack);
+    }
+
+    private class DefaultSideManager implements ISideManager
+    {
+        @Override
+        public int[] getSlotsForSide (int side) {
+            return autoSides;
+        }
     }
 }

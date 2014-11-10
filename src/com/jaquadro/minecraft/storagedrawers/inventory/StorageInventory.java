@@ -11,10 +11,13 @@ import net.minecraft.item.ItemStack;
 public class StorageInventory implements IDrawerInventory
 {
     private final IDrawerGroup group;
+    private final ISideManager sideMan;
+
     private final int[] inventorySlots;
 
-    public StorageInventory (IDrawerGroup drawerGroup) {
+    public StorageInventory (IDrawerGroup drawerGroup, ISideManager sideManager) {
         group = drawerGroup;
+        sideMan = sideManager;
 
         inventorySlots = new int[group.getDrawerCount() * SlotType.values.length];
         for (int i = 0, n = inventorySlots.length; i < n; i++)
@@ -38,8 +41,7 @@ public class StorageInventory implements IDrawerInventory
 
     @Override
     public int[] getAccessibleSlotsFromSide (int side) {
-        // TODO
-        return new int[0];
+        return sideMan.getSlotsForSide(side);
     }
 
     @Override
@@ -143,6 +145,11 @@ public class StorageInventory implements IDrawerInventory
         int insertCount = (item != null) ? item.stackSize : 0;
         switch (getInventorySlotType(slot)) {
             case INPUT:
+                if (drawer.isEmpty()) {
+                    setInventorySlotContents(drawer, item);
+                    return;
+                }
+
                 ItemStack inStack = adapter.getInventoryStack(SlotType.INPUT);
                 if (inStack != null)
                     insertCount -= inStack.stackSize;
@@ -153,16 +160,7 @@ public class StorageInventory implements IDrawerInventory
                     insertCount -= outStack.stackSize;
                 break;
             case STORAGE:
-                if (item == null)
-                    drawer.setStoredItem(null, 0);
-                else {
-                    insertCount = item.stackSize;
-                    if (insertCount > drawer.getMaxCapacity())
-                        insertCount = drawer.getMaxCapacity();
-
-                    drawer.setStoredItem(item, insertCount);
-                    item.stackSize -= insertCount;
-                }
+                setInventorySlotContents(drawer, item);
                 return;
         }
 
@@ -171,6 +169,21 @@ public class StorageInventory implements IDrawerInventory
             newStoredCount = Math.max(0, Math.min(newStoredCount, drawer.getMaxCapacity()));
 
             drawer.setStoredItemCount(newStoredCount);
+        }
+    }
+
+    private void setInventorySlotContents (IDrawer drawer, ItemStack item) {
+        if (item == null)
+            drawer.setStoredItem(null, 0);
+        else {
+            drawer.setStoredItem(item, 0);
+
+            int insertCount = item.stackSize;
+            if (insertCount > drawer.getMaxCapacity())
+                insertCount = drawer.getMaxCapacity();
+
+            drawer.setStoredItemCount(insertCount);
+            item.stackSize -= insertCount;
         }
     }
 
@@ -191,7 +204,14 @@ public class StorageInventory implements IDrawerInventory
 
     @Override
     public void markDirty () {
+        for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
+            if (!group.isDrawerEnabled(i))
+                continue;
 
+            IDrawer drawer = group.getDrawer(i);
+            if (drawer instanceof IInventoryAdapter)
+                ((IInventoryAdapter) drawer).syncInventory();
+        }
     }
 
     @Override

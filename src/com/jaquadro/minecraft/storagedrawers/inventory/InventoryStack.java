@@ -51,6 +51,9 @@ public abstract class InventoryStack
     }
 
     public int getDiff () {
+        if (nativeStack == null)
+            return 0;
+
         int diffNative = nativeStack.stackSize - nativeCount;
         int diffIn = inStack.stackSize - inCount;
         int diffOut = outStack.stackSize - outCount;

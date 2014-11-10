@@ -52,6 +52,9 @@ public class DefaultStorageProvider implements IStorageProvider
 
     @Override
     public void markDirty (int slot) {
+        if (tile.getWorldObj().isRemote)
+            return;
 
+        tile.getWorldObj().markBlockForUpdate(tile.xCoord, tile.yCoord, tile.zCoord);
     }
 }
