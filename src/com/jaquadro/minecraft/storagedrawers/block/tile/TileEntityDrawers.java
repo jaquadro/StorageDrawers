@@ -147,7 +147,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         if (currentStack != null)
             count += putItemsIntoSlot(slot, currentStack, currentStack.stackSize);
 
-        if (worldObj.getWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID)) {
+        if (worldObj.getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID)) {
             for (int i = 0, n = player.inventory.getSizeInventory(); i < n; i++) {
                 ItemStack subStack = player.inventory.getStackInSlot(i);
                 if (subStack != null) {
@@ -160,7 +160,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             }
         }
 
-        lastClickTime = worldObj.getWorldTime();
+        lastClickTime = worldObj.getTotalWorldTime();
         lastClickUUID = player.getPersistentID();
 
         markDirty();
