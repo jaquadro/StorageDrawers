@@ -4,15 +4,14 @@ import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.config.OreDictRegistry;
 import com.jaquadro.minecraft.storagedrawers.core.*;
+import com.jaquadro.minecraft.storagedrawers.integration.IntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -29,7 +28,7 @@ public class StorageDrawers
     public static final String MOD_ID = "StorageDrawers";
     public static final String MOD_NAME = "Storage Drawers";
     public static final String MOD_VERSION = "1.2.0";
-    static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.";
+    public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.";
 
     public static final ModBlocks blocks = new ModBlocks();
     public static final ModItems items = new ModItems();
@@ -59,10 +58,6 @@ public class StorageDrawers
 
         blocks.init();
         items.init();
-
-        if (Loader.isModLoaded("Waila")) {
-            FMLInterModComms.sendMessage("Waila", "register", SOURCE_PATH + "compat.WailaProvider.registerProvider");
-        }
     }
 
     @Mod.EventHandler
@@ -71,11 +66,15 @@ public class StorageDrawers
 
         FMLCommonHandler.instance().bus().register(instance);
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
+
+        IntegrationRegistry.instance().init();
     }
 
     @Mod.EventHandler
     public void postInit (FMLPostInitializationEvent event) {
         recipes.init();
+
+        IntegrationRegistry.instance().postInit();
     }
 
     @SubscribeEvent

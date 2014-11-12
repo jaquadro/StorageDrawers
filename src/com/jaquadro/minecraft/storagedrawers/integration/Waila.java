@@ -1,9 +1,11 @@
-package com.jaquadro.minecraft.storagedrawers.compat;
+package com.jaquadro.minecraft.storagedrawers.integration;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -15,9 +17,23 @@ import java.util.List;
 
 /**
  * @author dmillerw
+ * @author jaquadro
  */
-public class WailaProvider
+public class Waila extends IntegrationModule
 {
+    @Override
+    public String getModID () {
+        return "Waila";
+    }
+
+    @Override
+    public void init () throws Throwable {
+        FMLInterModComms.sendMessage("Waila", "register", StorageDrawers.SOURCE_PATH + "integration.Waila.registerProvider");
+    }
+
+    @Override
+    public void postInit () { }
+
     public static void registerProvider(IWailaRegistrar registrar) {
         registrar.registerBodyProvider(new WailaDrawer(), BlockDrawers.class);
     }
