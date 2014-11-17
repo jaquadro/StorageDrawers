@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
@@ -9,6 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityDrawersStandard extends TileEntityDrawers
 {
+    private IStorageProvider storageProvider = new StandardStorageProvider();
+
     public TileEntityDrawersStandard () {
         super(1);
     }
@@ -17,13 +20,19 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         initWithDrawerCount(count);
     }
 
-    @Override
     protected IStorageProvider getStorageProvider () {
-        return new StandardStorageProvider();
+        if (storageProvider == null)
+            storageProvider = new StandardStorageProvider();
+        return storageProvider;
     }
 
-    private class StandardStorageProvider extends DefaultStorageProvider {
+    @Override
+    protected IDrawer createDrawer (int slot) {
+        return new DrawerData(getStorageProvider(), slot);
+    }
 
+    private class StandardStorageProvider extends DefaultStorageProvider
+    {
         public StandardStorageProvider () {
             super(TileEntityDrawersStandard.this, TileEntityDrawersStandard.this);
         }

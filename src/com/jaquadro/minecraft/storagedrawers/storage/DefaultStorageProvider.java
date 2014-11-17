@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
 public class DefaultStorageProvider implements IStorageProvider
@@ -18,7 +19,7 @@ public class DefaultStorageProvider implements IStorageProvider
     }
 
     @Override
-    public boolean isCountCentrallyManaged () {
+    public boolean isCentrallyManaged () {
         return false;
     }
 
@@ -28,9 +29,7 @@ public class DefaultStorageProvider implements IStorageProvider
     }
 
     @Override
-    public int setSlotCount (int slot) {
-        return 0;
-    }
+    public void setSlotCount (int slot, int amount) { }
 
     @Override
     public int getSlotStackCapacity (int slot) {

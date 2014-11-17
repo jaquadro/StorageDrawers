@@ -7,8 +7,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.StorageInventory;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
-import com.jaquadro.minecraft.storagedrawers.storage.DrawerData;
-import com.jaquadro.minecraft.storagedrawers.storage.IStorageProvider;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,7 +43,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         initWithDrawerCount(drawerCount);
     }
 
-    protected abstract IStorageProvider getStorageProvider ();
+    protected abstract IDrawer createDrawer (int slot);
 
     protected ISideManager getSideManager () {
         return new DefaultSideManager();
@@ -54,7 +52,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     protected void initWithDrawerCount (int drawerCount) {
         drawers = new IDrawer[drawerCount];
         for (int i = 0; i < drawerCount; i++)
-            drawers[i] = new DrawerData(getStorageProvider(), i);
+            drawers[i] = createDrawer(i);
 
         inventory = new StorageInventory(this, getSideManager());
     }
@@ -190,11 +188,11 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
         NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
         int drawerCount = slots.tagCount();
-        drawers = new DrawerData[slots.tagCount()];
+        drawers = new IDrawer[slots.tagCount()];
 
         for (int i = 0, n = drawers.length; i < n; i++) {
             NBTTagCompound slot = slots.getCompoundTagAt(i);
-            drawers[i] = new DrawerData(getStorageProvider(), i);
+            drawers[i] = createDrawer(i);
             drawers[i].readFromNBT(slot);
         }
 

@@ -1,12 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
+import net.minecraft.item.ItemStack;
+
 public interface IStorageProvider
 {
-    public boolean isCountCentrallyManaged ();
+    public boolean isCentrallyManaged ();
 
     public int getSlotCount (int slot);
 
-    public int setSlotCount (int slot);
+    public void setSlotCount (int slot, int amount);
 
     public int getSlotStackCapacity (int slot);
 

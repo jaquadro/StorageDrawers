@@ -13,7 +13,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrawerData implements IDrawer, IInventoryAdapter
+public class DrawerData extends BaseDrawerData
 {
     private static final ItemStack nullStack = new ItemStack((Item)null);
 
@@ -21,17 +21,14 @@ public class DrawerData implements IDrawer, IInventoryAdapter
     private int slot;
 
     private ItemStack protoStack;
-    private InventoryStack inventoryStack;
-
     private int count;
-    private List<ItemStack> oreDictMatches;
 
     public DrawerData (IStorageProvider provider, int slot) {
         storageProvider = provider;
+        protoStack = nullStack;
         this.slot = slot;
 
-        protoStack = nullStack;
-        inventoryStack = new DrawerInventoryStack();
+        postInit();
     }
 
     @Override
@@ -43,24 +40,15 @@ public class DrawerData implements IDrawer, IInventoryAdapter
     }
 
     @Override
-    public ItemStack getStoredItemCopy () {
-        if (protoStack == nullStack)
-            return null;
-
-        ItemStack stack = protoStack.copy();
-        stack.stackSize = count;
-
-        return stack;
-    }
-
-    @Override
     public void setStoredItem (ItemStack itemPrototype, int amount) {
         setStoredItem(itemPrototype, amount, true);
     }
 
     private void setStoredItem (ItemStack itemPrototype, int amount, boolean mark) {
         if (itemPrototype == null) {
-            reset();
+            setStoredItemCount(0, false, true);
+            protoStack = nullStack;
+
             if (mark)
                 storageProvider.markDirty(slot);
             return;
@@ -79,10 +67,7 @@ public class DrawerData implements IDrawer, IInventoryAdapter
 
     @Override
     public int getStoredItemCount () {
-        if (storageProvider.isCountCentrallyManaged())
-            return storageProvider.getSlotCount(slot);
-        else
-            return count;
+        return count;
     }
 
     @Override
@@ -91,16 +76,10 @@ public class DrawerData implements IDrawer, IInventoryAdapter
     }
 
     public void setStoredItemCount (int amount, boolean mark, boolean clearOnEmpty) {
-        if (storageProvider.isCountCentrallyManaged())
-            storageProvider.setSlotCount(amount);
-        else
-            count = amount;
-
+        count = amount;
         if (amount == 0) {
             if (clearOnEmpty) {
-                protoStack = nullStack;
-                oreDictMatches = null;
-                inventoryStack.reset();
+                reset();
                 if (mark)
                     storageProvider.markDirty(slot);
             }
@@ -175,128 +154,14 @@ public class DrawerData implements IDrawer, IInventoryAdapter
             setStoredItem(stack, tag.getInteger("Count"), false);
         }
         else {
-            protoStack = nullStack;
-            oreDictMatches = null;
-            inventoryStack.reset();
+            reset();
         }
     }
 
-    private void reset () {
-        setStoredItemCount(0, false, true);
+    @Override
+    protected void reset () {
+        super.reset();
         protoStack = nullStack;
-        oreDictMatches = null;
-        inventoryStack.reset();
-    }
-
-    public boolean areItemsEqual (ItemStack item) {
-        return areItemsEqual(protoStack, item);
-    }
-
-    private void refreshOreDictMatches () {
-        int[] oreIDs = OreDictionary.getOreIDs(protoStack);
-        if (oreIDs.length == 0)
-            oreDictMatches = null;
-        else {
-            oreDictMatches = new ArrayList<ItemStack>();
-            for (int id : oreIDs) {
-                if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(id)))
-                    continue;
-
-                List<ItemStack> list = OreDictionary.getOres(OreDictionary.getOreName(id));
-                for (int i = 0, n = list.size(); i < n; i++)
-                    oreDictMatches.add(list.get(i));
-            }
-
-            if (oreDictMatches.size() == 0)
-                oreDictMatches = null;
-        }
-    }
-
-    public static boolean areItemsEqual (ItemStack stack1, ItemStack stack2) {
-        if (stack1 == null || stack2 == null)
-            return false;
-        if (stack1.getItem() == null || stack2.getItem() == null)
-            return false;
-
-        if (!stack1.isItemEqual(stack2)) {
-            int[] ids1 = OreDictionary.getOreIDs(stack1);
-            int[] ids2 = OreDictionary.getOreIDs(stack2);
-            if (ids1.length == 0 || ids2.length == 0)
-                return false;
-
-            boolean oreMatch = false;
-
-            BRK_ORE_MATCH:
-            for (int oreIndexLeft : ids1) {
-                if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(oreIndexLeft)))
-                    continue;
-
-                for (int oreIndexRight : ids2) {
-                    if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(oreIndexRight)))
-                        continue;
-
-                    if (oreIndexLeft == oreIndexRight) {
-                        oreMatch = true;
-                        break BRK_ORE_MATCH;
-                    }
-                }
-            }
-
-            if (!oreMatch)
-                return false;
-        }
-
-        return ItemStack.areItemStackTagsEqual(stack1, stack2);
-    }
-
-    @Override
-    public ItemStack getInventoryStack (SlotType slotType) {
-        switch (slotType) {
-            case INPUT:
-                return inventoryStack.getInStack();
-            case OUTPUT:
-                return inventoryStack.getOutStack();
-            default:
-                return inventoryStack.getNativeStack();
-        }
-    }
-
-    @Override
-    public void syncInventory () {
-        inventoryStack.markDirty();
-    }
-
-    class DrawerInventoryStack extends InventoryStack
-    {
-        public DrawerInventoryStack () {
-            init();
-        }
-
-        @Override
-        protected ItemStack getNewItemStack () {
-            return getStoredItemCopy();
-        }
-
-        @Override
-        protected int getItemStackSize () {
-            return getStoredItemStackSize();
-        }
-
-        @Override
-        protected int getItemCount () {
-            return getStoredItemCount();
-        }
-
-        @Override
-        protected int getItemCapacity () {
-            return getMaxCapacity();
-        }
-
-        @Override
-        protected void applyDiff (int diff) {
-            if (diff != 0)
-                setStoredItemCount(getStoredItemCount() + diff);
-        }
     }
 }
 

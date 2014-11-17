@@ -61,8 +61,7 @@ public class Waila extends IntegrationModule
                 ItemStack stack = drawer.getStoredItemPrototype();
                 if (stack != null && stack.getItem() != null) {
                     if (tile instanceof TileEntityDrawersComp)
-                        // TODO: WAILA remainder counts for comp drawers
-                        name = stack.getDisplayName(); // + ((i == 0) ? " [" : " [+") + ((TileEntityDrawersComp) tile).getItemRemainderCount(i) + "]";
+                        name = stack.getDisplayName() + ((i == 0) ? " [" : " [+") + ((TileEntityDrawersComp) tile).getStoredItemRemainder(i) + "]";
                     else
                         name = stack.getDisplayName() + " [" + drawer.getStoredItemCount() + "]";
                 }
