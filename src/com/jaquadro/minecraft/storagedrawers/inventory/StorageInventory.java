@@ -77,6 +77,9 @@ public class StorageInventory implements IDrawerInventory
         if (drawer == null)
             return false;
 
+        if (drawer.getStoredItemCount() == 0)
+            return false;
+
         return drawer.canItemBeExtracted(item);
     }
 
@@ -185,6 +188,9 @@ public class StorageInventory implements IDrawerInventory
             drawer.setStoredItem(null, 0);
         else {
             drawer.setStoredItem(item, 0);
+            drawer = findDrawer(item);
+            if (drawer == null)
+                return;
 
             int insertCount = item.stackSize;
             if (insertCount > drawer.getMaxCapacity())
@@ -193,6 +199,19 @@ public class StorageInventory implements IDrawerInventory
             drawer.setStoredItemCount(insertCount);
             item.stackSize -= insertCount;
         }
+    }
+
+    private IDrawer findDrawer (ItemStack item) {
+        for (int i = 0; i < group.getDrawerCount(); i++) {
+            if (!group.isDrawerEnabled(i))
+                continue;
+
+            IDrawer drawer = group.getDrawer(i);
+            if (drawer.canItemBeStored(item))
+                return drawer;
+        }
+
+        return null;
     }
 
     @Override

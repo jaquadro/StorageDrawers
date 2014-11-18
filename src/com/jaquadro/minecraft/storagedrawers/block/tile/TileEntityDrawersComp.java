@@ -62,12 +62,28 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     }
 
     @Override
+    public boolean isDrawerEnabled (int slot) {
+        if (slot > 0 && convRate[slot] == 0)
+            return false;
+
+        return super.isDrawerEnabled(slot);
+    }
+
+    @Override
     public int putItemsIntoSlot (int slot, ItemStack stack, int count) {
         if (stack != null && convRate != null && convRate[0] == 0) {
             populateSlots(stack);
+            int added = 0;
+
             for (int i = 0; i < getDrawerCount(); i++) {
                 if (BaseDrawerData.areItemsEqual(protoStack[i], stack))
-                    return super.putItemsIntoSlot(i, stack, count);
+                    added = super.putItemsIntoSlot(i, stack, count);
+            }
+
+            for (int i = 0; i < getDrawerCount(); i++) {
+                IDrawer drawer = getDrawer(i);
+                if (drawer instanceof CompDrawerData)
+                    ((CompDrawerData) drawer).refresh();
             }
         }
 
@@ -318,7 +334,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 populateSlots(itemPrototype);
                 for (int i = 0; i < getDrawerCount(); i++) {
                     if (BaseDrawerData.areItemsEqual(protoStack[i], itemPrototype))
-                        setStoredItemCount(i, amount);
+                        pooledCount = (pooledCount % convRate[slot]) + convRate[slot] * amount;
                 }
 
                 for (int i = 0; i < getDrawerCount(); i++) {
@@ -329,6 +345,14 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                     if (drawer instanceof CompDrawerData)
                         ((CompDrawerData) drawer).refresh();
                 }
+
+                if (worldObj != null && !worldObj.isRemote) {
+                    //TileEntityDrawersComp.this.markDirty();
+                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                }
+            }
+            else if (itemPrototype == null) {
+                setStoredItemCount(slot, 0);
             }
         }
 
@@ -351,8 +375,13 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (pooledCount != oldCount) {
                 if (pooledCount != 0)
                     markAmountDirty();
-                else
+                else {
                     clear();
+                    if (worldObj != null && !worldObj.isRemote) {
+                        //TileEntityDrawersComp.this.markDirty();
+                        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                    }
+                }
             }
         }
 
@@ -387,7 +416,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             TileEntityDrawersComp.this.markDirty();
         }
 
-        private void refresh () {
+        public void refresh () {
             for (int i = 0; i < getDrawerCount(); i++) {
                 IDrawer drawer = getDrawer(i);
                 if (drawer instanceof CompDrawerData)
