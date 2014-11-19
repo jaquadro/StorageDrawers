@@ -3,9 +3,11 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
+import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
 import com.jaquadro.minecraft.storagedrawers.storage.IStorageProvider;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.inventory.InventoryCrafting;
@@ -17,6 +19,7 @@ import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +95,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
     @Override
     public void readFromNBT (NBTTagCompound tag) {
+        pooledCount = 0;
+
         for (int i = 0; i < getDrawerCount(); i++) {
             protoStack[i] = null;
             convRate[i] = 0;
@@ -99,22 +104,27 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         super.readFromNBT(tag);
 
-        pooledCount = tag.getInteger("Count");
+        try {
+            pooledCount = tag.getInteger("Count");
 
-        for (int i = 0, n = convRate.length; i < n; i++)
-            convRate[i] = 0;
-
-        if (tag.hasKey("Conv0"))
-            convRate[0] = tag.getByte("Conv0");
-        if (tag.hasKey("Conv1"))
-            convRate[1] = tag.getByte("Conv1");
-        if (tag.hasKey("Conv2"))
-            convRate[2] = tag.getByte("Conv2");
+            if (tag.hasKey("Conv0"))
+                convRate[0] = tag.getByte("Conv0");
+            if (tag.hasKey("Conv1"))
+                convRate[1] = tag.getByte("Conv1");
+            if (tag.hasKey("Conv2"))
+                convRate[2] = tag.getByte("Conv2");
+        }
+        catch (Throwable t) {
+            trapLoadFailure(t, tag);
+        }
     }
 
     @Override
     public void writeToNBT (NBTTagCompound tag) {
         super.writeToNBT(tag);
+
+        if (loadDidFail())
+            return;
 
         tag.setInteger("Count", pooledCount);
 
@@ -406,6 +416,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             return protoStack[slot].getItem().getItemStackLimit(protoStack[slot]);
         }
 
+
+
         private void clear () {
             for (int i = 0; i < getDrawerCount(); i++) {
                 protoStack[i] = null;
@@ -428,7 +440,10 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (convRate == null || convRate[slot] == 0)
                 return 0;
 
-            int stackLimit = convRate[0] * TileEntityDrawersComp.this.getDrawerCapacity();
+            ConfigManager config = StorageDrawers.config;
+            int slotStacks = config.getStorageUpgradeMultiplier(getStorageLevel()) * TileEntityDrawersComp.this.getDrawerCapacity();
+
+            int stackLimit = convRate[0] * slotStacks;
             return stackLimit / convRate[slot];
         }
 

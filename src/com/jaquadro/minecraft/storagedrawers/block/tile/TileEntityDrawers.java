@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.StorageInventory;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +22,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
+import org.apache.logging.log4j.Level;
 
+import java.util.Iterator;
 import java.util.UUID;
 
 public abstract class TileEntityDrawers extends TileEntity implements IDrawerGroup, ISidedInventory
@@ -38,6 +41,8 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     private long lastClickTime;
     private UUID lastClickUUID;
+
+    private NBTTagCompound failureSnapshot;
 
     protected TileEntityDrawers (int drawerCount) {
         initWithDrawerCount(drawerCount);
@@ -127,8 +132,6 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         if (slot < 0 || slot >= getDrawerCount())
             return 0;
 
-        // TODO: Override comp to pick the right slot
-
         IDrawer drawer = drawers[slot];
         if (drawer.isEmpty())
             drawer.setStoredItem(stack, 0);
@@ -173,35 +176,65 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         return count;
     }
 
+    protected void trapLoadFailure (Throwable t, NBTTagCompound tag) {
+        failureSnapshot = (NBTTagCompound)tag.copy();
+        FMLLog.log(StorageDrawers.MOD_ID, Level.ERROR, t, "Tile Load Failure.");
+    }
+
+    protected void restoreLoadFailure (NBTTagCompound tag) {
+        Iterator<String> iter = failureSnapshot.func_150296_c().iterator();
+        while (iter.hasNext()) {
+            String key = iter.next();
+            if (!tag.hasKey(key))
+                tag.setTag(key, failureSnapshot.getTag(key));
+        }
+    }
+
+    protected boolean loadDidFail () {
+        return failureSnapshot != null;
+    }
+
     @Override
     public void readFromNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
 
-        setDirection(tag.getByte("Dir"));
+        failureSnapshot = null;
 
-        drawerCapacity = tag.getByte("Cap");
-        storageLevel = tag.getByte("Lev");
+        try {
+            setDirection(tag.getByte("Dir"));
 
-        statusLevel = 0;
-        if (tag.hasKey("Stat"))
-            statusLevel = tag.getByte("Stat");
+            drawerCapacity = tag.getByte("Cap");
+            storageLevel = tag.getByte("Lev");
 
-        NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
-        int drawerCount = slots.tagCount();
-        drawers = new IDrawer[slots.tagCount()];
+            statusLevel = 0;
+            if (tag.hasKey("Stat"))
+                statusLevel = tag.getByte("Stat");
 
-        for (int i = 0, n = drawers.length; i < n; i++) {
-            NBTTagCompound slot = slots.getCompoundTagAt(i);
-            drawers[i] = createDrawer(i);
-            drawers[i].readFromNBT(slot);
+            NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
+            int drawerCount = slots.tagCount();
+            drawers = new IDrawer[slots.tagCount()];
+
+            for (int i = 0, n = drawers.length; i < n; i++) {
+                NBTTagCompound slot = slots.getCompoundTagAt(i);
+                drawers[i] = createDrawer(i);
+                drawers[i].readFromNBT(slot);
+            }
+
+            inventory = new StorageInventory(this, getSideManager());
         }
-
-        inventory = new StorageInventory(this, getSideManager());
+        catch (Throwable t) {
+            trapLoadFailure(t, tag);
+        }
     }
 
     @Override
     public void writeToNBT (NBTTagCompound tag) {
         super.writeToNBT(tag);
+
+        if (failureSnapshot != null) {
+            restoreLoadFailure(tag);
+            return;
+        }
 
         tag.setByte("Dir", (byte)direction);
         tag.setByte("Cap", (byte)drawerCapacity);
