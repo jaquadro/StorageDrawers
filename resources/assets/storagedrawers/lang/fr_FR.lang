@@ -1,0 +1,92 @@
+itemGroup.storageDrawers=Storage Drawers
+
+# Items
+item.upgradeTemplate.name=Modèle d'amélioration
+item.upgrade.iron.name=Amélioration stockage (II)
+item.upgrade.gold.name=Amélioration stockage (III)
+item.upgrade.obsidian.name=Amélioration stockage (IV)
+item.upgrade.diamond.name=Amélioration stockage (V)
+item.upgrade.emerald.name=Amélioration stockage (VI)
+item.upgradeStatus.level1.name=Amélioration statut (I)
+item.upgradeStatus.level1.description=Montre si le stockage est plein
+item.upgradeStatus.level2.name=Amélioration statut (II)
+item.upgradeStatus.level2.description=Montre si le stockage est presque plein
+item.upgradeStatus.level3.name=Amélioration statut (III)
+item.upgradeStatus.level3.description=Montre le niveau de remplissage
+
+# Blocks
+tile.fullDrawers2.oak.name=Tiroirs de chêne 1x2
+tile.fullDrawers2.spruce.name=Tiroirs de sapin 1x2
+tile.fullDrawers2.birch.name=Tiroirs de bouleau 1x2
+tile.fullDrawers2.jungle.name=Tiroirs d'acajou 1x2
+tile.fullDrawers2.acacia.name=Tiroirs d'acacia 1x2
+tile.fullDrawers2.big_oak.name=Tiroirs de chêne noir 1x2
+
+tile.fullDrawers4.oak.name=Tiroirs de chêne 2x2
+tile.fullDrawers4.spruce.name=Tiroirs de sapin 2x2
+tile.fullDrawers4.birch.name=Tiroirs de bouleau 2x2
+tile.fullDrawers4.jungle.name=Tiroirs d'acajou 2x2
+tile.fullDrawers4.acacia.name=Tiroirs d'acacia 2x2
+tile.fullDrawers4.big_oak.name=Tiroirs de chêne noir 2x2
+
+tile.halfDrawers2.oak.name=Tiroirs compacts de chêne 1x2
+tile.halfDrawers2.spruce.name=Tiroirs compacts de sapin 1x2
+tile.halfDrawers2.birch.name=Tiroirs compacts de bouleau 1x2
+tile.halfDrawers2.jungle.name=Tiroirs compacts d'acajou 1x2
+tile.halfDrawers2.acacia.name=Tiroirs compacts d'acacia 1x2
+tile.halfDrawers2.big_oak.name=Tiroirs compacts de chêne noir 1x2
+
+tile.halfDrawers4.oak.name=Tiroirs compacts de chêne 2x2
+tile.halfDrawers4.spruce.name=Tiroirs compacts de sapin 2x2
+tile.halfDrawers4.birch.name=Tiroirs compacts de bouleau 2x2
+tile.halfDrawers4.jungle.name=Tiroirs compacts d'acajou 2x2
+tile.halfDrawers4.acacia.name=Tiroirs compacts d'acacia 2x2
+tile.halfDrawers4.big_oak.name=Tiroirs compacts de chêne noir 2x2
+
+tile.compDrawers.name=Tiroirs compacté
+
+storageDrawers.drawers.description=COntient %d piles par tiroir
+storageDrawers.upgrade.description=Augmente le stockage de %d fois la valeur de base
+
+# Integration
+storageDrawers.waila.empty=Vide
+storageDrawers.waila.level=Niveau d'amélioration : %s
+storageDrawers.waila.drawer=Tiroir #%s: %s
+
+# Configuration
+storageDrawers.config.title=Configuration des tiroirs de stockage
+
+storageDrawers.config.general=Options générales
+storageDrawers.config.general.tooltip=Ceci et cela.
+
+storageDrawers.config.blocks=options de blocs
+storageDrawers.config.blocks.tooltip=Configure les blocs de stockage individuel.
+
+storageDrawers.config.blocks.fullDrawers2=Tiroirs 1x2
+storageDrawers.config.blocks.fullDrawers4=Tiroirs 2x2
+storageDrawers.config.blocks.halfDrawers2=Tiroirs compacts 1x2
+storageDrawers.config.blocks.halfDrawers4=Tiroirs compacts 2x2
+storageDrawers.config.blocks.compDrawers=Compactage du tiroir
+
+storageDrawers.config.upgrades=options d'amélioration
+storageDrawers.config.upgrades.tooltip=Configure les améliorations de stockage induviduel.
+
+storageDrawers.config.upgrades.level2Mult=Multiplieur de stockage (II)
+storageDrawers.config.upgrades.level3Mult=Multiplieur de stockage (III)
+storageDrawers.config.upgrades.level4Mult=Multiplieur de stockage (IV)
+storageDrawers.config.upgrades.level5Mult=Multiplieur de stockage (V)
+storageDrawers.config.upgrades.level6Mult=Multiplieur de stockage (VI)
+
+storageDrawers.config.prop.itemRenderType=Type de rendu des éléments
+storageDrawers.config.prop.itemRenderType.tooltip=Rendu des éléments en 3D ou pas.
+storageDrawers.config.prop.enableIndicatorUpgrades=Active les améliorations d'indicateur
+storageDrawers.config.prop.enableStorageUpgrades=Active les améliorations de stockage
+storageDrawers.config.prop.renderStorageUpgrades=Rendu des améliorations de stockage
+storageDrawers.config.prop.creativeTabVanillaWoods=Tableau en créatif de bois Vanilla
+storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Active tous les style de bois dans le tableau en mode créatif.
+storageDrawers.config.prop.enabled=Activé
+storageDrawers.config.prop.enabled.tooltip=Active les blocs en jeu.
+storageDrawers.config.prop.baseStorage=Stockage de base
+storageDrawers.config.prop.baseStorage.tooltip=Nombre de pile contenu par tiroir.
+storageDrawers.config.prop.recipeOutput=Sortie de recette
+storageDrawers.config.prop.recipeOutput.tooltip=nombre d'éléments d'une seulle fabrication.
