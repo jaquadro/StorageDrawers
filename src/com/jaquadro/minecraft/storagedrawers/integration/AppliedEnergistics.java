@@ -51,6 +51,14 @@ public class AppliedEnergistics extends IntegrationModule
         }
     }
 
+    private static class APIFactory implements IStorageBusMonitorFactory {
+
+        @Override
+        public IMEMonitor<IAEItemStack> createStorageBusMonitor (IMEInventory<IAEItemStack> inventory, BaseActionSource src) {
+            return null;
+        }
+    }
+
     private IStorageBusMonitorFactory factory;
 
     @Override

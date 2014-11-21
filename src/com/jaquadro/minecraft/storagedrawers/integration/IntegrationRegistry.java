@@ -16,8 +16,10 @@ public class IntegrationRegistry
 
     static {
         IntegrationRegistry reg = instance();
-        reg.add(new AppliedEnergistics());
-        reg.add(new Waila());
+        if (Loader.isModLoaded("appliedenergistics2"))
+            reg.add(new AppliedEnergistics());
+        if (Loader.isModLoaded("Waila"))
+            reg.add(new Waila());
     }
 
     private IntegrationRegistry () {
