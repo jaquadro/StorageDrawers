@@ -9,9 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -27,7 +25,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
+import java.nio.FloatBuffer;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -147,6 +147,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             texManager.bindTexture(TextureMap.locationBlocksTexture);
             Block block = Block.getBlockFromItem(itemStack.getItem());
             GL11.glEnable(GL11.GL_ALPHA_TEST);
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            GL11.glDisable(GL11.GL_NORMALIZE);
 
             if (block.getRenderBlockPass() != 0) {
                 GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
@@ -157,6 +159,13 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 GL11.glAlphaFunc(GL11.GL_GREATER, 0.5F);
                 GL11.glDisable(GL11.GL_BLEND);
             }
+
+            // Orient lighting for on-block item render.  Standard GUI RenderHelper method is wrong for this.
+            GL11.glPushMatrix();
+            GL11.glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef(150.0F, 1.0F, 0.0F, 0.0F);
+            RenderHelper.enableStandardItemLighting();
+            GL11.glPopMatrix();
 
             GL11.glPushMatrix();
             GL11.glTranslatef(x - 2, y + 3, zLevel - 3);
@@ -174,14 +183,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             if (this.renderWithColor)
                 GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0F);
 
-            GL11.glDisable(GL11.GL_LIGHTING);
-
             GL11.glRotatef(-90, 0, 1, 0);
+
             this.renderBlocksRi.useInventoryTint = this.renderWithColor;
             this.renderBlocksRi.renderBlockAsItem(block, itemStack.getItemDamage(), brightness);
             this.renderBlocksRi.useInventoryTint = true;
-
-            GL11.glEnable(GL11.GL_LIGHTING);
 
             if (block.getRenderBlockPass() == 0)
                 GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
@@ -208,6 +214,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
     private static int[] glStateItemRender = { GL11.GL_LIGHTING, GL11.GL_ALPHA_TEST, GL11.GL_BLEND };
     private List<int[]> savedGLStateItemRender = GLUtil.makeGLState(glStateItemRender);
+
+    private static int[] glLightRender = { GL11.GL_LIGHT0, GL11.GL_LIGHT1, GL11.GL_COLOR_MATERIAL, GL12.GL_RESCALE_NORMAL, GL11.GL_NORMALIZE };
+    private List<int[]> savedGLLightRender = GLUtil.makeGLState(glLightRender);
 
     @Override
     public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime) {
@@ -241,6 +250,20 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         brightness = tile.getWorldObj().getLightBrightness(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ) * 1.25f;
         if (brightness > 1)
             brightness = 1;
+
+        boolean needRestoreLightAttrib = false;
+        if (!StorageDrawers.config.isFancyItemRenderEnabled()) {
+            for (int i = 0; i < drawerCount; i++) {
+                IDrawer drawer = tileDrawers.getDrawer(i);
+                ItemStack itemStack = drawer.getStoredItemPrototype();
+                if (itemStack != null && itemStack.getItemSpriteNumber() == 0 && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType())) {
+                    GLUtil.saveGLState(savedGLLightRender, glLightRender);
+                    GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
+                    needRestoreLightAttrib = true;
+                    break;
+                }
+            }
+        }
 
         for (int i = 0; i < drawerCount; i++) {
             GL11.glDisable(GL11.GL_BLEND);
@@ -344,6 +367,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         }
 
         GL11.glPopMatrix();
+
+        if (needRestoreLightAttrib) {
+            GLUtil.restoreGLState(savedGLLightRender);
+            GL11.glPopAttrib();
+        }
 
         GLUtil.restoreGLState(savedGLStateRender);
     }
