@@ -27,7 +27,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import java.nio.FloatBuffer;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -209,13 +208,15 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
     private float brightness;
 
+    private static final float unit = .0625f;
+
     private static int[] glStateRender = { GL11.GL_LIGHTING, GL11.GL_BLEND };
     private List<int[]> savedGLStateRender = GLUtil.makeGLState(glStateRender);
 
     private static int[] glStateItemRender = { GL11.GL_LIGHTING, GL11.GL_ALPHA_TEST, GL11.GL_BLEND };
     private List<int[]> savedGLStateItemRender = GLUtil.makeGLState(glStateItemRender);
 
-    private static int[] glLightRender = { GL11.GL_LIGHT0, GL11.GL_LIGHT1, GL11.GL_COLOR_MATERIAL, GL12.GL_RESCALE_NORMAL, GL11.GL_NORMALIZE };
+    private static int[] glLightRender = { GL11.GL_LIGHT0, GL11.GL_LIGHT1, GL11.GL_COLOR_MATERIAL, GL12.GL_RESCALE_NORMAL };
     private List<int[]> savedGLLightRender = GLUtil.makeGLState(glLightRender);
 
     @Override
@@ -224,17 +225,13 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         if (tileDrawers == null)
             return;
 
-        int drawerCount = tileDrawers.getDrawerCount();
-        float depth = 1;
-        float unit = .0625f;
+        float depth;
 
         Block block = tile.getWorldObj().getBlock(tile.xCoord, tile.yCoord, tile.zCoord);
         if (block instanceof BlockDrawers)
             depth = ((BlockDrawers) block).halfDepth ? .5f : 1;
         else
             return;
-
-        GLUtil.saveGLState(savedGLStateRender, glStateRender);
 
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
@@ -251,129 +248,203 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         if (brightness > 1)
             brightness = 1;
 
-        boolean needRestoreLightAttrib = false;
-        if (!StorageDrawers.config.isFancyItemRenderEnabled()) {
-            for (int i = 0; i < drawerCount; i++) {
-                IDrawer drawer = tileDrawers.getDrawer(i);
-                ItemStack itemStack = drawer.getStoredItemPrototype();
-                if (itemStack != null && itemStack.getItemSpriteNumber() == 0 && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType())) {
-                    GLUtil.saveGLState(savedGLLightRender, glLightRender);
-                    GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-                    needRestoreLightAttrib = true;
-                    break;
-                }
+        Minecraft mc = Minecraft.getMinecraft();
+        boolean cache = mc.gameSettings.fancyGraphics;
+        mc.gameSettings.fancyGraphics = true;
+
+        if (StorageDrawers.config.isFancyItemRenderEnabled())
+            renderFancyItemSet(tileDrawers, side, depth);
+        else
+            renderFastItemSet(tileDrawers, side, depth);
+
+        mc.gameSettings.fancyGraphics = cache;
+
+        GL11.glPopMatrix();
+    }
+
+    private void renderFancyItemSet (TileEntityDrawers tile, ForgeDirection side, float depth) {
+        boolean restoreGLState = false;
+        int drawerCount = tile.getDrawerCount();
+
+        for (int i = 0; i < drawerCount; i++) {
+            if (!tile.isDrawerEnabled(i))
+                continue;
+
+            IDrawer drawer = tile.getDrawer(i);
+            ItemStack itemStack = drawer.getStoredItemPrototype();
+            if (itemStack == null)
+                continue;
+
+            if (!restoreGLState) {
+                restoreGLState = true;
+                GLUtil.saveGLState(savedGLStateRender, glStateRender);
             }
+
+            renderFancyItem(itemStack, tile, i, side, depth);
+        }
+
+        if (restoreGLState)
+            GLUtil.restoreGLState(savedGLStateRender);
+    }
+
+    private boolean[] renderAsBlock = new boolean[4];
+    private ItemStack[] renderStacks = new ItemStack[4];
+
+    private void renderFastItemSet (TileEntityDrawers tile, ForgeDirection side, float depth) {
+        int drawerCount = tile.getDrawerCount();
+        boolean restoreItemState = false;
+        boolean restoreBlockState = false;
+
+        for (int i = 0; i < drawerCount; i++) {
+            renderStacks[i] = null;
+            if (!tile.isDrawerEnabled(i))
+                continue;
+
+            IDrawer drawer = tile.getDrawer(i);
+            ItemStack itemStack = drawer.getStoredItemPrototype();
+            if (itemStack == null)
+                continue;
+
+            renderStacks[i] = itemStack;
+            renderAsBlock[i] = isItemBlockType(itemStack);
+
+            if (renderAsBlock[i])
+                restoreBlockState = true;
+            else
+                restoreItemState = true;
+        }
+
+        if (restoreItemState || restoreBlockState)
+            GLUtil.saveGLState(savedGLStateItemRender, glStateItemRender);
+
+        for (int i = 0; i < drawerCount; i++) {
+            if (renderStacks[i] != null && !renderAsBlock[i])
+                renderFastItem(renderStacks[i], tile, i, side, depth);
+        }
+
+        if (restoreBlockState) {
+            GLUtil.saveGLState(savedGLLightRender, glLightRender);
+            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
         }
 
         for (int i = 0; i < drawerCount; i++) {
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glEnable(GL11.GL_LIGHTING);
-
-            IDrawer drawer = tileDrawers.getDrawer(i);
-            ItemStack itemStack = drawer.getStoredItemPrototype();
-            if (itemStack != null) {
-                GL11.glPushMatrix();
-
-                boolean blockType = itemStack.getItemSpriteNumber() == 0
-                    && itemStack.getItem() instanceof ItemBlock
-                    && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType());
-
-                float xunit, yunit;
-                if (drawerCount == 2) {
-                    xunit = itemOffset2X[i];
-                    yunit = itemOffset2Y[i];
-                }
-                else if (drawerCount == 3) {
-                    xunit = itemOffset3X[i];
-                    yunit = itemOffset3Y[i];
-                }
-                else {
-                    xunit = itemOffset4X[i];
-                    yunit = itemOffset4Y[i];
-                }
-
-                float zunit = blockType ? 1.95f * unit : unit;
-
-                float xc = 0, zc = 0;
-                float itemDepth = depth + .001f;
-
-                if (blockType) {
-                    Block itemBlock = Block.getBlockFromItem(itemStack.getItem());
-                    itemBlock.setBlockBoundsBasedOnState(tile.getWorldObj(), 0, 0, 0);
-                    itemBlock.setBlockBoundsForItemRender();
-
-                    double zDepth = 1 - itemBlock.getBlockBoundsMaxZ();
-                    itemDepth += zDepth * zunit;
-                }
-
-                switch (tileDrawers.getDirection()) {
-                    case 3:
-                        xc = xunit;
-                        zc = itemDepth - zunit;
-                        break;
-                    case 2:
-                        xc = 1 - xunit;
-                        zc = 1 - itemDepth + zunit;
-                        break;
-                    case 5:
-                        xc = itemDepth - zunit;
-                        zc = 1 - xunit;
-                        break;
-                    case 4:
-                        xc = 1 - itemDepth + zunit;
-                        zc = xunit;
-                        break;
-                }
-
-                Minecraft mc = Minecraft.getMinecraft();
-                boolean cache = mc.gameSettings.fancyGraphics;
-                mc.gameSettings.fancyGraphics = true;
-
-                if (StorageDrawers.config.isFancyItemRenderEnabled()) {
-                    float yAdj = 0;
-                    if (drawerCount == 2 || drawerCount == 4)
-                        yAdj = -.5f;
-
-                    if (blockType) {
-                        GL11.glTranslatef(xc, unit * (yunit + 1.75f + yAdj), zc);
-                        GL11.glScalef(1, 1, 1);
-                        GL11.glRotatef(getRotationYForSide(side) + 90.0F, 0.0F, 1.0F, 0.0F);
-                    } else {
-                        GL11.glTranslatef(xc, unit * (yunit + 0.75f + yAdj), zc);
-                        GL11.glScalef(.5f, .5f, .5f);
-                        GL11.glRotatef(getRotationYForSide(side), 0.0F, 1.0F, 0.0F);
-                    }
-
-                    EntityItem itemEnt = new EntityItem(null, 0, 0, 0, itemStack);
-                    itemEnt.hoverStart = 0;
-                    itemRenderer.doRender(itemEnt, 0, 0, 0, 0, 0);
-                }
-                else {
-                    alignRendering(side);
-                    moveRendering(.25f, getOffsetXForSide(side, xunit) * 16 - 2, 12.25f - yunit, .999f - depth + unit);
-
-                    GLUtil.saveGLState(savedGLStateItemRender, glStateItemRender);
-
-                    if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
-                        itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0, true);
-
-                    GLUtil.restoreGLState(savedGLStateItemRender);
-                }
-
-                mc.gameSettings.fancyGraphics = cache;
-
-                GL11.glPopMatrix();
-            }
+            if (renderStacks[i] != null && renderAsBlock[i])
+                renderFastItem(renderStacks[i], tile, i, side, depth);
         }
 
-        GL11.glPopMatrix();
-
-        if (needRestoreLightAttrib) {
+        if (restoreBlockState) {
             GLUtil.restoreGLState(savedGLLightRender);
             GL11.glPopAttrib();
         }
 
-        GLUtil.restoreGLState(savedGLStateRender);
+        if (restoreItemState || restoreBlockState)
+            GLUtil.restoreGLState(savedGLStateItemRender);
+    }
+
+    private void renderFancyItem (ItemStack itemStack, TileEntityDrawers tile, int slot, ForgeDirection side, float depth) {
+        int drawerCount = tile.getDrawerCount();
+        boolean isBlockType = isItemBlockType(itemStack);
+
+        float xunit = getXOffset(drawerCount, slot);
+        float yunit = getYOffset(drawerCount, slot);
+        float zunit = isBlockType ? 1.95f * unit : unit;
+
+        float xc = 0, zc = 0;
+        float itemDepth = depth + .001f;
+
+        if (isBlockType) {
+            Block itemBlock = Block.getBlockFromItem(itemStack.getItem());
+            itemBlock.setBlockBoundsBasedOnState(tile.getWorldObj(), 0, 0, 0);
+            itemBlock.setBlockBoundsForItemRender();
+
+            double zDepth = 1 - itemBlock.getBlockBoundsMaxZ();
+            itemDepth += zDepth * zunit;
+        }
+
+        switch (tile.getDirection()) {
+            case 3:
+                xc = xunit;
+                zc = itemDepth - zunit;
+                break;
+            case 2:
+                xc = 1 - xunit;
+                zc = 1 - itemDepth + zunit;
+                break;
+            case 5:
+                xc = itemDepth - zunit;
+                zc = 1 - xunit;
+                break;
+            case 4:
+                xc = 1 - itemDepth + zunit;
+                zc = xunit;
+                break;
+        }
+
+        float yAdj = 0;
+        if (drawerCount == 2 || drawerCount == 4)
+            yAdj = -.5f;
+
+        GL11.glPushMatrix();
+
+        if (isBlockType) {
+            GL11.glTranslatef(xc, unit * (yunit + 1.75f + yAdj), zc);
+            GL11.glScalef(1, 1, 1);
+            GL11.glRotatef(getRotationYForSide(side) + 90.0F, 0.0F, 1.0F, 0.0F);
+        } else {
+            GL11.glTranslatef(xc, unit * (yunit + 0.75f + yAdj), zc);
+            GL11.glScalef(.5f, .5f, .5f);
+            GL11.glRotatef(getRotationYForSide(side), 0.0F, 1.0F, 0.0F);
+        }
+
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_LIGHTING);
+
+        EntityItem itemEnt = new EntityItem(null, 0, 0, 0, itemStack);
+        itemEnt.hoverStart = 0;
+        itemRenderer.doRender(itemEnt, 0, 0, 0, 0, 0);
+
+        GL11.glPopMatrix();
+    }
+
+    private void renderFastItem (ItemStack itemStack, TileEntityDrawers tile, int slot, ForgeDirection side, float depth) {
+        Minecraft mc = Minecraft.getMinecraft();
+        int drawerCount = tile.getDrawerCount();
+        float xunit = getXOffset(drawerCount, slot);
+        float yunit = getYOffset(drawerCount, slot);
+
+        GL11.glPushMatrix();
+
+        alignRendering(side);
+        moveRendering(.25f, getOffsetXForSide(side, xunit) * 16 - 2, 12.25f - yunit, .999f - depth + unit);
+
+        if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
+            itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0, true);
+
+        GL11.glPopMatrix();
+    }
+
+    private boolean isItemBlockType (ItemStack itemStack) {
+        return itemStack.getItemSpriteNumber() == 0
+            && itemStack.getItem() instanceof ItemBlock
+            && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType());
+    }
+
+    private float getXOffset (int drawerCount, int slot) {
+        switch (drawerCount) {
+            case 2: return itemOffset2X[slot];
+            case 3: return itemOffset3X[slot];
+            case 4: return itemOffset4X[slot];
+            default: return 0;
+        }
+    }
+
+    private float getYOffset (int drawerCount, int slot) {
+        switch (drawerCount) {
+            case 2: return itemOffset2Y[slot];
+            case 3: return itemOffset3Y[slot];
+            case 4: return itemOffset4Y[slot];
+            default: return 0;
+        }
     }
 
     private void alignRendering (ForgeDirection side) {
