@@ -2,11 +2,12 @@ package com.jaquadro.minecraft.storagedrawers.integration;
 
 import appeng.api.AEApi;
 import appeng.api.networking.security.BaseActionSource;
+import appeng.api.recipes.IIngredient;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEItemStack;
-import com.jaquadro.minecraft.storagedrawers.integration.ae2.DrawerExternalStorageHandler;
-import com.jaquadro.minecraft.storagedrawers.integration.ae2.IStorageBusMonitorFactory;
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.integration.ae2.*;
 
 import java.lang.reflect.Constructor;
 
@@ -68,6 +69,16 @@ public class AppliedEnergistics extends IntegrationModule
 
     @Override
     public void init () throws Throwable {
+        ShapedRecipeHandler shapedHandler = new ShapedRecipeHandler();
+        if (shapedHandler.isValid())
+            StorageDrawers.recipeHandlerRegistry.registerRecipeHandler(shapedHandler.getRecipeClass(), shapedHandler);
+
+        ShapelessRecipeHandler shapelessHandler = new ShapelessRecipeHandler();
+        if (shapelessHandler.isValid())
+            StorageDrawers.recipeHandlerRegistry.registerRecipeHandler(shapelessHandler.getRecipeClass(), shapelessHandler);
+
+        StorageDrawers.recipeHandlerRegistry.registerIngredientHandler(IIngredient.class, new IngredientHandler());
+
         ReflectionFactory rfactory = new ReflectionFactory();
         if (!rfactory.init())
             throw new Exception("No valid Storage Bus Monitor factory");

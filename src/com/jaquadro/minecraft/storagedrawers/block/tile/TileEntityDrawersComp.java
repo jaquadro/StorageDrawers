@@ -1,25 +1,20 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.registry.IIngredientHandler;
+import com.jaquadro.minecraft.storagedrawers.api.registry.IRecipeHandler;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
-import com.jaquadro.minecraft.storagedrawers.storage.IStorageProvider;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -236,14 +231,22 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (!DrawerData.areItemsEqual(stack, output))
                 continue;
 
-            if (recipe instanceof ShapelessOreRecipe)
-                match = tryMatch(stack, ((ShapelessOreRecipe) recipe).getInput());
-            else if (recipe instanceof ShapelessRecipes)
-                match = tryMatch(stack, ((ShapelessRecipes) recipe).recipeItems);
-            else if (recipe instanceof ShapedOreRecipe)
-                match = tryMatch(stack, ((ShapedOreRecipe) recipe).getInput());
-            else if (recipe instanceof ShapedRecipes)
-                match = tryMatch(stack, ((ShapedRecipes) recipe).recipeItems);
+            IRecipeHandler handler = StorageDrawers.recipeHandlerRegistry.getRecipeHandler(recipe.getClass());
+            while (handler != null) {
+                Object[] itemArr = handler.getInputAsArray(recipe);
+                if (itemArr != null) {
+                    match = tryMatch(stack, itemArr);
+                    break;
+                }
+
+                List itemList = handler.getInputAsList(recipe);
+                if (itemList != null) {
+                    match = tryMatch(stack, itemList);
+                    break;
+                }
+
+                break;
+            }
 
             if (match != null) {
                 setupLookup(lookup1, stack);
@@ -296,6 +299,9 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             return null;
 
         Object item = list[0];
+        if (item == null)
+            return null;
+
         if (item instanceof ItemStack) {
             ItemStack item1 = (ItemStack)item;
             for (int i = 1, n = list.length; i < n; i++) {
@@ -319,6 +325,29 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 if (item1 instanceof ItemStack)
                     return (ItemStack)item1;
             }
+        }
+        else {
+            IIngredientHandler handler = StorageDrawers.recipeHandlerRegistry.getIngredientHandler(item.getClass());
+            if (handler == null)
+                return null;
+
+            ItemStack item1 = handler.getItemStack(item);
+            if (item1 == null)
+                return null;
+
+            for (int i = 1, n = list.length; i < n; i++) {
+                Object item2 = list[i];
+                if (item2 == null || item.getClass() != item2.getClass())
+                    return null;
+
+                item2 = handler.getItemStack(item2);
+                if (item2 == null || item2.getClass() != ItemStack.class)
+                    return null;
+                if (!item1.isItemEqual((ItemStack)item2))
+                    return null;
+            }
+
+            return item1;
         }
 
         return null;
@@ -464,43 +493,6 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             getWorldObj().markBlockForUpdate(xCoord, yCoord, zCoord);
         }
     }
-
-    /*private class CompStorageProvider extends DefaultStorageProvider
-    {
-        public CompStorageProvider () {
-            super(TileEntityDrawersComp.this, TileEntityDrawersComp.this);
-        }
-
-        @Override
-        public boolean isCentrallyManaged () {
-            return true;
-        }
-
-        @Override
-        public int getSlotStackCapacity (int slot) {
-            if (convRate == null || convRate[slot] == 0)
-                return 0;
-
-            int stackLimit = convRate[0] * TileEntityDrawersComp.this.getDrawerCapacity();
-            return stackLimit / convRate[slot];
-        }
-
-        @Override
-        public int getSlotCount (int slot) {
-            if (convRate == null || convRate[slot] == 0)
-                return 0;
-
-            return pooledCount / convRate[slot];
-        }
-
-        @Override
-        public void setSlotCount (int slot, int amount) {
-            if (convRate == null || convRate[slot] == 0)
-                return;
-
-            pooledCount = (pooledCount % convRate[slot]) + convRate[slot] * amount;
-        }
-    }*/
 
     private static class InventoryLookup extends InventoryCrafting
     {

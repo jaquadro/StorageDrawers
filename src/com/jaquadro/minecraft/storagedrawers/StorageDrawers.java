@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.config.OreDictRegistry;
+import com.jaquadro.minecraft.storagedrawers.config.RecipeHandlerRegistry;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.integration.IntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
@@ -38,6 +39,7 @@ public class StorageDrawers
     public static ConfigManager config;
     public static CompTierRegistry compRegistry;
     public static OreDictRegistry oreDictRegistry;
+    public static RecipeHandlerRegistry recipeHandlerRegistry;
 
     @Mod.Instance(MOD_ID)
     public static StorageDrawers instance;
@@ -57,6 +59,7 @@ public class StorageDrawers
 
         compRegistry = new CompTierRegistry();
         oreDictRegistry = new OreDictRegistry();
+        recipeHandlerRegistry = new RecipeHandlerRegistry();
 
         blocks.init();
         items.init();
