@@ -89,9 +89,9 @@ public class BlockCompDrawers extends BlockDrawers
 
         if (side == tile.getDirection()) {
             if (tile.getStatusLevel() != 3) {
-                if (tile.getDrawer(2).getStoredItemStackSize() > 0)
+                if (tile.isDrawerEnabled(2) && tile.getDrawer(2).getStoredItemStackSize() > 0)
                     return iconFront[2];
-                else if (tile.getDrawer(1).getStoredItemStackSize() > 0)
+                else if (tile.isDrawerEnabled(1) && tile.getDrawer(1).getStoredItemStackSize() > 0)
                     return iconFront[1];
                 else
                     return iconFront[0];
@@ -104,9 +104,9 @@ public class BlockCompDrawers extends BlockDrawers
                     plev = MathHelper.clamp_int((int) (pfull * 6.99), 0, 6);
                 }
 
-                if (tile.getDrawer(2).getStoredItemStackSize() > 0)
+                if (tile.isDrawerEnabled(2) && tile.getDrawer(2).getStoredItemStackSize() > 0)
                     return iconFrontInd[2][plev];
-                else if (tile.getDrawer(1).getStoredItemStackSize() > 0)
+                else if (tile.isDrawerEnabled(1) && tile.getDrawer(1).getStoredItemStackSize() > 0)
                     return iconFrontInd[1][plev];
                 else
                     return iconFrontInd[0][plev];

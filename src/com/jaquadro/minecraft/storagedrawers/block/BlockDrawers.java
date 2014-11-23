@@ -302,6 +302,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgradeStatus, 1, tile.getStatusLevel()));
 
             for (int i = 0; i < tile.getDrawerCount(); i++) {
+                if (!tile.isDrawerEnabled(i))
+                    continue;
+
                 IDrawer drawer = tile.getDrawer(i);
                 while (drawer.getStoredItemCount() > 0) {
                     ItemStack stack = tile.takeItemsFromSlot(i, drawer.getStoredItemStackSize());
