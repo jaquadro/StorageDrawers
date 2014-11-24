@@ -11,6 +11,7 @@ import com.jaquadro.minecraft.storagedrawers.storage.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -108,6 +109,17 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 convRate[1] = tag.getByte("Conv1");
             if (tag.hasKey("Conv2"))
                 convRate[2] = tag.getByte("Conv2");
+
+            for (int i = 0; i < getDrawerCount(); i++) {
+                IDrawer drawer = getDrawer(i);
+                if (drawer instanceof CompDrawerData)
+                    ((CompDrawerData) drawer).refresh();
+            }
+
+            if (worldObj != null && !worldObj.isRemote) {
+                //TileEntityDrawersComp.this.markDirty();
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
         }
         catch (Throwable t) {
             trapLoadFailure(t, tag);
@@ -445,7 +457,30 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             return protoStack[slot].getItem().getItemStackLimit(protoStack[slot]);
         }
 
+        @Override
+        public void writeToNBT (int slot, NBTTagCompound tag) {
+            ItemStack protoStack = getStoredItemPrototype(slot);
+            if (protoStack != null && protoStack.getItem() != null) {
+                tag.setShort("Item", (short) Item.getIdFromItem(protoStack.getItem()));
+                tag.setShort("Meta", (short) protoStack.getItemDamage());
+                tag.setInteger("Count", 0); // TODO: Remove when ready to break 1.1.7 compat
 
+                if (protoStack.getTagCompound() != null)
+                    tag.setTag("Tags", protoStack.getTagCompound());
+            }
+        }
+
+        @Override
+        public void readFromNBT (int slot, NBTTagCompound tag) {
+            if (tag.hasKey("Item")) {
+                ItemStack stack = new ItemStack(Item.getItemById(tag.getShort("Item")));
+                stack.setItemDamage(tag.getShort("Meta"));
+                if (tag.hasKey("Tags"))
+                    stack.setTagCompound(tag.getCompoundTag("Tags"));
+
+                protoStack[slot] = stack;
+            }
+        }
 
         private void clear () {
             for (int i = 0; i < getDrawerCount(); i++) {

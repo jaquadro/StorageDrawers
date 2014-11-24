@@ -74,30 +74,13 @@ public class CompDrawerData extends BaseDrawerData
 
     @Override
     public void writeToNBT (NBTTagCompound tag) {
-        ItemStack protoStack = getStoredItemPrototype();
-        if (protoStack != null && protoStack.getItem() != null) {
-            tag.setShort("Item", (short) Item.getIdFromItem(protoStack.getItem()));
-            tag.setShort("Meta", (short) protoStack.getItemDamage());
-            tag.setInteger("Count", 0); // TODO: Remove when ready to break 1.1.7 compat
-
-            if (protoStack.getTagCompound() != null)
-                tag.setTag("Tags", protoStack.getTagCompound());
-        }
+        central.writeToNBT(slot, tag);
     }
 
     @Override
     public void readFromNBT (NBTTagCompound tag) {
-        if (tag.hasKey("Item")) {
-            ItemStack stack = new ItemStack(Item.getItemById(tag.getShort("Item")));
-            stack.setItemDamage(tag.getShort("Meta"));
-            if (tag.hasKey("Tags"))
-                stack.setTagCompound(tag.getCompoundTag("Tags"));
-
-            setStoredItem(stack, 0);
-        }
-        else {
-            reset();
-        }
+        central.readFromNBT(slot, tag);
+        refresh();
     }
 
     public void refresh () {
