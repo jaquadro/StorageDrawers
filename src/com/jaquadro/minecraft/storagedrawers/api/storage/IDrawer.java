@@ -9,13 +9,13 @@ public interface IDrawer
      * Gets an ItemStack of size 1 representing the type, metadata, and tags of the stored items.
      * The returned ItemStack should not be modified for any reason.  Make a copy if you need to store or modify it.
      */
-    public ItemStack getStoredItemPrototype ();
+    ItemStack getStoredItemPrototype ();
 
     /**
      * Gets an ItemStack initialized to the number of items stored in this drawer.
      * The returned ItemStack is guaranteed to be a new copy and can be used for any purpose.  Does not affect drawer contents.
      */
-    public ItemStack getStoredItemCopy ();
+    ItemStack getStoredItemCopy ();
 
     /**
      * Sets the type of the stored item and initializes it to the given amount.  Any existing item will be replaced.
@@ -23,12 +23,12 @@ public interface IDrawer
      * @param itemPrototype An ItemStack representing the type, metadata, and tags of the item to store.
      * @param amount The amount to initialize the stored item count to.
      */
-    public void setStoredItem (ItemStack itemPrototype, int amount);
+    void setStoredItem (ItemStack itemPrototype, int amount);
 
     /**
      * Gets the number of items stored in this drawer.
      */
-    public int getStoredItemCount ();
+    int getStoredItemCount ();
 
     /**
      * Sets the number of items stored in this drawer.  Triggers syncing of inventories and client data.
@@ -36,23 +36,23 @@ public interface IDrawer
      *
      * @param amount The new amount of items stored in this drawer.
      */
-    public void setStoredItemCount (int amount);
+    void setStoredItemCount (int amount);
 
     /**
      * Gets the maximum number of items that can be stored in this drawer.
      * This value will vary depending on the max stack size of the stored item type.
      */
-    public int getMaxCapacity ();
+    int getMaxCapacity ();
 
     /**
      * Gets the number of items that could still be added to this drawer before it is full.
      */
-    public int getRemainingCapacity ();
+    int getRemainingCapacity ();
 
     /**
      * Gets the max stack size of the item type stored in this drawer.  Convenience method.
      */
-    public int getStoredItemStackSize ();
+    int getStoredItemStackSize ();
 
     /**
      * Gets whether or not an item of the given type and data can be stored in this drawer.
@@ -81,7 +81,7 @@ public interface IDrawer
      */
     boolean isEmpty ();
 
-    public void writeToNBT (NBTTagCompound tag);
+    void writeToNBT (NBTTagCompound tag);
 
-    public void readFromNBT (NBTTagCompound tag);
+    void readFromNBT (NBTTagCompound tag);
 }

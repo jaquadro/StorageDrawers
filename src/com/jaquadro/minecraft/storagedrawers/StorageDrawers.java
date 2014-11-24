@@ -31,6 +31,8 @@ public class StorageDrawers
     public static final String MOD_VERSION = "1.2.0";
     public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.";
 
+    public static final Api api = new Api();
+
     public static final ModBlocks blocks = new ModBlocks();
     public static final ModItems items = new ModItems();
     public static final ModRecipes recipes = new ModRecipes();

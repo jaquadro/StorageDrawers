@@ -9,7 +9,7 @@ public interface IDrawerInventory extends ISidedInventory
      *
      * @param inventorySlot An IInventory slot index returned from getInventorySlot.
      */
-    public int getDrawerSlot (int inventorySlot);
+    int getDrawerSlot (int inventorySlot);
 
     /**
      * Gets an IInventory slot index suitable for operations for the given type.
@@ -17,12 +17,12 @@ public interface IDrawerInventory extends ISidedInventory
      * @param drawerSlot The index of the drawer within its group.
      * @param type The type of IInventory slot to return an index for.
      */
-    public int getInventorySlot (int drawerSlot, SlotType type);
+    int getInventorySlot (int drawerSlot, SlotType type);
 
     /**
      * Gets the type associated with a given IInventory slot index.
      *
      * @param inventorySlot An IInventory slot index returned from getInventorySlot.
      */
-    public SlotType getInventorySlotType (int inventorySlot);
+    SlotType getInventorySlotType (int inventorySlot);
 }
