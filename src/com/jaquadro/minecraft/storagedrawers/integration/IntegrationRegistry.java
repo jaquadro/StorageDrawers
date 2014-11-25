@@ -16,9 +16,9 @@ public class IntegrationRegistry
 
     static {
         IntegrationRegistry reg = instance();
-        if (Loader.isModLoaded("appliedenergistics2"))
+        if (Loader.isModLoaded("appliedenergistics2") && StorageDrawers.config.cache.enableAE2Integration)
             reg.add(new AppliedEnergistics());
-        if (Loader.isModLoaded("Waila"))
+        if (Loader.isModLoaded("Waila") && StorageDrawers.config.cache.enableWailaIntegration)
             reg.add(new Waila());
     }
 

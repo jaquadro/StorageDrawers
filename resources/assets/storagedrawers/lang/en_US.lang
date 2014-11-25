@@ -90,3 +90,13 @@ storageDrawers.config.prop.baseStorage=Base Storage
 storageDrawers.config.prop.baseStorage.tooltip=Number of stacks held per drawer.
 storageDrawers.config.prop.recipeOutput=Recipe Output
 storageDrawers.config.prop.recipeOutput.tooltip=Number of items from single crafting.
+storageDrawers.config.prop.enableSidedInput=Enable Sided Input
+storageDrawers.config.prop.enableSidedInput.tooltip=Other blocks can insert items into drawers.
+storageDrawers.config.prop.enableSidedOutput=Enable Sided Output
+storageDrawers.config.prop.enableSidedOutput.tooltip=Other blocks can extract items from drawers.
+
+storageDrawers.config.integration=Integration
+storageDrawers.config.integration.tooltip=Configure integration with other mods.
+
+storageDrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integration
+storageDrawers.config.integration.enableWaila=Enable WAILA Integration

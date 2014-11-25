@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IInventoryAdapter;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.SlotType;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
@@ -54,6 +55,9 @@ public class StorageInventory implements IDrawerInventory
 
     @Override
     public boolean canInsertItem (int slot, ItemStack item, int side) {
+        if (!StorageDrawers.config.cache.enableSidedInput)
+            return false;
+
         int lowerThresh = SlotType.INPUT.ordinal() * group.getDrawerCount();
         int upperThresh = lowerThresh + group.getDrawerCount();
         if (slot < lowerThresh || slot >= upperThresh)
@@ -68,6 +72,9 @@ public class StorageInventory implements IDrawerInventory
 
     @Override
     public boolean canExtractItem (int slot, ItemStack item, int side) {
+        if (!StorageDrawers.config.cache.enableSidedOutput)
+            return false;
+
         int lowerThresh = SlotType.OUTPUT.ordinal() * group.getDrawerCount();
         int upperThresh = lowerThresh + group.getDrawerCount();
         if (slot < lowerThresh || slot >= upperThresh)
