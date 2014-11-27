@@ -20,6 +20,9 @@ public class OreDictRegistry
         register("blockGlass");
         register("paneGlass");
         register("record");
+        register("stone");
+        register("cobblestone");
+        register("sandstone");
 
         registerPrefix("list");
     }
