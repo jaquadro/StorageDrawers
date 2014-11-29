@@ -8,6 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
@@ -17,6 +18,8 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
     private static final double unit = .0625f;
 
     private ModularBoxRenderer boxRenderer = new ModularBoxRenderer();
+
+    private double[] boxCoord = new double[6];
 
     @Override
     public void renderInventoryBlock (Block block, int metadata, int modelId, RenderBlocks renderer) {
@@ -94,6 +97,15 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
             renderHandleIndicator(block, x, y, z, side, renderer, tile.getStatusLevel());
 
+        /*if (tile.isLocked()) {
+            boxRenderer.setExteriorIcon(Blocks.iron_block.getIcon(0, 0));
+            boxRenderer.setExteriorIcon(block.getIconLockFace(), side);
+
+            double depth = block.halfDepth ? 8 : 0;
+            setCoord(boxCoord, 7 * unit, 7 * unit, (depth + .5) * unit, 9 * unit, 9 * unit, (depth + 1) * unit, side);
+            boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, 0);
+        }*/
+
         return true;
     }
 
@@ -168,6 +180,53 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
             boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex));
             boxRenderer.renderExterior(renderer, block, x, y, z, indX[xi][d][i] * unit, indY[i] * unit, indX[zi][d][i] * unit,
                 (indX[xi][d][i] + indXLen[xi][i]) * unit, (indY[i] + 1) * unit, (indX[zi][d][i] + indXLen[zi][i]) * unit, 0, cut[xi]);
+        }
+    }
+
+    private void setCoord (double[] coords, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+        coords[0] = xMin;
+        coords[1] = yMin;
+        coords[2] = zMin;
+        coords[3] = xMax;
+        coords[4] = yMax;
+        coords[5] = zMax;
+    }
+
+    private void setCoord (double[] coords, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, int side) {
+        setCoord(coords, xMin, yMin, zMin, xMax, yMax, zMax);
+        transformCoord(coords, side);
+    }
+
+    private void transformCoord (double[] coords, int side) {
+        double tmpX, tmpZ;
+
+        switch (side) {
+            case 2:
+                return;
+            case 3:
+                tmpX = coords[0];
+                tmpZ = coords[2];
+                coords[0] = 1 - coords[3];
+                coords[3] = 1 - tmpX;
+                coords[2] = 1 - coords[5];
+                coords[5] = 1 - tmpZ;
+                return;
+            case 4:
+                tmpX = coords[0];
+                coords[0] = coords[2];
+                coords[2] = 1 - coords[3];
+                coords[3] = coords[5];
+                coords[5] = 1 - tmpX;
+                return;
+            case 5:
+                tmpX = coords[0];
+                tmpZ = coords[2];
+                coords[0] = 1 - coords[5];
+                coords[2] = tmpX;
+                tmpX = coords[3];
+                coords[3] = 1 - tmpZ;
+                coords[5] = tmpX;
+                return;
         }
     }
 

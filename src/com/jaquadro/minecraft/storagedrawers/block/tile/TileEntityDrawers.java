@@ -38,6 +38,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     private int drawerCapacity = 1;
     private int storageLevel = 1;
     private int statusLevel = 0;
+    private boolean locked = false;
 
     private long lastClickTime;
     private UUID lastClickUUID;
@@ -99,6 +100,25 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     public void setDrawerCapacity (int stackCount) {
         drawerCapacity = stackCount;
+    }
+
+    public boolean isLocked () {
+        return locked;
+    }
+
+    public void setIsLocked (boolean locked) {
+        this.locked = locked;
+
+        if (!locked) {
+            for (int i = 0; i < getDrawerCount(); i++) {
+                if (!isDrawerEnabled(i))
+                    continue;
+
+                IDrawer drawer = getDrawer(i);
+                if (drawer != null && drawer.getStoredItemCount() == 0)
+                    drawer.setStoredItemCount(0);
+            }
+        }
     }
 
     public ItemStack takeItemsFromSlot (int slot, int count) {
@@ -210,6 +230,10 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             if (tag.hasKey("Stat"))
                 statusLevel = tag.getByte("Stat");
 
+            locked = false;
+            if (tag.hasKey("Lock"))
+                locked = tag.getBoolean("Lock");
+
             NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
             int drawerCount = slots.tagCount();
             drawers = new IDrawer[slots.tagCount()];
@@ -242,6 +266,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
         if (statusLevel > 0)
             tag.setByte("Stat", (byte)statusLevel);
+
+        if (locked)
+            tag.setBoolean("Lock", locked);
 
         NBTTagList slots = new NBTTagList();
         for (IDrawer drawer : drawers) {

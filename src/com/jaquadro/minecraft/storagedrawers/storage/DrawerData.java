@@ -79,7 +79,8 @@ public class DrawerData extends BaseDrawerData
         count = amount;
         if (amount == 0) {
             if (clearOnEmpty) {
-                reset();
+                if (!storageProvider.isLocked(slot))
+                    reset();
                 if (mark)
                     storageProvider.markDirty(slot);
             }

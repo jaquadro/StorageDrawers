@@ -424,7 +424,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             pooledCount = (pooledCount % convRate[slot]) + convRate[slot] * amount;
 
             if (pooledCount != oldCount) {
-                if (pooledCount != 0)
+                if (pooledCount != 0 || isLocked())
                     markAmountDirty();
                 else {
                     clear();

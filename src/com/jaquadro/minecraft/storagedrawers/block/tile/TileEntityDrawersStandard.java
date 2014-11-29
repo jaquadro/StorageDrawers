@@ -42,5 +42,10 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
             ConfigManager config = StorageDrawers.config;
             return config.getStorageUpgradeMultiplier(getStorageLevel()) * getDrawerCapacity();
         }
+
+        @Override
+        public boolean isLocked (int slot) {
+            return TileEntityDrawersStandard.this.isLocked();
+        }
     }
 }

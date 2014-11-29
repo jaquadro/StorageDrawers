@@ -69,6 +69,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @SideOnly(Side.CLIENT)
     private IIcon iconIndicatorOff;
 
+    //@SideOnly(Side.CLIENT)
+    //private IIcon iconLockFace;
+
     public BlockDrawers (String blockName, int drawerCount, boolean halfDepth) {
         this(Material.wood, blockName, drawerCount, halfDepth);
     }
@@ -195,6 +198,27 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
+            else if (item.getItem() == ModItems.upgradeLock && !tileDrawers.isLocked()) {
+                tileDrawers.setIsLocked(true);
+                world.markBlockForUpdate(x, y, z);
+
+                if (player != null && !player.capabilities.isCreativeMode) {
+                    if (--item.stackSize <= 0)
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                }
+
+                return true;
+            }
+        }
+        else if (item == null && player.isSneaking()) {
+            if (tileDrawers.isLocked()) {
+                tileDrawers.setIsLocked(false);
+                if (player != null && !player.capabilities.isCreativeMode)
+                    dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgradeLock));
+
+                world.markBlockForUpdate(x, y, z);
+                return true;
+            }
         }
 
         if (tileDrawers.getDirection() != side)
@@ -300,6 +324,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgrade, 1, tile.getStorageLevel()));
             if (tile.getStatusLevel() > 0)
                 dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgradeStatus, 1, tile.getStatusLevel()));
+            if (tile.isLocked())
+                dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgradeLock));
 
             for (int i = 0; i < tile.getDrawerCount(); i++) {
                 if (!tile.isDrawerEnabled(i))
@@ -470,6 +496,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
     }
 
+    /*@SideOnly(Side.CLIENT)
+    public IIcon getIconLockFace () {
+        return iconLockFace;
+    }*/
+
     @SideOnly(Side.CLIENT)
     private IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side, int level) {
         int meta = blockAccess.getBlockMetadata(x, y, z) % BlockWood.field_150096_a.length;
@@ -543,5 +574,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         iconIndicatorOff = register.registerIcon(StorageDrawers.MOD_ID + ":indicator_off");
         iconIndicatorAmber = register.registerIcon(StorageDrawers.MOD_ID + ":indicator_amber");
         iconIndicatorOn = register.registerIcon(StorageDrawers.MOD_ID + ":indicator_on");
+
+        //iconLockFace = register.registerIcon(StorageDrawers.MOD_ID + ":lock_face");
     }
 }
