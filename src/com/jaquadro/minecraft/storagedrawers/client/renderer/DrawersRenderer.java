@@ -8,7 +8,6 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.init.Blocks;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
@@ -116,28 +115,13 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG | ModularBoxRenderer.CUT_ZPOS,
     };
 
-    private static final float[][][] indicatorsX2 = new float[][][] {
-        { { 6, 6 }, { 6, 6 } },
-        { { 6, 6 }, { 6, 6 } },
-        { { .95f, .95f }, { 8.95f, 8.95f } },
-        { { 15, 15 }, { 7, 7 } },
-    };
-    private static final float[][][] indicatorsX4 = new float[][][] {
-        { { 11, 11, 3, 3 }, { 11, 11, 3, 3 } },
-        { { 3, 3, 11, 11 }, { 3, 3, 11, 11 } },
-        { { .95f, .95f, .95f, .95f }, { 8.95f, 8.95f, 8.95f, 8.95f } },
-        { { 15, 15, 15, 15 }, { 7, 7, 7, 7 } },
+    private static final float[][] indicatorsXY2 = new float[][] {
+        { 6, 14, 10, 15 }, { 6, 6, 10, 7 }
     };
 
-    private static final float[][] indicatorsX2Len = new float[][] {
-        { 4, 4 }, { 4, 4 }, { .05f, .05f }, { .05f, .05f },
+    private static final float[][] indicatorsXY4 = new float[][] {
+        { 11, 14, 13, 15 }, { 11, 6, 13, 7 }, { 3, 14, 5, 15 }, { 3, 6, 5, 7 }
     };
-    private static final float[][] indicatorsX4Len = new float[][] {
-        { 2, 2, 2, 2 }, { 2, 2, 2, 2 }, {.05f, .05f, .05f, .05f }, { .05f, .05f, .05f, .05f },
-    };
-
-    private static final float[] indicatorsY2 = new float[]  { 14, 6 };
-    private static final float[] indicatorsY4 = new float[] { 14, 6, 14, 6 };
 
     private void renderHandleIndicator (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, int level) {
         if (level <= 0 || side < 2 || side > 5)
@@ -145,31 +129,22 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         TileEntityDrawers tile = block.getTileEntity(renderer.blockAccess, x, y, z);
 
-        int d = block.halfDepth ? 1 : 0;
-        int xi = side - 2;
-        int zi = (xi + 2) % 4;
-
-        int count;
-        float[][][] indX = null;
-        float[][] indXLen = null;
-        float[] indY = null;
-
+        double depth = block.halfDepth ? 8 : 0;
+        int count = 0;
+        float[][] xySet = null;
         if (block.drawerCount == 2 || block instanceof BlockCompDrawers) {
             count = (block instanceof BlockCompDrawers) ? 1 : 2;
-            indX = indicatorsX2;
-            indXLen = indicatorsX2Len;
-            indY = indicatorsY2;
+            xySet = indicatorsXY2;
         }
         else if (block.drawerCount == 4) {
             count = 4;
-            indX = indicatorsX4;
-            indXLen = indicatorsX4Len;
-            indY = indicatorsY4;
+            xySet = indicatorsXY4;
         }
-        else
-            return;
 
         for (int i = 0; i < count; i++) {
+            float[] xy = xySet[i];
+            setCoord(boxCoord, xy[0] * unit, xy[1] * unit, (depth + .95) * unit, xy[2] * unit, xy[3] * unit, (depth + 1) * unit, side);
+
             IDrawer drawer = tile.getDrawer(i);
             int iconIndex = 0;
             if (level == 2)
@@ -178,8 +153,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
                 iconIndex = (drawer.getMaxCapacity() > 0 && drawer.getStoredItemCount() == drawer.getMaxCapacity()) ? 2 : iconIndex;
 
             boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex));
-            boxRenderer.renderExterior(renderer, block, x, y, z, indX[xi][d][i] * unit, indY[i] * unit, indX[zi][d][i] * unit,
-                (indX[xi][d][i] + indXLen[xi][i]) * unit, (indY[i] + 1) * unit, (indX[zi][d][i] + indXLen[zi][i]) * unit, 0, cut[xi]);
+            boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
         }
     }
 
