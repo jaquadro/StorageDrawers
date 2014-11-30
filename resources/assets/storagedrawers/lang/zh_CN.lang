@@ -13,6 +13,8 @@ item.upgradeStatus.level2.name=状态显示升级 (II)
 item.upgradeStatus.level2.description=抽屉将近装满时亮起提示灯
 item.upgradeStatus.level3.name=状态显示升级 (III)
 item.upgradeStatus.level3.description=显示抽屉容量等级
+item.upgradeLock.name=锁定升级
+item.upgradeLock.description=使抽屉一直保留存储物的样板
 
 # Blocks
 tile.fullDrawers2.oak.name=橡木抽屉 (1x2)
@@ -45,13 +47,14 @@ tile.halfDrawers4.big_oak.name=小型深色橡木抽屉 (2x2)
 
 tile.compDrawers.name=致密抽屉
 
-storageDrawers.drawers.description=每个抽屉门可以储存 %d 组同类物品
-storageDrawers.upgrade.description=将抽屉容量升级为其基础容量的 %d 倍
+storageDrawers.drawers.description=每个抽屉门可以储存%d组同类物品
+storageDrawers.upgrade.description=将抽屉容量升级为其基础容量的%d倍
 
 # Integration
 storageDrawers.waila.empty=空的
 storageDrawers.waila.level=抽屉等级: %s
 storageDrawers.waila.drawer=抽屉门 #%s: %s
+torageDrawers.waila.locked=已锁定
 
 # Configuration
 storageDrawers.config.title=储物抽屉模组配置
@@ -81,6 +84,7 @@ storageDrawers.config.prop.itemRenderType=存储物品显示设定
 storageDrawers.config.prop.itemRenderType.tooltip=设定抽屉是否渲染3D物品
 storageDrawers.config.prop.enableIndicatorUpgrades=允许状态显示升级
 storageDrawers.config.prop.enableStorageUpgrades=允许容量升级
+storageDrawers.config.prop.enableLockUpgrades=允许锁定升级
 storageDrawers.config.prop.renderStorageUpgrades=渲染容量升级显示
 storageDrawers.config.prop.creativeTabVanillaWoods=显示所有种类抽屉
 storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=允许创造模式窗口或NEI中显示所有种类抽屉
@@ -90,3 +94,13 @@ storageDrawers.config.prop.baseStorage=基础容量
 storageDrawers.config.prop.baseStorage.tooltip=设定每个抽屉门中可存储的物品组数量
 storageDrawers.config.prop.recipeOutput=合成数量
 storageDrawers.config.prop.recipeOutput.tooltip=设定使用默认合成公式可合成多少抽屉
+storageDrawers.config.prop.enableSidedInput=允许抽屉输入
+storageDrawers.config.prop.enableSidedInput.tooltip=允许向抽屉侧面输入物品
+storageDrawers.config.prop.enableSidedOutput=允许抽屉输出
+storageDrawers.config.prop.enableSidedOutput.tooltip=允许从抽屉侧面输出物品
+
+storageDrawers.config.integration=关联设定
+storageDrawers.config.integration.tooltip=设定本模组与其它模组之间的联动性
+
+storageDrawers.config.integration.enableAE2=允许关联应用能源2
+storageDrawers.config.integration.enableWaila=允许关联Waila显示
