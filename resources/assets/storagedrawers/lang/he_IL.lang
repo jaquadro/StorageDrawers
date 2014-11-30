@@ -13,6 +13,8 @@ item.upgradeStatus.level2.name=Status Upgrade (II)
 item.upgradeStatus.level2.description=Shows near-full storage
 item.upgradeStatus.level3.name=Status Upgrade (III)
 item.upgradeStatus.level3.description=Shows fill level
+item.upgradeLock.name=Lock Upgrade
+item.upgradeLock.description=Keep associated items when empty
 
 # Blocks
 tile.fullDrawers2.oak.name=מגירות אלון 1x2
@@ -52,6 +54,7 @@ storageDrawers.upgrade.description=מכפיל את כמות האכסון ב־%d
 storageDrawers.waila.empty=ריק
 storageDrawers.waila.level=רמת שדרוג: %s
 storageDrawers.waila.drawer=מגירה #%s: %s
+storageDrawers.waila.locked=Locked
 
 # Configuration
 storageDrawers.config.title=Storage Drawers Configuration
@@ -81,6 +84,7 @@ storageDrawers.config.prop.itemRenderType=Item Render Type
 storageDrawers.config.prop.itemRenderType.tooltip=Render items in 3D or flat.
 storageDrawers.config.prop.enableIndicatorUpgrades=Enable Indicator Upgrades
 storageDrawers.config.prop.enableStorageUpgrades=Enable Storage Upgrades
+storageDrawers.config.prop.enableLockUpgrades=Enable Lock Upgrade
 storageDrawers.config.prop.renderStorageUpgrades=Render Storage Upgrades
 storageDrawers.config.prop.creativeTabVanillaWoods=Creative Tab Vanilla Woods
 storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Enable all vanilla wood styles on creative tab.
@@ -90,3 +94,13 @@ storageDrawers.config.prop.baseStorage=Base Storage
 storageDrawers.config.prop.baseStorage.tooltip=Number of stacks held per drawer.
 storageDrawers.config.prop.recipeOutput=Recipe Output
 storageDrawers.config.prop.recipeOutput.tooltip=Number of items from single crafting.
+storageDrawers.config.prop.enableSidedInput=Enable Sided Input
+storageDrawers.config.prop.enableSidedInput.tooltip=Other blocks can insert items into drawers.
+storageDrawers.config.prop.enableSidedOutput=Enable Sided Output
+storageDrawers.config.prop.enableSidedOutput.tooltip=Other blocks can extract items from drawers.
+
+storageDrawers.config.integration=Integration
+storageDrawers.config.integration.tooltip=Configure integration with other mods.
+
+storageDrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integration
+storageDrawers.config.integration.enableWaila=Enable WAILA Integration

@@ -15,6 +15,8 @@ item.upgradeStatus.level2.name=동상 업그레이드 (II)
 item.upgradeStatus.level2.description=대부분의 스토리지 표시
 item.upgradeStatus.level3.name=동상 업그레이드 (III)
 item.upgradeStatus.level3.description=레벨 표시
+item.upgradeLock.name=Lock Upgrade
+item.upgradeLock.description=Keep associated items when empty
 
 # Blocks
 tile.fullDrawers2.oak.name=참나무 서랍 1x2
@@ -54,6 +56,7 @@ storageDrawers.upgrade.description=기준보다 %d배 더 많은 적제량
 storageDrawers.waila.empty=비어있음
 storageDrawers.waila.level=업그레이드 레벨: %s
 storageDrawers.waila.drawer=서랍 #%s: %s
+storageDrawers.waila.locked=Locked
 
 # Configuration
 storageDrawers.config.title=스토리지 드로워즈 설정
@@ -83,6 +86,7 @@ storageDrawers.config.prop.itemRenderType=아이템 렌더 타입
 storageDrawers.config.prop.itemRenderType.tooltip=아이템을 3D혹은 평평하게 렌더링합니다
 storageDrawers.config.prop.enableIndicatorUpgrades=지표 업그레이드 활성화
 storageDrawers.config.prop.enableStorageUpgrades=스토리지 업그레이드 활성화
+storageDrawers.config.prop.enableLockUpgrades=Enable Lock Upgrade
 storageDrawers.config.prop.renderStorageUpgrades=스토리지 업그레이드 렌더링
 storageDrawers.config.prop.creativeTabVanillaWoods=크리에이티브탭 바닐라 나무
 storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=크리에이티브탭을 바닐라나무로 설정합니다..
@@ -92,3 +96,13 @@ storageDrawers.config.prop.baseStorage=베이스 스토리지
 storageDrawers.config.prop.baseStorage.tooltip=서랍에 저장되어있는 스택을 표시
 storageDrawers.config.prop.recipeOutput=레시피 출력
 storageDrawers.config.prop.recipeOutput.tooltip=단독제작시 아이템 갯수 표기
+storageDrawers.config.prop.enableSidedInput=Enable Sided Input
+storageDrawers.config.prop.enableSidedInput.tooltip=Other blocks can insert items into drawers.
+storageDrawers.config.prop.enableSidedOutput=Enable Sided Output
+storageDrawers.config.prop.enableSidedOutput.tooltip=Other blocks can extract items from drawers.
+
+storageDrawers.config.integration=Integration
+storageDrawers.config.integration.tooltip=Configure integration with other mods.
+
+storageDrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integration
+storageDrawers.config.integration.enableWaila=Enable WAILA Integration
