@@ -103,6 +103,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     }
 
     public boolean isLocked () {
+        if (!StorageDrawers.config.cache.enableLockUpgrades)
+            return false;
+
         return locked;
     }
 
