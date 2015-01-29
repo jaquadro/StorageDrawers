@@ -1,0 +1,106 @@
+itemGroup.storageDrawers=Storage Drawers
+
+# Items
+item.upgradeTemplate.name=Szablon ulepszenia
+item.upgrade.iron.name=Ulepszenie składowania (II)
+item.upgrade.gold.name=Ulepszenie składowania (III)
+item.upgrade.obsidian.name=Ulepszenie składowania (IV)
+item.upgrade.diamond.name=Ulepszenie składowania (V)
+item.upgrade.emerald.name=Ulepszenie składowania (VI)
+item.upgradeStatus.level1.name=Ulepszenie statusu (I)
+item.upgradeStatus.level1.description=Pokazuje pełny skład
+item.upgradeStatus.level2.name=Ulepszenie statusu (II)
+item.upgradeStatus.level2.description=Pokazuje prawie pełny skład
+item.upgradeStatus.level3.name=Ulepszenie statusu (III)
+item.upgradeStatus.level3.description=Pokazuje poziom wypełnienia
+item.upgradeLock.name=Ulepszenie blokady
+item.upgradeLock.description=Zatrzymuje przypisany przedmiot gdy puste
+
+# Blocks
+tile.fullDrawers2.oak.name=Dębowe szuflady 1x2
+tile.fullDrawers2.spruce.name=Świerkowe szuflady 1x2
+tile.fullDrawers2.birch.name=Brzozowe szuflady 1x2
+tile.fullDrawers2.jungle.name=Dżunglowe szuflady 1x2
+tile.fullDrawers2.acacia.name=Akacjowe szuflady 1x2
+tile.fullDrawers2.big_oak.name=Czarnodębowe szuflady 1x2
+
+tile.fullDrawers4.oak.name=Dębowe szuflady 2x2
+tile.fullDrawers4.spruce.name=Świerkowe szuflady 2x2
+tile.fullDrawers4.birch.name=Brzozowe szuflady 2x2
+tile.fullDrawers4.jungle.name=Dżunglowe szuflady 2x2
+tile.fullDrawers4.acacia.name=Akacjowe szuflady 2x2
+tile.fullDrawers4.big_oak.name=Czarnodębowe szuflady 2x2
+
+tile.halfDrawers2.oak.name=Kompaktowe dębowe szuflady 1x2
+tile.halfDrawers2.spruce.name=Kompaktowe świerkowe szuflady 1x2
+tile.halfDrawers2.birch.name=Kompaktowe brzozowe szuflady 1x2
+tile.halfDrawers2.jungle.name=Kompaktowe dżunglowe szuflady 1x2
+tile.halfDrawers2.acacia.name=Kompaktowe akacjowe szuflady 1x2
+tile.halfDrawers2.big_oak.name=Kompaktowe czarnodębowe szuflady 1x2
+
+tile.halfDrawers4.oak.name=Kompaktowe dębowe szuflady 2x2
+tile.halfDrawers4.spruce.name=Kompaktowe świerkowe szuflady 2x2
+tile.halfDrawers4.birch.name=Kompaktowe brzozowe szuflady 2x2
+tile.halfDrawers4.jungle.name=Kompaktowe dżunglowe szuflady 2x2
+tile.halfDrawers4.acacia.name=Kompaktowe akacjowe szuflady 2x2
+tile.halfDrawers4.big_oak.name=Kompaktowe czarnodębowe szuflady 2x2
+
+tile.compDrawers.name=Kompaktująca szuflada
+
+storageDrawers.drawers.description=Trzyma %d stowów na szufladę
+storageDrawers.upgrade.description=Zwiększa skład do %d*bazowa wartość
+
+# Integration
+storageDrawers.waila.empty=Puste
+storageDrawers.waila.level=Poziom ulepszeń: %s
+storageDrawers.waila.drawer=Szuflada #%s: %s
+storageDrawers.waila.locked=Zablokowane
+
+# Configuration
+storageDrawers.config.title=Konfiguracja Storage Drawers
+
+storageDrawers.config.general=Ustawienia generalne
+storageDrawers.config.general.tooltip=To i tamto.
+
+storageDrawers.config.blocks=Ustawienia bloków
+storageDrawers.config.blocks.tooltip=Konfiguruj indywidualne bloki składujące.
+
+storageDrawers.config.blocks.fullDrawers2=Szuflady 1x2
+storageDrawers.config.blocks.fullDrawers4=Szuflady 2x2
+storageDrawers.config.blocks.halfDrawers2=Kompaktowe szuflady 1x2
+storageDrawers.config.blocks.halfDrawers4=Kompaktowe szuflady 2x2
+storageDrawers.config.blocks.compDrawers=Szuflada kompaktująca
+
+storageDrawers.config.upgrades=Ustawienia ulepszeń
+storageDrawers.config.upgrades.tooltip=Konfiguruj indywidualne ulepszenia składowania.
+
+storageDrawers.config.upgrades.level2Mult=Mnożnik sładowania (II)
+storageDrawers.config.upgrades.level3Mult=Mnożnik sładowania (III)
+storageDrawers.config.upgrades.level4Mult=Mnożnik sładowania (IV)
+storageDrawers.config.upgrades.level5Mult=Mnożnik sładowania (V)
+storageDrawers.config.upgrades.level6Mult=Mnożnik sładowania (VI)
+
+storageDrawers.config.prop.itemRenderType=Typ renderowania przedmiotu
+storageDrawers.config.prop.itemRenderType.tooltip=Renderuj przedmioty 3D lub płaskie
+storageDrawers.config.prop.enableIndicatorUpgrades=Włącz ulepszenia wskaźnikowe
+storageDrawers.config.prop.enableStorageUpgrades=Włącz ulepszenia składowania
+storageDrawers.config.prop.enableLockUpgrades=Włącz ulepszenie blokady
+storageDrawers.config.prop.renderStorageUpgrades=Pokazuj ulepszenia składowania
+storageDrawers.config.prop.creativeTabVanillaWoods=Minecraft'owe drewna na karcie kreatywnej
+storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Włącz wszystkie Minecraft'owe style drewna na karcie kreatywnej
+storageDrawers.config.prop.enabled=Włączone
+storageDrawers.config.prop.enabled.tooltip=Włącz blok w grze.
+storageDrawers.config.prop.baseStorage=Podstawowe składowanie
+storageDrawers.config.prop.baseStorage.tooltip=Ilość stosów na szufladę.
+storageDrawers.config.prop.recipeOutput=Wyjście recept
+storageDrawers.config.prop.recipeOutput.tooltip=Ilość przemiotów z jednego tworzenia.
+storageDrawers.config.prop.enableSidedInput=Włącz stronowe wejście
+storageDrawers.config.prop.enableSidedInput.tooltip=Inne bloki mogą wkładać do szuflad.
+storageDrawers.config.prop.enableSidedOutput=Włącz stronowe wyjście
+storageDrawers.config.prop.enableSidedOutput.tooltip=Inne bloki mogą wyciągać z szuflad.
+
+storageDrawers.config.integration=Integracja
+storageDrawers.config.integration.tooltip=Konfiguruj integrację z innymi modami.
+
+storageDrawers.config.integration.enableAE2=Włącz integrację z Applied Energistics 2
+storageDrawers.config.integration.enableWaila=Włącz integrację z What Am I Looking At
