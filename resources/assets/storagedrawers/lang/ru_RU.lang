@@ -13,8 +13,8 @@ item.upgradeStatus.level2.name=Улучшение индикатора (II)
 item.upgradeStatus.level2.description=Показывает, когда ящик заполнен наполовину
 item.upgradeStatus.level3.name=Улучшение индикатора (III)
 item.upgradeStatus.level3.description=Показывает уровень заполнения
-item.upgradeLock.name=Lock Upgrade
-item.upgradeLock.description=Keep associated items when empty
+item.upgradeLock.name=Улучшение блокировки
+item.upgradeLock.description=Сохраняет тип хранимых предметов в ящике, даже когда тот пуст
 
 # Blocks
 tile.fullDrawers2.oak.name=Ящик из дуба 1x2
@@ -54,7 +54,7 @@ storageDrawers.upgrade.description=Увеличивает хранилище в 
 storageDrawers.waila.empty=Пусто
 storageDrawers.waila.level=Уровень улучшения: %s
 storageDrawers.waila.drawer=Ящик #%s: %s
-storageDrawers.waila.locked=Locked
+storageDrawers.waila.locked=Заблокирован
 
 # Configuration
 storageDrawers.config.title=Настройки Storage Drawers
@@ -84,7 +84,7 @@ storageDrawers.config.prop.itemRenderType=Тип отрисовки предме
 storageDrawers.config.prop.itemRenderType.tooltip=Отрисовывает предметы 3D или плоско.
 storageDrawers.config.prop.enableIndicatorUpgrades=Включить улучшения для индикаторов
 storageDrawers.config.prop.enableStorageUpgrades=Включить улучшения для ящиков
-storageDrawers.config.prop.enableLockUpgrades=Enable Lock Upgrade
+storageDrawers.config.prop.enableLockUpgrades=Включить улучшение блокировки
 storageDrawers.config.prop.renderStorageUpgrades=Показывать произведённые улучшения визуально
 storageDrawers.config.prop.creativeTabVanillaWoods=Ванильные деревья в творческом режиме
 storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Добавляет все виды деревьев из ванильного Minecraft в творческий режим.
@@ -94,13 +94,13 @@ storageDrawers.config.prop.baseStorage=Базовое хранилище
 storageDrawers.config.prop.baseStorage.tooltip=Количество стеков предметов, хранимое ящиком.
 storageDrawers.config.prop.recipeOutput=Количество предметов при крафте
 storageDrawers.config.prop.recipeOutput.tooltip=Количество предметов, получаемых при единичном крафте.
-storageDrawers.config.prop.enableSidedInput=Enable Sided Input
-storageDrawers.config.prop.enableSidedInput.tooltip=Other blocks can insert items into drawers.
-storageDrawers.config.prop.enableSidedOutput=Enable Sided Output
-storageDrawers.config.prop.enableSidedOutput.tooltip=Other blocks can extract items from drawers.
+storageDrawers.config.prop.enableSidedInput=Включить приём предметов
+storageDrawers.config.prop.enableSidedInput.tooltip=Другие блоки могут помещать предметы в ящики.
+storageDrawers.config.prop.enableSidedOutput=Включить извлечение предметов
+storageDrawers.config.prop.enableSidedOutput.tooltip=Другие блоки могут извлекать предметы из ящиков.
 
-storageDrawers.config.integration=Integration
-storageDrawers.config.integration.tooltip=Configure integration with other mods.
+storageDrawers.config.integration=Интеграция
+storageDrawers.config.integration.tooltip=Настройка совместимости с другими модами.
 
-storageDrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integration
-storageDrawers.config.integration.enableWaila=Enable WAILA Integration
+storageDrawers.config.integration.enableAE2=Включить совместимость с Applied Energistics 2
+storageDrawers.config.integration.enableWaila=Включить совместимость с WAILA
