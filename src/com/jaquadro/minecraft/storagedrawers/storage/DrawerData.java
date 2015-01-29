@@ -48,6 +48,7 @@ public class DrawerData extends BaseDrawerData
         if (itemPrototype == null) {
             setStoredItemCount(0, false, true);
             protoStack = nullStack;
+            inventoryStack.reset();
 
             if (mark)
                 storageProvider.markDirty(slot);
@@ -161,8 +162,8 @@ public class DrawerData extends BaseDrawerData
 
     @Override
     protected void reset () {
-        super.reset();
         protoStack = nullStack;
+        super.reset();
     }
 }
 
