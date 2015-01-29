@@ -28,7 +28,7 @@ public class StorageDrawers
 {
     public static final String MOD_ID = "StorageDrawers";
     public static final String MOD_NAME = "Storage Drawers";
-    public static final String MOD_VERSION = "1.2.0";
+    public static final String MOD_VERSION = "1.2.1";
     public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.";
 
     public static final Api api = new Api();
@@ -58,6 +58,8 @@ public class StorageDrawers
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
             network.registerMessage(CountUpdateMessage.Handler.class, CountUpdateMessage.class, 1, Side.CLIENT);
+        else
+            network.registerMessage(CountUpdateMessage.HandlerStub.class, CountUpdateMessage.class, 1, Side.CLIENT);
 
         compRegistry = new CompTierRegistry();
         oreDictRegistry = new OreDictRegistry();

@@ -1,6 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.network;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -10,6 +12,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.Level;
 
 public class CountUpdateMessage implements IMessage
 {
@@ -60,6 +63,15 @@ public class CountUpdateMessage implements IMessage
                 }
             }
 
+            return null;
+        }
+    }
+
+    public static class HandlerStub implements IMessageHandler<CountUpdateMessage, IMessage>
+    {
+        @Override
+        public IMessage onMessage (CountUpdateMessage message, MessageContext ctx) {
+            FMLLog.log(StorageDrawers.MOD_ID, Level.WARN, "CountUpdateMessage stub handler called.");
             return null;
         }
     }
