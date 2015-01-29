@@ -196,7 +196,8 @@ public class StorageInventory implements IDrawerInventory
             drawer.setStoredItem(null, 0);
         else {
             drawer.setStoredItem(item, 0);
-            drawer = findDrawer(item);
+            if (!drawer.canItemBeStored(item))
+                drawer = findDrawer(item);
             if (drawer == null)
                 return;
 
