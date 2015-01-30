@@ -63,7 +63,11 @@ public class StorageInventory implements IDrawerInventory
         if (slot < lowerThresh || slot >= upperThresh)
             return false;
 
-        IDrawer drawer = group.getDrawer(getDrawerSlot(slot));
+        int baseSlot = getDrawerSlot(slot);
+        if (!group.isDrawerEnabled(baseSlot))
+            return false;
+
+        IDrawer drawer = group.getDrawer(baseSlot);
         if (drawer == null)
             return false;
 
@@ -80,7 +84,11 @@ public class StorageInventory implements IDrawerInventory
         if (slot < lowerThresh || slot >= upperThresh)
             return false;
 
-        IDrawer drawer = group.getDrawer(getDrawerSlot(slot));
+        int baseSlot = getDrawerSlot(slot);
+        if (!group.isDrawerEnabled(baseSlot))
+            return false;
+
+        IDrawer drawer = group.getDrawer(baseSlot);
         if (drawer == null)
             return false;
 
