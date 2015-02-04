@@ -70,9 +70,9 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
     @Override
     public int putItemsIntoSlot (int slot, ItemStack stack, int count) {
+        int added = 0;
         if (stack != null && convRate != null && convRate[0] == 0) {
             populateSlots(stack);
-            int added = 0;
 
             for (int i = 0; i < getDrawerCount(); i++) {
                 if (BaseDrawerData.areItemsEqual(protoStack[i], stack))
@@ -84,9 +84,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 if (drawer instanceof CompDrawerData)
                     ((CompDrawerData) drawer).refresh();
             }
+
+
         }
 
-        return super.putItemsIntoSlot(slot, stack, count);
+        return added + super.putItemsIntoSlot(slot, stack, count);
     }
 
     @Override
