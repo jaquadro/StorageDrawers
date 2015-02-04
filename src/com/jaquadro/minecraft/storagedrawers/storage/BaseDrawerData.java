@@ -56,8 +56,11 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
                     continue;
 
                 List<ItemStack> list = OreDictionary.getOres(OreDictionary.getOreName(id));
-                for (int i = 0, n = list.size(); i < n; i++)
+                for (int i = 0, n = list.size(); i < n; i++) {
+                    if (list.get(i).getItemDamage() == OreDictionary.WILDCARD_VALUE)
+                        continue;
                     oreDictMatches.add(list.get(i));
+                }
             }
 
             if (oreDictMatches.size() == 0)
@@ -106,7 +109,30 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
                         continue;
 
                     if (oreIndexLeft == oreIndexRight) {
-                        oreMatch = true;
+                        List<ItemStack> oreList = OreDictionary.getOres(OreDictionary.getOreName(oreIndexLeft));
+                        for (int i = 0, n = oreList.size(); i < n; i++) {
+                            if (stack1.isItemEqual(oreList.get(i)))
+                                oreMatch = true;
+                        }
+                        if (!oreMatch)
+                            continue;
+
+                        oreMatch = false;
+                        for (int i = 0, n = oreList.size(); i < n; i++) {
+                            if (stack2.isItemEqual(oreList.get(i)))
+                                oreMatch = true;
+                        }
+                        if (!oreMatch)
+                            continue;
+
+                        oreMatch = false;
+                        for (int i = 0, n = oreList.size(); i < n; i++) {
+                            if (oreList.get(i).getItemDamage() != OreDictionary.WILDCARD_VALUE)
+                                oreMatch = true;
+                        }
+                        if (!oreMatch)
+                            continue;
+
                         break BRK_ORE_MATCH;
                     }
                 }

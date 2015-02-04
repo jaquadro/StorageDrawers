@@ -22,6 +22,7 @@ public class OreDictRegistry
         register("record");
         register("stone");
         register("cobblestone");
+        register("sand");
         register("sandstone");
 
         registerPrefix("list");
