@@ -31,6 +31,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 import java.util.Random;
@@ -293,6 +294,17 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             dropItemStack(world, x, y, z, player, item);
             world.markBlockForUpdate(x, y, z);
         }
+    }
+
+    @Override
+    public boolean isSideSolid (IBlockAccess world, int x, int y, int z, ForgeDirection side) {
+        if (halfDepth)
+            return false;
+
+        if (side.ordinal() != getTileEntity(world, x, y, z).getDirection())
+            return true;
+
+        return false;
     }
 
     private void dropItemStack (World world, int x, int y, int z, EntityPlayer player, ItemStack stack) {
