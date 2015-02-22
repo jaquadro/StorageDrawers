@@ -4,9 +4,11 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -285,7 +287,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         IDrawer drawer = tileDrawers.getDrawer(slot);
 
         ItemStack item = null;
-        if (player.isSneaking())
+        // if invertSHift is true this will happen when the player is not shifting
+        if (player.isSneaking() != StorageDrawers.config.cache.invertShift)
             item = tileDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
         else
             item = tileDrawers.takeItemsFromSlot(slot, 1);
