@@ -353,12 +353,15 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         float itemDepth = depth + .001f;
 
         if (isBlockType) {
-            Block itemBlock = Block.getBlockFromItem(itemStack.getItem());
-            itemBlock.setBlockBoundsBasedOnState(tile.getWorldObj(), 0, 0, 0);
-            itemBlock.setBlockBoundsForItemRender();
+            try {
+                Block itemBlock = Block.getBlockFromItem(itemStack.getItem());
+                itemBlock.setBlockBoundsBasedOnState(tile.getWorldObj(), 0, 0, 0);
+                itemBlock.setBlockBoundsForItemRender();
 
-            double zDepth = 1 - itemBlock.getBlockBoundsMaxZ();
-            itemDepth += zDepth * zunit;
+                double zDepth = 1 - itemBlock.getBlockBoundsMaxZ();
+                itemDepth += zDepth * zunit;
+            }
+            catch (Exception e) { };
         }
 
         switch (tile.getDirection()) {
