@@ -98,6 +98,10 @@ storageDrawers.config.prop.enableSidedInput=Enable Sided Input
 storageDrawers.config.prop.enableSidedInput.tooltip=Other blocks can insert items into drawers.
 storageDrawers.config.prop.enableSidedOutput=Enable Sided Output
 storageDrawers.config.prop.enableSidedOutput.tooltip=Other blocks can extract items from drawers.
+storageDrawers.config.prop.invertShift=Invert Shift
+storageDrawers.config.prop.invertShift.tooltip=Inverts click and shift+click behavior.
+storageDrawers.config.prop.enableDebugLogging=Enable Debug Logging
+storageDrawers.config.prop.enableDebugLogging.tooltip=Prints extra information to the logs.
 
 storageDrawers.config.integration=Integration
 storageDrawers.config.integration.tooltip=Configure integration with other mods.

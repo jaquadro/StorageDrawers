@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -34,6 +35,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import org.apache.logging.log4j.Level;
 
 import java.util.List;
 import java.util.Random;
@@ -178,6 +180,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, x, y, z);
         ItemStack item = player.inventory.getCurrentItem();
 
+        if (StorageDrawers.config.cache.debugTrace) {
+            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockActivated");
+            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item == null) ? "  null item" : "  " + item.toString());
+        }
+
         if (item != null && item.getItem() != null) {
             if (item.getItem() == ModItems.upgrade  && item.getItemDamage() != tileDrawers.getStorageLevel()) {
                 tileDrawers.setStorageLevel(item.getItemDamage());
@@ -274,11 +281,17 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             float hitZ = (float)(posn.hitVec.zCoord - posn.blockZ);
 
             StorageDrawers.network.sendToServer(new BlockClickMessage(x, y, z, posn.sideHit, hitX, hitY, hitZ));
+
+            if (StorageDrawers.config.cache.debugTrace)
+                FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockClicked with " + posn.toString());
         }
     }
 
     @Override
     public void onBlockClicked (World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+        if (StorageDrawers.config.cache.debugTrace)
+            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "IExtendedBlockClickHandler.onBlockClicked");
+
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, x, y, z);
         if (tileDrawers.getDirection() != side)
             return;
@@ -292,6 +305,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             item = tileDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
         else
             item = tileDrawers.takeItemsFromSlot(slot, 1);
+
+        if (StorageDrawers.config.cache.debugTrace)
+            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item == null) ? "  null item" : "  " + item.toString());
 
         if (item != null && item.stackSize > 0) {
             dropItemStack(world, x, y, z, player, item);
