@@ -52,6 +52,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @SideOnly(Side.CLIENT)
     private IIcon[] iconSideH;
     @SideOnly(Side.CLIENT)
+    private IIcon[] iconFront1;
+    @SideOnly(Side.CLIENT)
     private IIcon[] iconFront2;
     @SideOnly(Side.CLIENT)
     private IIcon[] iconFront4;
@@ -244,6 +246,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     protected int getDrawerSlot (int side, float hitX, float hitY, float hitZ) {
+        if (drawerCount == 1)
+            return 0;
         if (drawerCount == 2)
             return hitTop(hitY) ? 0 : 1;
 
@@ -478,7 +482,12 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             case 3:
                 return halfDepth ? iconSideV[meta] : iconSide[meta];
             case 4:
-                return drawerCount == 2 ? iconFront2[meta] : iconFront4[meta];
+                switch (drawerCount) {
+                    case 1: return iconFront1[meta];
+                    case 2: return iconFront2[meta];
+                    case 4: return iconFront4[meta];
+                }
+                return null;
             case 5:
                 return iconSide[meta];
         }
@@ -538,7 +547,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
         TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
         if (tile == null || side == tile.getDirection()) {
-            if (drawerCount == 2)
+            if (drawerCount == 1)
+                return  iconFront1[meta];
+            else if (drawerCount == 2)
                 return iconFront2[meta];
             else
                 return iconFront4[meta];
@@ -575,11 +586,13 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         iconSide = new IIcon[subtex.length];
         iconSideH = new IIcon[subtex.length];
         iconSideV = new IIcon[subtex.length];
+        iconFront1 = new IIcon[subtex.length];
         iconFront2 = new IIcon[subtex.length];
         iconFront4 = new IIcon[subtex.length];
         iconTrim = new IIcon[subtex.length];
 
         for (int i = 0; i < subtex.length; i++) {
+            iconFront1[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_front_1");
             iconFront2[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_front_2");
             iconFront4[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_front_4");
             iconSide[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side");

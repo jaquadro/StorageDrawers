@@ -17,6 +17,7 @@ import net.minecraft.block.Block;
 
 public class ModBlocks
 {
+    public static BlockDrawers fullDrawers1;
     public static BlockDrawers fullDrawers2;
     public static BlockDrawers fullDrawers4;
     public static BlockDrawers halfDrawers2;
@@ -25,6 +26,7 @@ public class ModBlocks
     public static BlockController controller;
 
     public void init () {
+        fullDrawers1 = new BlockDrawers("fullDrawers1", 1, false);
         fullDrawers2 = new BlockDrawers("fullDrawers2", 2, false);
         fullDrawers4 = new BlockDrawers("fullDrawers4", 4, false);
         halfDrawers2 = new BlockDrawers("halfDrawers2", 2, true);
@@ -34,6 +36,10 @@ public class ModBlocks
 
         ConfigManager config = StorageDrawers.config;
 
+        if (config.isBlockEnabled("fulldrawers1")) {
+            GameRegistry.registerBlock(fullDrawers1, ItemDrawers.class, "fullDrawers1");
+            GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers1));
+        }
         if (config.isBlockEnabled("fulldrawers2")) {
             GameRegistry.registerBlock(fullDrawers2, ItemDrawers.class, "fullDrawers2");
             GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers2));

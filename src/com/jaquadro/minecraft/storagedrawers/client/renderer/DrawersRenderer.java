@@ -115,6 +115,10 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG | ModularBoxRenderer.CUT_ZPOS,
     };
 
+    private static final float[][] indicatorsXY1 = new float[][] {
+        { 6, 14, 10, 15 }
+    };
+
     private static final float[][] indicatorsXY2 = new float[][] {
         { 6, 14, 10, 15 }, { 6, 6, 10, 7 }
     };
@@ -132,7 +136,11 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         double depth = block.halfDepth ? 8 : 0;
         int count = 0;
         float[][] xySet = null;
-        if (block.drawerCount == 2 || block instanceof BlockCompDrawers) {
+        if (block.drawerCount == 1) {
+            count = 1;
+            xySet = indicatorsXY1;
+        }
+        else if (block.drawerCount == 2 || block instanceof BlockCompDrawers) {
             count = (block instanceof BlockCompDrawers) ? 1 : 2;
             xySet = indicatorsXY2;
         }

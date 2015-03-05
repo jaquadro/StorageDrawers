@@ -17,6 +17,13 @@ item.upgradeLock.name=Lock Upgrade
 item.upgradeLock.description=Keep associated items when empty
 
 # Blocks
+tile.fullDrawers1.oak.name=Oak Drawer
+tile.fullDrawers1.spruce.name=Spruce Drawer
+tile.fullDrawers1.birch.name=Birch Drawer
+tile.fullDrawers1.jungle.name=Jungle Drawer
+tile.fullDrawers1.acacia.name=Acacia Drawer
+tile.fullDrawers1.big_oak.name=Dark Oak Drawer
+
 tile.fullDrawers2.oak.name=Oak Drawers 1x2
 tile.fullDrawers2.spruce.name=Spruce Drawers 1x2
 tile.fullDrawers2.birch.name=Birch Drawers 1x2
@@ -67,6 +74,7 @@ storageDrawers.config.general.tooltip=This and that.
 storageDrawers.config.blocks=Block Settings
 storageDrawers.config.blocks.tooltip=Configure individual storage blocks.
 
+storageDrawers.config.blocks.fullDrawers1=Drawers 1x1
 storageDrawers.config.blocks.fullDrawers2=Drawers 1x2
 storageDrawers.config.blocks.fullDrawers4=Drawers 2x2
 storageDrawers.config.blocks.halfDrawers2=Compact Drawers 1x2

@@ -195,6 +195,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         }
     };
 
+    private float itemOffset1X[] = new float[] { .5f };
+    private float itemOffset1Y[] = new float[] { 6.25f };
+
     private float itemOffset2X[] = new float[] { .5f, .5f };
     private float itemOffset2Y[] = new float[] { 10.25f, 2.25f };
 
@@ -414,11 +417,12 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         int drawerCount = tile.getDrawerCount();
         float xunit = getXOffset(drawerCount, slot);
         float yunit = getYOffset(drawerCount, slot);
+        float size = (drawerCount == 1) ? .5f : .25f;
 
         GL11.glPushMatrix();
 
         alignRendering(side);
-        moveRendering(.25f, getOffsetXForSide(side, xunit) * 16 - 2, 12.25f - yunit, .999f - depth + unit);
+        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, .999f - depth + unit);
 
         if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
             itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0, true);
@@ -434,6 +438,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
     private float getXOffset (int drawerCount, int slot) {
         switch (drawerCount) {
+            case 1: return itemOffset1X[slot];
             case 2: return itemOffset2X[slot];
             case 3: return itemOffset3X[slot];
             case 4: return itemOffset4X[slot];
@@ -443,6 +448,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
     private float getYOffset (int drawerCount, int slot) {
         switch (drawerCount) {
+            case 1: return itemOffset1Y[slot];
             case 2: return itemOffset2Y[slot];
             case 3: return itemOffset3Y[slot];
             case 4: return itemOffset4Y[slot];
