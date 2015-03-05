@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
 import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.StorageInventory;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
@@ -27,7 +28,7 @@ import org.apache.logging.log4j.Level;
 import java.util.Iterator;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends TileEntity implements IDrawerGroup, ISidedInventory
+public abstract class TileEntityDrawers extends TileEntity implements IDrawerGroupInteractive, ISidedInventory
 {
     private IDrawer[] drawers;
     private IDrawerInventory inventory;
@@ -171,14 +172,19 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         return countAdded;
     }
 
-    public int interactPutItemsIntoSlot (int slot, EntityPlayer player) {
-        int count = 0;
-
+    public int interactPutCurrentItemIntoSlot (int slot, EntityPlayer player) {
         ItemStack currentStack = player.inventory.getCurrentItem();
         if (currentStack != null)
-            count += putItemsIntoSlot(slot, currentStack, currentStack.stackSize);
+            return putItemsIntoSlot(slot, currentStack, currentStack.stackSize);
 
-        if (!drawers[slot].isEmpty() && worldObj.getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID)) {
+        markDirty();
+        return 0;
+    }
+
+    public int interactPutCurrentInventoryIntoSlot (int slot, EntityPlayer player) {
+        int count = 0;
+
+        if (!drawers[slot].isEmpty()) {
             for (int i = 0, n = player.inventory.getSizeInventory(); i < n; i++) {
                 ItemStack subStack = player.inventory.getStackInSlot(i);
                 if (subStack != null) {
@@ -191,10 +197,19 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             }
         }
 
+        markDirty();
+        return count;
+    }
+
+    public int interactPutItemsIntoSlot (int slot, EntityPlayer player) {
+        int count = 0;
+        if (worldObj.getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID))
+            count = interactPutCurrentInventoryIntoSlot(slot, player);
+        else
+            count = interactPutCurrentItemIntoSlot(slot, player);
+
         lastClickTime = worldObj.getTotalWorldTime();
         lastClickUUID = player.getPersistentID();
-
-        markDirty();
 
         return count;
     }
@@ -335,6 +350,11 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             return null;
 
         return drawers[slot];
+    }
+
+    @Override
+    public IDrawerInventory getDrawerInventory () {
+        return inventory;
     }
 
     @Override

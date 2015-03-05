@@ -43,18 +43,7 @@ public class StorageInventory implements IDrawerInventory
     }
 
     @Override
-    public int[] getAccessibleSlotsFromSide (int side) {
-        int[] autoSides = sideMan.getSlotsForSide(side);
-        for (int aside : autoSides) {
-            if (side == aside)
-                return inventorySlots;
-        }
-
-        return emptySlots;
-    }
-
-    @Override
-    public boolean canInsertItem (int slot, ItemStack item, int side) {
+    public boolean canInsertItem (int slot, ItemStack stack) {
         if (!StorageDrawers.config.cache.enableSidedInput)
             return false;
 
@@ -71,11 +60,11 @@ public class StorageInventory implements IDrawerInventory
         if (drawer == null)
             return false;
 
-        return drawer.canItemBeStored(item);
+        return drawer.canItemBeStored(stack);
     }
 
     @Override
-    public boolean canExtractItem (int slot, ItemStack item, int side) {
+    public boolean canExtractItem (int slot, ItemStack stack) {
         if (!StorageDrawers.config.cache.enableSidedOutput)
             return false;
 
@@ -95,7 +84,28 @@ public class StorageInventory implements IDrawerInventory
         if (drawer.getStoredItemCount() == 0)
             return false;
 
-        return drawer.canItemBeExtracted(item);
+        return drawer.canItemBeExtracted(stack);
+    }
+
+    @Override
+    public int[] getAccessibleSlotsFromSide (int side) {
+        int[] autoSides = sideMan.getSlotsForSide(side);
+        for (int aside : autoSides) {
+            if (side == aside)
+                return inventorySlots;
+        }
+
+        return emptySlots;
+    }
+
+    @Override
+    public boolean canInsertItem (int slot, ItemStack item, int side) {
+        return canInsertItem(slot, item);
+    }
+
+    @Override
+    public boolean canExtractItem (int slot, ItemStack item, int side) {
+        return canExtractItem(slot, item);
     }
 
     @Override

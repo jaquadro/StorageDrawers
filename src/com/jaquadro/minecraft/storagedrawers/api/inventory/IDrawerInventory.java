@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.api.inventory;
 
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
 
 public interface IDrawerInventory extends ISidedInventory
 {
@@ -25,4 +26,8 @@ public interface IDrawerInventory extends ISidedInventory
      * @param inventorySlot An IInventory slot index returned from getInventorySlot.
      */
     SlotType getInventorySlotType (int inventorySlot);
+
+    boolean canInsertItem (int slot, ItemStack stack);
+
+    boolean canExtractItem (int slot, ItemStack stack);
 }
