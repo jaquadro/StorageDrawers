@@ -54,10 +54,10 @@ public class ModBlocks
             GameRegistry.registerBlock(compDrawers, ItemCompDrawers.class, "compDrawers");
             GameRegistry.registerTileEntity(TileEntityDrawersComp.class, ModBlocks.getQualifiedName(compDrawers));
         }
-        //if (config.isBlockEnabled("controller")) {
+        if (config.isBlockEnabled("controller")) {
             GameRegistry.registerBlock(controller, ItemController.class, "controller");
             GameRegistry.registerTileEntity(TileEntityController.class, ModBlocks.getQualifiedName(controller));
-        //}
+        }
     }
 
     public static String getQualifiedName (Block block) {
