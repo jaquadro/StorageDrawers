@@ -324,6 +324,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 500);
 
         StorageDrawers.network.sendToAllAround(message, targetPoint);
+        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord));
     }
 
     public void clientUpdate (int[] inventorySlots) {
