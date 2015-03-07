@@ -67,8 +67,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         int side = tile.getDirection();
         int meta = world.getBlockMetadata(x, y, z);
 
-        double unit = .0625;
-        boxRenderer.setUnit(unit);
+        boxRenderer.setUnit(block.trimWidth);
         boxRenderer.setColor(ModularBoxRenderer.COLOR_WHITE);
         for (int i = 0; i < 6; i++)
             boxRenderer.setExteriorIcon(block.getIcon(world, x, y, z, i), i);
@@ -125,6 +124,8 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         TileEntityDrawers tile = block.getTileEntity(renderer.blockAccess, x, y, z);
 
         double depth = block.halfDepth ? 8 : 16;
+        double depthAdj = block.trimDepth * 16;
+
         int count = 0;
         float[][] xywhSet = null;
         if (block.drawerCount == 1) {
@@ -150,13 +151,13 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
             float[] xywh = xywhSet[i];
 
-            setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - 1) * unit, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - .95) * unit, side);
+            setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .05) * unit, side);
 
             boxRenderer.setExteriorIcon(iconOff);
             boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
 
             if (level == 1 && drawer.getMaxCapacity() > 0 && drawer.getRemainingCapacity() == 0) {
-                setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - 1) * unit, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - .94) * unit, side);
+                setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .06) * unit, side);
 
                 boxRenderer.setExteriorIcon(iconOn);
                 boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
@@ -170,7 +171,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
                     if (indCur >= indEnd)
                         indCur = xywh[0] + xywh[2];
 
-                    setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - 1) * unit, indCur * unit, (xywh[1] + xywh[3]) * unit, (depth - .94) * unit, side);
+                    setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, indCur * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .06) * unit, side);
                     if (side == 2 || side == 5)
                         renderer.flipTexture = true;
 
@@ -276,7 +277,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
     }
 
     private void renderInterior (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
-        double unit = .0625;
+        double unit = block.trimDepth;
         double depth = block.halfDepth ? .5 : 1;
         double xMin = 0, xMax = 0, zMin = 0, zMax = 0;
 

@@ -348,9 +348,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         int drawerCount = tile.getDrawerCount();
         boolean isBlockType = isItemBlockType(itemStack);
 
+        BlockDrawers block = (BlockDrawers)tile.getBlockType();
+
         float xunit = getXOffset(drawerCount, slot);
         float yunit = getYOffset(drawerCount, slot);
-        float zunit = isBlockType ? 1.95f * unit : unit;
+        float zunit = isBlockType ? 1.95f * block.trimDepth : block.trimDepth;
 
         float xc = 0, zc = 0;
         float itemDepth = depth + .001f;
@@ -419,10 +421,12 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         float yunit = getYOffset(drawerCount, slot);
         float size = (drawerCount == 1) ? .5f : .25f;
 
+        BlockDrawers block = (BlockDrawers)tile.getBlockType();
+
         GL11.glPushMatrix();
 
         alignRendering(side);
-        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, .999f - depth + unit);
+        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, .999f - depth + block.trimDepth);
 
         if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
             itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0, true);

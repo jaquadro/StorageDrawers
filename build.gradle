@@ -82,7 +82,7 @@ processResources
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    classifier = 'deobf'
+    classifier = 'dev'
 }
 
 artifacts {
