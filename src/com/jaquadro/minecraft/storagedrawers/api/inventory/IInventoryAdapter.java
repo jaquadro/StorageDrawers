@@ -7,4 +7,6 @@ public interface IInventoryAdapter
     ItemStack getInventoryStack (SlotType slotType);
 
     void syncInventory ();
+
+    boolean syncInventoryIfNeeded ();
 }

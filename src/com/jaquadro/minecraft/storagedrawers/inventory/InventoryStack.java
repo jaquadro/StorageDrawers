@@ -50,6 +50,17 @@ public abstract class InventoryStack
         refresh();
     }
 
+    public boolean markDirtyIfNeeded () {
+        int diff = getDiff();
+        if (diff != 0) {
+            applyDiff(diff);
+            refresh();
+            return true;
+        }
+
+        return false;
+    }
+
     public int getDiff () {
         if (nativeStack == null)
             return 0;

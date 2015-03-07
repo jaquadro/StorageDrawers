@@ -85,6 +85,10 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
         inventoryStack.markDirty();
     }
 
+    public boolean syncInventoryIfNeeded () {
+        return inventoryStack.markDirtyIfNeeded();
+    }
+
     public static boolean areItemsEqual (ItemStack stack1, ItemStack stack2) {
         if (stack1 == null || stack2 == null)
             return false;

@@ -1,9 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
+import com.jaquadro.minecraft.storagedrawers.network.ControllerUpdateMessage;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -65,7 +69,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     private int[] autoSides = new int[] { 0, 1 };
     private int direction;
 
-    private int inventorySize = 0;
     private int drawerSize = 0;
 
     private long lastClickTime;
@@ -87,7 +90,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     }
 
     public int interactPutItemsIntoInventory (EntityPlayer player) {
-        if (inventorySize == 0)
+        if (inventorySlots.length == 0)
             updateCache();
 
         boolean dumpInventory = worldObj.getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID);
@@ -128,7 +131,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         invSlotList.clear();
         drawerBlockList.clear();
         drawerSlotList.clear();
-        inventorySize = 0;
         drawerSize = 0;
     }
 
@@ -172,6 +174,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             if (invBlockList.get(i) != null)
                 inventorySlots[j++] = i;
         }
+
+        if (!worldObj.isRemote)
+            syncClient();
     }
 
     private void populateNode (int x, int y, int z, int depth) {
@@ -216,7 +221,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             drawerSlotList.add(i);
         }
 
-        inventorySize += invStorageSize.get(coord);
         drawerSize += drawerStorageSize.get(coord);
 
         if (depth == DEPTH_LIMIT)
@@ -315,6 +319,17 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
     }
 
+    private void syncClient () {
+        IMessage message = new ControllerUpdateMessage(xCoord, yCoord, zCoord, inventorySlots);
+        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 500);
+
+        StorageDrawers.network.sendToAllAround(message, targetPoint);
+    }
+
+    public void clientUpdate (int[] inventorySlots) {
+        this.inventorySlots = inventorySlots;
+    }
+
     @Override
     public IDrawerInventory getDrawerInventory () {
         return null;
@@ -322,7 +337,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
     @Override
     public int getDrawerCount () {
-        if (inventorySize == 0)
+        if (inventorySlots.length == 0)
             updateCache();
 
         return drawerSlotList.size();
@@ -344,6 +359,31 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             return false;
 
         return group.isDrawerEnabled(getDrawerSlotForGroup(slot));
+    }
+
+    @Override
+    public void markDirty () {
+        for (IDrawerGroup group : storage.values()) {
+            if (group != null && group.getDrawerInventory() != null)
+                group.markDirtyIfNeeded();
+        }
+
+        super.markDirty();
+    }
+
+    @Override
+    public boolean markDirtyIfNeeded () {
+        boolean synced = false;
+
+        for (IDrawerGroup group : storage.values()) {
+            if (group != null && group.getDrawerInventory() != null)
+                synced |= group.markDirtyIfNeeded();
+        }
+
+        if (synced)
+            super.markDirty();
+
+        return synced;
     }
 
     @Override
@@ -376,7 +416,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
     @Override
     public int getSizeInventory () {
-        return inventorySize;
+        return inventorySlots.length;
     }
 
     @Override
@@ -413,6 +453,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             return;
 
         inventory.setInventorySlotContents(getDrawerSlotForInv(slot), stack);
+        inventory.markDirty();
     }
 
     @Override

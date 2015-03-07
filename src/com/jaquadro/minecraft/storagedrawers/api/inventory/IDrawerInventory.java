@@ -30,4 +30,6 @@ public interface IDrawerInventory extends ISidedInventory
     boolean canInsertItem (int slot, ItemStack stack);
 
     boolean canExtractItem (int slot, ItemStack stack);
+
+    boolean syncInventoryIfNeeded ();
 }

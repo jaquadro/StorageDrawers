@@ -20,4 +20,6 @@ public interface IDrawerGroup
     boolean isDrawerEnabled (int slot);
 
     IDrawerInventory getDrawerInventory ();
+
+    boolean markDirtyIfNeeded ();
 }

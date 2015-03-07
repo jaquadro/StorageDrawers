@@ -309,6 +309,16 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         super.markDirty();
     }
 
+    @Override
+    public boolean markDirtyIfNeeded () {
+        if (inventory.syncInventoryIfNeeded()) {
+            super.markDirty();
+            return true;
+        }
+
+        return false;
+    }
+
     public void clientUpdateCount (int slot, int count) {
         IDrawer drawer = getDrawer(slot);
         if (drawer.getStoredItemCount() != count) {

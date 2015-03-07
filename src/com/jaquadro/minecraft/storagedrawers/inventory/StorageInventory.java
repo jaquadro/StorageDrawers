@@ -269,6 +269,22 @@ public class StorageInventory implements IDrawerInventory
     }
 
     @Override
+    public boolean syncInventoryIfNeeded () {
+        boolean synced = false;
+
+        for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
+            if (!group.isDrawerEnabled(i))
+                continue;
+
+            IDrawer drawer = group.getDrawer(i);
+            if (drawer instanceof IInventoryAdapter)
+                synced |= ((IInventoryAdapter) drawer).syncInventoryIfNeeded();
+        }
+
+        return synced;
+    }
+
+    @Override
     public boolean isUseableByPlayer (EntityPlayer player) {
         return false;
     }
