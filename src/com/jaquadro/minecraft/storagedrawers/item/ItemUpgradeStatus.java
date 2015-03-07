@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ItemUpgradeStatus extends Item
 {
-    public static final String[] iconNames = new String[] { null, "level1", "level2", "level3" };
+    public static final String[] iconNames = new String[] { null, "level1", "level2" };
 
     @SideOnly(Side.CLIENT)
     private IIcon[] icons;

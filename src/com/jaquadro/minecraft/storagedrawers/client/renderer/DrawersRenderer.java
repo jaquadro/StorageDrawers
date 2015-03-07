@@ -5,9 +5,11 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
@@ -91,19 +93,8 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         renderInterior(block, x, y, z, side, renderer);
 
-        boxRenderer.setIcon(block.getIndicatorIcon(false));
-
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
-            renderHandleIndicator(block, x, y, z, side, renderer, tile.getStatusLevel());
-
-        /*if (tile.isLocked()) {
-            boxRenderer.setExteriorIcon(Blocks.iron_block.getIcon(0, 0));
-            boxRenderer.setExteriorIcon(block.getIconLockFace(), side);
-
-            double depth = block.halfDepth ? 8 : 0;
-            setCoord(boxCoord, 7 * unit, 7 * unit, (depth + .5) * unit, 9 * unit, 9 * unit, (depth + 1) * unit, side);
-            boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, 0);
-        }*/
+            renderIndicator(block, x, y, z, side, renderer, tile.getStatusLevel());
 
         return true;
     }
@@ -115,54 +106,97 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         ModularBoxRenderer.CUT_YPOS | ModularBoxRenderer.CUT_YNEG | ModularBoxRenderer.CUT_XNEG | ModularBoxRenderer.CUT_ZNEG | ModularBoxRenderer.CUT_ZPOS,
     };
 
-    private static final float[][] indicatorsXY1 = new float[][] {
-        { 6, 14, 10, 15 }
+    private static final float[][] drawerXYWH1 = new float[][] {
+        { 0, 0, 16, 16 },
     };
 
-    private static final float[][] indicatorsXY2 = new float[][] {
-        { 6, 14, 10, 15 }, { 6, 6, 10, 7 }
+    private static final float[][] drawerXYWH2 = new float[][] {
+        { 0, 8, 16, 8 }, { 0, 0, 16, 8 },
     };
 
-    private static final float[][] indicatorsXY4 = new float[][] {
-        { 11, 14, 13, 15 }, { 11, 6, 13, 7 }, { 3, 14, 5, 15 }, { 3, 6, 5, 7 }
+    private static final float[][] drawerXYWH4 = new float[][] {
+        { 0, 8, 8, 8 }, { 0, 0, 8, 8 }, { 8, 8, 8, 8 }, { 8, 0, 8, 8 },
     };
 
-    private void renderHandleIndicator (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, int level) {
+    private void renderIndicator (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, int level) {
         if (level <= 0 || side < 2 || side > 5)
             return;
 
         TileEntityDrawers tile = block.getTileEntity(renderer.blockAccess, x, y, z);
 
-        double depth = block.halfDepth ? 8 : 0;
+        double depth = block.halfDepth ? 8 : 16;
         int count = 0;
-        float[][] xySet = null;
+        float[][] xywhSet = null;
         if (block.drawerCount == 1) {
             count = 1;
-            xySet = indicatorsXY1;
+            xywhSet = drawerXYWH1;
         }
-        else if (block.drawerCount == 2 || block instanceof BlockCompDrawers) {
-            count = (block instanceof BlockCompDrawers) ? 1 : 2;
-            xySet = indicatorsXY2;
+        else if (block.drawerCount == 2) {
+            count = 2;
+            xywhSet = drawerXYWH2;
         }
         else if (block.drawerCount == 4) {
             count = 4;
-            xySet = indicatorsXY4;
+            xywhSet = drawerXYWH4;
         }
+
+        IIcon iconOff = block.getIndicatorIcon(count, false);
+        IIcon iconOn = block.getIndicatorIcon(count, true);
 
         for (int i = 0; i < count; i++) {
-            float[] xy = xySet[i];
-            setCoord(boxCoord, xy[0] * unit, xy[1] * unit, (depth + .95) * unit, xy[2] * unit, xy[3] * unit, (depth + 1) * unit, side);
-
             IDrawer drawer = tile.getDrawer(i);
-            int iconIndex = 0;
-            if (level == 2)
-                iconIndex = (drawer.getMaxCapacity() > 0 && (float)drawer.getStoredItemCount() / drawer.getMaxCapacity() > .75) ? 1 : iconIndex;
-            if (level >= 1)
-                iconIndex = (drawer.getMaxCapacity() > 0 && drawer.getStoredItemCount() == drawer.getMaxCapacity()) ? 2 : iconIndex;
+            if (drawer == null)
+                continue;
 
-            boxRenderer.setExteriorIcon(block.getIndicatorIcon(iconIndex));
+            float[] xywh = xywhSet[i];
+
+            setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - 1) * unit, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - .95) * unit, side);
+
+            boxRenderer.setExteriorIcon(iconOff);
             boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
+
+            if (level == 1 && drawer.getMaxCapacity() > 0 && drawer.getRemainingCapacity() == 0) {
+                setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - 1) * unit, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - .94) * unit, side);
+
+                boxRenderer.setExteriorIcon(iconOn);
+                boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
+            }
+            else if (level >= 2) {
+                double indStart = xywh[0] + block.indStart / unit;
+                double indEnd = xywh[0] + block.indEnd / unit;
+                double indCur = getIndEnd(block, tile, i, indStart, (block.indEnd - block.indStart) / unit);
+
+                if (indCur > indStart) {
+                    if (indCur >= indEnd)
+                        indCur = xywh[0] + xywh[2];
+
+                    setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - 1) * unit, indCur * unit, (xywh[1] + xywh[3]) * unit, (depth - .94) * unit, side);
+                    if (side == 2 || side == 5)
+                        renderer.flipTexture = true;
+
+                    boxRenderer.setExteriorIcon(iconOn);
+                    boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
+
+                    renderer.flipTexture = false;
+                }
+            }
         }
+    }
+
+    private double getIndEnd (BlockDrawers block, TileEntityDrawers tile, int slot, double x, double w) {
+        IDrawer drawer = tile.getDrawer(slot);
+        if (drawer == null)
+            return x;
+
+        int cap = drawer.getMaxCapacity();
+        int count = drawer.getStoredItemCount();
+        if (cap == 0 || count == 0)
+            return x;
+
+        int step = block.indSteps > 0 ? block.indSteps : 1000;
+        float fillAmt = (float)(step * count / cap) / step;
+
+        return x + (w * fillAmt);
     }
 
     private void setCoord (double[] coords, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
@@ -184,30 +218,33 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         switch (side) {
             case 2:
-                return;
-            case 3:
                 tmpX = coords[0];
-                tmpZ = coords[2];
                 coords[0] = 1 - coords[3];
                 coords[3] = 1 - tmpX;
+
+                tmpZ = coords[2];
                 coords[2] = 1 - coords[5];
                 coords[5] = 1 - tmpZ;
                 return;
+            case 3:
+                return;
             case 4:
                 tmpX = coords[0];
-                coords[0] = coords[2];
-                coords[2] = 1 - coords[3];
-                coords[3] = coords[5];
-                coords[5] = 1 - tmpX;
+                tmpZ = coords[3];
+                coords[0] = 1 - coords[5];
+                coords[3] = 1 - coords[2];
+
+                coords[2] = tmpX;
+                coords[5] = tmpZ;
                 return;
             case 5:
                 tmpX = coords[0];
-                tmpZ = coords[2];
-                coords[0] = 1 - coords[5];
-                coords[2] = tmpX;
-                tmpX = coords[3];
-                coords[3] = 1 - tmpZ;
-                coords[5] = tmpX;
+                tmpZ = coords[3];
+                coords[0] = coords[2];
+                coords[3] = coords[5];
+
+                coords[2] = 1 - tmpZ;
+                coords[5] = 1 - tmpX;
                 return;
         }
     }

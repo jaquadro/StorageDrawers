@@ -1,5 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
@@ -19,6 +22,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,22 +33,31 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Random;
 
 public class BlockDrawers extends BlockContainer implements IExtendedBlockClickHandler
 {
+    private static final ResourceLocation blockConfig = new ResourceLocation(StorageDrawers.MOD_ID + ":textures/blocks/block_config.mcmeta");
+
     public final boolean halfDepth;
     public final int drawerCount;
+
+    public float trimWidth = 0.0625f;
+    public float trimDepth = 0.0625f;
+    public float indStart = 0;
+    public float indEnd = 0;
+    public int indSteps = 0;
 
     @SideOnly(Side.CLIENT)
     private IIcon[] iconSide;
@@ -70,11 +84,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     private IIcon[] iconOverlayTrim;
 
     @SideOnly(Side.CLIENT)
-    private IIcon iconIndicatorOn;
+    private IIcon[] iconIndicator1;
     @SideOnly(Side.CLIENT)
-    private IIcon iconIndicatorAmber;
+    private IIcon[] iconIndicator2;
     @SideOnly(Side.CLIENT)
-    private IIcon iconIndicatorOff;
+    private IIcon[] iconIndicator4;
 
     //@SideOnly(Side.CLIENT)
     //private IIcon iconLockFace;
@@ -518,30 +532,6 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @SideOnly(Side.CLIENT)
-    public IIcon getIndicatorIcon (boolean on) {
-        return on ? iconIndicatorOn : iconIndicatorAmber;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public IIcon getIndicatorIcon (int level) {
-        switch (level) {
-            case 0:
-                return iconIndicatorOff;
-            case 1:
-                return iconIndicatorAmber;
-            case 2:
-                return iconIndicatorOn;
-            default:
-                return iconIndicatorOff;
-        }
-    }
-
-    /*@SideOnly(Side.CLIENT)
-    public IIcon getIconLockFace () {
-        return iconLockFace;
-    }*/
-
-    @SideOnly(Side.CLIENT)
     private IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side, int level) {
         int meta = blockAccess.getBlockMetadata(x, y, z) % BlockWood.field_150096_a.length;
 
@@ -576,6 +566,18 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         return (level > 0) ? iconOverlay[level] : iconSide[meta];
+    }
+
+    @SideOnly(Side.CLIENT)
+    public IIcon getIndicatorIcon (int drawerCount, boolean on) {
+        int onIndex = on ? 1 : 0;
+        switch (drawerCount) {
+            case 1: return iconIndicator1[onIndex];
+            case 2: return iconIndicator2[onIndex];
+            case 4: return iconIndicator4[onIndex];
+        }
+
+        return null;
     }
 
     @Override
@@ -615,10 +617,49 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             iconOverlayTrim[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i] + "_trim");
         }
 
-        iconIndicatorOff = register.registerIcon(StorageDrawers.MOD_ID + ":indicator_off");
-        iconIndicatorAmber = register.registerIcon(StorageDrawers.MOD_ID + ":indicator_amber");
-        iconIndicatorOn = register.registerIcon(StorageDrawers.MOD_ID + ":indicator_on");
+        iconIndicator1 = new IIcon[2];
+        iconIndicator2 = new IIcon[2];
+        iconIndicator4 = new IIcon[2];
+
+        iconIndicator1[0] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_1_off");
+        iconIndicator1[1] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_1_on");
+        iconIndicator2[0] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_2_off");
+        iconIndicator2[1] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_2_on");
+        iconIndicator4[0] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_4_off");
+        iconIndicator4[1] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_4_on");
 
         //iconLockFace = register.registerIcon(StorageDrawers.MOD_ID + ":lock_face");
+
+        loadBlockConfig();
+    }
+
+    private void loadBlockConfig () {
+        try {
+            IResource configResource = Minecraft.getMinecraft().getResourceManager().getResource(blockConfig);
+            BufferedReader reader = null;
+            try {
+                reader = new BufferedReader(new InputStreamReader(configResource.getInputStream()));
+                JsonObject root = (new JsonParser()).parse(reader).getAsJsonObject();
+
+                JsonObject entry = root.getAsJsonObject(getUnlocalizedName().substring(5));
+                if (entry != null) {
+                    if (entry.has("trimWidth"))
+                        trimWidth = entry.get("trimWidth").getAsFloat();
+                    if (entry.has("trimDepth"))
+                        trimDepth = entry.get("trimDepth").getAsFloat();
+                    if (entry.has("indStart"))
+                        indStart = entry.get("indStart").getAsFloat();
+                    if (entry.has("indEnd"))
+                        indEnd = entry.get("indEnd").getAsFloat();
+                    if (entry.has("indSteps"))
+                        indSteps = entry.get("indSteps").getAsInt();
+                }
+            }
+            finally {
+                IOUtils.closeQuietly(reader);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

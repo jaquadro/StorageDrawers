@@ -71,11 +71,9 @@ public class ModRecipes
         }
 
         if (config.cache.enableIndicatorUpgrades) {
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStatus, 1, 1), "xyx", "yzy", "xyx",
-                'x', Items.redstone, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStatus, 1, 2), "wyw", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStatus, 1, 1), "wyw", "yzy", "xyx",
                 'w', new ItemStack(Blocks.redstone_torch), 'x', Items.redstone, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStatus, 1, 3), "wyw", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStatus, 1, 2), "wyw", "yzy", "xyx",
                 'w', Items.comparator, 'x', Items.redstone, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
         }
 

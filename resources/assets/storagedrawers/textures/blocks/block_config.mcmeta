@@ -1,0 +1,41 @@
+{
+	"fullDrawers1": {
+		"trimWidth": 0.0625,
+		"trimDepth": 0.0625,
+		"indStart": 0.390625,
+		"indEnd": 0.609375,
+		"indSteps": 14
+	},
+	"fullDrawers2": {
+		"trimWidth": 0.0625,
+		"trimDepth": 0.0625,
+		"indStart": 0.390625,
+		"indEnd": 0.609375,
+		"indSteps": 14
+	},
+	"fullDrawers4": {
+		"trimWidth": 0.0625,
+		"trimDepth": 0.0625,
+		"indStart": 0.140625,
+		"indEnd": 0.359375,
+		"indSteps": 14
+	},
+	"halfDrawers2": {
+		"trimWidth": 0.0625,
+		"trimDepth": 0.0625,
+		"indStart": 0.390625,
+		"indEnd": 0.609375,
+		"indSteps": 14
+	},
+	"halfDrawers4": {
+		"trimWidth": 0.0625,
+		"trimDepth": 0.0625,
+		"indStart": 0.140625,
+		"indEnd": 0.359375,
+		"indSteps": 14
+	},
+	"compDrawers": {
+		"trimWidth": 0.0625,
+		"trimDepth": 0.0625
+	}
+}

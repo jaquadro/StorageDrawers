@@ -196,7 +196,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     };
 
     private float itemOffset1X[] = new float[] { .5f };
-    private float itemOffset1Y[] = new float[] { 6.25f };
+    private float itemOffset1Y[] = new float[] { 8.25f };
 
     private float itemOffset2X[] = new float[] { .5f, .5f };
     private float itemOffset2Y[] = new float[] { 10.25f, 2.25f };
