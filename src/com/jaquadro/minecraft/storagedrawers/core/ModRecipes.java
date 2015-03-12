@@ -17,7 +17,7 @@ public class ModRecipes
 
         for (int i = 0; i < BlockWood.field_150096_a.length; i++) {
             if (config.isBlockEnabled("fulldrawers1"))
-                GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers2, config.getBlockRecipeOutput("fulldrawers2"), i), "xxx", " y ", "xxx",
+                GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers1, config.getBlockRecipeOutput("fulldrawers1"), i), "xxx", " y ", "xxx",
                     'x', new ItemStack(Blocks.planks, 1, i), 'y', Blocks.chest);
             if (config.isBlockEnabled("fulldrawers2"))
                 GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers2, config.getBlockRecipeOutput("fulldrawers2"), i), "xyx", "xxx", "xyx",
