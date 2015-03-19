@@ -8,6 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive
 import com.jaquadro.minecraft.storagedrawers.network.ControllerUpdateMessage;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -249,6 +250,12 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         if (!storage.containsKey(coord))
             return null;
 
+        TileEntity te = worldObj.getTileEntity(coord.x, coord.y, coord.z);
+        if (!(te instanceof IDrawerGroup)) {
+            storage.remove(coord);
+            return null;
+        }
+
         return storage.get(coord);
     }
 
@@ -262,6 +269,12 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
         if (!storage.containsKey(coord))
             return null;
+
+        TileEntity te = worldObj.getTileEntity(coord.x, coord.y, coord.z);
+        if (!(te instanceof IDrawerGroup)) {
+            storage.remove(coord);
+            return null;
+        }
 
         return storage.get(coord);
     }
