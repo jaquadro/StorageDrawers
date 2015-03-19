@@ -163,16 +163,16 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             }
         }
 
-        int validSlotCount = 0;
+        /*int validSlotCount = 0;
         for (int i = 0, n = invBlockList.size(); i < n; i++) {
             if (invBlockList.get(i) != null)
                 validSlotCount++;
-        }
+        }*/
 
-        inventorySlots = new int[validSlotCount];
+        inventorySlots = new int[invBlockList.size()];
         for (int i = 0, j = 0, n = invBlockList.size(); i < n; i++) {
-            if (invBlockList.get(i) != null)
-                inventorySlots[j++] = i;
+            //if (invBlockList.get(i) != null)
+            inventorySlots[j++] = i;
         }
 
         if (!worldObj.isRemote)
