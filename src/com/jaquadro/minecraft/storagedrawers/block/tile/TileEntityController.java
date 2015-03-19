@@ -185,7 +185,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         if (te == null || !(te instanceof IDrawerGroup))
             return;
 
-        if (te instanceof TileEntityController) {
+        if (te instanceof TileEntityController && depth < DEPTH_LIMIT) {
             populateNeighborNodes(x, y, z, depth + 1);
             return;
         }
