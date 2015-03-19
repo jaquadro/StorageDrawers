@@ -15,9 +15,7 @@ import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockWood;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
@@ -337,6 +335,12 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     public boolean isSideSolid (IBlockAccess world, int x, int y, int z, ForgeDirection side) {
         if (halfDepth)
             return false;
+
+        if (side == ForgeDirection.DOWN) {
+            Block blockUnder = world.getBlock(x, y - 1, z);
+            if (blockUnder instanceof BlockChest || blockUnder instanceof BlockEnderChest)
+                return false;
+        }
 
         if (side.ordinal() != getTileEntity(world, x, y, z).getDirection())
             return true;
