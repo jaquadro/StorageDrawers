@@ -356,6 +356,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         float xc = 0, zc = 0;
         float itemDepth = depth + .001f;
+        float relScale = (tile.getDrawerCount() == 1) ? 2 : 1;
 
         if (isBlockType) {
             try {
@@ -363,7 +364,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 itemBlock.setBlockBoundsBasedOnState(tile.getWorldObj(), 0, 0, 0);
                 itemBlock.setBlockBoundsForItemRender();
 
-                double zDepth = 1 - itemBlock.getBlockBoundsMaxZ();
+                double zDepth = 1 / relScale - itemBlock.getBlockBoundsMaxZ();
                 itemDepth += zDepth * zunit;
             }
             catch (Exception e) { };
@@ -391,16 +392,18 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         float yAdj = 0;
         if (drawerCount == 2 || drawerCount == 4)
             yAdj = -.5f;
+        else if (drawerCount == 1)
+            yAdj = -3f;
 
         GL11.glPushMatrix();
 
         if (isBlockType) {
             GL11.glTranslatef(xc, unit * (yunit + 1.75f + yAdj), zc);
-            GL11.glScalef(1, 1, 1);
+            GL11.glScalef(1 * relScale, 1 * relScale, 1 * relScale);
             GL11.glRotatef(getRotationYForSide(side) + 90.0F, 0.0F, 1.0F, 0.0F);
         } else {
             GL11.glTranslatef(xc, unit * (yunit + 0.75f + yAdj), zc);
-            GL11.glScalef(.5f, .5f, .5f);
+            GL11.glScalef(.5f * relScale, .5f * relScale, .5f * relScale);
             GL11.glRotatef(getRotationYForSide(side), 0.0F, 1.0F, 0.0F);
         }
 
