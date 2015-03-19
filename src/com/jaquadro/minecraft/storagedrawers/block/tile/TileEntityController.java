@@ -70,6 +70,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     private int[] autoSides = new int[] { 0, 1 };
     private int direction;
 
+    private boolean initialized;
     private int drawerSize = 0;
 
     private long lastClickTime;
@@ -144,7 +145,15 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         updateCache();
     }
 
+    private void initialize () {
+        if (!initialized)
+            updateCache();
+        initialized = true;
+    }
+
     public void updateCache () {
+        int preCount = inventorySlots.length;
+
         mark.clear();
         populateNode(xCoord, yCoord, zCoord, 0);
 
@@ -178,6 +187,11 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
         if (!worldObj.isRemote)
             syncClient();
+
+        if (preCount != inventorySlots.length && (preCount == 0 || inventorySlots.length == 0)) {
+            if (!worldObj.isRemote)
+                markDirty();
+        }
     }
 
     private void populateNode (int x, int y, int z, int depth) {
@@ -402,6 +416,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
     @Override
     public int[] getAccessibleSlotsFromSide (int side) {
+        initialize();
         for (int aside : autoSides) {
             if (side == aside)
                 return inventorySlots;
@@ -430,6 +445,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
     @Override
     public int getSizeInventory () {
+        initialize();
         return inventorySlots.length;
     }
 
