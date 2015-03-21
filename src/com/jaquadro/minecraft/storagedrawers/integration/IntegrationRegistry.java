@@ -20,6 +20,8 @@ public class IntegrationRegistry
             reg.add(new AppliedEnergistics());
         if (Loader.isModLoaded("Waila") && StorageDrawers.config.cache.enableWailaIntegration)
             reg.add(new Waila());
+        if (Loader.isModLoaded("Thaumcraft") && StorageDrawers.config.cache.enableThaumcraftIntegration)
+            reg.add(new Thaumcraft());
     }
 
     private IntegrationRegistry () {

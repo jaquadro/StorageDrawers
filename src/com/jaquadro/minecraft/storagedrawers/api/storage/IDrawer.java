@@ -81,6 +81,21 @@ public interface IDrawer
      */
     boolean isEmpty ();
 
+    /**
+     * Gets auxiliary data that has been associated with this drawer.
+     *
+     * @param key The key used to identify the data.
+     * @return An opaque object that was previously stored.
+     */
+    Object getExtendedData (String key);
+
+    /**
+     * Stores auxiliary data with this drawer, mainly for use in integration.
+     * @param key The key to identify the data with.
+     * @param data The data to store.
+     */
+    void setExtendedData (String key, Object data);
+
     void writeToNBT (NBTTagCompound tag);
 
     void readFromNBT (NBTTagCompound tag);

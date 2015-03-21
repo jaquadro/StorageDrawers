@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.registry.IWailaTooltipHandler;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
@@ -64,10 +65,15 @@ public class Waila extends IntegrationModule
                 IDrawer drawer = tile.getDrawer(i);
                 ItemStack stack = drawer.getStoredItemPrototype();
                 if (stack != null && stack.getItem() != null) {
+                    String stackName = stack.getDisplayName();
+                    List<IWailaTooltipHandler> handlers = StorageDrawers.wailaRegistry.getTooltipHandlers();
+                    for (int j = 0, n = handlers.size(); j < n; j++)
+                        stackName = handlers.get(j).transformItemName(drawer, stackName);
+
                     if (tile instanceof TileEntityDrawersComp)
-                        name = stack.getDisplayName() + ((i == 0) ? " [" : " [+") + ((TileEntityDrawersComp) tile).getStoredItemRemainder(i) + "]";
+                        name = stackName + ((i == 0) ? " [" : " [+") + ((TileEntityDrawersComp) tile).getStoredItemRemainder(i) + "]";
                     else
-                        name = stack.getDisplayName() + " [" + drawer.getStoredItemCount() + "]";
+                        name = stackName + " [" + drawer.getStoredItemCount() + "]";
                 }
                 currenttip.add(StatCollector.translateToLocalFormatted("storageDrawers.waila.drawer", i + 1, name));
             }

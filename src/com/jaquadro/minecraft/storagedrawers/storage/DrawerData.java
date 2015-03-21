@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IInventoryAdapter;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.SlotType;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
@@ -8,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.inventory.InventoryStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -50,6 +52,9 @@ public class DrawerData extends BaseDrawerData
             protoStack = nullStack;
             inventoryStack.reset();
 
+            DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
+            MinecraftForge.EVENT_BUS.post(event);
+
             if (mark)
                 storageProvider.markDirty(slot);
             return;
@@ -61,6 +66,9 @@ public class DrawerData extends BaseDrawerData
         refreshOreDictMatches();
         setStoredItemCount(amount, mark, false);
         inventoryStack.reset();
+
+        DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
+        MinecraftForge.EVENT_BUS.post(event);
 
         if (mark)
             storageProvider.markDirty(slot);
@@ -164,6 +172,9 @@ public class DrawerData extends BaseDrawerData
     protected void reset () {
         protoStack = nullStack;
         super.reset();
+
+        DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
+        MinecraftForge.EVENT_BUS.post(event);
     }
 }
 

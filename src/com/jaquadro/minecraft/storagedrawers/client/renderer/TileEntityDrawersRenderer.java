@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.render.IRenderLabel;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
@@ -27,6 +28,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -101,6 +103,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 if (renderEffect && itemStack.hasEffect(i))
                     renderEffect(texManager, x, y);
             }
+
+
         }
 
         @Override
@@ -222,6 +226,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     private static int[] glLightRender = { GL11.GL_LIGHT0, GL11.GL_LIGHT1, GL11.GL_COLOR_MATERIAL, GL12.GL_RESCALE_NORMAL };
     private List<int[]> savedGLLightRender = GLUtil.makeGLState(glLightRender);
 
+    private List<IRenderLabel> preLabelRenderHandlers = new ArrayList<IRenderLabel>();
+
     @Override
     public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime) {
         TileEntityDrawers tileDrawers = (TileEntityDrawers) tile;
@@ -256,16 +262,16 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         mc.gameSettings.fancyGraphics = true;
 
         if (StorageDrawers.config.isFancyItemRenderEnabled())
-            renderFancyItemSet(tileDrawers, side, depth);
+            renderFancyItemSet(tileDrawers, side, depth, partialTickTime);
         else
-            renderFastItemSet(tileDrawers, side, depth);
+            renderFastItemSet(tileDrawers, side, depth, partialTickTime);
 
         mc.gameSettings.fancyGraphics = cache;
 
         GL11.glPopMatrix();
     }
 
-    private void renderFancyItemSet (TileEntityDrawers tile, ForgeDirection side, float depth) {
+    private void renderFancyItemSet (TileEntityDrawers tile, ForgeDirection side, float depth, float partialTickTime) {
         boolean restoreGLState = false;
         int drawerCount = tile.getDrawerCount();
 
@@ -283,7 +289,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 GLUtil.saveGLState(savedGLStateRender, glStateRender);
             }
 
-            renderFancyItem(itemStack, tile, i, side, depth);
+            renderFancyItem(itemStack, tile, i, side, depth, partialTickTime);
         }
 
         if (restoreGLState)
@@ -293,7 +299,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     private boolean[] renderAsBlock = new boolean[4];
     private ItemStack[] renderStacks = new ItemStack[4];
 
-    private void renderFastItemSet (TileEntityDrawers tile, ForgeDirection side, float depth) {
+    private void renderFastItemSet (TileEntityDrawers tile, ForgeDirection side, float depth, float partialTickTime) {
         int drawerCount = tile.getDrawerCount();
         boolean restoreItemState = false;
         boolean restoreBlockState = false;
@@ -322,7 +328,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         for (int i = 0; i < drawerCount; i++) {
             if (renderStacks[i] != null && !renderAsBlock[i])
-                renderFastItem(renderStacks[i], tile, i, side, depth);
+                renderFastItem(renderStacks[i], tile, i, side, depth, partialTickTime);
         }
 
         if (restoreBlockState) {
@@ -332,7 +338,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         for (int i = 0; i < drawerCount; i++) {
             if (renderStacks[i] != null && renderAsBlock[i])
-                renderFastItem(renderStacks[i], tile, i, side, depth);
+                renderFastItem(renderStacks[i], tile, i, side, depth, partialTickTime);
         }
 
         if (restoreBlockState) {
@@ -344,7 +350,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             GLUtil.restoreGLState(savedGLStateItemRender);
     }
 
-    private void renderFancyItem (ItemStack itemStack, TileEntityDrawers tile, int slot, ForgeDirection side, float depth) {
+    private void renderFancyItem (ItemStack itemStack, TileEntityDrawers tile, int slot, ForgeDirection side, float depth, float partialTickTime) {
         int drawerCount = tile.getDrawerCount();
         boolean isBlockType = isItemBlockType(itemStack);
 
@@ -417,7 +423,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         GL11.glPopMatrix();
     }
 
-    private void renderFastItem (ItemStack itemStack, TileEntityDrawers tile, int slot, ForgeDirection side, float depth) {
+    private void renderFastItem (ItemStack itemStack, TileEntityDrawers tile, int slot, ForgeDirection side, float depth, float partialTickTime) {
         Minecraft mc = Minecraft.getMinecraft();
         int drawerCount = tile.getDrawerCount();
         float xunit = getXOffset(drawerCount, slot);
@@ -430,6 +436,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         alignRendering(side);
         moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, .999f - depth + block.trimDepth);
+
+        List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
+        for (int i = 0, n = renderHandlers.size(); i < n; i++) {
+            renderHandlers.get(i).render(tile, tile, slot, brightness, partialTickTime);
+        }
 
         if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
             itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0, true);

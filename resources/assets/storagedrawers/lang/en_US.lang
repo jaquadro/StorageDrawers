@@ -117,3 +117,4 @@ storageDrawers.config.integration.tooltip=Configure integration with other mods.
 
 storageDrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integration
 storageDrawers.config.integration.enableWaila=Enable WAILA Integration
+storageDrawers.config.integration.enableThaumcraft=Enable Thaumcraft Integration

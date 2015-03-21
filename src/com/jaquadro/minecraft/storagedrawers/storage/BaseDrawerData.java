@@ -9,12 +9,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
 {
     protected InventoryStack inventoryStack;
     private List<ItemStack> oreDictMatches;
+    private Map<String, Object> auxData;
 
     protected BaseDrawerData () {
         inventoryStack = new DrawerInventoryStack();
@@ -87,6 +90,22 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
 
     public boolean syncInventoryIfNeeded () {
         return inventoryStack.markDirtyIfNeeded();
+    }
+
+    @Override
+    public Object getExtendedData (String key) {
+        if (auxData == null || !auxData.containsKey(key))
+            return null;
+
+        return auxData.get(key);
+    }
+
+    @Override
+    public void setExtendedData (String key, Object data) {
+        if (auxData == null)
+            auxData = new HashMap<String, Object>();
+
+        auxData.put(key, data);
     }
 
     public static boolean areItemsEqual (ItemStack stack1, ItemStack stack2) {
