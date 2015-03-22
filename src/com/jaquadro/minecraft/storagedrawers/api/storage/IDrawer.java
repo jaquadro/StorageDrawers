@@ -45,6 +45,13 @@ public interface IDrawer
     int getMaxCapacity ();
 
     /**
+     * Gets the maximum number of items that could be stored in this drawer if it held the given item.
+     *
+     * @param itemPrototype The item type to query.
+     */
+    int getMaxCapacity (ItemStack itemPrototype);
+
+    /**
      * Gets the number of items that could still be added to this drawer before it is full.
      */
     int getRemainingCapacity ();

@@ -448,6 +448,20 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         @Override
+        public int getMaxCapacity (int slot, ItemStack itemPrototype) {
+            if (itemPrototype == null || itemPrototype.getItem() == null)
+                return 0;
+
+            if (convRate == null || protoStack[0] == null || convRate[0] == 0)
+                return itemPrototype.getItem().getItemStackLimit(itemPrototype) * getBaseStackCapacity();
+
+            if (BaseDrawerData.areItemsEqual(protoStack[slot], itemPrototype))
+                return getMaxCapacity(slot);
+
+            return 0;
+        }
+
+        @Override
         public int getRemainingCapacity (int slot) {
             return getMaxCapacity(slot) - getStoredItemCount(slot);
         }
@@ -507,11 +521,15 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (convRate == null || convRate[slot] == 0)
                 return 0;
 
-            ConfigManager config = StorageDrawers.config;
-            int slotStacks = config.getStorageUpgradeMultiplier(getStorageLevel()) * TileEntityDrawersComp.this.getDrawerCapacity();
+            int slotStacks = getBaseStackCapacity();
 
             int stackLimit = convRate[0] * slotStacks;
             return stackLimit / convRate[slot];
+        }
+
+        private int getBaseStackCapacity () {
+            ConfigManager config = StorageDrawers.config;
+            return config.getStorageUpgradeMultiplier(getStorageLevel()) * TileEntityDrawersComp.this.getDrawerCapacity();
         }
 
         public void markAmountDirty () {

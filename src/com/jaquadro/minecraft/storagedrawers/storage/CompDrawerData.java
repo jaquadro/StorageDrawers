@@ -45,6 +45,11 @@ public class CompDrawerData extends BaseDrawerData
     }
 
     @Override
+    public int getMaxCapacity (ItemStack itemPrototype) {
+        return central.getMaxCapacity(slot, itemPrototype);
+    }
+
+    @Override
     public int getRemainingCapacity () {
         return central.getRemainingCapacity(slot);
     }

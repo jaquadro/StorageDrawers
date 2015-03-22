@@ -100,10 +100,15 @@ public class DrawerData extends BaseDrawerData
 
     @Override
     public int getMaxCapacity () {
-        if (protoStack.getItem() == null)
+        return getMaxCapacity(protoStack);
+    }
+
+    @Override
+    public int getMaxCapacity (ItemStack itemPrototype) {
+        if (itemPrototype == null || itemPrototype.getItem() == null)
             return 0;
 
-        return protoStack.getItem().getItemStackLimit(protoStack) * storageProvider.getSlotStackCapacity(slot);
+        return itemPrototype.getItem().getItemStackLimit(itemPrototype) * storageProvider.getSlotStackCapacity(slot);
     }
 
     @Override

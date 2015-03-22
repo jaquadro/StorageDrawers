@@ -15,6 +15,8 @@ public interface ICentralInventory
 
     public int getMaxCapacity (int slot);
 
+    public int getMaxCapacity (int slot, ItemStack itemPrototype);
+
     public int getRemainingCapacity (int slot);
 
     public int getStoredItemStackSize (int slot);
