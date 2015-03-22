@@ -388,7 +388,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 populateSlots(itemPrototype);
                 for (int i = 0; i < getDrawerCount(); i++) {
                     if (BaseDrawerData.areItemsEqual(protoStack[i], itemPrototype))
-                        pooledCount = (pooledCount % convRate[slot]) + convRate[slot] * amount;
+                        pooledCount = (pooledCount % convRate[i]) + convRate[i] * amount;
                 }
 
                 for (int i = 0; i < getDrawerCount(); i++) {
