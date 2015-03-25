@@ -74,7 +74,11 @@ public class Thaumcraft extends IntegrationModule
     }
 
     private void setDrawerAspect (IDrawer drawer, ItemStack itemStack) {
-        NBTTagList tagAspects = itemStack.getTagCompound().getTagList("Aspects", Constants.NBT.TAG_COMPOUND);
+        NBTTagCompound tag = itemStack.getTagCompound();
+        if (tag == null)
+            return;
+
+        NBTTagList tagAspects = tag.getTagList("Aspects", Constants.NBT.TAG_COMPOUND);
         if (tagAspects == null || tagAspects.tagCount() == 0)
             return;
 
