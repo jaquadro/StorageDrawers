@@ -310,7 +310,7 @@ public class StorageInventory implements IDrawerInventory
             case OUTPUT:
                 return drawer.canItemBeExtracted(item);
             default:
-                return drawer.canItemBeStored(item);
+                return false;
         }
     }
 }

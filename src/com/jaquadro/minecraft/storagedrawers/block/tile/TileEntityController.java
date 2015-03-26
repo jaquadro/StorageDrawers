@@ -199,15 +199,10 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         if (te == null || !(te instanceof IDrawerGroup))
             return;
 
-        if (te instanceof TileEntityController && depth < DEPTH_LIMIT) {
-            populateNeighborNodes(x, y, z, depth + 1);
-            return;
-        }
-
-        IDrawerGroup group = (IDrawerGroup)te;
-        IDrawerInventory inventory = group.getDrawerInventory();
-        if (inventory == null)
-            return;
+        //if (te instanceof TileEntityController && depth < DEPTH_LIMIT) {
+        //    populateNeighborNodes(x, y, z, depth + 1);
+        //    return;
+        //}
 
         BlockCoord coord = new BlockCoord(x, y, z);
         if (storage.containsKey(coord)) {
@@ -220,23 +215,38 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             }
         }
 
-        storage.put(coord, group);
         mark.put(coord, true);
 
-        invStorageSize.put(coord, inventory.getSizeInventory());
-        drawerStorageSize.put(coord, group.getDrawerCount());
+        if (te instanceof TileEntityController) {
+            storage.put(coord, null);
 
-        for (int i = 0, n = invStorageSize.get(coord); i < n; i++) {
-            invBlockList.add(coord);
-            invSlotList.add(i);
+            invStorageSize.put(coord, 1);
+            invBlockList.add(null);
+            invSlotList.add(0);
         }
+        else {
+            IDrawerGroup group = (IDrawerGroup)te;
+            IDrawerInventory inventory = group.getDrawerInventory();
+            if (inventory == null)
+                return;
 
-        for (int i = 0, n = drawerStorageSize.get(coord); i < n; i++) {
-            drawerBlockList.add(coord);
-            drawerSlotList.add(i);
+            storage.put(coord, group);
+
+            invStorageSize.put(coord, inventory.getSizeInventory());
+            drawerStorageSize.put(coord, group.getDrawerCount());
+
+            for (int i = 0, n = invStorageSize.get(coord); i < n; i++) {
+                invBlockList.add(coord);
+                invSlotList.add(i);
+            }
+
+            for (int i = 0, n = drawerStorageSize.get(coord); i < n; i++) {
+                drawerBlockList.add(coord);
+                drawerSlotList.add(i);
+            }
+
+            drawerSize += drawerStorageSize.get(coord);
         }
-
-        drawerSize += drawerStorageSize.get(coord);
 
         if (depth == DEPTH_LIMIT)
             return;
