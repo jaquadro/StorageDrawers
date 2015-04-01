@@ -8,7 +8,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive
 import com.jaquadro.minecraft.storagedrawers.network.ControllerUpdateMessage;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -70,11 +69,16 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     private int[] autoSides = new int[] { 0, 1 };
     private int direction;
 
-    private boolean initialized;
     private int drawerSize = 0;
 
     private long lastClickTime;
     private UUID lastClickUUID;
+
+    public TileEntityController () {
+        invBlockList.add(null);
+        invSlotList.add(0);
+        inventorySlots = new int[] { 0 };
+    }
 
     public int getDirection () {
         return direction;
@@ -136,19 +140,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         drawerSize = 0;
     }
 
-    //private void buildCache () {
-    //    populateNode(xCoord, yCoord, zCoord, 0);
-    //}
-
     private void rebuildCache () {
         resetCache();
         updateCache();
-    }
-
-    private void initialize () {
-        if (!initialized)
-            updateCache();
-        initialized = true;
     }
 
     public void updateCache () {
@@ -375,9 +369,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
     @Override
     public int getDrawerCount () {
-        if (inventorySlots.length == 0)
-            updateCache();
-
         return drawerSlotList.size();
     }
 
@@ -426,7 +417,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
     @Override
     public int[] getAccessibleSlotsFromSide (int side) {
-        initialize();
         for (int aside : autoSides) {
             if (side == aside)
                 return inventorySlots;
@@ -455,7 +445,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
     @Override
     public int getSizeInventory () {
-        initialize();
         return inventorySlots.length;
     }
 
