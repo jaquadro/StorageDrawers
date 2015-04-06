@@ -6,10 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.registry.IWailaTooltipHandler;
 import com.jaquadro.minecraft.storagedrawers.api.render.IRenderLabel;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.Item;
@@ -22,9 +19,6 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import org.lwjgl.opengl.GL11;
-import thaumcraft.api.ThaumcraftApiHelper;
-import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectList;
 
 public class Thaumcraft extends IntegrationModule
 {
@@ -37,7 +31,7 @@ public class Thaumcraft extends IntegrationModule
 
     @Override
     public void init () throws Throwable {
-        MinecraftForge.EVENT_BUS.register(this);
+        /*MinecraftForge.EVENT_BUS.register(this);
 
         aspectItems = new Item[] {
             GameRegistry.findItem(getModID(), "ItemEssence"),
@@ -48,7 +42,7 @@ public class Thaumcraft extends IntegrationModule
         };
 
         StorageDrawersApi.instance().renderRegistry().registerPreLabelRenderHandler(new LabelRenderHandler());
-        StorageDrawersApi.instance().wailaRegistry().registerTooltipHandler(new WailaTooltipHandler());
+        StorageDrawersApi.instance().wailaRegistry().registerTooltipHandler(new WailaTooltipHandler());*/
     }
 
     @Override
@@ -56,7 +50,7 @@ public class Thaumcraft extends IntegrationModule
 
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     public void onDrawerPopulated (DrawerPopulatedEvent event) {
         IDrawer drawer = event.drawer;
         if (drawer.isEmpty()) {
@@ -179,5 +173,5 @@ public class Thaumcraft extends IntegrationModule
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_LIGHTING);
         }
-    }
+    }*/
 }

@@ -1,9 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
-import net.minecraft.block.Block;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 
 import java.io.File;
 import java.util.ArrayList;

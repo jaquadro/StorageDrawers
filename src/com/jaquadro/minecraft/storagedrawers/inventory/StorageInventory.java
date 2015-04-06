@@ -8,6 +8,8 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
 
 public class StorageInventory implements IDrawerInventory
 {
@@ -88,7 +90,7 @@ public class StorageInventory implements IDrawerInventory
     }
 
     @Override
-    public int[] getAccessibleSlotsFromSide (int side) {
+    public int[] getSlotsForFace (EnumFacing side) {
         int[] autoSides = sideMan.getSlotsForSide(side);
         for (int aside : autoSides) {
             if (side == aside)
@@ -99,12 +101,12 @@ public class StorageInventory implements IDrawerInventory
     }
 
     @Override
-    public boolean canInsertItem (int slot, ItemStack item, int side) {
+    public boolean canInsertItem (int slot, ItemStack item, EnumFacing side) {
         return canInsertItem(slot, item);
     }
 
     @Override
-    public boolean canExtractItem (int slot, ItemStack item, int side) {
+    public boolean canExtractItem (int slot, ItemStack item, EnumFacing side) {
         return canExtractItem(slot, item);
     }
 
@@ -242,13 +244,18 @@ public class StorageInventory implements IDrawerInventory
     }
 
     @Override
-    public String getInventoryName () {
+    public String getName () {
         return null;
     }
 
     @Override
-    public boolean hasCustomInventoryName () {
+    public boolean hasCustomName () {
         return false;
+    }
+
+    @Override
+    public IChatComponent getDisplayName () {
+        return null;
     }
 
     @Override
@@ -290,10 +297,10 @@ public class StorageInventory implements IDrawerInventory
     }
 
     @Override
-    public void openInventory () { }
+    public void openInventory (EntityPlayer player) { }
 
     @Override
-    public void closeInventory () { }
+    public void closeInventory (EntityPlayer player) { }
 
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack item) {

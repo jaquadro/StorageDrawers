@@ -6,8 +6,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
 import com.jaquadro.minecraft.storagedrawers.network.ControllerUpdateMessage;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -16,7 +14,11 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import java.util.*;
 
@@ -25,44 +27,13 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     private static final int DEPTH_LIMIT = 12;
     private static final int[] emptySlots = new int[0];
 
-    private static class BlockCoord {
-        private int x;
-        private int y;
-        private int z;
-
-        public BlockCoord (int x, int y, int z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-
-        @Override
-        public boolean equals (Object obj) {
-            if (obj == null || obj.getClass() != getClass())
-                return false;
-
-            BlockCoord that = (BlockCoord)obj;
-            return x == that.x && y == that.y && z == that.z;
-        }
-
-        @Override
-        public int hashCode () {
-            int hash = 23;
-            hash = hash * 31 + x;
-            hash = hash * 31 + y;
-            hash = hash * 31 + z;
-
-            return hash;
-        }
-    }
-
-    private Map<BlockCoord, IDrawerGroup> storage = new HashMap<BlockCoord, IDrawerGroup>();
-    private Map<BlockCoord, Boolean> mark = new HashMap<BlockCoord, Boolean>();
-    private Map<BlockCoord, Integer> invStorageSize = new HashMap<BlockCoord, Integer>();
-    private Map<BlockCoord, Integer> drawerStorageSize = new HashMap<BlockCoord, Integer>();
-    private List<BlockCoord> invBlockList = new ArrayList<BlockCoord>();
+    private Map<BlockPos, IDrawerGroup> storage = new HashMap<BlockPos, IDrawerGroup>();
+    private Map<BlockPos, Boolean> mark = new HashMap<BlockPos, Boolean>();
+    private Map<BlockPos, Integer> invStorageSize = new HashMap<BlockPos, Integer>();
+    private Map<BlockPos, Integer> drawerStorageSize = new HashMap<BlockPos, Integer>();
+    private List<BlockPos> invBlockList = new ArrayList<BlockPos>();
     private List<Integer> invSlotList = new ArrayList<Integer>();
-    private List<BlockCoord> drawerBlockList = new ArrayList<BlockCoord>();
+    private List<BlockPos> drawerBlockList = new ArrayList<BlockPos>();
     private List<Integer> drawerSlotList = new ArrayList<Integer>();
 
     private int[] inventorySlots = new int[0];
@@ -149,9 +120,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         int preCount = inventorySlots.length;
 
         mark.clear();
-        populateNode(xCoord, yCoord, zCoord, 0);
+        populateNode(getPos(), 0);
 
-        for (BlockCoord coord : storage.keySet()) {
+        for (BlockPos coord : storage.keySet()) {
             if (!mark.containsKey(coord)) {
                 storage.put(coord, null);
 
@@ -188,8 +159,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         }
     }
 
-    private void populateNode (int x, int y, int z, int depth) {
-        TileEntity te = worldObj.getTileEntity(x, y, z);
+    private void populateNode (BlockPos pos, int depth) {
+        TileEntity te = worldObj.getTileEntity(pos);
         if (te == null || !(te instanceof IDrawerGroup))
             return;
 
@@ -198,23 +169,22 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         //    return;
         //}
 
-        BlockCoord coord = new BlockCoord(x, y, z);
-        if (storage.containsKey(coord)) {
-            if (storage.get(coord) != null) {
-                if (!mark.containsKey(coord)) {
-                    mark.put(coord, true);
-                    populateNeighborNodes(x, y, z, depth + 1);
+        if (storage.containsKey(pos)) {
+            if (storage.get(pos) != null) {
+                if (!mark.containsKey(pos)) {
+                    mark.put(pos, true);
+                    populateNeighborNodes(pos, depth + 1);
                 }
                 return;
             }
         }
 
-        mark.put(coord, true);
+        mark.put(pos, true);
 
         if (te instanceof TileEntityController) {
-            storage.put(coord, null);
+            storage.put(pos, null);
 
-            invStorageSize.put(coord, 1);
+            invStorageSize.put(pos, 1);
             invBlockList.add(null);
             invSlotList.add(0);
         }
@@ -224,77 +194,77 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             if (inventory == null)
                 return;
 
-            storage.put(coord, group);
+            storage.put(pos, group);
 
-            invStorageSize.put(coord, inventory.getSizeInventory());
-            drawerStorageSize.put(coord, group.getDrawerCount());
+            invStorageSize.put(pos, inventory.getSizeInventory());
+            drawerStorageSize.put(pos, group.getDrawerCount());
 
-            for (int i = 0, n = invStorageSize.get(coord); i < n; i++) {
-                invBlockList.add(coord);
+            for (int i = 0, n = invStorageSize.get(pos); i < n; i++) {
+                invBlockList.add(pos);
                 invSlotList.add(i);
             }
 
-            for (int i = 0, n = drawerStorageSize.get(coord); i < n; i++) {
-                drawerBlockList.add(coord);
+            for (int i = 0, n = drawerStorageSize.get(pos); i < n; i++) {
+                drawerBlockList.add(pos);
                 drawerSlotList.add(i);
             }
 
-            drawerSize += drawerStorageSize.get(coord);
+            drawerSize += drawerStorageSize.get(pos);
         }
 
         if (depth == DEPTH_LIMIT)
             return;
 
-        populateNeighborNodes(x, y, z, depth + 1);
+        populateNeighborNodes(pos, depth + 1);
     }
 
-    private void populateNeighborNodes (int x, int y, int z, int depth) {
-        populateNode(x - 1, y, z, depth);
-        populateNode(x + 1, y, z, depth);
-        populateNode(x, y - 1, z, depth);
-        populateNode(x, y + 1, z, depth);
-        populateNode(x, y, z - 1, depth);
-        populateNode(x, y, z + 1, depth);
+    private void populateNeighborNodes (BlockPos pos, int depth) {
+        populateNode(pos.east(), depth);
+        populateNode(pos.west(), depth);
+        populateNode(pos.down(), depth);
+        populateNode(pos.up(), depth);
+        populateNode(pos.north(), depth);
+        populateNode(pos.south(), depth);
     }
 
     private IDrawerGroup getDrawerBlockForInv (int slot) {
         if (slot >= invBlockList.size())
             return null;
 
-        BlockCoord coord = invBlockList.get(slot);
-        if (coord == null)
+        BlockPos pos = invBlockList.get(slot);
+        if (pos == null)
             return null;
 
-        if (!storage.containsKey(coord))
+        if (!storage.containsKey(pos))
             return null;
 
-        TileEntity te = worldObj.getTileEntity(coord.x, coord.y, coord.z);
+        TileEntity te = worldObj.getTileEntity(pos);
         if (!(te instanceof IDrawerGroup)) {
-            storage.remove(coord);
+            storage.remove(pos);
             return null;
         }
 
-        return storage.get(coord);
+        return storage.get(pos);
     }
 
     private IDrawerGroup getDrawerBlockForGroup (int slot) {
         if (slot >= drawerBlockList.size())
             return null;
 
-        BlockCoord coord = drawerBlockList.get(slot);
-        if (coord == null)
+        BlockPos pos = drawerBlockList.get(slot);
+        if (pos == null)
             return null;
 
-        if (!storage.containsKey(coord))
+        if (!storage.containsKey(pos))
             return null;
 
-        TileEntity te = worldObj.getTileEntity(coord.x, coord.y, coord.z);
+        TileEntity te = worldObj.getTileEntity(pos);
         if (!(te instanceof IDrawerGroup)) {
-            storage.remove(coord);
+            storage.remove(pos);
             return null;
         }
 
-        return storage.get(coord);
+        return storage.get(pos);
     }
 
     private int getDrawerSlotForInv (int slot) {
@@ -341,21 +311,22 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
 
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, tag);
+        return new S35PacketUpdateTileEntity(getPos(), 5, tag);
     }
 
     @Override
     public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity pkt) {
-        readFromNBT(pkt.func_148857_g());
-        getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
+        readFromNBT(pkt.getNbtCompound());
+        if (getWorld().isRemote)
+            getWorld().markBlockForUpdate(getPos());
     }
 
     private void syncClient () {
-        IMessage message = new ControllerUpdateMessage(xCoord, yCoord, zCoord, inventorySlots);
-        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 500);
+        IMessage message = new ControllerUpdateMessage(getPos(), inventorySlots);
+        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.getDimensionId(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
 
         StorageDrawers.network.sendToAllAround(message, targetPoint);
-        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord));
+        worldObj.notifyNeighborsOfStateChange(getPos(), worldObj.getBlockState(getPos()).getBlock());
     }
 
     public void clientUpdate (int[] inventorySlots) {
@@ -416,7 +387,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     }
 
     @Override
-    public int[] getAccessibleSlotsFromSide (int side) {
+    public int[] getSlotsForFace (EnumFacing side) {
         for (int aside : autoSides) {
             if (side == aside)
                 return inventorySlots;
@@ -426,7 +397,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     }
 
     @Override
-    public boolean canInsertItem (int slot, ItemStack stack, int side) {
+    public boolean canInsertItem (int slot, ItemStack stack, EnumFacing side) {
         IDrawerInventory inventory = getDrawerInventory(slot);
         if (inventory == null)
             return false;
@@ -435,7 +406,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     }
 
     @Override
-    public boolean canExtractItem (int slot, ItemStack stack, int side) {
+    public boolean canExtractItem (int slot, ItemStack stack, EnumFacing side) {
         IDrawerInventory inventory = getDrawerInventory(slot);
         if (inventory == null)
             return false;
@@ -486,15 +457,21 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     }
 
     @Override
-    public String getInventoryName () {
+    public String getName () {
         // TODO
         return null;
     }
 
     @Override
-    public boolean hasCustomInventoryName () {
+    public boolean hasCustomName () {
         // TODO
         return false;
+    }
+
+    @Override
+    public IChatComponent getDisplayName () {
+        // TODO
+        return null;
     }
 
     @Override
@@ -508,10 +485,26 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     }
 
     @Override
-    public void openInventory () { }
+    public void openInventory (EntityPlayer player) { }
 
     @Override
-    public void closeInventory () { }
+    public void closeInventory (EntityPlayer player) { }
+
+    @Override
+    public int getField (int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField (int id, int value) {}
+
+    @Override
+    public int getFieldCount () {
+        return 0;
+    }
+
+    @Override
+    public void clear () { }
 
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack stack) {

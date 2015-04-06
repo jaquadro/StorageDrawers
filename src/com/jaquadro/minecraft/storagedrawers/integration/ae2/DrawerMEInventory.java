@@ -1,19 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.integration.ae2;
 
-import appeng.api.AEApi;
-import appeng.api.config.Actionable;
-import appeng.api.networking.security.BaseActionSource;
-import appeng.api.storage.IMEInventory;
-import appeng.api.storage.StorageChannel;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.api.storage.data.IItemList;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.item.ItemStack;
 
-public class DrawerMEInventory implements IMEInventory<IAEItemStack>
+public class DrawerMEInventory //implements IMEInventory<IAEItemStack>
 {
-    final IDrawerGroup group;
+    /*final IDrawerGroup group;
 
     public DrawerMEInventory (IDrawerGroup drawerGroup) {
         group = drawerGroup;
@@ -134,5 +127,5 @@ public class DrawerMEInventory implements IMEInventory<IAEItemStack>
     @Override
     public StorageChannel getChannel () {
         return StorageChannel.ITEMS;
-    }
+    }*/
 }

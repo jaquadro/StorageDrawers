@@ -2,50 +2,51 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
 
 public class BlockController extends BlockContainer
 {
-    @SideOnly(Side.CLIENT)
+    public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+
+    /*@SideOnly(Side.CLIENT)
     private IIcon iconFront;
     @SideOnly(Side.CLIENT)
     private IIcon iconSide;
     @SideOnly(Side.CLIENT)
     private IIcon iconSideEtched;
     @SideOnly(Side.CLIENT)
-    private IIcon iconTrim;
+    private IIcon iconTrim;*/
 
-    public BlockController (String blockName) {
+    public BlockController (String name) {
         super(Material.rock);
 
+        setUnlocalizedName(name);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
-        setBlockName(blockName);
         setStepSound(Block.soundTypeStone);
         setBlockBounds(0, 0, 0, 1, 1, 1);
         setTickRandomly(true);
-    }
 
-    @Override
-    public boolean renderAsNormalBlock () {
-        return false;
+        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
     @Override
@@ -64,68 +65,104 @@ public class BlockController extends BlockContainer
     }
 
     @Override
-    public void onBlockPlacedBy (World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
-        TileEntityController tile = getTileEntitySafe(world, x, y, z);
-        if (tile.getDirection() > 1)
-            return;
+    public Item getItemDropped (IBlockState state, Random rand, int fortune) {
+        return Item.getItemFromBlock(ModBlocks.controller);
+    }
 
-        int quadrant = MathHelper.floor_double((entity.rotationYaw * 4f / 360f) + .5) & 3;
-        switch (quadrant) {
-            case 0:
-                tile.setDirection(2);
-                break;
-            case 1:
-                tile.setDirection(5);
-                break;
-            case 2:
-                tile.setDirection(3);
-                break;
-            case 3:
-                tile.setDirection(4);
-                break;
-        }
+    @Override
+    public void onBlockAdded (World world, BlockPos pos, IBlockState state) {
+        if (!world.isRemote) {
+            Block blockNorth = world.getBlockState(pos.north()).getBlock();
+            Block blockSouth = world.getBlockState(pos.south()).getBlock();
+            Block blockWest = world.getBlockState(pos.west()).getBlock();
+            Block blockEast = world.getBlockState(pos.east()).getBlock();
 
-        if (world.isRemote) {
-            tile.invalidate();
-            world.markBlockForUpdate(x, y, z);
+            EnumFacing facing = (EnumFacing)state.getValue(FACING);
+
+            if (facing == EnumFacing.NORTH && blockNorth.isFullBlock() && !blockSouth.isFullBlock())
+                facing = EnumFacing.SOUTH;
+            if (facing == EnumFacing.SOUTH && blockSouth.isFullBlock() && !blockNorth.isFullBlock())
+                facing = EnumFacing.NORTH;
+            if (facing == EnumFacing.WEST && blockWest.isFullBlock() && !blockEast.isFullBlock())
+                facing = EnumFacing.EAST;
+            if (facing == EnumFacing.EAST && blockEast.isFullBlock() && !blockWest.isFullBlock())
+                facing = EnumFacing.WEST;
+
+            world.setBlockState(pos, state.withProperty(FACING, facing), 2);
         }
     }
 
     @Override
-    public boolean onBlockActivated (World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        TileEntityController te = getTileEntitySafe(world, x, y, z);
-        if (te.getDirection() != side)
+    public IBlockState onBlockPlaced (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+        return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+    }
+
+    @Override
+    public void onBlockPlacedBy (World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack itemStack) {
+        world.setBlockState(pos, state.withProperty(FACING, entity.getHorizontalFacing().getOpposite()), 2);
+    }
+
+    @Override
+    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+        EnumFacing blockDir = (EnumFacing)state.getValue(FACING);
+        if (blockDir != side)
             return false;
 
-        if (!world.isRemote)
+        if (!world.isRemote) {
+            TileEntityController te = getTileEntitySafe(world, pos);
             te.interactPutItemsIntoInventory(player);
+        }
 
         return true;
     }
 
     @Override
-    public boolean isSideSolid (IBlockAccess world, int x, int y, int z, ForgeDirection side) {
-        if (side.ordinal() != getTileEntity(world, x, y, z).getDirection())
+    public boolean isSideSolid (IBlockAccess world, BlockPos pos, EnumFacing side) {
+        if (side.ordinal() != getTileEntity(world, pos).getDirection())
             return true;
 
         return false;
     }
 
     @Override
-    public void updateTick (World world, int x, int y, int z, Random rand) {
+    public void updateTick (World world, BlockPos pos, IBlockState state, Random rand) {
         if (world.isRemote)
             return;
 
-        TileEntityController te = getTileEntity(world, x, y, z);
+        TileEntityController te = getTileEntity(world, pos);
         if (te == null)
             return;
 
         te.updateCache();
 
-        world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
+        world.scheduleUpdate(pos, this, this.tickRate(world));
     }
 
     @Override
+    public IBlockState getStateForEntityRender (IBlockState state) {
+        return getDefaultState().withProperty(FACING, EnumFacing.SOUTH);
+    }
+
+    @Override
+    public IBlockState getStateFromMeta (int meta) {
+        EnumFacing facing = EnumFacing.getFront(meta);
+        if (facing.getAxis() == EnumFacing.Axis.Y)
+            facing = EnumFacing.NORTH;
+
+        return getDefaultState().withProperty(FACING, facing);
+    }
+
+    @Override
+    public int getMetaFromState (IBlockState state) {
+        return ((EnumFacing)state.getValue(FACING)).getIndex();
+    }
+
+    @Override
+    protected BlockState createBlockState () {
+        return new BlockState(this, new IProperty[] { FACING });
+    }
+
+    /*@Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon (int side, int meta) {
         switch (side) {
@@ -161,34 +198,34 @@ public class BlockController extends BlockContainer
     @SideOnly(Side.CLIENT)
     public IIcon getIconTrim (int meta) {
         return iconTrim;
-    }
+    }*/
 
     @Override
     public TileEntityController createNewTileEntity (World world, int meta) {
         return new TileEntityController();
     }
 
-    public TileEntityController getTileEntity (IBlockAccess blockAccess, int x, int y, int z) {
-        TileEntity tile = blockAccess.getTileEntity(x, y, z);
+    public TileEntityController getTileEntity (IBlockAccess blockAccess, BlockPos pos) {
+        TileEntity tile = blockAccess.getTileEntity(pos);
         return (tile instanceof TileEntityController) ? (TileEntityController) tile : null;
     }
 
-    public TileEntityController getTileEntitySafe (World world, int x, int y, int z) {
-        TileEntityController tile = getTileEntity(world, x, y, z);
+    public TileEntityController getTileEntitySafe (World world, BlockPos pos) {
+        TileEntityController tile = getTileEntity(world, pos);
         if (tile == null) {
-            tile = createNewTileEntity(world, world.getBlockMetadata(x, y, z));
-            world.setTileEntity(x, y, z, tile);
+            tile = createNewTileEntity(world, 0);
+            world.setTileEntity(pos, tile);
         }
 
         return tile;
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons (IIconRegister register) {
         iconFront = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_controller_front");
         iconSide = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_side");
         iconSideEtched = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_side_2");
         iconTrim = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_trim");
-    }
+    }*/
 }

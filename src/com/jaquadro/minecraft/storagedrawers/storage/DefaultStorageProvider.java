@@ -3,10 +3,9 @@ package com.jaquadro.minecraft.storagedrawers.storage;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class DefaultStorageProvider implements IStorageProvider
 {
@@ -43,22 +42,22 @@ public class DefaultStorageProvider implements IStorageProvider
 
     @Override
     public void markAmountDirty (int slot) {
-        if (tile.getWorldObj().isRemote)
+        if (tile.getWorld().isRemote)
             return;
 
         int count = group.getDrawer(slot).getStoredItemCount();
 
-        IMessage message = new CountUpdateMessage(tile.xCoord, tile.yCoord, tile.zCoord, slot, count);
-        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, 500);
+        IMessage message = new CountUpdateMessage(tile.getPos(), slot, count);
+        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(tile.getWorld().provider.getDimensionId(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), 500);
 
         StorageDrawers.network.sendToAllAround(message, targetPoint);
     }
 
     @Override
     public void markDirty (int slot) {
-        if (tile.getWorldObj().isRemote)
+        if (tile.getWorld().isRemote)
             return;
 
-        tile.getWorldObj().markBlockForUpdate(tile.xCoord, tile.yCoord, tile.zCoord);
+        tile.getWorld().markBlockForUpdate(tile.getPos());
     }
 }

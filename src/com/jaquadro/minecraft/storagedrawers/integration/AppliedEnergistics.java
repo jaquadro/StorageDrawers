@@ -1,11 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
 
-import appeng.api.AEApi;
-import appeng.api.networking.security.BaseActionSource;
-import appeng.api.recipes.IIngredient;
-import appeng.api.storage.IMEInventory;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.data.IAEItemStack;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.integration.ae2.*;
 
@@ -13,7 +7,7 @@ import java.lang.reflect.Constructor;
 
 public class AppliedEnergistics extends IntegrationModule
 {
-    private static class ReflectionFactory implements IStorageBusMonitorFactory
+    /*private static class ReflectionFactory implements IStorageBusMonitorFactory
     {
         private Class classInventoryAdaptor;
         private Class classMEAdaptor;
@@ -60,7 +54,7 @@ public class AppliedEnergistics extends IntegrationModule
         }
     }
 
-    private IStorageBusMonitorFactory factory;
+    private IStorageBusMonitorFactory factory;*/
 
     @Override
     public String getModID () {
@@ -69,7 +63,7 @@ public class AppliedEnergistics extends IntegrationModule
 
     @Override
     public void init () throws Throwable {
-        ShapedRecipeHandler shapedHandler = new ShapedRecipeHandler();
+        /*ShapedRecipeHandler shapedHandler = new ShapedRecipeHandler();
         if (shapedHandler.isValid())
             StorageDrawers.recipeHandlerRegistry.registerRecipeHandler(shapedHandler.getRecipeClass(), shapedHandler);
 
@@ -83,11 +77,11 @@ public class AppliedEnergistics extends IntegrationModule
         if (!rfactory.init())
             throw new Exception("No valid Storage Bus Monitor factory");
 
-        factory = rfactory;
+        factory = rfactory;*/
     }
 
     @Override
     public void postInit () {
-        AEApi.instance().registries().externalStorage().addExternalStorageInterface(new DrawerExternalStorageHandler(factory));
+        //AEApi.instance().registries().externalStorage().addExternalStorageInterface(new DrawerExternalStorageHandler(factory));
     }
 }

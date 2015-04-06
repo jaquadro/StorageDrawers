@@ -6,9 +6,9 @@ import net.minecraft.item.crafting.IRecipe;
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class ShapedRecipeHandler implements IRecipeHandler
+public class ShapedRecipeHandler // implements IRecipeHandler
 {
-    private Class classShapedRecipe;
+    /*private Class classShapedRecipe;
     private Method methodGetInput;
 
     private boolean valid = true;
@@ -47,5 +47,5 @@ public class ShapedRecipeHandler implements IRecipeHandler
     @Override
     public List getInputAsList (IRecipe recipe) {
         return null;
-    }
+    }*/
 }

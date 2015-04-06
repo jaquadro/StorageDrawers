@@ -2,16 +2,17 @@ package com.jaquadro.minecraft.storagedrawers.network;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 
 public class CountUpdateMessage implements IMessage
@@ -24,10 +25,10 @@ public class CountUpdateMessage implements IMessage
 
     public CountUpdateMessage () { }
 
-    public CountUpdateMessage (int x, int y, int z, int slot, int count) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public CountUpdateMessage (BlockPos pos, int slot, int count) {
+        this.x = pos.getX();
+        this.y = pos.getY();
+        this.z = pos.getZ();
         this.slot = slot;
         this.count = count;
     }
@@ -57,7 +58,8 @@ public class CountUpdateMessage implements IMessage
         public IMessage onMessage (CountUpdateMessage message, MessageContext ctx) {
             if (ctx.side == Side.CLIENT) {
                 World world = Minecraft.getMinecraft().theWorld;
-                TileEntity tileEntity = world.getTileEntity(message.x, message.y, message.z);
+                BlockPos pos = new BlockPos(message.x, message.y, message.z);
+                TileEntity tileEntity = world.getTileEntity(pos);
                 if (tileEntity instanceof TileEntityDrawers) {
                     ((TileEntityDrawers) tileEntity).clientUpdateCount(message.slot, message.count);
                 }

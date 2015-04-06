@@ -11,9 +11,9 @@ import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemController;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
-import cpw.mods.fml.common.registry.GameData;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraftforge.fml.common.registry.GameData;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModBlocks
 {
@@ -67,6 +67,6 @@ public class ModBlocks
     }
 
     public static String getQualifiedName (Block block) {
-        return GameData.getBlockRegistry().getNameForObject(block);
+        return GameData.getBlockRegistry().getNameForObject(block).toString();
     }
 }

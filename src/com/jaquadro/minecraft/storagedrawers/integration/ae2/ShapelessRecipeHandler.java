@@ -6,9 +6,9 @@ import net.minecraft.item.crafting.IRecipe;
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class ShapelessRecipeHandler implements IRecipeHandler
+public class ShapelessRecipeHandler // implements IRecipeHandler
 {
-    private Class classShapelessRecipe;
+    /*private Class classShapelessRecipe;
     private Method methodGetInput;
 
     private boolean valid = true;
@@ -47,5 +47,5 @@ public class ShapelessRecipeHandler implements IRecipeHandler
         catch (Throwable t) {
             return null;
         }
-    }
+    }*/
 }

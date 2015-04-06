@@ -1,12 +1,11 @@
 package com.jaquadro.minecraft.storagedrawers.integration.ae2;
 
-import appeng.api.recipes.IIngredient;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IIngredientHandler;
 import net.minecraft.item.ItemStack;
 
-public class IngredientHandler implements IIngredientHandler
+public class IngredientHandler //implements IIngredientHandler
 {
-    @Override
+    /*@Override
     public ItemStack getItemStack (Object object) {
         if (!(object instanceof IIngredient))
             return null;
@@ -22,5 +21,5 @@ public class IngredientHandler implements IIngredientHandler
         catch (Throwable t) {
             return null;
         }
-    }
+    }*/
 }

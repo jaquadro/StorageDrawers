@@ -9,14 +9,14 @@ import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,8 +120,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             }
 
             if (worldObj != null && !worldObj.isRemote) {
-                //TileEntityDrawersComp.this.markDirty();
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                worldObj.markBlockForUpdate(getPos());
             }
         }
         catch (Throwable t) {
@@ -150,7 +149,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     public void clientUpdateCount (int slot, int count) {
         if (count != pooledCount) {
             pooledCount = count;
-            getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
+            getWorld().markBlockForUpdate(getPos());
         }
     }
 
@@ -401,8 +400,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 }
 
                 if (worldObj != null && !worldObj.isRemote) {
-                    //TileEntityDrawersComp.this.markDirty();
-                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                    worldObj.markBlockForUpdate(getPos());
                 }
             }
             else if (itemPrototype == null) {
@@ -432,8 +430,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 else {
                     clear();
                     if (worldObj != null && !worldObj.isRemote) {
-                        //TileEntityDrawersComp.this.markDirty();
-                        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                        worldObj.markBlockForUpdate(getPos());
                     }
                 }
             }
@@ -533,20 +530,20 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         public void markAmountDirty () {
-            if (getWorldObj().isRemote)
+            if (getWorld().isRemote)
                 return;
 
-            IMessage message = new CountUpdateMessage(xCoord, yCoord, zCoord, 0, pooledCount);
-            NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(getWorldObj().provider.dimensionId, xCoord, yCoord, zCoord, 500);
+            IMessage message = new CountUpdateMessage(getPos(), 0, pooledCount);
+            NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(getWorld().provider.getDimensionId(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
 
             StorageDrawers.network.sendToAllAround(message, targetPoint);
         }
 
         public void markDirty (int slot) {
-            if (getWorldObj().isRemote)
+            if (getWorld().isRemote)
                 return;
 
-            getWorldObj().markBlockForUpdate(xCoord, yCoord, zCoord);
+            getWorld().markBlockForUpdate(getPos());
         }
     }
 

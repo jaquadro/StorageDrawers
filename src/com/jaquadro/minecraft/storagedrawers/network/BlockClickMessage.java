@@ -1,13 +1,15 @@
 package com.jaquadro.minecraft.storagedrawers.network;
 
 import com.jaquadro.minecraft.storagedrawers.block.IExtendedBlockClickHandler;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class BlockClickMessage implements IMessage
 {
@@ -59,9 +61,10 @@ public class BlockClickMessage implements IMessage
         public IMessage onMessage (BlockClickMessage message, MessageContext ctx) {
             if (ctx.side == Side.SERVER) {
                 World world = ctx.getServerHandler().playerEntity.getEntityWorld();
-                Block block = world.getBlock(message.x, message.y, message.z);
+                BlockPos pos = new BlockPos(message.x, message.y, message.z);
+                Block block = world.getBlockState(pos).getBlock();
                 if (block instanceof IExtendedBlockClickHandler)
-                    ((IExtendedBlockClickHandler) block).onBlockClicked(world, message.x, message.y, message.z, ctx.getServerHandler().playerEntity, message.side, message.hitX, message.hitY, message.hitZ);
+                    ((IExtendedBlockClickHandler) block).onBlockClicked(world, pos, ctx.getServerHandler().playerEntity, EnumFacing.getFront(message.side), message.hitX, message.hitY, message.hitZ);
             }
 
             return null;

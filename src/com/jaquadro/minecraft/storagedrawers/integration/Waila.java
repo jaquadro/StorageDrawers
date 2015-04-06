@@ -6,11 +6,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
-import mcp.mobius.waila.api.IWailaRegistrar;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,13 +28,13 @@ public class Waila extends IntegrationModule
 
     @Override
     public void init () throws Throwable {
-        FMLInterModComms.sendMessage("Waila", "register", StorageDrawers.SOURCE_PATH + "integration.Waila.registerProvider");
+        //FMLInterModComms.sendMessage("Waila", "register", StorageDrawers.SOURCE_PATH + "integration.Waila.registerProvider");
     }
 
     @Override
     public void postInit () { }
 
-    public static void registerProvider(IWailaRegistrar registrar) {
+    /*public static void registerProvider(IWailaRegistrar registrar) {
         registrar.registerBodyProvider(new WailaDrawer(), BlockDrawers.class);
     }
 
@@ -93,5 +88,5 @@ public class Waila extends IntegrationModule
         public NBTTagCompound getNBTData (EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
             return null;
         }
-    }
+    }*/
 }

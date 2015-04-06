@@ -3,14 +3,10 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
 import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.StorageInventory;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -20,9 +16,13 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import org.apache.logging.log4j.Level;
 
 import java.util.Iterator;
@@ -220,7 +220,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     }
 
     protected void restoreLoadFailure (NBTTagCompound tag) {
-        Iterator<String> iter = failureSnapshot.func_150296_c().iterator();
+        Iterator<String> iter = failureSnapshot.getKeySet().iterator();
         while (iter.hasNext()) {
             String key = iter.next();
             if (!tag.hasKey(key))
@@ -299,11 +299,6 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     }
 
     @Override
-    public boolean canUpdate () {
-        return false;
-    }
-
-    @Override
     public void markDirty () {
         inventory.markDirty();
         super.markDirty();
@@ -323,13 +318,13 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         IDrawer drawer = getDrawer(slot);
         if (drawer.getStoredItemCount() != count) {
             drawer.setStoredItemCount(count);
-            getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
+            getWorld().markBlockForUpdate(getPos());
         }
     }
 
     private void syncClientCount (int slot) {
-        IMessage message = new CountUpdateMessage(xCoord, yCoord, zCoord, slot, drawers[slot].getStoredItemCount());
-        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 500);
+        IMessage message = new CountUpdateMessage(getPos(), slot, drawers[slot].getStoredItemCount());
+        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.getDimensionId(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
 
         StorageDrawers.network.sendToAllAround(message, targetPoint);
     }
@@ -340,13 +335,14 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
 
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, tag);
+        return new S35PacketUpdateTileEntity(getPos(), 5, tag);
     }
 
     @Override
     public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity pkt) {
-        readFromNBT(pkt.func_148857_g());
-        getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
+        readFromNBT(pkt.getNbtCompound());
+        if (getWorld().isRemote)
+            getWorld().markBlockForUpdate(getPos());
     }
 
     @Override
@@ -373,17 +369,17 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     }
 
     @Override
-    public int[] getAccessibleSlotsFromSide (int side) {
-        return inventory.getAccessibleSlotsFromSide(side);
+    public int[] getSlotsForFace (EnumFacing side) {
+        return inventory.getSlotsForFace(side);
     }
 
     @Override
-    public boolean canInsertItem (int slot, ItemStack stack, int side) {
+    public boolean canInsertItem (int slot, ItemStack stack, EnumFacing side) {
         return inventory.canInsertItem(slot, stack, side);
     }
 
     @Override
-    public boolean canExtractItem (int slot, ItemStack stack, int side) {
+    public boolean canExtractItem (int slot, ItemStack stack, EnumFacing side) {
         return inventory.canExtractItem(slot, stack, side);
     }
 
@@ -413,13 +409,18 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     }
 
     @Override
-    public String getInventoryName () {
-        return inventory.getInventoryName();
+    public String getName () {
+        return inventory.getName();
     }
 
     @Override
-    public boolean hasCustomInventoryName () {
-        return inventory.hasCustomInventoryName();
+    public boolean hasCustomName () {
+        return inventory.hasCustomName();
+    }
+
+    @Override
+    public IChatComponent getDisplayName () {
+        return inventory.getDisplayName();
     }
 
     @Override
@@ -433,13 +434,13 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     }
 
     @Override
-    public void openInventory () {
-        inventory.openInventory();
+    public void openInventory (EntityPlayer player) {
+        inventory.openInventory(player);
     }
 
     @Override
-    public void closeInventory () {
-        inventory.closeInventory();
+    public void closeInventory (EntityPlayer player) {
+        inventory.closeInventory(player);
     }
 
     @Override
@@ -447,10 +448,28 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         return inventory.isItemValidForSlot(slot, stack);
     }
 
+    @Override
+    public int getField (int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField (int id, int value) {}
+
+    @Override
+    public int getFieldCount () {
+        return 0;
+    }
+
+    @Override
+    public void clear () {
+        inventory.clear();
+    }
+
     private class DefaultSideManager implements ISideManager
     {
         @Override
-        public int[] getSlotsForSide (int side) {
+        public int[] getSlotsForSide (EnumFacing side) {
             return autoSides;
         }
     }
