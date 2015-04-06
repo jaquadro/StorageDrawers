@@ -1,13 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.MathHelper;
-
 public class RenderHelperAO
 {
-    private int aoBrightnessXYNI;
+    /*private int aoBrightnessXYNI;
     private int aoBrightnessYZIN;
     private int aoBrightnessYZIP;
     private int aoBrightnessXYPI;
@@ -950,5 +945,5 @@ public class RenderHelperAO
         float brightBlk = (brightMin & 255) * fMin + (brightMax & 255) * fMax;
 
         return ((int)brightSky & 255) << 16 | ((int)brightBlk & 255);
-    }
+    }*/
 }

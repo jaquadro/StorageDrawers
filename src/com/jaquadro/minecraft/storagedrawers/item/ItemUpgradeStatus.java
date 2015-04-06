@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,8 +16,8 @@ public class ItemUpgradeStatus extends Item
 {
     public static final String[] iconNames = new String[] { null, "level1", "level2" };
 
-    @SideOnly(Side.CLIENT)
-    private IIcon[] icons;
+    //@SideOnly(Side.CLIENT)
+    //private IIcon[] icons;
 
     public ItemUpgradeStatus (String name) {
         setUnlocalizedName(name);
@@ -27,11 +26,11 @@ public class ItemUpgradeStatus extends Item
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage (int meta) {
         return icons[MathHelper.clamp_int(meta, 0, iconNames.length - 1)];
-    }
+    }*/
 
     @Override
     public String getUnlocalizedName (ItemStack itemStack) {
@@ -58,7 +57,7 @@ public class ItemUpgradeStatus extends Item
         }
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public void registerIcons (IIconRegister register) {
         icons = new IIcon[iconNames.length];
@@ -67,5 +66,5 @@ public class ItemUpgradeStatus extends Item
             if (iconNames[i] != null)
                 icons[i] = register.registerIcon(StorageDrawers.MOD_ID + ":upgrade_status_" + iconNames[i]);
         }
-    }
+    }*/
 }

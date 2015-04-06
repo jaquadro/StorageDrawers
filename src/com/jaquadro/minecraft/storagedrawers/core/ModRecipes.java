@@ -1,7 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -14,7 +13,7 @@ public class ModRecipes
     public void init () {
         ConfigManager config = StorageDrawers.config;
 
-        for (int i = 0; i < BlockWood.field_150096_a.length; i++) {
+        for (int i = 0; i < 6; i++) {
             if (config.isBlockEnabled("fulldrawers1"))
                 GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers1, config.getBlockRecipeOutput("fulldrawers1"), i), "xxx", " y ", "xxx",
                     'x', new ItemStack(Blocks.planks, 1, i), 'y', Blocks.chest);

@@ -3,18 +3,13 @@ package com.jaquadro.minecraft.storagedrawers.client.renderer;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
-import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
-import com.jaquadro.minecraft.storagedrawers.core.CommonProxy;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
-public class ControllerRenderer implements ISimpleBlockRenderingHandler
+public class ControllerRenderer // implements ISimpleBlockRenderingHandler
 {
-    private static final double unit = .0625f;
+    /*private static final double unit = .0625f;
     private ModularBoxRenderer boxRenderer = new ModularBoxRenderer();
 
     @Override
@@ -140,5 +135,5 @@ public class ControllerRenderer implements ISimpleBlockRenderingHandler
     @Override
     public int getRenderId () {
         return StorageDrawers.proxy.controllerRenderID;
-    }
+    }*/
 }

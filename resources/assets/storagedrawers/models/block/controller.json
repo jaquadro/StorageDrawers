@@ -1,0 +1,8 @@
+{
+    "parent": "block/drawer_orientable",
+    "textures": {
+        "top": "blocks/drawers_controller_front",
+        "front": "blocks/drawers_comp_side",
+        "side": "blocks/drawers_comp_side_2"
+    }
+}

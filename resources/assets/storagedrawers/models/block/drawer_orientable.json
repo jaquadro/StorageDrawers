@@ -1,0 +1,12 @@
+{
+    "parent": "block/drawer_base",
+    "textures": {
+        "particle": "#front",
+        "down": "#top",
+        "up": "#top",
+        "north": "#front",
+        "east": "#side",
+        "south": "#side",
+        "west": "#side"
+    }
+}

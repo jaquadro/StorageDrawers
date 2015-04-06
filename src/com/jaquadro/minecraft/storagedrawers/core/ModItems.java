@@ -15,7 +15,7 @@ public class ModItems
     public static ItemUpgradeLock upgradeLock;
 
     public void init () {
-        upgradeTemplate = new Item().setUnlocalizedName("upgradeTemplate").setTextureName(StorageDrawers.MOD_ID + ":upgrade_template").setCreativeTab(ModCreativeTabs.tabStorageDrawers);
+        upgradeTemplate = new Item().setUnlocalizedName("upgradeTemplate").setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         upgrade = new ItemUpgrade("upgrade");
         upgradeStatus = new ItemUpgradeStatus("upgradeStatus");
         upgradeLock = new ItemUpgradeLock("upgradeLock");

@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.google.common.base.Function;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
@@ -7,7 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandar
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockLog;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMultiTexture;
@@ -19,12 +20,20 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemDrawers extends ItemMultiTexture
 {
     public ItemDrawers (Block block) {
-        super(block, block, BlockLog.field_150096_a);
+        super(block, block, new Function() {
+            @Nullable
+            @Override
+            public Object apply (Object input) {
+                ItemStack stack = (ItemStack)input;
+                return BlockPlanks.EnumType.byMetadata(stack.getMetadata()).getUnlocalizedName();
+            }
+        });
     }
 
     @Override
@@ -37,7 +46,7 @@ public class ItemDrawers extends ItemMultiTexture
             if (side != EnumFacing.UP && side != EnumFacing.DOWN)
                 tile.setDirection(side.ordinal());
 
-            BlockDrawers block = (BlockDrawers) field_150939_a;
+            BlockDrawers block = (BlockDrawers) theBlock;
             if (tile instanceof TileEntityDrawersStandard)
                 ((TileEntityDrawersStandard)tile).setDrawerCount(block.drawerCount);
 

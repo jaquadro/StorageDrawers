@@ -93,7 +93,7 @@ public class StorageInventory implements IDrawerInventory
     public int[] getSlotsForFace (EnumFacing side) {
         int[] autoSides = sideMan.getSlotsForSide(side);
         for (int aside : autoSides) {
-            if (side == aside)
+            if (side.ordinal() == aside)
                 return inventorySlots;
         }
 
@@ -319,5 +319,23 @@ public class StorageInventory implements IDrawerInventory
             default:
                 return false;
         }
+    }
+
+    @Override
+    public int getField (int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField (int id, int value) {}
+
+    @Override
+    public int getFieldCount () {
+        return 0;
+    }
+
+    @Override
+    public void clear () {
+
     }
 }

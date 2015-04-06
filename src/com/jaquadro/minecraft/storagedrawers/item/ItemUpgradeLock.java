@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -16,7 +15,7 @@ public class ItemUpgradeLock extends Item
     public ItemUpgradeLock (String name) {
         setUnlocalizedName(name);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
-        setTextureName(StorageDrawers.MOD_ID + ":upgrade_lock");
+        //setTextureName(StorageDrawers.MOD_ID + ":upgrade_lock");
         setMaxDamage(0);
     }
 

@@ -1,16 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.IIcon;
-
 public class RenderHelper
 {
-    public static final int YNEG = 0;
+    /*public static final int YNEG = 0;
     public static final int YPOS = 1;
     public static final int ZNEG = 2;
     public static final int ZPOS = 3;
@@ -338,7 +330,7 @@ public class RenderHelper
         }
 
         renderer.enableAO = false;
-    }
+    }*/
 
     /*    uMin += icon.getMinU();
         uMax += icon.getMaxU();

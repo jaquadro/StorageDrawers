@@ -58,7 +58,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     public void setDirection (int direction) {
         this.direction = direction % 6;
 
-        autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction], 2, 3 };
+        autoSides = new int[] { 0, 1, EnumFacing.getFront(direction).getOpposite().ordinal(), 2, 3 };
 
         if (direction == 2 || direction == 3) {
             autoSides[3] = 4;
@@ -389,7 +389,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     @Override
     public int[] getSlotsForFace (EnumFacing side) {
         for (int aside : autoSides) {
-            if (side == aside)
+            if (side.ordinal() == aside)
                 return inventorySlots;
         }
 

@@ -17,8 +17,8 @@ public class ItemUpgrade extends Item
 {
     public static final String[] iconNames = new String[] { null, null, "iron", "gold", "obsidian", "diamond", "emerald" };
 
-    @SideOnly(Side.CLIENT)
-    private IIcon[] icons;
+    //@SideOnly(Side.CLIENT)
+    //private IIcon[] icons;
 
     public ItemUpgrade (String name) {
         setUnlocalizedName(name);
@@ -27,11 +27,11 @@ public class ItemUpgrade extends Item
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage (int meta) {
         return icons[MathHelper.clamp_int(meta, 0, iconNames.length - 1)];
-    }
+    }*/
 
     @Override
     public String getUnlocalizedName (ItemStack itemStack) {
@@ -58,7 +58,7 @@ public class ItemUpgrade extends Item
         }
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public void registerIcons (IIconRegister register) {
         icons = new IIcon[iconNames.length];
@@ -67,5 +67,5 @@ public class ItemUpgrade extends Item
             if (iconNames[i] != null)
                 icons[i] = register.registerIcon(StorageDrawers.MOD_ID + ":upgrade_" + iconNames[i]);
         }
-    }
+    }*/
 }

@@ -1,12 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.util.IIcon;
 
 public class ModularBoxRenderer
 {
-    public static final int CONNECT_YNEG = 1 << 0;
+    /*public static final int CONNECT_YNEG = 1 << 0;
     public static final int CONNECT_YPOS = 1 << 1;
     public static final int CONNECT_ZNEG = 1 << 2;
     public static final int CONNECT_ZPOS = 1 << 3;
@@ -656,5 +654,5 @@ public class ModularBoxRenderer
 
     private void renderCutFace (int face, RenderBlocks renderer, Block block, double x, double y, double z) {
         renderFace(face, renderer, block, x, y, z, cutIcon[face], cutColor[face][0], cutColor[face][1], cutColor[face][2]);
-    }
+    }*/
 }
