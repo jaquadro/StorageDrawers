@@ -490,12 +490,15 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         @Override
         public void readFromNBT (int slot, NBTTagCompound tag) {
             if (tag.hasKey("Item")) {
-                ItemStack stack = new ItemStack(Item.getItemById(tag.getShort("Item")));
-                stack.setItemDamage(tag.getShort("Meta"));
-                if (tag.hasKey("Tags"))
-                    stack.setTagCompound(tag.getCompoundTag("Tags"));
+                Item item = Item.getItemById(tag.getShort("Item"));
+                if (item != null) {
+                    ItemStack stack = new ItemStack(item);
+                    stack.setItemDamage(tag.getShort("Meta"));
+                    if (tag.hasKey("Tags"))
+                        stack.setTagCompound(tag.getCompoundTag("Tags"));
 
-                protoStack[slot] = stack;
+                    protoStack[slot] = stack;
+                }
             }
         }
 

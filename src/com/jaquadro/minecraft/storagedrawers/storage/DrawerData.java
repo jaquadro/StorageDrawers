@@ -161,12 +161,18 @@ public class DrawerData extends BaseDrawerData
 
     public void readFromNBT (NBTTagCompound tag) {
         if (tag.hasKey("Item") && tag.hasKey("Count")) {
-            ItemStack stack = new ItemStack(Item.getItemById(tag.getShort("Item")));
-            stack.setItemDamage(tag.getShort("Meta"));
-            if (tag.hasKey("Tags"))
-                stack.setTagCompound(tag.getCompoundTag("Tags"));
+            Item item = Item.getItemById(tag.getShort("Item"));
+            if (item != null) {
+                ItemStack stack = new ItemStack(item);
+                stack.setItemDamage(tag.getShort("Meta"));
+                if (tag.hasKey("Tags"))
+                    stack.setTagCompound(tag.getCompoundTag("Tags"));
 
-            setStoredItem(stack, tag.getInteger("Count"), false);
+                setStoredItem(stack, tag.getInteger("Count"), false);
+            }
+            else {
+                reset();
+            }
         }
         else {
             reset();
