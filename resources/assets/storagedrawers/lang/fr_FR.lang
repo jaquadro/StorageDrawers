@@ -13,8 +13,8 @@ item.upgradeStatus.level2.name=Amélioration statut (II)
 item.upgradeStatus.level2.description=Montre si le stockage est presque plein
 item.upgradeStatus.level3.name=Amélioration statut (III)
 item.upgradeStatus.level3.description=Montre le niveau de remplissage
-item.upgradeLock.name=Lock Upgrade
-item.upgradeLock.description=Keep associated items when empty
+item.upgradeLock.name=Amélioration verrou
+item.upgradeLock.description=Conserve les éléments associés lorsqu'il est vide
 
 # Blocks
 tile.fullDrawers2.oak.name=Tiroirs de chêne 1x2
@@ -47,14 +47,14 @@ tile.halfDrawers4.big_oak.name=Tiroirs compacts de chêne noir 2x2
 
 tile.compDrawers.name=Tiroirs compacté
 
-storageDrawers.drawers.description=COntient %d piles par tiroir
+storageDrawers.drawers.description=Contient %d piles par tiroir
 storageDrawers.upgrade.description=Augmente le stockage de %d fois la valeur de base
 
 # Integration
 storageDrawers.waila.empty=Vide
 storageDrawers.waila.level=Niveau d'amélioration : %s
 storageDrawers.waila.drawer=Tiroir #%s: %s
-storageDrawers.waila.locked=Locked
+storageDrawers.waila.locked=Verrouillé
 
 # Configuration
 storageDrawers.config.title=Configuration des tiroirs de stockage
@@ -62,7 +62,7 @@ storageDrawers.config.title=Configuration des tiroirs de stockage
 storageDrawers.config.general=Options générales
 storageDrawers.config.general.tooltip=Ceci et cela.
 
-storageDrawers.config.blocks=options de blocs
+storageDrawers.config.blocks=Options de blocs
 storageDrawers.config.blocks.tooltip=Configure les blocs de stockage individuel.
 
 storageDrawers.config.blocks.fullDrawers2=Tiroirs 1x2
@@ -71,7 +71,7 @@ storageDrawers.config.blocks.halfDrawers2=Tiroirs compacts 1x2
 storageDrawers.config.blocks.halfDrawers4=Tiroirs compacts 2x2
 storageDrawers.config.blocks.compDrawers=Compactage du tiroir
 
-storageDrawers.config.upgrades=options d'amélioration
+storageDrawers.config.upgrades=Options d'amélioration
 storageDrawers.config.upgrades.tooltip=Configure les améliorations de stockage induviduel.
 
 storageDrawers.config.upgrades.level2Mult=Multiplieur de stockage (II)
@@ -84,7 +84,7 @@ storageDrawers.config.prop.itemRenderType=Type de rendu des éléments
 storageDrawers.config.prop.itemRenderType.tooltip=Rendu des éléments en 3D ou pas.
 storageDrawers.config.prop.enableIndicatorUpgrades=Active les améliorations d'indicateur
 storageDrawers.config.prop.enableStorageUpgrades=Active les améliorations de stockage
-storageDrawers.config.prop.enableLockUpgrades=Enable Lock Upgrade
+storageDrawers.config.prop.enableLockUpgrades=Active l'amélioration verrou
 storageDrawers.config.prop.renderStorageUpgrades=Rendu des améliorations de stockage
 storageDrawers.config.prop.creativeTabVanillaWoods=Tableau en créatif de bois Vanilla
 storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Active tous les style de bois dans le tableau en mode créatif.
@@ -93,14 +93,14 @@ storageDrawers.config.prop.enabled.tooltip=Active les blocs en jeu.
 storageDrawers.config.prop.baseStorage=Stockage de base
 storageDrawers.config.prop.baseStorage.tooltip=Nombre de pile contenu par tiroir.
 storageDrawers.config.prop.recipeOutput=Sortie de recette
-storageDrawers.config.prop.recipeOutput.tooltip=nombre d'éléments d'une seulle fabrication.
-storageDrawers.config.prop.enableSidedInput=Enable Sided Input
-storageDrawers.config.prop.enableSidedInput.tooltip=Other blocks can insert items into drawers.
-storageDrawers.config.prop.enableSidedOutput=Enable Sided Output
-storageDrawers.config.prop.enableSidedOutput.tooltip=Other blocks can extract items from drawers.
+storageDrawers.config.prop.recipeOutput.tooltip=Nombre d'éléments d'une seulle fabrication.
+storageDrawers.config.prop.enableSidedInput=Active l'entrée par les cotés
+storageDrawers.config.prop.enableSidedInput.tooltip=D'autres blocs peuvent insérer des éléments dans les tiroirs.
+storageDrawers.config.prop.enableSidedOutput=Active la sortie par les cotés
+storageDrawers.config.prop.enableSidedOutput.tooltip=D'autres blocs peuvent extraire des éléments dans les tiroirs.
 
-storageDrawers.config.integration=Integration
-storageDrawers.config.integration.tooltip=Configure integration with other mods.
+storageDrawers.config.integration=Intégration
+storageDrawers.config.integration.tooltip=Configure l'intégration avec d'autres mods.
 
-storageDrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integration
-storageDrawers.config.integration.enableWaila=Enable WAILA Integration
+storageDrawers.config.integration.enableAE2=Active l'intégration de Applied Energistics 2
+storageDrawers.config.integration.enableWaila=Active l'intégration de WAILA
