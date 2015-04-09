@@ -14,3 +14,5 @@ runtime/
 out/
 .gradle/
 *.iws
+*.iml
+*.ipr
