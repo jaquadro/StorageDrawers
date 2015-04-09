@@ -58,6 +58,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     // compile "appeng:appliedenergistics2:rv1-stable-1:api"
+
+    compile "appeng:appliedenergistics2:rv2-beta-28:dev"
 }
 
 processResources
