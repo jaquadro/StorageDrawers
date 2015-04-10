@@ -56,10 +56,25 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         }
     }
 
-    private Map<BlockCoord, IDrawerGroup> storage = new HashMap<BlockCoord, IDrawerGroup>();
-    private Map<BlockCoord, Boolean> mark = new HashMap<BlockCoord, Boolean>();
-    private Map<BlockCoord, Integer> invStorageSize = new HashMap<BlockCoord, Integer>();
-    private Map<BlockCoord, Integer> drawerStorageSize = new HashMap<BlockCoord, Integer>();
+    private static class StorageRecord
+    {
+        public IDrawerGroup storage;
+        public boolean mark;
+        public int invStorageSize;
+        public int drawerStorageSize;
+        public int distance = Integer.MAX_VALUE;
+
+        public void clear () {
+            storage = null;
+            mark = false;
+            invStorageSize = 0;
+            drawerStorageSize = 0;
+            distance = Integer.MAX_VALUE;
+        }
+    }
+
+    private Map<BlockCoord, StorageRecord> storage = new HashMap<BlockCoord, StorageRecord>();
+
     private List<BlockCoord> invBlockList = new ArrayList<BlockCoord>();
     private List<Integer> invSlotList = new ArrayList<Integer>();
     private List<BlockCoord> drawerBlockList = new ArrayList<BlockCoord>();
@@ -131,8 +146,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
     private void resetCache () {
         storage.clear();
-        invStorageSize.clear();
-        drawerStorageSize.clear();
         invBlockList.clear();
         invSlotList.clear();
         drawerBlockList.clear();
@@ -148,12 +161,15 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     public void updateCache () {
         int preCount = inventorySlots.length;
 
-        mark.clear();
+        for (StorageRecord record : storage.values())
+            record.mark = false;
+
         populateNode(xCoord, yCoord, zCoord, 0);
 
         for (BlockCoord coord : storage.keySet()) {
-            if (!mark.containsKey(coord)) {
-                storage.put(coord, null);
+            StorageRecord record = storage.get(coord);
+            if (!record.mark) {
+                record.clear();
 
                 for (int i = 0, n = invBlockList.size(); i < n; i++) {
                     if (coord.equals(invBlockList.get(i)))
@@ -199,22 +215,29 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         //}
 
         BlockCoord coord = new BlockCoord(x, y, z);
-        if (storage.containsKey(coord)) {
-            if (storage.get(coord) != null) {
-                if (!mark.containsKey(coord)) {
-                    mark.put(coord, true);
+        StorageRecord record = storage.get(coord);
+
+        if (record != null) {
+            if (record.storage != null) {
+                if (!record.mark || record.distance > depth) {
+                    record.mark = true;
+                    record.distance = depth;
                     populateNeighborNodes(x, y, z, depth + 1);
                 }
                 return;
             }
         }
+        else {
+            record = new StorageRecord();
+            storage.put(coord, record);
+        }
 
-        mark.put(coord, true);
+        record.mark = true;
 
         if (te instanceof TileEntityController) {
-            storage.put(coord, null);
+            record.storage = null;
+            record.invStorageSize = 1;
 
-            invStorageSize.put(coord, 1);
             invBlockList.add(null);
             invSlotList.add(0);
         }
@@ -224,22 +247,21 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             if (inventory == null)
                 return;
 
-            storage.put(coord, group);
+            record.storage = group;
+            record.invStorageSize = inventory.getSizeInventory();
+            record.drawerStorageSize = group.getDrawerCount();
 
-            invStorageSize.put(coord, inventory.getSizeInventory());
-            drawerStorageSize.put(coord, group.getDrawerCount());
-
-            for (int i = 0, n = invStorageSize.get(coord); i < n; i++) {
+            for (int i = 0, n = record.invStorageSize; i < n; i++) {
                 invBlockList.add(coord);
                 invSlotList.add(i);
             }
 
-            for (int i = 0, n = drawerStorageSize.get(coord); i < n; i++) {
+            for (int i = 0, n = record.drawerStorageSize; i < n; i++) {
                 drawerBlockList.add(coord);
                 drawerSlotList.add(i);
             }
 
-            drawerSize += drawerStorageSize.get(coord);
+            drawerSize += record.drawerStorageSize;
         }
 
         if (depth == DEPTH_LIMIT)
@@ -274,7 +296,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             return null;
         }
 
-        return storage.get(coord);
+        return storage.get(coord).storage;
     }
 
     private IDrawerGroup getDrawerBlockForGroup (int slot) {
@@ -294,7 +316,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             return null;
         }
 
-        return storage.get(coord);
+        return storage.get(coord).storage;
     }
 
     private int getDrawerSlotForInv (int slot) {
@@ -392,7 +414,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
     @Override
     public void markDirty () {
-        for (IDrawerGroup group : storage.values()) {
+        for (StorageRecord record : storage.values()) {
+            IDrawerGroup group = record.storage;
             if (group != null && group.getDrawerInventory() != null)
                 group.markDirtyIfNeeded();
         }
@@ -404,7 +427,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     public boolean markDirtyIfNeeded () {
         boolean synced = false;
 
-        for (IDrawerGroup group : storage.values()) {
+        for (StorageRecord record : storage.values()) {
+            IDrawerGroup group = record.storage;
             if (group != null && group.getDrawerInventory() != null)
                 synced |= group.markDirtyIfNeeded();
         }
