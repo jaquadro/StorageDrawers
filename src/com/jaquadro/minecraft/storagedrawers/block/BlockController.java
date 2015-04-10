@@ -92,6 +92,18 @@ public class BlockController extends BlockContainer
     }
 
     @Override
+    public void onPostBlockPlaced (World world, int x, int y, int z, int meta) {
+        if (world.isRemote)
+            return;
+
+        TileEntityController te = getTileEntity(world, x, y, z);
+        if (te == null)
+            return;
+
+        te.updateCache();
+    }
+
+    @Override
     public boolean onBlockActivated (World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         TileEntityController te = getTileEntitySafe(world, x, y, z);
         if (te.getDirection() != side)

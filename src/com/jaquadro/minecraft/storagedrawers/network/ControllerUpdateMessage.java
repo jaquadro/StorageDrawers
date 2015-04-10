@@ -20,6 +20,7 @@ public class ControllerUpdateMessage  implements IMessage
     private int y;
     private int z;
     private int[] inventorySlots;
+    private boolean error;
 
     public ControllerUpdateMessage () { }
 
@@ -37,10 +38,16 @@ public class ControllerUpdateMessage  implements IMessage
         z = buf.readInt();
 
         int count = buf.readShort();
-        inventorySlots = new int[count];
+        if (count >= 0 && count <= buf.readableBytes() / 2) {
+            inventorySlots = new int[count];
 
-        for (int i = 0; i < count; i++)
-            inventorySlots[i] = buf.readShort();
+            for (int i = 0; i < count; i++)
+                inventorySlots[i] = buf.readShort();
+        }
+        else {
+            FMLLog.log(StorageDrawers.MOD_ID, Level.ERROR, "ControllerUpdateMessage invalid data: count = %i, remaining = %i", count, buf.readableBytes());
+            error = true;
+        }
     }
 
     @Override
@@ -59,6 +66,9 @@ public class ControllerUpdateMessage  implements IMessage
     {
         @Override
         public IMessage onMessage (ControllerUpdateMessage message, MessageContext ctx) {
+            if (message.error)
+                return null;
+
             if (ctx.side == Side.CLIENT) {
                 World world = Minecraft.getMinecraft().theWorld;
                 TileEntity tileEntity = world.getTileEntity(message.x, message.y, message.z);
