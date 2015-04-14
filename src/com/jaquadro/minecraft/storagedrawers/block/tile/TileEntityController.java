@@ -208,6 +208,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         TileEntity te = worldObj.getTileEntity(x, y, z);
         if (te == null || !(te instanceof IDrawerGroup))
             return;
+        if (depth > DEPTH_LIMIT) return;
 
         //if (te instanceof TileEntityController && depth < DEPTH_LIMIT) {
         //    populateNeighborNodes(x, y, z, depth + 1);
