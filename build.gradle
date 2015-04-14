@@ -17,13 +17,15 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.3.7"
+version = "1.7.10-1.3.8"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
 
 minecraft {
     version = "1.7.10-10.13.2.1307-1.7.10"
-    assetDir = "runtime/assets"
+    runDir = "runtime/assets"
+
+    runArgs = "-XX:MaxPermSize=256m"
 
     replace '@VERSION@', project.version
 }
@@ -43,6 +45,23 @@ sourceSets.api {
     }
 }
 
+repositories {
+    maven {
+        name 'CB Maven FS'
+        url "http://chickenbones.net/maven/"
+    }
+
+    maven {
+        name "Waila Mobius Repo"
+        url "http://mobiusstrip.eu/maven"
+    }
+
+    maven {
+        name "FireBall API Depot"
+        url "http://dl.tsr.me/artifactory/libs-release-local"
+    }
+}
+
 dependencies {
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
@@ -59,7 +78,7 @@ dependencies {
 
     // compile "appeng:appliedenergistics2:rv1-stable-1:api"
 
-    compile "appeng:appliedenergistics2:rv2-beta-28:dev"
+    compile "appeng:appliedenergistics2:rv2-beta-28:api"
 }
 
 processResources
