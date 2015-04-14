@@ -28,13 +28,29 @@ public class OreDictRegistry
         registerPrefix("list");
     }
 
-    public void register (String entry) {
-        if (!blacklist.contains(entry))
-            blacklist.add(entry);
+    public boolean register (String entry) {
+        if (entry == null)
+            return false;
+
+        return blacklist.add(entry);
     }
 
-    public void registerPrefix (String entry) {
-        blacklistPrefix.add(entry);
+    public boolean registerPrefix (String entry) {
+        if (entry == null)
+            return false;
+
+        if (blacklistPrefix.contains(entry))
+            return false;
+
+        return blacklistPrefix.add(entry);
+    }
+
+    public boolean unregister (String entry) {
+        return blacklist.remove(entry);
+    }
+
+    public boolean unregisterPrefix (String entry) {
+        return blacklistPrefix.remove(entry);
     }
 
     public boolean isEntryBlacklisted (String entry) {

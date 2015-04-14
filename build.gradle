@@ -22,10 +22,8 @@ group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides
 archivesBaseName = "StorageDrawers"
 
 minecraft {
-    version = "1.7.10-10.13.2.1307-1.7.10"
-    runDir = "runtime/assets"
-
-    runArgs = "-XX:MaxPermSize=256m"
+    version = "1.7.10-10.13.2.1340-1.7.10"
+    assetDir = "runtime/assets"
 
     replace '@VERSION@', project.version
 }
@@ -60,25 +58,17 @@ repositories {
         name "FireBall API Depot"
         url "http://dl.tsr.me/artifactory/libs-release-local"
     }
+
+    ivy {
+        name "MineTweaker3"
+        artifactPattern "http://minetweaker3.powerofbytes.com/download/[module]-[revision].[ext]"
+    }
 }
 
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-      
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-    // compile "appeng:appliedenergistics2:rv1-stable-1:api"
-
     compile "appeng:appliedenergistics2:rv2-beta-28:api"
+
+    compile name: 'MineTweaker3', version: "Dev-1.7.10-3.0.9B", ext: 'jar'
 }
 
 processResources

@@ -22,6 +22,8 @@ public class IntegrationRegistry
             reg.add(new Waila());
         if (Loader.isModLoaded("Thaumcraft") && StorageDrawers.config.cache.enableThaumcraftIntegration)
             reg.add(new Thaumcraft());
+        if (Loader.isModLoaded("MineTweaker3") && StorageDrawers.config.cache.enableMineTweakerIntegration)
+            reg.add(new MineTweaker());
     }
 
     private IntegrationRegistry () {

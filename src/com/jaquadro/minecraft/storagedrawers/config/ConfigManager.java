@@ -1,9 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
-import net.minecraft.block.Block;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,6 +60,7 @@ public class ConfigManager
         public boolean enableWailaIntegration;
         public boolean enableAE2Integration;
         public boolean enableThaumcraftIntegration;
+        public boolean enableMineTweakerIntegration;
         public boolean invertShift;
         public boolean debugTrace;
 
@@ -95,8 +94,6 @@ public class ConfigManager
     public Map<String, ConfigSection> blockSectionsMap = new HashMap<String, ConfigSection>();
 
     //private Property itemRenderType;
-
-
 
     public ConfigManager (File file) {
         config = new Configuration(file);
@@ -132,6 +129,7 @@ public class ConfigManager
         cache.enableAE2Integration = config.get(sectionIntegration.getQualifiedName(), "enableAE2", true).setLanguageKey(LANG_PREFIX + "integration.enableAE2").setRequiresMcRestart(true).getBoolean();
         cache.enableWailaIntegration = config.get(sectionIntegration.getQualifiedName(), "enableWaila", true).setLanguageKey(LANG_PREFIX + "integration.enableWaila").setRequiresMcRestart(true).getBoolean();
         cache.enableThaumcraftIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThaumcraft", true).setLanguageKey(LANG_PREFIX + "integration.enableThaumcraft").setRequiresMcRestart(true).getBoolean();
+        cache.enableMineTweakerIntegration = config.get(sectionIntegration.getQualifiedName(), "enableMineTweaker", true).setLanguageKey(LANG_PREFIX + "integration.enableMineTweaker").setRequiresMcRestart(true).getBoolean();
 
         config.get(sectionBlocksFullDrawers1x1.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksFullDrawers1x1.getQualifiedName(), "baseStorage", 32).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
