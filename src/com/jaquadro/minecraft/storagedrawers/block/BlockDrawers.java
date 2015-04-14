@@ -342,6 +342,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 return false;
         }
 
+        if (getTileEntity(world, x, y, z) == null)
+            return true;
         if (side.ordinal() != getTileEntity(world, x, y, z).getDirection())
             return true;
 

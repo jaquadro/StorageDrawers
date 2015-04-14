@@ -209,10 +209,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         if (te == null || !(te instanceof IDrawerGroup))
             return;
 
-        //if (te instanceof TileEntityController && depth < DEPTH_LIMIT) {
-        //    populateNeighborNodes(x, y, z, depth + 1);
-        //    return;
-        //}
+        if (depth > DEPTH_LIMIT)
+            return;
 
         BlockCoord coord = new BlockCoord(x, y, z);
         StorageRecord record = storage.get(coord);
