@@ -1,13 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
-import com.jaquadro.minecraft.storagedrawers.network.ControllerUpdateMessage;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -183,20 +179,10 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             }
         }
 
-        /*int validSlotCount = 0;
-        for (int i = 0, n = invBlockList.size(); i < n; i++) {
-            if (invBlockList.get(i) != null)
-                validSlotCount++;
-        }*/
-
         inventorySlots = new int[invBlockList.size()];
         for (int i = 0, j = 0, n = invBlockList.size(); i < n; i++) {
-            //if (invBlockList.get(i) != null)
             inventorySlots[j++] = i;
         }
-
-        if (!worldObj.isRemote)
-            syncClient();
 
         if (preCount != inventorySlots.length && (preCount == 0 || inventorySlots.length == 0)) {
             if (!worldObj.isRemote)
@@ -368,18 +354,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity pkt) {
         readFromNBT(pkt.func_148857_g());
         getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
-    }
-
-    private void syncClient () {
-        IMessage message = new ControllerUpdateMessage(xCoord, yCoord, zCoord, inventorySlots);
-        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 500);
-
-        StorageDrawers.network.sendToAllAround(message, targetPoint);
-        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord));
-    }
-
-    public void clientUpdate (int[] inventorySlots) {
-        this.inventorySlots = inventorySlots;
     }
 
     @Override

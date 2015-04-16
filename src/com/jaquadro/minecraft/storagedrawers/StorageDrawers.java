@@ -4,7 +4,6 @@ import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.integration.IntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
-import com.jaquadro.minecraft.storagedrawers.network.ControllerUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -59,11 +58,9 @@ public class StorageDrawers
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             network.registerMessage(CountUpdateMessage.Handler.class, CountUpdateMessage.class, 1, Side.CLIENT);
-            network.registerMessage(ControllerUpdateMessage.Handler.class, ControllerUpdateMessage.class, 2, Side.CLIENT);
         }
         else {
             network.registerMessage(CountUpdateMessage.HandlerStub.class, CountUpdateMessage.class, 1, Side.CLIENT);
-            network.registerMessage(ControllerUpdateMessage.HandlerStub.class, ControllerUpdateMessage.class, 2, Side.CLIENT);
         }
 
         compRegistry = new CompTierRegistry();
