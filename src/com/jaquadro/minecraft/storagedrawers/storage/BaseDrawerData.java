@@ -27,10 +27,6 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
         inventoryStack.init();
     }
 
-    public boolean areItemsEqual (ItemStack item) {
-        return areItemsEqual(getStoredItemPrototype(), item);
-    }
-
     protected void reset () {
         oreDictMatches = null;
         inventoryStack.reset();
@@ -55,10 +51,11 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
         else {
             oreDictMatches = new ArrayList<ItemStack>();
             for (int id : oreIDs) {
-                if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(id)))
+                String oreName = OreDictionary.getOreName(id);
+                if (!StorageDrawers.oreDictRegistry.isEntryValid(oreName))
                     continue;
 
-                List<ItemStack> list = OreDictionary.getOres(OreDictionary.getOreName(id));
+                List<ItemStack> list = OreDictionary.getOres(oreName);
                 for (int i = 0, n = list.size(); i < n; i++) {
                     if (list.get(i).getItemDamage() == OreDictionary.WILDCARD_VALUE)
                         continue;
@@ -108,31 +105,34 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
         auxData.put(key, data);
     }
 
-    // Check if either set1 is a subset of set2, or set2 is a subset of set1, and return the smaller of the two sets.
-    // If neither is a subset, return null.
-    private static int[] isSubsetEitherWay (int[] set1, int[] set2) {
-        int[] smaller = set1;
-        int[] larger = set2;
+    public boolean areItemsEqual (ItemStack item) {
+        ItemStack protoStack = getStoredItemPrototype();
+        if (protoStack == null || item == null)
+            return false;
+        if (protoStack.getItem() == null || item.getItem() == null)
+            return false;
 
-        if (set2.length < smaller.length) {
-            smaller = set2;
-            larger = set1;
-        }
+        if (!protoStack.isItemEqual(item)) {
+            if (!StorageDrawers.config.cache.enableItemConversion)
+                return false;
+            if (oreDictMatches == null)
+                return false;
+            if (protoStack.getItem() == item.getItem())
+                return false;
 
-        for (int val1 : smaller) {
-            boolean found = false;
-            for (int val2 : larger) {
-                if (val1 == val2) {
-                    found = true;
+            boolean oreMatch = false;
+            for (int i = 0, n = oreDictMatches.size(); i < n; i++) {
+                if (item.isItemEqual(oreDictMatches.get(i))) {
+                    oreMatch = true;
                     break;
                 }
             }
 
-            if (!found)
-                return null;
+            if (!oreMatch)
+                return false;
         }
 
-        return smaller;
+        return ItemStack.areItemStackTagsEqual(protoStack, item);
     }
 
     public static boolean areItemsEqual (ItemStack stack1, ItemStack stack2) {
@@ -142,7 +142,11 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
             return false;
 
         if (!stack1.isItemEqual(stack2)) {
+            if (!StorageDrawers.config.cache.enableItemConversion)
+                return false;
             if (stack1.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack2.getItemDamage() == OreDictionary.WILDCARD_VALUE)
+                return false;
+            if (stack1.getItem() == stack2.getItem())
                 return false;
 
             int[] ids1 = OreDictionary.getOreIDs(stack1);
@@ -150,36 +154,21 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
             if (ids1.length == 0 || ids2.length == 0)
                 return false;
 
-            int[] commonIds = isSubsetEitherWay(ids1, ids2);
-            if (commonIds == null)
-                return false;
-
             boolean oreMatch = false;
-            for (int oreIndex : commonIds) {
-                if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(oreIndex)))
-                    continue;
+            for (int id1 : ids1) {
+                for (int id2 : ids2) {
+                    if (id1 != id2)
+                        continue;
 
-                List<ItemStack> oreList = OreDictionary.getOres(OreDictionary.getOreName(oreIndex));
-                boolean match1 = false;
-                for (int i = 0, n = oreList.size(); i < n; i++) {
-                    if (stack1.isItemEqual(oreList.get(i))) {
-                        match1 = true;
+                    String name = OreDictionary.getOreName(id1);
+                    if (StorageDrawers.oreDictRegistry.isEntryValid(name)) {
+                        oreMatch = true;
                         break;
                     }
                 }
 
-                boolean match2 = false;
-                for (int i = 0, n = oreList.size(); i < n; i++) {
-                    if (stack2.isItemEqual(oreList.get(i))) {
-                        match2 = true;
-                        break;
-                    }
-                }
-
-                if (match1 && match2) {
-                    oreMatch = true;
+                if (oreMatch)
                     break;
-                }
             }
 
             if (!oreMatch)

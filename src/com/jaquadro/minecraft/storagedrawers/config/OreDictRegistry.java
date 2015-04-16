@@ -1,5 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -66,8 +69,6 @@ public class OreDictRegistry
     public boolean isEntryBlacklisted (String entry) {
         if (blacklistCache.contains(entry))
             return true;
-        if (graylistCache.contains(entry))
-            return false;
 
         for (int i = 0, n = blacklistPrefix.size(); i < n; i++) {
             if (entry.startsWith(blacklistPrefix.get(i))) {
@@ -76,8 +77,55 @@ public class OreDictRegistry
             }
         }
 
+        return false;
+    }
+
+    public boolean isEntryValid (String entry) {
+        if (graylistCache.contains(entry))
+            return true;
+
+        if (isEntryBlacklisted(entry))
+            return false;
+
+        if (!isValidForEquiv(entry)) {
+            blacklistCache.add(entry);
+            return false;
+        }
+
         graylistCache.add(entry);
 
-        return false;
+        return true;
+    }
+
+    private boolean isValidForEquiv (String oreName) {
+        List<ItemStack> oreList = OreDictionary.getOres(oreName);
+        if (oreList.size() == 0)
+            return false;
+
+        // Fail entries that have any wildcard items registered to them.
+
+        for (int i = 0, n = oreList.size(); i < n; i++) {
+            if (oreList.get(i).getItemDamage() == OreDictionary.WILDCARD_VALUE)
+                return false;
+        }
+
+        // Fail entries where the keys in at least one stack are not the super-set of all other stacks.
+        // Can be determined by merging all keys and testing cardinality.
+
+        HashSet<Integer> mergedIds = new HashSet<Integer>();
+        int maxKeyCount = 0;
+
+        for (int i = 0, n = oreList.size(); i < n; i++) {
+            int[] ids = OreDictionary.getOreIDs(oreList.get(i));
+            maxKeyCount = Math.max(maxKeyCount, ids.length);
+
+            for (int id : ids)
+                mergedIds.add(id);
+        }
+
+        if (maxKeyCount < mergedIds.size())
+            return false;
+
+        return true;
     }
 }
