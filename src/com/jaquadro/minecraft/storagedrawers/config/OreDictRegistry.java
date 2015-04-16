@@ -11,30 +11,31 @@ import java.util.Set;
 public class OreDictRegistry
 {
     private Set<String> blacklist = new HashSet<String>();
+    private Set<String> whitelist = new HashSet<String>();
     private List<String> blacklistPrefix = new ArrayList<String>();
 
     private Set<String> blacklistCache = new HashSet<String>();
     private Set<String> graylistCache = new HashSet<String>();
 
     public OreDictRegistry () {
-        register("logWood");
-        register("plankWood");
-        register("slabWood");
-        register("stairWood");
-        register("treeSapling");
-        register("treeLeaves");
-        register("blockGlass");
-        register("paneGlass");
-        register("record");
-        register("stone");
-        register("cobblestone");
-        register("sand");
-        register("sandstone");
+        addBlacklist("logWood");
+        addBlacklist("plankWood");
+        addBlacklist("slabWood");
+        addBlacklist("stairWood");
+        addBlacklist("treeSapling");
+        addBlacklist("treeLeaves");
+        addBlacklist("blockGlass");
+        addBlacklist("paneGlass");
+        addBlacklist("record");
+        addBlacklist("stone");
+        addBlacklist("cobblestone");
+        addBlacklist("sand");
+        addBlacklist("sandstone");
 
-        registerPrefix("list");
+        addBlacklistPrefix("list");
     }
 
-    public boolean register (String entry) {
+    public boolean addBlacklist (String entry) {
         if (entry == null)
             return false;
 
@@ -44,7 +45,7 @@ public class OreDictRegistry
         return blacklist.add(entry);
     }
 
-    public boolean registerPrefix (String entry) {
+    public boolean addBlacklistPrefix (String entry) {
         if (entry == null)
             return false;
 
@@ -56,14 +57,25 @@ public class OreDictRegistry
         return blacklistPrefix.add(entry);
     }
 
-    public boolean unregister (String entry) {
+    public boolean addWhitelist (String entry) {
+        if (entry == null)
+            return false;
+
+        return whitelist.add(entry);
+    }
+
+    public boolean removeBlacklist (String entry) {
         blacklistCache.remove(entry);
 
         return blacklist.remove(entry);
     }
 
-    public boolean unregisterPrefix (String entry) {
+    public boolean removeBlacklistPrefix (String entry) {
         return blacklistPrefix.remove(entry);
+    }
+
+    public boolean removeWhitelist (String entry) {
+        return whitelist.remove(entry);
     }
 
     public boolean isEntryBlacklisted (String entry) {
@@ -80,16 +92,22 @@ public class OreDictRegistry
         return false;
     }
 
+    public boolean isEntryWhitelisted (String entry) {
+        return whitelist.contains(entry);
+    }
+
     public boolean isEntryValid (String entry) {
         if (graylistCache.contains(entry))
             return true;
 
-        if (isEntryBlacklisted(entry))
-            return false;
+        if (!whitelist.contains(entry)) {
+            if (isEntryBlacklisted(entry))
+                return false;
 
-        if (!isValidForEquiv(entry)) {
-            blacklistCache.add(entry);
-            return false;
+            if (!isValidForEquiv(entry)) {
+                blacklistCache.add(entry);
+                return false;
+            }
         }
 
         graylistCache.add(entry);

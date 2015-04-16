@@ -36,7 +36,7 @@ public class OreDictionaryBlacklist
 
         @Override
         public void apply () {
-            added = StorageDrawers.oreDictRegistry.register(name);
+            added = StorageDrawers.oreDictRegistry.addBlacklist(name);
         }
 
         @Override
@@ -47,7 +47,7 @@ public class OreDictionaryBlacklist
         @Override
         public void undo () {
             if (added)
-                StorageDrawers.oreDictRegistry.unregister(name);
+                StorageDrawers.oreDictRegistry.removeBlacklist(name);
         }
 
         @Override
@@ -83,7 +83,7 @@ public class OreDictionaryBlacklist
 
         @Override
         public void apply () {
-            added = StorageDrawers.oreDictRegistry.registerPrefix(name);
+            added = StorageDrawers.oreDictRegistry.addBlacklistPrefix(name);
         }
 
         @Override
@@ -94,7 +94,7 @@ public class OreDictionaryBlacklist
         @Override
         public void undo () {
             if (added)
-                StorageDrawers.oreDictRegistry.unregisterPrefix(name);
+                StorageDrawers.oreDictRegistry.removeBlacklistPrefix(name);
         }
 
         @Override
