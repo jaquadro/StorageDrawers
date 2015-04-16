@@ -108,6 +108,33 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
         auxData.put(key, data);
     }
 
+    // Check if either set1 is a subset of set2, or set2 is a subset of set1, and return the smaller of the two sets.
+    // If neither is a subset, return null.
+    private static int[] isSubsetEitherWay (int[] set1, int[] set2) {
+        int[] smaller = set1;
+        int[] larger = set2;
+
+        if (set2.length < smaller.length) {
+            smaller = set2;
+            larger = set1;
+        }
+
+        for (int val1 : smaller) {
+            boolean found = false;
+            for (int val2 : larger) {
+                if (val1 == val2) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+                return null;
+        }
+
+        return smaller;
+    }
+
     public static boolean areItemsEqual (ItemStack stack1, ItemStack stack2) {
         if (stack1 == null || stack2 == null)
             return false;
@@ -115,49 +142,43 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
             return false;
 
         if (!stack1.isItemEqual(stack2)) {
+            if (stack1.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack2.getItemDamage() == OreDictionary.WILDCARD_VALUE)
+                return false;
+
             int[] ids1 = OreDictionary.getOreIDs(stack1);
             int[] ids2 = OreDictionary.getOreIDs(stack2);
             if (ids1.length == 0 || ids2.length == 0)
                 return false;
 
-            boolean oreMatch = false;
+            int[] commonIds = isSubsetEitherWay(ids1, ids2);
+            if (commonIds == null)
+                return false;
 
-            BRK_ORE_MATCH:
-            for (int oreIndexLeft : ids1) {
-                if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(oreIndexLeft)))
+            boolean oreMatch = false;
+            for (int oreIndex : commonIds) {
+                if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(oreIndex)))
                     continue;
 
-                for (int oreIndexRight : ids2) {
-                    if (StorageDrawers.oreDictRegistry.isEntryBlacklisted(OreDictionary.getOreName(oreIndexRight)))
-                        continue;
-
-                    if (oreIndexLeft == oreIndexRight) {
-                        List<ItemStack> oreList = OreDictionary.getOres(OreDictionary.getOreName(oreIndexLeft));
-                        for (int i = 0, n = oreList.size(); i < n; i++) {
-                            if (stack1.isItemEqual(oreList.get(i)))
-                                oreMatch = true;
-                        }
-                        if (!oreMatch)
-                            continue;
-
-                        oreMatch = false;
-                        for (int i = 0, n = oreList.size(); i < n; i++) {
-                            if (stack2.isItemEqual(oreList.get(i)))
-                                oreMatch = true;
-                        }
-                        if (!oreMatch)
-                            continue;
-
-                        oreMatch = false;
-                        for (int i = 0, n = oreList.size(); i < n; i++) {
-                            if (oreList.get(i).getItemDamage() != OreDictionary.WILDCARD_VALUE)
-                                oreMatch = true;
-                        }
-                        if (!oreMatch)
-                            continue;
-
-                        break BRK_ORE_MATCH;
+                List<ItemStack> oreList = OreDictionary.getOres(OreDictionary.getOreName(oreIndex));
+                boolean match1 = false;
+                for (int i = 0, n = oreList.size(); i < n; i++) {
+                    if (stack1.isItemEqual(oreList.get(i))) {
+                        match1 = true;
+                        break;
                     }
+                }
+
+                boolean match2 = false;
+                for (int i = 0, n = oreList.size(); i < n; i++) {
+                    if (stack2.isItemEqual(oreList.get(i))) {
+                        match2 = true;
+                        break;
+                    }
+                }
+
+                if (match1 && match2) {
+                    oreMatch = true;
+                    break;
                 }
             }
 

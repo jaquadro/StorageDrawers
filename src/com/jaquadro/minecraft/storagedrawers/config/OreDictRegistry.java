@@ -10,6 +10,9 @@ public class OreDictRegistry
     private Set<String> blacklist = new HashSet<String>();
     private List<String> blacklistPrefix = new ArrayList<String>();
 
+    private Set<String> blacklistCache = new HashSet<String>();
+    private Set<String> graylistCache = new HashSet<String>();
+
     public OreDictRegistry () {
         register("logWood");
         register("plankWood");
@@ -32,6 +35,9 @@ public class OreDictRegistry
         if (entry == null)
             return false;
 
+        blacklistCache.add(entry);
+        graylistCache.remove(entry);
+
         return blacklist.add(entry);
     }
 
@@ -42,10 +48,14 @@ public class OreDictRegistry
         if (blacklistPrefix.contains(entry))
             return false;
 
+        graylistCache.clear();
+
         return blacklistPrefix.add(entry);
     }
 
     public boolean unregister (String entry) {
+        blacklistCache.remove(entry);
+
         return blacklist.remove(entry);
     }
 
@@ -54,13 +64,19 @@ public class OreDictRegistry
     }
 
     public boolean isEntryBlacklisted (String entry) {
-        if (blacklist.contains(entry))
+        if (blacklistCache.contains(entry))
             return true;
+        if (graylistCache.contains(entry))
+            return false;
 
         for (int i = 0, n = blacklistPrefix.size(); i < n; i++) {
-            if (entry.startsWith(blacklistPrefix.get(i)))
+            if (entry.startsWith(blacklistPrefix.get(i))) {
+                blacklistCache.add(entry);
                 return true;
+            }
         }
+
+        graylistCache.add(entry);
 
         return false;
     }
