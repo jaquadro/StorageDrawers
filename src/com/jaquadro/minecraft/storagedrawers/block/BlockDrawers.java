@@ -222,25 +222,10 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-            else if (item.getItem() == ModItems.upgradeLock && !tileDrawers.isLocked()) {
-                tileDrawers.setIsLocked(true);
+            else if (item.getItem() == ModItems.upgradeLock) {
+                tileDrawers.setIsLocked(!tileDrawers.isLocked());
                 world.markBlockForUpdate(x, y, z);
 
-                if (player != null && !player.capabilities.isCreativeMode) {
-                    if (--item.stackSize <= 0)
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-                }
-
-                return true;
-            }
-        }
-        else if (item == null && player.isSneaking()) {
-            if (tileDrawers.isLocked()) {
-                tileDrawers.setIsLocked(false);
-                if (player != null && !player.capabilities.isCreativeMode)
-                    dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgradeLock));
-
-                world.markBlockForUpdate(x, y, z);
                 return true;
             }
         }

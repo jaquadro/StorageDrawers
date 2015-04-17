@@ -11,8 +11,8 @@ item.upgradeStatus.level1.name=Status Upgrade (I)
 item.upgradeStatus.level1.description=Shows full storage
 item.upgradeStatus.level2.name=Status Upgrade (II)
 item.upgradeStatus.level2.description=Shows fill level
-item.upgradeLock.name=Lock Upgrade
-item.upgradeLock.description=Keep associated items when empty
+item.upgradeLock.name=Drawer Key
+item.upgradeLock.description=Locks and unlocks drawers
 
 # Blocks
 tile.fullDrawers1.oak.name=Oak Drawer
