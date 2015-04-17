@@ -58,9 +58,9 @@ storageDrawers.upgrade.description=Increases storage to %d times base value
 storageDrawers.controller.description=Interact with a bank of connected drawers
 
 # Integration
-storageDrawers.waila.empty=Empty
+storageDrawers.waila.empty=<Empty>
 storageDrawers.waila.level=Upgrade Level: %s
-storageDrawers.waila.drawer=Drawer #%s: %s
+storageDrawers.waila.drawer=#%s: %s
 storageDrawers.waila.locked=Locked
 
 # Configuration

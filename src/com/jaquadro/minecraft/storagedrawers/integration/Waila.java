@@ -78,8 +78,8 @@ public class Waila extends IntegrationModule
                 currenttip.add(StatCollector.translateToLocalFormatted("storageDrawers.waila.drawer", i + 1, name));
             }
 
-            if (tile.isLocked())
-                currenttip.add(StatCollector.translateToLocal("storageDrawers.waila.locked"));
+            //if (tile.isLocked())
+            //    currenttip.add(StatCollector.translateToLocal("storageDrawers.waila.locked"));
 
             return currenttip;
         }
