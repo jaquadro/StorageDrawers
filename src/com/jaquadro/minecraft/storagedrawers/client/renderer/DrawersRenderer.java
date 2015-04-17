@@ -94,8 +94,23 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
             renderIndicator(block, x, y, z, side, renderer, tile.getStatusLevel());
+        if (StorageDrawers.config.cache.enableLockUpgrades)
+            renderLock(block, x, y, z, side, renderer, tile.isLocked());
 
         return true;
+    }
+
+    private void renderLock (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean locked) {
+        if (!locked)
+            return;
+
+        double depth = block.halfDepth ? .5 : 1;
+        IIcon iconLock = block.getLockIcon();
+
+        RenderHelper.instance.setRenderBounds(0.46875, 0.9375, 0, 0.53125, 1, depth + .005);
+        RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
+        RenderHelper.instance.renderPartialFace(RenderHelper.ZPOS, x, y, z, iconLock, 0, 0, 1, 1);
+        RenderHelper.instance.state.clearRotateTransform();
     }
 
     private static final int[] cut = new int[] {
