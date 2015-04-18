@@ -88,7 +88,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 float b = (float)(color & 255) / 255.0F;
 
                 if (renderWithColor)
-                    GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0F);
+                    GL11.glColor4f(r, g, b, 1.0F);
 
                 GL11.glDisable(GL11.GL_LIGHTING);
                 GL11.glEnable(GL11.GL_BLEND);
@@ -187,7 +187,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             float b = (float)(color & 255) / 255.0F;
 
             if (this.renderWithColor)
-                GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0F);
+                GL11.glColor4f(r * 1, g * 1, b * 1, 1.0F);
 
             GL11.glRotatef(-90, 0, 1, 0);
 
