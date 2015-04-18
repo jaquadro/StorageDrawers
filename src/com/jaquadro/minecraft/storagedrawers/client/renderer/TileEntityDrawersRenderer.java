@@ -165,8 +165,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
             // Orient lighting for on-block item render.  Standard GUI RenderHelper method is wrong for this.
             GL11.glPushMatrix();
-            GL11.glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(150.0F, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(-170.0F, 1.0F, 0.0F, 1.0F);
+            GL11.glRotatef(-2, 1, 0, 0);
+            //GL11.glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
+            //GL11.glRotatef(142.0F, 1.0F, 0.0F, 0.0F);
+
             RenderHelper.enableStandardItemLighting();
             GL11.glPopMatrix();
 
@@ -189,7 +192,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             GL11.glRotatef(-90, 0, 1, 0);
 
             this.renderBlocksRi.useInventoryTint = this.renderWithColor;
-            this.renderBlocksRi.renderBlockAsItem(block, itemStack.getItemDamage(), brightness);
+            this.renderBlocksRi.renderBlockAsItem(block, itemStack.getItemDamage(), 1);
             this.renderBlocksRi.useInventoryTint = true;
 
             if (block.getRenderBlockPass() == 0)
