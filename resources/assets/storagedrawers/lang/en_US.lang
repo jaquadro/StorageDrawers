@@ -13,6 +13,8 @@ item.upgradeStatus.level2.name=Status Upgrade (II)
 item.upgradeStatus.level2.description=Shows fill level
 item.upgradeLock.name=Drawer Key
 item.upgradeLock.description=Locks and unlocks drawers
+item.upgradeVoid.name=Void Upgrade
+item.upgradeVoid.description=Destroys excess items
 
 # Blocks
 tile.fullDrawers1.oak.name=Oak Drawer

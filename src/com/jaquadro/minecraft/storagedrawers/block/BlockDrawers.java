@@ -228,6 +228,17 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
+            else if (item.getItem() == ModItems.upgradeVoid && !tileDrawers.isVoid()) {
+                tileDrawers.setVoid(true);
+                world.markBlockForUpdate(x, y, z);
+
+                if (player != null && !player.capabilities.isCreativeMode) {
+                    if (--item.stackSize <= 0)
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                }
+
+                return true;
+            }
         }
 
         if (tileDrawers.getDirection() != side)

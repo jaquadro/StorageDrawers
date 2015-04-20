@@ -86,6 +86,9 @@ public class DrawerData extends BaseDrawerData
 
     public void setStoredItemCount (int amount, boolean mark, boolean clearOnEmpty) {
         count = amount;
+        if (count > getMaxCapacity())
+            count = getMaxCapacity();
+
         if (amount == 0) {
             if (clearOnEmpty) {
                 if (!storageProvider.isLocked(slot))
@@ -125,6 +128,14 @@ public class DrawerData extends BaseDrawerData
             return 0;
 
         return protoStack.getItem().getItemStackLimit(protoStack);
+    }
+
+    @Override
+    protected int getItemCapacityForInventoryStack () {
+        if (storageProvider.isVoid(slot))
+            return Integer.MAX_VALUE;
+        else
+            return getMaxCapacity();
     }
 
     @Override

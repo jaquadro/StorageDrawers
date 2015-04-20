@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.inventory.SlotType;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
+import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -15,12 +16,14 @@ public class StorageInventory implements IDrawerInventory
 
     private final IDrawerGroup group;
     private final ISideManager sideMan;
+    private final IUpgradeProvider upgrade;
 
     private final int[] inventorySlots;
 
-    public StorageInventory (IDrawerGroup drawerGroup, ISideManager sideManager) {
+    public StorageInventory (IDrawerGroup drawerGroup, ISideManager sideManager, IUpgradeProvider upgradeProvider) {
         group = drawerGroup;
         sideMan = sideManager;
+        upgrade = upgradeProvider;
 
         inventorySlots = new int[group.getDrawerCount() * SlotType.values.length];
         for (int i = 0, n = inventorySlots.length; i < n; i++)
@@ -224,7 +227,11 @@ public class StorageInventory implements IDrawerInventory
                 insertCount = drawer.getMaxCapacity();
 
             drawer.setStoredItemCount(insertCount);
-            item.stackSize -= insertCount;
+
+            if (upgrade.isVoid())
+                item.stackSize = 0;
+            else
+                item.stackSize -= insertCount;
         }
     }
 

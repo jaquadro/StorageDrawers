@@ -8,6 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive
 import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.StorageInventory;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
+import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -28,7 +29,7 @@ import org.apache.logging.log4j.Level;
 import java.util.Iterator;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends TileEntity implements IDrawerGroupInteractive, ISidedInventory
+public abstract class TileEntityDrawers extends TileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider
 {
     private IDrawer[] drawers;
     private IDrawerInventory inventory;
@@ -40,6 +41,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     private int storageLevel = 1;
     private int statusLevel = 0;
     private boolean locked = false;
+    private boolean voidUpgrade = false;
 
     private long lastClickTime;
     private UUID lastClickUUID;
@@ -61,7 +63,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         for (int i = 0; i < drawerCount; i++)
             drawers[i] = createDrawer(i);
 
-        inventory = new StorageInventory(this, getSideManager());
+        inventory = new StorageInventory(this, getSideManager(), this);
     }
 
     public int getDirection () {
@@ -123,6 +125,17 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
                     drawer.setStoredItemCount(0);
             }
         }
+    }
+
+    public boolean isVoid () {
+        if (!StorageDrawers.config.cache.enableVoidUpgrades)
+            return false;
+
+        return voidUpgrade;
+    }
+
+    public void setVoid (boolean isVoid) {
+        this.voidUpgrade = isVoid;
     }
 
     public ItemStack takeItemsFromSlot (int slot, int count) {
@@ -252,6 +265,10 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             if (tag.hasKey("Lock"))
                 locked = tag.getBoolean("Lock");
 
+            voidUpgrade = false;
+            if (tag.hasKey("Void"))
+                voidUpgrade = tag.getBoolean("Void");
+
             NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
             int drawerCount = slots.tagCount();
             drawers = new IDrawer[slots.tagCount()];
@@ -262,7 +279,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
                 drawers[i].readFromNBT(slot);
             }
 
-            inventory = new StorageInventory(this, getSideManager());
+            inventory = new StorageInventory(this, getSideManager(), this);
         }
         catch (Throwable t) {
             trapLoadFailure(t, tag);
@@ -287,6 +304,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
         if (locked)
             tag.setBoolean("Lock", locked);
+
+        if (voidUpgrade)
+            tag.setBoolean("Void", voidUpgrade);
 
         NBTTagList slots = new NBTTagList();
         for (IDrawer drawer : drawers) {

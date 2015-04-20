@@ -105,6 +105,10 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
         auxData.put(key, data);
     }
 
+    protected int getItemCapacityForInventoryStack () {
+        return getMaxCapacity();
+    }
+
     public boolean areItemsEqual (ItemStack item) {
         ItemStack protoStack = getStoredItemPrototype();
         if (protoStack == null || item == null)
@@ -197,7 +201,7 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
 
         @Override
         protected int getItemCapacity () {
-            return getMaxCapacity();
+            return getItemCapacityForInventoryStack();
         }
 
         @Override

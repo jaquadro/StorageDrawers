@@ -42,6 +42,11 @@ public class DefaultStorageProvider implements IStorageProvider
     }
 
     @Override
+    public boolean isVoid (int slot) {
+        return false;
+    }
+
+    @Override
     public void markAmountDirty (int slot) {
         if (tile.getWorldObj().isRemote)
             return;

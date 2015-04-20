@@ -14,6 +14,8 @@ public interface IStorageProvider
 
     public boolean isLocked (int slot);
 
+    public boolean isVoid (int slot);
+
     public void markAmountDirty (int slot);
 
     public void markDirty (int slot);
