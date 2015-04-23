@@ -10,13 +10,18 @@ item.upgrade.emerald.name=Amélioration stockage (VI)
 item.upgradeStatus.level1.name=Amélioration statut (I)
 item.upgradeStatus.level1.description=Montre si le stockage est plein
 item.upgradeStatus.level2.name=Amélioration statut (II)
-item.upgradeStatus.level2.description=Montre si le stockage est presque plein
-item.upgradeStatus.level3.name=Amélioration statut (III)
-item.upgradeStatus.level3.description=Montre le niveau de remplissage
+item.upgradeStatus.level2.description=Montre le niveau de remplissage
 item.upgradeLock.name=Amélioration verrou
 item.upgradeLock.description=Conserve les éléments associés lorsqu'il est vide
 
 # Blocks
+tile.fullDrawers1.oak.name=Tiroir de chêne
+tile.fullDrawers1.spruce.name=Tiroir de sapin
+tile.fullDrawers1.birch.name=Tiroir de bouleau
+tile.fullDrawers1.jungle.name=Tiroir d'acajou
+tile.fullDrawers1.acacia.name=Tiroir d'acacia
+tile.fullDrawers1.big_oak.name=Tiroir de chêne noir
+
 tile.fullDrawers2.oak.name=Tiroirs de chêne 1x2
 tile.fullDrawers2.spruce.name=Tiroirs de sapin 1x2
 tile.fullDrawers2.birch.name=Tiroirs de bouleau 1x2
@@ -45,10 +50,12 @@ tile.halfDrawers4.jungle.name=Tiroirs compacts d'acajou 2x2
 tile.halfDrawers4.acacia.name=Tiroirs compacts d'acacia 2x2
 tile.halfDrawers4.big_oak.name=Tiroirs compacts de chêne noir 2x2
 
-tile.compDrawers.name=Tiroirs compacté
+tile.compDrawers.name=Compactage du tiroir
+tile.drawerController.name=Contrôleur de tiroirs
 
 storageDrawers.drawers.description=Contient %d piles par tiroir
 storageDrawers.upgrade.description=Augmente le stockage de %d fois la valeur de base
+storageDrawers.controller.description=Interagit avec une banque de tiroirs
 
 # Integration
 storageDrawers.waila.empty=Vide
@@ -65,11 +72,13 @@ storageDrawers.config.general.tooltip=Ceci et cela.
 storageDrawers.config.blocks=Options de blocs
 storageDrawers.config.blocks.tooltip=Configure les blocs de stockage individuel.
 
+storageDrawers.config.blocks.fullDrawers1=Tiroirs 1x1
 storageDrawers.config.blocks.fullDrawers2=Tiroirs 1x2
 storageDrawers.config.blocks.fullDrawers4=Tiroirs 2x2
 storageDrawers.config.blocks.halfDrawers2=Tiroirs compacts 1x2
 storageDrawers.config.blocks.halfDrawers4=Tiroirs compacts 2x2
 storageDrawers.config.blocks.compDrawers=Compactage du tiroir
+storageDrawers.config.blocks.controller=Contrôleur de tiroirs
 
 storageDrawers.config.upgrades=Options d'amélioration
 storageDrawers.config.upgrades.tooltip=Configure les améliorations de stockage induviduel.
@@ -93,14 +102,22 @@ storageDrawers.config.prop.enabled.tooltip=Active les blocs en jeu.
 storageDrawers.config.prop.baseStorage=Stockage de base
 storageDrawers.config.prop.baseStorage.tooltip=Nombre de pile contenu par tiroir.
 storageDrawers.config.prop.recipeOutput=Sortie de recette
-storageDrawers.config.prop.recipeOutput.tooltip=Nombre d'éléments d'une seulle fabrication.
+storageDrawers.config.prop.recipeOutput.tooltip=Nombre d'éléments d'une seule fabrication.
 storageDrawers.config.prop.enableSidedInput=Active l'entrée par les cotés
 storageDrawers.config.prop.enableSidedInput.tooltip=D'autres blocs peuvent insérer des éléments dans les tiroirs.
 storageDrawers.config.prop.enableSidedOutput=Active la sortie par les cotés
 storageDrawers.config.prop.enableSidedOutput.tooltip=D'autres blocs peuvent extraire des éléments dans les tiroirs.
+storageDrawers.config.prop.enableItemConversion=Active la conversion d'élément
+storageDrawers.config.prop.enableItemConversion.tooltip=Les tirroirs convertissent automatiquement les élément compatible de ore dictionary.
+storageDrawers.config.prop.invertShift=Inverser le Maj
+storageDrawers.config.prop.invertShift.tooltip=Interverti le clique et le Maj+clique.
+storageDrawers.config.prop.enableDebugLogging=Active le journal de débeugue
+storageDrawers.config.prop.enableDebugLogging.tooltip=Ajoute des information suplémentaires dans le journal.
 
 storageDrawers.config.integration=Intégration
 storageDrawers.config.integration.tooltip=Configure l'intégration avec d'autres mods.
 
 storageDrawers.config.integration.enableAE2=Active l'intégration de Applied Energistics 2
 storageDrawers.config.integration.enableWaila=Active l'intégration de WAILA
+storageDrawers.config.integration.enableThaumcraft=Active l'intégration de Thaumcraft
+storageDrawers.config.integration.enableMineTweaker=Active l'intégration de MineTweaker
