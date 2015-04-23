@@ -96,6 +96,8 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
             renderIndicator(block, x, y, z, side, renderer, tile.getStatusLevel());
         if (StorageDrawers.config.cache.enableLockUpgrades)
             renderLock(block, x, y, z, side, renderer, tile.isLocked());
+        if (StorageDrawers.config.cache.enableVoidUpgrades)
+            renderVoid(block, x, y, z, side, renderer, tile.isVoid());
 
         return true;
     }
@@ -110,6 +112,19 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         RenderHelper.instance.setRenderBounds(0.46875, 0.9375, 0, 0.53125, 1, depth + .005);
         RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
         RenderHelper.instance.renderPartialFace(RenderHelper.ZPOS, x, y, z, iconLock, 0, 0, 1, 1);
+        RenderHelper.instance.state.clearRotateTransform();
+    }
+
+    private void renderVoid (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean voided) {
+        if (!voided)
+            return;
+
+        double depth = block.halfDepth ? .5 : 1;
+        IIcon iconVoid = block.getVoidIcon();
+
+        RenderHelper.instance.setRenderBounds(1 - .0625, 0.9375, 0, 1, 1, depth + .005);
+        RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
+        RenderHelper.instance.renderPartialFace(RenderHelper.ZPOS, x, y, z, iconVoid, 0, 0, 1, 1);
         RenderHelper.instance.state.clearRotateTransform();
     }
 

@@ -81,5 +81,10 @@ public class ModRecipes
             GameRegistry.addRecipe(new ItemStack(ModItems.upgradeLock), "xy ", " y ", " z ",
                 'x', Items.gold_nugget, 'y', Items.gold_ingot, 'z', ModItems.upgradeTemplate);
         }
+
+        if (config.cache.enableVoidUpgrades) {
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeVoid), "yyy", "xzx", "yyy",
+                'x', Blocks.obsidian, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
+        }
     }
 }

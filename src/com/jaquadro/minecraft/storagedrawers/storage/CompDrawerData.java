@@ -60,6 +60,11 @@ public class CompDrawerData extends BaseDrawerData
     }
 
     @Override
+    protected int getItemCapacityForInventoryStack () {
+        return central.getItemCapacityForInventoryStack(slot);
+    }
+
+    @Override
     public boolean canItemBeStored (ItemStack itemPrototype) {
         if (getStoredItemPrototype() == null)
             return true;

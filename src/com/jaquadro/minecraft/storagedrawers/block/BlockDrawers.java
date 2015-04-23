@@ -90,6 +90,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @SideOnly(Side.CLIENT)
     private IIcon iconLock;
+    @SideOnly(Side.CLIENT)
+    private IIcon iconVoid;
 
     public BlockDrawers (String blockName, int drawerCount, boolean halfDepth) {
         this(Material.wood, blockName, drawerCount, halfDepth);
@@ -587,6 +589,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         return iconLock;
     }
 
+    @SideOnly(Side.CLIENT)
+    public IIcon getVoidIcon () {
+        return iconVoid;
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons (IIconRegister register) {
@@ -636,6 +643,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         iconIndicator4[1] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_4_on");
 
         iconLock = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/lock_icon");
+        iconVoid = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/void_icon");
 
         loadBlockConfig();
     }

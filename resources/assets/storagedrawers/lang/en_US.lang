@@ -64,6 +64,7 @@ storageDrawers.waila.empty=<Empty>
 storageDrawers.waila.level=Upgrade Level: %s
 storageDrawers.waila.drawer=#%s: %s
 storageDrawers.waila.locked=Locked
+storageDrawers.waila.void=Void
 
 # Configuration
 storageDrawers.config.title=Storage Drawers Configuration

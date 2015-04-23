@@ -426,6 +426,10 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             int oldCount = pooledCount;
             pooledCount = (pooledCount % convRate[slot]) + convRate[slot] * amount;
 
+            int poolMax = getMaxCapacity(0) * convRate[0];
+            if (pooledCount > poolMax)
+                pooledCount = poolMax;
+
             if (pooledCount != oldCount) {
                 if (pooledCount != 0 || isLocked())
                     markAmountDirty();
@@ -472,6 +476,14 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 return 0;
 
             return protoStack[slot].getItem().getItemStackLimit(protoStack[slot]);
+        }
+
+        @Override
+        public int getItemCapacityForInventoryStack (int slot) {
+            if (isVoid())
+                return Integer.MAX_VALUE;
+            else
+                return getMaxCapacity(slot);
         }
 
         @Override
