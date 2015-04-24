@@ -4,6 +4,8 @@ import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
+import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -157,27 +159,20 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     public void updateCache () {
         int preCount = inventorySlots.length;
 
-        for (StorageRecord record : storage.values())
+        for (StorageRecord record : storage.values()) {
             record.mark = false;
+            record.distance = Integer.MAX_VALUE;
+        }
 
         populateNode(xCoord, yCoord, zCoord, 0);
 
         for (BlockCoord coord : storage.keySet()) {
             StorageRecord record = storage.get(coord);
-            if (!record.mark) {
-                record.clear();
-
-                for (int i = 0, n = invBlockList.size(); i < n; i++) {
-                    if (coord.equals(invBlockList.get(i)))
-                        invBlockList.set(i, null);
-                }
-
-                for (int i = 0, n = drawerBlockList.size(); i < n; i++) {
-                    if (coord.equals(drawerBlockList.get(i)))
-                        drawerBlockList.set(i, null);
-                }
-            }
+            if (!record.mark)
+                clearRecordInfo(coord, record);
         }
+
+        flattenLists();
 
         inventorySlots = new int[invBlockList.size()];
         for (int i = 0, j = 0, n = invBlockList.size(); i < n; i++) {
@@ -190,35 +185,79 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         }
     }
 
-    private void populateNode (int x, int y, int z, int depth) {
-        TileEntity te = worldObj.getTileEntity(x, y, z);
-        if (te == null || !(te instanceof IDrawerGroup))
-            return;
+    private boolean containsNullEntries (List<BlockCoord> list) {
+        int nullCount = 0;
+        for (int i = 0, n = list.size(); i < n; i++) {
+            if (list.get(i) == null)
+                nullCount++;
+        }
 
-        if (depth > DEPTH_LIMIT)
-            return;
+        return nullCount > 0;
+    }
 
-        BlockCoord coord = new BlockCoord(x, y, z);
-        StorageRecord record = storage.get(coord);
+    private void flattenLists () {
+        if (containsNullEntries(invBlockList)) {
+            List<BlockCoord> newInvBlockList = new ArrayList<BlockCoord>();
+            List<Integer> newInvSlotLit = new ArrayList<Integer>();
 
-        if (record != null) {
-            if (record.storage != null) {
-                if (!record.mark || record.distance > depth) {
-                    record.mark = true;
-                    record.distance = depth;
-                    populateNeighborNodes(x, y, z, depth + 1);
+            for (int i = 0, n = invBlockList.size(); i < n; i++) {
+                BlockCoord coord = invBlockList.get(i);
+                if (coord != null) {
+                    newInvBlockList.add(coord);
+                    newInvSlotLit.add(invSlotList.get(i));
                 }
-                return;
             }
-        }
-        else {
-            record = new StorageRecord();
-            storage.put(coord, record);
+
+            invBlockList = newInvBlockList;
+            invSlotList = newInvSlotLit;
         }
 
-        record.mark = true;
+        if (containsNullEntries(drawerBlockList)) {
+            List<BlockCoord> newDrawerBlockList = new ArrayList<BlockCoord>();
+            List<Integer> newDrawerSlotList = new ArrayList<Integer>();
+
+            for (int i = 0, n = drawerBlockList.size(); i < n; i++) {
+                BlockCoord coord = drawerBlockList.get(i);
+                if (coord != null) {
+                    newDrawerBlockList.add(coord);
+                    newDrawerSlotList.add(drawerSlotList.get(i));
+                }
+            }
+
+            drawerBlockList = newDrawerBlockList;
+            drawerSlotList = newDrawerSlotList;
+        }
+    }
+
+    private void clearRecordInfo (BlockCoord coord, StorageRecord record) {
+        record.clear();
+
+        for (int i = 0, n = invBlockList.size(); i < n; i++) {
+            if (coord.equals(invBlockList.get(i)))
+                invBlockList.set(i, null);
+        }
+
+        for (int i = 0, n = drawerBlockList.size(); i < n; i++) {
+            if (coord.equals(drawerBlockList.get(i)))
+                drawerBlockList.set(i, null);
+        }
+    }
+
+    private void updateRecordInfo (BlockCoord coord, StorageRecord record, TileEntity te) {
+        if (te == null || !(te instanceof IDrawerGroup)) {
+            if (record.storage != null)
+                clearRecordInfo(coord, record);
+
+            return;
+        }
 
         if (te instanceof TileEntityController) {
+            if (record.storage == null && record.invStorageSize > 0)
+                return;
+
+            if (record.storage != null)
+                clearRecordInfo(coord, record);
+
             record.storage = null;
             record.invStorageSize = 1;
 
@@ -227,6 +266,12 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         }
         else {
             IDrawerGroup group = (IDrawerGroup)te;
+            if (record.storage == group)
+                return;
+
+            if (record.storage != null && record.storage != group)
+                clearRecordInfo(coord, record);
+
             IDrawerInventory inventory = group.getDrawerInventory();
             if (inventory == null)
                 return;
@@ -247,11 +292,31 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
             drawerSize += record.drawerStorageSize;
         }
+    }
 
-        if (depth == DEPTH_LIMIT)
+    private void populateNode (int x, int y, int z, int depth) {
+        if (depth > DEPTH_LIMIT)
             return;
 
-        populateNeighborNodes(x, y, z, depth + 1);
+        Block block = worldObj.getBlock(x, y, z);
+        if (!(block instanceof INetworked))
+            return;
+
+        BlockCoord coord = new BlockCoord(x, y, z);
+        StorageRecord record = storage.get(coord);
+        if (record == null) {
+            record = new StorageRecord();
+            storage.put(coord, record);
+        }
+
+        updateRecordInfo(coord, record, worldObj.getTileEntity(x, y, z));
+        record.mark = true;
+
+        if (record.distance > depth) {
+            record.mark = true;
+            record.distance = depth;
+            populateNeighborNodes(x, y, z, depth + 1);
+        }
     }
 
     private void populateNeighborNodes (int x, int y, int z, int depth) {

@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import cpw.mods.fml.relauncher.Side;
@@ -19,7 +20,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class BlockCompDrawers extends BlockDrawers
+public class BlockCompDrawers extends BlockDrawers implements INetworked
 {
     @SideOnly(Side.CLIENT)
     private IIcon[] iconFront;
