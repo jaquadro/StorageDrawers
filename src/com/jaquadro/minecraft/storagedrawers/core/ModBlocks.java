@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockController;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
@@ -11,6 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemController;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
+import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
@@ -24,6 +26,7 @@ public class ModBlocks
     public static BlockDrawers halfDrawers4;
     public static BlockCompDrawers compDrawers;
     public static BlockController controller;
+    public static BlockTrim trim;
 
     public void init () {
         fullDrawers1 = new BlockDrawers("fullDrawers1", 1, false);
@@ -33,6 +36,7 @@ public class ModBlocks
         halfDrawers4 = new BlockDrawers("halfDrawers4", 4, true);
         compDrawers = new BlockCompDrawers("compDrawers");
         controller = new BlockController("drawerController");
+        trim = new BlockTrim("trim");
 
         ConfigManager config = StorageDrawers.config;
 
@@ -63,6 +67,9 @@ public class ModBlocks
         if (config.isBlockEnabled("controller")) {
             GameRegistry.registerBlock(controller, ItemController.class, "controller");
             GameRegistry.registerTileEntity(TileEntityController.class, ModBlocks.getQualifiedName(controller));
+        }
+        if (config.isBlockEnabled("trim")) {
+            GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
         }
     }
 

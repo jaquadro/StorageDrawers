@@ -31,6 +31,10 @@ public class ModRecipes
             if (config.isBlockEnabled("halfdrawers4"))
                 GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers4, config.getBlockRecipeOutput("halfdrawers4"), i), "yxy", "xxx", "yxy",
                     'x', new ItemStack(Blocks.wooden_slab, 1, i), 'y', Blocks.chest);
+            if (config.isBlockEnabled("trim")) {
+                GameRegistry.addRecipe(new ItemStack(ModBlocks.trim, 24, i), "xyx", "yyy", "xyx",
+                    'x', Items.stick, 'y', new ItemStack(Blocks.planks, 1, i));
+            }
         }
 
         if (config.isBlockEnabled("compdrawers"))

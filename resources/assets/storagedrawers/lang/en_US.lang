@@ -55,6 +55,13 @@ tile.halfDrawers4.big_oak.name=Compact Dark Oak Drawers 2x2
 tile.compDrawers.name=Compacting Drawer
 tile.drawerController.name=Drawer Controller
 
+tile.trim.oak.name=Oak Trim
+tile.trim.spruce.name=Spruce Trim
+tile.trim.birch.name=Birch Trim
+tile.trim.jungle.name=Jungle Trim
+tile.trim.acacia.name=Acacia Trim
+tile.trim.big_oak.name=Dark Oak Trim
+
 storageDrawers.drawers.description=Holds %d stacks per drawer
 storageDrawers.upgrade.description=Increases storage to %d times base value
 storageDrawers.controller.description=Interact with a bank of connected drawers
@@ -82,6 +89,7 @@ storageDrawers.config.blocks.halfDrawers2=Compact Drawers 1x2
 storageDrawers.config.blocks.halfDrawers4=Compact Drawers 2x2
 storageDrawers.config.blocks.compDrawers=Compacting Drawer
 storageDrawers.config.blocks.controller=Drawer Controller
+storageDrawers.config.blocks.trim=Trim
 
 storageDrawers.config.upgrades=Upgrade Settings
 storageDrawers.config.upgrades.tooltip=Configure individual storage upgrades.

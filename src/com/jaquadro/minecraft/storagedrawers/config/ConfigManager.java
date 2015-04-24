@@ -92,6 +92,7 @@ public class ConfigManager
     public final ConfigSection sectionBlocksHalfDrawers2x2 = new ConfigSection(blockSections, sectionBlocks, "halfdrawers4", "blocks.halfDrawers4");
     public final ConfigSection sectionBlocksCompDrawers = new ConfigSection(blockSections, sectionBlocks, "compdrawers", "blocks.compDrawers");
     public final ConfigSection sectionBlocksController = new ConfigSection(blockSections, sectionBlocks, "controller", "blocks.controller");
+    public final ConfigSection sectionBlocksTrim = new ConfigSection(blockSections, sectionBlocks, "trim", "blocks.trim");
 
     public Map<String, ConfigSection> blockSectionsMap = new HashMap<String, ConfigSection>();
 
@@ -160,6 +161,8 @@ public class ConfigManager
         config.get(sectionBlocksCompDrawers.getQualifiedName(), "recipeOutput", 1).setLanguageKey(LANG_PREFIX + "prop.recipeOutput").setRequiresMcRestart(true);
 
         config.get(sectionBlocksController.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
+
+        config.get(sectionBlocksTrim.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
 
         cache.level2Mult = config.get(sectionUpgrades.getQualifiedName(), "level2Mult", 2).setLanguageKey(LANG_PREFIX + "upgrades.level2Mult").setRequiresWorldRestart(true).getInt();
         cache.level3Mult = config.get(sectionUpgrades.getQualifiedName(), "level3Mult", 3).setLanguageKey(LANG_PREFIX + "upgrades.level3Mult").setRequiresWorldRestart(true).getInt();
