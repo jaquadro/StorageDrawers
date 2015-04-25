@@ -48,6 +48,10 @@ public class BlockSlave extends BlockContainer implements INetworked
         return new TileEntitySlave();
     }
 
+    public void bindController (World world, int x, int y, int z) {
+        TileEntitySlave te = getTileEntitySafe(world, x, y, z);
+    }
+
     public TileEntitySlave getTileEntity (IBlockAccess blockAccess, int x, int y, int z) {
         TileEntity tile = blockAccess.getTileEntity(x, y, z);
         return (tile instanceof TileEntitySlave) ? (TileEntitySlave) tile : null;
@@ -58,6 +62,7 @@ public class BlockSlave extends BlockContainer implements INetworked
         if (tile == null) {
             tile = createNewTileEntity(world, world.getBlockMetadata(x, y, z));
             world.setTileEntity(x, y, z, tile);
+            tile.ensureInitialized();
         }
 
         return tile;

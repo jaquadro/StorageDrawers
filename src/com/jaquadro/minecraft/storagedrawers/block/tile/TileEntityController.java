@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -125,8 +126,12 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         updateCache();
     }
 
-    public boolean isValidSlave (int x, int y, int z) {
-        return false;
+    public boolean isValidSlave (BlockCoord coord) {
+        StorageRecord record = storage.get(coord);
+        if (record == null || !record.mark)
+            return false;
+
+        return record.storage == null;
     }
 
     public void updateCache () {
@@ -217,7 +222,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     }
 
     private void updateRecordInfo (BlockCoord coord, StorageRecord record, TileEntity te) {
-        if (te == null || !(te instanceof IDrawerGroup)) {
+        if (te == null) {
             if (record.storage != null)
                 clearRecordInfo(coord, record);
 
@@ -237,7 +242,21 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             invBlockList.add(null);
             invSlotList.add(0);
         }
-        else {
+        else if (te instanceof TileEntitySlave) {
+            if (record.storage == null && record.invStorageSize == 0) {
+                if (((TileEntitySlave) te).getController() == this)
+                    return;
+            }
+
+            if (record.storage != null)
+                clearRecordInfo(coord, record);
+
+            record.storage = null;
+            record.invStorageSize = 0;
+
+            ((TileEntitySlave) te).bindController(xCoord, yCoord, zCoord);
+        }
+        else if (te instanceof IDrawerGroup) {
             IDrawerGroup group = (IDrawerGroup)te;
             if (record.storage == group)
                 return;
@@ -265,6 +284,10 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
             drawerSize += record.drawerStorageSize;
         }
+        else {
+            if (record.storage != null)
+                clearRecordInfo(coord, record);
+        }
     }
 
     private void populateNode (int x, int y, int z, int depth) {
@@ -280,6 +303,10 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         if (record == null) {
             record = new StorageRecord();
             storage.put(coord, record);
+        }
+
+        if (block instanceof BlockSlave) {
+            ((BlockSlave) block).getTileEntitySafe(worldObj, x, y, z);
         }
 
         updateRecordInfo(coord, record, worldObj.getTileEntity(x, y, z));

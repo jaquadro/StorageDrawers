@@ -1,5 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -10,16 +13,25 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntitySlave extends TileEntity implements ISidedInventory
+public class TileEntitySlave extends TileEntity implements IDrawerGroup, ISidedInventory
 {
     private BlockCoord controllerCoord;
+    private BlockCoord selfCoord;
 
     private int[] inventorySlots = new int[] { 0 };
-    private int[] autoSides = new int[] { 0, 1, 2, 3, 4, 5 };
+
+    public void ensureInitialized () {
+        if (selfCoord == null) {
+            selfCoord = new BlockCoord(xCoord, yCoord, zCoord);
+            markDirty();
+        }
+    }
 
     @Override
     public void readFromNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
+
+        selfCoord = new BlockCoord(xCoord, yCoord, zCoord);
 
         if (tag.hasKey("Controller", Constants.NBT.TAG_COMPOUND)) {
             NBTTagCompound ctag = tag.getCompoundTag("Controller");
@@ -54,7 +66,15 @@ public class TileEntitySlave extends TileEntity implements ISidedInventory
         getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
     }
 
-    private TileEntityController getController () {
+    public void bindController (int x, int y, int z) {
+        if (controllerCoord != null && controllerCoord.x() == x && controllerCoord.y() == y && controllerCoord.z() == z)
+            return;
+
+        controllerCoord = new BlockCoord(x, y, z);
+        markDirty();
+    }
+
+    public TileEntityController getController () {
         if (controllerCoord == null)
             return null;
 
@@ -71,7 +91,7 @@ public class TileEntitySlave extends TileEntity implements ISidedInventory
     @Override
     public int[] getAccessibleSlotsFromSide (int side) {
         TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(xCoord, yCoord, zCoord))
+        if (controller == null || !controller.isValidSlave(selfCoord))
             return inventorySlots;
 
         return controller.getAccessibleSlotsFromSide(0);
@@ -80,7 +100,7 @@ public class TileEntitySlave extends TileEntity implements ISidedInventory
     @Override
     public boolean canInsertItem (int slot, ItemStack stack, int side) {
         TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(xCoord, yCoord, zCoord))
+        if (controller == null || !controller.isValidSlave(selfCoord))
             return false;
 
         return controller.canInsertItem(slot, stack, 0);
@@ -89,7 +109,7 @@ public class TileEntitySlave extends TileEntity implements ISidedInventory
     @Override
     public boolean canExtractItem (int slot, ItemStack stack, int side) {
         TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(xCoord, yCoord, zCoord))
+        if (controller == null || !controller.isValidSlave(selfCoord))
             return false;
 
         return controller.canExtractItem(slot, stack, side);
@@ -98,7 +118,7 @@ public class TileEntitySlave extends TileEntity implements ISidedInventory
     @Override
     public int getSizeInventory () {
         TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(xCoord, yCoord, zCoord))
+        if (controller == null || !controller.isValidSlave(selfCoord))
             return 1;
 
         return controller.getSizeInventory();
@@ -107,7 +127,7 @@ public class TileEntitySlave extends TileEntity implements ISidedInventory
     @Override
     public ItemStack getStackInSlot (int slot) {
         TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(xCoord, yCoord, zCoord))
+        if (controller == null || !controller.isValidSlave(selfCoord))
             return null;
 
         return controller.getStackInSlot(slot);
@@ -116,7 +136,7 @@ public class TileEntitySlave extends TileEntity implements ISidedInventory
     @Override
     public ItemStack decrStackSize (int slot, int count) {
         TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(xCoord, yCoord, zCoord))
+        if (controller == null || !controller.isValidSlave(selfCoord))
             return null;
 
         return controller.decrStackSize(slot, count);
@@ -125,7 +145,7 @@ public class TileEntitySlave extends TileEntity implements ISidedInventory
     @Override
     public ItemStack getStackInSlotOnClosing (int slot) {
         TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(xCoord, yCoord, zCoord))
+        if (controller == null || !controller.isValidSlave(selfCoord))
             return null;
 
         return controller.getStackInSlotOnClosing(slot);
@@ -134,7 +154,7 @@ public class TileEntitySlave extends TileEntity implements ISidedInventory
     @Override
     public void setInventorySlotContents (int slot, ItemStack stack) {
         TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(xCoord, yCoord, zCoord))
+        if (controller == null || !controller.isValidSlave(selfCoord))
             return;
 
         controller.setInventorySlotContents(slot, stack);
@@ -175,9 +195,63 @@ public class TileEntitySlave extends TileEntity implements ISidedInventory
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack stack) {
         TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(xCoord, yCoord, zCoord))
+        if (controller == null || !controller.isValidSlave(selfCoord))
             return false;
 
         return controller.isItemValidForSlot(slot, stack);
+    }
+
+    @Override
+    public int getDrawerCount () {
+        TileEntityController controller = getController();
+        if (controller == null || !controller.isValidSlave(selfCoord))
+            return 0;
+
+        return controller.getDrawerCount();
+    }
+
+    @Override
+    public IDrawer getDrawer (int slot) {
+        TileEntityController controller = getController();
+        if (controller == null || !controller.isValidSlave(selfCoord))
+            return null;
+
+        return controller.getDrawer(slot);
+    }
+
+    @Override
+    public boolean isDrawerEnabled (int slot) {
+        TileEntityController controller = getController();
+        if (controller == null || !controller.isValidSlave(selfCoord))
+            return false;
+
+        return controller.isDrawerEnabled(slot);
+    }
+
+    @Override
+    public IDrawerInventory getDrawerInventory () {
+        TileEntityController controller = getController();
+        if (controller == null || !controller.isValidSlave(selfCoord))
+            return null;
+
+        return controller.getDrawerInventory();
+    }
+
+    @Override
+    public void markDirty () {
+        TileEntityController controller = getController();
+        if (controller != null && controller.isValidSlave(selfCoord))
+            controller.markDirty();
+
+        super.markDirty();
+    }
+
+    @Override
+    public boolean markDirtyIfNeeded () {
+        TileEntityController controller = getController();
+        if (controller != null && controller.isValidSlave(selfCoord))
+            return controller.markDirtyIfNeeded();
+
+        return false;
     }
 }

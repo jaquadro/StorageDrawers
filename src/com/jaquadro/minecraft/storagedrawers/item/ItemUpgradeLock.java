@@ -40,7 +40,7 @@ public class ItemUpgradeLock extends Item
     @Override
     public Multimap getAttributeModifiers (ItemStack item) {
         Multimap multimap = super.getAttributeModifiers(item);
-        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", (double)1, 0));
+        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", (double)2, 0));
         return multimap;
     }
 }
