@@ -1,13 +1,11 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockController;
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
+import com.jaquadro.minecraft.storagedrawers.block.*;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemController;
@@ -27,6 +25,7 @@ public class ModBlocks
     public static BlockCompDrawers compDrawers;
     public static BlockController controller;
     public static BlockTrim trim;
+    public static BlockSlave controllerSlave;
 
     public void init () {
         fullDrawers1 = new BlockDrawers("fullDrawers1", 1, false);
@@ -37,6 +36,7 @@ public class ModBlocks
         compDrawers = new BlockCompDrawers("compDrawers");
         controller = new BlockController("drawerController");
         trim = new BlockTrim("trim");
+        controllerSlave = new BlockSlave("controllerSlave");
 
         ConfigManager config = StorageDrawers.config;
 
@@ -67,6 +67,10 @@ public class ModBlocks
         if (config.isBlockEnabled("controller")) {
             GameRegistry.registerBlock(controller, ItemController.class, "controller");
             GameRegistry.registerTileEntity(TileEntityController.class, ModBlocks.getQualifiedName(controller));
+        }
+        if (config.isBlockEnabled("controllerSlave")) {
+            GameRegistry.registerBlock(controllerSlave, "controllerSlave");
+            GameRegistry.registerTileEntity(TileEntitySlave.class, ModBlocks.getQualifiedName(controllerSlave));
         }
         if (config.isBlockEnabled("trim")) {
             GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
