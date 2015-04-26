@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -23,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
@@ -35,6 +37,15 @@ import java.util.List;
 public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 {
     private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
+
+    private Vec3[] dirVectors = {
+        Vec3.createVectorHelper(0, -1, 0),
+        Vec3.createVectorHelper(0, 1, 0),
+        Vec3.createVectorHelper(0, 0, -1),
+        Vec3.createVectorHelper(0, 0, 1),
+        Vec3.createVectorHelper(-1, 0, 0),
+        Vec3.createVectorHelper(1, 0, 0)
+    };
 
     private RenderItem itemRenderer = new RenderItem() {
         private RenderBlocks renderBlocksRi = new RenderBlocks();
@@ -235,6 +246,14 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime) {
         TileEntityDrawers tileDrawers = (TileEntityDrawers) tile;
         if (tileDrawers == null)
+            return;
+
+        // Don't bother rendering anything that is (probably) facing away from the player.
+        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        Vec3 faceVector = dirVectors[tileDrawers.getDirection()];
+        float lookProduct = (float)player.getLook(partialTickTime).dotProduct(faceVector);
+
+        if (lookProduct > .75f)
             return;
 
         float depth;
