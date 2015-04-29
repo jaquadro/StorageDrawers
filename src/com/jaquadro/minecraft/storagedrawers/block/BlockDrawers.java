@@ -33,6 +33,8 @@ import net.minecraft.util.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.logging.log4j.Level;
 
@@ -303,6 +305,10 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     public void onBlockClicked (World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         if (StorageDrawers.config.cache.debugTrace)
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "IExtendedBlockClickHandler.onBlockClicked");
+
+        PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, x, y, z, side, world);
+        if (event.isCanceled())
+            return;
 
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, x, y, z);
         if (tileDrawers.getDirection() != side)
