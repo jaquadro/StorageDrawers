@@ -83,6 +83,8 @@ public class Waila extends IntegrationModule
                 attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.locked");
             if (tile.isVoid())
                 attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.void");
+            if (tile.isSorting())
+                attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.sorting");
 
             if (!attrib.isEmpty())
                 currenttip.add(attrib);

@@ -1,10 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeLock;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStatus;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeVoid;
+import com.jaquadro.minecraft.storagedrawers.item.*;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.Item;
 

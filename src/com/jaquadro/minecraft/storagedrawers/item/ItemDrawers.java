@@ -51,7 +51,7 @@ public class ItemDrawers extends ItemMultiTexture
         list.add(StatCollector.translateToLocalFormatted("storageDrawers.drawers.description", getCapacityForBlock(block)));
     }
 
-    private int getCapacityForBlock (Block block) {
+    protected int getCapacityForBlock (Block block) {
         ConfigManager config = StorageDrawers.config;
         int count = 0;
 

@@ -41,7 +41,24 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         GL11.glRotatef(90, 0, 1, 0);
         GL11.glTranslatef(-.5f, -.5f, -.5f);
 
+        switch (side - 2) {
+            case 0:
+                renderer.uvRotateTop = 3;
+                break;
+            case 1:
+                renderer.uvRotateTop = 0;
+                break;
+            case 2:
+                renderer.uvRotateTop = 1;
+                break;
+            case 3:
+                renderer.uvRotateTop = 2;
+                break;
+        }
+
         renderExterior(block, 0, 0, 0,side, renderer);
+
+        renderer.uvRotateTop = 0;
 
         boxRenderer.setUnit(0);
         boxRenderer.setInteriorIcon(block.getIcon(side, metadata), ForgeDirection.OPPOSITES[side]);
@@ -67,6 +84,21 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         int side = tile.getDirection();
         int meta = world.getBlockMetadata(x, y, z);
 
+        switch (side - 2) {
+            case 0:
+                renderer.uvRotateTop = 3;
+                break;
+            case 1:
+                renderer.uvRotateTop = 0;
+                break;
+            case 2:
+                renderer.uvRotateTop = 1;
+                break;
+            case 3:
+                renderer.uvRotateTop = 2;
+                break;
+        }
+
         boxRenderer.setUnit(block.trimWidth);
         boxRenderer.setColor(ModularBoxRenderer.COLOR_WHITE);
         for (int i = 0; i < 6; i++)
@@ -76,6 +108,8 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         boxRenderer.setInteriorIcon(block.getIconTrim(meta));
 
         renderExterior(block, x, y, z, side, renderer);
+
+        renderer.uvRotateTop = 0;
 
         if (tile.getStorageLevel() > 1 && StorageDrawers.config.cache.renderStorageUpgrades) {
             for (int i = 0; i < 6; i++)

@@ -5,4 +5,6 @@ public interface IUpgradeProvider
     boolean isLocked ();
 
     boolean isVoid ();
+
+    boolean isSorting ();
 }

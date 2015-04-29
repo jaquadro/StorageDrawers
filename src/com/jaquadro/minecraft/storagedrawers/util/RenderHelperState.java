@@ -40,6 +40,8 @@ public class RenderHelperState
     public float shiftU;
     public float shiftV;
 
+    public final int[] uvRotate = new int[6];
+
     public float colorMultYNeg;
     public float colorMultYPos;
     public float colorMultZNeg;
@@ -90,6 +92,14 @@ public class RenderHelperState
     public void resetTextureOffset () {
         shiftU = 0;
         shiftV = 0;
+    }
+
+    public void setUVRotation (int face, int rotation) {
+        uvRotate[face] = rotation;
+    }
+
+    public void clearUVRotation (int face) {
+        uvRotate[face] = 0;
     }
 
     public void setColor (float r, float g, float b) {

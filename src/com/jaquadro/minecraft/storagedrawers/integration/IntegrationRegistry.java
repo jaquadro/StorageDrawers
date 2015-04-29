@@ -24,6 +24,8 @@ public class IntegrationRegistry
             reg.add(new Thaumcraft());
         if (Loader.isModLoaded("MineTweaker3") && StorageDrawers.config.cache.enableMineTweakerIntegration)
             reg.add(new MineTweaker());
+        if (Loader.isModLoaded("RefinedRelocation") && StorageDrawers.config.cache.enableRefinedRelocationIntegration)
+            reg.add(new RefinedRelocation());
     }
 
     private IntegrationRegistry () {

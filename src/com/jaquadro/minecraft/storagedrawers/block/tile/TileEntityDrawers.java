@@ -3,7 +3,6 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
 import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.StorageInventory;
@@ -138,6 +137,10 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         this.voidUpgrade = isVoid;
     }
 
+    public boolean isSorting () {
+        return false;
+    }
+
     public ItemStack takeItemsFromSlot (int slot, int count) {
         if (slot < 0 || slot >= getDrawerCount())
             return null;
@@ -237,7 +240,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         while (iter.hasNext()) {
             String key = iter.next();
             if (!tag.hasKey(key))
-                tag.setTag(key, failureSnapshot.getTag(key));
+                tag.setTag(key, failureSnapshot.getTag(key).copy());
         }
     }
 

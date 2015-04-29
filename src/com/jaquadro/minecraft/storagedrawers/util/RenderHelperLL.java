@@ -115,6 +115,8 @@ public class RenderHelperLL
         setupUVPoints(uStart, vStart, uStop, vStop, rangeX, rangeZ, icon);
         setupAOBrightnessLerp(state.renderMinX, state.renderMaxX, state.renderMinZ, state.renderMaxZ, rangeX, rangeZ);
 
+        int rotate = (face == 0) ? state.uvRotate[0] : state.uvRotate[1];
+
         for (int ix = 0; ix < rangeX; ix++) {
             xyz[MAXX] = xyz[MINX] + maxUDiv[ix] - minUDiv[ix];
             xyz[MINZ] = z + state.renderMinZ;
@@ -127,7 +129,21 @@ public class RenderHelperLL
                 state.brightnessBottomLeft = brightnessLerp[ix][iz + 1];
                 state.brightnessBottomRight = brightnessLerp[ix + 1][iz + 1];
 
-                setUV(icon, minUDiv[ix], minVDiv[iz], maxUDiv[ix], maxVDiv[iz]);
+                switch (rotate) {
+                    case RenderHelperState.ROTATE90:
+                        setUV(icon, maxVDiv[ix], minUDiv[iz], minVDiv[ix], maxUDiv[iz]);
+                        break;
+                    case RenderHelperState.ROTATE180:
+                        setUV(icon, maxUDiv[ix], maxVDiv[iz], minUDiv[ix], minVDiv[iz]);
+                        break;
+                    case RenderHelperState.ROTATE270:
+                        setUV(icon, minVDiv[ix], maxUDiv[iz], maxVDiv[ix], minUDiv[iz]);
+                        break;
+                    default:
+                        setUV(icon, minUDiv[ix], minVDiv[iz], maxUDiv[ix], maxVDiv[iz]);
+                        break;
+                }
+
                 renderXYZUVAO(xyzuvMap[face]);
 
                 xyz[MINZ] = xyz[MAXZ];

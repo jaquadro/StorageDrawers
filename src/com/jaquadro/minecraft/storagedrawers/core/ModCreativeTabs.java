@@ -27,6 +27,8 @@ public final class ModCreativeTabs
             return Item.getItemFromBlock(ModBlocks.fullDrawers2);
         if (config.isBlockEnabled("fulldrawers4"))
             return Item.getItemFromBlock(ModBlocks.fullDrawers4);
+        if (config.isBlockEnabled("fulldrawers1"))
+            return Item.getItemFromBlock(ModBlocks.fullDrawers1);
         if (config.isBlockEnabled("halfdrawers2"))
             return Item.getItemFromBlock(ModBlocks.halfDrawers2);
         if (config.isBlockEnabled("halfdrawers4"))

@@ -1,7 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IIngredientHandler;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IRecipeHandler;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;

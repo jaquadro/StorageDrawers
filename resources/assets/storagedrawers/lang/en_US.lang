@@ -1,4 +1,5 @@
 itemGroup.storageDrawers=Storage Drawers
+itemGroup.storageDrawersSorting=Storage Drawers - Sorting
 
 # Items
 item.upgradeTemplate.name=Upgrade Template
@@ -15,6 +16,8 @@ item.upgradeLock.name=Drawer Key
 item.upgradeLock.description=Locks and unlocks drawers
 item.upgradeVoid.name=Void Upgrade
 item.upgradeVoid.description=Destroys excess items
+item.upgradeSorting.name=Sorting Upgrade
+item.upgradeSorting.description=For Refined Relocation
 
 # Blocks
 tile.fullDrawers1.oak.name=Oak Drawer
@@ -73,6 +76,7 @@ storageDrawers.waila.level=Upgrade Level: %s
 storageDrawers.waila.drawer=#%s: %s
 storageDrawers.waila.locked=Locked
 storageDrawers.waila.void=Void
+storageDrawers.waila.sorting=Sorting
 
 # Configuration
 storageDrawers.config.title=Storage Drawers Configuration
@@ -107,6 +111,9 @@ storageDrawers.config.prop.itemRenderType.tooltip=Render items in 3D or flat.
 storageDrawers.config.prop.enableIndicatorUpgrades=Enable Indicator Upgrades
 storageDrawers.config.prop.enableStorageUpgrades=Enable Storage Upgrades
 storageDrawers.config.prop.enableLockUpgrades=Enable Lock Upgrade
+storageDrawers.config.prop.enableVoidUpgrades=Enable Void Upgrade
+storageDrawers.config.prop.enableSortingUpgrades=Enable Sorting Upgrade
+storageDrawers.config.prop.enableSortingUpgrades.tooltip=Refined Relocation must be loaded.
 storageDrawers.config.prop.renderStorageUpgrades=Render Storage Upgrades
 storageDrawers.config.prop.creativeTabVanillaWoods=Creative Tab Vanilla Woods
 storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Enable all vanilla wood styles on creative tab.
@@ -134,3 +141,4 @@ storageDrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integra
 storageDrawers.config.integration.enableWaila=Enable WAILA Integration
 storageDrawers.config.integration.enableThaumcraft=Enable Thaumcraft Integration
 storageDrawers.config.integration.enableMineTweaker=Enable MineTweaker Integration
+storageDrawers.config.integration.enableRefinedRelocation=Enable Refined Relocation Integration
