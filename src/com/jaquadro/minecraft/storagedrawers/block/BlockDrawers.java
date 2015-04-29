@@ -306,9 +306,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (StorageDrawers.config.cache.debugTrace)
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "IExtendedBlockClickHandler.onBlockClicked");
 
-        PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, x, y, z, side, world);
-        if (event.isCanceled())
-            return;
+        if (!player.capabilities.isCreativeMode) {
+            PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, x, y, z, side, world);
+            if (event.isCanceled())
+                return;
+        }
 
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, x, y, z);
         if (tileDrawers.getDirection() != side)
