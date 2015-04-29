@@ -78,6 +78,8 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, ISidedI
         if (controllerCoord == null)
             return null;
 
+        ensureInitialized();
+
         TileEntity te = worldObj.getTileEntity(controllerCoord.x(), controllerCoord.y(), controllerCoord.z());
         if (!(te instanceof TileEntityController)) {
             controllerCoord = null;
