@@ -213,6 +213,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             }
         }
 
+        if (count > 0)
+            StorageDrawers.proxy.updatePlayerInventory(player);
+
         markDirty();
         return count;
     }
