@@ -41,6 +41,11 @@ public class RefinedRelocation extends IntegrationModule
     }
 
     @Override
+    protected String versionPattern () {
+        return "[1.0.8b,)";
+    }
+
+    @Override
     public void init () throws Throwable {
         fullDrawers1 = new BlockSortingDrawers("fullDrawers1", 1, false);
         fullDrawers2 = new BlockSortingDrawers("fullDrawers2", 2, false);

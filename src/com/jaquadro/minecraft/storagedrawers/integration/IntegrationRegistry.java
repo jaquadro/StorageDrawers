@@ -40,7 +40,8 @@ public class IntegrationRegistry
     }
 
     public void add (IntegrationModule module) {
-        registry.add(module);
+        if (module.versionCheck())
+            registry.add(module);
     }
 
     public void init () {
