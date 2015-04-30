@@ -294,7 +294,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             float hitY = (float)(posn.hitVec.yCoord - posn.blockY);
             float hitZ = (float)(posn.hitVec.zCoord - posn.blockZ);
 
-            StorageDrawers.network.sendToServer(new BlockClickMessage(x, y, z, posn.sideHit, hitX, hitY, hitZ));
+            StorageDrawers.network.sendToServer(new BlockClickMessage(x, y, z, posn.sideHit, hitX, hitY, hitZ, StorageDrawers.config.cache.invertShift));
 
             if (StorageDrawers.config.cache.debugTrace)
                 FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockClicked with " + posn.toString());
@@ -302,7 +302,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
-    public void onBlockClicked (World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+    public void onBlockClicked (World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ, boolean invertShift) {
         if (StorageDrawers.config.cache.debugTrace)
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "IExtendedBlockClickHandler.onBlockClicked");
 
@@ -321,7 +321,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
         ItemStack item = null;
         // if invertSHift is true this will happen when the player is not shifting
-        if (player.isSneaking() != StorageDrawers.config.cache.invertShift)
+        if (player.isSneaking() != invertShift)
             item = tileDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
         else
             item = tileDrawers.takeItemsFromSlot(slot, 1);
