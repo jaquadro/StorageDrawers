@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
+import com.jaquadro.minecraft.storagedrawers.item.ItemController;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -20,6 +21,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.Random;
 
@@ -39,6 +41,9 @@ public class BlockController extends BlockContainer
     public BlockController (String name) {
         super(Material.rock);
 
+        GameRegistry.registerBlock(this, ItemController.class, "controller");
+        GameRegistry.registerTileEntity(TileEntityController.class, ModBlocks.getQualifiedName(this));
+
         setUnlocalizedName(name);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
@@ -56,7 +61,7 @@ public class BlockController extends BlockContainer
 
     @Override
     public int getRenderType () {
-        return StorageDrawers.proxy.controllerRenderID;
+        return 3;
     }
 
     @Override

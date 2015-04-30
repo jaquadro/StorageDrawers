@@ -21,6 +21,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -28,9 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
+public class TileEntityDrawersRenderer //extends TileEntitySpecialRenderer
 {
-    private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
+    /*private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
 
     private RenderItem itemRenderer = new RenderItem() {
         private RenderBlocks renderBlocksRi = new RenderBlocks();
@@ -500,5 +502,5 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
     private float getOffsetXForSide (ForgeDirection side, float x) {
         return Math.abs(offsetX[side.ordinal()] - x);
-    }
+    }*/
 }

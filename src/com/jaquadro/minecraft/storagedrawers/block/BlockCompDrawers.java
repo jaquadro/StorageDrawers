@@ -4,15 +4,11 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -21,7 +17,7 @@ import java.util.List;
 
 public class BlockCompDrawers extends BlockDrawers
 {
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     private IIcon[] iconFront;
 
     @SideOnly(Side.CLIENT)
@@ -32,7 +28,7 @@ public class BlockCompDrawers extends BlockDrawers
     @SideOnly(Side.CLIENT)
     private IIcon iconSide;
     @SideOnly(Side.CLIENT)
-    private IIcon iconSideEtched;
+    private IIcon iconSideEtched;*/
 
     public BlockCompDrawers (String blockName) {
         super(Material.rock, blockName, 3, false);
@@ -61,7 +57,7 @@ public class BlockCompDrawers extends BlockDrawers
         list.add(new ItemStack(item, 1, 0));
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconTrim (int meta) {
         return iconTrim;
@@ -142,5 +138,5 @@ public class BlockCompDrawers extends BlockDrawers
         iconTrim = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_trim");
         iconSide = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_side");
         iconSideEtched = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_side_2");
-    }
+    }*/
 }

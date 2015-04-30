@@ -17,13 +17,13 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.8.0-1.4.0"
+version = "1.8.0-2.0.0"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
 
 minecraft {
-    version = "1.8-11.14.1.1354"
-    assetDir = "runtime/assets"
+    version = "1.8-11.14.1.1397"
+    assetDir = "runtime-1.8/assets"
 
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.

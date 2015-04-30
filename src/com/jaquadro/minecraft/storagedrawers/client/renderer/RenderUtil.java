@@ -3,15 +3,13 @@ package com.jaquadro.minecraft.storagedrawers.client.renderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 
 public final class RenderUtil
 {
-    private static float[] colorScratch = new float[3];
+    /*private static float[] colorScratch = new float[3];
 
     private RenderUtil () { }
 
@@ -1083,5 +1081,5 @@ public final class RenderUtil
         float brightBlk = (brightMin & 255) * fMin + (brightMax & 255) * fMax;
 
         return ((int)brightSky & 255) << 16 | ((int)brightBlk & 255);
-    }
+    }*/
 }

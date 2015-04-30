@@ -1,8 +1,8 @@
 {
-    "parent": "block/drawer_orientable",
+    "parent": "StorageDrawers:block/drawer_orientable",
     "textures": {
-        "top": "blocks/drawers_controller_front",
-        "front": "blocks/drawers_comp_side",
-        "side": "blocks/drawers_comp_side_2"
+        "top": "StorageDrawers:blocks/drawers_comp_side",
+        "front": "StorageDrawers:blocks/drawers_controller_front",
+        "side": "StorageDrawers:blocks/drawers_comp_side_2"
     }
 }

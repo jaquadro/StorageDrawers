@@ -6,17 +6,13 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
-public class DrawersRenderer implements ISimpleBlockRenderingHandler
+public class DrawersRenderer //implements ISimpleBlockRenderingHandler
 {
-    private static final double unit = .0625f;
+    /*private static final double unit = .0625f;
 
     private ModularBoxRenderer boxRenderer = new ModularBoxRenderer();
 
@@ -311,5 +307,5 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
     @Override
     public int getRenderId () {
         return StorageDrawers.proxy.drawersRenderID;
-    }
+    }*/
 }

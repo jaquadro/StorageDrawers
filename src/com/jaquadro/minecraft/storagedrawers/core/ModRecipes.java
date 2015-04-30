@@ -56,15 +56,15 @@ public class ModRecipes
                 'x', Items.stick, 'y', new ItemStack(ModBlocks.halfDrawers4, 1, OreDictionary.WILDCARD_VALUE));
 
         if (config.cache.enableStorageUpgrades) {
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgrade, 1, 2), "xyx", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, 2), "xyx", "yzy", "xyx",
                 'x', Items.iron_ingot, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgrade, 1, 3), "xyx", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, 3), "xyx", "yzy", "xyx",
                 'x', Items.gold_ingot, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgrade, 1, 4), "xyx", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, 4), "xyx", "yzy", "xyx",
                 'x', Blocks.obsidian, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgrade, 1, 5), "xyx", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, 5), "xyx", "yzy", "xyx",
                 'x', Items.diamond, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgrade, 1, 6), "xyx", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, 6), "xyx", "yzy", "xyx",
                 'x', Items.emerald, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
         }
 

@@ -32,7 +32,7 @@ public class ModBlocks
         halfDrawers2 = new BlockDrawers("halfDrawers2", 2, true);
         halfDrawers4 = new BlockDrawers("halfDrawers4", 4, true);
         compDrawers = new BlockCompDrawers("compDrawers");
-        controller = new BlockController("drawerController");
+        controller = new BlockController("controller");
 
         ConfigManager config = StorageDrawers.config;
 
@@ -61,8 +61,8 @@ public class ModBlocks
             GameRegistry.registerTileEntity(TileEntityDrawersComp.class, ModBlocks.getQualifiedName(compDrawers));
         }
         if (config.isBlockEnabled("controller")) {
-            GameRegistry.registerBlock(controller, ItemController.class, "controller");
-            GameRegistry.registerTileEntity(TileEntityController.class, ModBlocks.getQualifiedName(controller));
+            //GameRegistry.registerBlock(controller, ItemController.class, "controller");
+            //GameRegistry.registerTileEntity(TileEntityController.class, ModBlocks.getQualifiedName(controller));
         }
     }
 
