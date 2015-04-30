@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.client.renderer.DrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.ModelBakery;
@@ -45,5 +46,14 @@ public class ClientProxy extends CommonProxy
         }
 
         renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.controller), 0, new ModelResourceLocation(ModBlocks.getQualifiedName(ModBlocks.controller), "inventory"));
+        renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.compDrawers), 0, new ModelResourceLocation(ModBlocks.getQualifiedName(ModBlocks.compDrawers), "inventory"));
+
+        for (BlockPlanks.EnumType type : BlockPlanks.EnumType.values()) {
+            String resName = ModBlocks.getQualifiedName(ModBlocks.fullDrawers2) + "_" + type.getName();
+            ModelBakery.addVariantName(Item.getItemFromBlock(ModBlocks.fullDrawers2), resName);
+            renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.fullDrawers2), type.getMetadata(), new ModelResourceLocation(resName, "inventory"));
+        }
+
+
     }
 }

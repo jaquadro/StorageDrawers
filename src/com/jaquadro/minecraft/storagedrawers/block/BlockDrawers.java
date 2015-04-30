@@ -33,6 +33,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -121,7 +122,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public int getRenderType () {
-        return StorageDrawers.proxy.drawersRenderID;
+        return 3;
     }
 
     @Override
@@ -194,7 +195,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public IBlockState onBlockPlaced (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+        return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(VARIANT, BlockPlanks.EnumType.byMetadata(meta));
     }
 
     @Override
@@ -471,6 +472,15 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @Override
     protected BlockState createBlockState () {
         return new BlockState(this, new IProperty[] { VARIANT, FACING });
+    }
+
+    @Override
+    public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
+        if (state instanceof IExtendedBlockState) {
+            TileEntityDrawers tile = getTileEntity(world, pos);
+            return ((IExtendedBlockState) state).withProperty(FACING, EnumFacing.getFront(tile.getDirection()));
+        }
+        return state;
     }
 
     /*@SideOnly(Side.CLIENT)

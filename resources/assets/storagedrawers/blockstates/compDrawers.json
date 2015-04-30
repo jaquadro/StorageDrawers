@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "StorageDrawers:compDrawers" },
+        "facing=south": { "model": "StorageDrawers:compDrawers", "y": 180 },
+        "facing=west": { "model": "StorageDrawers:compDrawers", "y": 270 },
+        "facing=east": { "model": "StorageDrawers:compDrawers", "y": 90 }
+    }
+}

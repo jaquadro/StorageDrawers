@@ -1,0 +1,28 @@
+{
+    "variants": {
+        "facing=north,variant=oak": { "model": "StorageDrawers:fullDrawers2_oak" },
+        "facing=south,variant=oak": { "model": "StorageDrawers:fullDrawers2_oak", "y": 180 },
+        "facing=west,variant=oak": { "model": "StorageDrawers:fullDrawers2_oak", "y": 270 },
+        "facing=east,variant=oak": { "model": "StorageDrawers:fullDrawers2_oak", "y": 90 },
+        "facing=north,variant=spruce": { "model": "StorageDrawers:fullDrawers2_spruce" },
+        "facing=south,variant=spruce": { "model": "StorageDrawers:fullDrawers2_spruce", "y": 180 },
+        "facing=west,variant=spruce": { "model": "StorageDrawers:fullDrawers2_spruce", "y": 270 },
+        "facing=east,variant=spruce": { "model": "StorageDrawers:fullDrawers2_spruce", "y": 90 },
+        "facing=north,variant=birch": { "model": "StorageDrawers:fullDrawers2_birch" },
+        "facing=south,variant=birch": { "model": "StorageDrawers:fullDrawers2_birch", "y": 180 },
+        "facing=west,variant=birch": { "model": "StorageDrawers:fullDrawers2_birch", "y": 270 },
+        "facing=east,variant=birch": { "model": "StorageDrawers:fullDrawers2_birch", "y": 90 },
+        "facing=north,variant=jungle": { "model": "StorageDrawers:fullDrawers2_jungle" },
+        "facing=south,variant=jungle": { "model": "StorageDrawers:fullDrawers2_jungle", "y": 180 },
+        "facing=west,variant=jungle": { "model": "StorageDrawers:fullDrawers2_jungle", "y": 270 },
+        "facing=east,variant=jungle": { "model": "StorageDrawers:fullDrawers2_jungle", "y": 90 },
+        "facing=north,variant=acacia": { "model": "StorageDrawers:fullDrawers2_acacia" },
+        "facing=south,variant=acacia": { "model": "StorageDrawers:fullDrawers2_acacia", "y": 180 },
+        "facing=west,variant=acacia": { "model": "StorageDrawers:fullDrawers2_acacia", "y": 270 },
+        "facing=east,variant=acacia": { "model": "StorageDrawers:fullDrawers2_acacia", "y": 90 },
+        "facing=north,variant=dark_oak": { "model": "StorageDrawers:fullDrawers2_dark_oak" },
+        "facing=south,variant=dark_oak": { "model": "StorageDrawers:fullDrawers2_dark_oak", "y": 180 },
+        "facing=west,variant=dark_oak": { "model": "StorageDrawers:fullDrawers2_dark_oak", "y": 270 },
+        "facing=east,variant=dark_oak": { "model": "StorageDrawers:fullDrawers2_dark_oak", "y": 90 }
+    }
+}
