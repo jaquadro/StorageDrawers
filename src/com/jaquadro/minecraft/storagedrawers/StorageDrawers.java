@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers;
 
+import com.jaquadro.minecraft.storagedrawers.client.model.DrawerModelBakeEventHandler;
 import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.integration.IntegrationRegistry;
@@ -86,6 +87,7 @@ public class StorageDrawers
 
         FMLCommonHandler.instance().bus().register(instance);
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
+        MinecraftForge.EVENT_BUS.register(DrawerModelBakeEventHandler.instance);
 
         IntegrationRegistry.instance().init();
     }

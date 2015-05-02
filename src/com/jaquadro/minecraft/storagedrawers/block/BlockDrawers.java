@@ -33,7 +33,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -49,6 +52,7 @@ import java.util.Random;
 public class BlockDrawers extends BlockContainer implements IExtendedBlockClickHandler
 {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+    //public static final IUnlistedProperty<EnumFacing> FACING = new Properties.PropertyAdapter<EnumFacing>(PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL));
     public static final PropertyEnum VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
 
     //private static final ResourceLocation blockConfig = new ResourceLocation(StorageDrawers.MOD_ID + ":textures/blocks/block_config.mcmeta");
@@ -183,11 +187,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             if (facing == EnumFacing.EAST && blockEast.isFullBlock() && !blockWest.isFullBlock())
                 facing = EnumFacing.WEST;
 
-            world.setBlockState(pos, state.withProperty(FACING, facing), 2);
+            //world.setBlockState(pos, state.withProperty(FACING, facing), 2);
 
             TileEntityDrawers tile = getTileEntitySafe(world, pos);
             tile.setDirection(facing.ordinal());
-            tile.invalidate();
+            tile.markDirty();
         }
 
         super.onBlockAdded(world, pos, state);
@@ -195,12 +199,18 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public IBlockState onBlockPlaced (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(VARIANT, BlockPlanks.EnumType.byMetadata(meta));
+        return getDefaultState().withProperty(VARIANT, BlockPlanks.EnumType.byMetadata(meta));
     }
 
     @Override
     public void onBlockPlacedBy (World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack itemStack) {
-        world.setBlockState(pos, state.withProperty(FACING, entity.getHorizontalFacing().getOpposite()), 2);
+        EnumFacing facing = entity.getHorizontalFacing().getOpposite();
+
+        TileEntityDrawers tile = getTileEntitySafe(world, pos);
+        tile.setDirection(facing.ordinal());
+        tile.markDirty();
+
+        //world.setBlockState(pos, state.withProperty(FACING, entity.getHorizontalFacing().getOpposite()), 2);
     }
 
     @Override
@@ -454,7 +464,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public IBlockState getStateForEntityRender (IBlockState state) {
-        return getDefaultState().withProperty(FACING, EnumFacing.SOUTH);
+        return getDefaultState().withProperty(VARIANT, BlockPlanks.EnumType.OAK);
     }
 
     @Override
@@ -471,14 +481,18 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     protected BlockState createBlockState () {
-        return new BlockState(this, new IProperty[] { VARIANT, FACING });
+        return new ExtendedBlockState(this, new IProperty[] { VARIANT, FACING }, new IUnlistedProperty[0]);
     }
 
     @Override
     public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
         if (state instanceof IExtendedBlockState) {
             TileEntityDrawers tile = getTileEntity(world, pos);
-            return ((IExtendedBlockState) state).withProperty(FACING, EnumFacing.getFront(tile.getDirection()));
+            EnumFacing facing = EnumFacing.getFront(tile.getDirection());
+            if (facing.getAxis() == EnumFacing.Axis.Y)
+                facing = EnumFacing.NORTH;
+
+            return ((IExtendedBlockState) state).withProperty(FACING, facing).withProperty(VARIANT, state.getValue(VARIANT));
         }
         return state;
     }
