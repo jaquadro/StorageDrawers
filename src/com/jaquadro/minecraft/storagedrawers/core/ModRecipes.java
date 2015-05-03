@@ -1,59 +1,50 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ModRecipes
 {
+    public static ItemStack makeBasicDrawerItemStack (EnumBasicDrawer info, String material, int count) {
+        ItemStack stack = new ItemStack(ModBlocks.basicDrawers, count, info.getMetadata());
+
+        NBTTagCompound data = new NBTTagCompound();
+        data.setString("material", material);
+        stack.setTagCompound(data);
+
+        return stack;
+    }
+
     public void init () {
         ConfigManager config = StorageDrawers.config;
 
-        for (int i = 0; i < 6; i++) {
-            if (config.isBlockEnabled("fulldrawers1"))
-                GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers1, config.getBlockRecipeOutput("fulldrawers1"), i), "xxx", " y ", "xxx",
-                    'x', new ItemStack(Blocks.planks, 1, i), 'y', Blocks.chest);
-            if (config.isBlockEnabled("fulldrawers2"))
-                GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers2, config.getBlockRecipeOutput("fulldrawers2"), i), "xyx", "xxx", "xyx",
-                    'x', new ItemStack(Blocks.planks, 1, i), 'y', Blocks.chest);
-            if (config.isBlockEnabled("halfdrawers2"))
-                GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers2, config.getBlockRecipeOutput("halfdrawers2"), i), "xyx", "xxx", "xyx",
-                    'x', new ItemStack(Blocks.wooden_slab, 1, i), 'y', Blocks.chest);
-            if (config.isBlockEnabled("fulldrawers4"))
-                GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers4, config.getBlockRecipeOutput("fulldrawers4"), i), "yxy", "xxx", "yxy",
-                    'x', new ItemStack(Blocks.planks, 1, i), 'y', Blocks.chest);
-            if (config.isBlockEnabled("halfdrawers4"))
-                GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers4, config.getBlockRecipeOutput("halfdrawers4"), i), "yxy", "xxx", "yxy",
-                    'x', new ItemStack(Blocks.wooden_slab, 1, i), 'y', Blocks.chest);
+        for (EnumBasicDrawer type : EnumBasicDrawer.values()) {
+            for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
+                if (config.isBlockEnabled(type.getUnlocalizedName())) {
+                    ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL1, material.getName(), config.getBlockRecipeOutput(type.getUnlocalizedName()));
+                    GameRegistry.addRecipe(result, "xxx", " y ", "xxx", 'x', new ItemStack(Blocks.planks, 1, material.getMetadata()), 'y', Blocks.chest);
+                }
+            }
         }
 
         if (config.isBlockEnabled("compdrawers"))
             GameRegistry.addRecipe(new ItemStack(ModBlocks.compDrawers, config.getBlockRecipeOutput("compdrawers")), "xxx", "zwz", "xyx",
-                'x', new ItemStack(Blocks.stone), 'y', Items.iron_ingot, 'z', new ItemStack(Blocks.piston), 'w', new ItemStack(ModBlocks.fullDrawers2, 1, OreDictionary.WILDCARD_VALUE));
+                'x', new ItemStack(Blocks.stone), 'y', Items.iron_ingot, 'z', new ItemStack(Blocks.piston), 'w', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE));
 
         if (config.isBlockEnabled("controller"))
             GameRegistry.addRecipe(new ItemStack(ModBlocks.controller), "xxx", "yzy", "xwx",
-                'x', new ItemStack(Blocks.stone), 'y', Items.comparator, 'z', new ItemStack(ModBlocks.fullDrawers2, 1, OreDictionary.WILDCARD_VALUE), 'w', Items.diamond);
+                'x', new ItemStack(Blocks.stone), 'y', Items.comparator, 'z', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE), 'w', Items.diamond);
 
-        if (config.isBlockEnabled("fulldrawers1"))
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', Items.stick, 'y', new ItemStack(ModBlocks.fullDrawers1, 1, OreDictionary.WILDCARD_VALUE));
-        if (config.isBlockEnabled("fulldrawers2"))
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', Items.stick, 'y', new ItemStack(ModBlocks.fullDrawers2, 1, OreDictionary.WILDCARD_VALUE));
-        if (config.isBlockEnabled("halfdrawers2"))
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', Items.stick, 'y', new ItemStack(ModBlocks.halfDrawers2, 1, OreDictionary.WILDCARD_VALUE));
-        if (config.isBlockEnabled("fulldrawers4"))
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', Items.stick, 'y', new ItemStack(ModBlocks.fullDrawers4, 1, OreDictionary.WILDCARD_VALUE));
-        if (config.isBlockEnabled("halfdrawers4"))
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', Items.stick, 'y', new ItemStack(ModBlocks.halfDrawers4, 1, OreDictionary.WILDCARD_VALUE));
+        GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
+            'x', Items.stick, 'y', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE));
 
         if (config.cache.enableStorageUpgrades) {
             GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, 2), "xyx", "yzy", "xyx",

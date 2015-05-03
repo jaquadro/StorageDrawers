@@ -36,6 +36,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     private int[] autoSides = new int[] { 0, 1 };
 
     private int direction;
+    private String material;
     private int drawerCapacity = 1;
     private int storageLevel = 1;
     private int statusLevel = 0;
@@ -77,6 +78,19 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             autoSides[3] = 4;
             autoSides[4] = 5;
         }
+    }
+
+    public String getMaterial () {
+        return material;
+    }
+
+    public String getMaterialOrDefault () {
+        String mat = getMaterial();
+        return (mat != null) ? mat : "oak";
+    }
+
+    public void setMaterial (String material) {
+        this.material = material;
     }
 
     public int getStorageLevel () {
@@ -241,6 +255,10 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         try {
             setDirection(tag.getByte("Dir"));
 
+            material = null;
+            if (tag.hasKey("Mat"))
+                material = tag.getString("Mat");
+
             drawerCapacity = tag.getByte("Cap");
             storageLevel = tag.getByte("Lev");
 
@@ -281,6 +299,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         tag.setByte("Dir", (byte)direction);
         tag.setByte("Cap", (byte)drawerCapacity);
         tag.setByte("Lev", (byte) storageLevel);
+
+        if (material != null)
+            tag.setString("Mat", material);
 
         if (statusLevel > 0)
             tag.setByte("Stat", (byte)statusLevel);

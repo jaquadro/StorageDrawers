@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.item;
 import com.google.common.base.Function;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
@@ -10,6 +11,8 @@ import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
@@ -25,15 +28,21 @@ import java.util.List;
 
 public class ItemDrawers extends ItemMultiTexture
 {
+    private MeshDefinition meshResolver = new MeshDefinition();
+
     public ItemDrawers (Block block) {
         super(block, block, new Function() {
             @Nullable
             @Override
             public Object apply (Object input) {
                 ItemStack stack = (ItemStack)input;
-                return BlockPlanks.EnumType.byMetadata(stack.getMetadata()).getUnlocalizedName();
+                return EnumBasicDrawer.byMetadata(stack.getMetadata()).getUnlocalizedName();
             }
         });
+    }
+
+    public ItemMeshDefinition getMeshResolver () {
+        return meshResolver;
     }
 
     @Override
@@ -46,11 +55,15 @@ public class ItemDrawers extends ItemMultiTexture
             if (side != EnumFacing.UP && side != EnumFacing.DOWN)
                 tile.setDirection(side.ordinal());
 
-            BlockDrawers block = (BlockDrawers) theBlock;
-            if (tile instanceof TileEntityDrawersStandard)
-                ((TileEntityDrawersStandard)tile).setDrawerCount(block.drawerCount);
+            if (tile instanceof TileEntityDrawersStandard) {
+                EnumBasicDrawer info = EnumBasicDrawer.byMetadata(stack.getMetadata());
+                ((TileEntityDrawersStandard) tile).setDrawerCount(info.getDrawerCount());
 
-            tile.setDrawerCapacity(getCapacityForBlock(block));
+                if (stack.hasTagCompound() && stack.getTagCompound().hasKey("material"))
+                    tile.setMaterial(stack.getTagCompound().getString("material"));
+            }
+
+            tile.setDrawerCapacity(getCapacityForBlock(stack));
         }
 
         return true;
@@ -59,27 +72,63 @@ public class ItemDrawers extends ItemMultiTexture
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation (ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
-        Block block = Block.getBlockFromItem(itemStack.getItem());
-        list.add(StatCollector.translateToLocalFormatted("storageDrawers.drawers.description", getCapacityForBlock(block)));
+        if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("material")) {
+            String key = itemStack.getTagCompound().getString("material");
+            list.add(StatCollector.translateToLocalFormatted("storageDrawers.material", StatCollector.translateToLocalFormatted("storageDrawers.material." + key)));
+        }
+        list.add(StatCollector.translateToLocalFormatted("storageDrawers.drawers.description", getCapacityForBlock(itemStack)));
     }
 
-    private int getCapacityForBlock (Block block) {
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ModelResourceLocation getModel (ItemStack stack, EntityPlayer player, int useRemaining) {
+        return meshResolver.getModelLocation(stack);
+    }
+
+    private int getCapacityForBlock (ItemStack itemStack) {
         ConfigManager config = StorageDrawers.config;
         int count = 0;
 
-        if (block == ModBlocks.fullDrawers1)
-            count = config.getBlockBaseStorage("fulldrawers1");
-        else if (block == ModBlocks.fullDrawers2)
-            count = config.getBlockBaseStorage("fulldrawers2");
-        else if (block == ModBlocks.fullDrawers4)
-            count = config.getBlockBaseStorage("fulldrawers4");
-        else if (block == ModBlocks.halfDrawers2)
-            count = config.getBlockBaseStorage("halfdrawers2");
-        else if (block == ModBlocks.halfDrawers4)
-            count = config.getBlockBaseStorage("halfdrawers4");
-        else if (block == ModBlocks.compDrawers)
-            count = config.getBlockBaseStorage("compDrawers");
+        Block block = Block.getBlockFromItem(itemStack.getItem());
+        if (block == ModBlocks.basicDrawers) {
+            EnumBasicDrawer info = EnumBasicDrawer.byMetadata(itemStack.getMetadata());
+            switch (info) {
+                case FULL1:
+                    return config.getBlockBaseStorage("fulldrawers1");
+                case FULL2:
+                    return config.getBlockBaseStorage("fulldrawers2");
+                case FULL4:
+                    return config.getBlockBaseStorage("fulldrawers4");
+                case HALF2:
+                    return config.getBlockBaseStorage("halfdrawers2");
+                case HALF4:
+                    return config.getBlockBaseStorage("halfdrawers4");
+                default:
+                    return 0;
+            }
+        }
+        else if (block == ModBlocks.compDrawers) {
+            return config.getBlockBaseStorage("compDrawers");
+        }
 
-        return count;
+        return 0;
+    }
+
+    private class MeshDefinition implements ItemMeshDefinition {
+        @Override
+        public ModelResourceLocation getModelLocation (ItemStack stack) {
+            if (stack == null)
+                return null;
+
+            EnumBasicDrawer drawer = EnumBasicDrawer.byMetadata(stack.getMetadata());
+            EnumFacing facing = EnumFacing.NORTH;
+
+            String material = "oak";
+            if (stack.hasTagCompound() && stack.getTagCompound().hasKey("material"))
+                material = stack.getTagCompound().getString("material");
+
+            String key = StorageDrawers.MOD_ID + ":basicDrawers_" + drawer + "_" + material;
+            return new ModelResourceLocation(key, "inventory");
+        }
     }
 }

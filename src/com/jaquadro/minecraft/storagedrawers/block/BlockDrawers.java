@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
@@ -51,14 +52,15 @@ import java.util.Random;
 
 public class BlockDrawers extends BlockContainer implements IExtendedBlockClickHandler
 {
+    public static final PropertyEnum BLOCK = PropertyEnum.create("block", EnumBasicDrawer.class);
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     //public static final IUnlistedProperty<EnumFacing> FACING = new Properties.PropertyAdapter<EnumFacing>(PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL));
     public static final PropertyEnum VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
 
     //private static final ResourceLocation blockConfig = new ResourceLocation(StorageDrawers.MOD_ID + ":textures/blocks/block_config.mcmeta");
 
-    public final boolean halfDepth;
-    public final int drawerCount;
+    //public final boolean halfDepth;
+    //public final int drawerCount;
 
     //public float trimWidth = 0.0625f;
     //public float trimDepth = 0.0625f;
@@ -100,23 +102,45 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     //@SideOnly(Side.CLIENT)
     //private IIcon iconLockFace;
 
-    public BlockDrawers (String blockName, int drawerCount, boolean halfDepth) {
-        this(Material.wood, blockName, drawerCount, halfDepth);
+    public BlockDrawers (String blockName) {
+        this(Material.wood, blockName);
     }
 
-    protected BlockDrawers (Material material, String blockName, int drawerCount, boolean halfDepth) {
+    protected BlockDrawers (Material material, String blockName) {
         super(material);
-
-        this.drawerCount = drawerCount;
-        this.halfDepth = halfDepth;
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
         setStepSound(Block.soundTypeWood);
         setUnlocalizedName(blockName);
 
+        initDefaultState();
+    }
+
+    protected void initDefaultState () {
+        setDefaultState(blockState.getBaseState().withProperty(BLOCK, EnumBasicDrawer.FULL2));
         setDefaultState(blockState.getBaseState().withProperty(VARIANT, BlockPlanks.EnumType.OAK));
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+    }
+
+    protected int getDrawerCount (IBlockState state) {
+        if (state != null) {
+            EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
+            if (info != null)
+                return info.getDrawerCount();
+        }
+
+        return 0;
+    }
+
+    protected boolean isHalfDepth (IBlockState state) {
+        if (state != null) {
+            EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
+            if (info != null)
+                return info.isHalfDepth();
+        }
+
+        return false;
     }
 
     @Override
@@ -137,7 +161,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             return;
         }
 
-        float depth = halfDepth ? .5f : 1;
+        float depth = isHalfDepth(blockAccess.getBlockState(pos)) ? .5f : 1;
         switch (tile.getDirection()) {
             case 2:
                 setBlockBounds(0, 0, 1 - depth, 1, 1, 1);
@@ -156,9 +180,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public void setBlockBoundsForItemRender () {
-        if (halfDepth)
-            setBlockBounds(0, 0, 0, 1, 1, .5f);
-        else
+        //if (halfDepth)
+        //    setBlockBounds(0, 0, 0, 1, 1, .5f);
+        //else
             setBlockBounds(0, 0, 0, 1, 1, 1);
     }
 
@@ -199,7 +223,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public IBlockState onBlockPlaced (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return getDefaultState().withProperty(VARIANT, BlockPlanks.EnumType.byMetadata(meta));
+        return getDefaultState().withProperty(BLOCK, EnumBasicDrawer.byMetadata(meta));
     }
 
     @Override
@@ -272,7 +296,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (tileDrawers.getDirection() != side.ordinal())
             return false;
 
-        int slot = getDrawerSlot(side.ordinal(), hitX, hitY, hitZ);
+        int slot = getDrawerSlot(getDrawerCount(state), side.ordinal(), hitX, hitY, hitZ);
         int countAdded = tileDrawers.interactPutItemsIntoSlot(slot, player);
 
         if (countAdded > 0)
@@ -281,7 +305,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         return true;
     }
 
-    protected int getDrawerSlot (int side, float hitX, float hitY, float hitZ) {
+    protected int getDrawerSlot (int drawerCount, int side, float hitX, float hitY, float hitZ) {
         if (drawerCount == 1)
             return 0;
         if (drawerCount == 2)
@@ -337,7 +361,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (tileDrawers.getDirection() != side.ordinal())
             return;
 
-        int slot = getDrawerSlot(side.ordinal(), hitX, hitY, hitZ);
+        int slot = getDrawerSlot(getDrawerCount(world.getBlockState(pos)), side.ordinal(), hitX, hitY, hitZ);
         IDrawer drawer = tileDrawers.getDrawer(slot);
 
         ItemStack item = null;
@@ -358,7 +382,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public boolean isSideSolid (IBlockAccess world, BlockPos pos, EnumFacing side) {
-        if (halfDepth)
+        if (isHalfDepth(world.getBlockState(pos)))
             return false;
 
         if (side == EnumFacing.DOWN) {
@@ -453,35 +477,51 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public void getSubBlocks (Item item, CreativeTabs creativeTabs, List list) {
-        if (StorageDrawers.config.cache.creativeTabVanillaWoods) {
+        for (EnumBasicDrawer type : EnumBasicDrawer.values()) {
+            for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
+                ItemStack stack = new ItemStack(item, 1, type.getMetadata());
+
+                NBTTagCompound data = new NBTTagCompound();
+                data.setString("material", material.getName());
+                stack.setTagCompound(data);
+
+                list.add(stack);
+            }
+        }
+        /*if (StorageDrawers.config.cache.creativeTabVanillaWoods) {
             BlockPlanks.EnumType[] plankTypes = BlockPlanks.EnumType.values();
             for (int i = 0; i < plankTypes.length; i++)
                 list.add(new ItemStack(item, 1, plankTypes[i].getMetadata()));
         }
         else
-            list.add(new ItemStack(item, 1, BlockPlanks.EnumType.values()[0].getMetadata()));
+            list.add(new ItemStack(item, 1, BlockPlanks.EnumType.values()[0].getMetadata()));*/
     }
 
     @Override
     public IBlockState getStateForEntityRender (IBlockState state) {
-        return getDefaultState().withProperty(VARIANT, BlockPlanks.EnumType.OAK);
+        return getDefaultState();
     }
 
     @Override
     public IBlockState getStateFromMeta (int meta) {
-        IBlockState state = getDefaultState().withProperty(VARIANT, BlockPlanks.EnumType.byMetadata(meta));
+        IBlockState state = getDefaultState().withProperty(BLOCK, EnumBasicDrawer.byMetadata(meta));
         return state;
     }
 
     @Override
     public int getMetaFromState (IBlockState state) {
-        int meta = ((BlockPlanks.EnumType)state.getValue(VARIANT)).getMetadata();
+        int meta = ((EnumBasicDrawer)state.getValue(BLOCK)).getMetadata();
         return meta;
     }
 
     @Override
     protected BlockState createBlockState () {
-        return new ExtendedBlockState(this, new IProperty[] { VARIANT, FACING }, new IUnlistedProperty[0]);
+        return new ExtendedBlockState(this, new IProperty[] { BLOCK, VARIANT, FACING }, new IUnlistedProperty[0]);
+    }
+
+    @Override
+    public IBlockState getActualState (IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+        return super.getActualState(state, worldIn, pos);
     }
 
     @Override
@@ -492,9 +532,20 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             if (facing.getAxis() == EnumFacing.Axis.Y)
                 facing = EnumFacing.NORTH;
 
-            return ((IExtendedBlockState) state).withProperty(FACING, facing).withProperty(VARIANT, state.getValue(VARIANT));
+            BlockPlanks.EnumType woodType = translateMaterial(tile.getMaterialOrDefault());
+
+            return ((IExtendedBlockState) state).withProperty(BLOCK, state.getValue(BLOCK)).withProperty(FACING, facing).withProperty(VARIANT, woodType);
         }
         return state;
+    }
+
+    private BlockPlanks.EnumType translateMaterial (String materal) {
+        for (BlockPlanks.EnumType type : BlockPlanks.EnumType.values()) {
+            if (materal.equals(type.getName()))
+                return type;
+        }
+
+        return BlockPlanks.EnumType.OAK;
     }
 
     /*@SideOnly(Side.CLIENT)

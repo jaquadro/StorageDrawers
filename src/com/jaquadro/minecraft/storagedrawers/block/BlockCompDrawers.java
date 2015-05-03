@@ -5,13 +5,22 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
 
 import java.util.List;
 
@@ -31,13 +40,28 @@ public class BlockCompDrawers extends BlockDrawers
     private IIcon iconSideEtched;*/
 
     public BlockCompDrawers (String blockName) {
-        super(Material.rock, blockName, 3, false);
+        super(Material.rock, blockName);
 
         setStepSound(Block.soundTypeStone);
     }
 
     @Override
-    protected int getDrawerSlot (int side, float hitX, float hitY, float hitZ) {
+    protected void initDefaultState () {
+        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+    }
+
+    @Override
+    protected int getDrawerCount (IBlockState state) {
+        return 3;
+    }
+
+    @Override
+    protected boolean isHalfDepth (IBlockState state) {
+        return false;
+    }
+
+    @Override
+    protected int getDrawerSlot (int drawerCount, int side, float hitX, float hitY, float hitZ) {
         if (hitTop(hitY))
             return 0;
 
@@ -55,6 +79,34 @@ public class BlockCompDrawers extends BlockDrawers
     @Override
     public void getSubBlocks (Item item, CreativeTabs creativeTabs, List list) {
         list.add(new ItemStack(item, 1, 0));
+    }
+
+    @Override
+    public IBlockState getStateFromMeta (int meta) {
+        return getDefaultState();
+    }
+
+    @Override
+    public int getMetaFromState (IBlockState state) {
+        return 0;
+    }
+
+    @Override
+    protected BlockState createBlockState () {
+        return new ExtendedBlockState(this, new IProperty[] { FACING }, new IUnlistedProperty[0]);
+    }
+
+    @Override
+    public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
+        if (state instanceof IExtendedBlockState) {
+            TileEntityDrawers tile = getTileEntity(world, pos);
+            EnumFacing facing = EnumFacing.getFront(tile.getDirection());
+            if (facing.getAxis() == EnumFacing.Axis.Y)
+                facing = EnumFacing.NORTH;
+
+            return ((IExtendedBlockState) state).withProperty(FACING, facing);
+        }
+        return state;
     }
 
     /*@Override

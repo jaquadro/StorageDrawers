@@ -1,0 +1,8 @@
+{
+    "parent": "StorageDrawers:block/drawer_orientable",
+    "textures": {
+        "top": "StorageDrawers:blocks/drawers_jungle_side",
+        "front": "StorageDrawers:blocks/drawers_jungle_front_4",
+        "side": "StorageDrawers:blocks/drawers_jungle_side"
+    }
+}

@@ -4,11 +4,11 @@ import net.minecraft.util.IStringSerializable;
 
 public enum EnumBasicDrawer implements IStringSerializable
 {
-    FULL1(0, 1, false, "full1", "full1"),
-    FULL2(1, 2, false, "full2", "full2"),
-    FULL4(2, 4, false, "full4", "full4"),
-    HALF2(3, 2, true, "half2", "half2"),
-    HALF4(4, 4, true, "half4", "half4");
+    FULL1(0, 1, false, "full1", "fulldrawers1"),
+    FULL2(1, 2, false, "full2", "fulldrawers2"),
+    FULL4(2, 4, false, "full4", "fulldrawers4"),
+    HALF2(3, 2, true, "half2", "halfdrawers2"),
+    HALF4(4, 4, true, "half4", "halfdrawers4");
 
     private static final EnumBasicDrawer[] META_LOOKUP;
 
@@ -50,7 +50,7 @@ public enum EnumBasicDrawer implements IStringSerializable
 
     @Override
     public String toString () {
-        return unlocalizedName;
+        return getName();
     }
 
     @Override
