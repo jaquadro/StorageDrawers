@@ -54,19 +54,12 @@ public class ClientProxy extends CommonProxy
             for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
                 String resName = ModBlocks.getQualifiedName(ModBlocks.basicDrawers) + "_" + type.getName() + "_" + material.getName();
                 ModelBakery.addVariantName(Item.getItemFromBlock(ModBlocks.basicDrawers), resName);
-
-                if (Item.getItemFromBlock(ModBlocks.basicDrawers) instanceof ItemDrawers) {
-                    ItemDrawers itemDrawers = (ItemDrawers)Item.getItemFromBlock(ModBlocks.basicDrawers);
-                    renderItem.getItemModelMesher().register(itemDrawers, itemDrawers.getMeshResolver());
-                }
-                //renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.basicDrawers), type.getMetadata(), new ModelResourceLocation(resName + "_oak", "inventory"));
             }
         }
 
-        /*for (BlockPlanks.EnumType type : BlockPlanks.EnumType.values()) {
-            String resName = ModBlocks.getQualifiedName(ModBlocks.fullDrawers2) + "_" + type.getName();
-            ModelBakery.addVariantName(Item.getItemFromBlock(ModBlocks.fullDrawers2), resName);
-            renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.fullDrawers2), type.getMetadata(), new ModelResourceLocation(resName, "inventory"));
-        }*/
+        if (Item.getItemFromBlock(ModBlocks.basicDrawers) instanceof ItemDrawers) {
+            ItemDrawers itemDrawers = (ItemDrawers)Item.getItemFromBlock(ModBlocks.basicDrawers);
+            renderItem.getItemModelMesher().register(itemDrawers, itemDrawers.getMeshResolver());
+        }
     }
 }
