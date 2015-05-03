@@ -28,7 +28,7 @@ public class ClientProxy extends CommonProxy
         //RenderingRegistry.registerBlockHandler(drawersRenderID, new DrawersRenderer());
         //RenderingRegistry.registerBlockHandler(controllerRenderID, new ControllerRenderer());
 
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.class, new TileEntityDrawersRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.class, new TileEntityDrawersRenderer());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersComp.class, new TileEntityDrawersRenderer());
 
         RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();

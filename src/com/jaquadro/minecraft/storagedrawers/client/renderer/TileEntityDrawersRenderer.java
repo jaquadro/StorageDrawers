@@ -4,8 +4,11 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.render.IRenderLabel;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
@@ -14,12 +17,15 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,8 +36,222 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class TileEntityDrawersRenderer //extends TileEntitySpecialRenderer
+public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 {
+    //private float brightness;
+
+    private boolean[] renderAsBlock = new boolean[4];
+    private ItemStack[] renderStacks = new ItemStack[4];
+
+    private RenderItem renderItem;
+
+    private float itemOffset1X[] = new float[] { .5f };
+    private float itemOffset1Y[] = new float[] { 8.25f };
+
+    private float itemOffset2X[] = new float[] { .5f, .5f };
+    private float itemOffset2Y[] = new float[] { 10.25f, 2.25f };
+
+    private float itemOffset4X[] = new float[] { .25f, .25f, .75f, .75f };
+    private float itemOffset4Y[] = new float[] { 10.25f, 2.25f, 10.25f, 2.25f };
+
+    private float itemOffset3X[] = new float[] { .5f, .25f, .75f };
+    private float itemOffset3Y[] = new float[] { 9.75f, 2.25f, 2.25f };
+
+    private static int[] glStateRender = { GL11.GL_LIGHTING, GL11.GL_BLEND };
+    private List<int[]> savedGLStateRender = GLUtil.makeGLState(glStateRender);
+
+    private static int[] glStateItemRender = { GL11.GL_LIGHTING, GL11.GL_ALPHA_TEST, GL11.GL_BLEND };
+    private List<int[]> savedGLStateItemRender = GLUtil.makeGLState(glStateItemRender);
+
+    private static int[] glLightRender = { GL11.GL_LIGHT0, GL11.GL_LIGHT1, GL11.GL_COLOR_MATERIAL, GL12.GL_RESCALE_NORMAL };
+    private List<int[]> savedGLLightRender = GLUtil.makeGLState(glLightRender);
+
+    @Override
+    public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime, int destroyStage) {
+        TileEntityDrawers tileDrawers = (TileEntityDrawers) tile;
+        if (tileDrawers == null)
+            return;
+
+        float depth = 0;
+
+        IBlockState state = tile.getWorld().getBlockState(tile.getPos());
+        if (state == null)
+            return;
+
+        Block block = state.getBlock();
+        if (block instanceof BlockDrawers) {
+            if (state.getProperties().containsKey(BlockDrawers.BLOCK)) {
+                EnumBasicDrawer info = (EnumBasicDrawer)state.getValue(BlockDrawers.BLOCK);
+                depth = info.isHalfDepth() ? .5f : 1;
+            }
+        }
+        else
+            return;
+
+        GL11.glPushMatrix();
+        GL11.glTranslated(x, y, z);
+
+        renderItem = Minecraft.getMinecraft().getRenderItem();
+
+        EnumFacing side = EnumFacing.getFront(tileDrawers.getDirection());
+        int ambLight = tile.getWorld().getLightFor(EnumSkyBlock.SKY, tile.getPos().offset(side));
+        int lu = ambLight % 65536;
+        int lv = ambLight / 65536;
+        //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lu, lv);
+
+        //brightness = tile.getWorldObj().getLightBrightness(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ) * 1.25f;
+        //if (brightness > 1)
+        //    brightness = 1;
+
+        Minecraft mc = Minecraft.getMinecraft();
+        boolean cache = mc.gameSettings.fancyGraphics;
+        mc.gameSettings.fancyGraphics = true;
+
+        renderFastItemSet(tileDrawers, side, depth, partialTickTime);
+
+        mc.gameSettings.fancyGraphics = cache;
+
+        GL11.glPopMatrix();
+    }
+
+    private void renderFastItemSet (TileEntityDrawers tile, EnumFacing side, float depth, float partialTickTime) {
+        int drawerCount = tile.getDrawerCount();
+        boolean restoreItemState = false;
+        boolean restoreBlockState = false;
+
+        for (int i = 0; i < drawerCount; i++) {
+            renderStacks[i] = null;
+            if (!tile.isDrawerEnabled(i))
+                continue;
+
+            IDrawer drawer = tile.getDrawer(i);
+            ItemStack itemStack = drawer.getStoredItemPrototype();
+            if (itemStack == null)
+                continue;
+
+            renderStacks[i] = itemStack;
+            renderAsBlock[i] = isItemBlockType(itemStack);
+
+            if (renderAsBlock[i])
+                restoreBlockState = true;
+            else
+                restoreItemState = true;
+        }
+
+        if (restoreItemState || restoreBlockState)
+            GLUtil.saveGLState(savedGLStateItemRender, glStateItemRender);
+
+        for (int i = 0; i < drawerCount; i++) {
+            if (renderStacks[i] != null && !renderAsBlock[i])
+                renderFastItem(renderStacks[i], tile, i, side, depth, partialTickTime);
+        }
+
+        if (restoreBlockState) {
+            GLUtil.saveGLState(savedGLLightRender, glLightRender);
+            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
+        }
+
+        for (int i = 0; i < drawerCount; i++) {
+            if (renderStacks[i] != null && renderAsBlock[i])
+                renderFastItem(renderStacks[i], tile, i, side, depth, partialTickTime);
+        }
+
+        if (restoreBlockState) {
+            GLUtil.restoreGLState(savedGLLightRender);
+            GL11.glPopAttrib();
+        }
+
+        if (restoreItemState || restoreBlockState)
+            GLUtil.restoreGLState(savedGLStateItemRender);
+    }
+
+    private void renderFastItem (ItemStack itemStack, TileEntityDrawers tile, int slot, EnumFacing side, float depth, float partialTickTime) {
+        Minecraft mc = Minecraft.getMinecraft();
+        int drawerCount = tile.getDrawerCount();
+        float xunit = getXOffset(drawerCount, slot);
+        float yunit = getYOffset(drawerCount, slot);
+        float size = (drawerCount == 1) ? .5f : .25f;
+
+        BlockDrawers block = (BlockDrawers)tile.getBlockType();
+
+        GL11.glPushMatrix();
+
+        alignRendering(side);
+        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, .999f - depth + 0); // 0 = trimDepth
+
+        List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
+        for (int i = 0, n = renderHandlers.size(); i < n; i++) {
+            renderHandlers.get(i).render(tile, tile, slot, 0, partialTickTime);
+        }
+
+        GL11.glDisable(GL11.GL_LIGHTING);
+        renderItem.renderItemIntoGUI(itemStack, 0, 0);
+
+        //if (!ForgeHooksClient..renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
+        //    itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0, true);
+
+        GL11.glPopMatrix();
+    }
+
+    private boolean isItemBlockType (ItemStack itemStack) {
+        return itemStack.getItem() instanceof ItemBlock && renderItem.shouldRenderItemIn3D(itemStack);
+    }
+
+    private float getXOffset (int drawerCount, int slot) {
+        switch (drawerCount) {
+            case 1: return itemOffset1X[slot];
+            case 2: return itemOffset2X[slot];
+            case 3: return itemOffset3X[slot];
+            case 4: return itemOffset4X[slot];
+            default: return 0;
+        }
+    }
+
+    private float getYOffset (int drawerCount, int slot) {
+        switch (drawerCount) {
+            case 1: return itemOffset1Y[slot];
+            case 2: return itemOffset2Y[slot];
+            case 3: return itemOffset3Y[slot];
+            case 4: return itemOffset4Y[slot];
+            default: return 0;
+        }
+    }
+
+    private void alignRendering (EnumFacing side) {
+        GL11.glTranslatef(.5f, .5f, .5f);
+        GL11.glRotatef(180f, 0, 0, 1f);     // Render is upside-down: correct it.
+        GL11.glRotatef(getRotationYForSide2D(side), 0, 1, 0);
+        GL11.glTranslatef(-.5f, -.5f, -.5f);
+    }
+
+    private void moveRendering (float size, float offsetX, float offsetY, float offsetZ) {
+        GL11.glTranslatef(0, 0, offsetZ);
+        GL11.glScalef(1 / 16f, 1 / 16f, -.0001f);
+        GL11.glTranslatef(offsetX, offsetY, 0);
+        GL11.glScalef(size, size, 1);
+    }
+
+    private static final float[] sideRotationY2D = { 0, 0, 0, 2, 3, 1 };
+
+    private float getRotationYForSide2D (EnumFacing side) {
+        return sideRotationY2D[side.ordinal()] * 90;
+    }
+
+    private static final float[] offsetX = { 0, 0, 0, 0, 0, 0 };
+
+    private float getOffsetXForSide (EnumFacing side, float x) {
+        return Math.abs(offsetX[side.ordinal()] - x);
+    }
+
+    private class LocalRenderItem extends RenderItem {
+
+        public LocalRenderItem (TextureManager textureManager, ModelManager modelManager) {
+            super(textureManager, modelManager);
+        }
+
+
+    }
+
     /*private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
 
     private RenderItem itemRenderer = new RenderItem() {
