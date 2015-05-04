@@ -1,0 +1,71 @@
+package com.jaquadro.minecraft.storagedrawers.client.model;
+
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IRegistry;
+import net.minecraftforge.client.model.IFlexibleBakedModel;
+import net.minecraftforge.client.model.ISmartBlockModel;
+
+import java.util.*;
+
+public class CompDrawerModel extends IFlexibleBakedModel.Wrapper implements ISmartBlockModel
+{
+    private static final Set<ModelResourceLocation> resourceLocations = new HashSet<ModelResourceLocation>();
+    private static final Map<EnumCompDrawer, Map<EnumFacing, ModelResourceLocation>> stateMap = new HashMap<EnumCompDrawer, Map<EnumFacing, ModelResourceLocation>>();
+    private static final Map<ModelResourceLocation, IFlexibleBakedModel> modelCache = new HashMap<ModelResourceLocation, IFlexibleBakedModel>();
+
+    public static void initialize (IRegistry modelRegistry) {
+        initailizeResourceLocations();
+
+        for (ModelResourceLocation loc : resourceLocations) {
+            Object object = modelRegistry.getObject(loc);
+            if (object instanceof IFlexibleBakedModel) {
+                modelCache.put(loc, (IFlexibleBakedModel)object);
+                modelRegistry.putObject(loc, new CompDrawerModel((IFlexibleBakedModel)object));
+            }
+        }
+    }
+
+    public static void initailizeResourceLocations () {
+        for (EnumCompDrawer drawerType : EnumCompDrawer.values()) {
+            Map<EnumFacing, ModelResourceLocation> dirMap = new HashMap<EnumFacing, ModelResourceLocation>();
+            stateMap.put(drawerType, dirMap);
+
+            for (EnumFacing dir : EnumFacing.values()) {
+                if (dir.getAxis() == EnumFacing.Axis.Y)
+                    continue;
+
+                String key = StorageDrawers.MOD_ID + ":compDrawers#facing=" + dir + ",slots=" + drawerType;
+                ModelResourceLocation location = new ModelResourceLocation(key);
+
+                resourceLocations.add(location);
+                dirMap.put(dir, location);
+            }
+        }
+    }
+
+    public CompDrawerModel (IFlexibleBakedModel parent) {
+        super(parent, parent.getFormat());
+    }
+
+    @Override
+    public IFlexibleBakedModel handleBlockState (IBlockState state) {
+        EnumCompDrawer drawer = (EnumCompDrawer)state.getValue(BlockCompDrawers.SLOTS);
+        EnumFacing dir = (EnumFacing)state.getValue(BlockDrawers.FACING);
+
+        Map<EnumFacing, ModelResourceLocation> dirMap = stateMap.get(drawer);
+        if (dirMap == null)
+            return null;
+
+        ModelResourceLocation location = dirMap.get(dir);
+        if (location == null)
+            return null;
+
+        return modelCache.get(location);
+    }
+}

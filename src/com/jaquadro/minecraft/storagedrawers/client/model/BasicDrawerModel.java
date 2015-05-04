@@ -13,7 +13,7 @@ import net.minecraftforge.client.model.ISmartBlockModel;
 
 import java.util.*;
 
-public class DrawerModel extends IFlexibleBakedModel.Wrapper implements ISmartBlockModel
+public class BasicDrawerModel extends IFlexibleBakedModel.Wrapper implements ISmartBlockModel
 {
     private static final Set<ModelResourceLocation> resourceLocations = new HashSet<ModelResourceLocation>();
     private static final Map<EnumBasicDrawer, Map<EnumFacing, Map<BlockPlanks.EnumType, ModelResourceLocation>>> stateMap = new HashMap<EnumBasicDrawer, Map<EnumFacing, Map<BlockPlanks.EnumType, ModelResourceLocation>>>();
@@ -26,7 +26,7 @@ public class DrawerModel extends IFlexibleBakedModel.Wrapper implements ISmartBl
             Object object = modelRegistry.getObject(loc);
             if (object instanceof IFlexibleBakedModel) {
                 modelCache.put(loc, (IFlexibleBakedModel)object);
-                modelRegistry.putObject(loc, new DrawerModel((IFlexibleBakedModel)object));
+                modelRegistry.putObject(loc, new BasicDrawerModel((IFlexibleBakedModel)object));
             }
         }
     }
@@ -54,7 +54,7 @@ public class DrawerModel extends IFlexibleBakedModel.Wrapper implements ISmartBl
         }
     }
 
-    public DrawerModel (IFlexibleBakedModel parent) {
+    public BasicDrawerModel (IFlexibleBakedModel parent) {
         super(parent, parent.getFormat());
     }
 

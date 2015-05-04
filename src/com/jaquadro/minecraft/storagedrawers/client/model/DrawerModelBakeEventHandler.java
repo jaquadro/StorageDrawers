@@ -11,6 +11,7 @@ public class DrawerModelBakeEventHandler
 
     @SubscribeEvent
     public void onModelBakeEvent (ModelBakeEvent event) {
-        DrawerModel.initialize(event.modelRegistry);
+        BasicDrawerModel.initialize(event.modelRegistry);
+        CompDrawerModel.initialize(event.modelRegistry);
     }
 }

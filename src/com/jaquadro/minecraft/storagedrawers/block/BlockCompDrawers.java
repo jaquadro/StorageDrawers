@@ -8,9 +8,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
@@ -26,18 +28,8 @@ import java.util.List;
 
 public class BlockCompDrawers extends BlockDrawers
 {
-    /*@SideOnly(Side.CLIENT)
-    private IIcon[] iconFront;
+    public static final PropertyEnum SLOTS = PropertyEnum.create("slots", EnumCompDrawer.class);
 
-    @SideOnly(Side.CLIENT)
-    private IIcon[][] iconFrontInd;
-
-    @SideOnly(Side.CLIENT)
-    private IIcon iconTrim;
-    @SideOnly(Side.CLIENT)
-    private IIcon iconSide;
-    @SideOnly(Side.CLIENT)
-    private IIcon iconSideEtched;*/
 
     public BlockCompDrawers (String blockName) {
         super(Material.rock, blockName);
@@ -47,7 +39,7 @@ public class BlockCompDrawers extends BlockDrawers
 
     @Override
     protected void initDefaultState () {
-        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+        setDefaultState(blockState.getBaseState().withProperty(SLOTS, EnumCompDrawer.OPEN1).withProperty(FACING, EnumFacing.NORTH));
     }
 
     @Override
@@ -72,6 +64,11 @@ public class BlockCompDrawers extends BlockDrawers
     }
 
     @Override
+    public IBlockState onBlockPlaced (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+        return getDefaultState();
+    }
+
+    @Override
     public TileEntityDrawers createNewTileEntity (World world, int meta) {
         return new TileEntityDrawersComp();
     }
@@ -93,7 +90,7 @@ public class BlockCompDrawers extends BlockDrawers
 
     @Override
     protected BlockState createBlockState () {
-        return new ExtendedBlockState(this, new IProperty[] { FACING }, new IUnlistedProperty[0]);
+        return new ExtendedBlockState(this, new IProperty[] { SLOTS, FACING }, new IUnlistedProperty[0]);
     }
 
     @Override
@@ -104,7 +101,13 @@ public class BlockCompDrawers extends BlockDrawers
             if (facing.getAxis() == EnumFacing.Axis.Y)
                 facing = EnumFacing.NORTH;
 
-            return ((IExtendedBlockState) state).withProperty(FACING, facing);
+            EnumCompDrawer slots = EnumCompDrawer.OPEN1;
+            if (tile.isDrawerEnabled(1))
+                slots = EnumCompDrawer.OPEN2;
+            if (tile.isDrawerEnabled(2))
+                slots = EnumCompDrawer.OPEN3;
+
+            return ((IExtendedBlockState) state).withProperty(FACING, facing).withProperty(SLOTS, slots);
         }
         return state;
     }

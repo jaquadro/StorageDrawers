@@ -49,6 +49,11 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
     }
 
     protected void refreshOreDictMatches () {
+        if (getStoredItemPrototype() == null) {
+            oreDictMatches = null;
+            return;
+        }
+
         int[] oreIDs = OreDictionary.getOreIDs(getStoredItemPrototype());
         if (oreIDs.length == 0)
             oreDictMatches = null;

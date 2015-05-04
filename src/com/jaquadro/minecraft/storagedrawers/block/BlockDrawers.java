@@ -54,53 +54,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 {
     public static final PropertyEnum BLOCK = PropertyEnum.create("block", EnumBasicDrawer.class);
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-    //public static final IUnlistedProperty<EnumFacing> FACING = new Properties.PropertyAdapter<EnumFacing>(PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL));
     public static final PropertyEnum VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
 
     //private static final ResourceLocation blockConfig = new ResourceLocation(StorageDrawers.MOD_ID + ":textures/blocks/block_config.mcmeta");
-
-    //public final boolean halfDepth;
-    //public final int drawerCount;
-
-    //public float trimWidth = 0.0625f;
-    //public float trimDepth = 0.0625f;
-    //public float indStart = 0;
-    //public float indEnd = 0;
-    //public int indSteps = 0;
-
-    /*@SideOnly(Side.CLIENT)
-    private IIcon[] iconSide;
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconSideV;
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconSideH;
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconFront1;
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconFront2;
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconFront4;
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconTrim;
-
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconOverlay;
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconOverlayV;
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconOverlayH;
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconOverlayTrim;
-
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconIndicator1;
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconIndicator2;
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconIndicator4;*/
-
-    //@SideOnly(Side.CLIENT)
-    //private IIcon iconLockFace;
 
     public BlockDrawers (String blockName) {
         this(Material.wood, blockName);
@@ -180,10 +136,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public void setBlockBoundsForItemRender () {
-        //if (halfDepth)
-        //    setBlockBounds(0, 0, 0, 1, 1, .5f);
-        //else
-            setBlockBounds(0, 0, 0, 1, 1, 1);
+        setBlockBounds(0, 0, 0, 1, 1, 1);
     }
 
     @Override
@@ -211,8 +164,6 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             if (facing == EnumFacing.EAST && blockEast.isFullBlock() && !blockWest.isFullBlock())
                 facing = EnumFacing.WEST;
 
-            //world.setBlockState(pos, state.withProperty(FACING, facing), 2);
-
             TileEntityDrawers tile = getTileEntitySafe(world, pos);
             tile.setDirection(facing.ordinal());
             tile.markDirty();
@@ -233,8 +184,6 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         TileEntityDrawers tile = getTileEntitySafe(world, pos);
         tile.setDirection(facing.ordinal());
         tile.markDirty();
-
-        //world.setBlockState(pos, state.withProperty(FACING, entity.getHorizontalFacing().getOpposite()), 2);
     }
 
     @Override
@@ -548,44 +497,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         return BlockPlanks.EnumType.OAK;
     }
 
-    /*@SideOnly(Side.CLIENT)
-    public IIcon getIconTrim (int meta) {
-        meta %= BlockWood.field_150096_a.length;
-        return iconTrim[meta];
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon (int side, int meta) {
-        meta %= BlockWood.field_150096_a.length;
-
-        switch (side) {
-            case 0:
-            case 1:
-                return halfDepth ? iconSideV[meta] : iconSide[meta];
-            case 2:
-            case 3:
-                return halfDepth ? iconSideV[meta] : iconSide[meta];
-            case 4:
-                switch (drawerCount) {
-                    case 1: return iconFront1[meta];
-                    case 2: return iconFront2[meta];
-                    case 4: return iconFront4[meta];
-                }
-                return null;
-            case 5:
-                return iconSide[meta];
-        }
-
-        return null;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side) {
-        return getIcon(blockAccess, x, y, z, side, 0);
-    }
-
+    /*
     @SideOnly(Side.CLIENT)
     public IIcon getOverlayIcon (IBlockAccess blockAccess, int x, int y, int z, int side, int level) {
         if (level == 0)
@@ -600,43 +512,6 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             return null;
 
         return iconOverlayTrim[level];
-    }
-
-    @SideOnly(Side.CLIENT)
-    private IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side, int level) {
-        int meta = blockAccess.getBlockMetadata(x, y, z) % BlockWood.field_150096_a.length;
-
-        TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
-        if (tile == null || side == tile.getDirection()) {
-            if (drawerCount == 1)
-                return  iconFront1[meta];
-            else if (drawerCount == 2)
-                return iconFront2[meta];
-            else
-                return iconFront4[meta];
-        }
-
-        switch (side) {
-            case 0:
-            case 1:
-                if (halfDepth) {
-                    switch (tile.getDirection()) {
-                        case 2:
-                        case 3:
-                            return (level > 0) ? iconOverlayH[level] : iconSideH[meta];
-                        case 4:
-                        case 5:
-                            return (level > 0) ? iconOverlayV[level] : iconSideV[meta];
-                    }
-                }
-                break;
-            default:
-                if (halfDepth)
-                    return (level > 0) ? iconOverlayV[level] : iconSideV[meta];
-                break;
-        }
-
-        return (level > 0) ? iconOverlay[level] : iconSide[meta];
     }
 
     @SideOnly(Side.CLIENT)

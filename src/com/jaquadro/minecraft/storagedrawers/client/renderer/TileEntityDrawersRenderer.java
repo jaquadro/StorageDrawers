@@ -72,7 +72,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         if (tileDrawers == null)
             return;
 
-        float depth = 0;
+        float depth = 1;
 
         IBlockState state = tile.getWorld().getBlockState(tile.getPos());
         if (state == null)

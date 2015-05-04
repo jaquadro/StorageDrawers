@@ -26,11 +26,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemDrawers extends ItemMultiTexture
+public class ItemBasicDrawers extends ItemMultiTexture
 {
     private MeshDefinition meshResolver = new MeshDefinition();
 
-    public ItemDrawers (Block block) {
+    public ItemBasicDrawers (Block block) {
         super(block, block, new Function() {
             @Nullable
             @Override

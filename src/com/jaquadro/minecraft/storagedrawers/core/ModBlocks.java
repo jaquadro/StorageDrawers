@@ -4,13 +4,11 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockController;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCompDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemController;
-import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
+import com.jaquadro.minecraft.storagedrawers.item.ItemBasicDrawers;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -38,7 +36,7 @@ public class ModBlocks
 
         ConfigManager config = StorageDrawers.config;
 
-        GameRegistry.registerBlock(basicDrawers, ItemDrawers.class, "basicDrawers");
+        GameRegistry.registerBlock(basicDrawers, ItemBasicDrawers.class, "basicDrawers");
         GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(basicDrawers));
 
         /*if (config.isBlockEnabled("fulldrawers1")) {
