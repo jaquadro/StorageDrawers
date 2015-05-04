@@ -2,11 +2,11 @@ itemGroup.storageDrawers=Storage Drawers
 
 # Items
 item.upgradeTemplate.name=Upgrade Template
-item.upgrade.iron.name=Storage Upgrade (II)
-item.upgrade.gold.name=Storage Upgrade (III)
-item.upgrade.obsidian.name=Storage Upgrade (IV)
-item.upgrade.diamond.name=Storage Upgrade (V)
-item.upgrade.emerald.name=Storage Upgrade (VI)
+item.upgradeStorage.iron.name=Storage Upgrade (II)
+item.upgradeStorage.gold.name=Storage Upgrade (III)
+item.upgradeStorage.obsidian.name=Storage Upgrade (IV)
+item.upgradeStorage.diamond.name=Storage Upgrade (V)
+item.upgradeStorage.emerald.name=Storage Upgrade (VI)
 item.upgradeStatus.level1.name=Status Upgrade (I)
 item.upgradeStatus.level1.description=Shows full storage
 item.upgradeStatus.level2.name=Status Upgrade (II)
@@ -30,7 +30,7 @@ storageDrawers.material.acacia=Acacia
 storageDrawers.material.dark_oak=Dark Oak
 
 tile.compDrawers.name=Compacting Drawer
-tile.drawerController.name=Drawer Controller
+tile.controller.name=Drawer Controller
 
 storageDrawers.drawers.description=Holds %d stacks per drawer
 storageDrawers.upgrade.description=Increases storage to %d times base value

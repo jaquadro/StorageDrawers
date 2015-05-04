@@ -22,7 +22,7 @@ public class ModBlocks
     //public static BlockDrawers halfDrawers4;
     public static BlockDrawers basicDrawers;
     public static BlockCompDrawers compDrawers;
-    public static BlockController controller;
+    //public static BlockController controller;
 
     public void init () {
         /*fullDrawers1 = new BlockDrawers("fullDrawers1", 1, false);
@@ -32,7 +32,7 @@ public class ModBlocks
         halfDrawers4 = new BlockDrawers("halfDrawers4", 4, true);*/
         basicDrawers = new BlockDrawers("basicDrawers");
         compDrawers = new BlockCompDrawers("compDrawers");
-        controller = new BlockController("controller");
+        //controller = new BlockController("controller");
 
         ConfigManager config = StorageDrawers.config;
 
