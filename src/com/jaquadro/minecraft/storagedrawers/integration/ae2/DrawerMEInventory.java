@@ -9,6 +9,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import net.minecraft.item.ItemStack;
 
 public class DrawerMEInventory implements IMEInventory<IAEItemStack>
@@ -55,6 +56,9 @@ public class DrawerMEInventory implements IMEInventory<IAEItemStack>
         }
 
         if (itemsLeft > 0) {
+            if (group instanceof IUpgradeProvider && ((IUpgradeProvider) group).isVoid())
+                return null;
+
             IAEItemStack overflow = AEApi.instance().storage().createItemStack(input.getItemStack());
             overflow.setStackSize(itemsLeft);
             return overflow;
