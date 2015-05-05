@@ -4,6 +4,8 @@ import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.client.model.BasicDrawerModel;
+import com.jaquadro.minecraft.storagedrawers.client.model.CompDrawerModel;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
@@ -14,10 +16,18 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ClientProxy extends CommonProxy
 {
+    @SubscribeEvent
+    public void onModelBakeEvent (ModelBakeEvent event) {
+        BasicDrawerModel.initialize(event.modelRegistry);
+        CompDrawerModel.initialize(event.modelRegistry);
+    }
+
     @Override
     public void registerRenderers () {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.class, new TileEntityDrawersRenderer());

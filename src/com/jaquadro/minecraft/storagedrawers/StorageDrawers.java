@@ -1,16 +1,11 @@
 package com.jaquadro.minecraft.storagedrawers;
 
-import com.jaquadro.minecraft.storagedrawers.client.model.DrawerModelBakeEventHandler;
 import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.integration.IntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import com.jaquadro.minecraft.storagedrawers.network.ControllerUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -86,8 +81,8 @@ public class StorageDrawers
         proxy.registerRenderers();
 
         FMLCommonHandler.instance().bus().register(instance);
-        MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
-        MinecraftForge.EVENT_BUS.register(DrawerModelBakeEventHandler.instance);
+        MinecraftForge.EVENT_BUS.register(proxy);
+        //MinecraftForge.EVENT_BUS.register(DrawerModelBakeEventHandler.instance);
 
         IntegrationRegistry.instance().init();
     }

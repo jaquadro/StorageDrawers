@@ -2,14 +2,12 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.base.Function;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -28,7 +26,8 @@ import java.util.List;
 
 public class ItemBasicDrawers extends ItemMultiTexture
 {
-    private MeshDefinition meshResolver = new MeshDefinition();
+    @SideOnly(Side.CLIENT)
+    private MeshDefinition meshResolver;
 
     public ItemBasicDrawers (Block block) {
         super(block, block, new Function() {
@@ -41,7 +40,10 @@ public class ItemBasicDrawers extends ItemMultiTexture
         });
     }
 
+    @SideOnly(Side.CLIENT)
     public ItemMeshDefinition getMeshResolver () {
+        if (meshResolver == null)
+            meshResolver = new MeshDefinition();
         return meshResolver;
     }
 
@@ -114,6 +116,7 @@ public class ItemBasicDrawers extends ItemMultiTexture
         return 0;
     }
 
+    @SideOnly(Side.CLIENT)
     private class MeshDefinition implements ItemMeshDefinition {
         @Override
         public ModelResourceLocation getModelLocation (ItemStack stack) {
