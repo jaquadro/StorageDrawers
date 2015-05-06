@@ -118,6 +118,8 @@ public class BlockController extends BlockContainer implements INetworked
 
     @Override
     public boolean isSideSolid (IBlockAccess world, int x, int y, int z, ForgeDirection side) {
+        if (getTileEntity(world, x, y, z) == null)
+            return true;
         if (side.ordinal() != getTileEntity(world, x, y, z).getDirection())
             return true;
 
