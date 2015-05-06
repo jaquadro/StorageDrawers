@@ -88,8 +88,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         else
             return;
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(x, y, z);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, z);
 
         renderItem = Minecraft.getMinecraft().getRenderItem();
 
@@ -111,7 +111,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         mc.gameSettings.fancyGraphics = cache;
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     private void renderFastItemSet (TileEntityDrawers tile, EnumFacing side, float depth, float partialTickTime) {
@@ -138,31 +138,44 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 restoreItemState = true;
         }
 
-        if (restoreItemState || restoreBlockState)
-            GLUtil.saveGLState(savedGLStateItemRender, glStateItemRender);
+        //if (restoreItemState || restoreBlockState)
+        //    GLUtil.saveGLState(savedGLStateItemRender, glStateItemRender);
+
+        //GlStateManager.pushAttrib();
 
         for (int i = 0; i < drawerCount; i++) {
             if (renderStacks[i] != null && !renderAsBlock[i])
                 renderFastItem(renderStacks[i], tile, i, side, depth, partialTickTime);
         }
 
-        if (restoreBlockState) {
-            GLUtil.saveGLState(savedGLLightRender, glLightRender);
-            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-        }
+        //if (restoreBlockState) {
+        //    GLUtil.saveGLState(savedGLLightRender, glLightRender);
+        //    GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
+        //}
 
         for (int i = 0; i < drawerCount; i++) {
             if (renderStacks[i] != null && renderAsBlock[i])
                 renderFastItem(renderStacks[i], tile, i, side, depth, partialTickTime);
         }
 
-        if (restoreBlockState) {
-            GLUtil.restoreGLState(savedGLLightRender);
-            GL11.glPopAttrib();
-        }
+        //GlStateManager.popAttrib();
 
-        if (restoreItemState || restoreBlockState)
-            GLUtil.restoreGLState(savedGLStateItemRender);
+        //if (restoreBlockState) {
+        //    GLUtil.restoreGLState(savedGLLightRender);
+        //    GL11.glPopAttrib();
+        //}
+
+        //if (restoreItemState || restoreBlockState)
+        //    GLUtil.restoreGLState(savedGLStateItemRender);
+
+        GlStateManager.enableLighting();
+        GlStateManager.enableLight(0);
+        GlStateManager.enableLight(1);
+        GlStateManager.enableColorMaterial();
+        GlStateManager.colorMaterial(1032, 5634);
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableNormalize();
+        GlStateManager.disableBlend();
     }
 
     private void renderFastItem (ItemStack itemStack, TileEntityDrawers tile, int slot, EnumFacing side, float depth, float partialTickTime) {
@@ -174,7 +187,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         BlockDrawers block = (BlockDrawers)tile.getBlockType();
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
 
         alignRendering(side);
         moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, .999f - depth + 0); // 0 = trimDepth
@@ -184,13 +197,10 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             renderHandlers.get(i).render(tile, tile, slot, 0, partialTickTime);
         }
 
-        GL11.glDisable(GL11.GL_LIGHTING);
+        GlStateManager.disableLighting();
         renderItem.renderItemIntoGUI(itemStack, 0, 0);
 
-        //if (!ForgeHooksClient..renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
-        //    itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0, true);
-
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     private boolean isItemBlockType (ItemStack itemStack) {
@@ -218,17 +228,17 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     }
 
     private void alignRendering (EnumFacing side) {
-        GL11.glTranslatef(.5f, .5f, .5f);
-        GL11.glRotatef(180f, 0, 0, 1f);     // Render is upside-down: correct it.
-        GL11.glRotatef(getRotationYForSide2D(side), 0, 1, 0);
-        GL11.glTranslatef(-.5f, -.5f, -.5f);
+        GlStateManager.translate(.5f, .5f, .5f);
+        GlStateManager.rotate(180, 0, 0, 1);
+        GlStateManager.rotate(getRotationYForSide2D(side), 0, 1, 0);
+        GlStateManager.translate(-.5f, -.5f, -.5f);
     }
 
     private void moveRendering (float size, float offsetX, float offsetY, float offsetZ) {
-        GL11.glTranslatef(0, 0, offsetZ);
-        GL11.glScalef(1 / 16f, 1 / 16f, -.0001f);
-        GL11.glTranslatef(offsetX, offsetY, 0);
-        GL11.glScalef(size, size, 1);
+        GlStateManager.translate(0, 0, offsetZ);
+        GlStateManager.scale(1 / 16f, 1 / 16f, -.0001f);
+        GlStateManager.translate(offsetX, offsetY, 0);
+        GlStateManager.scale(size, size, 1);
     }
 
     private static final float[] sideRotationY2D = { 0, 0, 0, 2, 3, 1 };
