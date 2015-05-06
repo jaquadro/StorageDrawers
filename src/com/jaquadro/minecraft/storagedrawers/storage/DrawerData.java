@@ -1,21 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
-import com.jaquadro.minecraft.storagedrawers.api.inventory.IInventoryAdapter;
-import com.jaquadro.minecraft.storagedrawers.api.inventory.SlotType;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.inventory.InventoryStack;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class DrawerData extends BaseDrawerData
+public class DrawerData extends BaseDrawerData implements IVoidable
 {
     private static final ItemStack nullStack = new ItemStack((Item)null);
 
@@ -197,6 +189,11 @@ public class DrawerData extends BaseDrawerData
 
         DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
         MinecraftForge.EVENT_BUS.post(event);
+    }
+
+    @Override
+    public boolean isVoid () {
+        return storageProvider.isVoid(slot);
     }
 }
 

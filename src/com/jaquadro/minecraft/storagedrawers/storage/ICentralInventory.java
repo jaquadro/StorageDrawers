@@ -23,6 +23,8 @@ public interface ICentralInventory
 
     public int getItemCapacityForInventoryStack (int slot);
 
+    public boolean isVoidSlot (int slot);
+
     public void readFromNBT (int slot, NBTTagCompound tag);
 
     public void writeToNBT (int slot, NBTTagCompound tag);

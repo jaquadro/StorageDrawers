@@ -486,6 +486,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         @Override
+        public boolean isVoidSlot (int slot) {
+            return isVoid();
+        }
+
+        @Override
         public void writeToNBT (int slot, NBTTagCompound tag) {
             ItemStack protoStack = getStoredItemPrototype(slot);
             if (protoStack != null && protoStack.getItem() != null) {
