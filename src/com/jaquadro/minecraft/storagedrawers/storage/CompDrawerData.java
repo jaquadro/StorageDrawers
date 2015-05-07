@@ -1,10 +1,11 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class CompDrawerData extends BaseDrawerData
+public class CompDrawerData extends BaseDrawerData implements IVoidable
 {
     private static final ItemStack nullStack = new ItemStack((Item)null);
 
@@ -60,6 +61,11 @@ public class CompDrawerData extends BaseDrawerData
     }
 
     @Override
+    protected int getItemCapacityForInventoryStack () {
+        return central.getItemCapacityForInventoryStack(slot);
+    }
+
+    @Override
     public boolean canItemBeStored (ItemStack itemPrototype) {
         if (getStoredItemPrototype() == null)
             return true;
@@ -91,5 +97,10 @@ public class CompDrawerData extends BaseDrawerData
     public void refresh () {
         reset();
         refreshOreDictMatches();
+    }
+
+    @Override
+    public boolean isVoid () {
+        return central.isVoidSlot(slot);
     }
 }

@@ -37,7 +37,24 @@ public class DrawersRenderer //implements ISimpleBlockRenderingHandler
         GL11.glRotatef(90, 0, 1, 0);
         GL11.glTranslatef(-.5f, -.5f, -.5f);
 
+        switch (side - 2) {
+            case 0:
+                renderer.uvRotateTop = 3;
+                break;
+            case 1:
+                renderer.uvRotateTop = 0;
+                break;
+            case 2:
+                renderer.uvRotateTop = 1;
+                break;
+            case 3:
+                renderer.uvRotateTop = 2;
+                break;
+        }
+
         renderExterior(block, 0, 0, 0,side, renderer);
+
+        renderer.uvRotateTop = 0;
 
         boxRenderer.setUnit(0);
         boxRenderer.setInteriorIcon(block.getIcon(side, metadata), ForgeDirection.OPPOSITES[side]);
@@ -63,6 +80,21 @@ public class DrawersRenderer //implements ISimpleBlockRenderingHandler
         int side = tile.getDirection();
         int meta = world.getBlockMetadata(x, y, z);
 
+        switch (side - 2) {
+            case 0:
+                renderer.uvRotateTop = 3;
+                break;
+            case 1:
+                renderer.uvRotateTop = 0;
+                break;
+            case 2:
+                renderer.uvRotateTop = 1;
+                break;
+            case 3:
+                renderer.uvRotateTop = 2;
+                break;
+        }
+
         boxRenderer.setUnit(block.trimWidth);
         boxRenderer.setColor(ModularBoxRenderer.COLOR_WHITE);
         for (int i = 0; i < 6; i++)
@@ -72,6 +104,8 @@ public class DrawersRenderer //implements ISimpleBlockRenderingHandler
         boxRenderer.setInteriorIcon(block.getIconTrim(meta));
 
         renderExterior(block, x, y, z, side, renderer);
+
+        renderer.uvRotateTop = 0;
 
         if (tile.getStorageLevel() > 1 && StorageDrawers.config.cache.renderStorageUpgrades) {
             for (int i = 0; i < 6; i++)
@@ -90,8 +124,38 @@ public class DrawersRenderer //implements ISimpleBlockRenderingHandler
 
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
             renderIndicator(block, x, y, z, side, renderer, tile.getStatusLevel());
+        if (StorageDrawers.config.cache.enableLockUpgrades)
+            renderLock(block, x, y, z, side, renderer, tile.isLocked());
+        if (StorageDrawers.config.cache.enableVoidUpgrades)
+            renderVoid(block, x, y, z, side, renderer, tile.isVoid());
 
         return true;
+    }
+
+    private void renderLock (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean locked) {
+        if (!locked)
+            return;
+
+        double depth = block.halfDepth ? .5 : 1;
+        IIcon iconLock = block.getLockIcon();
+
+        RenderHelper.instance.setRenderBounds(0.46875, 0.9375, 0, 0.53125, 1, depth + .005);
+        RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
+        RenderHelper.instance.renderPartialFace(RenderHelper.ZPOS, x, y, z, iconLock, 0, 0, 1, 1);
+        RenderHelper.instance.state.clearRotateTransform();
+    }
+
+    private void renderVoid (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean voided) {
+        if (!voided)
+            return;
+
+        double depth = block.halfDepth ? .5 : 1;
+        IIcon iconVoid = block.getVoidIcon();
+
+        RenderHelper.instance.setRenderBounds(1 - .0625, 0.9375, 0, 1, 1, depth + .005);
+        RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
+        RenderHelper.instance.renderPartialFace(RenderHelper.ZPOS, x, y, z, iconVoid, 0, 0, 1, 1);
+        RenderHelper.instance.state.clearRotateTransform();
     }
 
     private static final int[] cut = new int[] {

@@ -20,10 +20,11 @@ public class BlockClickMessage implements IMessage
     private float hitX;
     private float hitY;
     private float hitZ;
+    private boolean invertShift;
 
     public BlockClickMessage () { }
 
-    public BlockClickMessage (int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+    public BlockClickMessage (int x, int y, int z, int side, float hitX, float hitY, float hitZ, boolean invertShift) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -31,6 +32,7 @@ public class BlockClickMessage implements IMessage
         this.hitX = hitX;
         this.hitY = hitY;
         this.hitZ = hitZ;
+        this.invertShift = invertShift;
     }
 
     @Override
@@ -42,6 +44,7 @@ public class BlockClickMessage implements IMessage
         hitX = buf.readByte() / 16f;
         hitY = buf.readByte() / 16f;
         hitZ = buf.readByte() / 16f;
+        invertShift = buf.readBoolean();
     }
 
     @Override
@@ -53,6 +56,7 @@ public class BlockClickMessage implements IMessage
         buf.writeByte((int)(hitX * 16));
         buf.writeByte((int)(hitY * 16));
         buf.writeByte((int)(hitZ * 16));
+        buf.writeBoolean(invertShift);
     }
 
     public static class Handler implements IMessageHandler<BlockClickMessage, IMessage>
@@ -64,7 +68,7 @@ public class BlockClickMessage implements IMessage
                 BlockPos pos = new BlockPos(message.x, message.y, message.z);
                 Block block = world.getBlockState(pos).getBlock();
                 if (block instanceof IExtendedBlockClickHandler)
-                    ((IExtendedBlockClickHandler) block).onBlockClicked(world, pos, ctx.getServerHandler().playerEntity, EnumFacing.getFront(message.side), message.hitX, message.hitY, message.hitZ);
+                    ((IExtendedBlockClickHandler) block).onBlockClicked(world, pos, ctx.getServerHandler().playerEntity, EnumFacing.getFront(message.side), message.hitX, message.hitY, message.hitZ, message.invertShift);
             }
 
             return null;

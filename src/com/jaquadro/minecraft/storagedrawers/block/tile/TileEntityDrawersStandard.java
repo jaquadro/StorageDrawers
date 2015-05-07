@@ -48,5 +48,10 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         public boolean isLocked (int slot) {
             return TileEntityDrawersStandard.this.isLocked();
         }
+
+        @Override
+        public boolean isVoid (int slot) {
+            return TileEntityDrawersStandard.this.isVoid();
+        }
     }
 }

@@ -123,6 +123,8 @@ public class BlockController extends BlockContainer
 
     @Override
     public boolean isSideSolid (IBlockAccess world, BlockPos pos, EnumFacing side) {
+        if (getTileEntity(world, pos) == null)
+            return true;
         if (side.ordinal() != getTileEntity(world, pos).getDirection())
             return true;
 

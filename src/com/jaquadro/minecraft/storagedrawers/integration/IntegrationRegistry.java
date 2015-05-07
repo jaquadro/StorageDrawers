@@ -16,12 +16,16 @@ public class IntegrationRegistry
 
     static {
         IntegrationRegistry reg = instance();
-        if (Loader.isModLoaded("appliedenergistics2") && StorageDrawers.config.cache.enableAE2Integration)
+        /*if (Loader.isModLoaded("appliedenergistics2") && StorageDrawers.config.cache.enableAE2Integration)
             reg.add(new AppliedEnergistics());
         if (Loader.isModLoaded("Waila") && StorageDrawers.config.cache.enableWailaIntegration)
             reg.add(new Waila());
         if (Loader.isModLoaded("Thaumcraft") && StorageDrawers.config.cache.enableThaumcraftIntegration)
             reg.add(new Thaumcraft());
+        if (Loader.isModLoaded("MineTweaker3") && StorageDrawers.config.cache.enableMineTweakerIntegration)
+            reg.add(new MineTweaker());
+        if (Loader.isModLoaded("RefinedRelocation") && StorageDrawers.config.cache.enableRefinedRelocationIntegration)
+            reg.add(new RefinedRelocation());*/
     }
 
     private IntegrationRegistry () {
@@ -36,7 +40,8 @@ public class IntegrationRegistry
     }
 
     public void add (IntegrationModule module) {
-        registry.add(module);
+        if (module.versionCheck())
+            registry.add(module);
     }
 
     public void init () {

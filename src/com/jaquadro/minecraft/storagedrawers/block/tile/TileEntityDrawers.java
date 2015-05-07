@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive
 import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.StorageInventory;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
+import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -31,7 +32,7 @@ import org.apache.logging.log4j.Level;
 import java.util.Iterator;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends TileEntity implements IDrawerGroupInteractive, ISidedInventory
+public abstract class TileEntityDrawers extends TileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider
 {
     private IDrawer[] drawers;
     private IDrawerInventory inventory;
@@ -44,6 +45,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     private int storageLevel = 1;
     private int statusLevel = 0;
     private boolean locked = false;
+    private boolean voidUpgrade;
 
     private long lastClickTime;
     private UUID lastClickUUID;
@@ -65,7 +67,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         for (int i = 0; i < drawerCount; i++)
             drawers[i] = createDrawer(i);
 
-        inventory = new StorageInventory(this, getSideManager());
+        inventory = new StorageInventory(this, getSideManager(), this);
     }
 
     public int getDirection () {
@@ -142,6 +144,21 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         }
     }
 
+    public boolean isVoid () {
+        if (!StorageDrawers.config.cache.enableVoidUpgrades)
+            return false;
+
+        return voidUpgrade;
+    }
+
+    public void setVoid (boolean isVoid) {
+        this.voidUpgrade = isVoid;
+    }
+
+    public boolean isSorting () {
+        return false;
+    }
+
     public ItemStack takeItemsFromSlot (int slot, int count) {
         if (slot < 0 || slot >= getDrawerCount())
             return null;
@@ -214,6 +231,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             }
         }
 
+        if (count > 0)
+            StorageDrawers.proxy.updatePlayerInventory(player);
+
         markDirty();
         return count;
     }
@@ -273,6 +293,10 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             if (tag.hasKey("Lock"))
                 locked = tag.getBoolean("Lock");
 
+            voidUpgrade = false;
+            if (tag.hasKey("Void"))
+                voidUpgrade = tag.getBoolean("Void");
+
             NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
             int drawerCount = slots.tagCount();
             drawers = new IDrawer[slots.tagCount()];
@@ -283,7 +307,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
                 drawers[i].readFromNBT(slot);
             }
 
-            inventory = new StorageInventory(this, getSideManager());
+            inventory = new StorageInventory(this, getSideManager(), this);
         }
         catch (Throwable t) {
             trapLoadFailure(t, tag);
@@ -311,6 +335,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
         if (locked)
             tag.setBoolean("Lock", locked);
+
+        if (voidUpgrade)
+            tag.setBoolean("Void", voidUpgrade);
 
         NBTTagList slots = new NBTTagList();
         for (IDrawer drawer : drawers) {
@@ -351,6 +378,10 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.getDimensionId(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
 
         StorageDrawers.network.sendToAllAround(message, targetPoint);
+    }
+
+    public boolean canUpdate () {
+        return false;
     }
 
     // TODO: Eventually eliminate these expensive network updates

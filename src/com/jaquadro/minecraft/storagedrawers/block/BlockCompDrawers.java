@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import net.minecraft.block.Block;
@@ -26,7 +27,7 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 
 import java.util.List;
 
-public class BlockCompDrawers extends BlockDrawers
+public class BlockCompDrawers extends BlockDrawers implements INetworked
 {
     public static final PropertyEnum SLOTS = PropertyEnum.create("slots", EnumCompDrawer.class);
 

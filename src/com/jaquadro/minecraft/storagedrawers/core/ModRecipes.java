@@ -49,6 +49,23 @@ public class ModRecipes
             }
         }
 
+        // Fallback recipes
+        /*if (config.isBlockEnabled("fulldrawers1"))
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers1, config.getBlockRecipeOutput("fulldrawers1"), 0), "xxx", " y ", "xxx",
+                'x', "plankWood", 'y', Blocks.chest));
+        if (config.isBlockEnabled("fulldrawers2"))
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers2, config.getBlockRecipeOutput("fulldrawers2"), 0), "xyx", "xxx", "xyx",
+                'x', "plankWood", 'y', Blocks.chest));
+        if (config.isBlockEnabled("halfdrawers2"))
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfDrawers2, config.getBlockRecipeOutput("halfdrawers2"), 0), "xyx", "xxx", "xyx",
+                'x', "plankWood", 'y', Blocks.chest));
+        if (config.isBlockEnabled("fulldrawers4"))
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers4, config.getBlockRecipeOutput("fulldrawers4"), 0), "yxy", "xxx", "yxy",
+                'x', "plankWood", 'y', Blocks.chest));
+        if (config.isBlockEnabled("halfdrawers4"))
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfDrawers4, config.getBlockRecipeOutput("halfdrawers4"), 0), "yxy", "xxx", "yxy",
+                'x', "plankWood", 'y', Blocks.chest));*/
+
         if (config.isBlockEnabled("compdrawers"))
             GameRegistry.addRecipe(new ItemStack(ModBlocks.compDrawers, config.getBlockRecipeOutput("compdrawers")), "xxx", "zwz", "xyx",
                 'x', new ItemStack(Blocks.stone), 'y', Items.iron_ingot, 'z', new ItemStack(Blocks.piston), 'w', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE));
@@ -81,8 +98,13 @@ public class ModRecipes
         }
 
         if (config.cache.enableLockUpgrades) {
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeLock), " y ", "xzx", "yxy",
-                'x', Items.stick, 'y', Items.gold_nugget, 'z', ModItems.upgradeTemplate);
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeLock), "xy ", " y ", " z ",
+                'x', Items.gold_nugget, 'y', Items.gold_ingot, 'z', ModItems.upgradeTemplate);
+        }
+
+        if (config.cache.enableVoidUpgrades) {
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeVoid), "yyy", "xzx", "yyy",
+                'x', Blocks.obsidian, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
         }
     }
 }

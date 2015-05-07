@@ -1,6 +1,7 @@
 itemGroup.storageDrawers=储物抽屉
+itemGroup.storageDrawersSorting=储物抽屉|分拣升级
 
-# Items
+# 物件
 item.upgradeTemplate.name=升级模板
 item.upgrade.iron.name=抽屉容量升级 (II)
 item.upgrade.gold.name=抽屉容量升级 (III)
@@ -8,15 +9,24 @@ item.upgrade.obsidian.name=抽屉容量升级 (IV)
 item.upgrade.diamond.name=抽屉容量升级 (V)
 item.upgrade.emerald.name=抽屉容量升级 (VI)
 item.upgradeStatus.level1.name=状态显示升级 (I)
-item.upgradeStatus.level1.description=抽屉装满时亮起提示灯
+item.upgradeStatus.level1.description=抽屉装满时亮起提示灯.
 item.upgradeStatus.level2.name=状态显示升级 (II)
-item.upgradeStatus.level2.description=抽屉将近装满时亮起提示灯
-item.upgradeStatus.level3.name=状态显示升级 (III)
-item.upgradeStatus.level3.description=显示抽屉容量等级
-item.upgradeLock.name=锁定升级
-item.upgradeLock.description=使抽屉一直保留存储物的样板
+item.upgradeStatus.level2.description=显示抽屉容量等级.
+item.upgradeLock.name=抽屉钥匙
+item.upgradeLock.description=给抽屉上锁或解锁.
+item.upgradeVoid.name=清空升级
+item.upgradeVoid.description=销毁存储超过上限的物品.
+item.upgradeSorting.name=分拣升级
+item.upgradeSorting.description=将抽屉升级为分拣抽屉.
 
-# Blocks
+# 方块
+tile.fullDrawers1.oak.name=橡木抽屉
+tile.fullDrawers1.spruce.name=云杉木抽屉
+tile.fullDrawers1.birch.name=白桦木抽屉
+tile.fullDrawers1.jungle.name=丛林木抽屉
+tile.fullDrawers1.acacia.name=金合欢木抽屉
+tile.fullDrawers1.big_oak.name=深色橡木抽屉
+
 tile.fullDrawers2.oak.name=橡木抽屉 (1x2)
 tile.fullDrawers2.spruce.name=云杉木抽屉 (1x2)
 tile.fullDrawers2.birch.name=白桦木抽屉 (1x2)
@@ -46,33 +56,49 @@ tile.halfDrawers4.acacia.name=小型金合欢木抽屉 (2x2)
 tile.halfDrawers4.big_oak.name=小型深色橡木抽屉 (2x2)
 
 tile.compDrawers.name=致密抽屉
+tile.drawerController.name=抽屉管理器
+tile.controllerSlave.name=管理器传动方块
 
-storageDrawers.drawers.description=每个抽屉门可以储存%d组同类物品
-storageDrawers.upgrade.description=将抽屉容量升级为其基础容量的%d倍
+tile.trim.oak.name=橡木桥接方块
+tile.trim.spruce.name=云杉木桥接方块
+tile.trim.birch.name=白桦木桥接方块
+tile.trim.jungle.name=丛林木桥接方块
+tile.trim.acacia.name=金合欢木桥接方块
+tile.trim.big_oak.name=深色橡木桥接方块
 
-# Integration
-storageDrawers.waila.empty=空的
-storageDrawers.waila.level=抽屉等级: %s
-storageDrawers.waila.drawer=抽屉门 #%s: %s
-torageDrawers.waila.locked=已锁定
+storageDrawers.drawers.description=每个抽屉格可以储存%d组同类物品.
+storageDrawers.upgrade.description=将抽屉容量升级为其基础容量的%d倍.
+storageDrawers.controller.description=将放入的物品分配存入邻接的抽屉中.
 
-# Configuration
-storageDrawers.config.title=储物抽屉模组配置
+# 高亮显示
+storageDrawers.waila.empty=<空>
+storageDrawers.waila.level=级别: %s
+storageDrawers.waila.drawer=#%s: %s
+storageDrawers.waila.locked=锁定
+storageDrawers.waila.void=清空
+storageDrawers.waila.sorting=分拣
+
+# 配置
+storageDrawers.config.title=储物抽屉 模组配置
 
 storageDrawers.config.general=一般设定
-storageDrawers.config.general.tooltip=各种通用设定
+storageDrawers.config.general.tooltip=各种通用设定.
 
 storageDrawers.config.blocks=抽屉设定
-storageDrawers.config.blocks.tooltip=设定关于储物抽屉的配置
+storageDrawers.config.blocks.tooltip=设定关于储物抽屉的配置.
 
-storageDrawers.config.blocks.fullDrawers2=1x2 抽屉
-storageDrawers.config.blocks.fullDrawers4=2x2 抽屉
-storageDrawers.config.blocks.halfDrawers2=1x2 小型抽屉
-storageDrawers.config.blocks.halfDrawers4=2x2 小型抽屉
+storageDrawers.config.blocks.fullDrawers1=1x1抽屉
+storageDrawers.config.blocks.fullDrawers2=1x2抽屉
+storageDrawers.config.blocks.fullDrawers4=2x2抽屉
+storageDrawers.config.blocks.halfDrawers2=1x2小型抽屉
+storageDrawers.config.blocks.halfDrawers4=2x2小型抽屉
 storageDrawers.config.blocks.compDrawers=致密抽屉
+storageDrawers.config.blocks.controller=抽屉管理器
+storageDrawers.config.blocks.trim=桥接方块
+storageDrawers.config.blocks.controllerSlave=管理器传动方块
 
 storageDrawers.config.upgrades=升级设定
-storageDrawers.config.upgrades.tooltip=设定关于升级抽屉的配置
+storageDrawers.config.upgrades.tooltip=设定关于升级抽屉的配置.
 
 storageDrawers.config.upgrades.level2Mult=抽屉容量翻倍升级 (II)
 storageDrawers.config.upgrades.level3Mult=抽屉容量翻倍升级 (III)
@@ -81,26 +107,38 @@ storageDrawers.config.upgrades.level5Mult=抽屉容量翻倍升级 (V)
 storageDrawers.config.upgrades.level6Mult=抽屉容量翻倍升级 (VI)
 
 storageDrawers.config.prop.itemRenderType=存储物品显示设定
-storageDrawers.config.prop.itemRenderType.tooltip=设定抽屉是否渲染3D物品
+storageDrawers.config.prop.itemRenderType.tooltip=设定抽屉是否渲染3D物品.
 storageDrawers.config.prop.enableIndicatorUpgrades=允许状态显示升级
 storageDrawers.config.prop.enableStorageUpgrades=允许容量升级
 storageDrawers.config.prop.enableLockUpgrades=允许锁定升级
+storageDrawers.config.prop.enableVoidUpgrades=允许清空升级
+storageDrawers.config.prop.enableSortingUpgrades=允许分拣升级
+storageDrawers.config.prop.enableSortingUpgrades.tooltip=需安装精准重定位.
 storageDrawers.config.prop.renderStorageUpgrades=渲染容量升级显示
 storageDrawers.config.prop.creativeTabVanillaWoods=显示所有种类抽屉
-storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=允许创造模式窗口或NEI中显示所有种类抽屉
+storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=允许创造模式窗口或NEI中显示所有种类抽屉.
 storageDrawers.config.prop.enabled=启用
-storageDrawers.config.prop.enabled.tooltip=在游戏中启用该物品
+storageDrawers.config.prop.enabled.tooltip=在游戏中启用该物品.
 storageDrawers.config.prop.baseStorage=基础容量
-storageDrawers.config.prop.baseStorage.tooltip=设定每个抽屉门中可存储的物品组数量
+storageDrawers.config.prop.baseStorage.tooltip=设定每个抽屉格中可存储的物品组数量.
 storageDrawers.config.prop.recipeOutput=合成数量
-storageDrawers.config.prop.recipeOutput.tooltip=设定使用默认合成公式可合成多少抽屉
+storageDrawers.config.prop.recipeOutput.tooltip=设定使用默认合成公式可合成多少抽屉.
 storageDrawers.config.prop.enableSidedInput=允许抽屉输入
-storageDrawers.config.prop.enableSidedInput.tooltip=允许向抽屉侧面输入物品
+storageDrawers.config.prop.enableSidedInput.tooltip=允许向抽屉侧面输入物品.
 storageDrawers.config.prop.enableSidedOutput=允许抽屉输出
-storageDrawers.config.prop.enableSidedOutput.tooltip=允许从抽屉侧面输出物品
+storageDrawers.config.prop.enableSidedOutput.tooltip=允许从抽屉侧面输出物品.
+storageDrawers.config.prop.enableItemConversion=允许矿辞转换
+storageDrawers.config.prop.enableItemConversion.tooltip=使存入抽屉的物品通过矿辞自动统一.
+storageDrawers.config.prop.invertShift=Shift偏好
+storageDrawers.config.prop.invertShift.tooltip=对换shift与shift单击的组合键作用.
+storageDrawers.config.prop.enableDebugLogging=允许调试记录
+storageDrawers.config.prop.enableDebugLogging.tooltip=允许向log输入本模组的更多信息.
 
 storageDrawers.config.integration=关联设定
-storageDrawers.config.integration.tooltip=设定本模组与其它模组之间的联动性
+storageDrawers.config.integration.tooltip=设定本模组与其它模组之间的联动性.
 
 storageDrawers.config.integration.enableAE2=允许关联应用能源2
 storageDrawers.config.integration.enableWaila=允许关联Waila显示
+storageDrawers.config.integration.enableThaumcraft=允许关联神秘时代
+storageDrawers.config.integration.enableMineTweaker=允许关联MineTweaker
+storageDrawers.config.integration.enableRefinedRelocation=允许关联精准重定位

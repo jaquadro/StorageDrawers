@@ -73,8 +73,16 @@ public class Waila extends IntegrationModule
                 currenttip.add(StatCollector.translateToLocalFormatted("storageDrawers.waila.drawer", i + 1, name));
             }
 
+            String attrib = "";
             if (tile.isLocked())
-                currenttip.add(StatCollector.translateToLocal("storageDrawers.waila.locked"));
+                attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.locked");
+            if (tile.isVoid())
+                attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.void");
+            if (tile.isSorting())
+                attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.sorting");
+
+            if (!attrib.isEmpty())
+                currenttip.add(attrib);
 
             return currenttip;
         }

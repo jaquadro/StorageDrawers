@@ -1,46 +1,82 @@
 itemGroup.storageDrawers=Storage Drawers
+itemGroup.storageDrawersSorting=Storage Drawers - Sorting
 
 # Items
 item.upgradeTemplate.name=Upgrade Template
-item.upgradeStorage.iron.name=Storage Upgrade (II)
-item.upgradeStorage.gold.name=Storage Upgrade (III)
-item.upgradeStorage.obsidian.name=Storage Upgrade (IV)
-item.upgradeStorage.diamond.name=Storage Upgrade (V)
-item.upgradeStorage.emerald.name=Storage Upgrade (VI)
+item.upgrade.iron.name=Storage Upgrade (II)
+item.upgrade.gold.name=Storage Upgrade (III)
+item.upgrade.obsidian.name=Storage Upgrade (IV)
+item.upgrade.diamond.name=Storage Upgrade (V)
+item.upgrade.emerald.name=Storage Upgrade (VI)
 item.upgradeStatus.level1.name=Status Upgrade (I)
 item.upgradeStatus.level1.description=Shows full storage
 item.upgradeStatus.level2.name=Status Upgrade (II)
 item.upgradeStatus.level2.description=Shows fill level
-item.upgradeLock.name=Lock Upgrade
-item.upgradeLock.description=Keep associated items when empty
+item.upgradeLock.name=Drawer Key
+item.upgradeLock.description=Locks and unlocks drawers
+item.upgradeVoid.name=Void Upgrade
+item.upgradeVoid.description=Destroys excess items
+item.upgradeSorting.name=Sorting Upgrade
+item.upgradeSorting.description=For Refined Relocation
 
 # Blocks
-tile.basicDrawers.fulldrawers1.name=Basic Drawer
-tile.basicDrawers.fulldrawers2.name=Basic Drawers 1x2
-tile.basicDrawers.fulldrawers4.name=Basic Drawers 2x2
-tile.basicDrawers.halfdrawers2.name=Compact Basic Drawers 1x2
-tile.basicDrawers.halfdrawers4.name=Compact Basic Drawers 2x2
+tile.fullDrawers1.oak.name=Oak Drawer
+tile.fullDrawers1.spruce.name=Spruce Drawer
+tile.fullDrawers1.birch.name=Birch Drawer
+tile.fullDrawers1.jungle.name=Jungle Drawer
+tile.fullDrawers1.acacia.name=Acacia Drawer
+tile.fullDrawers1.big_oak.name=Dark Oak Drawer
 
-storageDrawers.material=Material: %s
-storageDrawers.material.oak=Oak
-storageDrawers.material.spruce=Spruce
-storageDrawers.material.birch=Birch
-storageDrawers.material.jungle=Jungle
-storageDrawers.material.acacia=Acacia
-storageDrawers.material.dark_oak=Dark Oak
+tile.fullDrawers2.oak.name=Oak Drawers 1x2
+tile.fullDrawers2.spruce.name=Spruce Drawers 1x2
+tile.fullDrawers2.birch.name=Birch Drawers 1x2
+tile.fullDrawers2.jungle.name=Jungle Drawers 1x2
+tile.fullDrawers2.acacia.name=Acacia Drawers 1x2
+tile.fullDrawers2.big_oak.name=Dark Oak Drawers 1x2
+
+tile.fullDrawers4.oak.name=Oak Drawers 2x2
+tile.fullDrawers4.spruce.name=Spruce Drawers 2x2
+tile.fullDrawers4.birch.name=Birch Drawers 2x2
+tile.fullDrawers4.jungle.name=Jungle Drawers 2x2
+tile.fullDrawers4.acacia.name=Acacia Drawers 2x2
+tile.fullDrawers4.big_oak.name=Dark Oak Drawers 2x2
+
+tile.halfDrawers2.oak.name=Compact Oak Drawers 1x2
+tile.halfDrawers2.spruce.name=Compact Spruce Drawers 1x2
+tile.halfDrawers2.birch.name=Compact Birch Drawers 1x2
+tile.halfDrawers2.jungle.name=Compact Jungle Drawers 1x2
+tile.halfDrawers2.acacia.name=Compact Acacia Drawers 1x2
+tile.halfDrawers2.big_oak.name=Compact Dark Oak Drawers 1x2
+
+tile.halfDrawers4.oak.name=Compact Oak Drawers 2x2
+tile.halfDrawers4.spruce.name=Compact Spruce Drawers 2x2
+tile.halfDrawers4.birch.name=Compact Birch Drawers 2x2
+tile.halfDrawers4.jungle.name=Compact Jungle Drawers 2x2
+tile.halfDrawers4.acacia.name=Compact Acacia Drawers 2x2
+tile.halfDrawers4.big_oak.name=Compact Dark Oak Drawers 2x2
 
 tile.compDrawers.name=Compacting Drawer
-tile.controller.name=Drawer Controller
+tile.drawerController.name=Drawer Controller
+tile.controllerSlave.name=Controller Slave
+
+tile.trim.oak.name=Oak Trim
+tile.trim.spruce.name=Spruce Trim
+tile.trim.birch.name=Birch Trim
+tile.trim.jungle.name=Jungle Trim
+tile.trim.acacia.name=Acacia Trim
+tile.trim.big_oak.name=Dark Oak Trim
 
 storageDrawers.drawers.description=Holds %d stacks per drawer
 storageDrawers.upgrade.description=Increases storage to %d times base value
 storageDrawers.controller.description=Interact with a bank of connected drawers
 
 # Integration
-storageDrawers.waila.empty=Empty
+storageDrawers.waila.empty=<Empty>
 storageDrawers.waila.level=Upgrade Level: %s
-storageDrawers.waila.drawer=Drawer #%s: %s
+storageDrawers.waila.drawer=#%s: %s
 storageDrawers.waila.locked=Locked
+storageDrawers.waila.void=Void
+storageDrawers.waila.sorting=Sorting
 
 # Configuration
 storageDrawers.config.title=Storage Drawers Configuration
@@ -58,6 +94,8 @@ storageDrawers.config.blocks.halfDrawers2=Compact Drawers 1x2
 storageDrawers.config.blocks.halfDrawers4=Compact Drawers 2x2
 storageDrawers.config.blocks.compDrawers=Compacting Drawer
 storageDrawers.config.blocks.controller=Drawer Controller
+storageDrawers.config.blocks.trim=Trim
+storageDrawers.config.blocks.controllerSlave=Controller Slave
 
 storageDrawers.config.upgrades=Upgrade Settings
 storageDrawers.config.upgrades.tooltip=Configure individual storage upgrades.
@@ -73,6 +111,9 @@ storageDrawers.config.prop.itemRenderType.tooltip=Render items in 3D or flat.
 storageDrawers.config.prop.enableIndicatorUpgrades=Enable Indicator Upgrades
 storageDrawers.config.prop.enableStorageUpgrades=Enable Storage Upgrades
 storageDrawers.config.prop.enableLockUpgrades=Enable Lock Upgrade
+storageDrawers.config.prop.enableVoidUpgrades=Enable Void Upgrade
+storageDrawers.config.prop.enableSortingUpgrades=Enable Sorting Upgrade
+storageDrawers.config.prop.enableSortingUpgrades.tooltip=Refined Relocation must be loaded.
 storageDrawers.config.prop.renderStorageUpgrades=Render Storage Upgrades
 storageDrawers.config.prop.creativeTabVanillaWoods=Creative Tab Vanilla Woods
 storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Enable all vanilla wood styles on creative tab.
@@ -86,6 +127,8 @@ storageDrawers.config.prop.enableSidedInput=Enable Sided Input
 storageDrawers.config.prop.enableSidedInput.tooltip=Other blocks can insert items into drawers.
 storageDrawers.config.prop.enableSidedOutput=Enable Sided Output
 storageDrawers.config.prop.enableSidedOutput.tooltip=Other blocks can extract items from drawers.
+storageDrawers.config.prop.enableItemConversion=Enable Item Conversion
+storageDrawers.config.prop.enableItemConversion.tooltip=Drawers auto-convert ore dictionary compatible items.
 storageDrawers.config.prop.invertShift=Invert Shift
 storageDrawers.config.prop.invertShift.tooltip=Inverts click and shift+click behavior.
 storageDrawers.config.prop.enableDebugLogging=Enable Debug Logging
@@ -97,3 +140,5 @@ storageDrawers.config.integration.tooltip=Configure integration with other mods.
 storageDrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integration
 storageDrawers.config.integration.enableWaila=Enable WAILA Integration
 storageDrawers.config.integration.enableThaumcraft=Enable Thaumcraft Integration
+storageDrawers.config.integration.enableMineTweaker=Enable MineTweaker Integration
+storageDrawers.config.integration.enableRefinedRelocation=Enable Refined Relocation Integration

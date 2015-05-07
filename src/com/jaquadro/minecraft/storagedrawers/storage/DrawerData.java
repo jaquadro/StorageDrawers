@@ -1,21 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
-import com.jaquadro.minecraft.storagedrawers.api.inventory.IInventoryAdapter;
-import com.jaquadro.minecraft.storagedrawers.api.inventory.SlotType;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.inventory.InventoryStack;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class DrawerData extends BaseDrawerData
+public class DrawerData extends BaseDrawerData implements IVoidable
 {
     private static final ItemStack nullStack = new ItemStack((Item)null);
 
@@ -86,6 +78,9 @@ public class DrawerData extends BaseDrawerData
 
     public void setStoredItemCount (int amount, boolean mark, boolean clearOnEmpty) {
         count = amount;
+        if (count > getMaxCapacity())
+            count = getMaxCapacity();
+
         if (amount == 0) {
             if (clearOnEmpty) {
                 if (!storageProvider.isLocked(slot))
@@ -128,6 +123,14 @@ public class DrawerData extends BaseDrawerData
     }
 
     @Override
+    protected int getItemCapacityForInventoryStack () {
+        if (storageProvider.isVoid(slot))
+            return Integer.MAX_VALUE;
+        else
+            return getMaxCapacity();
+    }
+
+    @Override
     public boolean canItemBeStored (ItemStack itemPrototype) {
         if (protoStack == nullStack)
             return true;
@@ -161,12 +164,18 @@ public class DrawerData extends BaseDrawerData
 
     public void readFromNBT (NBTTagCompound tag) {
         if (tag.hasKey("Item") && tag.hasKey("Count")) {
-            ItemStack stack = new ItemStack(Item.getItemById(tag.getShort("Item")));
-            stack.setItemDamage(tag.getShort("Meta"));
-            if (tag.hasKey("Tags"))
-                stack.setTagCompound(tag.getCompoundTag("Tags"));
+            Item item = Item.getItemById(tag.getShort("Item"));
+            if (item != null) {
+                ItemStack stack = new ItemStack(item);
+                stack.setItemDamage(tag.getShort("Meta"));
+                if (tag.hasKey("Tags"))
+                    stack.setTagCompound(tag.getCompoundTag("Tags"));
 
-            setStoredItem(stack, tag.getInteger("Count"), false);
+                setStoredItem(stack, tag.getInteger("Count"), false);
+            }
+            else {
+                reset();
+            }
         }
         else {
             reset();
@@ -180,6 +189,11 @@ public class DrawerData extends BaseDrawerData
 
         DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
         MinecraftForge.EVENT_BUS.post(event);
+    }
+
+    @Override
+    public boolean isVoid () {
+        return storageProvider.isVoid(slot);
     }
 }
 
