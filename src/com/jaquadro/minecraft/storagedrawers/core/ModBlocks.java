@@ -1,14 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockController;
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.*;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemBasicDrawers;
+import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -23,6 +22,8 @@ public class ModBlocks
     public static BlockDrawers basicDrawers;
     public static BlockCompDrawers compDrawers;
     //public static BlockController controller;
+    public static BlockSlave slave;
+    public static BlockTrim trim;
 
     public void init () {
         /*fullDrawers1 = new BlockDrawers("fullDrawers1", 1, false);
@@ -33,6 +34,7 @@ public class ModBlocks
         basicDrawers = new BlockDrawers("basicDrawers");
         compDrawers = new BlockCompDrawers("compDrawers");
         //controller = new BlockController("controller");
+        trim = new BlockTrim("trim");
 
         ConfigManager config = StorageDrawers.config;
 
@@ -66,6 +68,9 @@ public class ModBlocks
         if (config.isBlockEnabled("controller")) {
             //GameRegistry.registerBlock(controller, ItemController.class, "controller");
             //GameRegistry.registerTileEntity(TileEntityController.class, ModBlocks.getQualifiedName(controller));
+        }
+        if (config.isBlockEnabled("trim")) {
+            GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
         }
     }
 

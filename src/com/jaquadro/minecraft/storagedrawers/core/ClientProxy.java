@@ -6,10 +6,12 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.client.model.BasicDrawerModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.CompDrawerModel;
+import com.jaquadro.minecraft.storagedrawers.client.model.TrimModel;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.item.ItemBasicDrawers;
+import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -26,6 +28,7 @@ public class ClientProxy extends CommonProxy
     public void onModelBakeEvent (ModelBakeEvent event) {
         BasicDrawerModel.initialize(event.modelRegistry);
         CompDrawerModel.initialize(event.modelRegistry);
+        //TrimModel.initialize(event.modelRegistry);
     }
 
     @Override
@@ -72,6 +75,15 @@ public class ClientProxy extends CommonProxy
             ModelBakery.addVariantName(Item.getItemFromBlock(ModBlocks.compDrawers), resName);
 
             renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.compDrawers), slots.getMetadata(), new ModelResourceLocation(resName, "inventory"));
+        }
+
+        // Trim
+
+        for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
+            String resName = ModBlocks.getQualifiedName(ModBlocks.trim) + "_" + material.getName();
+            ModelBakery.addVariantName(Item.getItemFromBlock(ModBlocks.trim), resName);
+
+            renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.trim), material.getMetadata(), new ModelResourceLocation(resName, "inventory"));
         }
     }
 }

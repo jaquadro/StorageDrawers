@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "variant=oak": { "model": "StorageDrawers:trim_oak" },
+        "variant=spruce": { "model": "StorageDrawers:trim_spruce" },
+        "variant=birch": { "model": "StorageDrawers:trim_birch" },
+        "variant=jungle": { "model": "StorageDrawers:trim_jungle" },
+        "variant=acacia": { "model": "StorageDrawers:trim_acacia" },
+        "variant=dark_oak": { "model": "StorageDrawers:trim_dark_oak" }
+    }
+}
