@@ -57,7 +57,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     private List<SlotRecord> drawerSlotList = new ArrayList<SlotRecord>();
 
     private int[] inventorySlots = new int[0];
-    private int[] autoSides = new int[] { 0, 1 };
+    private int[] autoSides = new int[] { 0, 1, 2, 3, 4, 5 };
     private int direction;
 
     private int drawerSize = 0;
@@ -76,13 +76,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
     public void setDirection (int direction) {
         this.direction = direction % 6;
-
-        autoSides = new int[] { 0, 1, ForgeDirection.OPPOSITES[direction], 2, 3 };
-
-        if (direction == 2 || direction == 3) {
-            autoSides[3] = 4;
-            autoSides[4] = 5;
-        }
     }
 
     public int interactPutItemsIntoInventory (EntityPlayer player) {
