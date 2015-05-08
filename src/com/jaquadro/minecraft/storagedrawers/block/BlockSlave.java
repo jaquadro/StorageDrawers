@@ -23,6 +23,11 @@ public class BlockSlave extends BlockContainer implements INetworked
     }
 
     @Override
+    public int getRenderType () {
+        return 3;
+    }
+
+    @Override
     public TileEntitySlave createNewTileEntity (World world, int meta) {
         return new TileEntitySlave();
     }

@@ -1,7 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.item.ItemController;
@@ -25,24 +27,15 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.Random;
 
-public class BlockController extends BlockContainer
+public class BlockController extends BlockContainer implements INetworked
 {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-
-    /*@SideOnly(Side.CLIENT)
-    private IIcon iconFront;
-    @SideOnly(Side.CLIENT)
-    private IIcon iconSide;
-    @SideOnly(Side.CLIENT)
-    private IIcon iconSideEtched;
-    @SideOnly(Side.CLIENT)
-    private IIcon iconTrim;*/
 
     public BlockController (String name) {
         super(Material.rock);
 
-        GameRegistry.registerBlock(this, ItemController.class, "controller");
-        GameRegistry.registerTileEntity(TileEntityController.class, ModBlocks.getQualifiedName(this));
+        //GameRegistry.registerBlock(this, ItemController.class, "controller");
+        //GameRegistry.registerTileEntity(TileEntityController.class, ModBlocks.getQualifiedName(this));
 
         setUnlocalizedName(name);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
@@ -123,9 +116,12 @@ public class BlockController extends BlockContainer
 
     @Override
     public boolean isSideSolid (IBlockAccess world, BlockPos pos, EnumFacing side) {
-        if (getTileEntity(world, pos) == null)
+        IBlockState state = world.getBlockState(pos);
+        if (state == null)
             return true;
-        if (side.ordinal() != getTileEntity(world, pos).getDirection())
+
+        EnumFacing facing = (EnumFacing)state.getValue(FACING);
+        if (side != facing)
             return true;
 
         return false;
@@ -169,44 +165,6 @@ public class BlockController extends BlockContainer
         return new BlockState(this, new IProperty[] { FACING });
     }
 
-    /*@Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon (int side, int meta) {
-        switch (side) {
-            case 0:
-            case 1:
-                return iconSide;
-            case 4:
-                return iconFront;
-            default:
-                return iconSideEtched;
-        }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side) {
-        TileEntityController tile = getTileEntity(blockAccess, x, y, z);
-        if (tile == null)
-            return iconFront;
-
-        if (side == tile.getDirection())
-            return iconFront;
-
-        switch (side) {
-            case 0:
-            case 1:
-                return iconSide;
-            default:
-                return iconSideEtched;
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconTrim (int meta) {
-        return iconTrim;
-    }*/
-
     @Override
     public TileEntityController createNewTileEntity (World world, int meta) {
         return new TileEntityController();
@@ -226,13 +184,4 @@ public class BlockController extends BlockContainer
 
         return tile;
     }
-
-    /*@Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons (IIconRegister register) {
-        iconFront = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_controller_front");
-        iconSide = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_side");
-        iconSideEtched = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_side_2");
-        iconTrim = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_comp_trim");
-    }*/
 }

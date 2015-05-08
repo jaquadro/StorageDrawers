@@ -7,7 +7,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -20,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.world.World;
 
 import java.util.*;
 
@@ -61,8 +61,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     private List<SlotRecord> drawerSlotList = new ArrayList<SlotRecord>();
 
     private int[] inventorySlots = new int[0];
-    private int[] autoSides = new int[] { 0, 1 };
-    private int direction;
+    private int[] autoSides = new int[] { 0, 1, 2, 3, 4, 5 };
 
     private int drawerSize = 0;
 
@@ -74,23 +73,13 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         inventorySlots = new int[] { 0 };
     }
 
-    public int getDirection () {
-        return direction;
-    }
-
-    public void setDirection (int direction) {
-        this.direction = direction % 6;
-
-        autoSides = new int[] { 0, 1, EnumFacing.getFront(direction).getOpposite().ordinal(), 2, 3 };
-
-        if (direction == 2 || direction == 3) {
-            autoSides[3] = 4;
-            autoSides[4] = 5;
-        }
+    @Override
+    public boolean shouldRefresh (World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+        return oldState.getBlock() != newSate.getBlock();
     }
 
     public int interactPutItemsIntoInventory (EntityPlayer player) {
-        if (inventorySlots.length == 0)
+        if (inventorySlots.length <= 1)
             updateCache();
 
         boolean dumpInventory = worldObj.getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID);
@@ -416,8 +405,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     public void readFromNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
 
-        setDirection(tag.getByte("Dir"));
-
         if (worldObj != null && !worldObj.isRemote)
             updateCache();
     }
@@ -425,8 +412,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     @Override
     public void writeToNBT (NBTTagCompound tag) {
         super.writeToNBT(tag);
-
-        tag.setByte("Dir", (byte)direction);
     }
 
     @Override
