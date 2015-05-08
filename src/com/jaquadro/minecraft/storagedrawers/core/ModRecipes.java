@@ -34,7 +34,7 @@ public class ModRecipes
                 GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers4, config.getBlockRecipeOutput("halfdrawers4"), i), "yxy", "xxx", "yxy",
                     'x', new ItemStack(Blocks.wooden_slab, 1, i), 'y', Blocks.chest);
             if (config.isBlockEnabled("trim")) {
-                GameRegistry.addRecipe(new ItemStack(ModBlocks.trim, 24, i), "xyx", "yyy", "xyx",
+                GameRegistry.addRecipe(new ItemStack(ModBlocks.trim, config.getBlockRecipeOutput("trim"), i), "xyx", "yyy", "xyx",
                     'x', Items.stick, 'y', new ItemStack(Blocks.planks, 1, i));
             }
         }
@@ -51,10 +51,13 @@ public class ModRecipes
                 'x', "plankWood", 'y', Blocks.chest));
         if (config.isBlockEnabled("fulldrawers4"))
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers4, config.getBlockRecipeOutput("fulldrawers4"), 0), "yxy", "xxx", "yxy",
-                'x', "plankWood", 'y', Blocks.chest));
+                'x', "slabWood", 'y', Blocks.chest));
         if (config.isBlockEnabled("halfdrawers4"))
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfDrawers4, config.getBlockRecipeOutput("halfdrawers4"), 0), "yxy", "xxx", "yxy",
-                'x', "plankWood", 'y', Blocks.chest));
+                'x', "slabWood", 'y', Blocks.chest));
+        if (config.isBlockEnabled("trim"))
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.trim, config.getBlockRecipeOutput("trim"), 0), "xyx", "yyy", "xyx",
+                'x', Items.stick, 'y', "plankWood"));
 
         if (config.isBlockEnabled("compdrawers"))
             GameRegistry.addRecipe(new ItemStack(ModBlocks.compDrawers, config.getBlockRecipeOutput("compdrawers")), "xxx", "zwz", "xyx",
