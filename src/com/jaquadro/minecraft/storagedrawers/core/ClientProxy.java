@@ -39,6 +39,8 @@ public class ClientProxy extends CommonProxy
         RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 
         renderItem.getItemModelMesher().register(ModItems.upgradeTemplate, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.upgradeTemplate), "inventory"));
+        renderItem.getItemModelMesher().register(ModItems.upgradeVoid, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.upgradeVoid), "inventory"));
+        renderItem.getItemModelMesher().register(ModItems.drawerKey, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.drawerKey), "inventory"));
 
         for (EnumUpgradeStorage upgrade : EnumUpgradeStorage.values()) {
             String resName = ModItems.getQualifiedName(ModItems.upgradeStorage) + "_" + upgrade.getName();

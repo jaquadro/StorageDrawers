@@ -13,9 +13,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ItemUpgradeLock extends Item
+public class ItemDrawerKey extends Item
 {
-    public ItemUpgradeLock (String name) {
+    public ItemDrawerKey (String name) {
         setUnlocalizedName(name);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setMaxDamage(0);

@@ -34,13 +34,8 @@ public class ItemBasicDrawers extends ItemMultiTexture
             @Nullable
             @Override
             public Object apply (Object input) {
-                ItemStack stack = (ItemStack)input;
-                if (stack.hasTagCompound() && stack.getTagCompound().hasKey("material")) {
-                    String key = stack.getTagCompound().getString("material");
-                    return "storageDrawers.material." + key;
-                }
-
-                return "";
+            ItemStack stack = (ItemStack)input;
+            return EnumBasicDrawer.byMetadata(stack.getMetadata()).getUnlocalizedName();
             }
         });
     }

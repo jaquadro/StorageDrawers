@@ -211,8 +211,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-            else if (item.getItem() == ModItems.upgradeLock && !tileDrawers.isLocked()) {
-                tileDrawers.setIsLocked(true);
+            else if (item.getItem() == ModItems.upgradeVoid && !tileDrawers.isVoid()) {
+                tileDrawers.setVoid(true);
                 world.markBlockForUpdate(pos);
 
                 if (player != null && !player.capabilities.isCreativeMode) {
@@ -222,14 +222,10 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-        }
-        else if (item == null && player.isSneaking()) {
-            if (tileDrawers.isLocked()) {
-                tileDrawers.setIsLocked(false);
-                if (player != null && !player.capabilities.isCreativeMode)
-                    spawnAsEntity(world, pos, new ItemStack(ModItems.upgradeLock));
-
+            else if (item.getItem() == ModItems.drawerKey) {
+                tileDrawers.setIsLocked(!tileDrawers.isLocked());
                 world.markBlockForUpdate(pos);
+
                 return true;
             }
         }
@@ -379,8 +375,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 spawnAsEntity(world, pos, new ItemStack(ModItems.upgradeStorage, 1, tile.getStorageLevel()));
             if (tile.getStatusLevel() > 0)
                 spawnAsEntity(world, pos, new ItemStack(ModItems.upgradeStatus, 1, tile.getStatusLevel()));
-            if (tile.isLocked())
-                spawnAsEntity(world, pos, new ItemStack(ModItems.upgradeLock));
+            if (tile.isVoid())
+                spawnAsEntity(world, pos, new ItemStack(ModItems.upgradeVoid));
 
             InventoryHelper.dropInventoryItems(world, pos, tile);
         }

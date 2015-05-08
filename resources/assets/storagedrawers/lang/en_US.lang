@@ -3,57 +3,28 @@ itemGroup.storageDrawersSorting=Storage Drawers - Sorting
 
 # Items
 item.upgradeTemplate.name=Upgrade Template
-item.upgrade.iron.name=Storage Upgrade (II)
-item.upgrade.gold.name=Storage Upgrade (III)
-item.upgrade.obsidian.name=Storage Upgrade (IV)
-item.upgrade.diamond.name=Storage Upgrade (V)
-item.upgrade.emerald.name=Storage Upgrade (VI)
+item.upgradeStorage.iron.name=Storage Upgrade (II)
+item.upgradeStorage.gold.name=Storage Upgrade (III)
+item.upgradeStorage.obsidian.name=Storage Upgrade (IV)
+item.upgradeStorage.diamond.name=Storage Upgrade (V)
+item.upgradeStorage.emerald.name=Storage Upgrade (VI)
 item.upgradeStatus.level1.name=Status Upgrade (I)
 item.upgradeStatus.level1.description=Shows full storage
 item.upgradeStatus.level2.name=Status Upgrade (II)
 item.upgradeStatus.level2.description=Shows fill level
-item.upgradeLock.name=Drawer Key
-item.upgradeLock.description=Locks and unlocks drawers
 item.upgradeVoid.name=Void Upgrade
 item.upgradeVoid.description=Destroys excess items
 item.upgradeSorting.name=Sorting Upgrade
 item.upgradeSorting.description=For Refined Relocation
+item.drawerKey.name=Drawer Key
+item.drawerKey.description=Locks and unlocks drawers
 
 # Blocks
-tile.fullDrawers1.oak.name=Oak Drawer
-tile.fullDrawers1.spruce.name=Spruce Drawer
-tile.fullDrawers1.birch.name=Birch Drawer
-tile.fullDrawers1.jungle.name=Jungle Drawer
-tile.fullDrawers1.acacia.name=Acacia Drawer
-tile.fullDrawers1.big_oak.name=Dark Oak Drawer
-
-tile.fullDrawers2.oak.name=Oak Drawers 1x2
-tile.fullDrawers2.spruce.name=Spruce Drawers 1x2
-tile.fullDrawers2.birch.name=Birch Drawers 1x2
-tile.fullDrawers2.jungle.name=Jungle Drawers 1x2
-tile.fullDrawers2.acacia.name=Acacia Drawers 1x2
-tile.fullDrawers2.big_oak.name=Dark Oak Drawers 1x2
-
-tile.fullDrawers4.oak.name=Oak Drawers 2x2
-tile.fullDrawers4.spruce.name=Spruce Drawers 2x2
-tile.fullDrawers4.birch.name=Birch Drawers 2x2
-tile.fullDrawers4.jungle.name=Jungle Drawers 2x2
-tile.fullDrawers4.acacia.name=Acacia Drawers 2x2
-tile.fullDrawers4.big_oak.name=Dark Oak Drawers 2x2
-
-tile.halfDrawers2.oak.name=Compact Oak Drawers 1x2
-tile.halfDrawers2.spruce.name=Compact Spruce Drawers 1x2
-tile.halfDrawers2.birch.name=Compact Birch Drawers 1x2
-tile.halfDrawers2.jungle.name=Compact Jungle Drawers 1x2
-tile.halfDrawers2.acacia.name=Compact Acacia Drawers 1x2
-tile.halfDrawers2.big_oak.name=Compact Dark Oak Drawers 1x2
-
-tile.halfDrawers4.oak.name=Compact Oak Drawers 2x2
-tile.halfDrawers4.spruce.name=Compact Spruce Drawers 2x2
-tile.halfDrawers4.birch.name=Compact Birch Drawers 2x2
-tile.halfDrawers4.jungle.name=Compact Jungle Drawers 2x2
-tile.halfDrawers4.acacia.name=Compact Acacia Drawers 2x2
-tile.halfDrawers4.big_oak.name=Compact Dark Oak Drawers 2x2
+tile.basicDrawers.fulldrawers1.name=Basic Drawer
+tile.basicDrawers.fulldrawers2.name=Basic Drawers 1x2
+tile.basicDrawers.fulldrawers4.name=Basic Drawers 2x2
+tile.basicDrawers.halfdrawers2.name=Compact Basic Drawers 1x2
+tile.basicDrawers.halfdrawers4.name=Compact Basic Drawers 2x2
 
 tile.compDrawers.name=Compacting Drawer
 tile.drawerController.name=Drawer Controller
@@ -69,6 +40,16 @@ tile.trim.big_oak.name=Dark Oak Trim
 storageDrawers.drawers.description=Holds %d stacks per drawer
 storageDrawers.upgrade.description=Increases storage to %d times base value
 storageDrawers.controller.description=Interact with a bank of connected drawers
+
+# Material
+
+storageDrawers.material=Material: %s
+storageDrawers.material.oak=Oak
+storageDrawers.material.spruce=Spruce
+storageDrawers.material.birch=Birch
+storageDrawers.material.jungle=Jungle
+storageDrawers.material.acacia=Acacia
+storageDrawers.material.dark_oak=Dark Oak
 
 # Integration
 storageDrawers.waila.empty=<Empty>

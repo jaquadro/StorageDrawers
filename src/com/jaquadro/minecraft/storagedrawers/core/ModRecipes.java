@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class ModRecipes
 {
@@ -47,32 +48,50 @@ public class ModRecipes
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.HALF4, material.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.HALF4.getUnlocalizedName()));
                 GameRegistry.addRecipe(result, "yxy", "xxx", "yxy", 'x', new ItemStack(Blocks.wooden_slab, 1, material.getMetadata()), 'y', Blocks.chest);
             }
+            if (config.isBlockEnabled("trim")) {
+                ItemStack result = new ItemStack(ModBlocks.trim, config.getBlockRecipeOutput("trim"), material.getMetadata());
+                GameRegistry.addRecipe(result, "xyx", "yyy", "xyx", 'x', Items.stick, 'y', new ItemStack(Blocks.planks, 1, material.getMetadata()));
+            }
         }
 
         // Fallback recipes
-        /*if (config.isBlockEnabled("fulldrawers1"))
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers1, config.getBlockRecipeOutput("fulldrawers1"), 0), "xxx", " y ", "xxx",
-                'x', "plankWood", 'y', Blocks.chest));
-        if (config.isBlockEnabled("fulldrawers2"))
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers2, config.getBlockRecipeOutput("fulldrawers2"), 0), "xyx", "xxx", "xyx",
-                'x', "plankWood", 'y', Blocks.chest));
-        if (config.isBlockEnabled("halfdrawers2"))
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfDrawers2, config.getBlockRecipeOutput("halfdrawers2"), 0), "xyx", "xxx", "xyx",
-                'x', "plankWood", 'y', Blocks.chest));
-        if (config.isBlockEnabled("fulldrawers4"))
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers4, config.getBlockRecipeOutput("fulldrawers4"), 0), "yxy", "xxx", "yxy",
-                'x', "plankWood", 'y', Blocks.chest));
-        if (config.isBlockEnabled("halfdrawers4"))
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfDrawers4, config.getBlockRecipeOutput("halfdrawers4"), 0), "yxy", "xxx", "yxy",
-                'x', "plankWood", 'y', Blocks.chest));*/
 
-        if (config.isBlockEnabled("compdrawers"))
-            GameRegistry.addRecipe(new ItemStack(ModBlocks.compDrawers, config.getBlockRecipeOutput("compdrawers")), "xxx", "zwz", "xyx",
+        if (config.isBlockEnabled(EnumBasicDrawer.FULL1.getUnlocalizedName())) {
+            ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL1, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL1.getUnlocalizedName()));
+            GameRegistry.addRecipe(new ShapedOreRecipe(result, "xxx", " y ", "xxx", 'x', "plankWood", 'y', Blocks.chest));
+        }
+        if (config.isBlockEnabled(EnumBasicDrawer.FULL2.getUnlocalizedName())) {
+            ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL2, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL2.getUnlocalizedName()));
+            GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', "plankWood", 'y', Blocks.chest));
+        }
+        if (config.isBlockEnabled(EnumBasicDrawer.FULL4.getUnlocalizedName())) {
+            ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL4, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL4.getUnlocalizedName()));
+            GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', "plankWood", 'y', Blocks.chest));
+        }
+        if (config.isBlockEnabled(EnumBasicDrawer.HALF2.getUnlocalizedName())) {
+            ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.HALF2, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.HALF2.getUnlocalizedName()));
+            GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', "slabWood", 'y', Blocks.chest));
+        }
+        if (config.isBlockEnabled(EnumBasicDrawer.HALF4.getUnlocalizedName())) {
+            ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.HALF4, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.HALF4.getUnlocalizedName()));
+            GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', "slabWood", 'y', Blocks.chest));
+        }
+        if (config.isBlockEnabled("trim")) {
+            ItemStack result = new ItemStack(ModBlocks.trim, config.getBlockRecipeOutput("trim"), BlockPlanks.EnumType.OAK.getMetadata());
+            GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "yyy", "xyx", 'x', Items.stick, 'y', "slabWood"));
+        }
+
+        if (config.isBlockEnabled("compDrawers"))
+            GameRegistry.addRecipe(new ItemStack(ModBlocks.compDrawers, config.getBlockRecipeOutput("compDrawers")), "xxx", "zwz", "xyx",
                 'x', new ItemStack(Blocks.stone), 'y', Items.iron_ingot, 'z', new ItemStack(Blocks.piston), 'w', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE));
 
-        //if (config.isBlockEnabled("controller"))
-        //    GameRegistry.addRecipe(new ItemStack(ModBlocks.controller), "xxx", "yzy", "xwx",
-        //        'x', new ItemStack(Blocks.stone), 'y', Items.comparator, 'z', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE), 'w', Items.diamond);
+        if (config.isBlockEnabled("controller"))
+            GameRegistry.addRecipe(new ItemStack(ModBlocks.controller), "xxx", "yzy", "xwx",
+                'x', new ItemStack(Blocks.stone), 'y', Items.comparator, 'z', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE), 'w', Items.diamond);
+
+        if (config.isBlockEnabled("controllerSlave"))
+            GameRegistry.addRecipe(new ItemStack(ModBlocks.controllerSlave), "xxx", "yzy", "xwx",
+                'x', new ItemStack(Blocks.stone), 'y', Items.comparator, 'z', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE), 'w', Items.gold_ingot);
 
         GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
             'x', Items.stick, 'y', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE));
@@ -98,7 +117,7 @@ public class ModRecipes
         }
 
         if (config.cache.enableLockUpgrades) {
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeLock), "xy ", " y ", " z ",
+            GameRegistry.addRecipe(new ItemStack(ModItems.drawerKey), "xy ", " y ", " z ",
                 'x', Items.gold_nugget, 'y', Items.gold_ingot, 'z', ModItems.upgradeTemplate);
         }
 
