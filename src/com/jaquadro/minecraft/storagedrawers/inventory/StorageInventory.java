@@ -228,10 +228,8 @@ public class StorageInventory implements IDrawerInventory
 
             drawer.setStoredItemCount(insertCount);
 
-            if (upgrade.isVoid())
-                item.stackSize = 0;
-            else
-                item.stackSize -= insertCount;
+            if (!upgrade.isVoid())
+                item.stackSize = insertCount;
         }
     }
 
