@@ -81,8 +81,8 @@ public class ModRecipes
             GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "yyy", "xyx", 'x', Items.stick, 'y', "slabWood"));
         }
 
-        if (config.isBlockEnabled("compDrawers"))
-            GameRegistry.addRecipe(new ItemStack(ModBlocks.compDrawers, config.getBlockRecipeOutput("compDrawers")), "xxx", "zwz", "xyx",
+        if (config.isBlockEnabled("compdrawers"))
+            GameRegistry.addRecipe(new ItemStack(ModBlocks.compDrawers, config.getBlockRecipeOutput("compdrawers")), "xxx", "zwz", "xyx",
                 'x', new ItemStack(Blocks.stone), 'y', Items.iron_ingot, 'z', new ItemStack(Blocks.piston), 'w', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE));
 
         if (config.isBlockEnabled("controller"))
