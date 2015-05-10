@@ -33,6 +33,9 @@ public abstract class InventoryStack
     }
 
     public ItemStack getInStack () {
+        if (inStack == null || inStack.stackSize == 0)
+            return null;
+
         return inStack;
     }
 
