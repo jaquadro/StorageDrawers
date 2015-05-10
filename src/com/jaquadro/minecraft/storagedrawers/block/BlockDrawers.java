@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandar
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
+import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import net.minecraft.block.*;
@@ -52,8 +53,6 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @SideOnly(Side.CLIENT)
     private StatusModelData[] statusInfo;
-
-    //private static final ResourceLocation blockConfig = new ResourceLocation(StorageDrawers.MOD_ID + ":textures/blocks/block_config.mcmeta");
 
     public BlockDrawers (String blockName) {
         this(Material.wood, blockName);
@@ -214,16 +213,19 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         if (item != null && item.getItem() != null) {
-            if (item.getItem() == ModItems.upgradeStorage  && item.getMetadata() != tileDrawers.getStorageLevel()) {
-                tileDrawers.setStorageLevel(item.getMetadata());
-                world.markBlockForUpdate(pos);
+            if (item.getItem() == ModItems.upgradeStorage) {
+                EnumUpgradeStorage storage = EnumUpgradeStorage.byMetadata(item.getMetadata());
+                if (storage.getLevel() != tileDrawers.getStorageLevel()) {
+                    tileDrawers.setStorageLevel(storage.getLevel());
+                    world.markBlockForUpdate(pos);
 
-                if (player != null && !player.capabilities.isCreativeMode) {
-                    if (--item.stackSize <= 0)
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                    if (player != null && !player.capabilities.isCreativeMode) {
+                        if (--item.stackSize <= 0)
+                            player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                    }
+
+                    return true;
                 }
-
-                return true;
             }
             else if (item.getItem() == ModItems.upgradeStatus) {
                 EnumUpgradeStatus status = EnumUpgradeStatus.byMetadata(item.getMetadata());
@@ -529,116 +531,4 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
         return BlockPlanks.EnumType.OAK;
     }
-
-    /*
-    @SideOnly(Side.CLIENT)
-    public IIcon getOverlayIcon (IBlockAccess blockAccess, int x, int y, int z, int side, int level) {
-        if (level == 0)
-            return null;
-
-        return getIcon(blockAccess, x, y, z, side, level);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public IIcon getOverlayIconTrim (int level) {
-        if (level == 0)
-            return null;
-
-        return iconOverlayTrim[level];
-    }
-
-    @SideOnly(Side.CLIENT)
-    public IIcon getIndicatorIcon (int drawerCount, boolean on) {
-        int onIndex = on ? 1 : 0;
-        switch (drawerCount) {
-            case 1: return iconIndicator1[onIndex];
-            case 2: return iconIndicator2[onIndex];
-            case 4: return iconIndicator4[onIndex];
-        }
-
-        return null;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons (IIconRegister register) {
-        String[] subtex = BlockWood.field_150096_a;
-
-        iconSide = new IIcon[subtex.length];
-        iconSideH = new IIcon[subtex.length];
-        iconSideV = new IIcon[subtex.length];
-        iconFront1 = new IIcon[subtex.length];
-        iconFront2 = new IIcon[subtex.length];
-        iconFront4 = new IIcon[subtex.length];
-        iconTrim = new IIcon[subtex.length];
-
-        for (int i = 0; i < subtex.length; i++) {
-            iconFront1[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_front_1");
-            iconFront2[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_front_2");
-            iconFront4[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_front_4");
-            iconSide[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side");
-            iconSideV[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side_v");
-            iconSideH[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side_h");
-            iconTrim[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_trim");
-        }
-
-        String[] overlays = new String[] { null, null, "iron", "gold", "obsidian", "diamond", "emerald" };
-
-        iconOverlay = new IIcon[overlays.length];
-        iconOverlayH = new IIcon[overlays.length];
-        iconOverlayV = new IIcon[overlays.length];
-        iconOverlayTrim = new IIcon[overlays.length];
-
-        for (int i = 2; i < overlays.length; i++) {
-            iconOverlay[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i]);
-            iconOverlayV[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i] + "_v");
-            iconOverlayH[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i] + "_h");
-            iconOverlayTrim[i] = register.registerIcon(StorageDrawers.MOD_ID + ":overlay_" + overlays[i] + "_trim");
-        }
-
-        iconIndicator1 = new IIcon[2];
-        iconIndicator2 = new IIcon[2];
-        iconIndicator4 = new IIcon[2];
-
-        iconIndicator1[0] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_1_off");
-        iconIndicator1[1] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_1_on");
-        iconIndicator2[0] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_2_off");
-        iconIndicator2[1] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_2_on");
-        iconIndicator4[0] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_4_off");
-        iconIndicator4[1] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_4_on");
-
-        //iconLockFace = register.registerIcon(StorageDrawers.MOD_ID + ":lock_face");
-
-        loadBlockConfig();
-    }
-
-    private void loadBlockConfig () {
-        try {
-            IResource configResource = Minecraft.getMinecraft().getResourceManager().getResource(blockConfig);
-            BufferedReader reader = null;
-            try {
-                reader = new BufferedReader(new InputStreamReader(configResource.getInputStream()));
-                JsonObject root = (new JsonParser()).parse(reader).getAsJsonObject();
-
-                JsonObject entry = root.getAsJsonObject(getUnlocalizedName().substring(5));
-                if (entry != null) {
-                    if (entry.has("trimWidth"))
-                        trimWidth = entry.get("trimWidth").getAsFloat();
-                    if (entry.has("trimDepth"))
-                        trimDepth = entry.get("trimDepth").getAsFloat();
-                    if (entry.has("indStart"))
-                        indStart = entry.get("indStart").getAsFloat();
-                    if (entry.has("indEnd"))
-                        indEnd = entry.get("indEnd").getAsFloat();
-                    if (entry.has("indSteps"))
-                        indSteps = entry.get("indSteps").getAsInt();
-                }
-            }
-            finally {
-                IOUtils.closeQuietly(reader);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
 }
