@@ -1,11 +1,16 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
+import com.jaquadro.minecraft.chameleon.Chameleon;
+import com.jaquadro.minecraft.chameleon.geometry.Area2D;
+import com.jaquadro.minecraft.chameleon.render.ChamRender;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.render.IRenderLabel;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -14,6 +19,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -23,9 +29,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -111,7 +119,20 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         mc.gameSettings.fancyGraphics = cache;
 
+        renderUpgrades(tileDrawers);
+
+        GlStateManager.enableLighting();
+        GlStateManager.enableLight(0);
+        GlStateManager.enableLight(1);
+        GlStateManager.enableColorMaterial();
+        GlStateManager.colorMaterial(1032, 5634);
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableNormalize();
+        GlStateManager.disableBlend();
+
         GlStateManager.popMatrix();
+
+
     }
 
     private void renderFastItemSet (TileEntityDrawers tile, EnumFacing side, float depth, float partialTickTime) {
@@ -167,15 +188,6 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         //if (restoreItemState || restoreBlockState)
         //    GLUtil.restoreGLState(savedGLStateItemRender);
-
-        GlStateManager.enableLighting();
-        GlStateManager.enableLight(0);
-        GlStateManager.enableLight(1);
-        GlStateManager.enableColorMaterial();
-        GlStateManager.colorMaterial(1032, 5634);
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.disableNormalize();
-        GlStateManager.disableBlend();
     }
 
     private void renderFastItem (ItemStack itemStack, TileEntityDrawers tile, int slot, EnumFacing side, float depth, float partialTickTime) {
@@ -251,6 +263,195 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
     private float getOffsetXForSide (EnumFacing side, float x) {
         return Math.abs(offsetX[side.ordinal()] - x);
+    }
+
+    private void renderUpgrades (TileEntityDrawers tile) {
+        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+
+        GlStateManager.enableAlpha();
+
+        IBlockState blockState = tile.getWorld().getBlockState(tile.getPos());
+
+        renderLock(blockState, tile.getDirection(), tile.isLocked());
+        renderVoid(blockState, tile.getDirection(), tile.isVoid());
+        renderIndicator(tile, blockState, tile.getDirection(), tile.getStatusLevel());
+    }
+
+    private void renderLock (IBlockState blockState, int side, boolean locked) {
+        if (!locked)
+            return;
+
+        BlockDrawers block = (BlockDrawers)blockState.getBlock();
+
+        double depth = block.isHalfDepth(blockState) ? .5 : 1;
+        TextureAtlasSprite iconLock = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconLockResource);
+
+        ChamRender.instance.setRenderBounds(0.46875, 0.9375, 0, 0.53125, 1, depth + .005);
+        ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
+        ChamRender.instance.renderPartialFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconLock, 0, 0, 1, 1, 1, 1, 1);
+        ChamRender.instance.state.clearRotateTransform();
+    }
+
+    private void renderVoid (IBlockState blockState, int side, boolean voided) {
+        if (!voided)
+            return;
+
+        BlockDrawers block = (BlockDrawers)blockState.getBlock();
+
+        double depth = block.isHalfDepth(blockState) ? .5 : 1;
+        TextureAtlasSprite iconVoid = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconVoidResource);
+
+        ChamRender.instance.setRenderBounds(1 - .0625, 0.9375, 0, 1, 1, depth + .005);
+        ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
+        ChamRender.instance.renderPartialFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconVoid, 0, 0, 1, 1, 1, 1, 1);
+        ChamRender.instance.state.clearRotateTransform();
+    }
+
+    private static final float[][] drawerXYWH1 = new float[][] {
+        { 0, 0, 16, 16 },
+    };
+
+    private static final float[][] drawerXYWH2 = new float[][] {
+        { 0, 8, 16, 8 }, { 0, 0, 16, 8 },
+    };
+
+    private static final float[][] drawerXYWH4 = new float[][] {
+        { 0, 8, 8, 8 }, { 0, 0, 8, 8 }, { 8, 8, 8, 8 }, { 8, 0, 8, 8 },
+    };
+
+    private void renderIndicator (TileEntityDrawers tile, IBlockState blockState, int side, int level) {
+        if (level <= 0 || side < 2 || side > 5)
+            return;
+
+        BlockDrawers block = (BlockDrawers)blockState.getBlock();
+        StatusModelData statusInfo = block.getStatusInfo(blockState);
+        double depth = block.isHalfDepth(blockState) ? .5 : 1;
+        int count = block.getDrawerCount(blockState);
+
+        double unit = 0.0625;
+        double frontDepth = statusInfo.getFrontDepth() * unit;
+
+        float[][] xywhSet = null;
+        switch (count) {
+            case 1:
+                xywhSet = drawerXYWH1;
+                break;
+            case 2:
+                xywhSet = drawerXYWH2;
+                break;
+            case 4:
+                xywhSet = drawerXYWH4;
+                break;
+            default:
+                return;
+        }
+
+        //TextureAtlasSprite iconOff = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconIndicatorOffResource[count]);
+        //TextureAtlasSprite iconOn = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconIndicatorOnResource[count]);
+
+        for (int i = 0; i < count; i++) {
+            IDrawer drawer = tile.getDrawer(i);
+            if (drawer == null)
+                continue;
+
+            float[] xywh = xywhSet[i];
+
+            TextureAtlasSprite iconOff = Chameleon.instance.iconRegistry.getIcon(statusInfo.getSlot(i).getOffResource(EnumUpgradeStatus.byLevel(level)));
+            TextureAtlasSprite iconOn = Chameleon.instance.iconRegistry.getIcon(statusInfo.getSlot(i).getOnResource(EnumUpgradeStatus.byLevel(level)));
+
+            Area2D statusArea = statusInfo.getSlot(i).getStatusArea();
+            Area2D activeArea = statusInfo.getSlot(i).getStatusActiveArea();
+
+            ChamRender.instance.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
+                (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth + .005);
+            ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
+            ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconOff, 1, 1, 1);
+            ChamRender.instance.state.clearRotateTransform();
+
+            if (level == 1 && drawer.getMaxCapacity() > 0 && drawer.getRemainingCapacity() == 0) {
+                ChamRender.instance.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
+                    (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth + .006);
+                ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
+                ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
+                ChamRender.instance.state.clearRotateTransform();
+            }
+            else if (level >= 2) {
+                double indStart = activeArea.getX();
+                double indEnd = activeArea.getX() + activeArea.getWidth();
+                double indCur = getIndEnd(block, tile, i, indStart, activeArea.getWidth(), statusInfo.getSlot(i).getActiveStepsX());
+
+                //if (side == 2 || side == 5)
+                //    ChamRender.instance.state.flipTexture = true;
+
+                if (indCur > indStart) {
+                    if (indCur >= indEnd)
+                        indCur = indEnd;
+
+                    ChamRender.instance.setRenderBounds(indStart * unit, activeArea.getY() * unit, 0,
+                        indEnd * unit, (activeArea.getY() + activeArea.getHeight()) * unit, depth - frontDepth + .006);
+                    ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
+                    ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
+                    ChamRender.instance.state.clearRotateTransform();
+
+                    /*setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, indCur * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .06) * unit, side);
+                    if (side == 2 || side == 5)
+                        renderer.flipTexture = true;
+
+                    boxRenderer.setExteriorIcon(iconOn);
+                    boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
+
+                    renderer.flipTexture = false;*/
+                }
+
+                //ChamRender.instance.state.flipTexture = false;
+            }
+
+            //setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .05) * unit, side);
+
+            //boxRenderer.setExteriorIcon(iconOff);
+            //boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
+
+            /*if (level == 1 && drawer.getMaxCapacity() > 0 && drawer.getRemainingCapacity() == 0) {
+                setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .06) * unit, side);
+
+                boxRenderer.setExteriorIcon(iconOn);
+                boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
+            }
+            else if (level >= 2) {
+                double indStart = xywh[0] + block.indStart / unit;
+                double indEnd = xywh[0] + block.indEnd / unit;
+                double indCur = getIndEnd(block, tile, i, indStart, (block.indEnd - block.indStart) / unit);
+
+                if (indCur > indStart) {
+                    if (indCur >= indEnd)
+                        indCur = xywh[0] + xywh[2];
+
+                    setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, indCur * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .06) * unit, side);
+                    if (side == 2 || side == 5)
+                        renderer.flipTexture = true;
+
+                    boxRenderer.setExteriorIcon(iconOn);
+                    boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
+
+                    renderer.flipTexture = false;
+                }
+            }*/
+        }
+    }
+
+    private double getIndEnd (BlockDrawers block, TileEntityDrawers tile, int slot, double x, double w, int step) {
+        IDrawer drawer = tile.getDrawer(slot);
+        if (drawer == null)
+            return x;
+
+        int cap = drawer.getMaxCapacity();
+        int count = drawer.getStoredItemCount();
+        if (cap == 0 || count == 0)
+            return x;
+
+        float fillAmt = (float)(step * count / cap) / step;
+
+        return x + (w * fillAmt);
     }
 
     private class LocalRenderItem extends RenderItem {

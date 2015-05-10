@@ -3,10 +3,12 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import net.minecraft.block.*;
@@ -48,6 +50,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     public static final PropertyEnum VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
 
+    @SideOnly(Side.CLIENT)
+    private StatusModelData[] statusInfo;
+
     //private static final ResourceLocation blockConfig = new ResourceLocation(StorageDrawers.MOD_ID + ":textures/blocks/block_config.mcmeta");
 
     public BlockDrawers (String blockName) {
@@ -71,7 +76,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
-    protected int getDrawerCount (IBlockState state) {
+    public int getDrawerCount (IBlockState state) {
         if (state != null) {
             EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
             if (info != null)
@@ -81,7 +86,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         return 0;
     }
 
-    protected boolean isHalfDepth (IBlockState state) {
+    public boolean isHalfDepth (IBlockState state) {
         if (state != null) {
             EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
             if (info != null)
@@ -89,6 +94,26 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void initDynamic () {
+        statusInfo = new StatusModelData[EnumBasicDrawer.values().length];
+        for (EnumBasicDrawer type : EnumBasicDrawer.values()) {
+            ResourceLocation location = new ResourceLocation(StorageDrawers.MOD_ID + ":models/dynamic/basicDrawers_" + type.getName() + ".json");
+            statusInfo[type.getMetadata()] = new StatusModelData(type.getDrawerCount(), location);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public StatusModelData getStatusInfo (IBlockState state) {
+        if (state != null) {
+            EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
+            if (info != null)
+                return statusInfo[info.getMetadata()];
+        }
+
+        return null;
     }
 
     @Override
@@ -189,8 +214,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         if (item != null && item.getItem() != null) {
-            if (item.getItem() == ModItems.upgradeStorage  && item.getItemDamage() != tileDrawers.getStorageLevel()) {
-                tileDrawers.setStorageLevel(item.getItemDamage());
+            if (item.getItem() == ModItems.upgradeStorage  && item.getMetadata() != tileDrawers.getStorageLevel()) {
+                tileDrawers.setStorageLevel(item.getMetadata());
                 world.markBlockForUpdate(pos);
 
                 if (player != null && !player.capabilities.isCreativeMode) {
@@ -200,16 +225,19 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-            else if (item.getItem() == ModItems.upgradeStatus && item.getItemDamage() != tileDrawers.getStatusLevel()) {
-                tileDrawers.setStatusLevel(item.getItemDamage());
-                world.markBlockForUpdate(pos);
+            else if (item.getItem() == ModItems.upgradeStatus) {
+                EnumUpgradeStatus status = EnumUpgradeStatus.byMetadata(item.getMetadata());
+                if (status.getLevel() != tileDrawers.getStatusLevel()) {
+                    tileDrawers.setStatusLevel(status.getLevel());
+                    world.markBlockForUpdate(pos);
 
-                if (player != null && !player.capabilities.isCreativeMode) {
-                    if (--item.stackSize <= 0)
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                    if (player != null && !player.capabilities.isCreativeMode) {
+                        if (--item.stackSize <= 0)
+                            player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                    }
+
+                    return true;
                 }
-
-                return true;
             }
             else if (item.getItem() == ModItems.upgradeVoid && !tileDrawers.isVoid()) {
                 tileDrawers.setVoid(true);
@@ -476,9 +504,14 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @Override
     public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
         if (state instanceof IExtendedBlockState) {
+            EnumFacing facing;
             TileEntityDrawers tile = getTileEntity(world, pos);
-            EnumFacing facing = EnumFacing.getFront(tile.getDirection());
-            if (facing.getAxis() == EnumFacing.Axis.Y)
+            if (tile != null) {
+                facing = EnumFacing.getFront(tile.getDirection());
+                if (facing.getAxis() == EnumFacing.Axis.Y)
+                    facing = EnumFacing.NORTH;
+            }
+            else
                 facing = EnumFacing.NORTH;
 
             BlockPlanks.EnumType woodType = translateMaterial(tile.getMaterialOrDefault());

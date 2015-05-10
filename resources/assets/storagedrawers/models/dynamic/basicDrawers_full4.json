@@ -1,0 +1,52 @@
+{
+    "frontDepth": 0,
+    "slots": [ {
+        "statusAreaFrom": [ 0, 8 ],
+        "statusAreaTo": [ 8, 16 ],
+        "statusActiveFrom": [ 2.25, 14 ],
+        "statusActiveTo": [ 5.75, 15 ],
+        "statusActiveSteps": [ 14, 0 ],
+        "textures": {
+            "level1Off": "StorageDrawers:blocks/indicator/indicator_4_off",
+            "level1On": "StorageDrawers:blocks/indicator/indicator_4_on",
+            "level2Off": "StorageDrawers:blocks/indicator/indicator_4_off",
+            "level2On": "StorageDrawers:blocks/indicator/indicator_4_on"
+        }
+    }, {
+        "statusAreaFrom": [ 0, 0 ],
+        "statusAreaTo": [ 8, 8 ],
+        "statusActiveFrom": [ 2.25, 6 ],
+        "statusActiveTo": [ 5.75, 7 ],
+        "statusActiveSteps": [ 14, 0 ],
+        "textures": {
+            "level1Off": "StorageDrawers:blocks/indicator/indicator_4_off",
+            "level1On": "StorageDrawers:blocks/indicator/indicator_4_on",
+            "level2Off": "StorageDrawers:blocks/indicator/indicator_4_off",
+            "level2On": "StorageDrawers:blocks/indicator/indicator_4_on"
+        }
+    }, {
+        "statusAreaFrom": [ 8, 8 ],
+        "statusAreaTo": [ 16, 16 ],
+        "statusActiveFrom": [ 10.25, 14 ],
+        "statusActiveTo": [ 13.75, 15 ],
+        "statusActiveSteps": [ 14, 0 ],
+        "textures": {
+            "level1Off": "StorageDrawers:blocks/indicator/indicator_4_off",
+            "level1On": "StorageDrawers:blocks/indicator/indicator_4_on",
+            "level2Off": "StorageDrawers:blocks/indicator/indicator_4_off",
+            "level2On": "StorageDrawers:blocks/indicator/indicator_4_on"
+        }
+    }, {
+        "statusAreaFrom": [ 8, 0 ],
+        "statusAreaTo": [ 16, 8 ],
+        "statusActiveFrom": [ 10.25, 6 ],
+        "statusActiveTo": [ 13.75, 7 ],
+        "statusActiveSteps": [ 14, 0 ],
+        "textures": {
+            "level1Off": "StorageDrawers:blocks/indicator/indicator_4_off",
+            "level1On": "StorageDrawers:blocks/indicator/indicator_4_on",
+            "level2Off": "StorageDrawers:blocks/indicator/indicator_4_off",
+            "level2On": "StorageDrawers:blocks/indicator/indicator_4_on"
+        }
+    } ]
+}

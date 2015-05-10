@@ -44,12 +44,12 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }
 
     @Override
-    protected int getDrawerCount (IBlockState state) {
+    public int getDrawerCount (IBlockState state) {
         return 3;
     }
 
     @Override
-    protected boolean isHalfDepth (IBlockState state) {
+    public boolean isHalfDepth (IBlockState state) {
         return false;
     }
 

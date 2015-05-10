@@ -27,7 +27,7 @@ tile.basicDrawers.halfdrawers2.name=Compact Basic Drawers 1x2
 tile.basicDrawers.halfdrawers4.name=Compact Basic Drawers 2x2
 
 tile.compDrawers.name=Compacting Drawer
-tile.drawerController.name=Drawer Controller
+tile.controller.name=Drawer Controller
 tile.controllerSlave.name=Controller Slave
 
 tile.trim.oak.name=Oak Trim

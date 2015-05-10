@@ -1,16 +1,36 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CommonProxy
 {
-    public int drawersRenderID = -1;
-    public int controllerRenderID = -1;
+    public final ResourceLocation iconLockResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/lock_icon");
+    public final ResourceLocation iconVoidResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/void_icon");
+
+    public final ResourceLocation[] iconIndicatorOnResource = new ResourceLocation[] {
+        null,
+        new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_1_on"),
+        new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_2_on"),
+        null,
+        new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_4_on"),
+    };
+    public final ResourceLocation[] iconIndicatorOffResource = new ResourceLocation[] {
+        null,
+        new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_1_off"),
+        new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_2_off"),
+        null,
+        new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_4_off"),
+    };
+
+    public void initDynamic ()
+    { }
 
     public void registerRenderers ()
     { }

@@ -1,5 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
+import com.jaquadro.minecraft.chameleon.Chameleon;
+import com.jaquadro.minecraft.chameleon.resources.IconRegistry;
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
@@ -18,6 +21,7 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -32,9 +36,24 @@ public class ClientProxy extends CommonProxy
     }
 
     @Override
+    public void initDynamic () {
+        ModBlocks.basicDrawers.initDynamic();
+    }
+
+    @Override
     public void registerRenderers () {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.class, new TileEntityDrawersRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersComp.class, new TileEntityDrawersRenderer());
+
+        IconRegistry iconRegistry = Chameleon.instance.iconRegistry;
+        iconRegistry.registerIcon(iconLockResource);
+        iconRegistry.registerIcon(iconVoidResource);
+        for (int i = 0; i < 5; i++) {
+            if (iconIndicatorOffResource[i] != null)
+                iconRegistry.registerIcon(iconIndicatorOffResource[i]);
+            if (iconIndicatorOnResource[i] != null)
+                iconRegistry.registerIcon(iconIndicatorOnResource[i]);
+        }
 
         RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 
