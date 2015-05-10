@@ -3,8 +3,8 @@
     "slots": [ {
         "statusAreaFrom": [ 0, 0 ],
         "statusAreaTo": [ 16, 16 ],
-        "statusActiveFrom": [ 6.25, 14 ],
-        "statusActiveTo": [ 9.75, 15 ],
+        "statusActiveFrom": [ 6.25, 1 ],
+        "statusActiveTo": [ 9.75, 2 ],
         "statusActiveSteps": [ 14, 0 ],
         "textures": {
             "level1Off": "StorageDrawers:blocks/indicator/indicator_1_off",

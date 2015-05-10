@@ -3,8 +3,8 @@
     "slots": [ {
         "statusAreaFrom": [ 0, 8 ],
         "statusAreaTo": [ 8, 16 ],
-        "statusActiveFrom": [ 2.25, 14 ],
-        "statusActiveTo": [ 5.75, 15 ],
+        "statusActiveFrom": [ 2.25, 9 ],
+        "statusActiveTo": [ 5.75, 10 ],
         "statusActiveSteps": [ 14, 0 ],
         "textures": {
             "level1Off": "StorageDrawers:blocks/indicator/indicator_4_off",
@@ -15,8 +15,8 @@
     }, {
         "statusAreaFrom": [ 0, 0 ],
         "statusAreaTo": [ 8, 8 ],
-        "statusActiveFrom": [ 2.25, 6 ],
-        "statusActiveTo": [ 5.75, 7 ],
+        "statusActiveFrom": [ 2.25, 1 ],
+        "statusActiveTo": [ 5.75, 2 ],
         "statusActiveSteps": [ 14, 0 ],
         "textures": {
             "level1Off": "StorageDrawers:blocks/indicator/indicator_4_off",
@@ -27,8 +27,8 @@
     }, {
         "statusAreaFrom": [ 8, 8 ],
         "statusAreaTo": [ 16, 16 ],
-        "statusActiveFrom": [ 10.25, 14 ],
-        "statusActiveTo": [ 13.75, 15 ],
+        "statusActiveFrom": [ 10.25, 9 ],
+        "statusActiveTo": [ 13.75, 10 ],
         "statusActiveSteps": [ 14, 0 ],
         "textures": {
             "level1Off": "StorageDrawers:blocks/indicator/indicator_4_off",
@@ -39,8 +39,8 @@
     }, {
         "statusAreaFrom": [ 8, 0 ],
         "statusAreaTo": [ 16, 8 ],
-        "statusActiveFrom": [ 10.25, 6 ],
-        "statusActiveTo": [ 13.75, 7 ],
+        "statusActiveFrom": [ 10.25, 1 ],
+        "statusActiveTo": [ 13.75, 2 ],
         "statusActiveSteps": [ 14, 0 ],
         "textures": {
             "level1Off": "StorageDrawers:blocks/indicator/indicator_4_off",

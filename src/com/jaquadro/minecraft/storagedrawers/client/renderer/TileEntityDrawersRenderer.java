@@ -307,18 +307,6 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         ChamRender.instance.state.clearRotateTransform();
     }
 
-    private static final float[][] drawerXYWH1 = new float[][] {
-        { 0, 0, 16, 16 },
-    };
-
-    private static final float[][] drawerXYWH2 = new float[][] {
-        { 0, 8, 16, 8 }, { 0, 0, 16, 8 },
-    };
-
-    private static final float[][] drawerXYWH4 = new float[][] {
-        { 0, 8, 8, 8 }, { 0, 0, 8, 8 }, { 8, 8, 8, 8 }, { 8, 0, 8, 8 },
-    };
-
     private void renderIndicator (TileEntityDrawers tile, IBlockState blockState, int side, int level) {
         if (level <= 0 || side < 2 || side > 5)
             return;
@@ -331,30 +319,10 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         double unit = 0.0625;
         double frontDepth = statusInfo.getFrontDepth() * unit;
 
-        float[][] xywhSet = null;
-        switch (count) {
-            case 1:
-                xywhSet = drawerXYWH1;
-                break;
-            case 2:
-                xywhSet = drawerXYWH2;
-                break;
-            case 4:
-                xywhSet = drawerXYWH4;
-                break;
-            default:
-                return;
-        }
-
-        //TextureAtlasSprite iconOff = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconIndicatorOffResource[count]);
-        //TextureAtlasSprite iconOn = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconIndicatorOnResource[count]);
-
         for (int i = 0; i < count; i++) {
             IDrawer drawer = tile.getDrawer(i);
             if (drawer == null)
                 continue;
-
-            float[] xywh = xywhSet[i];
 
             TextureAtlasSprite iconOff = Chameleon.instance.iconRegistry.getIcon(statusInfo.getSlot(i).getOffResource(EnumUpgradeStatus.byLevel(level)));
             TextureAtlasSprite iconOn = Chameleon.instance.iconRegistry.getIcon(statusInfo.getSlot(i).getOnResource(EnumUpgradeStatus.byLevel(level)));
@@ -380,62 +348,17 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 double indEnd = activeArea.getX() + activeArea.getWidth();
                 double indCur = getIndEnd(block, tile, i, indStart, activeArea.getWidth(), statusInfo.getSlot(i).getActiveStepsX());
 
-                //if (side == 2 || side == 5)
-                //    ChamRender.instance.state.flipTexture = true;
-
                 if (indCur > indStart) {
                     if (indCur >= indEnd)
                         indCur = indEnd;
 
                     ChamRender.instance.setRenderBounds(indStart * unit, activeArea.getY() * unit, 0,
-                        indEnd * unit, (activeArea.getY() + activeArea.getHeight()) * unit, depth - frontDepth + .006);
+                        indCur * unit, (activeArea.getY() + activeArea.getHeight()) * unit, depth - frontDepth + .006);
                     ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
                     ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
                     ChamRender.instance.state.clearRotateTransform();
-
-                    /*setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, indCur * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .06) * unit, side);
-                    if (side == 2 || side == 5)
-                        renderer.flipTexture = true;
-
-                    boxRenderer.setExteriorIcon(iconOn);
-                    boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
-
-                    renderer.flipTexture = false;*/
                 }
-
-                //ChamRender.instance.state.flipTexture = false;
             }
-
-            //setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .05) * unit, side);
-
-            //boxRenderer.setExteriorIcon(iconOff);
-            //boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
-
-            /*if (level == 1 && drawer.getMaxCapacity() > 0 && drawer.getRemainingCapacity() == 0) {
-                setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .06) * unit, side);
-
-                boxRenderer.setExteriorIcon(iconOn);
-                boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
-            }
-            else if (level >= 2) {
-                double indStart = xywh[0] + block.indStart / unit;
-                double indEnd = xywh[0] + block.indEnd / unit;
-                double indCur = getIndEnd(block, tile, i, indStart, (block.indEnd - block.indStart) / unit);
-
-                if (indCur > indStart) {
-                    if (indCur >= indEnd)
-                        indCur = xywh[0] + xywh[2];
-
-                    setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, indCur * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .06) * unit, side);
-                    if (side == 2 || side == 5)
-                        renderer.flipTexture = true;
-
-                    boxRenderer.setExteriorIcon(iconOn);
-                    boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
-
-                    renderer.flipTexture = false;
-                }
-            }*/
         }
     }
 
