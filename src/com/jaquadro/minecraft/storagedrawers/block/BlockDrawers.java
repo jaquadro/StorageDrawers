@@ -402,9 +402,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
         if (tile != null) {
             if (tile.getStorageLevel() > 1)
-                spawnAsEntity(world, pos, new ItemStack(ModItems.upgradeStorage, 1, tile.getStorageLevel()));
+                spawnAsEntity(world, pos, new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.byLevel(tile.getStorageLevel()).getMetadata()));
             if (tile.getStatusLevel() > 0)
-                spawnAsEntity(world, pos, new ItemStack(ModItems.upgradeStatus, 1, tile.getStatusLevel()));
+                spawnAsEntity(world, pos, new ItemStack(ModItems.upgradeStatus, 1, EnumUpgradeStatus.byLevel(tile.getStatusLevel()).getMetadata()));
             if (tile.isVoid())
                 spawnAsEntity(world, pos, new ItemStack(ModItems.upgradeVoid));
 
