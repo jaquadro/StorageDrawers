@@ -14,6 +14,9 @@ public class CommonProxy
     public final ResourceLocation iconLockResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/lock_icon");
     public final ResourceLocation iconVoidResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/void_icon");
 
+    public final ResourceLocation iconIndicatorCompOnResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_comp_on");
+    public final ResourceLocation iconIndicatorCompOffResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_comp_off");
+
     public final ResourceLocation[] iconIndicatorOnResource = new ResourceLocation[] {
         null,
         new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_1_on"),

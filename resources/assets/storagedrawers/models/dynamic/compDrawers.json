@@ -1,0 +1,16 @@
+{
+    "frontDepth": 0,
+    "slots": [ {
+        "statusAreaFrom": [ 0, 0 ],
+        "statusAreaTo": [ 16, 16 ],
+        "statusActiveFrom": [ 7, 1 ],
+        "statusActiveTo": [ 9, 7 ],
+        "statusActiveSteps": [ 0, 12 ],
+        "textures": {
+            "level1Off": "StorageDrawers:blocks/indicator/indicator_comp_off",
+            "level1On": "StorageDrawers:blocks/indicator/indicator_comp_on",
+            "level2Off": "StorageDrawers:blocks/indicator/indicator_comp_off",
+            "level2On": "StorageDrawers:blocks/indicator/indicator_comp_on"
+        }
+    } ]
+}

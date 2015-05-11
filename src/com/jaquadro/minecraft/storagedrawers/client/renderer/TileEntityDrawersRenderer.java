@@ -10,6 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockState;
@@ -307,6 +308,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         ChamRender.instance.state.clearRotateTransform();
     }
 
+    //private void renderStorage ()
+
     private void renderIndicator (TileEntityDrawers tile, IBlockState blockState, int side, int level) {
         if (level <= 0 || side < 2 || side > 5)
             return;
@@ -314,7 +317,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         BlockDrawers block = (BlockDrawers)blockState.getBlock();
         StatusModelData statusInfo = block.getStatusInfo(blockState);
         double depth = block.isHalfDepth(blockState) ? .5 : 1;
-        int count = block.getDrawerCount(blockState);
+        int count = (tile instanceof TileEntityDrawersComp) ? 1 : block.getDrawerCount(blockState);
 
         double unit = 0.0625;
         double frontDepth = statusInfo.getFrontDepth() * unit;
@@ -344,16 +347,23 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 ChamRender.instance.state.clearRotateTransform();
             }
             else if (level >= 2) {
-                double indStart = activeArea.getX();
-                double indEnd = activeArea.getX() + activeArea.getWidth();
-                double indCur = getIndEnd(block, tile, i, indStart, activeArea.getWidth(), statusInfo.getSlot(i).getActiveStepsX());
+                int stepX = statusInfo.getSlot(i).getActiveStepsX();
+                int stepY = statusInfo.getSlot(i).getActiveStepsY();
 
-                if (indCur > indStart) {
-                    if (indCur >= indEnd)
-                        indCur = indEnd;
+                double indXStart = activeArea.getX();
+                double indXEnd = activeArea.getX() + activeArea.getWidth();
+                double indXCur = (stepX == 0) ? indXEnd : getIndEnd(block, tile, i, indXStart, activeArea.getWidth(), stepX);
 
-                    ChamRender.instance.setRenderBounds(indStart * unit, activeArea.getY() * unit, 0,
-                        indCur * unit, (activeArea.getY() + activeArea.getHeight()) * unit, depth - frontDepth + .006);
+                double indYStart = activeArea.getY();
+                double indYEnd = activeArea.getY() + activeArea.getHeight();
+                double indYCur = (stepY == 0) ? indYEnd : getIndEnd(block, tile, i, indYStart, activeArea.getHeight(), stepY);
+
+                if (indXCur > indXStart && indYCur > indYStart) {
+                    indXCur = Math.min(indXCur, indXEnd);
+                    indYCur = Math.min(indYCur, indYEnd);
+
+                    ChamRender.instance.setRenderBounds(indXStart * unit, indYStart * unit, 0,
+                        indXCur * unit, indYCur * unit, depth - frontDepth + .006);
                     ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
                     ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
                     ChamRender.instance.state.clearRotateTransform();

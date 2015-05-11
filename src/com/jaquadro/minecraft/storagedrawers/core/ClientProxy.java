@@ -38,6 +38,7 @@ public class ClientProxy extends CommonProxy
     @Override
     public void initDynamic () {
         ModBlocks.basicDrawers.initDynamic();
+        ModBlocks.compDrawers.initDynamic();
     }
 
     @Override
@@ -48,6 +49,9 @@ public class ClientProxy extends CommonProxy
         IconRegistry iconRegistry = Chameleon.instance.iconRegistry;
         iconRegistry.registerIcon(iconLockResource);
         iconRegistry.registerIcon(iconVoidResource);
+        iconRegistry.registerIcon(iconIndicatorCompOnResource);
+        iconRegistry.registerIcon(iconIndicatorCompOffResource);
+
         for (int i = 0; i < 5; i++) {
             if (iconIndicatorOffResource[i] != null)
                 iconRegistry.registerIcon(iconIndicatorOffResource[i]);

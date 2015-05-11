@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import net.minecraft.block.Block;
@@ -19,11 +20,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -31,6 +35,8 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
 {
     public static final PropertyEnum SLOTS = PropertyEnum.create("slots", EnumCompDrawer.class);
 
+    @SideOnly(Side.CLIENT)
+    private StatusModelData statusInfo;
 
     public BlockCompDrawers (String blockName) {
         super(Material.rock, blockName);
@@ -41,6 +47,18 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     @Override
     protected void initDefaultState () {
         setDefaultState(blockState.getBaseState().withProperty(SLOTS, EnumCompDrawer.OPEN1).withProperty(FACING, EnumFacing.NORTH));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void initDynamic () {
+        ResourceLocation location = new ResourceLocation(StorageDrawers.MOD_ID + ":models/dynamic/compDrawers.json");
+        statusInfo = new StatusModelData(1, location);
+    }
+
+    @Override
+    public StatusModelData getStatusInfo (IBlockState state) {
+        return statusInfo;
     }
 
     @Override
