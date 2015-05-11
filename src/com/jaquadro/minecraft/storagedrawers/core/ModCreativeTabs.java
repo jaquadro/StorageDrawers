@@ -19,6 +19,11 @@ public final class ModCreativeTabs
         public Item getTabIconItem () {
             return getTabItem();
         }
+
+        @Override
+        public int getIconItemDamage () {
+            return 1;
+        }
     };
 
     private static Item getTabItem () {

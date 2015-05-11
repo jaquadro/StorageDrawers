@@ -17,7 +17,8 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.8-2.0.0-alpha5"
+version = "1.8-2.0.0-alpha6"
+def version_chameleon = "1.8-0.1.0"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
 
@@ -78,7 +79,7 @@ processResources
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version':project.version, 'mcversion':project.minecraft.version, 'version_chameleon':version_chameleon
     }
         
     // copy everything else, thats not the mcmod.info

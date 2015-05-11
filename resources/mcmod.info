@@ -7,6 +7,20 @@
 	"credits": "By jaquadro",
 	"logoFile": "",
 	"url": "http://www.jaquadro.com/",
-	"authors": [ "jaquadro" ]
+	"authors": [ "jaquadro" ],
+	"requiredMods": [ "Forge", "Chameleon" ],
+	"dependencies": [ "Chameleon" ],
+	"useDependencyInformation": true
+}, {
+	"modid": "Chameleon",
+	"name": "Chameleon",
+	"description": "Shared code and render support for mods.  Used by jaquadro's mods.",
+	"version": "$version_chameleon",
+	"credits": "By jaquadro",
+	"logoFile": "",
+	"url": "http://www.jaquadro.com/",
+	"authors": [ "jaquadro" ],
+	"requiredMods": [ "Forge" ],
+	"useDependencyInformation": true
 }
 ]
