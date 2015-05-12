@@ -52,6 +52,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         }
     }
 
+    private Queue<BlockCoord> searchQueue = new LinkedList<BlockCoord>();
+    private Set<BlockCoord> searchDiscovered = new HashSet<BlockCoord>();
+
     private Map<BlockCoord, StorageRecord> storage = new HashMap<BlockCoord, StorageRecord>();
     private List<SlotRecord> invSlotList = new ArrayList<SlotRecord>();
     private List<SlotRecord> drawerSlotList = new ArrayList<SlotRecord>();
@@ -132,7 +135,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
         resetCache();
 
-        populateNode(xCoord, yCoord, zCoord, 0);
+        populateNodes(xCoord, yCoord, zCoord);
 
         flattenLists();
         inventorySlots = sortInventorySlots();
@@ -298,42 +301,55 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         }
     }
 
-    private void populateNode (int x, int y, int z, int depth) {
-        if (depth > DEPTH_LIMIT)
-            return;
+    private void populateNodes (int x, int y, int z) {
+        BlockCoord root = new BlockCoord(x, y, z);
 
-        Block block = worldObj.getBlock(x, y, z);
-        if (!(block instanceof INetworked))
-            return;
+        searchQueue.clear();
+        searchQueue.add(root);
 
-        BlockCoord coord = new BlockCoord(x, y, z);
-        StorageRecord record = storage.get(coord);
-        if (record == null) {
-            record = new StorageRecord();
-            storage.put(coord, record);
-        }
+        searchDiscovered.clear();
+        searchDiscovered.add(root);
 
-        if (block instanceof BlockSlave) {
-            ((BlockSlave) block).getTileEntitySafe(worldObj, x, y, z);
-        }
+        while (!searchQueue.isEmpty()) {
+            BlockCoord coord = searchQueue.remove();
+            int depth = Math.max(Math.max(Math.abs(coord.x() - x), Math.abs(coord.y() - y)), Math.abs(coord.z() - z));
+            if (depth > DEPTH_LIMIT)
+                continue;
 
-        updateRecordInfo(coord, record, worldObj.getTileEntity(x, y, z));
-        record.mark = true;
+            Block block = worldObj.getBlock(coord.x(), coord.y(), coord.z());
+            if (!(block instanceof INetworked))
+                continue;
 
-        if (record.distance > depth) {
+            StorageRecord record = storage.get(coord);
+            if (record == null) {
+                record = new StorageRecord();
+                storage.put(coord, record);
+            }
+
+            if (block instanceof BlockSlave) {
+                ((BlockSlave) block).getTileEntitySafe(worldObj, coord.x(), coord.y(), coord.z());
+            }
+
+            updateRecordInfo(coord, record, worldObj.getTileEntity(coord.x(), coord.y(), coord.z()));
             record.mark = true;
             record.distance = depth;
-            populateNeighborNodes(x, y, z, depth + 1);
-        }
-    }
 
-    private void populateNeighborNodes (int x, int y, int z, int depth) {
-        populateNode(x - 1, y, z, depth);
-        populateNode(x + 1, y, z, depth);
-        populateNode(x, y - 1, z, depth);
-        populateNode(x, y + 1, z, depth);
-        populateNode(x, y, z - 1, depth);
-        populateNode(x, y, z + 1, depth);
+            BlockCoord[] neighbors = new BlockCoord[] {
+                new BlockCoord(coord.x() + 1, coord.y(), coord.z()),
+                new BlockCoord(coord.x() - 1, coord.y(), coord.z()),
+                new BlockCoord(coord.x(), coord.y(), coord.z() + 1),
+                new BlockCoord(coord.x(), coord.y(), coord.z() - 1),
+                new BlockCoord(coord.x(), coord.y() + 1, coord.z()),
+                new BlockCoord(coord.x(), coord.y() - 1, coord.z()),
+            };
+
+            for (BlockCoord n : neighbors) {
+                if (!searchDiscovered.contains(n)) {
+                    searchQueue.add(n);
+                    searchDiscovered.add(n);
+                }
+            }
+        }
     }
 
     private IDrawerGroup getGroupForInvSlot (int invSlot) {
