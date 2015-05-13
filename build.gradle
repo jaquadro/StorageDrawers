@@ -17,13 +17,12 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.8-2.0.0-alpha6"
-def version_chameleon = "1.8-0.1.0"
+version = "${minecraft_version}-${mod_version}"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
 
 minecraft {
-    version = "1.8-11.14.1.1397"
+    version = forge_version
     assetDir = "runtime-1.8/assets"
 
     // the mappings can be changed at any time, and must be in the following format.
@@ -33,7 +32,9 @@ minecraft {
     // simply re-run your setup task after changing the mappings to update your workspace.
     mappings = "snapshot_20141130"
 
+    replaceIn "StorageDrawers.java"
     replace '@VERSION@', project.version
+    replace 'required-after:Chameleon', "required-after:Chameleon@[${chameleon_version},${chameleon_max_version})"
 }
 
 sourceSets.main {
@@ -66,6 +67,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     // compile "appeng:appliedenergistics2:rv1-stable-1:api"
+    //compile files("../Chameleon/build/libs/Chameleon-${minecraft_version}-${chameleon_version}.jar")
 }
 
 processResources
@@ -79,7 +81,7 @@ processResources
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version, 'version_chameleon':version_chameleon
+        expand 'version':project.version, 'mcversion':project.minecraft.version
     }
         
     // copy everything else, thats not the mcmod.info
