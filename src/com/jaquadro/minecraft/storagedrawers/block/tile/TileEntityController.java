@@ -56,6 +56,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         }
     }
 
+    private Queue<BlockPos> searchQueue = new LinkedList<BlockPos>();
+    private Set<BlockPos> searchDiscovered = new HashSet<BlockPos>();
+
     private Map<BlockPos, StorageRecord> storage = new HashMap<BlockPos, StorageRecord>();
     private List<SlotRecord> invSlotList = new ArrayList<SlotRecord>();
     private List<SlotRecord> drawerSlotList = new ArrayList<SlotRecord>();
@@ -132,7 +135,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
         resetCache();
 
-        populateNode(getPos(), 0);
+        populateNodes(getPos());
 
         flattenLists();
         inventorySlots = sortInventorySlots();
@@ -298,42 +301,49 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         }
     }
 
-    private void populateNode (BlockPos pos, int depth) {
-        if (depth > DEPTH_LIMIT)
-            return;
+    private void populateNodes (BlockPos root) {
 
-        IBlockState state = worldObj.getBlockState(pos);
-        Block block = state.getBlock();
-        if (!(block instanceof INetworked))
-            return;
+        searchQueue.clear();
+        searchQueue.add(root);
 
-        StorageRecord record = storage.get(pos);
-        if (record == null) {
-            record = new StorageRecord();
-            storage.put(pos, record);
-        }
+        searchDiscovered.clear();
+        searchDiscovered.add(root);
 
-        if (block instanceof BlockSlave) {
-            ((BlockSlave) block).getTileEntitySafe(worldObj, pos);
-        }
+        while (!searchQueue.isEmpty()) {
+            BlockPos coord = searchQueue.remove();
+            int depth = Math.max(Math.max(Math.abs(coord.getX() - root.getX()), Math.abs(coord.getY() - root.getY())), Math.abs(coord.getZ() - root.getZ()));
+            if (depth > DEPTH_LIMIT)
+                continue;
 
-        updateRecordInfo(pos, record, worldObj.getTileEntity(pos));
-        record.mark = true;
+            Block block = worldObj.getBlockState(coord).getBlock();
+            if (!(block instanceof INetworked))
+                continue;
 
-        if (record.distance > depth) {
+            StorageRecord record = storage.get(coord);
+            if (record == null) {
+                record = new StorageRecord();
+                storage.put(coord, record);
+            }
+
+            if (block instanceof BlockSlave) {
+                ((BlockSlave) block).getTileEntitySafe(worldObj, coord);
+            }
+
+            updateRecordInfo(coord, record, worldObj.getTileEntity(coord));
             record.mark = true;
             record.distance = depth;
-            populateNeighborNodes(pos, depth + 1);
-        }
-    }
 
-    private void populateNeighborNodes (BlockPos pos, int depth) {
-        populateNode(pos.west(), depth);
-        populateNode(pos.east(), depth);
-        populateNode(pos.down(), depth);
-        populateNode(pos.up(), depth);
-        populateNode(pos.north(), depth);
-        populateNode(pos.south(), depth);
+            BlockPos[] neighbors = new BlockPos[]{
+                coord.west(), coord.east(), coord.south(), coord.north(), coord.up(), coord.down()
+            };
+
+            for (BlockPos n : neighbors) {
+                if (!searchDiscovered.contains(n)) {
+                    searchQueue.add(n);
+                    searchDiscovered.add(n);
+                }
+            }
+        }
     }
 
     private IDrawerGroup getGroupForInvSlot (int invSlot) {

@@ -28,13 +28,48 @@ public class CompTierRegistry
         register(new ItemStack(Blocks.sandstone), new ItemStack(Blocks.sand), 4);
     }
 
-    public void register (ItemStack upper, ItemStack lower, int convRate) {
+    public boolean register (ItemStack upper, ItemStack lower, int convRate) {
+        if (upper == null || lower == null)
+            return false;
+        if (convRate != 4 && convRate != 9)
+            return false;
+
+        unregisterUpperTarget(upper);
+        unregisterLowerTarget(lower);
+
         Record r = new Record();
-        r.upper = upper;
-        r.lower = lower;
+        r.upper = upper.copy();
+        r.lower = lower.copy();
         r.convRate = convRate;
 
+        r.upper.stackSize = 1;
+        r.lower.stackSize = 1;
+
         records.add(r);
+
+        return true;
+    }
+
+    public boolean unregisterUpperTarget (ItemStack stack) {
+        for (Record r : records) {
+            if (ItemStack.areItemStacksEqual(stack, r.upper)) {
+                records.remove(r);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean unregisterLowerTarget (ItemStack stack) {
+        for (Record r : records) {
+            if (ItemStack.areItemStacksEqual(stack, r.lower)) {
+                records.remove(r);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Record findHigherTier (ItemStack stack) {
