@@ -506,14 +506,12 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @Override
     public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
         if (state instanceof IExtendedBlockState) {
-            EnumFacing facing;
             TileEntityDrawers tile = getTileEntity(world, pos);
-            if (tile != null) {
-                facing = EnumFacing.getFront(tile.getDirection());
-                if (facing.getAxis() == EnumFacing.Axis.Y)
-                    facing = EnumFacing.NORTH;
-            }
-            else
+            if (tile == null)
+                return state;
+
+            EnumFacing facing = EnumFacing.getFront(tile.getDirection());
+            if (facing.getAxis() == EnumFacing.Axis.Y)
                 facing = EnumFacing.NORTH;
 
             BlockPlanks.EnumType woodType = translateMaterial(tile.getMaterialOrDefault());

@@ -116,6 +116,9 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
         if (state instanceof IExtendedBlockState) {
             TileEntityDrawers tile = getTileEntity(world, pos);
+            if (tile == null)
+                return state;
+
             EnumFacing facing = EnumFacing.getFront(tile.getDirection());
             if (facing.getAxis() == EnumFacing.Axis.Y)
                 facing = EnumFacing.NORTH;

@@ -7,7 +7,7 @@
 	"credits": "By jaquadro",
 	"logoFile": "",
 	"url": "http://www.jaquadro.com/",
-	"authors": [ "jaquadro" ],
+	"authorList": [ "jaquadro" ],
 	"requiredMods": [ "Forge", "Chameleon" ],
 	"dependencies": [ "Chameleon" ],
 	"useDependencyInformation": true
