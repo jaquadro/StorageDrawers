@@ -40,6 +40,7 @@ public class Thaumcraft extends IntegrationModule
         MinecraftForge.EVENT_BUS.register(this);
 
         aspectItems = new Item[] {
+            GameRegistry.findItem(getModID(), "ItemResource"),
             GameRegistry.findItem(getModID(), "ItemEssence"),
             GameRegistry.findItem(getModID(), "ItemWispEssence"),
             GameRegistry.findItem(getModID(), "ItemCrystalEssence"),
