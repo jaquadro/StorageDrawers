@@ -40,6 +40,7 @@ public class Thaumcraft extends IntegrationModule
         MinecraftForge.EVENT_BUS.register(this);
 
         aspectItems = new Item[] {
+            GameRegistry.findItem(getModID(), "ItemResource"),
             GameRegistry.findItem(getModID(), "ItemEssence"),
             GameRegistry.findItem(getModID(), "ItemWispEssence"),
             GameRegistry.findItem(getModID(), "ItemCrystalEssence"),
@@ -77,7 +78,12 @@ public class Thaumcraft extends IntegrationModule
         NBTTagCompound tag = itemStack.getTagCompound();
         if (tag == null)
             return;
-
+        
+        if (tag.hasKey("AspectFilter")) {
+	        setDrawerAspectName(drawer, tag.getString("AspectFilter"));
+	        return;
+        }
+        
         NBTTagList tagAspects = tag.getTagList("Aspects", Constants.NBT.TAG_COMPOUND);
         if (tagAspects == null || tagAspects.tagCount() == 0)
             return;
@@ -86,10 +92,13 @@ public class Thaumcraft extends IntegrationModule
         if (tagAspect == null || !tagAspect.hasKey("key"))
             return;
 
-        String key = tagAspect.getString("key");
+        setDrawerAspectName(drawer, tagAspect.getString("key"));
+    }
+    
+    private void setDrawerAspectName (IDrawer drawer, String aspectName) {
         AspectList allAspects = ThaumcraftApiHelper.getAllAspects(1);
         for (Aspect a : allAspects.aspects.keySet()) {
-            if (a.getTag().equals(key)) {
+            if (a.getTag().equals(aspectName)) {
                 drawer.setExtendedData("aspect", a);
                 return;
             }
