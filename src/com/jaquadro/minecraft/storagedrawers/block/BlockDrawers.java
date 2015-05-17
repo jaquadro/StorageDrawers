@@ -58,19 +58,19 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     public int indSteps = 0;
 
     @SideOnly(Side.CLIENT)
-    private IIcon[] iconSide;
+    protected IIcon[] iconSide;
     @SideOnly(Side.CLIENT)
-    private IIcon[] iconSideV;
+    protected IIcon[] iconSideV;
     @SideOnly(Side.CLIENT)
-    private IIcon[] iconSideH;
+    protected IIcon[] iconSideH;
     @SideOnly(Side.CLIENT)
-    private IIcon[] iconFront1;
+    protected IIcon[] iconFront1;
     @SideOnly(Side.CLIENT)
-    private IIcon[] iconFront2;
+    protected IIcon[] iconFront2;
     @SideOnly(Side.CLIENT)
-    private IIcon[] iconFront4;
+    protected IIcon[] iconFront4;
     @SideOnly(Side.CLIENT)
-    private IIcon[] iconTrim;
+    protected IIcon[] iconTrim;
 
     @SideOnly(Side.CLIENT)
     private IIcon[] iconOverlay;
@@ -489,14 +489,14 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @SideOnly(Side.CLIENT)
     public IIcon getIconTrim (int meta) {
-        meta %= BlockWood.field_150096_a.length;
+        meta %= iconTrim.length;
         return iconTrim[meta];
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon (int side, int meta) {
-        meta %= BlockWood.field_150096_a.length;
+        meta %= iconSide.length;
 
         switch (side) {
             case 0:
@@ -543,7 +543,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @SideOnly(Side.CLIENT)
     protected IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side, int level) {
-        int meta = blockAccess.getBlockMetadata(x, y, z) % BlockWood.field_150096_a.length;
+        int meta = blockAccess.getBlockMetadata(x, y, z) % iconSide.length;
 
         TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
         if (tile == null || side == tile.getDirection()) {

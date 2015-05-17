@@ -9,4 +9,8 @@ public class ItemTrim extends ItemMultiTexture
     public ItemTrim (Block block) {
         super(block, block, BlockWood.field_150096_a);
     }
+
+    protected ItemTrim (Block block, String[] names) {
+        super(block, block, names);
+    }
 }
