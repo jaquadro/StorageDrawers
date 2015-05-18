@@ -56,6 +56,13 @@ public class RefinedRelocation extends IntegrationModule
 
         upgradeSorting = new ItemUpgradeSorting("upgradeSorting");
 
+        SortingBlockRegistry.register(ModBlocks.fullDrawers1, fullDrawers1);
+        SortingBlockRegistry.register(ModBlocks.fullDrawers2, fullDrawers2);
+        SortingBlockRegistry.register(ModBlocks.fullDrawers4, fullDrawers4);
+        SortingBlockRegistry.register(ModBlocks.halfDrawers2, halfDrawers2);
+        SortingBlockRegistry.register(ModBlocks.halfDrawers4, halfDrawers4);
+        SortingBlockRegistry.register(ModBlocks.compDrawers, compDrawers);
+
         ConfigManager config = StorageDrawers.config;
 
         if (config.isBlockEnabled("fulldrawers1")) {

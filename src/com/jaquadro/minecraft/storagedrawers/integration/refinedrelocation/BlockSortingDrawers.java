@@ -3,7 +3,6 @@ package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.integration.RefinedRelocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,7 +18,7 @@ import net.minecraft.world.World;
 public class BlockSortingDrawers extends BlockDrawers
 {
     @SideOnly(Side.CLIENT)
-    IIcon[] iconSort;
+    protected IIcon[] iconSort;
 
     public BlockSortingDrawers (String blockName, int drawerCount, boolean halfDepth) {
         super(blockName, drawerCount, halfDepth);
@@ -45,16 +44,10 @@ public class BlockSortingDrawers extends BlockDrawers
         world.removeTileEntity(x, y, z);
         world.setBlockToAir(x, y, z);
 
-        if (block == ModBlocks.fullDrawers1)
-            world.setBlock(x, y, z, RefinedRelocation.fullDrawers1, meta, 3);
-        else if (block == ModBlocks.fullDrawers2)
-            world.setBlock(x, y, z, RefinedRelocation.fullDrawers2, meta, 3);
-        else if (block == ModBlocks.fullDrawers4)
-            world.setBlock(x, y, z, RefinedRelocation.fullDrawers4, meta, 3);
-        else if (block == ModBlocks.halfDrawers2)
-            world.setBlock(x, y, z, RefinedRelocation.halfDrawers2, meta, 3);
-        else if (block == ModBlocks.halfDrawers4)
-            world.setBlock(x, y, z, RefinedRelocation.halfDrawers4, meta, 3);
+        Block sortingBlock = SortingBlockRegistry.resolveSortingBlock(block);
+        if (sortingBlock != null) {
+            world.setBlock(x, y, z, sortingBlock, meta, 3);
+        }
 
         world.setTileEntity(x, y, z, newDrawer);
 
@@ -76,7 +69,7 @@ public class BlockSortingDrawers extends BlockDrawers
 
     @SideOnly(Side.CLIENT)
     protected IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side, int level) {
-        int meta = blockAccess.getBlockMetadata(x, y, z) % BlockWood.field_150096_a.length;
+        int meta = blockAccess.getBlockMetadata(x, y, z) % iconSort.length;
         if (side == 1 && !halfDepth)
             return iconSort[meta];
 

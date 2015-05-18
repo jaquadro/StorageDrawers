@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.packs.natura;
 
 import com.jaquadro.minecraft.storagedrawers.packs.natura.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.packs.natura.core.ModRecipes;
+import com.jaquadro.minecraft.storagedrawers.packs.natura.core.RefinedRelocation;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -32,10 +33,12 @@ public class StorageDrawersPack
 
     @Mod.EventHandler
     public void init (FMLInitializationEvent event) {
+        RefinedRelocation.init();
     }
 
     @Mod.EventHandler
     public void postInit (FMLPostInitializationEvent event) {
         recipes.init();
+        RefinedRelocation.postInit();
     }
 }

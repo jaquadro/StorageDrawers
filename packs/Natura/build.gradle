@@ -26,6 +26,7 @@ minecraft {
     assetDir = "../../runtime/assets"
 
     replace '@VERSION@', project.version
+    replace 'required-after:StorageDrawers', "required-after:StorageDrawers@[1.4.7,)"
 }
 
 sourceSets.main {

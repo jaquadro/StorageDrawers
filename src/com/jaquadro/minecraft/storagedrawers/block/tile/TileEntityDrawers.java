@@ -294,27 +294,32 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             return;
         }
 
-        tag.setByte("Dir", (byte)direction);
-        tag.setByte("Cap", (byte)drawerCapacity);
-        tag.setByte("Lev", (byte) storageLevel);
+        try {
+            tag.setByte("Dir", (byte) direction);
+            tag.setByte("Cap", (byte) drawerCapacity);
+            tag.setByte("Lev", (byte) storageLevel);
 
-        if (statusLevel > 0)
-            tag.setByte("Stat", (byte)statusLevel);
+            if (statusLevel > 0)
+                tag.setByte("Stat", (byte) statusLevel);
 
-        if (locked)
-            tag.setBoolean("Lock", locked);
+            if (locked)
+                tag.setBoolean("Lock", locked);
 
-        if (voidUpgrade)
-            tag.setBoolean("Void", voidUpgrade);
+            if (voidUpgrade)
+                tag.setBoolean("Void", voidUpgrade);
 
-        NBTTagList slots = new NBTTagList();
-        for (IDrawer drawer : drawers) {
-            NBTTagCompound slot = new NBTTagCompound();
-            drawer.writeToNBT(slot);
-            slots.appendTag(slot);
+            NBTTagList slots = new NBTTagList();
+            for (IDrawer drawer : drawers) {
+                NBTTagCompound slot = new NBTTagCompound();
+                drawer.writeToNBT(slot);
+                slots.appendTag(slot);
+            }
+
+            tag.setTag("Slots", slots);
         }
-
-        tag.setTag("Slots", slots);
+        catch (Throwable t) {
+            FMLLog.log(StorageDrawers.MOD_ID, Level.ERROR, t, "Tile Save Failure.");
+        }
     }
 
     @Override
