@@ -438,7 +438,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     @Override
     public String getInventoryName () {
-        return inventory.getInventoryName();
+        return "container.drawers";
     }
 
     @Override
@@ -453,7 +453,11 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     @Override
     public boolean isUseableByPlayer (EntityPlayer player) {
-        return inventory.isUseableByPlayer(player);
+        if (worldObj.getTileEntity(xCoord, yCoord, zCoord) != this)
+            return false;
+
+        return player.getDistanceSq(xCoord + .5, yCoord + .5, zCoord + .5) <= 64;
+
     }
 
     @Override

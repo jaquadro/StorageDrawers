@@ -26,6 +26,8 @@ public class IntegrationRegistry
             reg.add(new MineTweaker());
         if (Loader.isModLoaded("RefinedRelocation") && StorageDrawers.config.cache.enableRefinedRelocationIntegration)
             reg.add(new RefinedRelocation());
+        if (Loader.isModLoaded("NotEnoughItems"))
+            reg.add(new NotEnoughItems());
     }
 
     private IntegrationRegistry () {
@@ -65,5 +67,14 @@ public class IntegrationRegistry
     public void postInit () {
         for (IntegrationModule module : registry)
             module.postInit();
+    }
+
+    public boolean isModLoaded (String mod_id) {
+        for (IntegrationModule module : registry) {
+            if (module.getModID().equals(mod_id))
+                return true;
+        }
+
+        return false;
     }
 }
