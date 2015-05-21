@@ -153,15 +153,18 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         if (slot == -1)
             return false;
 
-        upgrade = upgrade.copy();
-        upgrade.stackSize = 1;
-
         setUpgrade(slot, upgrade);
         return true;
     }
 
     public void setUpgrade (int slot, ItemStack upgrade) {
         slot = MathHelper.clamp_int(slot, 0, 4);
+
+        if (upgrade != null) {
+            upgrade = upgrade.copy();
+            upgrade.stackSize = 1;
+        }
+
         upgrades[slot] = upgrade;
 
         if (worldObj != null && !worldObj.isRemote) {

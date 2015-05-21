@@ -25,7 +25,13 @@ public class StorageRenderItem extends RenderItem
 
             if (item.stackSize > 1 || text != null)
             {
-                text = (text == null) ? String.valueOf(item.stackSize) : text;
+                if (item.stackSize >= 10000)
+                    text = (text == null) ? String.format("%.1fK", item.stackSize / 1000f) : text;
+                else if (item.stackSize >= 1000000)
+                    text = (text == null) ? String.format("%.1fM", item.stackSize / 1000000f) : text;
+                else
+                    text = (text == null) ? String.valueOf(item.stackSize) : text;
+
                 int textX = (int)((x + 16 - font.getStringWidth(text) * scale) / scale) - 1;
                 int textY = (int)((y + 16 - 7 * scale) / scale) - 1;
 

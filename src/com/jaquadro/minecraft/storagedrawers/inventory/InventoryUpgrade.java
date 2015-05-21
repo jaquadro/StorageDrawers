@@ -47,6 +47,9 @@ public class InventoryUpgrade implements IInventory
 
     @Override
     public void setInventorySlotContents (int slot, ItemStack item) {
+        //if (item != null && item.stackSize > getInventoryStackLimit())
+        //    item.stackSize = getInventoryStackLimit();
+
         tile.setUpgrade(slot, item);
     }
 

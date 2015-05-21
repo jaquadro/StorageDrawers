@@ -106,15 +106,27 @@ public class ContainerDrawers extends Container
 
             // Try merge inventory to upgrades
             else if (slotIndex >= inventoryStart && slotIndex < hotbarEnd && slotStack != null) {
-                if (slotStack.getItem() == ModItems.upgrade || slotStack.getItem() == ModItems.upgradeStatus || slotStack.getItem() == ModItems.upgradeVoid) {
-                    if (!mergeItemStack(slotStack, upgradeStart, upgradeEnd, false)) {
+                /*if (slotStack.getItem() == ModItems.upgrade || slotStack.getItem() == ModItems.upgradeStatus || slotStack.getItem() == ModItems.upgradeVoid) {
+                    ItemStack slotStack1 = slotStack.copy();
+                    slotStack1.stackSize = 1;
+
+                    if (!mergeItemStack(slotStack1, upgradeStart, upgradeEnd, false)) {
                         if (slotIndex >= inventoryStart && slotIndex < hotbarEnd) {
                             if (!mergeItemStack(slotStack, hotbarStart, hotbarEnd, false))
                                 return null;
                         } else if (slotIndex >= hotbarStart && slotIndex < hotbarEnd && !mergeItemStack(slotStack, inventoryStart, hotbarStart, false))
                             return null;
                     }
-                }
+                    else {
+                        slotStack.stackSize--;
+                    }
+                }*/
+
+                if (slotIndex >= inventoryStart && slotIndex < hotbarStart) {
+                    if (!mergeItemStack(slotStack, hotbarStart, hotbarEnd, false))
+                        return null;
+                } else if (slotIndex >= hotbarStart && slotIndex < hotbarEnd && !mergeItemStack(slotStack, inventoryStart, hotbarStart, false))
+                    return null;
             }
 
             // Try merge stack into inventory

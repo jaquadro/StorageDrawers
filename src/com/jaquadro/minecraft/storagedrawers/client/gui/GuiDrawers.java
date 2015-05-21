@@ -48,6 +48,8 @@ public class GuiDrawers extends GuiContainer
                 return new ContainerDrawers1(inventory, tile);
             case 2:
                 return new ContainerDrawers2(inventory, tile);
+            case 3:
+                return new ContainerDrawersComp(inventory, tile);
             case 4:
                 return new ContainerDrawers4(inventory, tile);
             default:
