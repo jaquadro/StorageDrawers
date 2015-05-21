@@ -4,6 +4,8 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
+import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.StorageInventory;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
@@ -13,6 +15,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -37,10 +40,12 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     private int direction;
     private int drawerCapacity = 1;
-    private int storageLevel = 1;
-    private int statusLevel = 0;
+    //private int storageLevel = 1;
+    //private int statusLevel = 0;
     private boolean locked = false;
-    private boolean voidUpgrade = false;
+    //private boolean voidUpgrade = false;
+
+    private ItemStack[] upgrades = new ItemStack[5];
 
     private long lastClickTime;
     private UUID lastClickUUID;
@@ -73,7 +78,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         this.direction = direction % 6;
     }
 
-    public int getStorageLevel () {
+    /*public int getStorageLevel () {
         return storageLevel;
     }
 
@@ -87,6 +92,88 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     public void setStatusLevel (int level) {
         this.statusLevel = MathHelper.clamp_int(level, 1, 3);
+    }*/
+
+    public int getMaxStorageLevel () {
+        int maxLevel = 1;
+        for (ItemStack upgrade : upgrades) {
+            if (upgrade != null && upgrade.getItem() == ModItems.upgrade)
+                maxLevel = Math.max(maxLevel, upgrade.getItemDamage());
+        }
+
+        return maxLevel;
+    }
+
+    public int getEffectiveStorageLevel () {
+        int level = 0;
+        for (ItemStack upgrade : upgrades) {
+            if (upgrade != null && upgrade.getItem() == ModItems.upgrade)
+                level += upgrade.getItemDamage();
+        }
+
+        return Math.max(level, 1);
+    }
+
+    public int getEffectiveStorageMultiplier () {
+        ConfigManager config = StorageDrawers.config;
+
+        int multiplier = 0;
+        for (ItemStack stack : upgrades) {
+            if (stack != null && stack.getItem() == ModItems.upgrade)
+                multiplier += config.getStorageUpgradeMultiplier(stack.getItemDamage());
+        }
+
+        if (multiplier == 0)
+            multiplier = config.getStorageUpgradeMultiplier(1);
+
+        return multiplier;
+    }
+
+    public int getEffectiveStatusLevel () {
+        int maxLevel = 0;
+        for (ItemStack upgrade : upgrades) {
+            if (upgrade != null && upgrade.getItem() == ModItems.upgradeStatus)
+                maxLevel = upgrade.getItemDamage();
+        }
+
+        return maxLevel;
+    }
+
+    public int getUpgradeSlotCount () {
+        return 5;
+    }
+
+    public ItemStack getUpgrade (int slot) {
+        slot = MathHelper.clamp_int(slot, 0, 4);
+        return upgrades[slot];
+    }
+
+    public boolean addUpgrade (ItemStack upgrade) {
+        int slot = getNextUpgradeSlot();
+        if (slot == -1)
+            return false;
+
+        setUpgrade(slot, upgrade);
+        return true;
+    }
+
+    public void setUpgrade (int slot, ItemStack upgrade) {
+        slot = MathHelper.clamp_int(slot, 0, 4);
+        upgrades[slot] = upgrade;
+
+        if (!worldObj.isRemote) {
+            markDirty();
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+
+    public int getNextUpgradeSlot () {
+        for (int i = 0; i < upgrades.length; i++) {
+            if (upgrades[i] == null)
+                return i;
+        }
+
+        return -1;
     }
 
     public int getDrawerCapacity () {
@@ -123,12 +210,17 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         if (!StorageDrawers.config.cache.enableVoidUpgrades)
             return false;
 
-        return voidUpgrade;
+        for (ItemStack stack : upgrades) {
+            if (stack != null && stack.getItem() == ModItems.upgradeVoid)
+                return true;
+        }
+
+        return false;
     }
 
-    public void setVoid (boolean isVoid) {
-        this.voidUpgrade = isVoid;
-    }
+    //public void setVoid (boolean isVoid) {
+        //this.voidUpgrade = isVoid;
+    //}
 
     public boolean isSorting () {
         return false;
@@ -244,6 +336,15 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         return failureSnapshot != null;
     }
 
+    private void readLegacyUpgradeNBT (NBTTagCompound tag) {
+        if (tag.hasKey("Lev") && tag.getByte("Lev") > 1)
+            addUpgrade(new ItemStack(ModItems.upgrade, 1, tag.getByte("Lev")));
+        if (tag.hasKey("Stat"))
+            addUpgrade(new ItemStack(ModItems.upgradeStatus, 1, tag.getByte("Stat")));
+        if (tag.hasKey("Void"))
+            addUpgrade(new ItemStack(ModItems.upgradeVoid));
+    }
+
     @Override
     public void readFromNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
@@ -251,22 +352,37 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         failureSnapshot = null;
 
         try {
+            upgrades = new ItemStack[upgrades.length];
+
             setDirection(tag.getByte("Dir"));
-
             drawerCapacity = tag.getByte("Cap");
-            storageLevel = tag.getByte("Lev");
 
-            statusLevel = 0;
-            if (tag.hasKey("Stat"))
-                statusLevel = tag.getByte("Stat");
+            if (!tag.hasKey("Upgrades")) {
+                readLegacyUpgradeNBT(tag);
+            }
+            else {
+                NBTTagList upgradeList = tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND);
+                for (int i = 0; i < upgradeList.tagCount(); i++) {
+                    NBTTagCompound upgradeTag = upgradeList.getCompoundTagAt(i);
+
+                    int slot = upgradeTag.getByte("Slot");
+                    setUpgrade(slot, ItemStack.loadItemStackFromNBT(upgradeTag));
+                }
+            }
+
+            //storageLevel = tag.getByte("Lev");
+
+            //statusLevel = 0;
+            //if (tag.hasKey("Stat"))
+            //    statusLevel = tag.getByte("Stat");
 
             locked = false;
             if (tag.hasKey("Lock"))
                 locked = tag.getBoolean("Lock");
 
-            voidUpgrade = false;
-            if (tag.hasKey("Void"))
-                voidUpgrade = tag.getBoolean("Void");
+            //voidUpgrade = false;
+            //if (tag.hasKey("Void"))
+            //    voidUpgrade = tag.getBoolean("Void");
 
             NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
             int drawerCount = slots.tagCount();
@@ -297,16 +413,30 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         try {
             tag.setByte("Dir", (byte) direction);
             tag.setByte("Cap", (byte) drawerCapacity);
-            tag.setByte("Lev", (byte) storageLevel);
 
-            if (statusLevel > 0)
-                tag.setByte("Stat", (byte) statusLevel);
+            NBTTagList upgradeList = new NBTTagList();
+            for (int i = 0; i < upgrades.length; i++) {
+                if (upgrades[i] != null) {
+                    NBTTagCompound upgradeTag = upgrades[i].writeToNBT(new NBTTagCompound());
+                    upgradeTag.setByte("Slot", (byte)i);
+
+                    upgradeList.appendTag(upgradeTag);
+                }
+            }
+
+            if (upgradeList.tagCount() > 0)
+                tag.setTag("Upgrades", upgradeList);
+
+            //tag.setByte("Lev", (byte) storageLevel);
+
+            //if (statusLevel > 0)
+            //    tag.setByte("Stat", (byte) statusLevel);
 
             if (locked)
                 tag.setBoolean("Lock", locked);
 
-            if (voidUpgrade)
-                tag.setBoolean("Void", voidUpgrade);
+            //if (voidUpgrade)
+            //    tag.setBoolean("Void", voidUpgrade);
 
             NBTTagList slots = new NBTTagList();
             for (IDrawer drawer : drawers) {

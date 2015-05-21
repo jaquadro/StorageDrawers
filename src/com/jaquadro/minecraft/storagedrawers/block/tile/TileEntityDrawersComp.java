@@ -548,7 +548,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         private int getBaseStackCapacity () {
             ConfigManager config = StorageDrawers.config;
-            return config.getStorageUpgradeMultiplier(getStorageLevel()) * TileEntityDrawersComp.this.getDrawerCapacity();
+            return TileEntityDrawersComp.this.getEffectiveStorageMultiplier() * TileEntityDrawersComp.this.getDrawerCapacity();
         }
 
         public void markAmountDirty () {

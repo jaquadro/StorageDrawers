@@ -24,15 +24,16 @@ public class InventoryUpgrade implements IInventory
 
     @Override
     public ItemStack getStackInSlot (int slot) {
-        return null; //tile.getUpgrade(slot);
+        return tile.getUpgrade(slot);
     }
 
     @Override
     public ItemStack decrStackSize (int slot, int count) {
-        //if (count > 0)
-        //    tile.setUpgrade(slot, null);
+        ItemStack stack = tile.getUpgrade(slot);
+        if (count > 0)
+            tile.setUpgrade(slot, null);
 
-        return null;
+        return stack;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class InventoryUpgrade implements IInventory
 
     @Override
     public void setInventorySlotContents (int slot, ItemStack item) {
-        //tile.setUpgrade(slot, item);
+        tile.setUpgrade(slot, item);
     }
 
     @Override

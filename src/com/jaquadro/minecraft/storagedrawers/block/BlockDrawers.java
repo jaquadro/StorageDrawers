@@ -203,8 +203,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         if (item != null && item.getItem() != null) {
-            if (item.getItem() == ModItems.upgrade  && item.getItemDamage() != tileDrawers.getStorageLevel()) {
-                tileDrawers.setStorageLevel(item.getItemDamage());
+            if (item.getItem() == ModItems.upgrade) {
+                tileDrawers.addUpgrade(item);
                 world.markBlockForUpdate(x, y, z);
 
                 if (player != null && !player.capabilities.isCreativeMode) {
@@ -214,8 +214,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-            else if (item.getItem() == ModItems.upgradeStatus && item.getItemDamage() != tileDrawers.getStatusLevel()) {
-                tileDrawers.setStatusLevel(item.getItemDamage());
+            else if (item.getItem() == ModItems.upgradeStatus) {
+                tileDrawers.addUpgrade(item);
                 world.markBlockForUpdate(x, y, z);
 
                 if (player != null && !player.capabilities.isCreativeMode) {
@@ -232,7 +232,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 return true;
             }
             else if (item.getItem() == ModItems.upgradeVoid && !tileDrawers.isVoid()) {
-                tileDrawers.setVoid(true);
+                tileDrawers.addUpgrade(item);
                 world.markBlockForUpdate(x, y, z);
 
                 if (player != null && !player.capabilities.isCreativeMode) {
@@ -384,12 +384,17 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         TileEntityDrawers tile = getTileEntity(world, x, y, z);
 
         if (tile != null) {
-            if (tile.getStorageLevel() > 1)
-                dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgrade, 1, tile.getStorageLevel()));
-            if (tile.getStatusLevel() > 0)
-                dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgradeStatus, 1, tile.getStatusLevel()));
-            if (tile.isVoid())
-                dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgradeVoid));
+            for (int i = 0; i < tile.getUpgradeSlotCount(); i++) {
+                ItemStack stack = tile.getUpgrade(i);
+                if (stack != null)
+                    dropBlockAsItem(world, x, y, z, stack);
+            }
+            //if (tile.getStorageLevel() > 1)
+            //    dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgrade, 1, tile.getStorageLevel()));
+            //if (tile.getStatusLevel() > 0)
+            //    dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgradeStatus, 1, tile.getStatusLevel()));
+            //if (tile.isVoid())
+            //    dropBlockAsItem(world, x, y, z, new ItemStack(ModItems.upgradeVoid));
 
             for (int i = 0; i < tile.getDrawerCount(); i++) {
                 if (!tile.isDrawerEnabled(i))

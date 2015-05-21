@@ -111,12 +111,13 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         renderer.uvRotateTop = 0;
 
-        if (tile.getStorageLevel() > 1 && StorageDrawers.config.cache.renderStorageUpgrades) {
+        int maxStorageLevel = tile.getMaxStorageLevel();
+        if (maxStorageLevel > 1 && StorageDrawers.config.cache.renderStorageUpgrades) {
             for (int i = 0; i < 6; i++)
-                boxRenderer.setExteriorIcon(block.getOverlayIcon(world, x, y, z, i, tile.getStorageLevel()), i);
+                boxRenderer.setExteriorIcon(block.getOverlayIcon(world, x, y, z, i, maxStorageLevel), i);
 
-            boxRenderer.setCutIcon(block.getOverlayIconTrim(tile.getStorageLevel()));
-            boxRenderer.setInteriorIcon(block.getOverlayIconTrim(tile.getStorageLevel()));
+            boxRenderer.setCutIcon(block.getOverlayIconTrim(maxStorageLevel));
+            boxRenderer.setInteriorIcon(block.getOverlayIconTrim(maxStorageLevel));
 
             renderExterior(block, x, y, z, side, renderer);
         }
@@ -127,7 +128,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         renderInterior(block, x, y, z, side, renderer);
 
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
-            renderIndicator(block, x, y, z, side, renderer, tile.getStatusLevel());
+            renderIndicator(block, x, y, z, side, renderer, tile.getEffectiveStatusLevel());
         if (StorageDrawers.config.cache.enableLockUpgrades)
             renderLock(block, x, y, z, side, renderer, tile.isLocked());
         if (StorageDrawers.config.cache.enableVoidUpgrades)

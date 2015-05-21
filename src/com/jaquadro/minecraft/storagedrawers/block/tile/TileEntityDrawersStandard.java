@@ -41,7 +41,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         @Override
         public int getSlotStackCapacity (int slot) {
             ConfigManager config = StorageDrawers.config;
-            return config.getStorageUpgradeMultiplier(getStorageLevel()) * getDrawerCapacity();
+            return getEffectiveStorageMultiplier() * getDrawerCapacity();
         }
 
         @Override

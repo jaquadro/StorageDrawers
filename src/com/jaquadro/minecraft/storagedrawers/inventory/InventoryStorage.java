@@ -121,8 +121,13 @@ public class InventoryStorage implements IInventory
     public void markDirty () {
         for (int i = 0, n = getSizeInventory(); i < n; i++) {
             int diff = snapshot.splitDiff(i);
-            if (diff != 0)
-                tile.getStackInSlot(i).stackSize += diff;
+            if (diff != 0) {
+                ItemStack stack = tile.getStackInSlot(i);
+                if (stack != null)
+                    stack.stackSize += diff;
+                //else if (diff > 0)
+                //    tile.setInventorySlotContents(i, snapshot.);
+            }
         }
 
         tile.markDirty();

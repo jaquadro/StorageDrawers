@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.core.handlers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.gui.GuiDrawers;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers;
+import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -35,6 +36,8 @@ public class GuiHandler implements IGuiHandler
 
     private ContainerDrawers getContainer (TileEntityDrawers tile, InventoryPlayer playerInventory) {
         switch (tile.getDrawerCount()) {
+            case 1:
+                return new ContainerDrawers1(playerInventory, tile);
             case 2:
                 return new ContainerDrawers2(playerInventory, tile);
             case 4:
