@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -39,7 +40,7 @@ public class ContainerDrawers extends Container
 
         upgradeSlots = new ArrayList<Slot>();
         for (int i = 0; i < 5; i++)
-            upgradeSlots.add(addSlotToContainer(new Slot(upgradeInventory, i, UpgradeX + i * 18, UpgradeY)));
+            upgradeSlots.add(addSlotToContainer(new SlotUpgrade(upgradeInventory, i, UpgradeX + i * 18, UpgradeY)));
 
         playerSlots = new ArrayList<Slot>();
         for (int i = 0; i < 3; i++) {
@@ -66,6 +67,10 @@ public class ContainerDrawers extends Container
 
     public List<Slot> getStorageSlots () {
         return storageSlots;
+    }
+
+    public List<Slot> getUpgradeSlots () {
+        return upgradeSlots;
     }
 
     @Override
@@ -97,6 +102,19 @@ public class ContainerDrawers extends Container
                 if (!mergeItemStack(slotStack, inventoryStart, hotbarEnd, true))
                     return null;
                 slot.onSlotChange(slotStack, itemStack);
+            }
+
+            // Try merge inventory to upgrades
+            else if (slotIndex >= inventoryStart && slotIndex < hotbarEnd && slotStack != null) {
+                if (slotStack.getItem() == ModItems.upgrade || slotStack.getItem() == ModItems.upgradeStatus || slotStack.getItem() == ModItems.upgradeVoid) {
+                    if (!mergeItemStack(slotStack, upgradeStart, upgradeEnd, false)) {
+                        if (slotIndex >= inventoryStart && slotIndex < hotbarEnd) {
+                            if (!mergeItemStack(slotStack, hotbarStart, hotbarEnd, false))
+                                return null;
+                        } else if (slotIndex >= hotbarStart && slotIndex < hotbarEnd && !mergeItemStack(slotStack, inventoryStart, hotbarStart, false))
+                            return null;
+                    }
+                }
             }
 
             // Try merge stack into inventory

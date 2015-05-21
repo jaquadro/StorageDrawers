@@ -153,6 +153,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         if (slot == -1)
             return false;
 
+        upgrade = upgrade.copy();
+        upgrade.stackSize = 1;
+
         setUpgrade(slot, upgrade);
         return true;
     }
@@ -161,7 +164,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         slot = MathHelper.clamp_int(slot, 0, 4);
         upgrades[slot] = upgrade;
 
-        if (!worldObj.isRemote) {
+        if (worldObj != null && !worldObj.isRemote) {
             markDirty();
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }

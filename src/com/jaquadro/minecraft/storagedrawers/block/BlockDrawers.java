@@ -203,19 +203,12 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         if (item != null && item.getItem() != null) {
-            if (item.getItem() == ModItems.upgrade) {
-                tileDrawers.addUpgrade(item);
-                world.markBlockForUpdate(x, y, z);
-
-                if (player != null && !player.capabilities.isCreativeMode) {
-                    if (--item.stackSize <= 0)
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+            if (item.getItem() == ModItems.upgrade || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid) {
+                if (!tileDrawers.addUpgrade(item)) {
+                    player.addChatMessage(new ChatComponentTranslation("storagedrawers.msg.maxUpgrades"));
+                    return false;
                 }
 
-                return true;
-            }
-            else if (item.getItem() == ModItems.upgradeStatus) {
-                tileDrawers.addUpgrade(item);
                 world.markBlockForUpdate(x, y, z);
 
                 if (player != null && !player.capabilities.isCreativeMode) {
@@ -231,19 +224,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-            else if (item.getItem() == ModItems.upgradeVoid && !tileDrawers.isVoid()) {
-                tileDrawers.addUpgrade(item);
-                world.markBlockForUpdate(x, y, z);
-
-                if (player != null && !player.capabilities.isCreativeMode) {
-                    if (--item.stackSize <= 0)
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-                }
-
-                return true;
-            }
         }
-        else if (true) {
+        else if (item == null && player.isSneaking()) {
             player.openGui(StorageDrawers.instance, GuiHandler.drawersGuiID, world, x, y, z);
             return true;
         }

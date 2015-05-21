@@ -4,6 +4,8 @@ itemGroup.storageDrawersSorting=Storage Drawers - Sorting
 container.drawers=Drawers
 storageDrawers.container.upgrades=Upgrades
 
+storagedrawers.msg.maxUpgrades=This drawer cannot accept any more upgrades.
+
 # Items
 item.upgradeTemplate.name=Upgrade Template
 item.upgrade.iron.name=Storage Upgrade (II)

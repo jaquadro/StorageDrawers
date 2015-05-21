@@ -1,8 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStatus;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeVoid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -83,9 +87,37 @@ public class InventoryUpgrade implements IInventory
 
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack item) {
-        if (item.getItem() instanceof ItemUpgrade || item.getItem() instanceof ItemUpgradeStatus)
+        if (item.getItem() instanceof ItemUpgrade || item.getItem() instanceof ItemUpgradeStatus || item.getItem() instanceof ItemUpgradeVoid)
             return true;
 
         return false;
+    }
+
+    public boolean canRemoveStorageUpgrade (int storageLevel) {
+        return canRemoveStorageUpgrade(tile, storageLevel);
+    }
+
+    private boolean canRemoveStorageUpgrade (TileEntityDrawers tile, int storageLevel) {
+        int storageMult = StorageDrawers.config.getStorageUpgradeMultiplier(storageLevel);
+        int effectiveStorageMult = tile.getEffectiveStorageMultiplier();
+        if (effectiveStorageMult == storageMult)
+            storageMult--;
+
+        int addedStackCapacity = storageMult * tile.getDrawerCapacity();
+
+        for (int i = 0; i < tile.getDrawerCount(); i++) {
+            if (!tile.isDrawerEnabled(i))
+                continue;
+
+            IDrawer drawer = tile.getDrawer(i);
+            if (drawer.isEmpty())
+                continue;
+
+            int addedItemCapacity = addedStackCapacity * drawer.getStoredItemStackSize();
+            if (drawer.getMaxCapacity() - addedItemCapacity < drawer.getStoredItemCount())
+                return false;
+        }
+
+        return true;
     }
 }
