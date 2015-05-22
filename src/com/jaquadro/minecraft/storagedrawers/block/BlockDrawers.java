@@ -43,6 +43,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BlockDrawers extends BlockContainer implements IExtendedBlockClickHandler, INetworked
@@ -382,6 +383,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    public int damageDropped (IBlockState state) {
+        return getMetaFromState(state);
+    }
+
+    @Override
     public boolean removedByPlayer (World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
         if (world.isRemote && player.capabilities.isCreativeMode) {
             TileEntityDrawers tile = getTileEntity(world, pos);
@@ -392,6 +398,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 return false;
             }
         }
+
+        if (willHarvest)
+            return true;
 
         return super.removedByPlayer(world, pos, player, willHarvest);
     }
@@ -412,6 +421,32 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         super.breakBlock(world, pos, state);
+    }
+
+    @Override
+    public List<ItemStack> getDrops (IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        ItemStack drawerStack = new ItemStack(Item.getItemFromBlock(this), 1, getMetaFromState(state));
+
+        List<ItemStack> drops = new ArrayList<ItemStack>();
+        drops.add(drawerStack);
+
+        TileEntityDrawers tile = getTileEntity(world, pos);
+        if (tile == null)
+            return drops;
+
+        BlockPlanks.EnumType material = translateMaterial(tile.getMaterialOrDefault());
+
+        NBTTagCompound data = new NBTTagCompound();
+        data.setString("material", material.getName());
+        drawerStack.setTagCompound(data);
+
+        return drops;
+    }
+
+    @Override
+    public void harvestBlock (World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te) {
+        super.harvestBlock(world, player, pos, state, te);
+        world.setBlockToAir(pos);
     }
 
     @Override

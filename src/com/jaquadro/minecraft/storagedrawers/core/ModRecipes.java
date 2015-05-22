@@ -3,6 +3,8 @@ package com.jaquadro.minecraft.storagedrawers.core;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
+import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -97,22 +99,22 @@ public class ModRecipes
             'x', Items.stick, 'y', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE));
 
         if (config.cache.enableStorageUpgrades) {
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, 2), "xyx", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.IRON.getMetadata()), "xyx", "yzy", "xyx",
                 'x', Items.iron_ingot, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, 3), "xyx", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.GOLD.getMetadata()), "xyx", "yzy", "xyx",
                 'x', Items.gold_ingot, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, 4), "xyx", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.OBSIDIAN.getMetadata()), "xyx", "yzy", "xyx",
                 'x', Blocks.obsidian, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, 5), "xyx", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.DIAMOND.getMetadata()), "xyx", "yzy", "xyx",
                 'x', Items.diamond, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, 6), "xyx", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.EMERALD.getMetadata()), "xyx", "yzy", "xyx",
                 'x', Items.emerald, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
         }
 
         if (config.cache.enableIndicatorUpgrades) {
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStatus, 1, 1), "wyw", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStatus, 1, EnumUpgradeStatus.LEVEL1.getMetadata()), "wyw", "yzy", "xyx",
                 'w', new ItemStack(Blocks.redstone_torch), 'x', Items.redstone, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStatus, 1, 2), "wyw", "yzy", "xyx",
+            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeStatus, 1, EnumUpgradeStatus.LEVEL2.getMetadata()), "wyw", "yzy", "xyx",
                 'w', Items.comparator, 'x', Items.redstone, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
         }
 
