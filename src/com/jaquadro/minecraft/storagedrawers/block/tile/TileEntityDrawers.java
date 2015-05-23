@@ -361,7 +361,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             upgrades = new ItemStack[upgrades.length];
 
             setDirection(tag.getByte("Dir"));
-            drawerCapacity = tag.getByte("Cap");
+            drawerCapacity = tag.getInteger("Cap");
 
             if (!tag.hasKey("Upgrades")) {
                 readLegacyUpgradeNBT(tag);
@@ -418,7 +418,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
         try {
             tag.setByte("Dir", (byte) direction);
-            tag.setByte("Cap", (byte) drawerCapacity);
+            tag.setInteger("Cap", drawerCapacity);
 
             NBTTagList upgradeList = new NBTTagList();
             for (int i = 0; i < upgrades.length; i++) {
