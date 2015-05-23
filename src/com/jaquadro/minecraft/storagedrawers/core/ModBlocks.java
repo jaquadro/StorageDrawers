@@ -40,41 +40,41 @@ public class ModBlocks
 
         ConfigManager config = StorageDrawers.config;
 
-        if (config.isBlockEnabled("fulldrawers1")) {
+        if (config.isBlockEnabled("fulldrawers1"))
             GameRegistry.registerBlock(fullDrawers1, ItemDrawers.class, "fullDrawers1");
-            GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers1));
-        }
-        if (config.isBlockEnabled("fulldrawers2")) {
+        if (config.isBlockEnabled("fulldrawers2"))
             GameRegistry.registerBlock(fullDrawers2, ItemDrawers.class, "fullDrawers2");
-            GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers2));
-        }
-        if (config.isBlockEnabled("fulldrawers4")) {
+        if (config.isBlockEnabled("fulldrawers4"))
             GameRegistry.registerBlock(fullDrawers4, ItemDrawers.class, "fullDrawers4");
-            GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers4));
-        }
-        if (config.isBlockEnabled("halfdrawers2")) {
+        if (config.isBlockEnabled("halfdrawers2"))
             GameRegistry.registerBlock(halfDrawers2, ItemDrawers.class, "halfDrawers2");
-            GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(halfDrawers2));
-        }
-        if (config.isBlockEnabled("halfdrawers4")) {
+        if (config.isBlockEnabled("halfdrawers4"))
             GameRegistry.registerBlock(halfDrawers4, ItemDrawers.class, "halfDrawers4");
-            GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(halfDrawers4));
-        }
-        if (config.isBlockEnabled("compdrawers")) {
+        if (config.isBlockEnabled("compdrawers"))
             GameRegistry.registerBlock(compDrawers, ItemCompDrawers.class, "compDrawers");
-            GameRegistry.registerTileEntity(TileEntityDrawersComp.class, ModBlocks.getQualifiedName(compDrawers));
-        }
-        if (config.isBlockEnabled("controller")) {
+        if (config.isBlockEnabled("controller"))
             GameRegistry.registerBlock(controller, ItemController.class, "controller");
-            GameRegistry.registerTileEntity(TileEntityController.class, ModBlocks.getQualifiedName(controller));
-        }
-        if (config.isBlockEnabled("controllerSlave")) {
+        if (config.isBlockEnabled("controllerSlave"))
             GameRegistry.registerBlock(controllerSlave, "controllerSlave");
-            GameRegistry.registerTileEntity(TileEntitySlave.class, ModBlocks.getQualifiedName(controllerSlave));
-        }
-        if (config.isBlockEnabled("trim")) {
+        if (config.isBlockEnabled("trim"))
             GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
-        }
+
+        GameRegistry.registerTileEntityWithAlternatives(TileEntityDrawersStandard.class, getQualifiedName("tileDrawersStandard"),
+            getQualifiedName(fullDrawers1), getQualifiedName(fullDrawers2), getQualifiedName(fullDrawers4),
+            getQualifiedName(halfDrawers2), getQualifiedName(halfDrawers4));
+
+        GameRegistry.registerTileEntityWithAlternatives(TileEntityDrawersComp.class, getQualifiedName("tileDrawersComp"),
+            getQualifiedName(compDrawers));
+
+        GameRegistry.registerTileEntityWithAlternatives(TileEntityController.class, getQualifiedName("tileController"),
+            getQualifiedName(controller));
+
+        GameRegistry.registerTileEntityWithAlternatives(TileEntitySlave.class, getQualifiedName("tileControllerSlave"),
+            getQualifiedName(controllerSlave));
+    }
+
+    public static String getQualifiedName (String name) {
+        return StorageDrawers.MOD_ID + ":" + name;
     }
 
     public static String getQualifiedName (Block block) {

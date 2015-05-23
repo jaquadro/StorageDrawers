@@ -36,26 +36,20 @@ public class RefinedRelocation
         SortingBlockRegistry.register(ModBlocks.halfDrawers2, halfDrawers2);
         SortingBlockRegistry.register(ModBlocks.halfDrawers4, halfDrawers4);
 
-        if (config.isBlockEnabled("fulldrawers1")) {
+        if (config.isBlockEnabled("fulldrawers1"))
             GameRegistry.registerBlock(fullDrawers1, ItemSortingDrawersPack.class, "fullDrawersSort1");
-            GameRegistry.registerTileEntity(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers1));
-        }
-        if (config.isBlockEnabled("fulldrawers2")) {
+        if (config.isBlockEnabled("fulldrawers2"))
             GameRegistry.registerBlock(fullDrawers2, ItemSortingDrawersPack.class, "fullDrawersSort2");
-            GameRegistry.registerTileEntity(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers2));
-        }
-        if (config.isBlockEnabled("fulldrawers4")) {
+        if (config.isBlockEnabled("fulldrawers4"))
             GameRegistry.registerBlock(fullDrawers4, ItemSortingDrawersPack.class, "fullDrawersSort4");
-            GameRegistry.registerTileEntity(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers4));
-        }
-        if (config.isBlockEnabled("halfdrawers2")) {
+        if (config.isBlockEnabled("halfdrawers2"))
             GameRegistry.registerBlock(halfDrawers2, ItemSortingDrawersPack.class, "halfDrawersSort2");
-            GameRegistry.registerTileEntity(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName(halfDrawers2));
-        }
-        if (config.isBlockEnabled("halfdrawers4")) {
+        if (config.isBlockEnabled("halfdrawers4"))
             GameRegistry.registerBlock(halfDrawers4, ItemSortingDrawersPack.class, "halfDrawersSort4");
-            GameRegistry.registerTileEntity(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName(halfDrawers4));
-        }
+
+        ModBlocks.addAlternativeTileEntityMappings(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers1),
+            ModBlocks.getQualifiedName(fullDrawers2), ModBlocks.getQualifiedName(fullDrawers4),
+            ModBlocks.getQualifiedName(halfDrawers2), ModBlocks.getQualifiedName(halfDrawers4));
     }
 
     public static void postInit () {
