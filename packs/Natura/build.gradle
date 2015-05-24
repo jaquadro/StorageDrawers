@@ -22,7 +22,7 @@ group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides
 archivesBaseName = "StorageDrawers-Natura"
 
 minecraft {
-    version = "1.7.10-10.13.2.1340-1.7.10"
+    version = "1.7.10-10.13.3.1408-1.7.10"
     assetDir = "../../runtime/assets"
 
     replace '@VERSION@', project.version
@@ -38,32 +38,8 @@ sourceSets.main {
     }
 }
 
-repositories {
-    maven {
-        name 'CB Maven FS'
-        url "http://chickenbones.net/maven/"
-    }
-
-    maven {
-        name "Waila Mobius Repo"
-        url "http://mobiusstrip.eu/maven"
-    }
-
-    maven {
-        name "FireBall API Depot"
-        url "http://dl.tsr.me/artifactory/libs-release-local"
-    }
-
-    ivy {
-        name "MineTweaker3"
-        artifactPattern "http://minetweaker3.powerofbytes.com/download/[module]-[revision].[ext]"
-    }
-}
-
 dependencies {
-    compile "appeng:appliedenergistics2:rv2-beta-28:api"
 
-    compile name: 'MineTweaker3', version: "Dev-1.7.10-3.0.9B", ext: 'jar'
 }
 
 processResources
