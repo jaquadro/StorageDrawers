@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWood;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -47,4 +48,7 @@ public class BlockTrim extends Block implements INetworked
     public IIcon getIcon (int side, int meta) {
         return ModBlocks.fullDrawers1.getIcon(0, meta);
     }
+
+    @Override
+    public void registerBlockIcons (IIconRegister register) { }
 }
