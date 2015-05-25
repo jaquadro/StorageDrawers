@@ -1,8 +1,8 @@
-package com.jaquadro.minecraft.storagedrawers.packs.erebus.block;
+package com.jaquadro.minecraft.storagedrawers.packs.bop.block;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.packs.erebus.StorageDrawersPack;
-import com.jaquadro.minecraft.storagedrawers.packs.erebus.core.ModCreativeTabs;
+import com.jaquadro.minecraft.storagedrawers.packs.bop.StorageDrawersPack;
+import com.jaquadro.minecraft.storagedrawers.packs.bop.core.ModCreativeTabs;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
@@ -16,8 +16,7 @@ import java.util.List;
 
 public class BlockDrawersPack extends BlockDrawers
 {
-    public static String[] blockNames = new String[] { "Baobab", "Eucalyptus", "Mahogany", "Mossbark", "Asper", "Cypress", null, "White", "Bamboo", "Rotten", "Marshwood", null, null, null, "Scorched", "Varnished" };
-    public static String[] textureNames = new String[] { "baobab", "eucalyptus", "mahogany", "mossbark", "asper", "cypress", null, "white", "bamboo", "rotten", "marshwood", null, null, null, "scorched", "varnished" };
+    public static String[] textureNames = new String[] { "sacredoak", "cherry", "dark", "fir", "ethereal", "magic", "mangrove", "palm", "redwood", "willow", null, "pine", "hellbark", "jacaranda", "mahogany" };
 
     public BlockDrawersPack (String blockName, int drawerCount, boolean halfDepth) {
         super(Material.wood, blockName, drawerCount, halfDepth);

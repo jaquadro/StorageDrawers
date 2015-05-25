@@ -1,4 +1,4 @@
-itemGroup.storageDrawersErebus=Storage Drawers: Erebus Pack
+itemGroup.storageDrawersErebus=Storage Drawers: Erebus
 
 # Blocks
 tile.storagedrawerserebus.fullDrawers1.baobab.name=Baobab Drawer
@@ -12,6 +12,8 @@ tile.storagedrawerserebus.fullDrawers1.white.name=White Drawer
 tile.storagedrawerserebus.fullDrawers1.bamboo.name=Bamboo Drawer
 tile.storagedrawerserebus.fullDrawers1.rotten.name=Rotten Drawer
 tile.storagedrawerserebus.fullDrawers1.marshwood.name=Marshwood Drawer
+tile.storagedrawerserebus.fullDrawers1.scorched.name=Scorched Drawer
+tile.storagedrawerserebus.fullDrawers1.varnished.name=Varnished Drawer
 
 tile.storagedrawerserebus.fullDrawers2.baobab.name=Baobab Drawers 1x2
 tile.storagedrawerserebus.fullDrawers2.eucalyptus.name=Eucalyptus Drawers 1x2
@@ -24,6 +26,8 @@ tile.storagedrawerserebus.fullDrawers2.white.name=White Drawers 1x2
 tile.storagedrawerserebus.fullDrawers2.bamboo.name=Bamboo Drawers 1x2
 tile.storagedrawerserebus.fullDrawers2.rotten.name=Rotten Drawers 1x2
 tile.storagedrawerserebus.fullDrawers2.marshwood.name=Marshwood Drawers 1x2
+tile.storagedrawerserebus.fullDrawers2.scorched.name=Scorched Drawers 1x2
+tile.storagedrawerserebus.fullDrawers2.varnished.name=Varnished Drawers 1x2
 
 tile.storagedrawerserebus.fullDrawers4.baobab.name=Baobab Drawers 2x2
 tile.storagedrawerserebus.fullDrawers4.eucalyptus.name=Eucalyptus Drawers 2x2
@@ -36,6 +40,8 @@ tile.storagedrawerserebus.fullDrawers4.white.name=White Drawers 2x2
 tile.storagedrawerserebus.fullDrawers4.bamboo.name=Bamboo Drawers 2x2
 tile.storagedrawerserebus.fullDrawers4.rotten.name=Rotten Drawers 2x2
 tile.storagedrawerserebus.fullDrawers4.marshwood.name=Marshwood Drawers 2x2
+tile.storagedrawerserebus.fullDrawers4.scorched.name=Scorched Drawers 2x2
+tile.storagedrawerserebus.fullDrawers4.varnished.name=Varnished Drawers 2x2
 
 tile.storagedrawerserebus.halfDrawers2.baobab.name=Compact Baobab Drawers 1x2
 tile.storagedrawerserebus.halfDrawers2.eucalyptus.name=Compact Eucalyptus Drawers 1x2
@@ -48,6 +54,8 @@ tile.storagedrawerserebus.halfDrawers2.white.name=Compact White Drawers 1x2
 tile.storagedrawerserebus.halfDrawers2.bamboo.name=Compact Bamboo Drawers 1x2
 tile.storagedrawerserebus.halfDrawers2.rotten.name=Compact Rotten Drawers 1x2
 tile.storagedrawerserebus.halfDrawers2.marshwood.name=Compact Marshwood Drawers 1x2
+tile.storagedrawerserebus.halfDrawers2.scorched.name=Compact Scorched Drawers 1x2
+tile.storagedrawerserebus.halfDrawers2.varnished.name=Compact Varnished Drawers 1x2
 
 tile.storagedrawerserebus.halfDrawers4.baobab.name=Compact Baobab Drawers 2x2
 tile.storagedrawerserebus.halfDrawers4.eucalyptus.name=Compact Eucalyptus Drawers 2x2
@@ -60,6 +68,8 @@ tile.storagedrawerserebus.halfDrawers4.white.name=Compact White Drawers 2x2
 tile.storagedrawerserebus.halfDrawers4.bamboo.name=Compact Bamboo Drawers 2x2
 tile.storagedrawerserebus.halfDrawers4.rotten.name=Compact Rotten Drawers 2x2
 tile.storagedrawerserebus.halfDrawers4.marshwood.name=Compact Marshwood Drawers 2x2
+tile.storagedrawerserebus.halfDrawers4.scorched.name=Compact Scorched Drawers 2x2
+tile.storagedrawerserebus.halfDrawers4.varnished.name=Compact Varnished Drawers 2x2
 
 tile.storagedrawerserebus.trim.baobab.name=Baobab Trim
 tile.storagedrawerserebus.trim.eucalyptus.name=Eucalyptus Trim
@@ -72,3 +82,5 @@ tile.storagedrawerserebus.trim.white.name=White Trim
 tile.storagedrawerserebus.trim.bamboo.name=Bamboo Trim
 tile.storagedrawerserebus.trim.rotten.name=Rotten Trim
 tile.storagedrawerserebus.trim.marshwood.name=Marshwood Trim
+tile.storagedrawerserebus.trim.scorched.name=Scorched Trim
+tile.storagedrawerserebus.trim.varnished.name=Varnished Trim

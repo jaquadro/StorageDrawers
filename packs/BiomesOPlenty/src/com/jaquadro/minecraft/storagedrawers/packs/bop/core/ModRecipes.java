@@ -1,9 +1,9 @@
-package com.jaquadro.minecraft.storagedrawers.packs.erebus.core;
+package com.jaquadro.minecraft.storagedrawers.packs.bop.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import com.jaquadro.minecraft.storagedrawers.packs.erebus.block.BlockDrawersPack;
+import com.jaquadro.minecraft.storagedrawers.packs.bop.block.BlockDrawersPack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -16,16 +16,13 @@ public class ModRecipes
     public void init () {
         ConfigManager config = StorageDrawers.config;
 
-        Block planks = GameRegistry.findBlock("erebus", "planks");
+        Block planks = GameRegistry.findBlock("BiomesOPlenty", "planks");
+        Block slab1 = GameRegistry.findBlock("BiomesOPlenty", "woodenSingleSlab1");
+        Block slab2 = GameRegistry.findBlock("BiomesOPlenty", "woodenSingleSlab2");
 
-        for (int i = 0; i < BlockDrawersPack.blockNames.length; i++) {
-            if (BlockDrawersPack.blockNames[i] == null)
+        for (int i = 0; i < BlockDrawersPack.textureNames.length; i++) {
+            if (BlockDrawersPack.textureNames[i] == null)
                 continue;
-
-            if (BlockDrawersPack.blockNames[i].equals("Scorched"))
-                planks = GameRegistry.findBlock("erebus", "planks_scorched");
-            else if (BlockDrawersPack.blockNames[i].equals("Varnished"))
-                planks = GameRegistry.findBlock("erebus", "planks_varnished");
 
             if (planks != null) {
                 if (config.isBlockEnabled("fulldrawers1"))
@@ -43,15 +40,14 @@ public class ModRecipes
                 }
             }
 
-            Block slab = GameRegistry.findBlock("erebus", "slabPlanks" + BlockDrawersPack.blockNames[i]);
-
-            if (slab != null) {
+            Block recipeSlab = (i < 8) ? slab1 : slab2;
+            if (recipeSlab != null) {
                 if (config.isBlockEnabled("halfdrawers2"))
                     GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers2, config.getBlockRecipeOutput("halfdrawers2"), i), "xyx", "xxx", "xyx",
-                        'x', new ItemStack(slab, 1, i), 'y', Blocks.chest);
+                        'x', new ItemStack(recipeSlab, 1, i), 'y', Blocks.chest);
                 if (config.isBlockEnabled("halfdrawers4"))
                     GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers4, config.getBlockRecipeOutput("halfdrawers4"), i), "yxy", "xxx", "yxy",
-                        'x', new ItemStack(slab, 1, i), 'y', Blocks.chest);
+                        'x', new ItemStack(recipeSlab, 1, i), 'y', Blocks.chest);
             }
         }
 

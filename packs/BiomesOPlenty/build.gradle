@@ -19,7 +19,7 @@ apply plugin: 'forge'
 
 version = "1.7.10-1.0.0"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "StorageDrawers-Erebus"
+archivesBaseName = "StorageDrawers-BiomesOPlenty"
 
 minecraft {
     version = "1.7.10-10.13.3.1408-1.7.10"
