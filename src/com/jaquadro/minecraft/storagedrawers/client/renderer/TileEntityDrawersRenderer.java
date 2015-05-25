@@ -345,8 +345,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 restoreItemState = true;
         }
 
-        if (restoreItemState || restoreBlockState)
-            GLUtil.saveGLState(savedGLStateItemRender, glStateItemRender);
+        if (restoreItemState || restoreBlockState) {
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+        }
 
         for (int i = 0; i < drawerCount; i++) {
             if (renderStacks[i] != null && !renderAsBlock[i])
@@ -354,7 +355,6 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         }
 
         if (restoreBlockState) {
-            GLUtil.saveGLState(savedGLLightRender, glLightRender);
             GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
         }
 
@@ -364,12 +364,12 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         }
 
         if (restoreBlockState) {
-            GLUtil.restoreGLState(savedGLLightRender);
             GL11.glPopAttrib();
         }
 
-        if (restoreItemState || restoreBlockState)
-            GLUtil.restoreGLState(savedGLStateItemRender);
+        if (restoreItemState || restoreBlockState) {
+            GL11.glPopAttrib();
+        }
     }
 
     private void renderFancyItem (ItemStack itemStack, TileEntityDrawers tile, int slot, ForgeDirection side, float depth, float partialTickTime) {
