@@ -224,8 +224,12 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
+            else if (item.getItem() == ModItems.shroudKey) {
+                tileDrawers.setIsShrouded(!tileDrawers.isShrouded());
+                return true;
+            }
         }
-        else if (item == null && player.isSneaking()) {
+        else if (item == null && player.isSneaking() && StorageDrawers.config.cache.enableDrawerUI) {
             player.openGui(StorageDrawers.instance, GuiHandler.drawersGuiID, world, x, y, z);
             return true;
         }

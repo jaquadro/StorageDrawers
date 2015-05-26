@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
+import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -107,6 +108,16 @@ public class BlockController extends BlockContainer implements INetworked
     @Override
     public boolean onBlockActivated (World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         TileEntityController te = getTileEntitySafe(world, x, y, z);
+        ItemStack item = player.inventory.getCurrentItem();
+
+        if (item != null && item.getItem() != null) {
+            if (item.getItem() == ModItems.shroudKey) {
+                if (!world.isRemote)
+                    te.toggleShroud();
+                return true;
+            }
+        }
+
         if (te.getDirection() != side)
             return false;
 

@@ -248,6 +248,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         if (tileDrawers == null)
             return;
 
+        if (tileDrawers.isShrouded())
+            return;
+
         // Don't bother rendering anything that is (probably) facing away from the player.
         EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
         Vec3 faceVector = dirVectors[tileDrawers.getDirection()];

@@ -1,11 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class CompDrawerData extends BaseDrawerData implements IVoidable
+public class CompDrawerData extends BaseDrawerData implements IVoidable, IShroudable
 {
     private static final ItemStack nullStack = new ItemStack((Item)null);
 
@@ -102,5 +103,15 @@ public class CompDrawerData extends BaseDrawerData implements IVoidable
     @Override
     public boolean isVoid () {
         return central.isVoidSlot(slot);
+    }
+
+    @Override
+    public boolean isShrouded () {
+        return central.isShroudedSlot(slot);
+    }
+
+    @Override
+    public boolean setIsShrouded (boolean state) {
+        return central.setIsSlotShrouded(slot, state);
     }
 }

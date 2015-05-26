@@ -53,5 +53,16 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         public boolean isVoid (int slot) {
             return TileEntityDrawersStandard.this.isVoid();
         }
+
+        @Override
+        public boolean isShrouded (int slot) {
+            return TileEntityDrawersStandard.this.isShrouded();
+        }
+
+        @Override
+        public boolean setIsShrouded (int slot, boolean state) {
+            TileEntityDrawersStandard.this.setIsShrouded(state);
+            return true;
+        }
     }
 }

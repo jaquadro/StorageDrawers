@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -113,6 +114,33 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         lastClickUUID = player.getPersistentID();
 
         return count;
+    }
+
+    public void toggleShroud () {
+        IShroudable template = null;
+        boolean state = false;
+
+        for (StorageRecord record : storage.values()) {
+            if (record.storage == null)
+                continue;
+
+            for (int i = 0, n = record.storage.getDrawerCount(); i < n; i++) {
+                if (!record.storage.isDrawerEnabled(i))
+                    continue;
+
+                IDrawer drawer = record.storage.getDrawer(i);
+                if (!(drawer instanceof IShroudable))
+                    continue;
+
+                IShroudable shroudableStorage = (IShroudable)drawer;
+                if (template == null) {
+                    template = shroudableStorage;
+                    state = !template.isShrouded();
+                }
+
+                shroudableStorage.setIsShrouded(state);
+            }
+        }
     }
 
     private void resetCache () {

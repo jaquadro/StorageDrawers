@@ -7,4 +7,6 @@ public interface IUpgradeProvider
     boolean isVoid ();
 
     boolean isSorting ();
+
+    boolean isShrouded ();
 }

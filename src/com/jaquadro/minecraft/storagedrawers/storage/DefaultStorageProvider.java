@@ -47,6 +47,16 @@ public class DefaultStorageProvider implements IStorageProvider
     }
 
     @Override
+    public boolean isShrouded (int slot) {
+        return false;
+    }
+
+    @Override
+    public boolean setIsShrouded (int slot, boolean state) {
+        return false;
+    }
+
+    @Override
     public void markAmountDirty (int slot) {
         if (tile.getWorldObj().isRemote)
             return;

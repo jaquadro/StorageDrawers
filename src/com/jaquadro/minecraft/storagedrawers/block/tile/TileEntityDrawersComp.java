@@ -491,6 +491,17 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         @Override
+        public boolean isShroudedSlot (int slot) {
+            return isShrouded();
+        }
+
+        @Override
+        public boolean setIsSlotShrouded (int slot, boolean state) {
+            setIsShrouded(state);
+            return true;
+        }
+
+        @Override
         public void writeToNBT (int slot, NBTTagCompound tag) {
             ItemStack protoStack = getStoredItemPrototype(slot);
             if (protoStack != null && protoStack.getItem() != null) {

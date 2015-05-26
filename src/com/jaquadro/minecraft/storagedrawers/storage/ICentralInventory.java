@@ -25,6 +25,10 @@ public interface ICentralInventory
 
     public boolean isVoidSlot (int slot);
 
+    public boolean isShroudedSlot (int slot);
+
+    public boolean setIsSlotShrouded (int slot, boolean state);
+
     public void readFromNBT (int slot, NBTTagCompound tag);
 
     public void writeToNBT (int slot, NBTTagCompound tag);

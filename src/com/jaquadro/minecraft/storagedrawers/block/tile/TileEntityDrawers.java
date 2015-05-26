@@ -43,6 +43,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     //private int storageLevel = 1;
     //private int statusLevel = 0;
     private boolean locked = false;
+    private boolean shrouded = false;
     //private boolean voidUpgrade = false;
 
     private ItemStack[] upgrades = new ItemStack[5];
@@ -212,6 +213,24 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         }
     }
 
+    public boolean isShrouded () {
+        if (!StorageDrawers.config.cache.enableShroudUpgrades)
+            return false;
+
+        return shrouded;
+    }
+
+    public void setIsShrouded (boolean shrouded) {
+        if (this.shrouded != shrouded) {
+            this.shrouded = shrouded;
+
+            if (worldObj != null && !worldObj.isRemote) {
+                markDirty();
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
+        }
+    }
+
     public boolean isVoid () {
         if (!StorageDrawers.config.cache.enableVoidUpgrades)
             return false;
@@ -223,10 +242,6 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
         return false;
     }
-
-    //public void setVoid (boolean isVoid) {
-        //this.voidUpgrade = isVoid;
-    //}
 
     public boolean isSorting () {
         return false;
@@ -376,19 +391,13 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
                 }
             }
 
-            //storageLevel = tag.getByte("Lev");
-
-            //statusLevel = 0;
-            //if (tag.hasKey("Stat"))
-            //    statusLevel = tag.getByte("Stat");
-
             locked = false;
             if (tag.hasKey("Lock"))
                 locked = tag.getBoolean("Lock");
 
-            //voidUpgrade = false;
-            //if (tag.hasKey("Void"))
-            //    voidUpgrade = tag.getBoolean("Void");
+            shrouded = false;
+            if (tag.hasKey("Shr"))
+                shrouded = tag.getBoolean("Shr");
 
             NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
             int drawerCount = slots.tagCount();
@@ -433,16 +442,11 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             if (upgradeList.tagCount() > 0)
                 tag.setTag("Upgrades", upgradeList);
 
-            //tag.setByte("Lev", (byte) storageLevel);
-
-            //if (statusLevel > 0)
-            //    tag.setByte("Stat", (byte) statusLevel);
-
             if (locked)
                 tag.setBoolean("Lock", locked);
 
-            //if (voidUpgrade)
-            //    tag.setBoolean("Void", voidUpgrade);
+            if (shrouded)
+                tag.setBoolean("Shr", shrouded);
 
             NBTTagList slots = new NBTTagList();
             for (IDrawer drawer : drawers) {
