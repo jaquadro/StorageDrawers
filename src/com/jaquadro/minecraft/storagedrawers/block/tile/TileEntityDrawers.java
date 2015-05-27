@@ -543,6 +543,12 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     @Override
     public boolean canInsertItem (int slot, ItemStack stack, int side) {
+        if (isLocked() && inventory instanceof StorageInventory) {
+            IDrawer drawer = getDrawer(inventory.getDrawerSlot(slot));
+            if (drawer != null && drawer.isEmpty())
+                return false;
+        }
+        
         return inventory.canInsertItem(slot, stack, side);
     }
 

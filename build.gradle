@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.5.1"
+version = "1.7.10-1.5.2"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
 
@@ -57,6 +57,16 @@ repositories {
     maven {
         name "FireBall API Depot"
         url "http://dl.tsr.me/artifactory/libs-release-local"
+    }
+
+    maven {
+        name = "ic2"
+        url = "http://maven.ic2.player.to/"
+    }
+
+    maven {
+        name "RX14"
+        url "http://mvn.rx14.co.uk/repo/"
     }
 
     ivy {
