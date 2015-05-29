@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.integration;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IWailaTooltipHandler;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
@@ -79,7 +80,7 @@ public class Waila extends IntegrationModule
             }
 
             String attrib = "";
-            if (tile.isLocked())
+            if (tile.isLocked(LockAttribute.LOCK_POPULATED))
                 attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.locked");
             if (tile.isVoid())
                 attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.void");

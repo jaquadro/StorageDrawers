@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
@@ -219,8 +220,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 return true;
             }
             else if (item.getItem() == ModItems.upgradeLock) {
-                tileDrawers.setIsLocked(!tileDrawers.isLocked());
-                world.markBlockForUpdate(x, y, z);
+                boolean locked = tileDrawers.isLocked(LockAttribute.LOCK_POPULATED);
+                tileDrawers.setLocked(LockAttribute.LOCK_POPULATED, !locked);
+                tileDrawers.setLocked(LockAttribute.LOCK_EMPTY, !locked);
 
                 return true;
             }

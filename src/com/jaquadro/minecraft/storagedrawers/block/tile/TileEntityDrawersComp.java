@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IIngredientHandler;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IRecipeHandler;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
@@ -430,7 +431,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 pooledCount = poolMax;
 
             if (pooledCount != oldCount) {
-                if (pooledCount != 0 || isLocked())
+                if (pooledCount != 0 || isLocked(LockAttribute.LOCK_POPULATED))
                     markAmountDirty();
                 else {
                     clear();

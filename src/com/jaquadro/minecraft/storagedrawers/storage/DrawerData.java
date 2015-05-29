@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.storage;
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -84,7 +85,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
         if (amount == 0) {
             if (clearOnEmpty) {
-                if (!storageProvider.isLocked(slot))
+                if (!storageProvider.isLocked(slot, LockAttribute.LOCK_POPULATED))
                     reset();
                 if (mark)
                     storageProvider.markDirty(slot);

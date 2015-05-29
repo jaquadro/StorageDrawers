@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
@@ -21,6 +22,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.EnumSet;
 import java.util.Random;
 
 public class BlockController extends BlockContainer implements INetworked
@@ -114,6 +116,11 @@ public class BlockController extends BlockContainer implements INetworked
             if (item.getItem() == ModItems.shroudKey) {
                 if (!world.isRemote)
                     te.toggleShroud();
+                return true;
+            }
+            else if (item.getItem() == ModItems.upgradeLock) {
+                if (!world.isRemote)
+                    te.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED);
                 return true;
             }
         }

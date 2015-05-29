@@ -4,6 +4,8 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
@@ -28,10 +30,11 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.logging.log4j.Level;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends TileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider
+public abstract class TileEntityDrawers extends TileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, ILockable
 {
     private IDrawer[] drawers;
     private IDrawerInventory inventory;
@@ -40,11 +43,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     private int direction;
     private int drawerCapacity = 1;
-    //private int storageLevel = 1;
-    //private int statusLevel = 0;
-    private boolean locked = false;
     private boolean shrouded = false;
-    //private boolean voidUpgrade = false;
+
+    private EnumSet<LockAttribute> lockAttributes = null;
 
     private ItemStack[] upgrades = new ItemStack[5];
 
@@ -78,22 +79,6 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     public void setDirection (int direction) {
         this.direction = direction % 6;
     }
-
-    /*public int getStorageLevel () {
-        return storageLevel;
-    }
-
-    public void setStorageLevel (int level) {
-        this.storageLevel = MathHelper.clamp_int(level, 1, 6);
-    }
-
-    public int getStatusLevel () {
-        return statusLevel;
-    }
-
-    public void setStatusLevel (int level) {
-        this.statusLevel = MathHelper.clamp_int(level, 1, 3);
-    }*/
 
     public int getMaxStorageLevel () {
         int maxLevel = 1;
@@ -191,24 +176,44 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         drawerCapacity = stackCount;
     }
 
-    public boolean isLocked () {
+    @Override
+    public boolean isLocked (LockAttribute attr) {
+        if (!StorageDrawers.config.cache.enableLockUpgrades || lockAttributes == null)
+            return false;
+
+        return lockAttributes.contains(attr);
+    }
+
+    @Override
+    public boolean canLock (LockAttribute attr) {
         if (!StorageDrawers.config.cache.enableLockUpgrades)
             return false;
 
-        return locked;
+        return true;
     }
 
-    public void setIsLocked (boolean locked) {
-        this.locked = locked;
+    @Override
+    public void setLocked (LockAttribute attr, boolean isLocked) {
+        if (!StorageDrawers.config.cache.enableLockUpgrades)
+            return;
 
-        if (!locked) {
-            for (int i = 0; i < getDrawerCount(); i++) {
-                if (!isDrawerEnabled(i))
-                    continue;
+        if (isLocked && (lockAttributes == null || !lockAttributes.contains(attr))) {
+            if (lockAttributes == null)
+                lockAttributes = EnumSet.of(attr);
+            else
+                lockAttributes.add(attr);
 
-                IDrawer drawer = getDrawer(i);
-                if (drawer != null && drawer.getStoredItemCount() == 0)
-                    drawer.setStoredItemCount(0);
+            if (worldObj != null && !worldObj.isRemote) {
+                markDirty();
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
+        }
+        else if (!isLocked && lockAttributes != null && lockAttributes.contains(attr)) {
+            lockAttributes.remove(attr);
+
+            if (worldObj != null && !worldObj.isRemote) {
+                markDirty();
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         }
     }
@@ -391,9 +396,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
                 }
             }
 
-            locked = false;
+            lockAttributes = null;
             if (tag.hasKey("Lock"))
-                locked = tag.getBoolean("Lock");
+                lockAttributes = LockAttribute.getEnumSet(tag.getByte("Lock"));
 
             shrouded = false;
             if (tag.hasKey("Shr"))
@@ -442,8 +447,8 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             if (upgradeList.tagCount() > 0)
                 tag.setTag("Upgrades", upgradeList);
 
-            if (locked)
-                tag.setBoolean("Lock", locked);
+            if (lockAttributes != null)
+                tag.setByte("Lock", (byte)LockAttribute.getBitfield(lockAttributes));
 
             if (shrouded)
                 tag.setBoolean("Shr", shrouded);
@@ -543,12 +548,12 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     @Override
     public boolean canInsertItem (int slot, ItemStack stack, int side) {
-        if (isLocked() && inventory instanceof StorageInventory) {
+        if (isLocked(LockAttribute.LOCK_EMPTY) && inventory instanceof StorageInventory) {
             IDrawer drawer = getDrawer(inventory.getDrawerSlot(slot));
             if (drawer != null && drawer.isEmpty())
                 return false;
         }
-        
+
         return inventory.canInsertItem(slot, stack, side);
     }
 

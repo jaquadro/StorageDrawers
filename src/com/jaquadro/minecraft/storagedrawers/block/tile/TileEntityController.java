@@ -5,7 +5,9 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -139,6 +141,46 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
                 }
 
                 shroudableStorage.setIsShrouded(state);
+            }
+        }
+    }
+
+    public void toggleLock (EnumSet<LockAttribute> attributes, LockAttribute key) {
+        ILockable template = null;
+        boolean state = false;
+
+        for (StorageRecord record : storage.values()) {
+            if (record.storage == null)
+                continue;
+
+            if (record.storage instanceof ILockable) {
+                ILockable lockableStorage = (ILockable)record.storage;
+                if (template == null) {
+                    template = lockableStorage;
+                    state = !template.isLocked(key);
+                }
+
+                for (LockAttribute attr : attributes)
+                    lockableStorage.setLocked(attr, state);
+            }
+            else {
+                for (int i = 0, n = record.storage.getDrawerCount(); i < n; i++) {
+                    if (!record.storage.isDrawerEnabled(i))
+                        continue;
+
+                    IDrawer drawer = record.storage.getDrawer(i);
+                    if (!(drawer instanceof IShroudable))
+                        continue;
+
+                    ILockable lockableStorage = (ILockable)drawer;
+                    if (template == null) {
+                        template = lockableStorage;
+                        state = !template.isLocked(key);
+                    }
+
+                    for (LockAttribute attr : attributes)
+                        lockableStorage.setLocked(attr, state);
+                }
             }
         }
     }

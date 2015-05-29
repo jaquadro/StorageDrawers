@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
@@ -130,7 +131,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
             renderIndicator(block, x, y, z, side, renderer, tile.getEffectiveStatusLevel());
         if (StorageDrawers.config.cache.enableLockUpgrades)
-            renderLock(block, x, y, z, side, renderer, tile.isLocked());
+            renderLock(block, x, y, z, side, renderer, tile.isLocked(LockAttribute.LOCK_POPULATED));
         if (StorageDrawers.config.cache.enableVoidUpgrades)
             renderVoid(block, x, y, z, side, renderer, tile.isVoid());
         renderShroud(block, x, y, z, side, renderer, tile.isShrouded());

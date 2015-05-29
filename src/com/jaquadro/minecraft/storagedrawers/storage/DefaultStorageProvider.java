@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.storage;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -37,7 +38,7 @@ public class DefaultStorageProvider implements IStorageProvider
     }
 
     @Override
-    public boolean isLocked (int slot) {
+    public boolean isLocked ( int slot, LockAttribute attr) {
         return false;
     }
 
