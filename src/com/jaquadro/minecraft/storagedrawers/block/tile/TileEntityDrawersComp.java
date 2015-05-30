@@ -431,7 +431,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 pooledCount = poolMax;
 
             if (pooledCount != oldCount) {
-                if (pooledCount != 0 || isLocked(LockAttribute.LOCK_POPULATED))
+                if (pooledCount != 0 || TileEntityDrawersComp.this.isLocked(LockAttribute.LOCK_POPULATED))
                     markAmountDirty();
                 else {
                     clear();
@@ -500,6 +500,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         public boolean setIsSlotShrouded (int slot, boolean state) {
             setIsShrouded(state);
             return true;
+        }
+
+        @Override
+        public boolean isLocked (int slot, LockAttribute attr) {
+            return TileEntityDrawersComp.this.isLocked(attr);
         }
 
         @Override

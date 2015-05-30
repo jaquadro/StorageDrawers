@@ -9,7 +9,9 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import net.minecraft.item.ItemStack;
 
@@ -45,8 +47,15 @@ public class DrawerMEInventory implements IMEInventory<IAEItemStack>
             if (!group.isDrawerEnabled(i))
                 continue;
 
+            if (group instanceof ILockable && ((ILockable) group).isLocked(LockAttribute.LOCK_EMPTY))
+                continue;
+
             IDrawer drawer = group.getDrawer(i);
             ItemStack itemProto = drawer.getStoredItemPrototype();
+
+            if (itemProto == null && drawer instanceof ILockable && ((ILockable) drawer).isLocked(LockAttribute.LOCK_EMPTY))
+                continue;
+
             if (itemProto == null) {
                 itemProto = input.getItemStack();
                 if (drawer.canItemBeStored(itemProto)) {

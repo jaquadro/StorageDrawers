@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -28,6 +29,8 @@ public interface ICentralInventory
     public boolean isShroudedSlot (int slot);
 
     public boolean setIsSlotShrouded (int slot, boolean state);
+
+    public boolean isLocked (int slot, LockAttribute attr);
 
     public void readFromNBT (int slot, NBTTagCompound tag);
 

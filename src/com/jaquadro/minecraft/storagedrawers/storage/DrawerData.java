@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
@@ -9,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 
-public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
+public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable, ILockable
 {
     private static final ItemStack nullStack = new ItemStack((Item)null);
 
@@ -207,5 +208,18 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     public boolean setIsShrouded (boolean state) {
         return storageProvider.setIsShrouded(slot, state);
     }
+
+    @Override
+    public boolean isLocked (LockAttribute attr) {
+        return storageProvider.isLocked(slot, attr);
+    }
+
+    @Override
+    public boolean canLock (LockAttribute attr) {
+        return false;
+    }
+
+    @Override
+    public void setLocked (LockAttribute attr, boolean isLocked) { }
 }
 
