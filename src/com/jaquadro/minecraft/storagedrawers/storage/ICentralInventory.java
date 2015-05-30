@@ -24,6 +24,10 @@ public interface ICentralInventory
 
     public int getItemCapacityForInventoryStack (int slot);
 
+    public int getConversionRate (int slot);
+
+    public int getStoredItemRemainder (int slot);
+
     public boolean isVoidSlot (int slot);
 
     public boolean isShroudedSlot (int slot);

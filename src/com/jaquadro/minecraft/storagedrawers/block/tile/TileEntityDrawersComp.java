@@ -487,6 +487,19 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         @Override
+        public int getConversionRate (int slot) {
+            if (protoStack[slot] == null || convRate == null || convRate[slot] == 0)
+                return 0;
+
+            return convRate[0] / convRate[slot];
+        }
+
+        @Override
+        public int getStoredItemRemainder (int slot) {
+            return TileEntityDrawersComp.this.getStoredItemRemainder(slot);
+        }
+
+        @Override
         public boolean isVoidSlot (int slot) {
             return isVoid();
         }

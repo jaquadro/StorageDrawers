@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
@@ -8,7 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class CompDrawerData extends BaseDrawerData implements IVoidable, IShroudable, ILockable
+public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer, IVoidable, IShroudable, ILockable
 {
     private static final ItemStack nullStack = new ItemStack((Item)null);
 
@@ -95,6 +96,16 @@ public class CompDrawerData extends BaseDrawerData implements IVoidable, IShroud
     public void readFromNBT (NBTTagCompound tag) {
         central.readFromNBT(slot, tag);
         refresh();
+    }
+
+    @Override
+    public int getConversionRate () {
+        return central.getConversionRate(slot);
+    }
+
+    @Override
+    public int getStoredItemRemainder () {
+        return central.getStoredItemRemainder(slot);
     }
 
     public void refresh () {
