@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.chameleon.render.ChamRender;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.render.IRenderLabel;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
@@ -107,7 +108,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         boolean cache = mc.gameSettings.fancyGraphics;
         mc.gameSettings.fancyGraphics = true;
 
-        renderFastItemSet(tileDrawers, side, depth, partialTickTime);
+        if (!tileDrawers.isShrouded())
+            renderFastItemSet(tileDrawers, side, depth, partialTickTime);
 
         mc.gameSettings.fancyGraphics = cache;
 
@@ -264,9 +266,10 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         IBlockState blockState = tile.getWorld().getBlockState(tile.getPos());
 
-        renderLock(blockState, tile.getDirection(), tile.isLocked());
+        renderLock(blockState, tile.getDirection(), tile.isLocked(LockAttribute.LOCK_POPULATED));
         renderVoid(blockState, tile.getDirection(), tile.isVoid());
-        renderIndicator(tile, blockState, tile.getDirection(), tile.getStatusLevel());
+        renderIndicator(tile, blockState, tile.getDirection(), tile.getEffectiveStatusLevel());
+        renderShroud(tile, blockState, tile.getDirection(), tile.isShrouded());
     }
 
     private void renderLock (IBlockState blockState, int side, boolean locked) {
@@ -299,7 +302,38 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         ChamRender.instance.state.clearRotateTransform();
     }
 
-    //private void renderStorage ()
+    private void renderShroud (TileEntityDrawers tile, IBlockState blockState, int side, boolean shrouded) {
+        if (!shrouded || side < 2 || side > 5)
+            return;
+
+        BlockDrawers block = (BlockDrawers) blockState.getBlock();
+        StatusModelData statusInfo = block.getStatusInfo(blockState);
+        double depth = block.isHalfDepth(blockState) ? .5 : 1;
+        int count = block.getDrawerCount(blockState);
+
+        double unit = 0.0625;
+        double frontDepth = statusInfo.getFrontDepth() * unit;
+
+        int drawerCount = tile.getDrawerCount();
+        float size = (drawerCount == 1) ? .25f : .125f;
+
+        for (int i = 0; i < count; i++) {
+            IDrawer drawer = tile.getDrawer(i);
+            if (drawer == null || drawer.isEmpty())
+                continue;
+
+            float xunit = getOffsetXForSide(EnumFacing.getFront(side), getXOffset(drawerCount, i));
+            float yunit = getYOffset(drawerCount, i);
+
+            TextureAtlasSprite iconCover = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconShroudCover);
+
+            ChamRender.instance.setRenderBounds(xunit - size / 2, (yunit - .25) * unit + size / 2, 0,
+                xunit - size / 2 + size, (yunit - .25) * unit + size / 2 + size, depth - frontDepth + .005);
+            ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
+            ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconCover, 1, 1, 1);
+            ChamRender.instance.state.clearRotateTransform();
+        }
+    }
 
     private void renderIndicator (TileEntityDrawers tile, IBlockState blockState, int side, int level) {
         if (level <= 0 || side < 2 || side > 5)

@@ -51,6 +51,7 @@ public class ClientProxy extends CommonProxy
         iconRegistry.registerIcon(iconVoidResource);
         iconRegistry.registerIcon(iconIndicatorCompOnResource);
         iconRegistry.registerIcon(iconIndicatorCompOffResource);
+        iconRegistry.registerIcon(iconShroudCover);
 
         for (int i = 0; i < 5; i++) {
             if (iconIndicatorOffResource[i] != null)
@@ -64,6 +65,7 @@ public class ClientProxy extends CommonProxy
         renderItem.getItemModelMesher().register(ModItems.upgradeTemplate, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.upgradeTemplate), "inventory"));
         renderItem.getItemModelMesher().register(ModItems.upgradeVoid, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.upgradeVoid), "inventory"));
         renderItem.getItemModelMesher().register(ModItems.drawerKey, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.drawerKey), "inventory"));
+        renderItem.getItemModelMesher().register(ModItems.shroudKey, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.shroudKey), "inventory"));
 
         for (EnumUpgradeStorage upgrade : EnumUpgradeStorage.values()) {
             String resName = ModItems.getQualifiedName(ModItems.upgradeStorage) + "_" + upgrade.getName();

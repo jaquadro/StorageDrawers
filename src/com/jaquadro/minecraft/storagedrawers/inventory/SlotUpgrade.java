@@ -20,7 +20,7 @@ public class SlotUpgrade extends Slot
     public boolean canTakeStack () {
         if (inventory instanceof InventoryUpgrade) {
             ItemStack stack = getStack();
-            if (stack != null && stack.getItem() == ModItems.upgrade)
+            if (stack != null && stack.getItem() == ModItems.upgradeStorage)
                 return ((InventoryUpgrade) inventory).canRemoveStorageUpgrade(stack.getItemDamage());
         }
 

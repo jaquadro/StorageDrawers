@@ -32,6 +32,8 @@ public class CommonProxy
         new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_4_off"),
     };
 
+    public final ResourceLocation iconShroudCover = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/drawers_oak_trim");
+
     public void initDynamic ()
     { }
 

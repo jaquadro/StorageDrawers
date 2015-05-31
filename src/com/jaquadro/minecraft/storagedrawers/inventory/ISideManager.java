@@ -4,5 +4,5 @@ import net.minecraft.util.EnumFacing;
 
 public interface ISideManager
 {
-    public int[] getSlotsForSide (EnumFacing side);
+    int[] getSlotsForSide (EnumFacing side);
 }

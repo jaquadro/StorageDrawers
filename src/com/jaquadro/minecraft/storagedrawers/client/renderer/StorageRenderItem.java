@@ -1,21 +1,79 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 public class StorageRenderItem extends RenderItem
 {
+    private RenderItem parent;
+
     public ItemStack overrideStack;
 
+    public StorageRenderItem (TextureManager texManager, ModelManager modelManager) {
+        super(texManager, modelManager);
+        parent = Minecraft.getMinecraft().getRenderItem();
+    }
+
     @Override
-    public void renderItemOverlayIntoGUI (FontRenderer font, TextureManager texManager, ItemStack item, int x, int y, String text)
+    public ItemModelMesher getItemModelMesher () {
+        return parent.getItemModelMesher();
+    }
+
+    @Override
+    public void renderItem (ItemStack stack, IBakedModel model) {
+        parent.renderItem(stack, model);
+    }
+
+    @Override
+    public boolean shouldRenderItemIn3D (ItemStack stack) {
+        return parent.shouldRenderItemIn3D(stack);
+    }
+
+    @Override
+    public void renderItemModel (ItemStack stack) {
+        parent.renderItemModel(stack);
+    }
+
+    @Override
+    public void renderItemModelForEntity (ItemStack stack, EntityLivingBase entityToRenderFor, ItemCameraTransforms.TransformType cameraTransformType) {
+        parent.renderItemModelForEntity(stack, entityToRenderFor, cameraTransformType);
+    }
+
+    @Override
+    public void renderItemIntoGUI (ItemStack stack, int x, int y) {
+        parent.renderItemIntoGUI(stack, x, y);
+    }
+
+    @Override
+    public void renderItemAndEffectIntoGUI (ItemStack stack, int xPosition, int yPosition) {
+        parent.renderItemAndEffectIntoGUI(stack, xPosition, yPosition);
+    }
+
+    @Override
+    public void renderItemOverlays (FontRenderer fr, ItemStack stack, int xPosition, int yPosition) {
+        parent.renderItemOverlays(fr, stack, xPosition, yPosition);
+    }
+
+    @Override
+    public void renderItemOverlayIntoGUI (FontRenderer font, ItemStack item, int x, int y, String text)
     {
         if (item != overrideStack) {
-            super.renderItemOverlayIntoGUI(font, texManager, item, x, y, text);
+            super.renderItemOverlayIntoGUI(font, item, x, y, text);
             return;
         }
 
@@ -35,15 +93,15 @@ public class StorageRenderItem extends RenderItem
                 int textX = (int)((x + 16 - font.getStringWidth(text) * scale) / scale) - 1;
                 int textY = (int)((y + 16 - 7 * scale) / scale) - 1;
 
-                GL11.glDisable(GL11.GL_LIGHTING);
-                GL11.glDisable(GL11.GL_DEPTH_TEST);
-                GL11.glDisable(GL11.GL_BLEND);
-                GL11.glPushMatrix();
-                GL11.glScalef(scale, scale, scale);
+                GlStateManager.disableLighting();
+                GlStateManager.disableDepth();
+                GlStateManager.disableBlend();
+                GlStateManager.pushMatrix();
+                GlStateManager.scale(scale, scale, scale);
                 font.drawStringWithShadow(text, textX, textY, 16777215);
-                GL11.glPopMatrix();
-                GL11.glEnable(GL11.GL_LIGHTING);
-                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                GlStateManager.popMatrix();
+                GlStateManager.enableLighting();
+                GlStateManager.enableDepth();
             }
 
             if (item.getItem().showDurabilityBar(item))
@@ -51,28 +109,28 @@ public class StorageRenderItem extends RenderItem
                 double health = item.getItem().getDurabilityForDisplay(item);
                 int j1 = (int)Math.round(13.0D - health * 13.0D);
                 int k = (int)Math.round(255.0D - health * 255.0D);
-                GL11.glDisable(GL11.GL_LIGHTING);
-                GL11.glDisable(GL11.GL_DEPTH_TEST);
-                GL11.glDisable(GL11.GL_TEXTURE_2D);
-                GL11.glDisable(GL11.GL_ALPHA_TEST);
-                GL11.glDisable(GL11.GL_BLEND);
-                Tessellator tessellator = Tessellator.instance;
+                GlStateManager.disableLighting();
+                GlStateManager.disableDepth();
+                GlStateManager.disableTexture2D();
+                GlStateManager.disableAlpha();
+                GlStateManager.disableBlend();
+                Tessellator tessellator = Tessellator.getInstance();
+                WorldRenderer worldrenderer = tessellator.getWorldRenderer();
                 int l = 255 - k << 16 | k << 8;
                 int i1 = (255 - k) / 4 << 16 | 16128;
-                this.renderQuad(tessellator, x + 2, y + 13, 13, 2, 0);
-                this.renderQuad(tessellator, x + 2, y + 13, 12, 1, i1);
-                this.renderQuad(tessellator, x + 2, y + 13, j1, 1, l);
+                this.renderQuad(worldrenderer, x + 2, y + 13, 13, 2, 0);
+                this.renderQuad(worldrenderer, x + 2, y + 13, 12, 1, i1);
+                this.renderQuad(worldrenderer, x + 2, y + 13, j1, 1, l);
                 //GL11.glEnable(GL11.GL_BLEND); // Forge: Disable Bled because it screws with a lot of things down the line.
-                GL11.glEnable(GL11.GL_ALPHA_TEST);
-                GL11.glEnable(GL11.GL_TEXTURE_2D);
-                GL11.glEnable(GL11.GL_LIGHTING);
-                GL11.glEnable(GL11.GL_DEPTH_TEST);
-                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                GlStateManager.enableAlpha();
+                GlStateManager.enableTexture2D();
+                GlStateManager.enableLighting();
+                GlStateManager.enableDepth();
             }
         }
     }
 
-    private void renderQuad (Tessellator tessellator, int x, int y, int w, int h, int color)
+    private void renderQuad (WorldRenderer tessellator, int x, int y, int w, int h, int color)
     {
         tessellator.startDrawingQuads();
         tessellator.setColorOpaque_I(color);
@@ -80,6 +138,6 @@ public class StorageRenderItem extends RenderItem
         tessellator.addVertex(x + 0, y + h, 0);
         tessellator.addVertex(x + w, y + h, 0);
         tessellator.addVertex(x + w, y + 0, 0);
-        tessellator.draw();
+        tessellator.finishDrawing();
     }
 }

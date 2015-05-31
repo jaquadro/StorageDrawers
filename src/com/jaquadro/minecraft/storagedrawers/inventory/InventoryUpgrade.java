@@ -3,13 +3,13 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStatus;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeVoid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IChatComponent;
 
 public class InventoryUpgrade implements IInventory
 {
@@ -54,13 +54,18 @@ public class InventoryUpgrade implements IInventory
     }
 
     @Override
-    public String getInventoryName () {
-        return tile.getInventoryName();
+    public String getName () {
+        return tile.getName();
     }
 
     @Override
-    public boolean hasCustomInventoryName () {
-        return tile.hasCustomInventoryName();
+    public boolean hasCustomName () {
+        return tile.hasCustomName();
+    }
+
+    @Override
+    public IChatComponent getDisplayName () {
+        return tile.getDisplayName();
     }
 
     @Override
@@ -79,21 +84,37 @@ public class InventoryUpgrade implements IInventory
     }
 
     @Override
-    public void openInventory () {
-
-    }
+    public void openInventory (EntityPlayer player) { }
 
     @Override
-    public void closeInventory () {
-
-    }
+    public void closeInventory (EntityPlayer player) { }
 
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack item) {
-        if (item.getItem() instanceof ItemUpgrade || item.getItem() instanceof ItemUpgradeStatus || item.getItem() instanceof ItemUpgradeVoid)
+        if (item.getItem() instanceof ItemUpgradeStorage || item.getItem() instanceof ItemUpgradeStatus || item.getItem() instanceof ItemUpgradeVoid)
             return true;
 
         return false;
+    }
+
+    @Override
+    public int getField (int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField (int id, int value) {
+
+    }
+
+    @Override
+    public int getFieldCount () {
+        return 0;
+    }
+
+    @Override
+    public void clear () {
+
     }
 
     public boolean canRemoveStorageUpgrade (int storageLevel) {

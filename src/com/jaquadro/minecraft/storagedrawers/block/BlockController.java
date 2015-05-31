@@ -1,13 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
-import com.jaquadro.minecraft.storagedrawers.item.ItemController;
+import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -24,7 +21,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -35,9 +31,6 @@ public class BlockController extends BlockContainer implements INetworked
 
     public BlockController (String name) {
         super(Material.rock);
-
-        //GameRegistry.registerBlock(this, ItemController.class, "controller");
-        //GameRegistry.registerTileEntity(TileEntityController.class, ModBlocks.getQualifiedName(this));
 
         setUnlocalizedName(name);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
@@ -105,16 +98,16 @@ public class BlockController extends BlockContainer implements INetworked
     @Override
     public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
         EnumFacing blockDir = (EnumFacing)state.getValue(FACING);
-        TileEntityController te = getTileEntitySafe(world, x, y, z);
-        ItemStack item = player.inventory.getCurrentItem();
+        TileEntityController te = getTileEntitySafe(world, pos);
 
+        ItemStack item = player.inventory.getCurrentItem();
         if (item != null && item.getItem() != null) {
             if (item.getItem() == ModItems.shroudKey) {
                 if (!world.isRemote)
                     te.toggleShroud();
                 return true;
             }
-            else if (item.getItem() == ModItems.upgradeLock) {
+            else if (item.getItem() == ModItems.drawerKey) {
                 if (!world.isRemote)
                     te.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED);
                 return true;
@@ -124,10 +117,8 @@ public class BlockController extends BlockContainer implements INetworked
         if (blockDir != side)
             return false;
 
-        if (!world.isRemote) {
-            TileEntityController te = getTileEntitySafe(world, pos);
+        if (!world.isRemote)
             te.interactPutItemsIntoInventory(player);
-        }
 
         return true;
     }

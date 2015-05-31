@@ -10,12 +10,13 @@ import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.StorageInventory;
+import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
+import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -100,7 +101,7 @@ public void setMaterial (String material) {
     public int getMaxStorageLevel () {
         int maxLevel = 1;
         for (ItemStack upgrade : upgrades) {
-            if (upgrade != null && upgrade.getItem() == ModItems.upgrade)
+            if (upgrade != null && upgrade.getItem() == ModItems.upgradeStorage)
                 maxLevel = Math.max(maxLevel, upgrade.getItemDamage());
         }
 
@@ -110,7 +111,7 @@ public void setMaterial (String material) {
     public int getEffectiveStorageLevel () {
         int level = 0;
         for (ItemStack upgrade : upgrades) {
-            if (upgrade != null && upgrade.getItem() == ModItems.upgrade)
+            if (upgrade != null && upgrade.getItem() == ModItems.upgradeStorage)
                 level += upgrade.getItemDamage();
         }
 
@@ -122,7 +123,7 @@ public void setMaterial (String material) {
 
         int multiplier = 0;
         for (ItemStack stack : upgrades) {
-            if (stack != null && stack.getItem() == ModItems.upgrade)
+            if (stack != null && stack.getItem() == ModItems.upgradeStorage)
                 multiplier += config.getStorageUpgradeMultiplier(stack.getItemDamage());
         }
 
@@ -172,7 +173,7 @@ public void setMaterial (String material) {
 
         if (worldObj != null && !worldObj.isRemote) {
             markDirty();
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            worldObj.markBlockForUpdate(getPos());
         }
     }
 
@@ -222,7 +223,7 @@ public void setMaterial (String material) {
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                worldObj.markBlockForUpdate(getPos());
             }
         }
         else if (!isLocked && lockAttributes != null && lockAttributes.contains(attr)) {
@@ -230,7 +231,7 @@ public void setMaterial (String material) {
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                worldObj.markBlockForUpdate(getPos());
             }
         }
     }
@@ -248,7 +249,7 @@ public void setMaterial (String material) {
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                worldObj.markBlockForUpdate(getPos());
             }
         }
     }
@@ -381,9 +382,9 @@ public void setMaterial (String material) {
 
     private void readLegacyUpgradeNBT (NBTTagCompound tag) {
         if (tag.hasKey("Lev") && tag.getByte("Lev") > 1)
-            addUpgrade(new ItemStack(ModItems.upgrade, 1, tag.getByte("Lev")));
+            addUpgrade(new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.byLevel(tag.getByte("Lev")).getMetadata()));
         if (tag.hasKey("Stat"))
-            addUpgrade(new ItemStack(ModItems.upgradeStatus, 1, tag.getByte("Stat")));
+            addUpgrade(new ItemStack(ModItems.upgradeStatus, 1, EnumUpgradeStatus.byLevel(tag.getByte("Stat")).getMetadata()));
         if (tag.hasKey("Void"))
             addUpgrade(new ItemStack(ModItems.upgradeVoid));
     }
@@ -402,6 +403,7 @@ public void setMaterial (String material) {
             material = null;
             if (tag.hasKey("Mat"))
                 material = tag.getString("Mat");
+
             drawerCapacity = tag.getInteger("Cap");
 
             if (!tag.hasKey("Upgrades")) {
@@ -426,9 +428,8 @@ public void setMaterial (String material) {
                 shrouded = tag.getBoolean("Shr");
 
             NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
-            int drawerCount = slots.tagCount();
-            drawers = new IDrawer[slots.tagCount()];
 
+            drawers = new IDrawer[slots.tagCount()];
             for (int i = 0, n = drawers.length; i < n; i++) {
                 NBTTagCompound slot = slots.getCompoundTagAt(i);
                 drawers[i] = createDrawer(i);
@@ -454,8 +455,9 @@ public void setMaterial (String material) {
         try {
             tag.setByte("Dir", (byte) direction);
             tag.setInteger("Cap", drawerCapacity);
-        if (material != null)
-            tag.setString("Mat", material);
+
+            if (material != null)
+                tag.setString("Mat", material);
 
             NBTTagList upgradeList = new NBTTagList();
             for (int i = 0; i < upgrades.length; i++) {
@@ -616,8 +618,8 @@ public void setMaterial (String material) {
     }
 
     @Override
-    public String getInventoryName () {
-        return inventory.getInventoryName();
+    public String getName () {
+        return "container.drawers";
     }
 
     @Override
@@ -637,11 +639,10 @@ public void setMaterial (String material) {
 
     @Override
     public boolean isUseableByPlayer (EntityPlayer player) {
-        if (worldObj.getTileEntity(xCoord, yCoord, zCoord) != this)
+        if (worldObj.getTileEntity(getPos()) != this)
             return false;
 
-        return player.getDistanceSq(xCoord + .5, yCoord + .5, zCoord + .5) <= 64;
-
+        return player.getDistanceSq(getPos().getX() + .5, getPos().getY() + .5, getPos().getZ() + .5) <= 64;
     }
 
     @Override

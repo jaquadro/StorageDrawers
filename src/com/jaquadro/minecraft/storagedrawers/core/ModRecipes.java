@@ -129,7 +129,7 @@ public class ModRecipes
         }
 
         if (config.cache.enableShroudUpgrades) {
-            GameRegistry.addShapelessRecipe(new ItemStack(ModItems.shroudKey), ModItems.upgradeLock, Items.ender_eye);
+            GameRegistry.addShapelessRecipe(new ItemStack(ModItems.shroudKey), ModItems.drawerKey, Items.ender_eye);
         }
     }
 }

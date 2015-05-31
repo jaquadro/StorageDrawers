@@ -32,10 +32,6 @@ public class BlockSlave extends BlockContainer implements INetworked
         return new TileEntitySlave();
     }
 
-    public void bindController (World world, BlockPos pos) {
-        TileEntitySlave te = getTileEntitySafe(world, pos);
-    }
-
     public TileEntitySlave getTileEntity (IBlockAccess blockAccess, BlockPos pos) {
         TileEntity tile = blockAccess.getTileEntity(pos);
         return (tile instanceof TileEntitySlave) ? (TileEntitySlave) tile : null;

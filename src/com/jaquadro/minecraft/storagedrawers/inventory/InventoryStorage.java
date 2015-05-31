@@ -1,13 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
-import cpw.mods.fml.common.asm.transformers.ItemStackTransformer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IChatComponent;
 
 public class InventoryStorage implements IInventory
 {
@@ -102,13 +101,18 @@ public class InventoryStorage implements IInventory
     }
 
     @Override
-    public String getInventoryName () {
-        return tile.getInventoryName();
+    public String getName () {
+        return tile.getName();
     }
 
     @Override
-    public boolean hasCustomInventoryName () {
-        return tile.hasCustomInventoryName();
+    public boolean hasCustomName () {
+        return tile.hasCustomName();
+    }
+
+    @Override
+    public IChatComponent getDisplayName () {
+        return tile.getDisplayName();
     }
 
     @Override
@@ -139,17 +143,33 @@ public class InventoryStorage implements IInventory
     }
 
     @Override
-    public void openInventory () {
-
-    }
+    public void openInventory (EntityPlayer player) { }
 
     @Override
-    public void closeInventory () {
-
-    }
+    public void closeInventory (EntityPlayer player) { }
 
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack stack) {
         return tile.isItemValidForSlot(slot, stack);
+    }
+
+    @Override
+    public int getField (int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField (int id, int value) {
+
+    }
+
+    @Override
+    public int getFieldCount () {
+        return 0;
+    }
+
+    @Override
+    public void clear () {
+
     }
 }

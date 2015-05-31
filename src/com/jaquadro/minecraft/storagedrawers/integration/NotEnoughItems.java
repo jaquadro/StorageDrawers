@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.client.renderer.entity.RenderItem;
 
 import java.lang.reflect.Field;

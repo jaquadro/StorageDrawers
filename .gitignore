@@ -20,3 +20,4 @@ runtime-1.8/
 tools/TextureBuilder/TextureBuilder/bin/
 tools/TextureBuilder/TextureBuilder/obj/
 *.suo
+working/

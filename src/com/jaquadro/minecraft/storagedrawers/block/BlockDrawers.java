@@ -40,6 +40,8 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -216,13 +218,13 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         if (item != null && item.getItem() != null) {
-            if (item.getItem() == ModItems.upgrade || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid) {
-                if (!tileDrawers.addUpgrade(item)) {
+            if (item.getItem() == ModItems.upgradeStorage || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid) {
+                if (!tileDrawers.addUpgrade(item) && !world.isRemote) {
                     player.addChatMessage(new ChatComponentTranslation("storagedrawers.msg.maxUpgrades"));
                     return false;
                 }
 
-                world.markBlockForUpdate(x, y, z);
+                world.markBlockForUpdate(pos);
 
                 if (player != null && !player.capabilities.isCreativeMode) {
                     if (--item.stackSize <= 0)
@@ -231,7 +233,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-            else if (item.getItem() == ModItems.upgradeLock) {
+            else if (item.getItem() == ModItems.drawerKey) {
                 boolean locked = tileDrawers.isLocked(LockAttribute.LOCK_POPULATED);
                 tileDrawers.setLocked(LockAttribute.LOCK_POPULATED, !locked);
                 tileDrawers.setLocked(LockAttribute.LOCK_EMPTY, !locked);
@@ -244,7 +246,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             }
         }
         else if (item == null && player.isSneaking() && StorageDrawers.config.cache.enableDrawerUI) {
-            player.openGui(StorageDrawers.instance, GuiHandler.drawersGuiID, world, x, y, z);
+            player.openGui(StorageDrawers.instance, GuiHandler.drawersGuiID, world, pos.getX(), pos.getY(), pos.getZ());
             return true;
         }
 
@@ -326,7 +328,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "IExtendedBlockClickHandler.onBlockClicked");
 
         if (!player.capabilities.isCreativeMode) {
-            PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, x, y, z, side, world);
+            PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, world, pos, side);
             if (event.isCanceled())
                 return;
         }
@@ -402,12 +404,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         TileEntityDrawers tile = getTileEntity(world, pos);
 
         if (tile != null) {
-            if (tile.getStorageLevel() > 1)
-                spawnAsEntity(world, pos, new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.byLevel(tile.getStorageLevel()).getMetadata()));
-            if (tile.getStatusLevel() > 0)
-                spawnAsEntity(world, pos, new ItemStack(ModItems.upgradeStatus, 1, EnumUpgradeStatus.byLevel(tile.getStatusLevel()).getMetadata()));
-            if (tile.isVoid())
-                spawnAsEntity(world, pos, new ItemStack(ModItems.upgradeVoid));
+            for (int i = 0; i < tile.getUpgradeSlotCount(); i++) {
+                ItemStack stack = tile.getUpgrade(i);
+                if (stack != null)
+                    spawnAsEntity(world, pos, stack);
+            }
 
             InventoryHelper.dropInventoryItems(world, pos, tile);
         }

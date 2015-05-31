@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
 import com.jaquadro.minecraft.storagedrawers.integration.IntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.integration.NotEnoughItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.I18n;
@@ -28,7 +29,7 @@ public class GuiDrawers extends GuiContainer
 
     private static final Object[] empty = new Object[0];
 
-    private static StorageRenderItem storageItemRender = new StorageRenderItem();
+    private static StorageRenderItem storageItemRender;
 
     private TileEntityDrawers tileDrawers;
 
@@ -38,6 +39,12 @@ public class GuiDrawers extends GuiContainer
 
         xSize = 176;
         ySize = 199;
+
+        if (storageItemRender == null) {
+            Minecraft minecraft = Minecraft.getMinecraft();
+            RenderItem defaultRenderItem = minecraft.getRenderItem();
+            storageItemRender = new StorageRenderItem(minecraft.getTextureManager(), defaultRenderItem.getItemModelMesher().getModelManager());
+        }
 
         itemRender = storageItemRender;
     }
@@ -77,7 +84,7 @@ public class GuiDrawers extends GuiContainer
 
     @Override
     protected void drawGuiContainerForegroundLayer (int p_146979_1_, int p_146979_2_) {
-        String name = tileDrawers.hasCustomInventoryName() ? tileDrawers.getInventoryName() : I18n.format(tileDrawers.getInventoryName(), empty);
+        String name = tileDrawers.hasCustomName() ? tileDrawers.getName() : I18n.format(tileDrawers.getName(), empty);
         fontRendererObj.drawString(name, 8, 6, 4210752);
         fontRendererObj.drawString(I18n.format("storageDrawers.container.upgrades", empty), 8, 75, 4210752);
         fontRendererObj.drawString(I18n.format("container.inventory",empty), 8, ySize - 96 + 2, 4210752);
@@ -118,7 +125,7 @@ public class GuiDrawers extends GuiContainer
     }
 
     @Override
-    protected boolean func_146978_c (int x, int y, int width, int height, int originX, int originY) {
+    protected boolean isPointInRegion (int x, int y, int width, int height, int originX, int originY) {
         if (inventorySlots instanceof ContainerDrawers) {
             ContainerDrawers container = (ContainerDrawers) inventorySlots;
             List<Slot> storageSlots = container.getStorageSlots();
@@ -136,7 +143,7 @@ public class GuiDrawers extends GuiContainer
             }
         }
 
-        return super.func_146978_c(x, y, width, height, originX, originY);
+        return super.isPointInRegion(x, y, width, height, originX, originY);
     }
 
     private RenderItem setItemRender (RenderItem renderItem) {
@@ -149,13 +156,4 @@ public class GuiDrawers extends GuiContainer
             return prev;
         }
     }
-
-    /*@Override
-    public void func_146977_a (Slot slot) {
-        RenderItem ri = setItemRender(storageItemRender);
-
-        super.func_146977_a(slot);
-
-        setItemRender(ri);
-    }*/
 }
