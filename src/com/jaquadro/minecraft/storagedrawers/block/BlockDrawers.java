@@ -499,7 +499,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         switch (side) {
             case 0:
             case 1:
-                return halfDepth ? iconSideV[meta] : iconSide[meta];
+                return halfDepth ? iconSideH[meta] : iconSide[meta];
             case 2:
             case 3:
                 return halfDepth ? iconSideV[meta] : iconSide[meta];
@@ -560,16 +560,37 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                     switch (tile.getDirection()) {
                         case 2:
                         case 3:
+                        case 4:
+                        case 5:
                             return (level > 0) ? iconOverlayH[level] : iconSideH[meta];
+                    }
+                }
+                break;
+            case 2:
+            case 3:
+                if (halfDepth) {
+                    switch (tile.getDirection()) {
+                        case 2:
+                        case 3:
+                            return (level > 0) ? iconOverlay[level] : iconSide[meta];
                         case 4:
                         case 5:
                             return (level > 0) ? iconOverlayV[level] : iconSideV[meta];
                     }
                 }
                 break;
-            default:
-                if (halfDepth)
-                    return (level > 0) ? iconOverlayV[level] : iconSideV[meta];
+            case 4:
+            case 5:
+                if (halfDepth) {
+                    switch (tile.getDirection()) {
+                        case 2:
+                        case 3:
+                            return (level > 0) ? iconOverlayV[level] : iconSideV[meta];
+                        case 4:
+                        case 5:
+                            return (level > 0) ? iconOverlay[level] : iconSide[meta];
+                    }
+                }
                 break;
         }
 
