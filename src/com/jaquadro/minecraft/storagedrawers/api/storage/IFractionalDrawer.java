@@ -16,7 +16,7 @@ public interface IFractionalDrawer extends IDrawer
 
     /**
      * Gets the number of items left in the drawer if the maximum number of equivalent compressed items had been removed.
-     * The equivalency is determined by the conversion rate.
+     * The equivalency is determined by the next compression tier, and not necessarily the conversion rate.
      */
     int getStoredItemRemainder ();
 }

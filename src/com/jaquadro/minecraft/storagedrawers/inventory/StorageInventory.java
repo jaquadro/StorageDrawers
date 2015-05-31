@@ -6,6 +6,8 @@ import com.jaquadro.minecraft.storagedrawers.api.inventory.SlotType;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -61,6 +63,9 @@ public class StorageInventory implements IDrawerInventory
 
         IDrawer drawer = group.getDrawer(baseSlot);
         if (drawer == null)
+            return false;
+
+        if (drawer.isEmpty() && drawer instanceof ILockable && ((ILockable) drawer).isLocked(LockAttribute.LOCK_EMPTY))
             return false;
 
         return drawer.canItemBeStored(stack);
