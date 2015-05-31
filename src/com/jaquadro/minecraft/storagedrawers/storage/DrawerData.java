@@ -1,13 +1,16 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 
-public class DrawerData extends BaseDrawerData implements IVoidable
+public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable, ILockable
 {
     private static final ItemStack nullStack = new ItemStack((Item)null);
 
@@ -83,7 +86,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable
 
         if (amount == 0) {
             if (clearOnEmpty) {
-                if (!storageProvider.isLocked(slot))
+                if (!storageProvider.isLocked(slot, LockAttribute.LOCK_POPULATED))
                     reset();
                 if (mark)
                     storageProvider.markDirty(slot);
@@ -195,5 +198,28 @@ public class DrawerData extends BaseDrawerData implements IVoidable
     public boolean isVoid () {
         return storageProvider.isVoid(slot);
     }
+
+    @Override
+    public boolean isShrouded () {
+        return storageProvider.isShrouded(slot);
+    }
+
+    @Override
+    public boolean setIsShrouded (boolean state) {
+        return storageProvider.setIsShrouded(slot, state);
+    }
+
+    @Override
+    public boolean isLocked (LockAttribute attr) {
+        return storageProvider.isLocked(slot, attr);
+    }
+
+    @Override
+    public boolean canLock (LockAttribute attr) {
+        return false;
+    }
+
+    @Override
+    public void setLocked (LockAttribute attr, boolean isLocked) { }
 }
 

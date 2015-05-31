@@ -24,6 +24,8 @@ public class DrawerMEInventory //implements IMEInventory<IAEItemStack>
             if (itemProto != null) {
                 if (drawer.canItemBeStored(input.getItemStack())) {
                     itemsLeft = injectItemsIntoDrawer(drawer, itemsLeft, type);
+                    if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
+                        itemsLeft = 0;
                     if (itemsLeft == 0)
                         return null;
                 }
@@ -34,13 +36,22 @@ public class DrawerMEInventory //implements IMEInventory<IAEItemStack>
             if (!group.isDrawerEnabled(i))
                 continue;
 
+            if (group instanceof ILockable && ((ILockable) group).isLocked(LockAttribute.LOCK_EMPTY))
+                continue;
+
             IDrawer drawer = group.getDrawer(i);
             ItemStack itemProto = drawer.getStoredItemPrototype();
+
+            if (itemProto == null && drawer instanceof ILockable && ((ILockable) drawer).isLocked(LockAttribute.LOCK_EMPTY))
+                continue;
+
             if (itemProto == null) {
                 itemProto = input.getItemStack();
                 if (drawer.canItemBeStored(itemProto)) {
                     drawer.setStoredItem(itemProto, 0);
                     itemsLeft = injectItemsIntoDrawer(drawer, itemsLeft, type);
+                    if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
+                        itemsLeft = 0;
                     if (itemsLeft == 0)
                         return null;
                 }

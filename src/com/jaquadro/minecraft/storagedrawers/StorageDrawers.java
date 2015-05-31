@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers;
 
 import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
+import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.integration.IntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
@@ -79,6 +80,7 @@ public class StorageDrawers
     public void init (FMLInitializationEvent event) {
         proxy.registerRenderers();
 
+        NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
         FMLCommonHandler.instance().bus().register(instance);
         MinecraftForge.EVENT_BUS.register(proxy);
         //MinecraftForge.EVENT_BUS.register(DrawerModelBakeEventHandler.instance);

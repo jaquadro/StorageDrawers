@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IIngredientHandler;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IRecipeHandler;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
@@ -428,7 +429,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 pooledCount = poolMax;
 
             if (pooledCount != oldCount) {
-                if (pooledCount != 0 || isLocked())
+                if (pooledCount != 0 || TileEntityDrawersComp.this.isLocked(LockAttribute.LOCK_POPULATED))
                     markAmountDirty();
                 else {
                     clear();
@@ -483,8 +484,37 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         @Override
+        public int getConversionRate (int slot) {
+            if (protoStack[slot] == null || convRate == null || convRate[slot] == 0)
+                return 0;
+
+            return convRate[0] / convRate[slot];
+        }
+
+        @Override
+        public int getStoredItemRemainder (int slot) {
+            return TileEntityDrawersComp.this.getStoredItemRemainder(slot);
+        }
+
+        @Override
         public boolean isVoidSlot (int slot) {
             return isVoid();
+        }
+
+        @Override
+        public boolean isShroudedSlot (int slot) {
+            return isShrouded();
+        }
+
+        @Override
+        public boolean setIsSlotShrouded (int slot, boolean state) {
+            setIsShrouded(state);
+            return true;
+        }
+
+        @Override
+        public boolean isLocked (int slot, LockAttribute attr) {
+            return TileEntityDrawersComp.this.isLocked(attr);
         }
 
         @Override
@@ -545,7 +575,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         private int getBaseStackCapacity () {
             ConfigManager config = StorageDrawers.config;
-            return config.getStorageUpgradeMultiplier(getStorageLevel()) * TileEntityDrawersComp.this.getDrawerCapacity();
+            return TileEntityDrawersComp.this.getEffectiveStorageMultiplier() * TileEntityDrawersComp.this.getDrawerCapacity();
         }
 
         public void markAmountDirty () {

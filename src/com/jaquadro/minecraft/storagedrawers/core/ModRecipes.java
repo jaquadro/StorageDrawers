@@ -127,5 +127,9 @@ public class ModRecipes
             GameRegistry.addRecipe(new ItemStack(ModItems.upgradeVoid), "yyy", "xzx", "yyy",
                 'x', Blocks.obsidian, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
         }
+
+        if (config.cache.enableShroudUpgrades) {
+            GameRegistry.addShapelessRecipe(new ItemStack(ModItems.shroudKey), ModItems.upgradeLock, Items.ender_eye);
+        }
     }
 }

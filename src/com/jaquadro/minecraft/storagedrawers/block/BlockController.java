@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
@@ -25,6 +26,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import java.util.EnumSet;
 import java.util.Random;
 
 public class BlockController extends BlockContainer implements INetworked
@@ -103,6 +105,22 @@ public class BlockController extends BlockContainer implements INetworked
     @Override
     public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
         EnumFacing blockDir = (EnumFacing)state.getValue(FACING);
+        TileEntityController te = getTileEntitySafe(world, x, y, z);
+        ItemStack item = player.inventory.getCurrentItem();
+
+        if (item != null && item.getItem() != null) {
+            if (item.getItem() == ModItems.shroudKey) {
+                if (!world.isRemote)
+                    te.toggleShroud();
+                return true;
+            }
+            else if (item.getItem() == ModItems.upgradeLock) {
+                if (!world.isRemote)
+                    te.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED);
+                return true;
+            }
+        }
+
         if (blockDir != side)
             return false;
 

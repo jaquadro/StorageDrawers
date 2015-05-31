@@ -56,30 +56,18 @@ public class RefinedRelocation extends IntegrationModule
 
         ConfigManager config = StorageDrawers.config;
 
-        if (config.isBlockEnabled("fulldrawers1")) {
+        if (config.isBlockEnabled("fulldrawers1"))
             GameRegistry.registerBlock(fullDrawers1, ItemSortingDrawers.class, "fullDrawersSort1");
-            GameRegistry.registerTileEntity(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers1));
-        }
-        if (config.isBlockEnabled("fulldrawers2")) {
+        if (config.isBlockEnabled("fulldrawers2"))
             GameRegistry.registerBlock(fullDrawers2, ItemSortingDrawers.class, "fullDrawersSort2");
-            GameRegistry.registerTileEntity(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers2));
-        }
-        if (config.isBlockEnabled("fulldrawers4")) {
+        if (config.isBlockEnabled("fulldrawers4"))
             GameRegistry.registerBlock(fullDrawers4, ItemSortingDrawers.class, "fullDrawersSort4");
-            GameRegistry.registerTileEntity(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers4));
-        }
-        if (config.isBlockEnabled("halfdrawers2")) {
+        if (config.isBlockEnabled("halfdrawers2"))
             GameRegistry.registerBlock(halfDrawers2, ItemSortingDrawers.class, "halfDrawersSort2");
-            GameRegistry.registerTileEntity(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName(halfDrawers2));
-        }
-        if (config.isBlockEnabled("halfdrawers4")) {
+        if (config.isBlockEnabled("halfdrawers4"))
             GameRegistry.registerBlock(halfDrawers4, ItemSortingDrawers.class, "halfDrawersSort4");
-            GameRegistry.registerTileEntity(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName(halfDrawers4));
-        }
-        if (config.isBlockEnabled("compdrawers")) {
+        if (config.isBlockEnabled("compdrawers"))
             GameRegistry.registerBlock(compDrawers, ItemSortingCompDrawers.class, "compDrawersSort");
-            GameRegistry.registerTileEntity(TileSortingDrawersComp.class, ModBlocks.getQualifiedName(compDrawers));
-        }
 
         if (config.cache.enableSortingUpgrades)
             GameRegistry.registerItem(upgradeSorting, "upgradeSorting");*/

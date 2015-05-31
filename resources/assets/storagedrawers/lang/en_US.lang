@@ -1,6 +1,11 @@
 itemGroup.storageDrawers=Storage Drawers
 itemGroup.storageDrawersSorting=Storage Drawers - Sorting
 
+container.drawers=Drawers
+storageDrawers.container.upgrades=Upgrades
+
+storagedrawers.msg.maxUpgrades=This drawer cannot accept any more upgrades.
+
 # Items
 item.upgradeTemplate.name=Upgrade Template
 item.upgradeStorage.iron.name=Storage Upgrade (II)
@@ -18,6 +23,8 @@ item.upgradeSorting.name=Sorting Upgrade
 item.upgradeSorting.description=For Refined Relocation
 item.drawerKey.name=Drawer Key
 item.drawerKey.description=Locks and unlocks drawers
+item.shroudKey.name=Concealment Key
+item.shroudKey.description=Show or hide item labels
 
 # Blocks
 tile.basicDrawers.fulldrawers1.name=Basic Drawer
@@ -40,6 +47,7 @@ tile.trim.big_oak.name=Dark Oak Trim
 storageDrawers.drawers.description=Holds %d stacks per drawer
 storageDrawers.upgrade.description=Increases storage to %d times base value
 storageDrawers.controller.description=Interact with a bank of connected drawers
+storageDrawers.controllerSlave.description=Extra attach points for controllers
 
 # Material
 
@@ -91,7 +99,8 @@ storageDrawers.config.prop.itemRenderType=Item Render Type
 storageDrawers.config.prop.itemRenderType.tooltip=Render items in 3D or flat.
 storageDrawers.config.prop.enableIndicatorUpgrades=Enable Indicator Upgrades
 storageDrawers.config.prop.enableStorageUpgrades=Enable Storage Upgrades
-storageDrawers.config.prop.enableLockUpgrades=Enable Lock Upgrade
+storageDrawers.config.prop.enableLockUpgrades=Enable Drawer Locking
+storageDrawers.config.prop.enableShroudUpgrades=Enable Item Concealing
 storageDrawers.config.prop.enableVoidUpgrades=Enable Void Upgrade
 storageDrawers.config.prop.enableSortingUpgrades=Enable Sorting Upgrade
 storageDrawers.config.prop.enableSortingUpgrades.tooltip=Refined Relocation must be loaded.
@@ -104,6 +113,8 @@ storageDrawers.config.prop.baseStorage=Base Storage
 storageDrawers.config.prop.baseStorage.tooltip=Number of stacks held per drawer.
 storageDrawers.config.prop.recipeOutput=Recipe Output
 storageDrawers.config.prop.recipeOutput.tooltip=Number of items from single crafting.
+storageDrawers.config.prop.enableDrawerUI=Enable Drawer UI
+storageDrawers.config.prop.enableDrawerUI.tooltip=Shows item counts and provides upgrade management.
 storageDrawers.config.prop.enableSidedInput=Enable Sided Input
 storageDrawers.config.prop.enableSidedInput.tooltip=Other blocks can insert items into drawers.
 storageDrawers.config.prop.enableSidedOutput=Enable Sided Output

@@ -16,6 +16,7 @@ public class ModItems
     public static ItemUpgradeStatus upgradeStatus;
     public static ItemDrawerKey drawerKey;
     public static ItemUpgradeVoid upgradeVoid;
+    public static ItemShroudKey shroudKey;
 
     public void init () {
         upgradeTemplate = new Item().setUnlocalizedName("upgradeTemplate").setCreativeTab(ModCreativeTabs.tabStorageDrawers);
@@ -23,6 +24,7 @@ public class ModItems
         upgradeStatus = new ItemUpgradeStatus("upgradeStatus");
         upgradeVoid = new ItemUpgradeVoid("upgradeVoid");
         drawerKey = new ItemDrawerKey("drawerKey");
+        shroudKey = new ItemShroudKey("shroudKey");
 
         GameRegistry.registerItem(upgradeTemplate, "upgradeTemplate");
 
@@ -34,6 +36,8 @@ public class ModItems
             GameRegistry.registerItem(upgradeVoid, "upgradeVoid");
         if (StorageDrawers.config.cache.enableLockUpgrades)
             GameRegistry.registerItem(drawerKey, "drawerKey");
+        if (StorageDrawers.config.cache.enableShroudUpgrades)
+            GameRegistry.registerItem(shroudKey, "shroudKey");
     }
 
     public static String getQualifiedName (Item item) {

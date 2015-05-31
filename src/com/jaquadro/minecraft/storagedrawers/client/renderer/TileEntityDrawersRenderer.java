@@ -441,7 +441,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 float b = (float)(color & 255) / 255.0F;
 
                 if (renderWithColor)
-                    GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0F);
+                    GL11.glColor4f(r, g, b, 1.0F);
 
                 GL11.glDisable(GL11.GL_LIGHTING);
                 GL11.glEnable(GL11.GL_BLEND);
@@ -518,8 +518,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
             // Orient lighting for on-block item render.  Standard GUI RenderHelper method is wrong for this.
             GL11.glPushMatrix();
-            GL11.glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(150.0F, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(-170.0F, 1.0F, 0.0F, 1.0F);
+            GL11.glRotatef(-2, 1, 0, 0);
+            //GL11.glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
+            //GL11.glRotatef(142.0F, 1.0F, 0.0F, 0.0F);
+
             RenderHelper.enableStandardItemLighting();
             GL11.glPopMatrix();
 
@@ -537,12 +540,12 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             float b = (float)(color & 255) / 255.0F;
 
             if (this.renderWithColor)
-                GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0F);
+                GL11.glColor4f(r * 1, g * 1, b * 1, 1.0F);
 
             GL11.glRotatef(-90, 0, 1, 0);
 
             this.renderBlocksRi.useInventoryTint = this.renderWithColor;
-            this.renderBlocksRi.renderBlockAsItem(block, itemStack.getItemDamage(), brightness);
+            this.renderBlocksRi.renderBlockAsItem(block, itemStack.getItemDamage(), 1);
             this.renderBlocksRi.useInventoryTint = true;
 
             if (block.getRenderBlockPass() == 0)
@@ -585,6 +588,17 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime) {
         TileEntityDrawers tileDrawers = (TileEntityDrawers) tile;
         if (tileDrawers == null)
+            return;
+
+        if (tileDrawers.isShrouded())
+            return;
+
+        // Don't bother rendering anything that is (probably) facing away from the player.
+        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        Vec3 faceVector = dirVectors[tileDrawers.getDirection()];
+        float lookProduct = (float)player.getLook(partialTickTime).dotProduct(faceVector);
+
+        if (lookProduct > .75f)
             return;
 
         float depth;
@@ -676,8 +690,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 restoreItemState = true;
         }
 
-        if (restoreItemState || restoreBlockState)
-            GLUtil.saveGLState(savedGLStateItemRender, glStateItemRender);
+        if (restoreItemState || restoreBlockState) {
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+        }
 
         for (int i = 0; i < drawerCount; i++) {
             if (renderStacks[i] != null && !renderAsBlock[i])
@@ -685,7 +700,6 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         }
 
         if (restoreBlockState) {
-            GLUtil.saveGLState(savedGLLightRender, glLightRender);
             GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
         }
 
@@ -695,12 +709,12 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         }
 
         if (restoreBlockState) {
-            GLUtil.restoreGLState(savedGLLightRender);
             GL11.glPopAttrib();
         }
 
-        if (restoreItemState || restoreBlockState)
-            GLUtil.restoreGLState(savedGLStateItemRender);
+        if (restoreItemState || restoreBlockState) {
+            GL11.glPopAttrib();
+        }
     }
 
     private void renderFancyItem (ItemStack itemStack, TileEntityDrawers tile, int slot, ForgeDirection side, float depth, float partialTickTime) {

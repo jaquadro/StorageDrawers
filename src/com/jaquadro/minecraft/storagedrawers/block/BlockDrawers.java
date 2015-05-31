@@ -4,12 +4,14 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
+import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import net.minecraft.block.*;
@@ -214,37 +216,13 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         if (item != null && item.getItem() != null) {
-            if (item.getItem() == ModItems.upgradeStorage) {
-                EnumUpgradeStorage storage = EnumUpgradeStorage.byMetadata(item.getMetadata());
-                if (storage.getLevel() != tileDrawers.getStorageLevel()) {
-                    tileDrawers.setStorageLevel(storage.getLevel());
-                    world.markBlockForUpdate(pos);
-
-                    if (player != null && !player.capabilities.isCreativeMode) {
-                        if (--item.stackSize <= 0)
-                            player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-                    }
-
-                    return true;
+            if (item.getItem() == ModItems.upgrade || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid) {
+                if (!tileDrawers.addUpgrade(item)) {
+                    player.addChatMessage(new ChatComponentTranslation("storagedrawers.msg.maxUpgrades"));
+                    return false;
                 }
-            }
-            else if (item.getItem() == ModItems.upgradeStatus) {
-                EnumUpgradeStatus status = EnumUpgradeStatus.byMetadata(item.getMetadata());
-                if (status.getLevel() != tileDrawers.getStatusLevel()) {
-                    tileDrawers.setStatusLevel(status.getLevel());
-                    world.markBlockForUpdate(pos);
 
-                    if (player != null && !player.capabilities.isCreativeMode) {
-                        if (--item.stackSize <= 0)
-                            player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-                    }
-
-                    return true;
-                }
-            }
-            else if (item.getItem() == ModItems.upgradeVoid && !tileDrawers.isVoid()) {
-                tileDrawers.setVoid(true);
-                world.markBlockForUpdate(pos);
+                world.markBlockForUpdate(x, y, z);
 
                 if (player != null && !player.capabilities.isCreativeMode) {
                     if (--item.stackSize <= 0)
@@ -253,12 +231,21 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-            else if (item.getItem() == ModItems.drawerKey) {
-                tileDrawers.setIsLocked(!tileDrawers.isLocked());
-                world.markBlockForUpdate(pos);
+            else if (item.getItem() == ModItems.upgradeLock) {
+                boolean locked = tileDrawers.isLocked(LockAttribute.LOCK_POPULATED);
+                tileDrawers.setLocked(LockAttribute.LOCK_POPULATED, !locked);
+                tileDrawers.setLocked(LockAttribute.LOCK_EMPTY, !locked);
 
                 return true;
             }
+            else if (item.getItem() == ModItems.shroudKey) {
+                tileDrawers.setIsShrouded(!tileDrawers.isShrouded());
+                return true;
+            }
+        }
+        else if (item == null && player.isSneaking() && StorageDrawers.config.cache.enableDrawerUI) {
+            player.openGui(StorageDrawers.instance, GuiHandler.drawersGuiID, world, x, y, z);
+            return true;
         }
 
         if (tileDrawers.getDirection() != side.ordinal())
@@ -338,6 +325,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (StorageDrawers.config.cache.debugTrace)
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "IExtendedBlockClickHandler.onBlockClicked");
 
+        if (!player.capabilities.isCreativeMode) {
+            PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, x, y, z, side, world);
+            if (event.isCanceled())
+                return;
+        }
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, pos);
         if (tileDrawers.getDirection() != side.ordinal())
             return;

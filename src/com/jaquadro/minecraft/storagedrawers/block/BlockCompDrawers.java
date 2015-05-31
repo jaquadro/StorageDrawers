@@ -161,7 +161,7 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
             return iconFront[0];
 
         if (side == tile.getDirection()) {
-            if (tile.getStatusLevel() == 0) {
+            if (tile.getEffectiveStatusLevel() == 0) {
                 if (tile.isDrawerEnabled(2) && tile.getDrawer(2).getStoredItemStackSize() > 0)
                     return iconFront[2];
                 else if (tile.isDrawerEnabled(1) && tile.getDrawer(1).getStoredItemStackSize() > 0)
@@ -173,7 +173,7 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
                 IDrawer main = tile.getDrawer(0);
                 int plev = 0;
 
-                if (tile.getStatusLevel() == 1)
+                if (tile.getEffectiveStatusLevel() == 1)
                     plev = (main.getMaxCapacity() > 0 && main.getRemainingCapacity() == 0) ? 6 : 0;
                 else if (main.getMaxCapacity() > 0) {
                     float pfull = (float) main.getStoredItemCount() / main.getMaxCapacity();

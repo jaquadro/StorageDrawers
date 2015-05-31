@@ -3,6 +3,9 @@ package com.jaquadro.minecraft.storagedrawers.integration;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IWailaTooltipHandler;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
@@ -54,10 +57,14 @@ public class Waila extends IntegrationModule
         public List<String> getWailaBody (ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
             TileEntityDrawers tile = (TileEntityDrawers) accessor.getTileEntity();
 
-            for (int i = 0; i < tile.getDrawerCount(); i++) {
+            IDrawerGroup group = tile;
+            for (int i = 0; i < group.getDrawerCount(); i++) {
+                if (!group.isDrawerEnabled(i))
+                    continue;
+
                 String name = StatCollector.translateToLocal("storageDrawers.waila.empty");
 
-                IDrawer drawer = tile.getDrawer(i);
+                IDrawer drawer = group.getDrawer(i);
                 ItemStack stack = drawer.getStoredItemPrototype();
                 if (stack != null && stack.getItem() != null) {
                     String stackName = stack.getDisplayName();
@@ -65,8 +72,8 @@ public class Waila extends IntegrationModule
                     for (int j = 0, n = handlers.size(); j < n; j++)
                         stackName = handlers.get(j).transformItemName(drawer, stackName);
 
-                    if (tile instanceof TileEntityDrawersComp)
-                        name = stackName + ((i == 0) ? " [" : " [+") + ((TileEntityDrawersComp) tile).getStoredItemRemainder(i) + "]";
+                    if (drawer instanceof IFractionalDrawer && ((IFractionalDrawer) drawer).getConversionRate() > 1)
+                        name = stackName + ((i == 0) ? " [" : " [+") + ((IFractionalDrawer) drawer).getStoredItemRemainder() + "]";
                     else
                         name = stackName + " [" + drawer.getStoredItemCount() + "]";
                 }
@@ -74,7 +81,7 @@ public class Waila extends IntegrationModule
             }
 
             String attrib = "";
-            if (tile.isLocked())
+            if (tile.isLocked(LockAttribute.LOCK_POPULATED))
                 attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.locked");
             if (tile.isVoid())
                 attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.void");

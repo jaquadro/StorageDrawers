@@ -53,8 +53,10 @@ public class ConfigManager
         public boolean enableStorageUpgrades;
         public boolean enableLockUpgrades;
         public boolean enableVoidUpgrades;
+        public boolean enableShroudUpgrades;
         public boolean enableSortingUpgrades;
         public boolean renderStorageUpgrades;
+        public boolean enableDrawerUI;
         public String itemRenderType;
         public boolean creativeTabVanillaWoods;
         public boolean enableSidedInput;
@@ -121,10 +123,12 @@ public class ConfigManager
         cache.enableStorageUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableStorageUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableStorageUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableLockUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableLockUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableLockUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableVoidUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableVoidUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableVoidUpgrades").setRequiresMcRestart(true).getBoolean();
+        cache.enableShroudUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableShroudUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableShroudUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableSortingUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableSortingUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableSortingUpgrades").setRequiresMcRestart(true).getBoolean();
-        cache.itemRenderType = config.get(Configuration.CATEGORY_GENERAL, "itemRenderType", "fast", null, new String[] { "fancy", "fast" }).setLanguageKey(LANG_PREFIX + "prop.itemRenderType").getString();
+        cache.itemRenderType = config.get(Configuration.CATEGORY_GENERAL, "itemRenderType", "fast", null, new String[]{"fancy", "fast"}).setLanguageKey(LANG_PREFIX + "prop.itemRenderType").getString();
         cache.renderStorageUpgrades = config.get(Configuration.CATEGORY_GENERAL, "renderStorageUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.renderStorageUpgrades").getBoolean();
         cache.creativeTabVanillaWoods = config.get(Configuration.CATEGORY_GENERAL, "creativeTabVanillaWoods", true).setLanguageKey(LANG_PREFIX + "prop.creativeTabVanillaWoods").getBoolean();
+        cache.enableDrawerUI = config.get(Configuration.CATEGORY_GENERAL, "enableDrawerUI", true).setLanguageKey(LANG_PREFIX + "prop.enableDrawerUI").getBoolean();
         cache.enableSidedInput = config.get(Configuration.CATEGORY_GENERAL, "enableSidedInput", true).setLanguageKey(LANG_PREFIX + "prop.enableSidedInput").getBoolean();
         cache.enableSidedOutput = config.get(Configuration.CATEGORY_GENERAL, "enableSidedOutput", true).setLanguageKey(LANG_PREFIX + "prop.enableSidedOutput").getBoolean();
         cache.enableItemConversion = config.get(Configuration.CATEGORY_GENERAL, "enableItemConversion", true).setLanguageKey(LANG_PREFIX + "prop.enableItemConversion").getBoolean();

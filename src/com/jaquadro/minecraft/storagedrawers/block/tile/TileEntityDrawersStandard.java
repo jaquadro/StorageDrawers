@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
 import com.jaquadro.minecraft.storagedrawers.storage.IStorageProvider;
@@ -41,17 +42,28 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         @Override
         public int getSlotStackCapacity (int slot) {
             ConfigManager config = StorageDrawers.config;
-            return config.getStorageUpgradeMultiplier(getStorageLevel()) * getDrawerCapacity();
+            return getEffectiveStorageMultiplier() * getDrawerCapacity();
         }
 
         @Override
-        public boolean isLocked (int slot) {
-            return TileEntityDrawersStandard.this.isLocked();
+        public boolean isLocked (int slot, LockAttribute attr) {
+            return TileEntityDrawersStandard.this.isLocked(attr);
         }
 
         @Override
         public boolean isVoid (int slot) {
             return TileEntityDrawersStandard.this.isVoid();
+        }
+
+        @Override
+        public boolean isShrouded (int slot) {
+            return TileEntityDrawersStandard.this.isShrouded();
+        }
+
+        @Override
+        public boolean setIsShrouded (int slot, boolean state) {
+            TileEntityDrawersStandard.this.setIsShrouded(state);
+            return true;
         }
     }
 }

@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
@@ -107,12 +108,13 @@ public class DrawersRenderer //implements ISimpleBlockRenderingHandler
 
         renderer.uvRotateTop = 0;
 
-        if (tile.getStorageLevel() > 1 && StorageDrawers.config.cache.renderStorageUpgrades) {
+        int maxStorageLevel = tile.getMaxStorageLevel();
+        if (maxStorageLevel > 1 && StorageDrawers.config.cache.renderStorageUpgrades) {
             for (int i = 0; i < 6; i++)
-                boxRenderer.setExteriorIcon(block.getOverlayIcon(world, x, y, z, i, tile.getStorageLevel()), i);
+                boxRenderer.setExteriorIcon(block.getOverlayIcon(world, x, y, z, i, maxStorageLevel), i);
 
-            boxRenderer.setCutIcon(block.getOverlayIconTrim(tile.getStorageLevel()));
-            boxRenderer.setInteriorIcon(block.getOverlayIconTrim(tile.getStorageLevel()));
+            boxRenderer.setCutIcon(block.getOverlayIconTrim(maxStorageLevel));
+            boxRenderer.setInteriorIcon(block.getOverlayIconTrim(maxStorageLevel));
 
             renderExterior(block, x, y, z, side, renderer);
         }
@@ -123,11 +125,12 @@ public class DrawersRenderer //implements ISimpleBlockRenderingHandler
         renderInterior(block, x, y, z, side, renderer);
 
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
-            renderIndicator(block, x, y, z, side, renderer, tile.getStatusLevel());
+            renderIndicator(block, x, y, z, side, renderer, tile.getEffectiveStatusLevel());
         if (StorageDrawers.config.cache.enableLockUpgrades)
-            renderLock(block, x, y, z, side, renderer, tile.isLocked());
+            renderLock(block, x, y, z, side, renderer, tile.isLocked(LockAttribute.LOCK_POPULATED));
         if (StorageDrawers.config.cache.enableVoidUpgrades)
             renderVoid(block, x, y, z, side, renderer, tile.isVoid());
+        renderShroud(block, x, y, z, side, renderer, tile.isShrouded());
 
         return true;
     }
@@ -176,6 +179,61 @@ public class DrawersRenderer //implements ISimpleBlockRenderingHandler
     private static final float[][] drawerXYWH4 = new float[][] {
         { 0, 8, 8, 8 }, { 0, 0, 8, 8 }, { 8, 8, 8, 8 }, { 8, 0, 8, 8 },
     };
+
+    private static final float[][] drawerXYWH3 = new float[][] {
+        { 0, 8, 16, 8 }, { 0, 0, 8, 8 }, { 8, 0, 8, 8 },
+    };
+
+    private void renderShroud (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean shrouded) {
+        if (!shrouded || side < 2 || side > 5)
+            return;
+
+        TileEntityDrawers tile = block.getTileEntity(renderer.blockAccess, x, y, z);
+
+        double depth = block.halfDepth ? 8 : 16;
+        double depthAdj = block.trimDepth * 16;
+
+        int count = 0;
+        float w = 2;
+        float h = 2;
+
+        float[][] xywhSet = null;
+        if (block.drawerCount == 1) {
+            count = 1;
+            w = 4;
+            h = 4;
+            xywhSet = drawerXYWH1;
+        }
+        else if (block.drawerCount == 2) {
+            count = 2;
+            xywhSet = drawerXYWH2;
+        }
+        else if (block.drawerCount == 3) {
+            count = 3;
+            xywhSet = drawerXYWH3;
+        }
+        else if (block.drawerCount == 4) {
+            count = 4;
+            xywhSet = drawerXYWH4;
+        }
+
+        IIcon icon = block.getIconTrim(renderer.blockAccess.getBlockMetadata(x, y, z));
+
+        for (int i = 0; i < count; i++) {
+            IDrawer drawer = tile.getDrawer(i);
+            if (drawer == null || drawer.isEmpty())
+                continue;
+
+            float[] xywh = xywhSet[i];
+            float subX = xywh[0] + (xywh[2] - w) / 2;
+            float subY = xywh[1] + (xywh[3] - h) / 2;
+
+            setCoord(boxCoord, subX * unit, subY * unit, (depth - depthAdj) * unit, (subX + w) * unit, (subY + h) * unit, (depth - depthAdj + .05) * unit, side);
+
+            boxRenderer.setExteriorIcon(icon);
+            boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
+        }
+    }
 
     private void renderIndicator (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, int level) {
         if (level <= 0 || side < 2 || side > 5)
