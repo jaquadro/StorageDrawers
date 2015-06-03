@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.packs.forestry.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.integration.notenoughitems.NEIStorageDrawersConfig;
 import com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation.*;
 import com.jaquadro.minecraft.storagedrawers.packs.forestry.block.BlockDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.packs.forestry.block.BlockSortingDrawersPack;
@@ -73,6 +74,20 @@ public class RefinedRelocation
         if (config.isBlockEnabled("halfdrawers4")) {
             GameRegistry.registerBlock(halfDrawers4A, ItemSortingDrawersPack.class, "halfDrawersSort4A");
             GameRegistry.registerBlock(halfDrawers4B, ItemSortingDrawersPack.class, "halfDrawersSort4B");
+        }
+
+        if (!config.cache.addonShowNEI) {
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(fullDrawers1A));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(fullDrawers2A));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(fullDrawers4A));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(halfDrawers2A));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(halfDrawers4A));
+
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(fullDrawers1B));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(fullDrawers2B));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(fullDrawers4B));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(halfDrawers2B));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(halfDrawers4B));
         }
     }
 

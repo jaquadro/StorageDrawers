@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.packs.erebus.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.integration.notenoughitems.NEIStorageDrawersConfig;
 import com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation.*;
 import com.jaquadro.minecraft.storagedrawers.packs.erebus.block.BlockDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.packs.erebus.block.BlockSortingDrawersPack;
@@ -46,6 +47,14 @@ public class RefinedRelocation
             GameRegistry.registerBlock(halfDrawers2, ItemSortingDrawersPack.class, "halfDrawersSort2");
         if (config.isBlockEnabled("halfdrawers4"))
             GameRegistry.registerBlock(halfDrawers4, ItemSortingDrawersPack.class, "halfDrawersSort4");
+
+        if (!config.cache.addonShowNEI) {
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(fullDrawers1));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(fullDrawers2));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(fullDrawers4));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(halfDrawers2));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(halfDrawers4));
+        }
     }
 
     public static void postInit () {

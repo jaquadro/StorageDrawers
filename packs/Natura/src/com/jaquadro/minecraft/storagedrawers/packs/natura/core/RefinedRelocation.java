@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.packs.natura.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.integration.notenoughitems.NEIStorageDrawersConfig;
 import com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation.*;
 import com.jaquadro.minecraft.storagedrawers.packs.natura.block.BlockDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.packs.natura.block.BlockSortingDrawersPack;
@@ -50,6 +51,14 @@ public class RefinedRelocation
         ModBlocks.addAlternativeTileEntityMappings(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName(fullDrawers1),
             ModBlocks.getQualifiedName(fullDrawers2), ModBlocks.getQualifiedName(fullDrawers4),
             ModBlocks.getQualifiedName(halfDrawers2), ModBlocks.getQualifiedName(halfDrawers4));
+
+        if (!config.cache.addonShowNEI) {
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(fullDrawers1));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(fullDrawers2));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(fullDrawers4));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(halfDrawers2));
+            NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(halfDrawers4));
+        }
     }
 
     public static void postInit () {

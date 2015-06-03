@@ -34,11 +34,11 @@ public class StorageDrawersPack
     @Mod.EventHandler
     public void init (FMLInitializationEvent event) {
         RefinedRelocation.init();
+        recipes.init();
     }
 
     @Mod.EventHandler
     public void postInit (FMLPostInitializationEvent event) {
-        recipes.init();
         RefinedRelocation.postInit();
     }
 }

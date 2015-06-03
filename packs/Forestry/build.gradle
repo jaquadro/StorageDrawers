@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.0.0"
+version = "1.7.10-1.0.1"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers-Forestry"
 
@@ -26,7 +26,7 @@ minecraft {
     assetDir = "../../runtime/assets"
 
     replace '@VERSION@', project.version
-    replace 'required-after:StorageDrawers', "required-after:StorageDrawers@[1.4.7,)"
+    replace 'required-after:StorageDrawers', "required-after:StorageDrawers@[1.5.4,)"
 }
 
 sourceSets.main {

@@ -3,12 +3,15 @@ package com.jaquadro.minecraft.storagedrawers.packs.forestry.core;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.*;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.integration.notenoughitems.NEIStorageDrawersConfig;
 import com.jaquadro.minecraft.storagedrawers.packs.forestry.block.BlockDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.packs.forestry.item.ItemDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.packs.forestry.item.ItemTrimPack;
 import com.jaquadro.minecraft.storagedrawers.packs.forestry.StorageDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.packs.forestry.block.BlockTrimPack;
+import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
 
 public class ModBlocks
 {
@@ -67,6 +70,26 @@ public class ModBlocks
             GameRegistry.registerBlock(trimA, ItemTrimPack.class, "trimA");
             GameRegistry.registerBlock(trimB, ItemTrimPack.class, "trimB");
         }
+
+        if (!config.cache.addonShowNEI) {
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers1A));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers2A));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers4A));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(halfDrawers2A));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(halfDrawers4A));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(trimA));
+
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers1B));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers2B));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers4B));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(halfDrawers2B));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(halfDrawers4B));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(trimB));
+        }
+    }
+
+    public static String getQualifiedName (Block block) {
+        return GameData.getBlockRegistry().getNameForObject(block);
     }
 
     public static String makeName (String name) {

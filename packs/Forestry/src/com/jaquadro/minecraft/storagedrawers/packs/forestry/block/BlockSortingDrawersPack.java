@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.packs.forestry.block;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation.BlockSortingDrawers;
 import com.jaquadro.minecraft.storagedrawers.packs.forestry.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.packs.forestry.StorageDrawersPack;
@@ -25,11 +26,17 @@ public class BlockSortingDrawersPack extends BlockSortingDrawers
         else if (textureGroup == 1)
             blockTextures = BlockDrawersPack.textureNames2;
 
-        setCreativeTab(ModCreativeTabs.tabStorageDrawers);
+        if (StorageDrawers.config.cache.addonSeparateVanilla)
+            setCreativeTab(ModCreativeTabs.tabStorageDrawers);
+        else
+            setCreativeTab(com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs.tabStorageDrawers);
     }
 
     @Override
     public void getSubBlocks (Item item, CreativeTabs creativeTabs, List list) {
+        if (!StorageDrawers.config.cache.addonShowVanilla)
+            return;
+
         for (int i = 0; i < blockTextures.length; i++) {
             if (blockTextures[i] != null)
                 list.add(new ItemStack(item, 1, i));
