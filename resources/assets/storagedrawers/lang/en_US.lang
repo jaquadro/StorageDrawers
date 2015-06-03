@@ -145,6 +145,14 @@ storageDrawers.config.prop.invertShift.tooltip=Inverts click and shift+click beh
 storageDrawers.config.prop.enableDebugLogging=Enable Debug Logging
 storageDrawers.config.prop.enableDebugLogging.tooltip=Prints extra information to the logs.
 
+storageDrawers.config.addons=Addons
+storageDrawers.config.addons.tooltip=Configure global addon pack settings.
+
+storageDrawers.config.addons.showNEI=Show Blocks in NEI
+storageDrawers.config.addons.showCreative=Show Blocks in Creative Tabs
+storageDrawers.config.addons.separateTabs=Separate Creative Tabs
+storageDrawers.config.addons.tooltip=Each pack uses its own tab instead of the Storage Drawers tab.
+
 storageDrawers.config.integration=Integration
 storageDrawers.config.integration.tooltip=Configure integration with other mods.
 

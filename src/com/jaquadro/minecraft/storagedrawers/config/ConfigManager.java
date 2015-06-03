@@ -75,6 +75,10 @@ public class ConfigManager
         public int level4Mult;
         public int level5Mult;
         public int level6Mult;
+
+        public boolean addonSeparateVanilla;
+        public boolean addonShowNEI;
+        public boolean addonShowVanilla;
     }
 
     private static final String LANG_PREFIX = "storageDrawers.config.";
@@ -87,6 +91,7 @@ public class ConfigManager
     public final ConfigSection sectionIntegration = new ConfigSection(sections, "integration", "integration");
     public final ConfigSection sectionBlocks = new ConfigSection(sections, "blocks", "blocks");
     public final ConfigSection sectionUpgrades = new ConfigSection(sections, "upgrades", "upgrades");
+    public final ConfigSection sectionAddons = new ConfigSection(sections, "addons", "addons");
 
     public final List<ConfigSection> blockSections = new ArrayList<ConfigSection>();
     public final ConfigSection sectionBlocksFullDrawers1x1 = new ConfigSection(blockSections, sectionBlocks, "fulldrawers1", "blocks.fullDrawers1");
@@ -181,6 +186,10 @@ public class ConfigManager
         cache.level4Mult = config.get(sectionUpgrades.getQualifiedName(), "level4Mult", 5).setLanguageKey(LANG_PREFIX + "upgrades.level4Mult").setRequiresWorldRestart(true).getInt();
         cache.level5Mult = config.get(sectionUpgrades.getQualifiedName(), "level5Mult", 8).setLanguageKey(LANG_PREFIX + "upgrades.level5Mult").setRequiresWorldRestart(true).getInt();
         cache.level6Mult = config.get(sectionUpgrades.getQualifiedName(), "level6Mult", 13).setLanguageKey(LANG_PREFIX + "upgrades.level6Mult").setRequiresWorldRestart(true).getInt();
+
+        cache.addonShowNEI = config.get(sectionAddons.getQualifiedName(), "showBlocksInNEI", true).setLanguageKey(LANG_PREFIX + "addons.showNEI").setRequiresWorldRestart(true).getBoolean();
+        cache.addonShowVanilla = config.get(sectionAddons.getQualifiedName(), "showBlocksInCreative", true).setLanguageKey(LANG_PREFIX + "addons.showCreative").setRequiresWorldRestart(true).getBoolean();
+        cache.addonSeparateVanilla = config.get(sectionAddons.getQualifiedName(), "useSeparateCreativeTabs", true).setLanguageKey(LANG_PREFIX + "addons.separateTabs").setRequiresMcRestart(true).getBoolean();
 
         if (config.hasChanged())
             config.save();
