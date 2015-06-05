@@ -2,7 +2,6 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,6 +18,9 @@ import java.util.List;
 
 public class BlockTrim extends Block implements INetworked
 {
+    @SideOnly(Side.CLIENT)
+    protected IIcon[] iconTrim;
+
     public BlockTrim (String name) {
         super(Material.wood);
 
@@ -46,9 +48,16 @@ public class BlockTrim extends Block implements INetworked
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon (int side, int meta) {
-        return ModBlocks.fullDrawers1.getIcon(0, meta);
+        meta = meta % iconTrim.length;
+        return iconTrim[meta];
     }
 
     @Override
-    public void registerBlockIcons (IIconRegister register) { }
+    public void registerBlockIcons (IIconRegister register) {
+        String[] subtex = BlockWood.field_150096_a;
+
+        iconTrim = new IIcon[subtex.length];
+        for (int i = 0; i < subtex.length; i++)
+            iconTrim[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side");
+    }
 }

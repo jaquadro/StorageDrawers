@@ -21,9 +21,6 @@ public class BlockTrimPack extends BlockTrim
 {
     private IPackDataResolver resolver;
 
-    @SideOnly(Side.CLIENT)
-    IIcon[] iconTrim;
-
     public BlockTrimPack (IPackDataResolver resolver) {
         super(resolver.getBlockName(BlockConfiguration.Trim));
 
