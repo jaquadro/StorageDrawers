@@ -59,6 +59,13 @@ public class BlockTrimPack extends BlockTrim
 
     @Override
     @SideOnly(Side.CLIENT)
+    public IIcon getIcon (int side, int meta) {
+        meta = meta % 16;
+        return iconTrim[meta];
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void registerBlockIcons (IIconRegister register) {
         iconTrim = new IIcon[16];
 

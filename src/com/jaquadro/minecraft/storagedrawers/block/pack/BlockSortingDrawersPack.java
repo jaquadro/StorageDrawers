@@ -33,6 +33,16 @@ public class BlockSortingDrawersPack extends BlockSortingDrawers
             setCreativeTab(ModCreativeTabs.tabStorageDrawers);
     }
 
+    public String[] getUnlocalizedNames () {
+        String[] names = new String[16];
+        for (int i = 0; i < 16; i++) {
+            if (resolver.isValidMetaValue(i))
+                names[i] = resolver.getUnlocalizedName(i);
+        }
+
+        return names;
+    }
+
     @Override
     public void getSubBlocks (Item item, CreativeTabs creativeTabs, List list) {
         if (!StorageDrawers.config.cache.addonShowVanilla)

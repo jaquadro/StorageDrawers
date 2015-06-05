@@ -6,10 +6,16 @@ public class StandardDataResolver implements IPackDataResolver
 {
     private String modID;
     private String[] unlocalizedNames;
+    private CreativeTabs creativeTab;
 
     public StandardDataResolver (String modID, String[] unlocalizedNames) {
         this.modID = modID;
         this.unlocalizedNames = unlocalizedNames;
+    }
+
+    public StandardDataResolver (String modID, String[] unlocalizedNames, CreativeTabs creativeTab) {
+        this(modID, unlocalizedNames);
+        this.creativeTab = creativeTab;
     }
 
     @Override
@@ -45,12 +51,12 @@ public class StandardDataResolver implements IPackDataResolver
 
     @Override
     public CreativeTabs getCreativeTabs (BlockType type) {
-        return null;
+        return creativeTab;
     }
 
     @Override
     public boolean isValidMetaValue (int meta) {
-        if (meta < 0 || meta >= 16)
+        if (meta < 0 || meta >= unlocalizedNames.length)
             return false;
 
         return unlocalizedNames != null && unlocalizedNames[meta] != null;
@@ -76,11 +82,11 @@ public class StandardDataResolver implements IPackDataResolver
     public String getTexturePath (TextureType type, int meta) {
         switch (type) {
             case Front1:
-                return getBaseTexturePath() + "drawers_" + getTextureMetaName(meta) + "_front1_1";
+                return getBaseTexturePath() + "drawers_" + getTextureMetaName(meta) + "_front_1";
             case Front2:
-                return getBaseTexturePath() + "drawers_" + getTextureMetaName(meta) + "_front1_2";
+                return getBaseTexturePath() + "drawers_" + getTextureMetaName(meta) + "_front_2";
             case Front4:
-                return getBaseTexturePath() + "drawers_" + getTextureMetaName(meta) + "_front1_4";
+                return getBaseTexturePath() + "drawers_" + getTextureMetaName(meta) + "_front_4";
             case Side:
                 return getBaseTexturePath() + "drawers_" + getTextureMetaName(meta) + "_side";
             case SideSort:

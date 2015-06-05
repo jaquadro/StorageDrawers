@@ -10,6 +10,10 @@ public class ItemDrawersPack extends ItemDrawers
         super(block, getUnlocalizedNames(block));
     }
 
+    protected ItemDrawersPack (Block block, String[] unlocalizedNames) {
+        super(block, unlocalizedNames);
+    }
+
     private static String[] getUnlocalizedNames (Block block) {
         if (block instanceof BlockDrawersPack)
             return ((BlockDrawersPack) block).getUnlocalizedNames();
