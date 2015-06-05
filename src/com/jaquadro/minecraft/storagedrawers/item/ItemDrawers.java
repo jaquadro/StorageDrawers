@@ -59,17 +59,22 @@ public class ItemDrawers extends ItemMultiTexture
         ConfigManager config = StorageDrawers.config;
         int count = 0;
 
-        if (block == ModBlocks.fullDrawers1)
+        if (!(block instanceof BlockDrawers))
+            return 0;
+
+        BlockDrawers drawer = (BlockDrawers)block;
+
+        if (drawer.drawerCount == 1)
             count = config.getBlockBaseStorage("fulldrawers1");
-        else if (block == ModBlocks.fullDrawers2)
+        else if (drawer.drawerCount == 2 && !drawer.halfDepth)
             count = config.getBlockBaseStorage("fulldrawers2");
-        else if (block == ModBlocks.fullDrawers4)
+        else if (drawer.drawerCount == 4 && !drawer.halfDepth)
             count = config.getBlockBaseStorage("fulldrawers4");
-        else if (block == ModBlocks.halfDrawers2)
+        else if (drawer.drawerCount == 2 && drawer.halfDepth)
             count = config.getBlockBaseStorage("halfdrawers2");
-        else if (block == ModBlocks.halfDrawers4)
+        else if (drawer.drawerCount == 4 && drawer.halfDepth)
             count = config.getBlockBaseStorage("halfdrawers4");
-        else if (block == ModBlocks.compDrawers)
+        else if (drawer.drawerCount == 3)
             count = config.getBlockBaseStorage("compDrawers");
 
         return count;
