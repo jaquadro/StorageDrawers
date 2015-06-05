@@ -1,9 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.packs.bop.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.pack.IPackDataResolver;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import com.jaquadro.minecraft.storagedrawers.packs.bop.block.BlockDrawersPack;
+import com.jaquadro.minecraft.storagedrawers.packs.bop.StorageDrawersPack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -20,8 +21,10 @@ public class ModRecipes
         Block slab1 = GameRegistry.findBlock("BiomesOPlenty", "woodenSingleSlab1");
         Block slab2 = GameRegistry.findBlock("BiomesOPlenty", "woodenSingleSlab2");
 
-        for (int i = 0; i < BlockDrawersPack.textureNames.length; i++) {
-            if (BlockDrawersPack.textureNames[i] == null)
+        IPackDataResolver resolver = StorageDrawersPack.instance.resolver;
+
+        for (int i = 0; i < 16; i++) {
+            if (!resolver.isValidMetaValue(i))
                 continue;
 
             if (planks != null) {

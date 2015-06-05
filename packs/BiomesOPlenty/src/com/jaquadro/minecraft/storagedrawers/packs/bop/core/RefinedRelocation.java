@@ -1,35 +1,41 @@
 package com.jaquadro.minecraft.storagedrawers.packs.bop.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.StorageDrawersApi;
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
+import com.jaquadro.minecraft.storagedrawers.api.pack.IPackBlockFactory;
+import com.jaquadro.minecraft.storagedrawers.api.pack.IPackDataResolver;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.integration.notenoughitems.NEIStorageDrawersConfig;
 import com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation.*;
-import com.jaquadro.minecraft.storagedrawers.packs.bop.block.BlockDrawersPack;
-import com.jaquadro.minecraft.storagedrawers.packs.bop.block.BlockSortingDrawersPack;
-import com.jaquadro.minecraft.storagedrawers.packs.bop.item.ItemSortingDrawersPack;
+import com.jaquadro.minecraft.storagedrawers.packs.bop.StorageDrawersPack;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class RefinedRelocation
 {
-    public static BlockSortingDrawersPack fullDrawers1;
-    public static BlockSortingDrawersPack fullDrawers2;
-    public static BlockSortingDrawersPack fullDrawers4;
-    public static BlockSortingDrawersPack halfDrawers2;
-    public static BlockSortingDrawersPack halfDrawers4;
+    public static Block fullDrawers1;
+    public static Block fullDrawers2;
+    public static Block fullDrawers4;
+    public static Block halfDrawers2;
+    public static Block halfDrawers4;
 
     public static void init () {
         ConfigManager config = StorageDrawers.config;
         if (!Loader.isModLoaded("RefinedRelocation") || !config.cache.enableRefinedRelocationIntegration)
             return;
 
-        fullDrawers1 = new BlockSortingDrawersPack(ModBlocks.makeName("fullDrawers1"), 1, false);
-        fullDrawers2 = new BlockSortingDrawersPack(ModBlocks.makeName("fullDrawers2"), 2, false);
-        fullDrawers4 = new BlockSortingDrawersPack(ModBlocks.makeName("fullDrawers4"), 4, false);
-        halfDrawers2 = new BlockSortingDrawersPack(ModBlocks.makeName("halfDrawers2"), 2, true);
-        halfDrawers4 = new BlockSortingDrawersPack(ModBlocks.makeName("halfDrawers4"), 4, true);
+        IPackBlockFactory factory = StorageDrawersApi.instance().packFactory();
+        IPackDataResolver resolver = StorageDrawersPack.instance.resolver;
+
+        fullDrawers1 = factory.createBlock(BlockConfiguration.SortingFull1, resolver);
+        fullDrawers2 = factory.createBlock(BlockConfiguration.SortingFull2, resolver);
+        fullDrawers4 = factory.createBlock(BlockConfiguration.SortingFull4, resolver);
+        halfDrawers2 = factory.createBlock(BlockConfiguration.SortingHalf2, resolver);
+        halfDrawers4 = factory.createBlock(BlockConfiguration.SortingHalf4, resolver);
 
         SortingBlockRegistry.register(ModBlocks.fullDrawers1, fullDrawers1);
         SortingBlockRegistry.register(ModBlocks.fullDrawers2, fullDrawers2);
@@ -38,15 +44,15 @@ public class RefinedRelocation
         SortingBlockRegistry.register(ModBlocks.halfDrawers4, halfDrawers4);
 
         if (config.isBlockEnabled("fulldrawers1"))
-            GameRegistry.registerBlock(fullDrawers1, ItemSortingDrawersPack.class, "fullDrawersSort1");
+            factory.registerBlock(fullDrawers1, "fullDrawersSort1");
         if (config.isBlockEnabled("fulldrawers2"))
-            GameRegistry.registerBlock(fullDrawers2, ItemSortingDrawersPack.class, "fullDrawersSort2");
+            factory.registerBlock(fullDrawers2, "fullDrawersSort2");
         if (config.isBlockEnabled("fulldrawers4"))
-            GameRegistry.registerBlock(fullDrawers4, ItemSortingDrawersPack.class, "fullDrawersSort4");
+            factory.registerBlock(fullDrawers4, "fullDrawersSort4");
         if (config.isBlockEnabled("halfdrawers2"))
-            GameRegistry.registerBlock(halfDrawers2, ItemSortingDrawersPack.class, "halfDrawersSort2");
+            factory.registerBlock(halfDrawers2, "halfDrawersSort2");
         if (config.isBlockEnabled("halfdrawers4"))
-            GameRegistry.registerBlock(halfDrawers4, ItemSortingDrawersPack.class, "halfDrawersSort4");
+            factory.registerBlock(halfDrawers4, "halfDrawersSort4");
 
         if (!config.cache.addonShowNEI) {
             NEIStorageDrawersConfig.hideBlock(ModBlocks.getQualifiedName(fullDrawers1));
@@ -62,7 +68,12 @@ public class RefinedRelocation
         if (!Loader.isModLoaded("RefinedRelocation") || !config.cache.enableRefinedRelocationIntegration)
             return;
 
-        for (int i = 0; i < BlockDrawersPack.textureNames.length; i++) {
+        IPackDataResolver resolver = StorageDrawersPack.instance.resolver;
+
+        for (int i = 0; i < 16; i++) {
+            if (!resolver.isValidMetaValue(i))
+                continue;
+
             if (config.isBlockEnabled("fulldrawers1"))
                 GameRegistry.addRecipe(new ItemStack(fullDrawers1, 1, i), "x x", " y ", "x x",
                     'x', Items.gold_nugget, 'y', new ItemStack(ModBlocks.fullDrawers1, 1, i));

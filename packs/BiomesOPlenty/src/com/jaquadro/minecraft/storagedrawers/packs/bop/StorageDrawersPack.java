@@ -1,6 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.packs.bop;
 
+import com.jaquadro.minecraft.storagedrawers.api.pack.IPackDataResolver;
+import com.jaquadro.minecraft.storagedrawers.api.pack.StandardDataResolver;
 import com.jaquadro.minecraft.storagedrawers.packs.bop.core.ModBlocks;
+import com.jaquadro.minecraft.storagedrawers.packs.bop.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.packs.bop.core.ModRecipes;
 import com.jaquadro.minecraft.storagedrawers.packs.bop.core.RefinedRelocation;
 import cpw.mods.fml.common.Mod;
@@ -16,6 +19,10 @@ public class StorageDrawersPack
     public static final String MOD_NAME = "Storage Drawers: Biomes O' Plenty Pack";
     public static final String MOD_VERSION = "@VERSION@";
     public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.packs.bop.";
+
+    public IPackDataResolver resolver = new StandardDataResolver(MOD_ID, new String[] {
+        "sacredoak", "cherry", "dark", "fir", "ethereal", "magic", "mangrove", "palm", "redwood", "willow", null, "pine", "hellbark", "jacaranda", "mahogany"
+    }, ModCreativeTabs.tabStorageDrawers);
 
     public ModBlocks blocks = new ModBlocks();
     public ModRecipes recipes = new ModRecipes();
