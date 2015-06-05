@@ -10,6 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.block.pack.BlockTrimPack;
 import com.jaquadro.minecraft.storagedrawers.item.pack.ItemDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.item.pack.ItemSortingDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.item.pack.ItemTrimPack;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 
 public class PackFactory implements IPackBlockFactory
@@ -31,16 +32,12 @@ public class PackFactory implements IPackBlockFactory
     }
 
     @Override
-    public Class getItemClass (BlockConfiguration blockConfig) {
-        switch (blockConfig.getBlockType()) {
-            case Drawers:
-                return ItemDrawersPack.class;
-            case DrawersSorting:
-                return ItemSortingDrawersPack.class;
-            case Trim:
-                return ItemTrimPack.class;
-        }
-
-        return null;
+    public void registerBlock (Block block, String name) {
+        if (block instanceof BlockDrawersPack)
+            GameRegistry.registerBlock(block, ItemDrawersPack.class, name);
+        else if (block instanceof BlockSortingDrawersPack)
+            GameRegistry.registerBlock(block, ItemSortingDrawersPack.class, name);
+        else if (block instanceof BlockTrimPack)
+            GameRegistry.registerBlock(block, ItemTrimPack.class, name);
     }
 }
