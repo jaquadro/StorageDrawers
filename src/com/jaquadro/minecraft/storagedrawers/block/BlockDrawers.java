@@ -109,6 +109,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         setHardness(5f);
         setStepSound(Block.soundTypeWood);
         setBlockName(blockName);
+
+        if (!halfDepth)
+            setLightOpacity(255);
     }
 
     @Override

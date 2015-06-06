@@ -43,6 +43,7 @@ public class BlockController extends BlockContainer implements INetworked
         setHardness(5f);
         setBlockName(blockName);
         setStepSound(Block.soundTypeStone);
+        setLightOpacity(255);
         setBlockBounds(0, 0, 0, 1, 1, 1);
         setTickRandomly(true);
     }
