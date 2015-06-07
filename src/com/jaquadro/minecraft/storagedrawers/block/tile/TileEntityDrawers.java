@@ -15,6 +15,8 @@ import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -508,9 +510,24 @@ public void setMaterial (String material) {
         return false;
     }
 
-    public void clientUpdateCount (int slot, int count) {
+    public void clientUpdateCount (final int slot, final int count) {
+        if (!worldObj.isRemote)
+            return;
+
+        Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+            @Override
+            public void run () {
+                TileEntityDrawers.this.clientUpdateCountAsync(slot, count);
+            }
+        });
+    }
+
+    private void clientUpdateCountAsync (int slot, int count) {
+        if (!isDrawerEnabled(slot))
+            return;
+
         IDrawer drawer = getDrawer(slot);
-        if (drawer.getStoredItemCount() != count) {
+        if (drawer != null && drawer.getStoredItemCount() != count) {
             drawer.setStoredItemCount(count);
             getWorld().markBlockForUpdate(getPos());
         }
