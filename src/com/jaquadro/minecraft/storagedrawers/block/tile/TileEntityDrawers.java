@@ -16,7 +16,6 @@ import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -35,6 +34,8 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 
 import java.util.EnumSet;
@@ -510,6 +511,7 @@ public void setMaterial (String material) {
         return false;
     }
 
+    @SideOnly(Side.CLIENT)
     public void clientUpdateCount (final int slot, final int count) {
         if (!worldObj.isRemote)
             return;
@@ -522,6 +524,7 @@ public void setMaterial (String material) {
         });
     }
 
+    @SideOnly(Side.CLIENT)
     private void clientUpdateCountAsync (int slot, int count) {
         if (!isDrawerEnabled(slot))
             return;
