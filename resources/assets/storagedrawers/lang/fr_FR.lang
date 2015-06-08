@@ -1,8 +1,11 @@
 itemGroup.storageDrawers=Storage Drawers
 itemGroup.storageDrawersSorting=Storage Drawers - Triage
 
-container.drawers=Tiroirs
+storageDrawers.container.drawers=Tiroirs
+storageDrawers.container.compDrawers=Tiroirs de compactage
 storageDrawers.container.upgrades=Amélioration
+storageDrawers.container.controller=Contrôleur de tiroirs
+storageDrawers.container.unboundSlave=Esclave non liée
 
 storagedrawers.msg.maxUpgrades=Ce tiroir ne peuvent pas accepter davantage d'améliorations.
 
