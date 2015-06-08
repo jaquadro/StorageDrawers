@@ -1,4 +1,10 @@
 itemGroup.storageDrawers=Storage Drawers
+itemGroup.storageDrawersSorting=Storage Drawers - Triage
+
+container.drawers=Tiroirs
+storageDrawers.container.upgrades=Amélioration
+
+storagedrawers.msg.maxUpgrades=Ce tiroir ne peuvent pas accepter davantage d'améliorations.
 
 # Items
 item.upgradeTemplate.name=Modèle d'amélioration
@@ -13,6 +19,12 @@ item.upgradeStatus.level2.name=Amélioration statut (II)
 item.upgradeStatus.level2.description=Montre le niveau de remplissage
 item.upgradeLock.name=Amélioration verrou
 item.upgradeLock.description=Conserve les éléments associés lorsqu'il est vide
+item.upgradeVoid.name=Amélioration cavité
+item.upgradeVoid.description=Détruit les objets en excès
+item.upgradeSorting.name=Amélioration triage
+item.upgradeSorting.description=Pour Refined Relocation
+item.shroudKey.name=Clé de dissimulation
+item.shroudKey.description=Montrer ou cacher les étiquettes d'objet
 
 # Blocks
 tile.fullDrawers1.oak.name=Tiroir de chêne
@@ -50,18 +62,29 @@ tile.halfDrawers4.jungle.name=Tiroirs compacts d'acajou 2x2
 tile.halfDrawers4.acacia.name=Tiroirs compacts d'acacia 2x2
 tile.halfDrawers4.big_oak.name=Tiroirs compacts de chêne noir 2x2
 
-tile.compDrawers.name=Compactage du tiroir
+tile.compDrawers.name=Tiroir de compactage
 tile.drawerController.name=Contrôleur de tiroirs
+tile.controllerSlave.name=Esclave du contrôleur
+
+tile.trim.oak.name=Rebord en chêne
+tile.trim.spruce.name=Rebord en sapin
+tile.trim.birch.name=Rebord en bouleau
+tile.trim.jungle.name=Rebord en acajou
+tile.trim.acacia.name=Rebord en acacia
+tile.trim.big_oak.name=Rebord en chêne noir
 
 storageDrawers.drawers.description=Contient %d piles par tiroir
 storageDrawers.upgrade.description=Augmente le stockage de %d fois la valeur de base
 storageDrawers.controller.description=Interagit avec une banque de tiroirs
+storageDrawers.controllerSlave.description=Jonction supplémentaire pour les contrôleurs
 
 # Integration
 storageDrawers.waila.empty=Vide
 storageDrawers.waila.level=Niveau d'amélioration : %s
 storageDrawers.waila.drawer=Tiroir #%s: %s
 storageDrawers.waila.locked=Verrouillé
+storageDrawers.waila.void=Cavité
+storageDrawers.waila.sorting=Triage
 
 # Configuration
 storageDrawers.config.title=Configuration des tiroirs de stockage
@@ -79,6 +102,8 @@ storageDrawers.config.blocks.halfDrawers2=Tiroirs compacts 1x2
 storageDrawers.config.blocks.halfDrawers4=Tiroirs compacts 2x2
 storageDrawers.config.blocks.compDrawers=Compactage du tiroir
 storageDrawers.config.blocks.controller=Contrôleur de tiroirs
+storageDrawers.config.blocks.trim=Rebord
+storageDrawers.config.blocks.controllerSlave=Esclave du contrôleur
 
 storageDrawers.config.upgrades=Options d'amélioration
 storageDrawers.config.upgrades.tooltip=Configure les améliorations de stockage induviduel.
@@ -94,6 +119,10 @@ storageDrawers.config.prop.itemRenderType.tooltip=Rendu des éléments en 3D ou 
 storageDrawers.config.prop.enableIndicatorUpgrades=Active les améliorations d'indicateur
 storageDrawers.config.prop.enableStorageUpgrades=Active les améliorations de stockage
 storageDrawers.config.prop.enableLockUpgrades=Active l'amélioration verrou
+storageDrawers.config.prop.enableShroudUpgrades=Active le camouflage d'objet
+storageDrawers.config.prop.enableVoidUpgrades=Active l'amélioration cavité
+storageDrawers.config.prop.enableSortingUpgrades=Autoriser l'amélioration triage
+storageDrawers.config.prop.enableSortingUpgrades.tooltip=Refined Relocation doit être charger.
 storageDrawers.config.prop.renderStorageUpgrades=Rendu des améliorations de stockage
 storageDrawers.config.prop.creativeTabVanillaWoods=Tableau en créatif de bois Vanilla
 storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Active tous les style de bois dans le tableau en mode créatif.
@@ -114,6 +143,14 @@ storageDrawers.config.prop.invertShift.tooltip=Interverti le clique et le Maj+cl
 storageDrawers.config.prop.enableDebugLogging=Active le journal de débeugue
 storageDrawers.config.prop.enableDebugLogging.tooltip=Ajoute des information suplémentaires dans le journal.
 
+storageDrawers.config.addons=Addons
+storageDrawers.config.addons.tooltip=Configurer les réglages globaux du pack d'addons.
+
+storageDrawers.config.addons.showNEI=Montrer les blocs dans NEI
+storageDrawers.config.addons.showCreative=Montrer les blocs dans le tableau en mode créatif
+storageDrawers.config.addons.separateTabs=Séparer les tableaux du mode créatif
+storageDrawers.config.addons.tooltip=Chaque pack utilise son propre tableau au lieu d'utiliser celui de Storage Drawers.
+
 storageDrawers.config.integration=Intégration
 storageDrawers.config.integration.tooltip=Configure l'intégration avec d'autres mods.
 
@@ -121,3 +158,4 @@ storageDrawers.config.integration.enableAE2=Active l'intégration de Applied Ene
 storageDrawers.config.integration.enableWaila=Active l'intégration de WAILA
 storageDrawers.config.integration.enableThaumcraft=Active l'intégration de Thaumcraft
 storageDrawers.config.integration.enableMineTweaker=Active l'intégration de MineTweaker
+storageDrawers.config.integration.enableRefinedRelocation=Active l'intégration de Refined Relocation
