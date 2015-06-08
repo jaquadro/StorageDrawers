@@ -90,6 +90,9 @@ public class BlockController extends BlockContainer implements INetworked
                 break;
         }
 
+        if (itemStack.hasDisplayName())
+            tile.setInventoryName(itemStack.getDisplayName());
+
         if (world.isRemote) {
             tile.invalidate();
             world.markBlockForUpdate(x, y, z);

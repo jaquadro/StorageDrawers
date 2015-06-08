@@ -190,6 +190,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 break;
         }
 
+        if (itemStack.hasDisplayName())
+            tile.setInventoryName(itemStack.getDisplayName());
+
         if (world.isRemote) {
             tile.invalidate();
             world.markBlockForUpdate(x, y, z);

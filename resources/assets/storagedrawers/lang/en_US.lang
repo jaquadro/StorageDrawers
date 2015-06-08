@@ -1,8 +1,11 @@
 itemGroup.storageDrawers=Storage Drawers
 itemGroup.storageDrawersSorting=Storage Drawers - Sorting
 
-container.drawers=Drawers
+storageDrawers.container.drawers=Drawers
+storageDrawers.container.compDrawers=Compacting Drawers
 storageDrawers.container.upgrades=Upgrades
+storageDrawers.container.controller=Drawer Controller
+storageDrawers.container.unboundSlave=Unbound Slave
 
 storagedrawers.msg.maxUpgrades=This drawer cannot accept any more upgrades.
 

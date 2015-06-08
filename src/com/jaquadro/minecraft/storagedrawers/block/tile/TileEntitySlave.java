@@ -164,14 +164,20 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, ISidedI
 
     @Override
     public String getInventoryName () {
-        // TODO
-        return null;
+        TileEntityController controller = getController();
+        if (controller == null || !controller.isValidSlave(selfCoord))
+            return "storageDrawers.container.unboundSlave";
+
+        return controller.getInventoryName();
     }
 
     @Override
     public boolean hasCustomInventoryName () {
-        // TODO
-        return false;
+        TileEntityController controller = getController();
+        if (controller == null || !controller.isValidSlave(selfCoord))
+            return false;
+
+        return controller.hasCustomInventoryName();
     }
 
     @Override

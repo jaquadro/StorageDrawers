@@ -52,6 +52,8 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     private long lastClickTime;
     private UUID lastClickUUID;
 
+    private String customName;
+
     private NBTTagCompound failureSnapshot;
 
     protected TileEntityDrawers (int drawerCount) {
@@ -415,6 +417,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             }
 
             inventory = new StorageInventory(this, getSideManager(), this);
+
+            if (tag.hasKey("CustomName", Constants.NBT.TAG_STRING))
+                customName = tag.getString("CustomName");
         }
         catch (Throwable t) {
             trapLoadFailure(t, tag);
@@ -461,6 +466,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
             }
 
             tag.setTag("Slots", slots);
+
+            if (hasCustomInventoryName())
+                tag.setString("CustomName", customName);
         }
         catch (Throwable t) {
             FMLLog.log(StorageDrawers.MOD_ID, Level.ERROR, t, "Tile Save Failure.");
@@ -587,14 +595,18 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         inventory.setInventorySlotContents(slot, stack);
     }
 
+    public void setInventoryName (String name) {
+        customName = name;
+    }
+
     @Override
     public String getInventoryName () {
-        return "container.drawers";
+        return hasCustomInventoryName() ? customName : "storageDrawers.container.drawers";
     }
 
     @Override
     public boolean hasCustomInventoryName () {
-        return inventory.hasCustomInventoryName();
+        return customName != null && customName.length() > 0;
     }
 
     @Override

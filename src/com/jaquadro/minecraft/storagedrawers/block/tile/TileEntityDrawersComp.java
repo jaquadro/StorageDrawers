@@ -154,6 +154,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
     }
 
+    @Override
+    public String getInventoryName () {
+        return hasCustomInventoryName() ? super.getInventoryName() : "storageDrawers.container.compDrawers";
+    }
+
     private void populateSlots (ItemStack stack) {
         int index = 0;
 

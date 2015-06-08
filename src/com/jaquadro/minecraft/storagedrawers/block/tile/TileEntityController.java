@@ -18,6 +18,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.*;
@@ -70,6 +71,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
     private long lastClickTime;
     private UUID lastClickUUID;
+
+    private String customName;
 
     public TileEntityController () {
         invSlotList.add(new SlotRecord(null, 0));
@@ -493,6 +496,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
         setDirection(tag.getByte("Dir"));
 
+        if (tag.hasKey("CustomName", Constants.NBT.TAG_STRING))
+            customName = tag.getString("CustomName");
+
         if (worldObj != null && !worldObj.isRemote)
             updateCache();
     }
@@ -502,6 +508,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         super.writeToNBT(tag);
 
         tag.setByte("Dir", (byte)direction);
+
+        if (hasCustomInventoryName())
+            tag.setString("CustomName", customName);
     }
 
     @Override
@@ -643,16 +652,18 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         inventory.markDirty();
     }
 
+    public void setInventoryName (String name) {
+        customName = name;
+    }
+
     @Override
     public String getInventoryName () {
-        // TODO
-        return null;
+        return hasCustomInventoryName() ? customName : "storageDrawers.container.controller";
     }
 
     @Override
     public boolean hasCustomInventoryName () {
-        // TODO
-        return false;
+        return customName != null && customName.length() > 0;
     }
 
     @Override
