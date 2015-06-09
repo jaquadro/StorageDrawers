@@ -9,6 +9,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
@@ -81,22 +82,24 @@ public class DrawerMEInventory implements IMEInventory<IAEItemStack>
     private long injectItemsIntoDrawer (IDrawer drawer, long itemCount, Actionable type) {
         int capacity = drawer.getMaxCapacity();
         int storedItems = drawer.getStoredItemCount();
-        if (capacity == storedItems)
+
+        int storableItems = capacity - storedItems;
+        if (drawer instanceof IFractionalDrawer) {
+            IFractionalDrawer fracDrawer = (IFractionalDrawer)drawer;
+            if (!fracDrawer.isSmallestUnit() && fracDrawer.getStoredItemRemainder() > 0)
+                storableItems--;
+        }
+
+        if (storableItems == 0)
             return itemCount;
 
-        storedItems += itemCount;
-        if (storedItems > capacity) {
-            if (type == Actionable.MODULATE)
-                drawer.setStoredItemCount(capacity);
+        long remainder = Math.max(itemCount - storableItems, 0);
+        storedItems += Math.min(itemCount, storableItems);
 
-            return storedItems - capacity;
-        }
-        else {
-            if (type == Actionable.MODULATE)
-                drawer.setStoredItemCount(storedItems);
+        if (type == Actionable.MODULATE)
+            drawer.setStoredItemCount(storedItems);
 
-            return 0;
-        }
+        return remainder;
     }
 
     @Override

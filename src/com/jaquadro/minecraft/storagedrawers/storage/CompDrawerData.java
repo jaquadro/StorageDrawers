@@ -108,6 +108,11 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
         return central.getStoredItemRemainder(slot);
     }
 
+    @Override
+    public boolean isSmallestUnit () {
+        return central.isSmallestUnit(slot);
+    }
+
     public void refresh () {
         reset();
         refreshOreDictMatches();

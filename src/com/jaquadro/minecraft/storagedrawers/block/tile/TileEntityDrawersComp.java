@@ -505,6 +505,14 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         @Override
+        public boolean isSmallestUnit (int slot) {
+            if (protoStack[slot] == null || convRate == null || convRate[slot] == 0)
+                return false;
+
+            return convRate[slot] == 1;
+        }
+
+        @Override
         public boolean isVoidSlot (int slot) {
             return isVoid();
         }
