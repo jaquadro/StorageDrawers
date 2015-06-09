@@ -4,11 +4,9 @@ import net.minecraft.item.ItemStack;
 
 public abstract class InventoryStack
 {
-    private ItemStack nativeStack;
     private ItemStack inStack;
     private ItemStack outStack;
 
-    private int nativeCount;
     private int inCount;
     private int outCount;
 
@@ -17,19 +15,13 @@ public abstract class InventoryStack
     }
 
     public void reset () {
-        nativeStack = getNewItemStack();
         inStack = getNewItemStack();
         outStack = getNewItemStack();
 
-        nativeCount = 0;
         inCount = 0;
         outCount = 0;
 
         refresh();
-    }
-
-    public ItemStack getNativeStack () {
-        return nativeStack;
     }
 
     public ItemStack getInStack () {
@@ -121,14 +113,10 @@ public abstract class InventoryStack
     }
 
     public int getDiff () {
-        if (nativeStack == null)
-            return 0;
+        int diffIn = ((inStack == null) ? 0 : inStack.stackSize) - inCount;
+        int diffOut = ((outStack == null) ? 0 : outStack.stackSize) - outCount;
 
-        int diffNative = nativeStack.stackSize - nativeCount;
-        int diffIn = inStack.stackSize - inCount;
-        int diffOut = outStack.stackSize - outCount;
-
-        return diffNative + diffIn + diffOut;
+        return diffIn + diffOut;
     }
 
     protected abstract void applyDiff (int diff);
@@ -137,11 +125,6 @@ public abstract class InventoryStack
         int itemStackLimit = getItemStackSize();
         int itemCount = getItemCount();
         int remainingLimit = getItemCapacity() - itemCount;
-
-        if (nativeStack != null) {
-            nativeCount = itemCount;
-            nativeStack.stackSize = nativeCount;
-        }
 
         if (inStack != null) {
             inCount = itemStackLimit - Math.min(itemStackLimit, remainingLimit);

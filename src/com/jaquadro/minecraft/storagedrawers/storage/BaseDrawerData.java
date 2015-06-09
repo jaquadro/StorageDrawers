@@ -76,7 +76,7 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
             case OUTPUT:
                 return inventoryStack.getOutStack();
             default:
-                return inventoryStack.getNativeStack();
+                return null;
         }
     }
 

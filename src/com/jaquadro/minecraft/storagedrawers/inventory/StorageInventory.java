@@ -157,7 +157,6 @@ public class StorageInventory implements IDrawerInventory
         ItemStack stack = drawer.getStoredItemCopy();
         if (stack.stackSize <= count) {
             drawer.setStoredItemCount(0);
-//            drawer.setStoredItem(null, 0);
         }
         else {
             stack.stackSize = count;
@@ -197,9 +196,6 @@ public class StorageInventory implements IDrawerInventory
             case OUTPUT:
                 adapter.setOutStack(item);
                 break;
-            case STORAGE:
-                setInventorySlotContents(drawer, item);
-                return;
         }
     }
 
