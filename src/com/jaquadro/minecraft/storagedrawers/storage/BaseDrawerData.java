@@ -81,6 +81,16 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
     }
 
     @Override
+    public void setInStack (ItemStack stack) {
+        inventoryStack.setInStack(stack);
+    }
+
+    @Override
+    public void setOutStack (ItemStack stack) {
+        inventoryStack.setOutStack(stack);
+    }
+
+    @Override
     public void syncInventory () {
         inventoryStack.markDirty();
     }

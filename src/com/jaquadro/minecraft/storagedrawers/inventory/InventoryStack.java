@@ -43,6 +43,62 @@ public abstract class InventoryStack
         return outStack;
     }
 
+    public void setInStack (ItemStack stack) {
+        if (stack != null) {
+            if (inStack == null)
+                applyDiff(stack.stackSize);
+            else
+                applyDiff(stack.stackSize - inCount);
+        }
+
+        inStack = stack;
+        syncInStack();
+        syncOutStack();
+    }
+
+    private void syncInStack () {
+        if (inStack == null) {
+            inStack = getNewItemStack();
+            inCount = 0;
+        }
+
+        if (inStack != null) {
+            int itemStackLimit = getItemStackSize();
+            int itemCount = getItemCount();
+            int remainingLimit = getItemCapacity() - itemCount;
+
+            inCount = itemStackLimit - Math.min(itemStackLimit, remainingLimit);
+            inStack.stackSize = inCount;
+        }
+    }
+
+    public void setOutStack (ItemStack stack) {
+        if (outStack != null) {
+            if (stack == null)
+                applyDiff(0 - outCount);
+            else
+                applyDiff(0 - outCount + stack.stackSize);
+        }
+
+        outStack = stack;
+        syncOutStack();
+    }
+
+    private void syncOutStack () {
+        if (outStack == null) {
+            outStack = getNewItemStack();
+            outCount = 0;
+        }
+
+        if (outStack != null) {
+            int itemStackLimit = getItemStackSize();
+            int itemCount = getItemCount();
+
+            outCount = Math.min(itemStackLimit, itemCount);
+            outStack.stackSize = outCount;
+        }
+    }
+
     protected abstract ItemStack getNewItemStack ();
     protected abstract int getItemStackSize ();
     protected abstract int getItemCount ();
