@@ -1,12 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.packs.bop.core;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.IStorageDrawersApi;
 import com.jaquadro.minecraft.storagedrawers.api.StorageDrawersApi;
+import com.jaquadro.minecraft.storagedrawers.api.config.IBlockConfig;
+import com.jaquadro.minecraft.storagedrawers.api.config.IUserConfig;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
 import com.jaquadro.minecraft.storagedrawers.api.pack.IPackBlockFactory;
 import com.jaquadro.minecraft.storagedrawers.api.pack.IPackDataResolver;
-import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
-import com.jaquadro.minecraft.storagedrawers.integration.notenoughitems.NEIStorageDrawersConfig;
 import com.jaquadro.minecraft.storagedrawers.packs.bop.StorageDrawersPack;
 import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
@@ -21,7 +21,11 @@ public class ModBlocks
     public static Block trim;
 
     public void init () {
-        IPackBlockFactory factory = StorageDrawersApi.instance().packFactory();
+        IStorageDrawersApi api = StorageDrawersApi.instance();
+        if (api == null)
+            return;
+
+        IPackBlockFactory factory = api.packFactory();
         IPackDataResolver resolver = StorageDrawersPack.instance.resolver;
 
         fullDrawers1 = factory.createBlock(BlockConfiguration.BasicFull1, resolver);
@@ -31,28 +35,29 @@ public class ModBlocks
         halfDrawers4 = factory.createBlock(BlockConfiguration.BasicHalf4, resolver);
         trim = factory.createBlock(BlockConfiguration.Trim, resolver);
 
-        ConfigManager config = StorageDrawers.config;
+        IUserConfig config = api.userConfig();
+        IBlockConfig blockConfig = config.blockConfig();
 
-        if (config.isBlockEnabled("fulldrawers1"))
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull1)))
             factory.registerBlock(fullDrawers1, "fullDrawers1");
-        if (config.isBlockEnabled("fulldrawers2"))
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull2)))
             factory.registerBlock(fullDrawers2, "fullDrawers2");
-        if (config.isBlockEnabled("fulldrawers4"))
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull4)))
             factory.registerBlock(fullDrawers4, "fullDrawers4");
-        if (config.isBlockEnabled("halfdrawers2"))
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicHalf2)))
             factory.registerBlock(halfDrawers2, "halfDrawers2");
-        if (config.isBlockEnabled("halfdrawers4"))
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicHalf4)))
             factory.registerBlock(halfDrawers4, "halfDrawers4");
-        if (config.isBlockEnabled("trim"))
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.Trim)))
             factory.registerBlock(trim, "trim");
 
-        if (!config.cache.addonShowNEI) {
-            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers1));
-            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers2));
-            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers4));
-            NEIStorageDrawersConfig.hideBlock(getQualifiedName(halfDrawers2));
-            NEIStorageDrawersConfig.hideBlock(getQualifiedName(halfDrawers4));
-            NEIStorageDrawersConfig.hideBlock(getQualifiedName(trim));
+        if (!config.addonConfig().showAddonItemsNEI()) {
+            factory.hideBlock(getQualifiedName(fullDrawers1));
+            factory.hideBlock(getQualifiedName(fullDrawers2));
+            factory.hideBlock(getQualifiedName(fullDrawers4));
+            factory.hideBlock(getQualifiedName(halfDrawers2));
+            factory.hideBlock(getQualifiedName(halfDrawers4));
+            factory.hideBlock(getQualifiedName(trim));
         }
     }
 

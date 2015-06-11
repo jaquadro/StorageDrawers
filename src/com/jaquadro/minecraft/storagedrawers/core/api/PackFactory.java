@@ -7,6 +7,8 @@ import com.jaquadro.minecraft.storagedrawers.integration.IntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.block.pack.BlockDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.block.pack.BlockSortingDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.block.pack.BlockTrimPack;
+import com.jaquadro.minecraft.storagedrawers.integration.notenoughitems.NEIStorageDrawersConfig;
+import com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation.SortingBlockRegistry;
 import com.jaquadro.minecraft.storagedrawers.item.pack.ItemDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.item.pack.ItemSortingDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.item.pack.ItemTrimPack;
@@ -39,5 +41,15 @@ public class PackFactory implements IPackBlockFactory
             GameRegistry.registerBlock(block, ItemSortingDrawersPack.class, name);
         else if (block instanceof BlockTrimPack)
             GameRegistry.registerBlock(block, ItemTrimPack.class, name);
+    }
+
+    @Override
+    public void bindSortingBlock (Block basicBlock, Block sortingBlock) {
+        SortingBlockRegistry.register(basicBlock, sortingBlock);
+    }
+
+    @Override
+    public void hideBlock (String blockID) {
+        NEIStorageDrawersConfig.hideBlock(blockID);
     }
 }
