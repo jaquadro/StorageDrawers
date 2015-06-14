@@ -292,8 +292,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         if (!drawer.canItemBeStored(stack))
             return 0;
 
-        int countAdded = Math.min(drawer.getRemainingCapacity(), stack.stackSize);
-        countAdded = Math.min(countAdded, count);
+        int countAdded = Math.min(count, stack.stackSize);
+        if (!isVoid())
+            countAdded = Math.min(countAdded, drawer.getRemainingCapacity());
 
         drawer.setStoredItemCount(drawer.getStoredItemCount() + countAdded);
         stack.stackSize -= countAdded;
