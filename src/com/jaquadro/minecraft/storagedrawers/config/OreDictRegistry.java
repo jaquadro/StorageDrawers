@@ -32,6 +32,11 @@ public class OreDictRegistry
         addBlacklist("sand");
         addBlacklist("sandstone");
 
+        addBlacklist("accioMaterial");
+        addBlacklist("crucioMaterial");
+        addBlacklist("imperioMaterial");
+        addBlacklist("zivicioMaterial");
+
         addBlacklistPrefix("list");
     }
 
