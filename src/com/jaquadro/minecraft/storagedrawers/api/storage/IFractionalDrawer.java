@@ -19,4 +19,10 @@ public interface IFractionalDrawer extends IDrawer
      * The equivalency is determined by the next compression tier, and not necessarily the conversion rate.
      */
     int getStoredItemRemainder ();
+
+    /**
+     * Gets whether or not the stored item represents the smallest granularity of material that can be stored within
+     * the drawer group.
+     */
+    boolean isSmallestUnit ();
 }

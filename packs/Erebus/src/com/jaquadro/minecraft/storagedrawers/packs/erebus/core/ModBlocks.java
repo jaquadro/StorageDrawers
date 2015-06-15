@@ -3,12 +3,15 @@ package com.jaquadro.minecraft.storagedrawers.packs.erebus.core;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.*;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.integration.notenoughitems.NEIStorageDrawersConfig;
 import com.jaquadro.minecraft.storagedrawers.packs.erebus.StorageDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.packs.erebus.block.BlockDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.packs.erebus.block.BlockTrimPack;
 import com.jaquadro.minecraft.storagedrawers.packs.erebus.item.ItemDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.packs.erebus.item.ItemTrimPack;
+import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
 
 public class ModBlocks
 {
@@ -41,6 +44,19 @@ public class ModBlocks
             GameRegistry.registerBlock(halfDrawers4, ItemDrawersPack.class, "halfDrawers4");
         if (config.isBlockEnabled("trim"))
             GameRegistry.registerBlock(trim, ItemTrimPack.class, "trim");
+
+        if (!config.cache.addonShowNEI) {
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers1));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers2));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers4));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(halfDrawers2));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(halfDrawers4));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(trim));
+        }
+    }
+
+    public static String getQualifiedName (Block block) {
+        return GameData.getBlockRegistry().getNameForObject(block);
     }
 
     public static String makeName (String name) {

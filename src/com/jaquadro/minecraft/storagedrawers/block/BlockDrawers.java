@@ -121,6 +121,14 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    public int getLightOpacity (IBlockAccess world, BlockPos pos) {
+        if (isHalfDepth(world.getBlockState(pos)))
+            return 0;
+        else
+            return 255;
+    }
+
+    @Override
     public boolean isOpaqueCube () {
         return false;
     }
@@ -205,6 +213,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         TileEntityDrawers tile = getTileEntitySafe(world, pos);
         tile.setDirection(facing.ordinal());
         tile.markDirty();
+
+        if (itemStack.hasDisplayName())
+            tile.setInventoryName(itemStack.getDisplayName());
     }
 
     @Override

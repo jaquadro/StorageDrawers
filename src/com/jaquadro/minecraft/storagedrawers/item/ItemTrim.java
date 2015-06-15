@@ -30,6 +30,10 @@ public class ItemTrim extends ItemMultiTexture
         });
     }
 
+    protected ItemTrim (Block block, Function function) {
+        super(block, block, function);
+    }
+
     /*@SideOnly(Side.CLIENT)
     public ItemMeshDefinition getMeshResolver () {
         if (meshResolver == null)

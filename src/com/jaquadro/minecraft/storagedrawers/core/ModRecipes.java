@@ -124,8 +124,8 @@ public class ModRecipes
         }
 
         if (config.cache.enableVoidUpgrades) {
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeVoid), "yyy", "xzx", "yyy",
-                'x', Blocks.obsidian, 'y', Items.stick, 'z', ModItems.upgradeTemplate);
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeVoid), "yyy", "xzx", "yyy",
+                'x', Blocks.obsidian, 'y', "stickWood", 'z', ModItems.upgradeTemplate));
         }
 
         if (config.cache.enableShroudUpgrades) {

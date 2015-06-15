@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.api;
 
+import com.jaquadro.minecraft.storagedrawers.api.config.IUserConfig;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IRecipeHandlerRegistry;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IRenderRegistry;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IWailaRegistry;
@@ -14,4 +15,11 @@ public interface IStorageDrawersApi
     IRenderRegistry renderRegistry ();
 
     IWailaRegistry wailaRegistry ();
+
+    //IPackBlockFactory packFactory ();
+
+    /**
+     * User-managed configuration for the Storage Drawers mod.
+     */
+    IUserConfig userConfig ();
 }

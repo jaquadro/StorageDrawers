@@ -23,6 +23,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 
@@ -73,6 +74,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
     private long lastClickTime;
     private UUID lastClickUUID;
+
+    private String customName;
 
     public TileEntityController () {
         invSlotList.add(new SlotRecord(null, 0));
@@ -485,6 +488,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     public void readFromNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
 
+        if (tag.hasKey("CustomName", Constants.NBT.TAG_STRING))
+            customName = tag.getString("CustomName");
+
         if (worldObj != null && !worldObj.isRemote)
             updateCache();
     }
@@ -492,6 +498,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     @Override
     public void writeToNBT (NBTTagCompound tag) {
         super.writeToNBT(tag);
+
+        if (hasCustomName())
+            tag.setString("CustomName", customName);
     }
 
     @Override
@@ -634,16 +643,18 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         inventory.markDirty();
     }
 
+    public void setInventoryName (String name) {
+        customName = name;
+    }
+
     @Override
     public String getName () {
-        // TODO
-        return null;
+        return hasCustomName() ? customName : "storageDrawers.container.controller";
     }
 
     @Override
     public boolean hasCustomName () {
-        // TODO
-        return false;
+        return customName != null && customName.length() > 0;
     }
 
     @Override

@@ -159,7 +159,6 @@ public class StorageInventory implements IDrawerInventory
         ItemStack stack = drawer.getStoredItemCopy();
         if (stack.stackSize <= count) {
             drawer.setStoredItemCount(0);
-//            drawer.setStoredItem(null, 0);
         }
         else {
             stack.stackSize = count;
@@ -187,9 +186,6 @@ public class StorageInventory implements IDrawerInventory
             return;
 
         IInventoryAdapter adapter = (IInventoryAdapter)drawer;
-        adapter.syncInventory();
-
-        int insertCount = (item != null) ? item.stackSize : 0;
         switch (getInventorySlotType(slot)) {
             case INPUT:
                 if (drawer.isEmpty()) {
@@ -197,25 +193,11 @@ public class StorageInventory implements IDrawerInventory
                     return;
                 }
 
-                ItemStack inStack = adapter.getInventoryStack(SlotType.INPUT);
-                if (inStack != null)
-                    insertCount -= inStack.stackSize;
+                adapter.setInStack(item);
                 break;
             case OUTPUT:
-                ItemStack outStack = adapter.getInventoryStack(SlotType.OUTPUT);
-                if (outStack != null)
-                    insertCount -= outStack.stackSize;
+                adapter.setOutStack(item);
                 break;
-            case STORAGE:
-                setInventorySlotContents(drawer, item);
-                return;
-        }
-
-        if (insertCount != 0) {
-            int newStoredCount = drawer.getStoredItemCount() + insertCount;
-            newStoredCount = Math.max(0, Math.min(newStoredCount, drawer.getMaxCapacity()));
-
-            drawer.setStoredItemCount(newStoredCount);
         }
     }
 

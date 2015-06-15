@@ -5,9 +5,6 @@ package com.jaquadro.minecraft.storagedrawers.api.inventory;
  */
 public enum SlotType
 {
-    /** An inventory slot for native StorageDrawers operations; stack sizes exceed 64. */
-    STORAGE,
-
     /** An inventory slot for input-only operations; stack sizes artificially held low. */
     INPUT,
 

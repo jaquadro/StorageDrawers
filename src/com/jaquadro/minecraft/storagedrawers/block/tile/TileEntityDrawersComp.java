@@ -153,6 +153,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
     }
 
+    @Override
+    public String getName () {
+        return hasCustomName() ? super.getName() : "storageDrawers.container.compDrawers";
+    }
+
     private void populateSlots (ItemStack stack) {
         int index = 0;
 
@@ -494,6 +499,14 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         @Override
         public int getStoredItemRemainder (int slot) {
             return TileEntityDrawersComp.this.getStoredItemRemainder(slot);
+        }
+
+        @Override
+        public boolean isSmallestUnit (int slot) {
+            if (protoStack[slot] == null || convRate == null || convRate[slot] == 0)
+                return false;
+
+            return convRate[slot] == 1;
         }
 
         @Override

@@ -4,11 +4,9 @@ import net.minecraft.item.ItemStack;
 
 public abstract class InventoryStack
 {
-    private ItemStack nativeStack;
     private ItemStack inStack;
     private ItemStack outStack;
 
-    private int nativeCount;
     private int inCount;
     private int outCount;
 
@@ -17,19 +15,13 @@ public abstract class InventoryStack
     }
 
     public void reset () {
-        nativeStack = getNewItemStack();
         inStack = getNewItemStack();
         outStack = getNewItemStack();
 
-        nativeCount = 0;
         inCount = 0;
         outCount = 0;
 
         refresh();
-    }
-
-    public ItemStack getNativeStack () {
-        return nativeStack;
     }
 
     public ItemStack getInStack () {
@@ -41,6 +33,62 @@ public abstract class InventoryStack
 
     public ItemStack getOutStack () {
         return outStack;
+    }
+
+    public void setInStack (ItemStack stack) {
+        if (stack != null) {
+            if (inStack == null)
+                applyDiff(stack.stackSize);
+            else
+                applyDiff(stack.stackSize - inCount);
+        }
+
+        inStack = stack;
+        syncInStack();
+        syncOutStack();
+    }
+
+    private void syncInStack () {
+        if (inStack == null) {
+            inStack = getNewItemStack();
+            inCount = 0;
+        }
+
+        if (inStack != null) {
+            int itemStackLimit = getItemStackSize();
+            int itemCount = getItemCount();
+            int remainingLimit = getItemCapacity() - itemCount;
+
+            inCount = itemStackLimit - Math.min(itemStackLimit, remainingLimit);
+            inStack.stackSize = inCount;
+        }
+    }
+
+    public void setOutStack (ItemStack stack) {
+        if (outStack != null) {
+            if (stack == null)
+                applyDiff(0 - outCount);
+            else
+                applyDiff(0 - outCount + stack.stackSize);
+        }
+
+        outStack = stack;
+        syncOutStack();
+    }
+
+    private void syncOutStack () {
+        if (outStack == null) {
+            outStack = getNewItemStack();
+            outCount = 0;
+        }
+
+        if (outStack != null) {
+            int itemStackLimit = getItemStackSize();
+            int itemCount = getItemCount();
+
+            outCount = Math.min(itemStackLimit, itemCount);
+            outStack.stackSize = outCount;
+        }
     }
 
     protected abstract ItemStack getNewItemStack ();
@@ -65,14 +113,10 @@ public abstract class InventoryStack
     }
 
     public int getDiff () {
-        if (nativeStack == null)
-            return 0;
+        int diffIn = ((inStack == null) ? 0 : inStack.stackSize) - inCount;
+        int diffOut = ((outStack == null) ? 0 : outStack.stackSize) - outCount;
 
-        int diffNative = nativeStack.stackSize - nativeCount;
-        int diffIn = inStack.stackSize - inCount;
-        int diffOut = outStack.stackSize - outCount;
-
-        return diffNative + diffIn + diffOut;
+        return diffIn + diffOut;
     }
 
     protected abstract void applyDiff (int diff);
@@ -81,11 +125,6 @@ public abstract class InventoryStack
         int itemStackLimit = getItemStackSize();
         int itemCount = getItemCount();
         int remainingLimit = getItemCapacity() - itemCount;
-
-        if (nativeStack != null) {
-            nativeCount = itemCount;
-            nativeStack.stackSize = nativeCount;
-        }
 
         if (inStack != null) {
             inCount = itemStackLimit - Math.min(itemStackLimit, remainingLimit);

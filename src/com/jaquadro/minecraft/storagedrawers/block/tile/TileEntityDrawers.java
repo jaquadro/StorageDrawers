@@ -61,6 +61,8 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     private long lastClickTime;
     private UUID lastClickUUID;
 
+    private String customName;
+
     private NBTTagCompound failureSnapshot;
 
     protected TileEntityDrawers (int drawerCount) {
@@ -311,8 +313,9 @@ public void setMaterial (String material) {
         if (!drawer.canItemBeStored(stack))
             return 0;
 
-        int countAdded = Math.min(drawer.getRemainingCapacity(), stack.stackSize);
-        countAdded = Math.min(countAdded, count);
+        int countAdded = Math.min(count, stack.stackSize);
+        if (!isVoid())
+            countAdded = Math.min(countAdded, drawer.getRemainingCapacity());
 
         drawer.setStoredItemCount(drawer.getStoredItemCount() + countAdded);
         stack.stackSize -= countAdded;
@@ -440,6 +443,9 @@ public void setMaterial (String material) {
             }
 
             inventory = new StorageInventory(this, getSideManager(), this);
+
+            if (tag.hasKey("CustomName", Constants.NBT.TAG_STRING))
+                customName = tag.getString("CustomName");
         }
         catch (Throwable t) {
             trapLoadFailure(t, tag);
@@ -489,6 +495,9 @@ public void setMaterial (String material) {
             }
 
             tag.setTag("Slots", slots);
+
+            if (hasCustomName())
+                tag.setString("CustomName", customName);
         }
         catch (Throwable t) {
             FMLLog.log(StorageDrawers.MOD_ID, Level.ERROR, t, "Tile Save Failure.");
@@ -637,14 +646,18 @@ public void setMaterial (String material) {
         inventory.setInventorySlotContents(slot, stack);
     }
 
+    public void setInventoryName (String name) {
+        customName = name;
+    }
+
     @Override
     public String getName () {
-        return "container.drawers";
+        return hasCustomName() ? customName : "storageDrawers.container.drawers";
     }
 
     @Override
     public boolean hasCustomName () {
-        return inventory.hasCustomName();
+        return customName != null && customName.length() > 0;
     }
 
     @Override

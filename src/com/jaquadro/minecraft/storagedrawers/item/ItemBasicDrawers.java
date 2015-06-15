@@ -34,10 +34,14 @@ public class ItemBasicDrawers extends ItemMultiTexture
             @Nullable
             @Override
             public Object apply (Object input) {
-            ItemStack stack = (ItemStack)input;
-            return EnumBasicDrawer.byMetadata(stack.getMetadata()).getUnlocalizedName();
+                ItemStack stack = (ItemStack)input;
+                return EnumBasicDrawer.byMetadata(stack.getMetadata()).getUnlocalizedName();
             }
         });
+    }
+
+    protected ItemBasicDrawers (Block block, Function function) {
+        super(block, block, function);
     }
 
     @SideOnly(Side.CLIENT)

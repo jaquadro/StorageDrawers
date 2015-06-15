@@ -36,6 +36,7 @@ public class BlockController extends BlockContainer implements INetworked
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
         setStepSound(Block.soundTypeStone);
+        setLightOpacity(255);
         setBlockBounds(0, 0, 0, 1, 1, 1);
         setTickRandomly(true);
 
@@ -93,6 +94,12 @@ public class BlockController extends BlockContainer implements INetworked
     @Override
     public void onBlockPlacedBy (World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack itemStack) {
         world.setBlockState(pos, state.withProperty(FACING, entity.getHorizontalFacing().getOpposite()), 2);
+
+        if (itemStack.hasDisplayName()) {
+            TileEntityController tile = getTileEntity(world, pos);
+            if (tile != null)
+                tile.setInventoryName(itemStack.getDisplayName());
+        }
     }
 
     @Override

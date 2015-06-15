@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.*;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.integration.notenoughitems.NEIStorageDrawersConfig;
 import com.jaquadro.minecraft.storagedrawers.packs.natura.StorageDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.packs.natura.block.BlockDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.packs.natura.block.BlockTrimPack;
@@ -52,6 +53,15 @@ public class ModBlocks
         addAlternativeTileEntityMappings(TileEntityDrawersStandard.class, getQualifiedName(fullDrawers1),
             getQualifiedName(fullDrawers2), getQualifiedName(fullDrawers4),
             getQualifiedName(halfDrawers2), getQualifiedName(halfDrawers4));
+
+        if (!config.cache.addonShowNEI) {
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers1));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers2));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(fullDrawers4));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(halfDrawers2));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(halfDrawers4));
+            NEIStorageDrawersConfig.hideBlock(getQualifiedName(trim));
+        }
     }
 
     public static String makeName (String name) {

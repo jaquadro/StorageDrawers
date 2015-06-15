@@ -28,6 +28,8 @@ public interface ICentralInventory
 
     public int getStoredItemRemainder (int slot);
 
+    public boolean isSmallestUnit (int slot);
+
     public boolean isVoidSlot (int slot);
 
     public boolean isShroudedSlot (int slot);
