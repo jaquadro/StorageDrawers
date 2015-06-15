@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.network;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -23,6 +24,8 @@ public class CountUpdateMessage implements IMessage
     private int slot;
     private int count;
 
+    private boolean failed;
+
     public CountUpdateMessage () { }
 
     public CountUpdateMessage (BlockPos pos, int slot, int count) {
@@ -35,11 +38,17 @@ public class CountUpdateMessage implements IMessage
 
     @Override
     public void fromBytes (ByteBuf buf) {
-        x = buf.readInt();
-        y = buf.readShort();
-        z = buf.readInt();
-        slot = buf.readByte();
-        count = buf.readInt();
+        try {
+            x = buf.readInt();
+            y = buf.readShort();
+            z = buf.readInt();
+            slot = buf.readByte();
+            count = buf.readInt();
+        }
+        catch (IndexOutOfBoundsException e) {
+            failed = true;
+            FMLLog.log(StorageDrawers.MOD_ID, Level.ERROR, e, "CountUpdateMessage: Unexpected end of packet.\nMessage: %s", ByteBufUtil.hexDump(buf, 0, buf.writerIndex()));
+        }
     }
 
     @Override
@@ -56,7 +65,7 @@ public class CountUpdateMessage implements IMessage
     {
         @Override
         public IMessage onMessage (CountUpdateMessage message, MessageContext ctx) {
-            if (ctx.side == Side.CLIENT) {
+            if (!message.failed && ctx.side == Side.CLIENT) {
                 World world = Minecraft.getMinecraft().theWorld;
                 BlockPos pos = new BlockPos(message.x, message.y, message.z);
                 TileEntity tileEntity = world.getTileEntity(pos);

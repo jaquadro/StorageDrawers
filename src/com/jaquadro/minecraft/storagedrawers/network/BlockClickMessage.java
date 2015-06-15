@@ -1,15 +1,19 @@
 package com.jaquadro.minecraft.storagedrawers.network;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.IExtendedBlockClickHandler;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import net.minecraft.block.Block;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.Level;
 
 public class BlockClickMessage implements IMessage
 {
@@ -21,6 +25,8 @@ public class BlockClickMessage implements IMessage
     private float hitY;
     private float hitZ;
     private boolean invertShift;
+
+    private boolean failed;
 
     public BlockClickMessage () { }
 
@@ -37,14 +43,20 @@ public class BlockClickMessage implements IMessage
 
     @Override
     public void fromBytes (ByteBuf buf) {
-        x = buf.readInt();
-        y = buf.readShort();
-        z = buf.readInt();
-        side = buf.readByte();
-        hitX = buf.readByte() / 16f;
-        hitY = buf.readByte() / 16f;
-        hitZ = buf.readByte() / 16f;
-        invertShift = buf.readBoolean();
+        try {
+            x = buf.readInt();
+            y = buf.readShort();
+            z = buf.readInt();
+            side = buf.readByte();
+            hitX = buf.readByte() / 16f;
+            hitY = buf.readByte() / 16f;
+            hitZ = buf.readByte() / 16f;
+            invertShift = buf.readBoolean();
+        }
+        catch (IndexOutOfBoundsException e) {
+            failed = true;
+            FMLLog.log(StorageDrawers.MOD_ID, Level.ERROR, e, "BlockClickMessage: Unexpected end of packet.\nMessage: %s", ByteBufUtil.hexDump(buf, 0, buf.writerIndex()));
+        }
     }
 
     @Override
@@ -63,7 +75,7 @@ public class BlockClickMessage implements IMessage
     {
         @Override
         public IMessage onMessage (BlockClickMessage message, MessageContext ctx) {
-            if (ctx.side == Side.SERVER) {
+            if (!message.failed && ctx.side == Side.SERVER) {
                 World world = ctx.getServerHandler().playerEntity.getEntityWorld();
                 BlockPos pos = new BlockPos(message.x, message.y, message.z);
                 Block block = world.getBlockState(pos).getBlock();
