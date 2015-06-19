@@ -679,6 +679,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         loadBlockConfig();
     }
 
+    @SideOnly(Side.CLIENT)
     private void loadBlockConfig () {
         try {
             IResource configResource = Minecraft.getMinecraft().getResourceManager().getResource(blockConfig);
