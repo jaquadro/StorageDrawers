@@ -95,10 +95,10 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         renderItem = Minecraft.getMinecraft().getRenderItem();
 
         EnumFacing side = EnumFacing.getFront(tileDrawers.getDirection());
-        int ambLight = tile.getWorld().getLightFor(EnumSkyBlock.SKY, tile.getPos().offset(side));
+        int ambLight = getWorld().getCombinedLight(tile.getPos().offset(side), 0);
         int lu = ambLight % 65536;
         int lv = ambLight / 65536;
-        //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lu, lv);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lu / 1.0F, (float)lv / 1.0F);
 
         //brightness = tile.getWorldObj().getLightBrightness(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ) * 1.25f;
         //if (brightness > 1)
