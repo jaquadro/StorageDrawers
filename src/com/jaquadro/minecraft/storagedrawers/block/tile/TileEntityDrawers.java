@@ -128,8 +128,10 @@ public void setMaterial (String material) {
 
         int multiplier = 0;
         for (ItemStack stack : upgrades) {
-            if (stack != null && stack.getItem() == ModItems.upgradeStorage)
-                multiplier += config.getStorageUpgradeMultiplier(stack.getItemDamage());
+            if (stack != null && stack.getItem() == ModItems.upgradeStorage) {
+                int level = EnumUpgradeStorage.byMetadata(stack.getItemDamage()).getLevel();
+                multiplier += config.getStorageUpgradeMultiplier(level);
+            }
         }
 
         if (multiplier == 0)
@@ -145,7 +147,7 @@ public void setMaterial (String material) {
                 maxLevel = upgrade.getItemDamage();
         }
 
-        return maxLevel;
+        return EnumUpgradeStatus.byMetadata(maxLevel).getLevel();
     }
 
     public int getUpgradeSlotCount () {
