@@ -129,6 +129,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    public boolean isFullCube () {
+        return false;
+    }
+
+    @Override
     public boolean isOpaqueCube () {
         return false;
     }
