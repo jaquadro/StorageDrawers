@@ -81,7 +81,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     public int getDrawerCount (IBlockState state) {
-        if (state != null) {
+        if (state != null && state.getBlock() instanceof BlockDrawers) {
             EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
             if (info != null)
                 return info.getDrawerCount();
@@ -91,7 +91,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     public boolean isHalfDepth (IBlockState state) {
-        if (state != null) {
+        if (state != null && state.getBlock() instanceof BlockDrawers) {
             EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
             if (info != null)
                 return info.isHalfDepth();
@@ -221,6 +221,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
         if (itemStack.hasDisplayName())
             tile.setInventoryName(itemStack.getDisplayName());
+
+        world.setBlockState(pos, state, 3);
     }
 
     @Override
