@@ -1,6 +1,14 @@
 itemGroup.storageDrawers=储物抽屉
 itemGroup.storageDrawersSorting=储物抽屉|分拣升级
 
+storageDrawers.container.drawers=抽屉
+storageDrawers.container.compDrawers=致密抽屉
+storageDrawers.container.upgrades=升级组件
+storageDrawers.container.controller=抽屉管理器
+storageDrawers.container.unboundSlave=未连接的传动方块
+
+storagedrawers.msg.maxUpgrades=这个抽屉已无法容纳更多的升级组件.
+
 # 物件
 item.upgradeTemplate.name=升级模板
 item.upgrade.iron.name=抽屉容量升级 (II)
@@ -18,6 +26,8 @@ item.upgradeVoid.name=清空升级
 item.upgradeVoid.description=销毁存储超过上限的物品.
 item.upgradeSorting.name=分拣升级
 item.upgradeSorting.description=将抽屉升级为分拣抽屉.
+item.shroudKey.name=屏蔽钥匙
+item.shroudKey.description=设定隐藏或显示抽屉上的物品图标.
 
 # 方块
 tile.fullDrawers1.oak.name=橡木抽屉
@@ -69,6 +79,7 @@ tile.trim.big_oak.name=深色橡木桥接方块
 storageDrawers.drawers.description=每个抽屉格可以储存%d组同类物品.
 storageDrawers.upgrade.description=将抽屉容量升级为其基础容量的%d倍.
 storageDrawers.controller.description=将放入的物品分配存入邻接的抽屉中.
+storageDrawers.controllerSlave.description=为抽屉管理器扩展存储连接面.
 
 # 高亮显示
 storageDrawers.waila.empty=<空>
@@ -110,7 +121,8 @@ storageDrawers.config.prop.itemRenderType=存储物品显示设定
 storageDrawers.config.prop.itemRenderType.tooltip=设定抽屉是否渲染3D物品.
 storageDrawers.config.prop.enableIndicatorUpgrades=允许状态显示升级
 storageDrawers.config.prop.enableStorageUpgrades=允许容量升级
-storageDrawers.config.prop.enableLockUpgrades=允许锁定升级
+storageDrawers.config.prop.enableLockUpgrades=允许抽屉钥匙
+storageDrawers.config.prop.enableShroudUpgrades=允许屏蔽钥匙
 storageDrawers.config.prop.enableVoidUpgrades=允许清空升级
 storageDrawers.config.prop.enableSortingUpgrades=允许分拣升级
 storageDrawers.config.prop.enableSortingUpgrades.tooltip=需安装精准重定位.
@@ -123,6 +135,8 @@ storageDrawers.config.prop.baseStorage=基础容量
 storageDrawers.config.prop.baseStorage.tooltip=设定每个抽屉格中可存储的物品组数量.
 storageDrawers.config.prop.recipeOutput=合成数量
 storageDrawers.config.prop.recipeOutput.tooltip=设定使用默认合成公式可合成多少抽屉.
+storageDrawers.config.prop.enableDrawerUI=允许抽屉UI
+storageDrawers.config.prop.enableDrawerUI.tooltip=在界面中显示物品信息以及更方便的管理升级组件.
 storageDrawers.config.prop.enableSidedInput=允许抽屉输入
 storageDrawers.config.prop.enableSidedInput.tooltip=允许向抽屉侧面输入物品.
 storageDrawers.config.prop.enableSidedOutput=允许抽屉输出
@@ -133,6 +147,14 @@ storageDrawers.config.prop.invertShift=Shift偏好
 storageDrawers.config.prop.invertShift.tooltip=对换shift与shift单击的组合键作用.
 storageDrawers.config.prop.enableDebugLogging=允许调试记录
 storageDrawers.config.prop.enableDebugLogging.tooltip=允许向log输入本模组的更多信息.
+
+storageDrawers.config.addons=附属模组
+storageDrawers.config.addons.tooltip=储物抽屉扩充包的全局设定.
+
+storageDrawers.config.addons.showNEI=在NEI中显示扩充包方块.
+storageDrawers.config.addons.showCreative=在创造模式窗口中显示扩充包方块.
+storageDrawers.config.addons.separateTabs=Tab分类
+storageDrawers.config.addons.tooltip=设定显示独立的扩充包Tab.
 
 storageDrawers.config.integration=关联设定
 storageDrawers.config.integration.tooltip=设定本模组与其它模组之间的联动性.
