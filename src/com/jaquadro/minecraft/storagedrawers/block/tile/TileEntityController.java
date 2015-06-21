@@ -26,6 +26,12 @@ import java.util.*;
 
 public class TileEntityController extends TileEntity implements IDrawerGroup, ISidedInventory
 {
+    private static final int PRI_VOID = 0;
+    private static final int PRI_LOCKED = 1;
+    private static final int PRI_NORMAL = 2;
+    private static final int PRI_EMPTY = 3;
+    private static final int PRI_DISABLED = 4;
+
     private static final int DEPTH_LIMIT = 12;
     private static final int[] emptySlots = new int[0];
 
@@ -51,10 +57,50 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         public BlockCoord coord;
         public int slot;
 
+        public int index;
+        public int priority;
+
         public SlotRecord (BlockCoord coord, int slot) {
             this.coord = coord;
             this.slot = slot;
         }
+    }
+
+    private Comparator<SlotRecord> slotRecordComparator = new Comparator<SlotRecord>()
+    {
+        @Override
+        public int compare (SlotRecord o1, SlotRecord o2) {
+            return o1.priority - o2.priority;
+        }
+    };
+
+    private int getSlotPriority (SlotRecord record, boolean invBased) {
+        IDrawerGroup group = getGroupForCoord(record.coord);
+        if (group == null) {
+            return PRI_DISABLED;
+        }
+
+        int drawerSlot = (invBased) ? group.getDrawerInventory().getDrawerSlot(record.slot) : record.slot;
+        if (!group.isDrawerEnabled(drawerSlot)) {
+            return PRI_DISABLED;
+        }
+
+        IDrawer drawer = group.getDrawer(drawerSlot);
+        if (drawer.isEmpty()) {
+            return PRI_EMPTY;
+        }
+
+        if ((drawer instanceof IVoidable && ((IVoidable) drawer).isVoid()) ||
+            (group instanceof IVoidable && ((IVoidable) group).isVoid())) {
+            return PRI_VOID;
+        }
+
+        if ((drawer instanceof ILockable && ((ILockable) drawer).isLocked(LockAttribute.LOCK_POPULATED)) ||
+            (group instanceof ILockable && ((ILockable) group).isLocked(LockAttribute.LOCK_POPULATED))) {
+            return PRI_LOCKED;
+        }
+
+        return PRI_NORMAL;
     }
 
     private Queue<BlockCoord> searchQueue = new LinkedList<BlockCoord>();
@@ -65,6 +111,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     private List<SlotRecord> drawerSlotList = new ArrayList<SlotRecord>();
 
     private int[] inventorySlots = new int[0];
+    private int[] drawerSlots = new int[0];
     private int[] autoSides = new int[] { 0, 1, 2, 3, 4, 5 };
     private int direction;
 
@@ -95,14 +142,16 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         boolean dumpInventory = worldObj.getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID);
         int count = 0;
 
-        for (int i = 0, n = drawerSlotList.size(); i < n; i++) {
-            IDrawerGroup group = getGroupForDrawerSlot(i);
+        for (int i = 0, n = drawerSlots.length; i < n; i++) {
+            int slotIndex = drawerSlots[i];
+
+            IDrawerGroup group = getGroupForDrawerSlot(slotIndex);
             if (group == null || !(group instanceof IDrawerGroupInteractive))
                 continue;
 
             IDrawerGroupInteractive intGroup = (IDrawerGroupInteractive)group;
 
-            int slot = getLocalDrawerSlot(i);
+            int slot = getLocalDrawerSlot(slotIndex);
             if (!group.isDrawerEnabled(slot))
                 continue;
 
@@ -212,7 +261,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         populateNodes(xCoord, yCoord, zCoord);
 
         flattenLists();
-        inventorySlots = sortInventorySlots();
+        inventorySlots = sortSlotRecords(invSlotList, true); //sortInventorySlots();
+        drawerSlots = sortSlotRecords(drawerSlotList, false);
 
         if (preCount != inventorySlots.length && (preCount == 0 || inventorySlots.length == 0)) {
             if (!worldObj.isRemote)
@@ -220,70 +270,25 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         }
     }
 
-    private int[] sortInventorySlots () {
-        int index = 0;
-        int normalIndex = 0;
-        int emptyIndex = 0;
-        int disabledIndex = 0;
-        int voidIndex = 0;
-        int lockedIndex = 0;
-
-        int[] slotMap = new int[invSlotList.size()];
-        int[] normalMap = new int[invSlotList.size()];
-        int[] emptyMap = new int[invSlotList.size()];
-        int[] disabledMap = new int[invSlotList.size()];
-        int[] voidMap = new int[invSlotList.size()];
-        int[] lockedMap = new int[invSlotList.size()];
-
-        for (int i = 0, n = invSlotList.size(); i < n; i++) {
-            IDrawerGroup group = getGroupForInvSlot(i);
-            if (group == null) {
-                disabledMap[disabledIndex++] = i;
-                continue;
+    private void indexSlotRecords (List<SlotRecord> records, boolean invBased) {
+        for (int i = 0, n = records.size(); i < n; i++) {
+            SlotRecord record = records.get(i);
+            if (record != null) {
+                record.index = i;
+                record.priority = getSlotPriority(record, invBased);
             }
-
-            int localSlot = getLocalInvSlot(i);
-            int drawerSlot = group.getDrawerInventory().getDrawerSlot(localSlot);
-            if (!group.isDrawerEnabled(drawerSlot)) {
-                disabledMap[disabledIndex++] = i;
-                continue;
-            }
-
-            IDrawer drawer = group.getDrawer(drawerSlot);
-            if (drawer.isEmpty()) {
-                emptyMap[emptyIndex++] = i;
-                continue;
-            }
-
-            if ((drawer instanceof IVoidable && ((IVoidable) drawer).isVoid()) ||
-                (group instanceof IVoidable && ((IVoidable) group).isVoid())) {
-                voidMap[voidIndex++] = i;
-                continue;
-            }
-
-            if ((drawer instanceof ILockable && ((ILockable) drawer).isLocked(LockAttribute.LOCK_POPULATED)) ||
-                (group instanceof ILockable && ((ILockable) group).isLocked(LockAttribute.LOCK_POPULATED))) {
-                lockedMap[lockedIndex++] = i;
-                continue;
-            }
-
-            normalMap[normalIndex++] = i;
         }
+    }
 
-        for (int i = 0; i < voidIndex; i++)
-            slotMap[index++] = voidMap[i];
+    private int[] sortSlotRecords (List<SlotRecord> records, boolean invBased) {
+        indexSlotRecords(records, invBased);
 
-        for (int i = 0; i < lockedIndex; i++)
-            slotMap[index++] = lockedMap[i];
+        List<SlotRecord> copied = new ArrayList<SlotRecord>(records);
+        Collections.sort(copied, slotRecordComparator);
 
-        for (int i = 0; i < normalIndex; i++)
-            slotMap[index++] = normalMap[i];
-
-        for (int i = 0; i < emptyIndex; i++)
-            slotMap[index++] = emptyMap[i];
-
-        for (int i = 0; i < disabledIndex; i++)
-            slotMap[index++] = disabledMap[i];
+        int[] slotMap = new int[copied.size()];
+        for (int i = 0; i < slotMap.length; i++)
+            slotMap[i] = copied.get(i).index;
 
         return slotMap;
     }
