@@ -39,6 +39,8 @@ public class BlockController extends BlockContainer implements INetworked
     public BlockController (String blockName) {
         super(Material.rock);
 
+        this.useNeighborBrightness = true;
+
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
         setBlockName(blockName);

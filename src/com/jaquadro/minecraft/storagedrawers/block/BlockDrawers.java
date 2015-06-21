@@ -104,14 +104,13 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
         this.drawerCount = drawerCount;
         this.halfDepth = halfDepth;
+        this.useNeighborBrightness = true;
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
         setStepSound(Block.soundTypeWood);
         setBlockName(blockName);
-
-        if (!halfDepth)
-            setLightOpacity(255);
+        setLightOpacity(255);
     }
 
     @Override
