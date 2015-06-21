@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
 import net.minecraft.block.Block;
@@ -221,12 +222,18 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
 
     private int[] sortInventorySlots () {
         int index = 0;
+        int normalIndex = 0;
         int emptyIndex = 0;
         int disabledIndex = 0;
+        int voidIndex = 0;
+        int lockedIndex = 0;
 
         int[] slotMap = new int[invSlotList.size()];
+        int[] normalMap = new int[invSlotList.size()];
         int[] emptyMap = new int[invSlotList.size()];
         int[] disabledMap = new int[invSlotList.size()];
+        int[] voidMap = new int[invSlotList.size()];
+        int[] lockedMap = new int[invSlotList.size()];
 
         for (int i = 0, n = invSlotList.size(); i < n; i++) {
             IDrawerGroup group = getGroupForInvSlot(i);
@@ -243,11 +250,34 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             }
 
             IDrawer drawer = group.getDrawer(drawerSlot);
-            if (!drawer.isEmpty())
-                slotMap[index++] = i;
-            else
+            if (drawer.isEmpty()) {
                 emptyMap[emptyIndex++] = i;
+                continue;
+            }
+
+            if ((drawer instanceof IVoidable && ((IVoidable) drawer).isVoid()) ||
+                (group instanceof IVoidable && ((IVoidable) group).isVoid())) {
+                voidMap[voidIndex++] = i;
+                continue;
+            }
+
+            if ((drawer instanceof ILockable && ((ILockable) drawer).isLocked(LockAttribute.LOCK_POPULATED)) ||
+                (group instanceof ILockable && ((ILockable) group).isLocked(LockAttribute.LOCK_POPULATED))) {
+                lockedMap[lockedIndex++] = i;
+                continue;
+            }
+
+            normalMap[normalIndex++] = i;
         }
+
+        for (int i = 0; i < voidIndex; i++)
+            slotMap[index++] = voidMap[i];
+
+        for (int i = 0; i < lockedIndex; i++)
+            slotMap[index++] = lockedMap[i];
+
+        for (int i = 0; i < normalIndex; i++)
+            slotMap[index++] = normalMap[i];
 
         for (int i = 0; i < emptyIndex; i++)
             slotMap[index++] = emptyMap[i];
