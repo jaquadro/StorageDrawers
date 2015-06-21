@@ -148,7 +148,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         RenderHelper.instance.setRenderBounds(0.46875, 0.9375, 0, 0.53125, 1, depth + .005);
         RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
-        RenderHelper.instance.renderPartialFace(RenderHelper.ZPOS, x, y, z, iconLock, 0, 0, 1, 1);
+        RenderHelper.instance.renderPartialFace(RenderHelper.ZPOS, renderer.blockAccess, block, x, y, z, iconLock, 0, 0, 1, 1);
         RenderHelper.instance.state.clearRotateTransform();
     }
 
@@ -161,7 +161,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         RenderHelper.instance.setRenderBounds(1 - .0625, 0.9375, 0, 1, 1, depth + .005);
         RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
-        RenderHelper.instance.renderPartialFace(RenderHelper.ZPOS, x, y, z, iconVoid, 0, 0, 1, 1);
+        RenderHelper.instance.renderPartialFace(RenderHelper.ZPOS, renderer.blockAccess, block, x, y, z, iconVoid, 0, 0, 1, 1);
         RenderHelper.instance.state.clearRotateTransform();
     }
 
