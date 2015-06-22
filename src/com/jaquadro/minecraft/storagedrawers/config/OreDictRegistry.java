@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -22,12 +23,18 @@ public class OreDictRegistry
         addBlacklist("plankWood");
         addBlacklist("slabWood");
         addBlacklist("stairWood");
+        addBlacklist("stickWood");
         addBlacklist("treeSapling");
         addBlacklist("treeLeaves");
+        addBlacklist("leavesTree");
         addBlacklist("blockGlass");
         addBlacklist("paneGlass");
         addBlacklist("record");
         addBlacklist("stone");
+        addBlacklist("cobblestone");
+        addBlacklist("glowstone");
+        addBlacklist("glass");
+        addBlacklist("obsidian");
         addBlacklist("cobblestone");
         addBlacklist("sand");
         addBlacklist("sandstone");
@@ -36,8 +43,13 @@ public class OreDictRegistry
         addBlacklist("crucioMaterial");
         addBlacklist("imperioMaterial");
         addBlacklist("zivicioMaterial");
+        addBlacklist("resourceTaint");
+        addBlacklist("slimeball");
 
         addBlacklistPrefix("list");
+        addBlacklistPrefix("dye");
+
+        addWhitelist("nuggetIron");
     }
 
     public boolean addBlacklist (String entry) {
@@ -127,10 +139,18 @@ public class OreDictRegistry
 
         // Fail entries that have any wildcard items registered to them.
 
+        HashSet<Item> itemIds = new HashSet<Item>();
         for (int i = 0, n = oreList.size(); i < n; i++) {
             if (oreList.get(i).getItemDamage() == OreDictionary.WILDCARD_VALUE)
                 return false;
+            itemIds.add(oreList.get(i).getItem());
         }
+
+        // Fail entries that have multiple instances of an item registered, differing by metadata or other
+        // criteria.
+
+        if (itemIds.size() < oreList.size())
+            return false;
 
         // Fail entries where the keys in at least one stack are not the super-set of all other stacks.
         // Can be determined by merging all keys and testing cardinality.
