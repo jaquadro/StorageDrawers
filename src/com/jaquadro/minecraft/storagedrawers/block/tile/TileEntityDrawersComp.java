@@ -15,8 +15,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.registry.GameData;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -290,11 +293,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     }
 
     private ItemStack findMatchingModCandidate (ItemStack reference, List<ItemStack> candidates) {
-        String referenceName = GameData.getItemRegistry().getNameForObject(reference.getItem());
+        String referenceName = GameData.getItemRegistry().getNameForObject(reference.getItem()).toString();
         if (referenceName != null) {
             GameRegistry.UniqueIdentifier referneceID = new GameRegistry.UniqueIdentifier(referenceName);
             for (ItemStack candidate : candidates) {
-                String matchName = GameData.getItemRegistry().getNameForObject(candidate.getItem());
+                String matchName = GameData.getItemRegistry().getNameForObject(candidate.getItem()).toString();
                 if (matchName != null) {
                     GameRegistry.UniqueIdentifier matchID = new GameRegistry.UniqueIdentifier(matchName);
                     if (referneceID.modId.equals(matchID.modId))
@@ -358,13 +361,13 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             }
             return item1;
         }
-        else if (item instanceof ArrayList) {
+        else if (item instanceof List) {
             for (int i = 1, n = list.length; i < n; i++) {
                 if (item != list[i])
                     return null;
             }
 
-            ArrayList itemList = (ArrayList)item;
+            List itemList = (List)item;
             if (itemList.size() > 0) {
                 Object item1 = findMatchingModCandidate(stack, itemList);
                 if (item1 == null)
