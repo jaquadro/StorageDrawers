@@ -66,6 +66,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     protected BlockDrawers (Material material, String blockName) {
         super(material);
 
+        this.useNeighborBrightness = true;
+
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
         setStepSound(Block.soundTypeWood);

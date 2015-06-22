@@ -242,6 +242,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         CraftingManager cm = CraftingManager.getInstance();
         List recipeList = cm.getRecipeList();
 
+        List<ItemStack> candidates = new ArrayList<ItemStack>();
+
         for (int i = 0, n = recipeList.size(); i < n; i++) {
             IRecipe recipe = (IRecipe) recipeList.get(i);
             ItemStack match = null;
@@ -272,7 +274,31 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 ItemStack comp = cm.findMatchingRecipe(lookup1, worldObj);
                 if (DrawerData.areItemsEqual(match, comp) && comp.stackSize == recipe.getRecipeSize()) {
                     lookupSizeResult = recipe.getRecipeSize();
-                    return match;
+                    candidates.add(match);
+                }
+            }
+        }
+
+        ItemStack modMatch = findMatchingModCandidate(stack, candidates);
+        if (modMatch != null)
+            return modMatch;
+
+        if (candidates.size() > 0)
+            return candidates.get(0);
+
+        return null;
+    }
+
+    private ItemStack findMatchingModCandidate (ItemStack reference, List<ItemStack> candidates) {
+        String referenceName = GameData.getItemRegistry().getNameForObject(reference.getItem());
+        if (referenceName != null) {
+            GameRegistry.UniqueIdentifier referneceID = new GameRegistry.UniqueIdentifier(referenceName);
+            for (ItemStack candidate : candidates) {
+                String matchName = GameData.getItemRegistry().getNameForObject(candidate.getItem());
+                if (matchName != null) {
+                    GameRegistry.UniqueIdentifier matchID = new GameRegistry.UniqueIdentifier(matchName);
+                    if (referneceID.modId.equals(matchID.modId))
+                        return candidate;
                 }
             }
         }
@@ -340,7 +366,10 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
             ArrayList itemList = (ArrayList)item;
             if (itemList.size() > 0) {
-                Object item1 = itemList.get(0);
+                Object item1 = findMatchingModCandidate(stack, itemList);
+                if (item1 == null)
+                    item1 = itemList.get(0);
+
                 if (item1 instanceof ItemStack)
                     return (ItemStack)item1;
             }

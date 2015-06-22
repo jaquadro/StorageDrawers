@@ -33,6 +33,8 @@ public class BlockController extends BlockContainer implements INetworked
         super(Material.rock);
 
         setUnlocalizedName(name);
+        this.useNeighborBrightness = true;
+
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
         setStepSound(Block.soundTypeStone);
