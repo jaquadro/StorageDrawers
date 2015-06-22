@@ -141,11 +141,14 @@ public void setMaterial (String material) {
     }
 
     public int getEffectiveStatusLevel () {
-        int maxLevel = 0;
+        int maxLevel = -1;
         for (ItemStack upgrade : upgrades) {
             if (upgrade != null && upgrade.getItem() == ModItems.upgradeStatus)
                 maxLevel = upgrade.getItemDamage();
         }
+
+        if (maxLevel == -1)
+            return 0;
 
         return EnumUpgradeStatus.byMetadata(maxLevel).getLevel();
     }
