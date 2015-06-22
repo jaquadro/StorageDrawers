@@ -72,6 +72,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         setHardness(5f);
         setStepSound(Block.soundTypeWood);
         setUnlocalizedName(blockName);
+        setLightOpacity(255);
 
         initDefaultState();
     }
@@ -120,14 +121,6 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         return null;
-    }
-
-    @Override
-    public int getLightOpacity (IBlockAccess world, BlockPos pos) {
-        if (isHalfDepth(world.getBlockState(pos)))
-            return 0;
-        else
-            return 255;
     }
 
     @Override
