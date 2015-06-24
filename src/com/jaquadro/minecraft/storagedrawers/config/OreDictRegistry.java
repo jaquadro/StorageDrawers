@@ -1,5 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
+import cpw.mods.fml.common.registry.GameData;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -132,6 +134,15 @@ public class OreDictRegistry
         return true;
     }
 
+    private String getModId (Item item) {
+        String itemId = GameData.getItemRegistry().getNameForObject(item);
+        if (itemId == null)
+            return null;
+
+        GameRegistry.UniqueIdentifier uid = new GameRegistry.UniqueIdentifier(itemId);
+        return uid.modId;
+    }
+
     private boolean isValidForEquiv (String oreName) {
         List<ItemStack> oreList = OreDictionary.getOres(oreName);
         if (oreList.size() == 0)
@@ -139,17 +150,20 @@ public class OreDictRegistry
 
         // Fail entries that have any wildcard items registered to them.
 
-        HashSet<Item> itemIds = new HashSet<Item>();
+        HashSet<String> modIds = new HashSet<String>();
         for (int i = 0, n = oreList.size(); i < n; i++) {
             if (oreList.get(i).getItemDamage() == OreDictionary.WILDCARD_VALUE)
                 return false;
-            itemIds.add(oreList.get(i).getItem());
+
+            String modId = getModId(oreList.get(i).getItem());
+            if (modId != null)
+                modIds.add(modId);
         }
 
         // Fail entries that have multiple instances of an item registered, differing by metadata or other
         // criteria.
 
-        if (itemIds.size() < oreList.size())
+        if (modIds.size() < oreList.size())
             return false;
 
         // Fail entries where the keys in at least one stack are not the super-set of all other stacks.
