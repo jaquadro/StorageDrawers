@@ -14,6 +14,8 @@ import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ModBlocks
 {
@@ -71,6 +73,17 @@ public class ModBlocks
 
         GameRegistry.registerTileEntityWithAlternatives(TileEntitySlave.class, getQualifiedName("tileControllerSlave"),
             getQualifiedName(controllerSlave));
+
+        for (String key : new String[] { "drawerBasic" })
+            OreDictionary.registerOre(key, new ItemStack(fullDrawers1, 1, OreDictionary.WILDCARD_VALUE));
+        for (String key : new String[] { "drawerBasic" })
+            OreDictionary.registerOre(key, new ItemStack(fullDrawers2, 1, OreDictionary.WILDCARD_VALUE));
+        for (String key : new String[] { "drawerBasic" })
+            OreDictionary.registerOre(key, new ItemStack(fullDrawers4, 1, OreDictionary.WILDCARD_VALUE));
+        for (String key : new String[] { "drawerBasic" })
+            OreDictionary.registerOre(key, new ItemStack(halfDrawers2, 1, OreDictionary.WILDCARD_VALUE));
+        for (String key : new String[] { "drawerBasic" })
+            OreDictionary.registerOre(key, new ItemStack(halfDrawers4, 1, OreDictionary.WILDCARD_VALUE));
     }
 
     public static String getQualifiedName (String name) {

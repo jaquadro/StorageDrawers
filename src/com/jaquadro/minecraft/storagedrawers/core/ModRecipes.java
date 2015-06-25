@@ -60,32 +60,19 @@ public class ModRecipes
                 'x', "stickWood", 'y', "plankWood"));
 
         if (config.isBlockEnabled("compdrawers"))
-            GameRegistry.addRecipe(new ItemStack(ModBlocks.compDrawers, config.getBlockRecipeOutput("compdrawers")), "xxx", "zwz", "xyx",
-                'x', new ItemStack(Blocks.stone), 'y', Items.iron_ingot, 'z', new ItemStack(Blocks.piston), 'w', new ItemStack(ModBlocks.fullDrawers2, 1, OreDictionary.WILDCARD_VALUE));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.compDrawers, config.getBlockRecipeOutput("compdrawers")), "xxx", "zwz", "xyx",
+                'x', new ItemStack(Blocks.stone), 'y', Items.iron_ingot, 'z', new ItemStack(Blocks.piston), 'w', "drawerBasic"));
 
         if (config.isBlockEnabled("controller"))
-            GameRegistry.addRecipe(new ItemStack(ModBlocks.controller), "xxx", "yzy", "xwx",
-                'x', new ItemStack(Blocks.stone), 'y', Items.comparator, 'z', new ItemStack(ModBlocks.fullDrawers2, 1, OreDictionary.WILDCARD_VALUE), 'w', Items.diamond);
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.controller), "xxx", "yzy", "xwx",
+                'x', new ItemStack(Blocks.stone), 'y', Items.comparator, 'z', "drawerBasic", 'w', Items.diamond));
 
         if (config.isBlockEnabled("controllerSlave"))
-            GameRegistry.addRecipe(new ItemStack(ModBlocks.controllerSlave), "xxx", "yzy", "xwx",
-                'x', new ItemStack(Blocks.stone), 'y', Items.comparator, 'z', new ItemStack(ModBlocks.fullDrawers2, 1, OreDictionary.WILDCARD_VALUE), 'w', Items.gold_ingot);
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.controllerSlave), "xxx", "yzy", "xwx",
+                'x', new ItemStack(Blocks.stone), 'y', Items.comparator, 'z', "drawerBasic", 'w', Items.gold_ingot));
 
-        if (config.isBlockEnabled("fulldrawers1"))
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', "stickWood", 'y', new ItemStack(ModBlocks.fullDrawers1, 1, OreDictionary.WILDCARD_VALUE)));
-        if (config.isBlockEnabled("fulldrawers2"))
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', "stickWood", 'y', new ItemStack(ModBlocks.fullDrawers2, 1, OreDictionary.WILDCARD_VALUE)));
-        if (config.isBlockEnabled("halfdrawers2"))
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', "stickWood", 'y', new ItemStack(ModBlocks.halfDrawers2, 1, OreDictionary.WILDCARD_VALUE)));
-        if (config.isBlockEnabled("fulldrawers4"))
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', "stickWood", 'y', new ItemStack(ModBlocks.fullDrawers4, 1, OreDictionary.WILDCARD_VALUE)));
-        if (config.isBlockEnabled("halfdrawers4"))
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', "stickWood", 'y', new ItemStack(ModBlocks.halfDrawers4, 1, OreDictionary.WILDCARD_VALUE)));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
+            'x', "stickWood", 'y', "drawerBasic"));
 
         if (config.cache.enableStorageUpgrades) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgrade, 1, 2), "xyx", "yzy", "xyx",

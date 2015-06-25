@@ -14,6 +14,8 @@ import com.jaquadro.minecraft.storagedrawers.item.pack.ItemSortingDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.item.pack.ItemTrimPack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class PackFactory implements IPackBlockFactory
 {
@@ -35,8 +37,10 @@ public class PackFactory implements IPackBlockFactory
 
     @Override
     public void registerBlock (Block block, String name) {
-        if (block instanceof BlockDrawersPack)
+        if (block instanceof BlockDrawersPack) {
             GameRegistry.registerBlock(block, ItemDrawersPack.class, name);
+            OreDictionary.registerOre("drawerBasic", new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE));
+        }
         else if (block instanceof BlockSortingDrawersPack)
             GameRegistry.registerBlock(block, ItemSortingDrawersPack.class, name);
         else if (block instanceof BlockTrimPack)
