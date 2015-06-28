@@ -156,14 +156,9 @@ public class StorageInventory implements IDrawerInventory
         IInventoryAdapter adapter = (IInventoryAdapter)drawer;
         adapter.syncInventory();
 
-        ItemStack stack = drawer.getStoredItemCopy();
-        if (stack.stackSize <= count) {
-            drawer.setStoredItemCount(0);
-        }
-        else {
-            stack.stackSize = count;
-            drawer.setStoredItemCount(drawer.getStoredItemCount() - count);
-        }
+        ItemStack stack = adapter.getInventoryStack(SlotType.OUTPUT).copy();
+        stack.stackSize = Math.min(stack.stackSize, count);
+        adapter.getInventoryStack(SlotType.OUTPUT).stackSize -= stack.stackSize;
 
         return stack;
     }
