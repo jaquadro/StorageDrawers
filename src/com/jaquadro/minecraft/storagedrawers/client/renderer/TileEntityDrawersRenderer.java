@@ -101,6 +101,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 if (renderWithColor)
                     GL11.glColor4f(r, g, b, 1.0F);
 
+                GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
+                GL11.glPolygonOffset(-1f, -1);
+
                 GL11.glDisable(GL11.GL_LIGHTING);
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glEnable(GL11.GL_ALPHA_TEST);
@@ -113,9 +116,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
                 if (renderEffect && itemStack.hasEffect(i))
                     renderEffect(texManager, x, y);
+
+                GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
             }
-
-
         }
 
         @Override
@@ -201,10 +204,14 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 GL11.glColor4f(r * 1, g * 1, b * 1, 1.0F);
 
             GL11.glRotatef(-90, 0, 1, 0);
+            GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
+            GL11.glPolygonOffset(0, 1f);
 
             this.renderBlocksRi.useInventoryTint = this.renderWithColor;
             this.renderBlocksRi.renderBlockAsItem(block, itemStack.getItemDamage(), 1);
             this.renderBlocksRi.useInventoryTint = true;
+
+            GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
 
             if (block.getRenderBlockPass() == 0)
                 GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
@@ -460,7 +467,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         GL11.glPushMatrix();
 
         alignRendering(side);
-        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, .999f - depth + block.trimDepth);
+        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, 1f - depth + block.trimDepth);
 
         List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
         for (int i = 0, n = renderHandlers.size(); i < n; i++) {
