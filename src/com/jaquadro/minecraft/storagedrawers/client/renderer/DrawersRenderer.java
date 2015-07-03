@@ -82,6 +82,21 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         if (tile == null)
             return false;
 
+        renderBaseBlock(world, tile, x, y, z, block, renderer);
+
+        int side = tile.getDirection();
+        if (StorageDrawers.config.cache.enableIndicatorUpgrades)
+            renderIndicator(block, x, y, z, side, renderer, tile.getEffectiveStatusLevel());
+        if (StorageDrawers.config.cache.enableLockUpgrades)
+            renderLock(block, x, y, z, side, renderer, tile.isLocked(LockAttribute.LOCK_POPULATED));
+        if (StorageDrawers.config.cache.enableVoidUpgrades)
+            renderVoid(block, x, y, z, side, renderer, tile.isVoid());
+        renderShroud(block, x, y, z, side, renderer, tile.isShrouded());
+
+        return true;
+    }
+
+    protected void renderBaseBlock (IBlockAccess world, TileEntityDrawers tile, int x, int y, int z, BlockDrawers block, RenderBlocks renderer) {
         int side = tile.getDirection();
         int meta = world.getBlockMetadata(x, y, z);
 
@@ -127,16 +142,6 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         boxRenderer.setInteriorIcon(block.getIcon(world, x, y, z, side), ForgeDirection.OPPOSITES[side]);
 
         renderInterior(block, x, y, z, side, renderer);
-
-        if (StorageDrawers.config.cache.enableIndicatorUpgrades)
-            renderIndicator(block, x, y, z, side, renderer, tile.getEffectiveStatusLevel());
-        if (StorageDrawers.config.cache.enableLockUpgrades)
-            renderLock(block, x, y, z, side, renderer, tile.isLocked(LockAttribute.LOCK_POPULATED));
-        if (StorageDrawers.config.cache.enableVoidUpgrades)
-            renderVoid(block, x, y, z, side, renderer, tile.isVoid());
-        renderShroud(block, x, y, z, side, renderer, tile.isShrouded());
-
-        return true;
     }
 
     private void renderLock (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean locked) {

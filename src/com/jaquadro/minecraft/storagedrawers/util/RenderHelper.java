@@ -141,9 +141,9 @@ public class RenderHelper
     }
 
     public void renderFaceColorMult (int face, IBlockAccess blockAccess, Block block, int x, int y, int z, IIcon icon, float r, float g, float b) {
+        face = state.getTransformedFace(face);
         setupColorMult(face, blockAccess, block, x, y, z, r, g, b);
 
-        face = RenderHelperState.FACE_BY_FACE_ROTATION[face][state.rotateTransform];
         llHelper.drawFace(face, x, y, z, icon);
 
         if (blockAccess == null)
@@ -153,7 +153,7 @@ public class RenderHelper
     public void renderFaceAOPartial (int face, IBlockAccess blockAccess, Block block, int x, int y, int z, IIcon icon, float r, float g, float b) {
         state.enableAO = true;
 
-        face = RenderHelperState.FACE_BY_FACE_ROTATION[face][state.rotateTransform];
+        face = state.getTransformedFace(face);
 
         switch (face) {
             case YNEG:
@@ -211,7 +211,7 @@ public class RenderHelper
     public void renderPartialFaceAOPartial (int face, IBlockAccess blockAccess, Block block, int x, int y, int z, IIcon icon, double uMin, double vMin, double uMax, double vMax, float r, float g, float b) {
         state.enableAO = true;
 
-        switch (RenderHelperState.FACE_BY_FACE_ROTATION[face][state.rotateTransform]) {
+        switch (state.getTransformedFace(face)) {
             case YNEG:
                 aoHelper.setupYNegAOPartial(blockAccess, block, x, y, z, r, g, b);
                 break;
@@ -238,12 +238,12 @@ public class RenderHelper
 
     public void renderPartialFace (int face, IIcon icon, double uMin, double vMin, double uMax, double vMax) {
         state.enableAO = false;
-        face = RenderHelperState.FACE_BY_FACE_ROTATION[face][state.rotateTransform];
+        face = state.getTransformedFace(face);
         llHelper.drawPartialFace(face, 0, 0, 0, icon, uMin, vMin, uMax, vMax);
     }
 
     public void renderPartialFace (int face, double x, double y, double z, IIcon icon, double uMin, double vMin, double uMax, double vMax) {
-        face = RenderHelperState.FACE_BY_FACE_ROTATION[face][state.rotateTransform];
+        face = state.getTransformedFace(face);
         llHelper.drawPartialFace(face, x, y, z, icon, uMin, vMin, uMax, vMax);
     }
 

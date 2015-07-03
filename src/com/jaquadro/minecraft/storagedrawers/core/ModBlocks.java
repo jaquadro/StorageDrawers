@@ -29,6 +29,8 @@ public class ModBlocks
     public static BlockTrim trim;
     public static BlockSlave controllerSlave;
 
+    public static BlockDrawersCustom fullCustom1;
+
     public void init () {
         fullDrawers1 = new BlockDrawers("fullDrawers1", 1, false);
         fullDrawers2 = new BlockDrawers("fullDrawers2", 2, false);
@@ -39,6 +41,8 @@ public class ModBlocks
         controller = new BlockController("drawerController");
         trim = new BlockTrim("trim");
         controllerSlave = new BlockSlave("controllerSlave");
+
+        fullCustom1 = new BlockDrawersCustom("fullCustom1", 1, false);
 
         ConfigManager config = StorageDrawers.config;
 
@@ -60,6 +64,8 @@ public class ModBlocks
             GameRegistry.registerBlock(controllerSlave, "controllerSlave");
         if (config.isBlockEnabled("trim"))
             GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
+
+        GameRegistry.registerBlock(fullCustom1, ItemDrawers.class, "fullCustom1");
 
         GameRegistry.registerTileEntityWithAlternatives(TileEntityDrawersStandard.class, getQualifiedName("tileDrawersStandard"),
             getQualifiedName(fullDrawers1), getQualifiedName(fullDrawers2), getQualifiedName(fullDrawers4),
@@ -84,6 +90,9 @@ public class ModBlocks
             OreDictionary.registerOre(key, new ItemStack(halfDrawers2, 1, OreDictionary.WILDCARD_VALUE));
         for (String key : new String[] { "drawerBasic" })
             OreDictionary.registerOre(key, new ItemStack(halfDrawers4, 1, OreDictionary.WILDCARD_VALUE));
+
+        for (String key : new String[] { "drawerBasic" })
+            OreDictionary.registerOre(key, new ItemStack(fullCustom1, 1, OreDictionary.WILDCARD_VALUE));
     }
 
     public static String getQualifiedName (String name) {

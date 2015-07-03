@@ -411,6 +411,10 @@ public class ModularBoxRenderer
         }
     }
 
+    public void renderExteriorCut (RenderBlocks renderer, Block block, double x, double y, double z, double xNeg, double yNeg, double zNeg, double xPos, double yPos, double zPos, int connectedFlags, int cutFlags) {
+
+    }
+
     public void renderInterior (RenderBlocks renderer, Block block, double x, double y, double z, double xNeg, double yNeg, double zNeg, double xPos, double yPos, double zPos, int connectedFlags, int cutFlags) {
         if ((cutFlags & CUT_YNEG) != 0)
             connectedFlags |= PLANE_YNEG;
