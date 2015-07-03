@@ -43,9 +43,10 @@ public abstract class InventoryStack
                 applyDiff(stack.stackSize - inCount);
         }
 
-        inStack = stack;
+        inStack = null;
         syncInStack();
-        syncOutStack();
+
+        setOutStack(outStack);
     }
 
     private void syncInStack () {
