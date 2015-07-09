@@ -173,6 +173,9 @@ public class Thaumcraft extends IntegrationModule
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_ALPHA_TEST);
 
+            GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
+            GL11.glPolygonOffset(-1f, -1);
+
             ResourceLocation aspectResource = aspect.getImage();
             Minecraft.getMinecraft().renderEngine.bindTexture(aspectResource);
 
@@ -183,6 +186,8 @@ public class Thaumcraft extends IntegrationModule
             tessellator.addVertexWithUV(x + w, y, 0, 1, 0);
             tessellator.addVertexWithUV(x, y, 0, 0, 0);
             tessellator.draw();
+
+            GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
 
             GL11.glDisable(GL11.GL_ALPHA_TEST);
             GL11.glDisable(GL11.GL_BLEND);
