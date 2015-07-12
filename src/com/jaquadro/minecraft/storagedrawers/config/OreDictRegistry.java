@@ -52,6 +52,10 @@ public class OreDictRegistry
         addBlacklistPrefix("dye");
 
         addWhitelist("nuggetIron");
+        addWhitelist("nuggetAluminum");
+        addWhitelist("nuggetAluminium");
+        addWhitelist("nuggetTin");
+        addWhitelist("nuggetCopper");
     }
 
     public boolean addBlacklist (String entry) {
