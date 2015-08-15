@@ -150,6 +150,10 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
     }
 
     public static boolean areItemsEqual (ItemStack stack1, ItemStack stack2) {
+        return areItemsEqual(stack1, stack2, true);
+    }
+
+    public static boolean areItemsEqual (ItemStack stack1, ItemStack stack2, boolean oreDictStrictMode) {
         if (stack1 == null || stack2 == null)
             return false;
         if (stack1.getItem() == null || stack2.getItem() == null)
@@ -175,7 +179,7 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
                         continue;
 
                     String name = OreDictionary.getOreName(id1);
-                    if (StorageDrawers.oreDictRegistry.isEntryValid(name)) {
+                    if (!oreDictStrictMode || StorageDrawers.oreDictRegistry.isEntryValid(name)) {
                         oreMatch = true;
                         break;
                     }
