@@ -51,7 +51,17 @@ public class OreDictRegistry
         addBlacklistPrefix("list");
         addBlacklistPrefix("dye");
 
-        addWhitelist("nuggetIron");
+        for (String item : new String[] { "oreIron", "oreGold", "oreAluminum", "oreAluminium", "oreTin", "oreCopper", "oreLead", "oreSilver", "orePlatinum", "oreNickel" })
+            addWhitelist(item);
+
+        for (String item : new String[] { "blockIron", "blockGold", "blockAluminum", "blockAluminium", "blockTin", "blockCopper", "blockLead", "blockSilver", "blockPlatinum", "blockeNickel" })
+            addWhitelist(item);
+
+        for (String item : new String[] { "ingotIron", "ingotGold", "ingotAluminum", "ingotAluminium", "ingotTin", "ingotCopper", "ingotLead", "ingotSilver", "ingotPlatinum", "ingotNickel" })
+            addWhitelist(item);
+
+        for (String item : new String[] { "nuggetIron", "nuggetGold", "nuggetAluminum", "nuggetAluminium", "nuggetTin", "nuggetCopper", "nuggetLead", "nuggetSilver", "nuggetPlatinum", "nuggetNickel" })
+            addWhitelist(item);
     }
 
     public boolean addBlacklist (String entry) {

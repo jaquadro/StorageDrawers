@@ -97,7 +97,7 @@ public class RefinedRelocation extends IntegrationModule
 
         if (config.isBlockEnabled("compdrawers"))
             GameRegistry.addRecipe(new ItemStack(compDrawers, 1), "x x", " y ", "x x",
-                'x', Items.gold_nugget, 'y', new ItemStack(compDrawers, 1));
+                'x', Items.gold_nugget, 'y', new ItemStack(ModBlocks.compDrawers, 1));
 
         if (config.cache.enableSortingUpgrades)
             GameRegistry.addRecipe(new ItemStack(upgradeSorting), "y y", " z ", "y y",

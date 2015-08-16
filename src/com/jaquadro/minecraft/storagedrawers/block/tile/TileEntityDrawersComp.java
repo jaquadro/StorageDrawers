@@ -16,13 +16,17 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TileEntityDrawersComp extends TileEntityDrawers
 {
@@ -181,6 +185,9 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         ItemStack lTier1 = findLowerTier(stack);
         if (lTier1 != null) {
+            if (!worldObj.isRemote && StorageDrawers.config.cache.debugTrace)
+                FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Picked candidate " + lTier1.toString() + " with conv=" + lookupSizeResult);
+
             populateSlot(index++, lTier1, 1);
             for (int i = 0; i < index - 1; i++)
                 convRate[i] *= lookupSizeResult;
@@ -191,6 +198,9 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         ItemStack lTier2 = findLowerTier(lTier1);
         if (lTier2 != null) {
+            if (!worldObj.isRemote && StorageDrawers.config.cache.debugTrace)
+                FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Picked candidate " + lTier2.toString() + " with conv=" + lookupSizeResult);
+
             populateSlot(index++, lTier2, 1);
             for (int i = 0; i < index - 1; i++)
                 convRate[i] *= lookupSizeResult;
@@ -212,27 +222,69 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         CraftingManager cm = CraftingManager.getInstance();
+        List<ItemStack> candidates = new ArrayList<ItemStack>();
 
         setupLookup(lookup3, stack);
-        ItemStack match = cm.findMatchingRecipe(lookup3, worldObj);
+        List<ItemStack> fwdCandidates = findAllMatchingRecipes(lookup3);
 
-        if (match == null || match.getItem() == null) {
+        if (fwdCandidates.size() == 0) {
             setupLookup(lookup2, stack);
-            match = cm.findMatchingRecipe(lookup2, worldObj);
+            fwdCandidates = findAllMatchingRecipes(lookup2);
         }
 
-        if (match != null && match.getItem() != null) {
+        if (fwdCandidates.size() > 0) {
             int size = lookupSizeResult;
 
-            setupLookup(lookup1, match);
-            ItemStack comp = cm.findMatchingRecipe(lookup1, worldObj);
-            if (!DrawerData.areItemsEqual(comp, stack) || comp.stackSize != size)
-                return null;
+            for (int i = 0, n1 = fwdCandidates.size(); i < n1; i++) {
+                ItemStack match = fwdCandidates.get(i);
+                setupLookup(lookup1, match);
+                List<ItemStack> backCandidates = findAllMatchingRecipes(lookup1);
+
+                for (int j = 0, n2 = backCandidates.size(); j < n2; j++) {
+                    ItemStack comp = backCandidates.get(j);
+                    if (comp.stackSize != size)
+                        continue;
+
+                    if (!DrawerData.areItemsEqual(comp, stack, false))
+                        continue;
+
+                    candidates.add(match);
+                    if (!worldObj.isRemote && StorageDrawers.config.cache.debugTrace)
+                        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Found ascending candidate for " + stack.toString() + ": " + match.toString() + " size=" + lookupSizeResult + ", inverse=" + comp.toString());
+
+                    break;
+                }
+            }
 
             lookupSizeResult = size;
         }
 
-        return match;
+        ItemStack modMatch = findMatchingModCandidate(stack, candidates);
+        if (modMatch != null)
+            return modMatch;
+
+        if (candidates.size() > 0)
+            return candidates.get(0);
+
+        return null;
+    }
+
+    private List<ItemStack> findAllMatchingRecipes (InventoryCrafting crafting) {
+        List<ItemStack> candidates = new ArrayList<ItemStack>();
+
+        CraftingManager cm = CraftingManager.getInstance();
+        List recipeList = cm.getRecipeList();
+
+        for (int i = 0, n = recipeList.size(); i < n; i++) {
+            IRecipe recipe = (IRecipe) recipeList.get(i);
+            if (recipe.matches(crafting, worldObj)) {
+                ItemStack result = recipe.getCraftingResult(crafting);
+                if (result != null && result.getItem() != null)
+                    candidates.add(result);
+            }
+        }
+
+        return candidates;
     }
 
     private ItemStack findLowerTier (ItemStack stack) {
@@ -246,13 +298,14 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         List recipeList = cm.getRecipeList();
 
         List<ItemStack> candidates = new ArrayList<ItemStack>();
+        Map<ItemStack, Integer> candidatesRate = new HashMap<ItemStack, Integer>();
 
         for (int i = 0, n = recipeList.size(); i < n; i++) {
             IRecipe recipe = (IRecipe) recipeList.get(i);
             ItemStack match = null;
 
             ItemStack output = recipe.getRecipeOutput();
-            if (!DrawerData.areItemsEqual(stack, output))
+            if (!DrawerData.areItemsEqual(stack, output, false))
                 continue;
 
             IRecipeHandler handler = StorageDrawers.recipeHandlerRegistry.getRecipeHandler(recipe.getClass());
@@ -275,19 +328,29 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (match != null) {
                 setupLookup(lookup1, stack);
                 ItemStack comp = cm.findMatchingRecipe(lookup1, worldObj);
-                if (DrawerData.areItemsEqual(match, comp) && comp.stackSize == recipe.getRecipeSize()) {
+                if (DrawerData.areItemsEqual(match, comp, false) && comp.stackSize == recipe.getRecipeSize()) {
                     lookupSizeResult = recipe.getRecipeSize();
                     candidates.add(match);
+                    candidatesRate.put(match, lookupSizeResult);
+
+                    if (!worldObj.isRemote && StorageDrawers.config.cache.debugTrace)
+                        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Found descending candidate for " + stack.toString() + ": " + match.toString() + " size=" + lookupSizeResult + ", inverse=" + comp.toString());
                 }
             }
         }
 
         ItemStack modMatch = findMatchingModCandidate(stack, candidates);
-        if (modMatch != null)
+        if (modMatch != null) {
+            lookupSizeResult = candidatesRate.get(modMatch);
             return modMatch;
+        }
 
-        if (candidates.size() > 0)
-            return candidates.get(0);
+        if (candidates.size() > 0) {
+            ItemStack match = candidates.get(0);
+            lookupSizeResult = candidatesRate.get(match);
+
+            return match;
+        }
 
         return null;
     }

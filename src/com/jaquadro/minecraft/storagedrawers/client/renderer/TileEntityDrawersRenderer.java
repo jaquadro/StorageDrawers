@@ -196,7 +196,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         GlStateManager.pushMatrix();
 
         alignRendering(side);
-        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, .999f - depth + 0); // 0 = trimDepth
+        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, 1f - depth + 0); // 0 = trimDepth
 
         List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
         for (int i = 0, n = renderHandlers.size(); i < n; i++) {
@@ -204,7 +204,13 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         }
 
         GlStateManager.disableLighting();
+
+        GlStateManager.enablePolygonOffset();
+        GlStateManager.doPolygonOffset(-1, -1);
+
         renderItem.renderItemIntoGUI(itemStack, 0, 0);
+
+        GlStateManager.disablePolygonOffset();
 
         GlStateManager.popMatrix();
     }
@@ -242,7 +248,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
     private void moveRendering (float size, float offsetX, float offsetY, float offsetZ) {
         GlStateManager.translate(0, 0, offsetZ);
-        GlStateManager.scale(1 / 16f, 1 / 16f, -.0001f);
+        GlStateManager.scale(1 / 16f, 1 / 16f, -.00001f);
         GlStateManager.translate(offsetX, offsetY, 0);
         GlStateManager.scale(size, size, 1);
     }
@@ -281,10 +287,15 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         double depth = block.isHalfDepth(blockState) ? .5 : 1;
         TextureAtlasSprite iconLock = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconLockResource);
 
-        ChamRender.instance.setRenderBounds(0.46875, 0.9375, 0, 0.53125, 1, depth + .005);
+        GlStateManager.enablePolygonOffset();
+        GlStateManager.doPolygonOffset(-1, -1);
+
+        ChamRender.instance.setRenderBounds(0.46875, 0.9375, 0, 0.53125, 1, depth);
         ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
         ChamRender.instance.renderPartialFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconLock, 0, 0, 1, 1, 1, 1, 1);
         ChamRender.instance.state.clearRotateTransform();
+
+        GlStateManager.disablePolygonOffset();
     }
 
     private void renderVoid (IBlockState blockState, int side, boolean voided) {
@@ -296,10 +307,15 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         double depth = block.isHalfDepth(blockState) ? .5 : 1;
         TextureAtlasSprite iconVoid = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconVoidResource);
 
-        ChamRender.instance.setRenderBounds(1 - .0625, 0.9375, 0, 1, 1, depth + .005);
+        GlStateManager.enablePolygonOffset();
+        GlStateManager.doPolygonOffset(-1, -1);
+
+        ChamRender.instance.setRenderBounds(1 - .0625, 0.9375, 0, 1, 1, depth);
         ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
         ChamRender.instance.renderPartialFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconVoid, 0, 0, 1, 1, 1, 1, 1);
         ChamRender.instance.state.clearRotateTransform();
+
+        GlStateManager.disablePolygonOffset();
     }
 
     private void renderShroud (TileEntityDrawers tile, IBlockState blockState, int side, boolean shrouded) {
@@ -317,6 +333,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         int drawerCount = tile.getDrawerCount();
         float size = (drawerCount == 1) ? .25f : .125f;
 
+        GlStateManager.enablePolygonOffset();
+        GlStateManager.doPolygonOffset(-1, -1);
+
         for (int i = 0; i < count; i++) {
             IDrawer drawer = tile.getDrawer(i);
             if (drawer == null || drawer.isEmpty())
@@ -328,11 +347,13 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             TextureAtlasSprite iconCover = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconShroudCover);
 
             ChamRender.instance.setRenderBounds(xunit - size / 2, (yunit - .25) * unit + size / 2, 0,
-                xunit - size / 2 + size, (yunit - .25) * unit + size / 2 + size, depth - frontDepth + .005);
+                xunit - size / 2 + size, (yunit - .25) * unit + size / 2 + size, depth - frontDepth);
             ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
             ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconCover, 1, 1, 1);
             ChamRender.instance.state.clearRotateTransform();
         }
+
+        GlStateManager.disablePolygonOffset();
     }
 
     private void renderIndicator (TileEntityDrawers tile, IBlockState blockState, int side, int level) {
@@ -358,15 +379,20 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             Area2D statusArea = statusInfo.getSlot(i).getStatusArea();
             Area2D activeArea = statusInfo.getSlot(i).getStatusActiveArea();
 
+            GlStateManager.enablePolygonOffset();
+            GlStateManager.doPolygonOffset(-1, -1);
+
             ChamRender.instance.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
-                (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth + .005);
+                (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth);
             ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
             ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconOff, 1, 1, 1);
             ChamRender.instance.state.clearRotateTransform();
 
+            GlStateManager.doPolygonOffset(-1, -10);
+
             if (level == 1 && drawer.getMaxCapacity() > 0 && drawer.getRemainingCapacity() == 0) {
                 ChamRender.instance.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
-                    (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth + .006);
+                    (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth);
                 ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
                 ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
                 ChamRender.instance.state.clearRotateTransform();
@@ -388,12 +414,14 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                     indYCur = Math.min(indYCur, indYEnd);
 
                     ChamRender.instance.setRenderBounds(indXStart * unit, indYStart * unit, 0,
-                        indXCur * unit, indYCur * unit, depth - frontDepth + .006);
+                        indXCur * unit, indYCur * unit, depth - frontDepth);
                     ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
                     ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
                     ChamRender.instance.state.clearRotateTransform();
                 }
             }
+
+            GlStateManager.disablePolygonOffset();
         }
     }
 
@@ -477,6 +505,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 if (renderWithColor)
                     GL11.glColor4f(r, g, b, 1.0F);
 
+                GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
+                GL11.glPolygonOffset(-1f, -1);
+
                 GL11.glDisable(GL11.GL_LIGHTING);
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glEnable(GL11.GL_ALPHA_TEST);
@@ -489,9 +520,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
                 if (renderEffect && itemStack.hasEffect(i))
                     renderEffect(texManager, x, y);
+
+                GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
             }
-
-
         }
 
         @Override
@@ -577,10 +608,14 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 GL11.glColor4f(r * 1, g * 1, b * 1, 1.0F);
 
             GL11.glRotatef(-90, 0, 1, 0);
+            GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
+            GL11.glPolygonOffset(-1f, -1f);
 
             this.renderBlocksRi.useInventoryTint = this.renderWithColor;
             this.renderBlocksRi.renderBlockAsItem(block, itemStack.getItemDamage(), 1);
             this.renderBlocksRi.useInventoryTint = true;
+
+            GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
 
             if (block.getRenderBlockPass() == 0)
                 GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
@@ -836,7 +871,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         GL11.glPushMatrix();
 
         alignRendering(side);
-        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, .999f - depth + block.trimDepth);
+        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, 1f - depth + block.trimDepth);
 
         List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
         for (int i = 0, n = renderHandlers.size(); i < n; i++) {
