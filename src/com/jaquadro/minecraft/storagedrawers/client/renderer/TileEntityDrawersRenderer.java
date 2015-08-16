@@ -205,7 +205,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
             GL11.glRotatef(-90, 0, 1, 0);
             GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
-            GL11.glPolygonOffset(0, 1f);
+            GL11.glPolygonOffset(-1f, -1f);
 
             this.renderBlocksRi.useInventoryTint = this.renderWithColor;
             this.renderBlocksRi.renderBlockAsItem(block, itemStack.getItemDamage(), 1);
