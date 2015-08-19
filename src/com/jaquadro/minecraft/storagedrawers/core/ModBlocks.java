@@ -12,8 +12,10 @@ import com.jaquadro.minecraft.storagedrawers.item.ItemBasicDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemController;
 import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ModBlocks
 {
@@ -50,6 +52,9 @@ public class ModBlocks
         if (config.isBlockEnabled("trim")) {
             GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
         }
+
+        for (String key : new String[] { "drawerBasic" })
+            OreDictionary.registerOre(key, new ItemStack(basicDrawers, 1, OreDictionary.WILDCARD_VALUE));
     }
 
     public static String getQualifiedName (Block block) {
