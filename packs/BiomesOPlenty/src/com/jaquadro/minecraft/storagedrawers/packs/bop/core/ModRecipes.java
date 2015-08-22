@@ -65,23 +65,5 @@ public class ModRecipes
                         'x', new ItemStack(recipeSlab, 1, i), 'y', Blocks.chest);
             }
         }
-
-        ItemStack itemTemplate = new ItemStack(GameRegistry.findItem("StorageDrawers", "upgradeTemplate"), 2);
-
-        if (blockConfig.isBlockEnabled(nameFull1))
-            GameRegistry.addRecipe(new ShapedOreRecipe(itemTemplate, "xxx", "xyx", "xxx",
-                'x', "stickWood", 'y', new ItemStack(ModBlocks.fullDrawers1, 1, OreDictionary.WILDCARD_VALUE)));
-        if (blockConfig.isBlockEnabled(nameFull2))
-            GameRegistry.addRecipe(new ShapedOreRecipe(itemTemplate, "xxx", "xyx", "xxx",
-                'x', "stickWood", 'y', new ItemStack(ModBlocks.fullDrawers2, 1, OreDictionary.WILDCARD_VALUE)));
-        if (blockConfig.isBlockEnabled(nameFull4))
-            GameRegistry.addRecipe(new ShapedOreRecipe(itemTemplate, "xxx", "xyx", "xxx",
-                'x', "stickWood", 'y', new ItemStack(ModBlocks.halfDrawers2, 1, OreDictionary.WILDCARD_VALUE)));
-        if (blockConfig.isBlockEnabled(nameHalf2))
-            GameRegistry.addRecipe(new ShapedOreRecipe(itemTemplate, "xxx", "xyx", "xxx",
-                'x', "stickWood", 'y', new ItemStack(ModBlocks.fullDrawers4, 1, OreDictionary.WILDCARD_VALUE)));
-        if (blockConfig.isBlockEnabled(nameHalf4))
-            GameRegistry.addRecipe(new ShapedOreRecipe(itemTemplate, "xxx", "xyx", "xxx",
-                'x', "stickWood", 'y', new ItemStack(ModBlocks.halfDrawers4, 1, OreDictionary.WILDCARD_VALUE)));
     }
 }
