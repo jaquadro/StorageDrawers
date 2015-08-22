@@ -8,9 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.api.pack.IPackDataResolver;
 import com.jaquadro.minecraft.storagedrawers.packs.bop.StorageDrawersPack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class ModRecipes
@@ -41,14 +39,14 @@ public class ModRecipes
 
             if (planks != null) {
                 if (blockConfig.isBlockEnabled(nameFull1))
-                    GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers1, blockConfig.getBlockRecipeOutput(nameFull1), i), "xxx", " y ", "xxx",
-                        'x', new ItemStack(planks, 1, i), 'y', Blocks.chest);
+                    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers1, blockConfig.getBlockRecipeOutput(nameFull1), i), "xxx", " y ", "xxx",
+                        'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
                 if (blockConfig.isBlockEnabled(nameFull2))
-                    GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers2, blockConfig.getBlockRecipeOutput(nameFull2), i), "xyx", "xxx", "xyx",
-                        'x', new ItemStack(planks, 1, i), 'y', Blocks.chest);
+                    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers2, blockConfig.getBlockRecipeOutput(nameFull2), i), "xyx", "xxx", "xyx",
+                        'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
                 if (blockConfig.isBlockEnabled(nameFull4))
-                    GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers4, blockConfig.getBlockRecipeOutput(nameFull4), i), "yxy", "xxx", "yxy",
-                        'x', new ItemStack(planks, 1, i), 'y', Blocks.chest);
+                    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers4, blockConfig.getBlockRecipeOutput(nameFull4), i), "yxy", "xxx", "yxy",
+                        'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
                 if (blockConfig.isBlockEnabled(nameTrim)) {
                     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.trim, blockConfig.getBlockRecipeOutput(nameTrim), i), "xyx", "yyy", "xyx",
                         'x', "stickWood", 'y', new ItemStack(planks, 1, i)));
@@ -58,11 +56,11 @@ public class ModRecipes
             Block recipeSlab = (i < 8) ? slab1 : slab2;
             if (recipeSlab != null) {
                 if (blockConfig.isBlockEnabled(nameHalf2))
-                    GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers2, blockConfig.getBlockRecipeOutput(nameHalf2), i), "xyx", "xxx", "xyx",
-                        'x', new ItemStack(recipeSlab, 1, i), 'y', Blocks.chest);
+                    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfDrawers2, blockConfig.getBlockRecipeOutput(nameHalf2), i), "xyx", "xxx", "xyx",
+                        'x', new ItemStack(recipeSlab, 1, i), 'y', "chestWood"));
                 if (blockConfig.isBlockEnabled(nameHalf4))
-                    GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers4, blockConfig.getBlockRecipeOutput(nameHalf4), i), "yxy", "xxx", "yxy",
-                        'x', new ItemStack(recipeSlab, 1, i), 'y', Blocks.chest);
+                    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfDrawers4, blockConfig.getBlockRecipeOutput(nameHalf4), i), "yxy", "xxx", "yxy",
+                        'x', new ItemStack(recipeSlab, 1, i), 'y', "chestWood"));
             }
         }
     }
