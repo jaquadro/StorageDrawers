@@ -31,7 +31,7 @@ public class RefinedRelocation
         if (!Loader.isModLoaded("RefinedRelocation") || !api.userConfig().integrationConfig().isRefinedRelocationEnabled())
             return;
 
-        IPackBlockFactory factory = StorageDrawersApi.instance().packFactory();
+        IPackBlockFactory factory = api.packFactory();
         IPackDataResolver resolver = StorageDrawersPack.instance.resolver;
 
         fullDrawers1 = factory.createBlock(BlockConfiguration.SortingFull1, resolver);

@@ -70,10 +70,6 @@ public class ModBlocks
             getQualifiedName(halfDrawers2), getQualifiedName(halfDrawers4));
     }
 
-    public static String makeName (String name) {
-        return StorageDrawersPack.MOD_ID.toLowerCase() + "." + name;
-    }
-
     public static String getQualifiedName (Block block) {
         return GameData.getBlockRegistry().getNameForObject(block);
     }

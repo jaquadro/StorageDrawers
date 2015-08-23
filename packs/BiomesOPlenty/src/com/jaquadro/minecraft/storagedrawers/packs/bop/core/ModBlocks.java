@@ -64,8 +64,4 @@ public class ModBlocks
     public static String getQualifiedName (Block block) {
         return GameData.getBlockRegistry().getNameForObject(block);
     }
-
-    public static String makeName (String name) {
-        return StorageDrawersPack.MOD_ID.toLowerCase() + "." + name;
-    }
 }
