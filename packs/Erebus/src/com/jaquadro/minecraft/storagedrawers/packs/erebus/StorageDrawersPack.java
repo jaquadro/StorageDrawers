@@ -1,8 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.packs.erebus;
 
-import com.jaquadro.minecraft.storagedrawers.packs.erebus.core.ModBlocks;
-import com.jaquadro.minecraft.storagedrawers.packs.erebus.core.ModRecipes;
-import com.jaquadro.minecraft.storagedrawers.packs.erebus.core.RefinedRelocation;
+import com.jaquadro.minecraft.storagedrawers.api.pack.IPackDataResolver;
+import com.jaquadro.minecraft.storagedrawers.packs.erebus.core.*;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -16,6 +15,8 @@ public class StorageDrawersPack
     public static final String MOD_NAME = "Storage Drawers: Erebus Pack";
     public static final String MOD_VERSION = "@VERSION@";
     public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.packs.erebus.";
+
+    public IPackDataResolver resolver = new DataResolver(MOD_ID, ModCreativeTabs.tabStorageDrawers);
 
     public ModBlocks blocks = new ModBlocks();
     public ModRecipes recipes = new ModRecipes();

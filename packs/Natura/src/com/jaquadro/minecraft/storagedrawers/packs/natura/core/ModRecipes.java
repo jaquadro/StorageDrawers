@@ -1,67 +1,67 @@
 package com.jaquadro.minecraft.storagedrawers.packs.natura.core;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
-import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import com.jaquadro.minecraft.storagedrawers.packs.natura.block.BlockDrawersPack;
+import com.jaquadro.minecraft.storagedrawers.api.IStorageDrawersApi;
+import com.jaquadro.minecraft.storagedrawers.api.StorageDrawersApi;
+import com.jaquadro.minecraft.storagedrawers.api.config.IBlockConfig;
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
+import com.jaquadro.minecraft.storagedrawers.api.pack.IPackDataResolver;
+import com.jaquadro.minecraft.storagedrawers.packs.natura.StorageDrawersPack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class ModRecipes
 {
     public void init () {
-        ConfigManager config = StorageDrawers.config;
+        IStorageDrawersApi api = StorageDrawersApi.instance();
+        if (api == null)
+            return;
+
+        IBlockConfig blockConfig = api.userConfig().blockConfig();
+
+        String nameFull1 = blockConfig.getBlockConfigName(BlockConfiguration.BasicFull1);
+        String nameFull2 = blockConfig.getBlockConfigName(BlockConfiguration.BasicFull2);
+        String nameFull4 = blockConfig.getBlockConfigName(BlockConfiguration.BasicFull4);
+        String nameHalf2 = blockConfig.getBlockConfigName(BlockConfiguration.BasicHalf2);
+        String nameHalf4 = blockConfig.getBlockConfigName(BlockConfiguration.BasicHalf4);
+        String nameTrim = blockConfig.getBlockConfigName(BlockConfiguration.Trim);
 
         Block planks = GameRegistry.findBlock("Natura", "planks");
         Block slab1 = GameRegistry.findBlock("Natura", "plankSlab1");
         Block slab2 = GameRegistry.findBlock("Natura", "plankSlab2");
 
-        for (int i = 0; i < BlockDrawersPack.textureNames.length; i++) {
+        IPackDataResolver resolver = StorageDrawersPack.instance.resolver;
+
+        for (int i = 0; i < 16; i++) {
+            if (!resolver.isValidMetaValue(i))
+                continue;
+
             if (planks != null) {
-                if (config.isBlockEnabled("fulldrawers1"))
-                    GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers1, config.getBlockRecipeOutput("fulldrawers1"), i), "xxx", " y ", "xxx",
-                        'x', new ItemStack(planks, 1, i), 'y', Blocks.chest);
-                if (config.isBlockEnabled("fulldrawers2"))
-                    GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers2, config.getBlockRecipeOutput("fulldrawers2"), i), "xyx", "xxx", "xyx",
-                        'x', new ItemStack(planks, 1, i), 'y', Blocks.chest);
-                if (config.isBlockEnabled("fulldrawers4"))
-                    GameRegistry.addRecipe(new ItemStack(ModBlocks.fullDrawers4, config.getBlockRecipeOutput("fulldrawers4"), i), "yxy", "xxx", "yxy",
-                        'x', new ItemStack(planks, 1, i), 'y', Blocks.chest);
-                if (config.isBlockEnabled("trim")) {
-                    GameRegistry.addRecipe(new ItemStack(ModBlocks.trim, config.getBlockRecipeOutput("trim"), i), "xyx", "yyy", "xyx",
-                        'x', Items.stick, 'y', new ItemStack(planks, 1, i));
+                if (blockConfig.isBlockEnabled(nameFull1))
+                    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers1, blockConfig.getBlockRecipeOutput(nameFull1), i), "xxx", " y ", "xxx",
+                        'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
+                if (blockConfig.isBlockEnabled(nameFull2))
+                    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers2, blockConfig.getBlockRecipeOutput(nameFull2), i), "xyx", "xxx", "xyx",
+                        'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
+                if (blockConfig.isBlockEnabled(nameFull4))
+                    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers4, blockConfig.getBlockRecipeOutput(nameFull4), i), "yxy", "xxx", "yxy",
+                        'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
+                if (blockConfig.isBlockEnabled(nameTrim)) {
+                    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.trim, blockConfig.getBlockRecipeOutput(nameTrim), i), "xyx", "yyy", "xyx",
+                        'x', "stickWood", 'y', new ItemStack(planks, 1, i)));
                 }
             }
 
             Block recipeSlab = (i < 8) ? slab1 : slab2;
             if (recipeSlab != null) {
-                if (config.isBlockEnabled("halfdrawers2"))
-                    GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers2, config.getBlockRecipeOutput("halfdrawers2"), i), "xyx", "xxx", "xyx",
-                        'x', new ItemStack(recipeSlab, 1, i), 'y', Blocks.chest);
-                if (config.isBlockEnabled("halfdrawers4"))
-                    GameRegistry.addRecipe(new ItemStack(ModBlocks.halfDrawers4, config.getBlockRecipeOutput("halfdrawers4"), i), "yxy", "xxx", "yxy",
-                        'x', new ItemStack(recipeSlab, 1, i), 'y', Blocks.chest);
+                if (blockConfig.isBlockEnabled(nameHalf2))
+                    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfDrawers2, blockConfig.getBlockRecipeOutput(nameHalf2), i), "xyx", "xxx", "xyx",
+                        'x', new ItemStack(recipeSlab, 1, i), 'y', "chestWood"));
+                if (blockConfig.isBlockEnabled(nameHalf4))
+                    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfDrawers4, blockConfig.getBlockRecipeOutput(nameHalf4), i), "yxy", "xxx", "yxy",
+                        'x', new ItemStack(recipeSlab, 1, i), 'y', "chestWood"));
             }
         }
-
-        if (config.isBlockEnabled("fulldrawers1"))
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', Items.stick, 'y', new ItemStack(ModBlocks.fullDrawers1, 1, OreDictionary.WILDCARD_VALUE));
-        if (config.isBlockEnabled("fulldrawers2"))
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', Items.stick, 'y', new ItemStack(ModBlocks.fullDrawers2, 1, OreDictionary.WILDCARD_VALUE));
-        if (config.isBlockEnabled("halfdrawers2"))
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', Items.stick, 'y', new ItemStack(ModBlocks.halfDrawers2, 1, OreDictionary.WILDCARD_VALUE));
-        if (config.isBlockEnabled("fulldrawers4"))
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', Items.stick, 'y', new ItemStack(ModBlocks.fullDrawers4, 1, OreDictionary.WILDCARD_VALUE));
-        if (config.isBlockEnabled("halfdrawers4"))
-            GameRegistry.addRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-                'x', Items.stick, 'y', new ItemStack(ModBlocks.halfDrawers4, 1, OreDictionary.WILDCARD_VALUE));
     }
 }
