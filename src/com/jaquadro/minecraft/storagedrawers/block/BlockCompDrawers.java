@@ -113,24 +113,21 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }
 
     @Override
-    public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
-        if (state instanceof IExtendedBlockState) {
-            TileEntityDrawers tile = getTileEntity(world, pos);
-            if (tile == null)
-                return state;
+    public IBlockState getActualState (IBlockState state, IBlockAccess world, BlockPos pos) {
+        TileEntityDrawers tile = getTileEntity(world, pos);
+        if (tile == null)
+            return state;
 
-            EnumFacing facing = EnumFacing.getFront(tile.getDirection());
-            if (facing.getAxis() == EnumFacing.Axis.Y)
-                facing = EnumFacing.NORTH;
+        EnumFacing facing = EnumFacing.getFront(tile.getDirection());
+        if (facing.getAxis() == EnumFacing.Axis.Y)
+            facing = EnumFacing.NORTH;
 
-            EnumCompDrawer slots = EnumCompDrawer.OPEN1;
-            if (tile.isDrawerEnabled(1))
-                slots = EnumCompDrawer.OPEN2;
-            if (tile.isDrawerEnabled(2))
-                slots = EnumCompDrawer.OPEN3;
+        EnumCompDrawer slots = EnumCompDrawer.OPEN1;
+        if (tile.isDrawerEnabled(1))
+            slots = EnumCompDrawer.OPEN2;
+        if (tile.isDrawerEnabled(2))
+            slots = EnumCompDrawer.OPEN3;
 
-            return ((IExtendedBlockState) state).withProperty(FACING, facing).withProperty(SLOTS, slots);
-        }
-        return state;
+        return state.withProperty(FACING, facing).withProperty(SLOTS, slots);
     }
 }
