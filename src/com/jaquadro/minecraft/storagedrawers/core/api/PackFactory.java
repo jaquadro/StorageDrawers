@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.core.api;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
 import com.jaquadro.minecraft.storagedrawers.api.pack.IPackBlockFactory;
 import com.jaquadro.minecraft.storagedrawers.api.pack.IPackDataResolver;
@@ -40,9 +41,12 @@ public class PackFactory implements IPackBlockFactory
         if (block instanceof BlockDrawersPack) {
             GameRegistry.registerBlock(block, ItemDrawersPack.class, name);
             OreDictionary.registerOre("drawerBasic", new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE));
+            StorageDrawers.proxy.registerDrawer(block);
         }
-        else if (block instanceof BlockSortingDrawersPack)
+        else if (block instanceof BlockSortingDrawersPack) {
             GameRegistry.registerBlock(block, ItemSortingDrawersPack.class, name);
+            StorageDrawers.proxy.registerDrawer(block);
+        }
         else if (block instanceof BlockTrimPack)
             GameRegistry.registerBlock(block, ItemTrimPack.class, name);
     }

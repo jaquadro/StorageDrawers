@@ -1,20 +1,20 @@
 itemGroup.storageDrawers=Storage Drawers
 
 # Items
-item.upgradeTemplate.name=Szablon ulepszenia
-item.upgrade.iron.name=Ulepszenie składowania (II)
-item.upgrade.gold.name=Ulepszenie składowania (III)
-item.upgrade.obsidian.name=Ulepszenie składowania (IV)
-item.upgrade.diamond.name=Ulepszenie składowania (V)
-item.upgrade.emerald.name=Ulepszenie składowania (VI)
-item.upgradeStatus.level1.name=Ulepszenie statusu (I)
-item.upgradeStatus.level1.description=Pokazuje pełny skład
-item.upgradeStatus.level2.name=Ulepszenie statusu (II)
-item.upgradeStatus.level2.description=Pokazuje prawie pełny skład
-item.upgradeStatus.level3.name=Ulepszenie statusu (III)
-item.upgradeStatus.level3.description=Pokazuje poziom wypełnienia
-item.upgradeLock.name=Ulepszenie blokady
-item.upgradeLock.description=Zatrzymuje przypisany przedmiot gdy puste
+item.storagedrawers.upgradeTemplate.name=Szablon ulepszenia
+item.storagedrawers.upgrade.iron.name=Ulepszenie składowania (II)
+item.storagedrawers.upgrade.gold.name=Ulepszenie składowania (III)
+item.storagedrawers.upgrade.obsidian.name=Ulepszenie składowania (IV)
+item.storagedrawers.upgrade.diamond.name=Ulepszenie składowania (V)
+item.storagedrawers.upgrade.emerald.name=Ulepszenie składowania (VI)
+item.storagedrawers.upgradeStatus.level1.name=Ulepszenie statusu (I)
+item.storagedrawers.upgradeStatus.level1.description=Pokazuje pełny skład
+item.storagedrawers.upgradeStatus.level2.name=Ulepszenie statusu (II)
+item.storagedrawers.upgradeStatus.level2.description=Pokazuje prawie pełny skład
+item.storagedrawers.upgradeStatus.level3.name=Ulepszenie statusu (III)
+item.storagedrawers.upgradeStatus.level3.description=Pokazuje poziom wypełnienia
+item.storagedrawers.upgradeLock.name=Ulepszenie blokady
+item.storagedrawers.upgradeLock.description=Zatrzymuje przypisany przedmiot gdy puste
 
 # Blocks
 tile.fullDrawers2.oak.name=Dębowe szuflady 1x2

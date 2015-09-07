@@ -43,6 +43,7 @@ import org.apache.logging.log4j.Level;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -94,6 +95,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     private IIcon iconLock;
     @SideOnly(Side.CLIENT)
     private IIcon iconVoid;
+
+    @SideOnly(Side.CLIENT)
+    private IIcon iconTaped;
 
     public BlockDrawers (String blockName, int drawerCount, boolean halfDepth) {
         this(Material.wood, blockName, drawerCount, halfDepth);
@@ -235,13 +239,24 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 tileDrawers.setIsShrouded(!tileDrawers.isShrouded());
                 return true;
             }
+            else if (item.getItem() == ModItems.tape)
+                return false;
         }
-        else if (item == null && player.isSneaking() && StorageDrawers.config.cache.enableDrawerUI) {
-            player.openGui(StorageDrawers.instance, GuiHandler.drawersGuiID, world, x, y, z);
-            return true;
+        else if (item == null && player.isSneaking()) {
+            if (tileDrawers.isSealed()) {
+                tileDrawers.setIsSealed(false);
+                return true;
+            }
+            else if (StorageDrawers.config.cache.enableDrawerUI) {
+                player.openGui(StorageDrawers.instance, GuiHandler.drawersGuiID, world, x, y, z);
+                return true;
+            }
         }
 
         if (tileDrawers.getDirection() != side)
+            return false;
+
+        if (tileDrawers.isSealed())
             return false;
 
         int slot = getDrawerSlot(side, hitX, hitY, hitZ);
@@ -314,6 +329,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (tileDrawers.getDirection() != side)
             return;
 
+        if (tileDrawers.isSealed())
+            return;
+
         int slot = getDrawerSlot(side, hitX, hitY, hitZ);
         IDrawer drawer = tileDrawers.getDrawer(slot);
 
@@ -376,7 +394,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     public void breakBlock (World world, int x, int y, int z, Block block, int meta) {
         TileEntityDrawers tile = getTileEntity(world, x, y, z);
 
-        if (tile != null) {
+        if (tile != null && !tile.isSealed()) {
             for (int i = 0; i < tile.getUpgradeSlotCount(); i++) {
                 ItemStack stack = tile.getUpgrade(i);
                 if (stack != null)
@@ -432,6 +450,42 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @Override
     public int damageDropped (int meta) {
         return meta;
+    }
+
+    @Override
+    public boolean removedByPlayer (World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+        if (willHarvest)
+            return true;
+
+        return super.removedByPlayer(world, player, x, y, z, willHarvest);
+    }
+
+    @Override
+    public void harvestBlock (World world, EntityPlayer player, int x, int y, int z, int meta) {
+        super.harvestBlock(world, player, x, y, z, meta);
+        world.setBlockToAir(x, y, z);
+    }
+
+    @Override
+    public ArrayList<ItemStack> getDrops (World world, int x, int y, int z, int metadata, int fortune) {
+        ItemStack dropStack = new ItemStack(Item.getItemFromBlock(this), 1, metadata);
+
+        ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
+        drops.add(dropStack);
+
+        TileEntityDrawers tile = getTileEntity(world, x, y, z);
+        if (tile == null || !tile.isSealed())
+            return drops;
+
+        NBTTagCompound tiledata = new NBTTagCompound();
+        tile.writeToNBT(tiledata);
+
+        NBTTagCompound data = new NBTTagCompound();
+        data.setTag("tile", tiledata);
+
+        dropStack.setTagCompound(data);
+
+        return drops;
     }
 
     @Override
@@ -618,6 +672,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         return iconVoid;
     }
 
+    @SideOnly(Side.CLIENT)
+    public IIcon getTapeIcon () { return iconTaped; }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons (IIconRegister register) {
@@ -640,6 +697,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             iconSideH[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_side_h");
             iconTrim[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_trim");
         }
+
+        iconTaped = register.registerIcon(StorageDrawers.MOD_ID + ":tape");
 
         String[] overlays = new String[] { null, null, "iron", "gold", "obsidian", "diamond", "emerald" };
 

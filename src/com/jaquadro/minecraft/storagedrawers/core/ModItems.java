@@ -13,14 +13,16 @@ public class ModItems
     public static ItemUpgradeLock upgradeLock;
     public static ItemUpgradeVoid upgradeVoid;
     public static ItemShroudKey shroudKey;
+    public static ItemTape tape;
 
     public void init () {
-        upgradeTemplate = new Item().setUnlocalizedName("upgradeTemplate").setTextureName(StorageDrawers.MOD_ID + ":upgrade_template").setCreativeTab(ModCreativeTabs.tabStorageDrawers);
-        upgrade = new ItemUpgrade("upgrade");
-        upgradeStatus = new ItemUpgradeStatus("upgradeStatus");
-        upgradeLock = new ItemUpgradeLock("upgradeLock");
-        upgradeVoid = new ItemUpgradeVoid("upgradeVoid");
-        shroudKey = new ItemShroudKey("shroudKey");
+        upgradeTemplate = new Item().setUnlocalizedName(makeName("upgradeTemplate")).setTextureName(StorageDrawers.MOD_ID + ":upgrade_template").setCreativeTab(ModCreativeTabs.tabStorageDrawers);
+        upgrade = new ItemUpgrade(makeName("upgrade"));
+        upgradeStatus = new ItemUpgradeStatus(makeName("upgradeStatus"));
+        upgradeLock = new ItemUpgradeLock(makeName("upgradeLock"));
+        upgradeVoid = new ItemUpgradeVoid(makeName("upgradeVoid"));
+        shroudKey = new ItemShroudKey(makeName("shroudKey"));
+        tape = new ItemTape(makeName("tape"));
 
         GameRegistry.registerItem(upgradeTemplate, "upgradeTemplate");
 
@@ -34,5 +36,11 @@ public class ModItems
             GameRegistry.registerItem(upgradeLock, "upgradeLock");
         if (StorageDrawers.config.cache.enableShroudUpgrades)
             GameRegistry.registerItem(shroudKey, "shroudKey");
+        if (StorageDrawers.config.cache.enableTape)
+            GameRegistry.registerItem(tape, "tape");
+    }
+
+    public static String makeName (String name) {
+        return StorageDrawers.MOD_ID.toLowerCase() + "." + name;
     }
 }

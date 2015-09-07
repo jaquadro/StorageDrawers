@@ -10,24 +10,26 @@ storageDrawers.container.unboundSlave=Unbound Slave
 storagedrawers.msg.maxUpgrades=This drawer cannot accept any more upgrades.
 
 # Items
-item.upgradeTemplate.name=Upgrade Template
-item.upgrade.iron.name=Storage Upgrade (II)
-item.upgrade.gold.name=Storage Upgrade (III)
-item.upgrade.obsidian.name=Storage Upgrade (IV)
-item.upgrade.diamond.name=Storage Upgrade (V)
-item.upgrade.emerald.name=Storage Upgrade (VI)
-item.upgradeStatus.level1.name=Status Upgrade (I)
-item.upgradeStatus.level1.description=Shows full storage
-item.upgradeStatus.level2.name=Status Upgrade (II)
-item.upgradeStatus.level2.description=Shows fill level
-item.upgradeLock.name=Drawer Key
-item.upgradeLock.description=Locks and unlocks drawers
-item.upgradeVoid.name=Void Upgrade
-item.upgradeVoid.description=Destroys excess items
-item.upgradeSorting.name=Sorting Upgrade
-item.upgradeSorting.description=For Refined Relocation
-item.shroudKey.name=Concealment Key
-item.shroudKey.description=Show or hide item labels
+item.storagedrawers.upgradeTemplate.name=Upgrade Template
+item.storagedrawers.upgrade.iron.name=Storage Upgrade (II)
+item.storagedrawers.upgrade.gold.name=Storage Upgrade (III)
+item.storagedrawers.upgrade.obsidian.name=Storage Upgrade (IV)
+item.storagedrawers.upgrade.diamond.name=Storage Upgrade (V)
+item.storagedrawers.upgrade.emerald.name=Storage Upgrade (VI)
+item.storagedrawers.upgradeStatus.level1.name=Status Upgrade (I)
+item.storagedrawers.upgradeStatus.level1.description=Shows full storage
+item.storagedrawers.upgradeStatus.level2.name=Status Upgrade (II)
+item.storagedrawers.upgradeStatus.level2.description=Shows fill level
+item.storagedrawers.upgradeLock.name=Drawer Key
+item.storagedrawers.upgradeLock.description=Locks and unlocks drawers
+item.storagedrawers.upgradeVoid.name=Void Upgrade
+item.storagedrawers.upgradeVoid.description=Destroys excess items
+item.storagedrawers.upgradeSorting.name=Sorting Upgrade
+item.storagedrawers.upgradeSorting.description=For Refined Relocation
+item.storagedrawers.shroudKey.name=Concealment Key
+item.storagedrawers.shroudKey.description=Show or hide item labels
+item.storagedrawers.tape.name=Packing Tape
+item.storagedrawers.tape.description=Seals drawers for moving
 
 # Blocks
 tile.fullDrawers1.oak.name=Oak Drawer
@@ -77,6 +79,7 @@ tile.trim.acacia.name=Acacia Trim
 tile.trim.big_oak.name=Dark Oak Trim
 
 storageDrawers.drawers.description=Holds %d stacks per drawer
+storageDrawers.drawers.sealed=Contents sealed within
 storageDrawers.upgrade.description=Increases storage to %d times base value
 storageDrawers.controller.description=Interact with a bank of connected drawers
 storageDrawers.controllerSlave.description=Extra attach points for controllers
@@ -147,6 +150,8 @@ storageDrawers.config.prop.invertShift=Invert Shift
 storageDrawers.config.prop.invertShift.tooltip=Inverts click and shift+click behavior.
 storageDrawers.config.prop.enableDebugLogging=Enable Debug Logging
 storageDrawers.config.prop.enableDebugLogging.tooltip=Prints extra information to the logs.
+storageDrawers.config.prop.enableTape=Enable Tape
+storageDrawers.config.prop.enableTape.tooltip=For moving drawers with contents.
 
 storageDrawers.config.addons=Addons
 storageDrawers.config.addons.tooltip=Configure global addon pack settings.

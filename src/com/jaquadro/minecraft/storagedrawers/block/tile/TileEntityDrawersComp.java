@@ -99,7 +99,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     }
 
     @Override
-    public void readFromNBT (NBTTagCompound tag) {
+    public void readFromPortableNBT (NBTTagCompound tag) {
         pooledCount = 0;
 
         for (int i = 0; i < getDrawerCount(); i++) {
@@ -107,40 +107,32 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             convRate[i] = 0;
         }
 
-        super.readFromNBT(tag);
+        super.readFromPortableNBT(tag);
 
-        try {
-            pooledCount = tag.getInteger("Count");
+        pooledCount = tag.getInteger("Count");
 
-            if (tag.hasKey("Conv0"))
-                convRate[0] = tag.getByte("Conv0");
-            if (tag.hasKey("Conv1"))
-                convRate[1] = tag.getByte("Conv1");
-            if (tag.hasKey("Conv2"))
-                convRate[2] = tag.getByte("Conv2");
+        if (tag.hasKey("Conv0"))
+            convRate[0] = tag.getByte("Conv0");
+        if (tag.hasKey("Conv1"))
+            convRate[1] = tag.getByte("Conv1");
+        if (tag.hasKey("Conv2"))
+            convRate[2] = tag.getByte("Conv2");
 
-            for (int i = 0; i < getDrawerCount(); i++) {
-                IDrawer drawer = getDrawer(i);
-                if (drawer instanceof CompDrawerData)
-                    ((CompDrawerData) drawer).refresh();
-            }
-
-            if (worldObj != null && !worldObj.isRemote) {
-                //TileEntityDrawersComp.this.markDirty();
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-            }
+        for (int i = 0; i < getDrawerCount(); i++) {
+            IDrawer drawer = getDrawer(i);
+            if (drawer instanceof CompDrawerData)
+                ((CompDrawerData) drawer).refresh();
         }
-        catch (Throwable t) {
-            trapLoadFailure(t, tag);
+
+        if (worldObj != null && !worldObj.isRemote) {
+            //TileEntityDrawersComp.this.markDirty();
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
     }
 
     @Override
-    public void writeToNBT (NBTTagCompound tag) {
-        super.writeToNBT(tag);
-
-        if (loadDidFail())
-            return;
+    public void writeToPortableNBT (NBTTagCompound tag) {
+        super.writeToPortableNBT(tag);
 
         tag.setInteger("Count", pooledCount);
 

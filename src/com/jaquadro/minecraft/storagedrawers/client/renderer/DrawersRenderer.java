@@ -10,6 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -19,6 +20,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 {
     private static final double unit = .0625f;
 
+    private RenderHelper renderHelper = new RenderHelper();
     private ModularBoxRenderer boxRenderer = new ModularBoxRenderer();
 
     private double[] boxCoord = new double[6];
@@ -128,12 +130,18 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         renderInterior(block, x, y, z, side, renderer);
 
+        if (renderer.overrideBlockTexture != null && renderer.overrideBlockTexture.getIconName().startsWith("destroy_stage"))
+            return true;
+
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
             renderIndicator(block, x, y, z, side, renderer, tile.getEffectiveStatusLevel());
         if (StorageDrawers.config.cache.enableLockUpgrades)
             renderLock(block, x, y, z, side, renderer, tile.isLocked(LockAttribute.LOCK_POPULATED));
         if (StorageDrawers.config.cache.enableVoidUpgrades)
             renderVoid(block, x, y, z, side, renderer, tile.isVoid());
+        if (StorageDrawers.config.cache.enableTape)
+            renderTape(block, x, y, z, side, renderer, tile.isSealed());
+
         renderShroud(block, x, y, z, side, renderer, tile.isShrouded());
 
         return true;
@@ -162,6 +170,19 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         RenderHelper.instance.setRenderBounds(1 - .0625, 0.9375, 0, 1, 1, depth + .005);
         RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
         RenderHelper.instance.renderPartialFace(RenderHelper.ZPOS, renderer.blockAccess, block, x, y, z, iconVoid, 0, 0, 1, 1);
+        RenderHelper.instance.state.clearRotateTransform();
+    }
+
+    private void renderTape (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean taped) {
+        if (!taped)
+            return;
+
+        double depth = block.halfDepth ? .5 : 1;
+        IIcon iconTape = block.getTapeIcon();
+
+        RenderHelper.instance.setRenderBounds(0, 0, 0, 1, 1, depth + .005);
+        RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
+        RenderHelper.instance.renderFace(RenderHelper.ZPOS, renderer.blockAccess, block, x, y, z, iconTape);
         RenderHelper.instance.state.clearRotateTransform();
     }
 

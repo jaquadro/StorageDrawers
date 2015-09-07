@@ -1,20 +1,20 @@
 itemGroup.storageDrawers=מגירות אכסון
 
 # Items
-item.upgradeTemplate.name=Upgrade Template
-item.upgrade.iron.name=שדרוג למגירה (2)
-item.upgrade.gold.name=שדרוג למגירה (3)
-item.upgrade.obsidian.name=שדרוג למגירה (4)
-item.upgrade.diamond.name=שדרוג למגירה (5)
-item.upgrade.emerald.name=שדרוג למגירה (6)
-item.upgradeStatus.level1.name=Status Upgrade (I)
-item.upgradeStatus.level1.description=Shows full storage
-item.upgradeStatus.level2.name=Status Upgrade (II)
-item.upgradeStatus.level2.description=Shows near-full storage
-item.upgradeStatus.level3.name=Status Upgrade (III)
-item.upgradeStatus.level3.description=Shows fill level
-item.upgradeLock.name=Lock Upgrade
-item.upgradeLock.description=Keep associated items when empty
+item.storagedrawers.upgradeTemplate.name=Upgrade Template
+item.storagedrawers.upgrade.iron.name=שדרוג למגירה (2)
+item.storagedrawers.upgrade.gold.name=שדרוג למגירה (3)
+item.storagedrawers.upgrade.obsidian.name=שדרוג למגירה (4)
+item.storagedrawers.upgrade.diamond.name=שדרוג למגירה (5)
+item.storagedrawers.upgrade.emerald.name=שדרוג למגירה (6)
+item.storagedrawers.upgradeStatus.level1.name=Status Upgrade (I)
+item.storagedrawers.upgradeStatus.level1.description=Shows full storage
+item.storagedrawers.upgradeStatus.level2.name=Status Upgrade (II)
+item.storagedrawers.upgradeStatus.level2.description=Shows near-full storage
+item.storagedrawers.upgradeStatus.level3.name=Status Upgrade (III)
+item.storagedrawers.upgradeStatus.level3.description=Shows fill level
+item.storagedrawers.upgradeLock.name=Lock Upgrade
+item.storagedrawers.upgradeLock.description=Keep associated items when empty
 
 # Blocks
 tile.fullDrawers2.oak.name=מגירות אלון 1x2

@@ -3,20 +3,20 @@
 itemGroup.storageDrawers=스토리지 드로워즈[Storage Drawers]
 
 # Items
-item.upgradeTemplate.name=업데이트 견본
-item.upgrade.iron.name=서랍 업그레이드 (II)
-item.upgrade.gold.name=서랍 업그레이드 (III)
-item.upgrade.obsidian.name=서랍 업그레이드 (IV)
-item.upgrade.diamond.name=서랍 업그레이드 (V)
-item.upgrade.emerald.name=서랍 업그레이드 (VI)
-item.upgradeStatus.level1.name=동상 업그레이드 (I)
-item.upgradeStatus.level1.description=전제 스토리지 표시
-item.upgradeStatus.level2.name=동상 업그레이드 (II)
-item.upgradeStatus.level2.description=대부분의 스토리지 표시
-item.upgradeStatus.level3.name=동상 업그레이드 (III)
-item.upgradeStatus.level3.description=레벨 표시
-item.upgradeLock.name=Lock Upgrade
-item.upgradeLock.description=Keep associated items when empty
+item.storagedrawers.upgradeTemplate.name=업데이트 견본
+item.storagedrawers.upgrade.iron.name=서랍 업그레이드 (II)
+item.storagedrawers.upgrade.gold.name=서랍 업그레이드 (III)
+item.storagedrawers.upgrade.obsidian.name=서랍 업그레이드 (IV)
+item.storagedrawers.upgrade.diamond.name=서랍 업그레이드 (V)
+item.storagedrawers.upgrade.emerald.name=서랍 업그레이드 (VI)
+item.storagedrawers.upgradeStatus.level1.name=동상 업그레이드 (I)
+item.storagedrawers.upgradeStatus.level1.description=전제 스토리지 표시
+item.storagedrawers.upgradeStatus.level2.name=동상 업그레이드 (II)
+item.storagedrawers.upgradeStatus.level2.description=대부분의 스토리지 표시
+item.storagedrawers.upgradeStatus.level3.name=동상 업그레이드 (III)
+item.storagedrawers.upgradeStatus.level3.description=레벨 표시
+item.storagedrawers.upgradeLock.name=Lock Upgrade
+item.storagedrawers.upgradeLock.description=Keep associated items when empty
 
 # Blocks
 tile.fullDrawers2.oak.name=참나무 서랍 1x2

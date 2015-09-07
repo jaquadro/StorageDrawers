@@ -3,8 +3,10 @@ package com.jaquadro.minecraft.storagedrawers.client.renderer;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.render.IRenderLabel;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ISealable;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.util.*;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -12,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -255,7 +258,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         if (tileDrawers == null)
             return;
 
-        if (tileDrawers.isShrouded())
+        if (tileDrawers.isShrouded() || tileDrawers.isSealed())
             return;
 
         // Don't bother rendering anything that is (probably) facing away from the player.

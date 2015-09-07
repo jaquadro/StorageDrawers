@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ISealable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
@@ -34,7 +35,7 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends TileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, ILockable
+public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, ILockable, ISealable
 {
     private IDrawer[] drawers;
     private IDrawerInventory inventory;
@@ -44,6 +45,7 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     private int direction;
     private int drawerCapacity = 1;
     private boolean shrouded = false;
+    private boolean taped = false;
 
     private EnumSet<LockAttribute> lockAttributes = null;
 
@@ -238,6 +240,29 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         }
     }
 
+    public boolean isSealed () {
+        if (!StorageDrawers.config.cache.enableTape)
+            return false;
+
+        return taped;
+    }
+
+    public boolean setIsSealed (boolean state) {
+        if (!StorageDrawers.config.cache.enableTape)
+            return false;
+
+        if (this.taped != state) {
+            this.taped = state;
+
+            if (worldObj != null && !worldObj.isRemote) {
+                markDirty();
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
+        }
+
+        return true;
+    }
+
     public boolean isVoid () {
         if (!StorageDrawers.config.cache.enableVoidUpgrades)
             return false;
@@ -347,24 +372,6 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
         return count;
     }
 
-    protected void trapLoadFailure (Throwable t, NBTTagCompound tag) {
-        failureSnapshot = (NBTTagCompound)tag.copy();
-        FMLLog.log(StorageDrawers.MOD_ID, Level.ERROR, t, "Tile Load Failure.");
-    }
-
-    protected void restoreLoadFailure (NBTTagCompound tag) {
-        Iterator<String> iter = failureSnapshot.func_150296_c().iterator();
-        while (iter.hasNext()) {
-            String key = iter.next();
-            if (!tag.hasKey(key))
-                tag.setTag(key, failureSnapshot.getTag(key).copy());
-        }
-    }
-
-    protected boolean loadDidFail () {
-        return failureSnapshot != null;
-    }
-
     private void readLegacyUpgradeNBT (NBTTagCompound tag) {
         if (tag.hasKey("Lev") && tag.getByte("Lev") > 1)
             addUpgrade(new ItemStack(ModItems.upgrade, 1, tag.getByte("Lev")));
@@ -375,105 +382,107 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
     }
 
     @Override
-    public void readFromNBT (NBTTagCompound tag) {
-        super.readFromNBT(tag);
+    protected void readFromFixedNBT (NBTTagCompound tag) {
+        super.readFromFixedNBT(tag);
 
-        failureSnapshot = null;
+        setDirection(tag.getByte("Dir"));
 
-        try {
-            upgrades = new ItemStack[upgrades.length];
+        taped = false;
+        if (tag.hasKey("Tape"))
+            taped = tag.getBoolean("Tape");
 
-            setDirection(tag.getByte("Dir"));
-            drawerCapacity = tag.getInteger("Cap");
-
-            if (!tag.hasKey("Upgrades")) {
-                readLegacyUpgradeNBT(tag);
-            }
-            else {
-                NBTTagList upgradeList = tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND);
-                for (int i = 0; i < upgradeList.tagCount(); i++) {
-                    NBTTagCompound upgradeTag = upgradeList.getCompoundTagAt(i);
-
-                    int slot = upgradeTag.getByte("Slot");
-                    setUpgrade(slot, ItemStack.loadItemStackFromNBT(upgradeTag));
-                }
-            }
-
-            lockAttributes = null;
-            if (tag.hasKey("Lock"))
-                lockAttributes = LockAttribute.getEnumSet(tag.getByte("Lock"));
-
-            shrouded = false;
-            if (tag.hasKey("Shr"))
-                shrouded = tag.getBoolean("Shr");
-
-            NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
-            int drawerCount = slots.tagCount();
-            drawers = new IDrawer[slots.tagCount()];
-
-            for (int i = 0, n = drawers.length; i < n; i++) {
-                NBTTagCompound slot = slots.getCompoundTagAt(i);
-                drawers[i] = createDrawer(i);
-                drawers[i].readFromNBT(slot);
-            }
-
-            inventory = new StorageInventory(this, getSideManager(), this);
-
-            if (tag.hasKey("CustomName", Constants.NBT.TAG_STRING))
-                customName = tag.getString("CustomName");
-        }
-        catch (Throwable t) {
-            trapLoadFailure(t, tag);
-        }
+        customName = null;
+        if (tag.hasKey("CustomName", Constants.NBT.TAG_STRING))
+            customName = tag.getString("CustomName");
     }
 
     @Override
-    public void writeToNBT (NBTTagCompound tag) {
-        super.writeToNBT(tag);
+    protected void writeToFixedNBT (NBTTagCompound tag) {
+        super.writeToFixedNBT(tag);
 
-        if (failureSnapshot != null) {
-            restoreLoadFailure(tag);
-            return;
+        tag.setByte("Dir", (byte) direction);
+
+        if (taped)
+            tag.setBoolean("Tape", taped);
+
+        if (hasCustomInventoryName())
+            tag.setString("CustomName", customName);
+    }
+
+    @Override
+    public void readFromPortableNBT (NBTTagCompound tag) {
+        super.readFromPortableNBT(tag);
+
+        upgrades = new ItemStack[upgrades.length];
+
+        drawerCapacity = tag.getInteger("Cap");
+
+        if (!tag.hasKey("Upgrades")) {
+            readLegacyUpgradeNBT(tag);
         }
+        else {
+            NBTTagList upgradeList = tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < upgradeList.tagCount(); i++) {
+                NBTTagCompound upgradeTag = upgradeList.getCompoundTagAt(i);
 
-        try {
-            tag.setByte("Dir", (byte) direction);
-            tag.setInteger("Cap", drawerCapacity);
-
-            NBTTagList upgradeList = new NBTTagList();
-            for (int i = 0; i < upgrades.length; i++) {
-                if (upgrades[i] != null) {
-                    NBTTagCompound upgradeTag = upgrades[i].writeToNBT(new NBTTagCompound());
-                    upgradeTag.setByte("Slot", (byte)i);
-
-                    upgradeList.appendTag(upgradeTag);
-                }
+                int slot = upgradeTag.getByte("Slot");
+                setUpgrade(slot, ItemStack.loadItemStackFromNBT(upgradeTag));
             }
+        }
 
-            if (upgradeList.tagCount() > 0)
-                tag.setTag("Upgrades", upgradeList);
+        lockAttributes = null;
+        if (tag.hasKey("Lock"))
+            lockAttributes = LockAttribute.getEnumSet(tag.getByte("Lock"));
 
-            if (lockAttributes != null)
-                tag.setByte("Lock", (byte)LockAttribute.getBitfield(lockAttributes));
+        shrouded = false;
+        if (tag.hasKey("Shr"))
+            shrouded = tag.getBoolean("Shr");
 
-            if (shrouded)
-                tag.setBoolean("Shr", shrouded);
+        NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
+        drawers = new IDrawer[slots.tagCount()];
 
-            NBTTagList slots = new NBTTagList();
-            for (IDrawer drawer : drawers) {
-                NBTTagCompound slot = new NBTTagCompound();
-                drawer.writeToNBT(slot);
-                slots.appendTag(slot);
+        for (int i = 0, n = drawers.length; i < n; i++) {
+            NBTTagCompound slot = slots.getCompoundTagAt(i);
+            drawers[i] = createDrawer(i);
+            drawers[i].readFromNBT(slot);
+        }
+
+        inventory = new StorageInventory(this, getSideManager(), this);
+    }
+
+    @Override
+    public void writeToPortableNBT (NBTTagCompound tag) {
+        super.writeToPortableNBT(tag);
+
+        tag.setInteger("Cap", drawerCapacity);
+
+        NBTTagList upgradeList = new NBTTagList();
+        for (int i = 0; i < upgrades.length; i++) {
+            if (upgrades[i] != null) {
+                NBTTagCompound upgradeTag = upgrades[i].writeToNBT(new NBTTagCompound());
+                upgradeTag.setByte("Slot", (byte)i);
+
+                upgradeList.appendTag(upgradeTag);
             }
-
-            tag.setTag("Slots", slots);
-
-            if (hasCustomInventoryName())
-                tag.setString("CustomName", customName);
         }
-        catch (Throwable t) {
-            FMLLog.log(StorageDrawers.MOD_ID, Level.ERROR, t, "Tile Save Failure.");
+
+        if (upgradeList.tagCount() > 0)
+            tag.setTag("Upgrades", upgradeList);
+
+        if (lockAttributes != null)
+            tag.setByte("Lock", (byte) LockAttribute.getBitfield(lockAttributes));
+
+        if (shrouded)
+            tag.setBoolean("Shr", shrouded);
+
+        NBTTagList slots = new NBTTagList();
+        for (IDrawer drawer : drawers) {
+            NBTTagCompound slot = new NBTTagCompound();
+            drawer.writeToNBT(slot);
+            slots.appendTag(slot);
         }
+
+        tag.setTag("Slots", slots);
     }
 
     @Override
@@ -547,6 +556,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     @Override
     public boolean isDrawerEnabled (int slot) {
+        if (isSealed())
+            return false;
+
         return getDrawer(slot) != null;
     }
 
@@ -557,6 +569,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     @Override
     public boolean canInsertItem (int slot, ItemStack stack, int side) {
+        if (isSealed())
+            return false;
+
         if (isLocked(LockAttribute.LOCK_EMPTY) && inventory instanceof StorageInventory) {
             IDrawer drawer = getDrawer(inventory.getDrawerSlot(slot));
             if (drawer != null && drawer.isEmpty())
@@ -568,6 +583,9 @@ public abstract class TileEntityDrawers extends TileEntity implements IDrawerGro
 
     @Override
     public boolean canExtractItem (int slot, ItemStack stack, int side) {
+        if (isSealed())
+            return false;
+
         return inventory.canExtractItem(slot, stack, side);
     }
 

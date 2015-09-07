@@ -81,6 +81,13 @@ public class RefinedRelocation extends IntegrationModule
         if (config.cache.enableSortingUpgrades)
             GameRegistry.registerItem(upgradeSorting, "upgradeSorting");
 
+        StorageDrawers.proxy.registerDrawer(fullDrawers1);
+        StorageDrawers.proxy.registerDrawer(fullDrawers2);
+        StorageDrawers.proxy.registerDrawer(fullDrawers4);
+        StorageDrawers.proxy.registerDrawer(halfDrawers2);
+        StorageDrawers.proxy.registerDrawer(halfDrawers4);
+        StorageDrawers.proxy.registerDrawer(compDrawers);
+
         GameRegistry.registerTileEntityWithAlternatives(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName("tileSortingDrawersStandard"),
             ModBlocks.getQualifiedName(fullDrawers1), ModBlocks.getQualifiedName(fullDrawers2), ModBlocks.getQualifiedName(fullDrawers4),
             ModBlocks.getQualifiedName(halfDrawers2), ModBlocks.getQualifiedName(halfDrawers4));
