@@ -114,7 +114,7 @@ public class DrawersItemRenderer implements IItemRenderer
     }
 
     private void renderInterior (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
-        double unit = block.trimDepth;
+        double unit = block.getTrimDepth();
         double depth = block.halfDepth ? .5 : 1;
         double xMin = 0, xMax = 0, zMin = 0, zMax = 0;
 

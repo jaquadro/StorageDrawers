@@ -102,7 +102,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
                 break;
         }
 
-        boxRenderer.setUnit(block.trimWidth);
+        boxRenderer.setUnit(block.getTrimWidth());
         boxRenderer.setColor(ModularBoxRenderer.COLOR_WHITE);
         for (int i = 0; i < 6; i++)
             boxRenderer.setExteriorIcon(block.getIcon(world, x, y, z, i), i);
@@ -216,7 +216,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         TileEntityDrawers tile = block.getTileEntity(renderer.blockAccess, x, y, z);
 
         double depth = block.halfDepth ? 8 : 16;
-        double depthAdj = block.trimDepth * 16;
+        double depthAdj = block.getTrimDepth() * 16;
 
         int count = 0;
         float w = 2;
@@ -267,7 +267,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         TileEntityDrawers tile = block.getTileEntity(renderer.blockAccess, x, y, z);
 
         double depth = block.halfDepth ? 8 : 16;
-        double depthAdj = block.trimDepth * 16;
+        double depthAdj = block.getTrimDepth() * 16;
 
         int count = 0;
         float[][] xywhSet = null;
@@ -306,9 +306,9 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
                 boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
             }
             else if (level >= 2) {
-                double indStart = xywh[0] + block.indStart / unit;
-                double indEnd = xywh[0] + block.indEnd / unit;
-                double indCur = getIndEnd(block, tile, i, indStart, (block.indEnd - block.indStart) / unit);
+                double indStart = xywh[0] + block.getIndStart() / unit;
+                double indEnd = xywh[0] + block.getIndEnd() / unit;
+                double indCur = getIndEnd(block, tile, i, indStart, (block.getIndEnd() - block.getIndStart()) / unit);
 
                 if (indCur > indStart) {
                     if (indCur >= indEnd)
@@ -337,7 +337,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         if (cap == 0 || count == 0)
             return x;
 
-        int step = block.indSteps > 0 ? block.indSteps : 1000;
+        int step = block.getIndSteps() > 0 ? block.getIndSteps() : 1000;
         float fillAmt = (float)(step * count / cap) / step;
 
         return x + (w * fillAmt);
@@ -420,7 +420,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
     }
 
     private void renderInterior (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
-        double unit = block.trimDepth;
+        double unit = block.getTrimDepth();
         double depth = block.halfDepth ? .5 : 1;
         double xMin = 0, xMax = 0, zMin = 0, zMax = 0;
 

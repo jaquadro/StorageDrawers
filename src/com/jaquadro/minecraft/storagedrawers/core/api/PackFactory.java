@@ -24,16 +24,31 @@ public class PackFactory implements IPackBlockFactory
     public Block createBlock (BlockConfiguration blockConfig, IPackDataResolver dataResolver) {
         switch (blockConfig.getBlockType()) {
             case Drawers:
-                return new BlockDrawersPack(dataResolver, blockConfig.getDrawerCount(), blockConfig.isHalfDepth());
+                return new BlockDrawersPack(dataResolver, blockConfig.getDrawerCount(), blockConfig.isHalfDepth()).setConfigName(getConfigName(blockConfig));
             case DrawersSorting:
                 if (IntegrationRegistry.instance().isModLoaded("RefinedRelocation"))
-                    return new BlockSortingDrawersPack(dataResolver, blockConfig.getDrawerCount(), blockConfig.isHalfDepth());
+                    return new BlockSortingDrawersPack(dataResolver, blockConfig.getDrawerCount(), blockConfig.isHalfDepth()).setConfigName(getConfigName(blockConfig));
                 return null;
             case Trim:
                 return new BlockTrimPack(dataResolver);
         }
 
         return null;
+    }
+
+    private static String getConfigName (BlockConfiguration blockConfig) {
+        if (blockConfig.getDrawerCount() == 1)
+            return "fullDrawers1";
+        if (blockConfig.getDrawerCount() == 2 && !blockConfig.isHalfDepth())
+            return "fullDrawers2";
+        if (blockConfig.getDrawerCount() == 4 && !blockConfig.isHalfDepth())
+            return "fullDrawers4";
+        if (blockConfig.getDrawerCount() == 2 && blockConfig.isHalfDepth())
+            return "halfDrawers2";
+        if (blockConfig.getDrawerCount() == 4 && blockConfig.isHalfDepth())
+            return "halfDrawers4";
+
+        return "";
     }
 
     @Override

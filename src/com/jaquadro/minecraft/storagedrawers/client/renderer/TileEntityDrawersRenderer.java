@@ -393,7 +393,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         float xunit = getXOffset(drawerCount, slot);
         float yunit = getYOffset(drawerCount, slot);
-        float zunit = isBlockType ? 1.95f * block.trimDepth : block.trimDepth;
+        float zunit = isBlockType ? 1.95f * block.getTrimDepth() : block.getTrimDepth();
 
         float xc = 0, zc = 0;
         float itemDepth = depth + .001f;
@@ -470,7 +470,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         GL11.glPushMatrix();
 
         alignRendering(side);
-        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, 1f - depth + block.trimDepth);
+        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, 1f - depth + block.getTrimDepth());
 
         List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
         for (int i = 0, n = renderHandlers.size(); i < n; i++) {

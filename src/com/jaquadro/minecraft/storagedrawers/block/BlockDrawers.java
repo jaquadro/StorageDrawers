@@ -54,11 +54,13 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     public final boolean halfDepth;
     public final int drawerCount;
 
-    public float trimWidth = 0.0625f;
-    public float trimDepth = 0.0625f;
-    public float indStart = 0;
-    public float indEnd = 0;
-    public int indSteps = 0;
+    private float trimWidth = 0.0625f;
+    private float trimDepth = 0.0625f;
+    private float indStart = 0;
+    private float indEnd = 0;
+    private int indSteps = 0;
+
+    private String blockConfigName;
 
     @SideOnly(Side.CLIENT)
     protected IIcon[] iconSide;
@@ -114,7 +116,37 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         setHardness(5f);
         setStepSound(Block.soundTypeWood);
         setBlockName(blockName);
+        setConfigName(blockName);
         setLightOpacity(255);
+    }
+
+    public float getTrimWidth () {
+        return trimWidth;
+    }
+
+    public float getTrimDepth () {
+        return trimDepth;
+    }
+
+    public float getIndStart () {
+        return indStart;
+    }
+
+    public float getIndEnd () {
+        return indEnd;
+    }
+
+    public int getIndSteps () {
+        return indSteps;
+    }
+
+    public BlockDrawers setConfigName (String name) {
+        blockConfigName = name;
+        return this;
+    }
+
+    public String getConfigName () {
+        return blockConfigName;
     }
 
     @Override
@@ -740,7 +772,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 reader = new BufferedReader(new InputStreamReader(configResource.getInputStream()));
                 JsonObject root = (new JsonParser()).parse(reader).getAsJsonObject();
 
-                JsonObject entry = root.getAsJsonObject(getUnlocalizedName().substring(5));
+                JsonObject entry = root.getAsJsonObject(getConfigName());
                 if (entry != null) {
                     if (entry.has("trimWidth"))
                         trimWidth = entry.get("trimWidth").getAsFloat();
