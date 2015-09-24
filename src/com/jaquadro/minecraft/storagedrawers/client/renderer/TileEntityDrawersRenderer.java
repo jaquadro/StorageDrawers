@@ -296,10 +296,15 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         boolean cache = mc.gameSettings.fancyGraphics;
         mc.gameSettings.fancyGraphics = true;
 
-        if (StorageDrawers.config.isFancyItemRenderEnabled())
-            renderFancyItemSet(tileDrawers, side, depth, partialTickTime);
-        else
-            renderFastItemSet(tileDrawers, side, depth, partialTickTime);
+        try {
+            if (StorageDrawers.config.isFancyItemRenderEnabled())
+                renderFancyItemSet(tileDrawers, side, depth, partialTickTime);
+            else
+                renderFastItemSet(tileDrawers, side, depth, partialTickTime);
+        }
+        catch (Exception e) {
+            // Swallow exception
+        }
 
         mc.gameSettings.fancyGraphics = cache;
 
@@ -451,9 +456,12 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_LIGHTING);
 
-        EntityItem itemEnt = new EntityItem(null, 0, 0, 0, itemStack);
-        itemEnt.hoverStart = 0;
-        itemRenderer.doRender(itemEnt, 0, 0, 0, 0, 0);
+        try {
+            EntityItem itemEnt = new EntityItem(null, 0, 0, 0, itemStack);
+            itemEnt.hoverStart = 0;
+            itemRenderer.doRender(itemEnt, 0, 0, 0, 0, 0);
+        }
+        catch (Exception e) { }
 
         GL11.glPopMatrix();
     }
@@ -477,8 +485,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             renderHandlers.get(i).render(tile, tile, slot, brightness, partialTickTime);
         }
 
-        if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
-            itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0, true);
+        try {
+            if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
+                itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0, true);
+        }
+        catch (Exception e) { }
 
         GL11.glPopMatrix();
     }
