@@ -27,9 +27,15 @@ public class ModRecipes
         String nameHalf4 = blockConfig.getBlockConfigName(BlockConfiguration.BasicHalf4);
         String nameTrim = blockConfig.getBlockConfigName(BlockConfiguration.Trim);
 
-        Block[] planksSet = new Block[] {
-            GameRegistry.findBlock("Forestry", "planks"),
-            GameRegistry.findBlock("Forestry", "planks2")
+        Block[][] planksSet = new Block[][] {
+            new Block[] {
+                GameRegistry.findBlock("Forestry", "planks"),
+                GameRegistry.findBlock("Forestry", "fireproofPlanks1")
+            },
+            new Block [] {
+                GameRegistry.findBlock("Forestry", "planks2"),
+                GameRegistry.findBlock("Forestry", "fireproofPlanks2")
+            }
         };
 
         Block[][] slabsSet = new Block[][] {
@@ -53,25 +59,27 @@ public class ModRecipes
         IPackDataResolver[] resolver = new IPackDataResolver[] { StorageDrawersPack.instance.resolver1, StorageDrawersPack.instance.resolver2 };
 
         for (int p = 0; p < resolver.length; p++) {
-            Block planks = planksSet[p];
+            Block[] planksGroup = planksSet[p];
 
             for (int i = 0; i < 16; i++) {
-                if (resolver[p].isValidMetaValue(i))
+                if (!resolver[p].isValidMetaValue(i))
                     continue;
 
-                if (planks != null) {
-                    if (blockConfig.isBlockEnabled(nameFull1))
-                        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fullDrawers1[p], blockConfig.getBlockRecipeOutput(nameFull1), i), "xxx", " y ", "xxx",
-                            'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
-                    if (blockConfig.isBlockEnabled(nameFull2))
-                        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fullDrawers2[p], blockConfig.getBlockRecipeOutput(nameFull2), i), "xyx", "xxx", "xyx",
-                            'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
-                    if (blockConfig.isBlockEnabled(nameFull4))
-                        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fullDrawers4[p], blockConfig.getBlockRecipeOutput(nameFull4), i), "yxy", "xxx", "yxy",
-                            'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
-                    if (blockConfig.isBlockEnabled(nameTrim)) {
-                        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(trim[p], blockConfig.getBlockRecipeOutput(nameTrim), i), "xyx", "yyy", "xyx",
-                            'x', "stickWood", 'y', new ItemStack(planks, 1, i)));
+                for (Block planks : planksGroup) {
+                    if (planks != null) {
+                        if (blockConfig.isBlockEnabled(nameFull1))
+                            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fullDrawers1[p], blockConfig.getBlockRecipeOutput(nameFull1), i), "xxx", " y ", "xxx",
+                                'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
+                        if (blockConfig.isBlockEnabled(nameFull2))
+                            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fullDrawers2[p], blockConfig.getBlockRecipeOutput(nameFull2), i), "xyx", "xxx", "xyx",
+                                'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
+                        if (blockConfig.isBlockEnabled(nameFull4))
+                            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fullDrawers4[p], blockConfig.getBlockRecipeOutput(nameFull4), i), "yxy", "xxx", "yxy",
+                                'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
+                        if (blockConfig.isBlockEnabled(nameTrim)) {
+                            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(trim[p], blockConfig.getBlockRecipeOutput(nameTrim), i), "xyx", "yyy", "xyx",
+                                'x', "stickWood", 'y', new ItemStack(planks, 1, i)));
+                        }
                     }
                 }
 
