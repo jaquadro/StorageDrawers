@@ -35,24 +35,29 @@ public class ModRecipes
             if (!resolver.isValidMetaValue(i))
                 continue;
 
-            if (resolver.getUnlocalizedName(i).equals("scorched"))
+            int src = i;
+            if (resolver.getUnlocalizedName(i).equals("scorched")) {
                 planks = GameRegistry.findBlock("erebus", "planks_scorched");
-            else if (resolver.getUnlocalizedName(i).equals("varnished"))
+                src = 0;
+            }
+            else if (resolver.getUnlocalizedName(i).equals("varnished")) {
                 planks = GameRegistry.findBlock("erebus", "planks_varnished");
+                src = 0;
+            }
 
             if (planks != null) {
                 if (blockConfig.isBlockEnabled(nameFull1))
                     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers1, blockConfig.getBlockRecipeOutput(nameFull1), i), "xxx", " y ", "xxx",
-                        'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
+                        'x', new ItemStack(planks, 1, src), 'y', "chestWood"));
                 if (blockConfig.isBlockEnabled(nameFull2))
                     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers2, blockConfig.getBlockRecipeOutput(nameFull2), i), "xyx", "xxx", "xyx",
-                        'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
+                        'x', new ItemStack(planks, 1, src), 'y', "chestWood"));
                 if (blockConfig.isBlockEnabled(nameFull4))
                     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullDrawers4, blockConfig.getBlockRecipeOutput(nameFull4), i), "yxy", "xxx", "yxy",
-                        'x', new ItemStack(planks, 1, i), 'y', "chestWood"));
+                        'x', new ItemStack(planks, 1, src), 'y', "chestWood"));
                 if (blockConfig.isBlockEnabled(nameTrim)) {
                     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.trim, blockConfig.getBlockRecipeOutput(nameTrim), i), "xyx", "yyy", "xyx",
-                        'x', "stickWood", 'y', new ItemStack(planks, 1, i)));
+                        'x', "stickWood", 'y', new ItemStack(planks, 1, src)));
                 }
             }
 
