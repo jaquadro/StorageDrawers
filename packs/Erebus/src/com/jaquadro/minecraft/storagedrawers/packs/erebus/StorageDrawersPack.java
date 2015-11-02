@@ -16,7 +16,7 @@ public class StorageDrawersPack
     public static final String MOD_VERSION = "@VERSION@";
     public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.packs.erebus.";
 
-    public IPackDataResolver resolver = new DataResolver(MOD_ID, ModCreativeTabs.tabStorageDrawers);
+    public IPackDataResolver resolver = new DataResolver(MOD_ID);
 
     public ModBlocks blocks = new ModBlocks();
     public ModRecipes recipes = new ModRecipes();

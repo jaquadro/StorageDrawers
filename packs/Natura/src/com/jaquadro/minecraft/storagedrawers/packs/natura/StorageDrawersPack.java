@@ -1,11 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.packs.natura;
 
 import com.jaquadro.minecraft.storagedrawers.api.pack.IPackDataResolver;
-import com.jaquadro.minecraft.storagedrawers.api.pack.StandardDataResolver;
-import com.jaquadro.minecraft.storagedrawers.packs.natura.core.ModBlocks;
-import com.jaquadro.minecraft.storagedrawers.packs.natura.core.ModCreativeTabs;
-import com.jaquadro.minecraft.storagedrawers.packs.natura.core.ModRecipes;
-import com.jaquadro.minecraft.storagedrawers.packs.natura.core.RefinedRelocation;
+import com.jaquadro.minecraft.storagedrawers.packs.natura.core.*;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -20,9 +16,9 @@ public class StorageDrawersPack
     public static final String MOD_VERSION = "@VERSION@";
     public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.packs.natura.";
 
-    public IPackDataResolver resolver = new StandardDataResolver(MOD_ID, new String[] {
+    public IPackDataResolver resolver = new DataResolver(MOD_ID, new String[] {
         "eucalyptus", "sakura", "ghostwood", "redwood", "bloodwood", "hopseed", "maple", "silverbell", "purpleheart", "tigerwood", "willow", "darkwood", "fusewood"
-    }, ModCreativeTabs.tabStorageDrawers);
+    });
 
     public ModBlocks blocks = new ModBlocks();
     public ModRecipes recipes = new ModRecipes();

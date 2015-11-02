@@ -1,11 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.packs.forestry;
 
 import com.jaquadro.minecraft.storagedrawers.api.pack.IPackDataResolver;
-import com.jaquadro.minecraft.storagedrawers.api.pack.StandardDataResolver;
-import com.jaquadro.minecraft.storagedrawers.packs.forestry.core.ModBlocks;
-import com.jaquadro.minecraft.storagedrawers.packs.forestry.core.ModCreativeTabs;
-import com.jaquadro.minecraft.storagedrawers.packs.forestry.core.ModRecipes;
-import com.jaquadro.minecraft.storagedrawers.packs.forestry.core.RefinedRelocation;
+import com.jaquadro.minecraft.storagedrawers.packs.forestry.core.*;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -20,13 +16,13 @@ public class StorageDrawersPack
     public static final String MOD_VERSION = "@VERSION@";
     public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.packs.forestry.";
 
-    public IPackDataResolver resolver1 = new StandardDataResolver(MOD_ID, new String[] {
+    public IPackDataResolver resolver1 = new DataResolver(MOD_ID, new String[] {
         "larch", "teak", "acacia", "lime", "chestnut", "wenge", "baobab", "sequoia", "kapok", "ebony", "mahogany", "balsa", "willow", "walnut", "greenheart", "cherry"
-    }, ModCreativeTabs.tabStorageDrawers);
+    });
 
-    public IPackDataResolver resolver2 = new StandardDataResolver(MOD_ID, new String[] {
+    public IPackDataResolver resolver2 = new DataResolver(MOD_ID, new String[] {
         "mahoe", "poplar", "palm", "papaya", "pine", "plum", "maple", "citrus", "giganteum", "ipe", "padauk", "cocobolo", "zebrawood"
-    }, ModCreativeTabs.tabStorageDrawers);
+    });
 
     public ModBlocks blocks = new ModBlocks();
     public ModRecipes recipes = new ModRecipes();

@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.packs.natura.core;
 import com.jaquadro.minecraft.storagedrawers.api.IStorageDrawersApi;
 import com.jaquadro.minecraft.storagedrawers.api.StorageDrawersApi;
 import com.jaquadro.minecraft.storagedrawers.api.config.IBlockConfig;
+import com.jaquadro.minecraft.storagedrawers.api.config.IUserConfig;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -14,13 +15,30 @@ public final class ModCreativeTabs
 {
     private ModCreativeTabs () { }
 
-    public static final CreativeTabs tabStorageDrawers = new CreativeTabs("storageDrawersNatura") {
-        @Override
-        @SideOnly(Side.CLIENT)
-        public Item getTabIconItem () {
-            return getTabItem();
+    private static CreativeTabs tabStorageDrawers = null;
+
+    public static CreativeTabs getTabStorageDrawers () {
+        if (tabStorageDrawers != null)
+            return tabStorageDrawers;
+
+        IStorageDrawersApi api = StorageDrawersApi.instance();
+        if (api == null)
+            return null;
+
+        IUserConfig config = api.userConfig();
+        if (config.addonConfig().addonItemsUseSeparateTab() && config.addonConfig().showAddonItemsVanilla()) {
+            tabStorageDrawers = new CreativeTabs("storageDrawersNatura")
+            {
+                @Override
+                @SideOnly(Side.CLIENT)
+                public Item getTabIconItem () {
+                    return getTabItem();
+                }
+            };
         }
-    };
+
+        return tabStorageDrawers;
+    }
 
     private static Item getTabItem () {
         IStorageDrawersApi api = StorageDrawersApi.instance();

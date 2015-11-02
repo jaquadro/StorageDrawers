@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.packs.misc.core;
 
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
 import com.jaquadro.minecraft.storagedrawers.api.pack.StandardDataResolver;
 import net.minecraft.creativetab.CreativeTabs;
 
@@ -25,7 +26,12 @@ public class DataResolver extends StandardDataResolver
         new int[] { 0, 1, 2, 3, 0, 1, 0, 1, 2 }
     };
 
-    public DataResolver (String modID, CreativeTabs creativeTab, int bankNumber) {
-        super(modID, textureBank[bankNumber], creativeTab);
+    public DataResolver (String modID, int bankNumber) {
+        super(modID, textureBank[bankNumber]);
+    }
+
+    @Override
+    public CreativeTabs getCreativeTabs (BlockType type) {
+        return ModCreativeTabs.getTabStorageDrawers();
     }
 }

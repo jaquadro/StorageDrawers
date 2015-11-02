@@ -17,8 +17,8 @@ public class StorageDrawersPack
     public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.packs.misc.";
 
     public IPackDataResolver[] resolvers = new IPackDataResolver[] {
-        new DataResolver(MOD_ID, ModCreativeTabs.tabStorageDrawers, 0),
-        new DataResolver(MOD_ID, ModCreativeTabs.tabStorageDrawers, 1)
+        new DataResolver(MOD_ID, 0),
+        new DataResolver(MOD_ID, 1)
     };
 
     public ModBlocks blocks = new ModBlocks();
