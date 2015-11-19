@@ -71,8 +71,8 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
 
     @Override
     public boolean canItemBeStored (ItemStack itemPrototype) {
-        if (getStoredItemPrototype() == null)
-            return true;
+        if (getStoredItemPrototype() == null && !isLocked(LockAttribute.LOCK_POPULATED))
+        	return true;
 
         return areItemsEqual(itemPrototype);
     }
