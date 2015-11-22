@@ -478,7 +478,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         GL11.glPushMatrix();
 
         alignRendering(side);
-        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, 1f - depth + block.getTrimDepth());
+        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, 1f - depth + block.getTrimDepth() - .005f);
 
         List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
         for (int i = 0, n = renderHandlers.size(); i < n; i++) {
