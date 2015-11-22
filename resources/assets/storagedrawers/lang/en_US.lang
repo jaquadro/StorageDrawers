@@ -154,6 +154,8 @@ storageDrawers.config.prop.enableDebugLogging=Enable Debug Logging
 storageDrawers.config.prop.enableDebugLogging.tooltip=Prints extra information to the logs.
 storageDrawers.config.prop.enableTape=Enable Tape
 storageDrawers.config.prop.enableTape.tooltip=For moving drawers with contents.
+storageDrawers.config.prop.wailaStackRemainder=WAILA amount presentation
+storageDrawers.config.prop.wailaStackRemainder.tooltip=How item amounts are displayed by WAILA.
 
 storageDrawers.config.addons=Addons
 storageDrawers.config.addons.tooltip=Configure global addon pack settings.
