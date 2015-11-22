@@ -135,7 +135,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Override
     public boolean canItemBeStored (ItemStack itemPrototype) {
-        if (protoStack == nullStack)
+        if (protoStack == nullStack && !isLocked(LockAttribute.LOCK_POPULATED))
             return true;
 
         return areItemsEqual(itemPrototype);
