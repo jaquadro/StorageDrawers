@@ -166,9 +166,6 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         private void renderItemIntoGUIBlock (FontRenderer fontRenderer, TextureManager texManager, ItemStack itemStack, int x, int y, boolean renderEffect) {
             texManager.bindTexture(TextureMap.locationBlocksTexture);
             Block block = Block.getBlockFromItem(itemStack.getItem());
-            GL11.glEnable(GL11.GL_ALPHA_TEST);
-            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-            GL11.glDisable(GL11.GL_NORMALIZE);
 
             if (block.getRenderBlockPass() != 0) {
                 GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
@@ -179,16 +176,6 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 GL11.glAlphaFunc(GL11.GL_GREATER, 0.5F);
                 GL11.glDisable(GL11.GL_BLEND);
             }
-
-            // Orient lighting for on-block item render.  Standard GUI RenderHelper method is wrong for this.
-            GL11.glPushMatrix();
-            GL11.glRotatef(-170.0F, 1.0F, 0.0F, 1.0F);
-            GL11.glRotatef(-2, 1, 0, 0);
-            //GL11.glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
-            //GL11.glRotatef(142.0F, 1.0F, 0.0F, 0.0F);
-
-            RenderHelper.enableStandardItemLighting();
-            GL11.glPopMatrix();
 
             GL11.glPushMatrix();
             GL11.glTranslatef(x - 2, y + 3, zLevel - 3);
@@ -364,7 +351,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         }
 
         if (restoreItemState || restoreBlockState) {
-            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_LIGHTING_BIT | GL11.GL_COLOR_BUFFER_BIT);
         }
 
         for (int i = 0; i < drawerCount; i++) {
@@ -372,17 +359,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 renderFastItem(renderStacks[i], tile, i, side, depth, partialTickTime);
         }
 
-        if (restoreBlockState) {
-            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-        }
-
         for (int i = 0; i < drawerCount; i++) {
             if (renderStacks[i] != null && renderAsBlock[i])
                 renderFastItem(renderStacks[i], tile, i, side, depth, partialTickTime);
-        }
-
-        if (restoreBlockState) {
-            GL11.glPopAttrib();
         }
 
         if (restoreItemState || restoreBlockState) {
@@ -484,6 +463,22 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         for (int i = 0, n = renderHandlers.size(); i < n; i++) {
             renderHandlers.get(i).render(tile, tile, slot, brightness, partialTickTime);
         }
+
+        GL11.glPushMatrix();
+        if (drawerCount == 1) {
+            GL11.glRotatef(-173F, 1.0F, 0.0F, 1.0F);
+            GL11.glRotatef(-2.1f, 1, 0, 0);
+        }
+        else {
+            GL11.glRotatef(-166.8F, 1.0F, 0.0F, 1.0F);
+            GL11.glRotatef(-4.8f, 1, 0, 0);
+        }
+        RenderHelper.enableStandardItemLighting();
+        GL11.glPopMatrix();
+
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        GL11.glDisable(GL11.GL_NORMALIZE);
 
         try {
             if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
