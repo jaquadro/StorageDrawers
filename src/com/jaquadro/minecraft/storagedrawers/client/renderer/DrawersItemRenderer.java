@@ -45,10 +45,12 @@ public class DrawersItemRenderer implements IItemRenderer
         for (int i = 0; i < 6; i++)
             boxRenderer.setIcon(block.getIcon(i, item.getItemDamage()), i);
 
-        if (renderType == ItemRenderType.INVENTORY) {
+        if (renderType == ItemRenderType.INVENTORY)
             GL11.glRotatef(90, 0, 1, 0);
-            GL11.glTranslatef(-.5f, -.5f, -.5f);
-        }
+        if (renderType == ItemRenderType.ENTITY)
+            GL11.glRotatef(180, 0, 1, 0);
+        if (renderType == ItemRenderType.INVENTORY || renderType == ItemRenderType.ENTITY)
+            GL11.glTranslatef(block.halfDepth ? -.75f : -.5f, -.5f, -.5f);
 
         switch (side - 2) {
             case 0:
@@ -82,9 +84,8 @@ public class DrawersItemRenderer implements IItemRenderer
             RenderHelper.instance.renderFace(side, null, block, block.getTapeIcon(), 1, 1, 1);
         }
 
-        if (renderType == ItemRenderType.INVENTORY) {
-            GL11.glTranslatef(.5f, .5f, .5f);
-        }
+        if (renderType == ItemRenderType.INVENTORY || renderType == ItemRenderType.ENTITY)
+            GL11.glTranslatef(block.halfDepth ? .75f : .5f, .5f, .5f);
     }
 
     private void renderExterior (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
