@@ -466,12 +466,14 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         GL11.glPushMatrix();
         if (drawerCount == 1) {
-            GL11.glRotatef(-173F, 1.0F, 0.0F, 1.0F);
-            GL11.glRotatef(-2.1f, 1, 0, 0);
+            GL11.glScalef(2.6f, 2.6f, 1);
+            GL11.glRotatef(171.6f, 0, 1, 0);
+            GL11.glRotatef(84.9f, 1, 0, 0);
         }
         else {
-            GL11.glRotatef(-166.8F, 1.0F, 0.0F, 1.0F);
-            GL11.glRotatef(-4.8f, 1, 0, 0);
+            GL11.glScalef(1.92f, 1.92f, 1);
+            GL11.glRotatef(169.2f, 0, 1, 0);
+            GL11.glRotatef(79.0f, 1, 0, 0);
         }
         RenderHelper.enableStandardItemLighting();
         GL11.glPopMatrix();
