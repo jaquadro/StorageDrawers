@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
@@ -116,6 +117,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     private int direction;
 
     private int drawerSize = 0;
+    private int range;
 
     private long lastClickTime;
     private UUID lastClickUUID;
@@ -125,6 +127,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     public TileEntityController () {
         invSlotList.add(new SlotRecord(null, 0));
         inventorySlots = new int[] { 0 };
+        range = StorageDrawers.config.getControllerRange();
     }
 
     public int getDirection () {
@@ -421,7 +424,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         while (!searchQueue.isEmpty()) {
             BlockCoord coord = searchQueue.remove();
             int depth = Math.max(Math.max(Math.abs(coord.x() - x), Math.abs(coord.y() - y)), Math.abs(coord.z() - z));
-            if (depth > DEPTH_LIMIT)
+            if (depth > range)
                 continue;
 
             Block block = worldObj.getBlock(coord.x(), coord.y(), coord.z());

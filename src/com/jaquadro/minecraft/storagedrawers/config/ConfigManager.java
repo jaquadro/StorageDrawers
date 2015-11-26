@@ -274,6 +274,7 @@ public class ConfigManager
         config.get(sectionBlocksCompDrawers.getQualifiedName(), "recipeOutput", 1).setLanguageKey(LANG_PREFIX + "prop.recipeOutput").setRequiresMcRestart(true);
 
         config.get(sectionBlocksController.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
+        config.get(sectionBlocksController.getQualifiedName(), "range", 12).setLanguageKey(LANG_PREFIX + "prop.controllerRange");
 
         config.get(sectionBlocksTrim.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksTrim.getQualifiedName(), "recipeOutput", 4).setLanguageKey(LANG_PREFIX + "prop.recipeOutput").setRequiresMcRestart(true);
@@ -324,6 +325,11 @@ public class ConfigManager
 
         ConfigSection section = blockSectionsMap.get(blockName);
         return section.getCategory().get("recipeOutput").getInt();
+    }
+
+    public int getControllerRange () {
+        ConfigSection section = blockSectionsMap.get("controller");
+        return section.getCategory().get("range").getInt();
     }
 
     public int getStorageUpgradeMultiplier (int level) {
