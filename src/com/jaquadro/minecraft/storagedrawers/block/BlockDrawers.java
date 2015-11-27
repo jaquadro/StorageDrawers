@@ -101,6 +101,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @SideOnly(Side.CLIENT)
     private IIcon iconTaped;
 
+    private long ignoreEventTime;
+
     public BlockDrawers (String blockName, int drawerCount, boolean halfDepth) {
         this(Material.wood, blockName, drawerCount, halfDepth);
     }
@@ -236,6 +238,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public boolean onBlockActivated (World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+        if (Minecraft.getMinecraft().getSystemTime() == ignoreEventTime) {
+            ignoreEventTime = 0;
+            return false;
+        }
+
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, x, y, z);
         ItemStack item = player.inventory.getCurrentItem();
 
@@ -381,6 +388,30 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             dropItemStack(world, x, y, z, player, item);
             world.markBlockForUpdate(x, y, z);
         }
+    }
+
+    @Override
+    public boolean rotateBlock (World world, int x, int y, int z, ForgeDirection axis) {
+        TileEntityDrawers tile = getTileEntitySafe(world, x, y, z);
+        if (tile.isSealed()) {
+            harvestBlock(world, Minecraft.getMinecraft().thePlayer, x, y, z, world.getBlockMetadata(x, y, z));
+            return true;
+        }
+
+        if (tile.getDirection() == axis.ordinal())
+            return false;
+
+        if (axis == ForgeDirection.UP || axis == ForgeDirection.DOWN)
+            return false;
+
+        tile.setDirection(axis.ordinal());
+
+        world.markBlockForUpdate(x, y, z);
+
+        if (world.isRemote)
+            ignoreEventTime = Minecraft.getMinecraft().getSystemTime();
+
+        return true;
     }
 
     @Override
