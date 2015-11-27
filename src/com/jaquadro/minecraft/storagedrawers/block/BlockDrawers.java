@@ -394,7 +394,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     public boolean rotateBlock (World world, int x, int y, int z, ForgeDirection axis) {
         TileEntityDrawers tile = getTileEntitySafe(world, x, y, z);
         if (tile.isSealed()) {
-            harvestBlock(world, Minecraft.getMinecraft().thePlayer, x, y, z, world.getBlockMetadata(x, y, z));
+            dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+            world.setBlockToAir(x, y, z);
             return true;
         }
 
