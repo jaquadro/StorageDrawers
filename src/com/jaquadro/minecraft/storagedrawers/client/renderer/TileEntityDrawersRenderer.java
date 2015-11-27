@@ -3,10 +3,9 @@ package com.jaquadro.minecraft.storagedrawers.client.renderer;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.render.IRenderLabel;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ISealable;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.util.*;
+import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -446,6 +445,14 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     }
 
     private void renderFastItem (ItemStack itemStack, TileEntityDrawers tile, int slot, ForgeDirection side, float depth, float partialTickTime) {
+        boolean skipRenderHook = false;
+        Block itemBlock = Block.getBlockFromItem(itemStack.getItem());
+        if (itemBlock != null) {
+            String itemBlockName = GameData.getBlockRegistry().getNameForObject(itemBlock);
+            if (itemBlockName != null && itemBlockName.equals("Mariculture:tanks"))
+                skipRenderHook = true;
+        }
+
         Minecraft mc = Minecraft.getMinecraft();
         int drawerCount = tile.getDrawerCount();
         float xunit = getXOffset(drawerCount, slot);
@@ -483,7 +490,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         GL11.glDisable(GL11.GL_NORMALIZE);
 
         try {
-            if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
+            if (skipRenderHook || !ForgeHooksClient.renderInventoryItem(this.renderBlocks, mc.renderEngine, itemStack, true, 0, 0, 0))
                 itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, 0, 0, true);
         }
         catch (Exception e) { }
