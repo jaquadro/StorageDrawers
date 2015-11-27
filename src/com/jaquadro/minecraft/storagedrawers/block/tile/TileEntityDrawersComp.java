@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
 import cpw.mods.fml.common.FMLLog;
@@ -534,12 +535,18 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (convRate == null || convRate[slot] == 0)
                 return 0;
 
+            if (TileEntityDrawersComp.this.isVending())
+                return Integer.MAX_VALUE;
+
             return pooledCount / convRate[slot];
         }
 
         @Override
         public void setStoredItemCount (int slot, int amount) {
             if (convRate == null || convRate[slot] == 0)
+                return;
+
+            if (TileEntityDrawersComp.this.isVending())
                 return;
 
             int oldCount = pooledCount;
@@ -567,6 +574,12 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (protoStack[slot] == null || convRate == null || convRate[slot] == 0)
                 return 0;
 
+            if (TileEntityDrawersComp.this.isUnlimited() || TileEntityDrawersComp.this.isVending()) {
+                if (convRate == null || protoStack[slot] == null || convRate[slot] == 0)
+                    return Integer.MAX_VALUE;
+                return Integer.MAX_VALUE / convRate[slot];
+            }
+
             return protoStack[slot].getItem().getItemStackLimit(protoStack[slot]) * getStackCapacity(slot);
         }
 
@@ -574,6 +587,12 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         public int getMaxCapacity (int slot, ItemStack itemPrototype) {
             if (itemPrototype == null || itemPrototype.getItem() == null)
                 return 0;
+
+            if (TileEntityDrawersComp.this.isUnlimited() || TileEntityDrawersComp.this.isVending()) {
+                if (convRate == null || protoStack[slot] == null || convRate[slot] == 0)
+                    return Integer.MAX_VALUE;
+                return Integer.MAX_VALUE / convRate[slot];
+            }
 
             if (convRate == null || protoStack[0] == null || convRate[0] == 0)
                 return itemPrototype.getItem().getItemStackLimit(itemPrototype) * getBaseStackCapacity();
@@ -586,6 +605,9 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public int getRemainingCapacity (int slot) {
+            if (TileEntityDrawersComp.this.isVending())
+                return Integer.MAX_VALUE;
+
             return getMaxCapacity(slot) - getStoredItemCount(slot);
         }
 

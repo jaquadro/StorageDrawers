@@ -275,6 +275,30 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         return false;
     }
 
+    public boolean isUnlimited () {
+        if (!StorageDrawers.config.cache.enableCreativeUpgrades)
+            return false;
+
+        for (ItemStack stack : upgrades) {
+            if (stack != null && stack.getItem() == ModItems.upgradeCreative)
+                return true;
+        }
+
+        return false;
+    }
+
+    public boolean isVending () {
+        if (!StorageDrawers.config.cache.enableCreativeUpgrades)
+            return false;
+
+        for (ItemStack stack : upgrades) {
+            if (stack != null && stack.getItem() == ModItems.upgradeCreative && stack.getItemDamage() == 1)
+                return true;
+        }
+
+        return false;
+    }
+
     public boolean isSorting () {
         return false;
     }

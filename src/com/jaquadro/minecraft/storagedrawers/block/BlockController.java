@@ -141,6 +141,22 @@ public class BlockController extends BlockContainer implements INetworked
     }
 
     @Override
+    public boolean rotateBlock (World world, int x, int y, int z, ForgeDirection axis) {
+        TileEntityController tile = getTileEntitySafe(world, x, y, z);
+
+        if (tile.getDirection() == axis.ordinal())
+            return false;
+
+        if (axis == ForgeDirection.UP || axis == ForgeDirection.DOWN)
+            return false;
+
+        tile.setDirection(axis.ordinal());
+        world.markBlockForUpdate(x, y, z);
+
+        return true;
+    }
+
+    @Override
     public boolean isSideSolid (IBlockAccess world, int x, int y, int z, ForgeDirection side) {
         if (getTileEntity(world, x, y, z) == null)
             return true;

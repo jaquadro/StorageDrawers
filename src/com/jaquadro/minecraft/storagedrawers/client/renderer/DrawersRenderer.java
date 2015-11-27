@@ -338,7 +338,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
             return x;
 
         int step = block.getIndSteps() > 0 ? block.getIndSteps() : 1000;
-        float fillAmt = (float)(step * count / cap) / step;
+        float fillAmt = (float)((double)step * count / cap) / step;
 
         return x + (w * fillAmt);
     }

@@ -71,6 +71,9 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Override
     public int getStoredItemCount () {
+        if (protoStack != nullStack && storageProvider.isVendingUnlimited(slot))
+            return Integer.MAX_VALUE;
+
         return count;
     }
 
@@ -80,6 +83,9 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     }
 
     public void setStoredItemCount (int amount, boolean mark, boolean clearOnEmpty) {
+        if (storageProvider.isVendingUnlimited(slot))
+            return;
+
         count = amount;
         if (count > getMaxCapacity())
             count = getMaxCapacity();
@@ -106,6 +112,9 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         if (itemPrototype == null || itemPrototype.getItem() == null)
             return 0;
 
+        if (storageProvider.isStorageUnlimited(slot) || storageProvider.isVendingUnlimited(slot))
+            return Integer.MAX_VALUE;
+
         return itemPrototype.getItem().getItemStackLimit(itemPrototype) * storageProvider.getSlotStackCapacity(slot);
     }
 
@@ -113,6 +122,9 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     public int getRemainingCapacity () {
         if (protoStack.getItem() == null)
             return 0;
+
+        if (storageProvider.isVendingUnlimited(slot))
+            return Integer.MAX_VALUE;
 
         return getMaxCapacity() - getStoredItemCount();
     }
