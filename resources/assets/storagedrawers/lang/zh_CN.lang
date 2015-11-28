@@ -10,24 +10,24 @@ storageDrawers.container.unboundSlave=未连接的传动方块
 storagedrawers.msg.maxUpgrades=这个抽屉已无法容纳更多的升级组件.
 
 # 物件
-item.upgradeTemplate.name=升级模板
-item.upgrade.iron.name=抽屉容量升级 (II)
-item.upgrade.gold.name=抽屉容量升级 (III)
-item.upgrade.obsidian.name=抽屉容量升级 (IV)
-item.upgrade.diamond.name=抽屉容量升级 (V)
-item.upgrade.emerald.name=抽屉容量升级 (VI)
-item.upgradeStatus.level1.name=状态显示升级 (I)
-item.upgradeStatus.level1.description=抽屉装满时亮起提示灯.
-item.upgradeStatus.level2.name=状态显示升级 (II)
-item.upgradeStatus.level2.description=显示抽屉容量等级.
-item.upgradeLock.name=抽屉钥匙
-item.upgradeLock.description=给抽屉上锁或解锁.
-item.upgradeVoid.name=清空升级
-item.upgradeVoid.description=销毁存储超过上限的物品.
-item.upgradeSorting.name=分拣升级
-item.upgradeSorting.description=将抽屉升级为分拣抽屉.
-item.shroudKey.name=屏蔽钥匙
-item.shroudKey.description=设定隐藏或显示抽屉上的物品图标.
+item.storagedrawers.upgradeTemplate.name=升级模板
+item.storagedrawers.upgrade.iron.name=抽屉容量升级 (II)
+item.storagedrawers.upgrade.gold.name=抽屉容量升级 (III)
+item.storagedrawers.upgrade.obsidian.name=抽屉容量升级 (IV)
+item.storagedrawers.upgrade.diamond.name=抽屉容量升级 (V)
+item.storagedrawers.upgrade.emerald.name=抽屉容量升级 (VI)
+item.storagedrawers.upgradeStatus.level1.name=状态显示升级 (I)
+item.storagedrawers.upgradeStatus.level1.description=抽屉装满时亮起提示灯.
+item.storagedrawers.upgradeStatus.level2.name=状态显示升级 (II)
+item.storagedrawers.upgradeStatus.level2.description=显示抽屉容量等级.
+item.storagedrawers.upgradeLock.name=抽屉钥匙
+item.storagedrawers.upgradeLock.description=给抽屉上锁或解锁.
+item.storagedrawers.upgradeVoid.name=清空升级
+item.storagedrawers.upgradeVoid.description=销毁存储超过上限的物品.
+item.storagedrawers.upgradeSorting.name=分拣升级
+item.storagedrawers.upgradeSorting.description=将抽屉升级为分拣抽屉.
+item.storagedrawers.shroudKey.name=屏蔽钥匙
+item.storagedrawers.shroudKey.description=设定隐藏或显示抽屉上的物品图标.
 
 # 方块
 tile.fullDrawers1.oak.name=橡木抽屉

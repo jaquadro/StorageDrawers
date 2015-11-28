@@ -54,6 +54,13 @@ public class RefinedRelocation extends IntegrationModule
 
         upgradeSorting = new ItemUpgradeSorting("upgradeSorting");
 
+        SortingBlockRegistry.register(ModBlocks.fullDrawers1, fullDrawers1);
+        SortingBlockRegistry.register(ModBlocks.fullDrawers2, fullDrawers2);
+        SortingBlockRegistry.register(ModBlocks.fullDrawers4, fullDrawers4);
+        SortingBlockRegistry.register(ModBlocks.halfDrawers2, halfDrawers2);
+        SortingBlockRegistry.register(ModBlocks.halfDrawers4, halfDrawers4);
+        SortingBlockRegistry.register(ModBlocks.compDrawers, compDrawers);
+
         ConfigManager config = StorageDrawers.config;
 
         if (config.isBlockEnabled("fulldrawers1"))
@@ -70,7 +77,21 @@ public class RefinedRelocation extends IntegrationModule
             GameRegistry.registerBlock(compDrawers, ItemSortingCompDrawers.class, "compDrawersSort");
 
         if (config.cache.enableSortingUpgrades)
-            GameRegistry.registerItem(upgradeSorting, "upgradeSorting");*/
+            GameRegistry.registerItem(upgradeSorting, "upgradeSorting");
+
+        StorageDrawers.proxy.registerDrawer(fullDrawers1);
+        StorageDrawers.proxy.registerDrawer(fullDrawers2);
+        StorageDrawers.proxy.registerDrawer(fullDrawers4);
+        StorageDrawers.proxy.registerDrawer(halfDrawers2);
+        StorageDrawers.proxy.registerDrawer(halfDrawers4);
+        StorageDrawers.proxy.registerDrawer(compDrawers);
+
+        GameRegistry.registerTileEntityWithAlternatives(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName("tileSortingDrawersStandard"),
+            ModBlocks.getQualifiedName(fullDrawers1), ModBlocks.getQualifiedName(fullDrawers2), ModBlocks.getQualifiedName(fullDrawers4),
+            ModBlocks.getQualifiedName(halfDrawers2), ModBlocks.getQualifiedName(halfDrawers4));
+
+        GameRegistry.registerTileEntityWithAlternatives(TileSortingDrawersComp.class, ModBlocks.getQualifiedName("tileSortingDrawersComp"),
+            ModBlocks.getQualifiedName(compDrawers));/*
     }
 
     @Override

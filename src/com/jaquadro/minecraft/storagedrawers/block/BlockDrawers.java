@@ -255,13 +255,24 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 tileDrawers.setIsShrouded(!tileDrawers.isShrouded());
                 return true;
             }
+            else if (item.getItem() == ModItems.tape)
+                return false;
         }
-        else if (item == null && player.isSneaking() && StorageDrawers.config.cache.enableDrawerUI) {
-            player.openGui(StorageDrawers.instance, GuiHandler.drawersGuiID, world, pos.getX(), pos.getY(), pos.getZ());
-            return true;
+        else if (item == null && player.isSneaking()) {
+            if (tileDrawers.isSealed()) {
+                tileDrawers.setIsSealed(false);
+                return true;
+            }
+            else if (StorageDrawers.config.cache.enableDrawerUI) {
+                player.openGui(StorageDrawers.instance, GuiHandler.drawersGuiID, world, pos.getX(), pos.getY(), pos.getZ());
+                return true;
+            }
         }
 
         if (tileDrawers.getDirection() != side.ordinal())
+            return false;
+
+        if (tileDrawers.isSealed())
             return false;
 
         int slot = getDrawerSlot(getDrawerCount(state), side.ordinal(), hitX, hitY, hitZ);
@@ -347,6 +358,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (tileDrawers.getDirection() != side.ordinal())
             return;
 
+        if (tileDrawers.isSealed())
+            return;
+
         int slot = getDrawerSlot(getDrawerCount(world.getBlockState(pos)), side.ordinal(), hitX, hitY, hitZ);
         IDrawer drawer = tileDrawers.getDrawer(slot);
 
@@ -414,7 +428,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     public void breakBlock (World world, BlockPos pos, IBlockState state) {
         TileEntityDrawers tile = getTileEntity(world, pos);
 
-        if (tile != null) {
+        if (tile != null && !tile.isSealed()) {
             for (int i = 0; i < tile.getUpgradeSlotCount(); i++) {
                 ItemStack stack = tile.getUpgrade(i);
                 if (stack != null)
@@ -435,13 +449,18 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         drops.add(drawerStack);
 
         TileEntityDrawers tile = getTileEntity(world, pos);
-        if (tile == null)
+        if (tile == null || !tile.isSealed())
             return drops;
 
         BlockPlanks.EnumType material = translateMaterial(tile.getMaterialOrDefault());
 
+        NBTTagCompound tiledata = new NBTTagCompound();
+        tile.writeToNBT(tiledata);
+
         NBTTagCompound data = new NBTTagCompound();
         data.setString("material", material.getName());
+        data.setTag("tile", tiledata);
+
         drawerStack.setTagCompound(data);
 
         return drops;

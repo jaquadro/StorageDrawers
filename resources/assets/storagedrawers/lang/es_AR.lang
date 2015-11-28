@@ -1,20 +1,20 @@
 itemGroup.storageDrawers=Storage Drawers
 
 # Items
-item.upgradeTemplate.name=Plantilla de Mejora
-item.upgrade.iron.name=Mejora para Cajonera (II)
-item.upgrade.gold.name=Mejora para Cajonera (III)
-item.upgrade.obsidian.name=Mejora para Cajonera (IV)
-item.upgrade.diamond.name=Mejora para Cajonera (V)
-item.upgrade.emerald.name=Mejora para Cajonera (VI)
-item.upgradeStatus.level1.name=Status Mejora (I)
-item.upgradeStatus.level1.description=Muestra que el cajón está lleno
-item.upgradeStatus.level2.name=Status Mejora (II)
-item.upgradeStatus.level2.description=Muestra que el cajón está casi lleno
-item.upgradeStatus.level3.name=Status Mejora (III)
-item.upgradeStatus.level3.description=Muestra el nivel de llenado
-item.upgradeLock.name=Lock Upgrade
-item.upgradeLock.description=Keep associated items when empty
+item.storagedrawers.upgradeTemplate.name=Plantilla de Mejora
+item.storagedrawers.upgrade.iron.name=Mejora para Cajonera (II)
+item.storagedrawers.upgrade.gold.name=Mejora para Cajonera (III)
+item.storagedrawers.upgrade.obsidian.name=Mejora para Cajonera (IV)
+item.storagedrawers.upgrade.diamond.name=Mejora para Cajonera (V)
+item.storagedrawers.upgrade.emerald.name=Mejora para Cajonera (VI)
+item.storagedrawers.upgradeStatus.level1.name=Status Mejora (I)
+item.storagedrawers.upgradeStatus.level1.description=Muestra que el cajón está lleno
+item.storagedrawers.upgradeStatus.level2.name=Status Mejora (II)
+item.storagedrawers.upgradeStatus.level2.description=Muestra que el cajón está casi lleno
+item.storagedrawers.upgradeStatus.level3.name=Status Mejora (III)
+item.storagedrawers.upgradeStatus.level3.description=Muestra el nivel de llenado
+item.storagedrawers.upgradeLock.name=Lock Upgrade
+item.storagedrawers.upgradeLock.description=Keep associated items when empty
 
 # Blocks
 tile.fullDrawers2.oak.name=Cajonera de Roble 1x2

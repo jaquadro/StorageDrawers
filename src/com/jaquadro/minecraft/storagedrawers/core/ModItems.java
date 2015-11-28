@@ -14,14 +14,16 @@ public class ModItems
     public static ItemDrawerKey drawerKey;
     public static ItemUpgradeVoid upgradeVoid;
     public static ItemShroudKey shroudKey;
+    public static ItemTape tape;
 
     public void init () {
         upgradeTemplate = new Item().setUnlocalizedName("upgradeTemplate").setCreativeTab(ModCreativeTabs.tabStorageDrawers);
-        upgradeStorage = new ItemUpgradeStorage("upgradeStorage");
-        upgradeStatus = new ItemUpgradeStatus("upgradeStatus");
-        upgradeVoid = new ItemUpgradeVoid("upgradeVoid");
-        drawerKey = new ItemDrawerKey("drawerKey");
-        shroudKey = new ItemShroudKey("shroudKey");
+        upgradeStorage = new ItemUpgradeStorage(makeName("upgradeStorage"));
+        upgradeStatus = new ItemUpgradeStatus(makeName("upgradeStatus"));
+        upgradeVoid = new ItemUpgradeVoid(makeName("upgradeVoid"));
+        drawerKey = new ItemDrawerKey(makeName("drawerKey"));
+        shroudKey = new ItemShroudKey(makeName("shroudKey"));
+        tape = new ItemTape(makeName("tape"));
 
         GameRegistry.registerItem(upgradeTemplate, "upgradeTemplate");
 
@@ -35,9 +37,15 @@ public class ModItems
             GameRegistry.registerItem(drawerKey, "drawerKey");
         if (StorageDrawers.config.cache.enableShroudUpgrades)
             GameRegistry.registerItem(shroudKey, "shroudKey");
+        if (StorageDrawers.config.cache.enableTape)
+            GameRegistry.registerItem(tape, "tape");
     }
 
     public static String getQualifiedName (Item item) {
         return GameData.getItemRegistry().getNameForObject(item).toString();
+    }
+
+    public static String makeName (String name) {
+        return StorageDrawers.MOD_ID.toLowerCase() + "." + name;
     }
 }

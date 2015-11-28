@@ -72,6 +72,7 @@ public class ConfigManager
         public boolean enableThaumcraftIntegration;
         public boolean enableMineTweakerIntegration;
         public boolean enableRefinedRelocationIntegration;
+        public boolean enableTape;
         public boolean invertShift;
         public boolean debugTrace;
 
@@ -223,6 +224,7 @@ public class ConfigManager
         cache.enableVoidUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableVoidUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableVoidUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableShroudUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableShroudUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableShroudUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableSortingUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableSortingUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableSortingUpgrades").setRequiresMcRestart(true).getBoolean();
+        cache.enableTape = config.get(Configuration.CATEGORY_GENERAL, "enableTape", true).setLanguageKey(LANG_PREFIX + "prop.enableTape").setRequiresMcRestart(true).getBoolean();
         cache.itemRenderType = config.get(Configuration.CATEGORY_GENERAL, "itemRenderType", "fast", null, new String[]{"fancy", "fast"}).setLanguageKey(LANG_PREFIX + "prop.itemRenderType").getString();
         cache.renderStorageUpgrades = config.get(Configuration.CATEGORY_GENERAL, "renderStorageUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.renderStorageUpgrades").getBoolean();
         cache.creativeTabVanillaWoods = config.get(Configuration.CATEGORY_GENERAL, "creativeTabVanillaWoods", true).setLanguageKey(LANG_PREFIX + "prop.creativeTabVanillaWoods").getBoolean();

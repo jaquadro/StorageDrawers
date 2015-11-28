@@ -10,24 +10,24 @@ storageDrawers.container.unboundSlave=Esclave non liée
 storagedrawers.msg.maxUpgrades=Ce tiroir ne peuvent pas accepter davantage d'améliorations.
 
 # Items
-item.upgradeTemplate.name=Modèle d'amélioration
-item.upgrade.iron.name=Amélioration stockage (II)
-item.upgrade.gold.name=Amélioration stockage (III)
-item.upgrade.obsidian.name=Amélioration stockage (IV)
-item.upgrade.diamond.name=Amélioration stockage (V)
-item.upgrade.emerald.name=Amélioration stockage (VI)
-item.upgradeStatus.level1.name=Amélioration statut (I)
-item.upgradeStatus.level1.description=Montre si le stockage est plein
-item.upgradeStatus.level2.name=Amélioration statut (II)
-item.upgradeStatus.level2.description=Montre le niveau de remplissage
-item.upgradeLock.name=Amélioration verrou
-item.upgradeLock.description=Conserve les éléments associés lorsqu'il est vide
-item.upgradeVoid.name=Amélioration cavité
-item.upgradeVoid.description=Détruit les objets en excès
-item.upgradeSorting.name=Amélioration triage
-item.upgradeSorting.description=Pour Refined Relocation
-item.shroudKey.name=Clé de dissimulation
-item.shroudKey.description=Montrer ou cacher les étiquettes d'objet
+item.storagedrawers.upgradeTemplate.name=Modèle d'amélioration
+item.storagedrawers.upgrade.iron.name=Amélioration stockage (II)
+item.storagedrawers.upgrade.gold.name=Amélioration stockage (III)
+item.storagedrawers.upgrade.obsidian.name=Amélioration stockage (IV)
+item.storagedrawers.upgrade.diamond.name=Amélioration stockage (V)
+item.storagedrawers.upgrade.emerald.name=Amélioration stockage (VI)
+item.storagedrawers.upgradeStatus.level1.name=Amélioration statut (I)
+item.storagedrawers.upgradeStatus.level1.description=Montre si le stockage est plein
+item.storagedrawers.upgradeStatus.level2.name=Amélioration statut (II)
+item.storagedrawers.upgradeStatus.level2.description=Montre le niveau de remplissage
+item.storagedrawers.upgradeLock.name=Amélioration verrou
+item.storagedrawers.upgradeLock.description=Conserve les éléments associés lorsqu'il est vide
+item.storagedrawers.upgradeVoid.name=Amélioration cavité
+item.storagedrawers.upgradeVoid.description=Détruit les objets en excès
+item.storagedrawers.upgradeSorting.name=Amélioration triage
+item.storagedrawers.upgradeSorting.description=Pour Refined Relocation
+item.storagedrawers.shroudKey.name=Clé de dissimulation
+item.storagedrawers.shroudKey.description=Montrer ou cacher les étiquettes d'objet
 
 # Blocks
 tile.fullDrawers1.oak.name=Tiroir de chêne

@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -58,4 +59,6 @@ public class CommonProxy
             }
         }
     }
+
+    public void registerDrawer (Block block) { }
 }

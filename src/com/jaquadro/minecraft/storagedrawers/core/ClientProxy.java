@@ -10,11 +10,13 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandar
 import com.jaquadro.minecraft.storagedrawers.client.model.BasicDrawerModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.CompDrawerModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.TrimModel;
+import com.jaquadro.minecraft.storagedrawers.client.renderer.DrawersItemRenderer;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.item.ItemBasicDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -22,12 +24,15 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ClientProxy extends CommonProxy
 {
+    private DrawersItemRenderer itemRenderer = new DrawersItemRenderer();
+
     @SubscribeEvent
     public void onModelBakeEvent (ModelBakeEvent event) {
         BasicDrawerModel.initialize(event.modelRegistry);
@@ -113,5 +118,10 @@ public class ClientProxy extends CommonProxy
 
             renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.trim), material.getMetadata(), new ModelResourceLocation(resName, "inventory"));
         }
+    }
+
+    @Override
+    public void registerDrawer (Block block) {
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), itemRenderer);
     }
 }
