@@ -238,7 +238,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public boolean onBlockActivated (World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        if (Minecraft.getMinecraft().getSystemTime() == ignoreEventTime) {
+        if (world.isRemote && Minecraft.getMinecraft().getSystemTime() == ignoreEventTime) {
             ignoreEventTime = 0;
             return false;
         }
