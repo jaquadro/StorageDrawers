@@ -293,9 +293,7 @@ public class StorageInventory implements IDrawerInventory
 
         switch (getInventorySlotType(slot)) {
             case INPUT:
-                return drawer.canItemBeStored(item);
-            case OUTPUT:
-                return drawer.canItemBeExtracted(item);
+                return canInsertItem(slot, item);
             default:
                 return false;
         }
