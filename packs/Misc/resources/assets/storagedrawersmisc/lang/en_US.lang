@@ -19,6 +19,7 @@ tile.storagedrawersmisc.fullDrawers1.tc_silverwood.name=Silverwood Drawer
 tile.storagedrawersmisc.fullDrawers1.witchery_alder.name=Alder Drawer
 tile.storagedrawersmisc.fullDrawers1.witchery_hawthorn.name=Hawthorn Drawer
 tile.storagedrawersmisc.fullDrawers1.witchery_rowan.name=Rowan Drawer
+tile.storagedrawersmisc.fullDrawers1.immeng_treated.name=Treated Wood Drawer
 
 tile.storagedrawersmisc.fullDrawers2.ebxl_acacia.name=Acacia Drawers 1x2
 tile.storagedrawersmisc.fullDrawers2.ebxl_autumn.name=Autumn Drawers 1x2
@@ -38,6 +39,7 @@ tile.storagedrawersmisc.fullDrawers2.tc_silverwood.name=Silverwood Drawers 1x2
 tile.storagedrawersmisc.fullDrawers2.witchery_alder.name=Alder Drawer 1x2
 tile.storagedrawersmisc.fullDrawers2.witchery_hawthorn.name=Hawthorn Drawer 1x2
 tile.storagedrawersmisc.fullDrawers2.witchery_rowan.name=Rowan Drawer 1x2
+tile.storagedrawersmisc.fullDrawers2.immeng_treated.name=Treated Wood Drawer 1x2
 
 tile.storagedrawersmisc.fullDrawers4.ebxl_acacia.name=Acacia Drawers 2x2
 tile.storagedrawersmisc.fullDrawers4.ebxl_autumn.name=Autumn Drawers 2x2
@@ -57,6 +59,7 @@ tile.storagedrawersmisc.fullDrawers4.tc_silverwood.name=Silverwood Drawers 2x2
 tile.storagedrawersmisc.fullDrawers4.witchery_alder.name=Alder Drawer 2x2
 tile.storagedrawersmisc.fullDrawers4.witchery_hawthorn.name=Hawthorn Drawer 2x2
 tile.storagedrawersmisc.fullDrawers4.witchery_rowan.name=Rowan Drawer 2x2
+tile.storagedrawersmisc.fullDrawers4.immeng_treated.name=Treated Wood Drawer 2x2
 
 tile.storagedrawersmisc.halfDrawers2.ebxl_acacia.name=Compact Acacia Drawers 1x2
 tile.storagedrawersmisc.halfDrawers2.ebxl_autumn.name=Compact Autumn Drawers 1x2
@@ -76,6 +79,7 @@ tile.storagedrawersmisc.halfDrawers2.tc_silverwood.name=Compact Silverwood Drawe
 tile.storagedrawersmisc.halfDrawers2.witchery_alder.name=Compact Alder Drawer 1x2
 tile.storagedrawersmisc.halfDrawers2.witchery_hawthorn.name=Compact Hawthorn Drawer 1x2
 tile.storagedrawersmisc.halfDrawers2.witchery_rowan.name=Compact Rowan Drawer 1x2
+tile.storagedrawersmisc.halfDrawers2.immeng_treated.name=Compact Treated Wood Drawer 1x2
 
 tile.storagedrawersmisc.halfDrawers4.ebxl_acacia.name=Compact Acacia Drawers 2x2
 tile.storagedrawersmisc.halfDrawers4.ebxl_autumn.name=Compact Autumn Drawers 2x2
@@ -95,6 +99,7 @@ tile.storagedrawersmisc.halfDrawers4.tc_silverwood.name=Compact Silverwood Drawe
 tile.storagedrawersmisc.halfDrawers4.witchery_alder.name=Compact Alder Drawer 2x2
 tile.storagedrawersmisc.halfDrawers4.witchery_hawthorn.name=Compact Hawthorn Drawer 2x2
 tile.storagedrawersmisc.halfDrawers4.witchery_rowan.name=Compact Rowan Drawer 2x2
+tile.storagedrawersmisc.halfDrawers4.immeng_treated.name=Compact Treated Wood Drawer 2x2
 
 tile.storagedrawersmisc.trim.ebxl_acacia.name=Acacia Trim
 tile.storagedrawersmisc.trim.ebxl_autumn.name=Autumn Trim
@@ -114,3 +119,4 @@ tile.storagedrawersmisc.trim.tc_silverwood.name=Silverwood Trim
 tile.storagedrawersmisc.trim.witchery_alder.name=Alder Trim
 tile.storagedrawersmisc.trim.witchery_hawthorn.name=Hawthorn Trim
 tile.storagedrawersmisc.trim.witchery_rowan.name=Rowan Trim
+tile.storagedrawersmisc.trim.immeng_treated.name=Treated Wood Trim
