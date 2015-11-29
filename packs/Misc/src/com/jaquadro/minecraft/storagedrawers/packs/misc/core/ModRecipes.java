@@ -32,6 +32,8 @@ public class ModRecipes
             GameRegistry.findBlock("Highlands", "hl_woodPlanks"),
             GameRegistry.findBlock("Thaumcraft", "blockWoodenDevice" ), // 6, 7
             GameRegistry.findBlock("witchery", "witchwood"),
+            GameRegistry.findBlock("ImmersiveEngineering", "treatedWood"),
+            
         };
 
         Block[][] slabs = new Block[][] {
@@ -39,6 +41,8 @@ public class ModRecipes
             new Block[] { GameRegistry.findBlock("Highlands", "hl_woodSlab"), null },
             new Block[] { GameRegistry.findBlock("Thaumcraft", "blockCosmeticSlabWood" ), null },
             new Block[] { GameRegistry.findBlock("witchery", "witchwoodslab"), null },
+            new Block[] { GameRegistry.findBlock("ImmersiveEngineering", "woodenDecoration"), null }, // 2
+            
         };
 
         IPackDataResolver[] resolvers = StorageDrawersPack.instance.resolvers;
