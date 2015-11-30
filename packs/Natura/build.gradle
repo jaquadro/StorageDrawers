@@ -39,7 +39,7 @@ sourceSets.main {
 }
 
 dependencies {
-
+    compile project(path: ':', transitive: false)
 }
 
 processResources
