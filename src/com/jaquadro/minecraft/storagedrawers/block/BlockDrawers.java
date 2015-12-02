@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.block.material.MaterialDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
@@ -104,7 +105,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     private long ignoreEventTime;
 
     public BlockDrawers (String blockName, int drawerCount, boolean halfDepth) {
-        this(Material.wood, blockName, drawerCount, halfDepth);
+        this(MaterialDrawer.material, blockName, drawerCount, halfDepth);
     }
 
     protected BlockDrawers (Material material, String blockName, int drawerCount, boolean halfDepth) {
