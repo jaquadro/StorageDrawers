@@ -34,8 +34,6 @@ public class CompTierRegistry
     public boolean register (ItemStack upper, ItemStack lower, int convRate) {
         if (upper == null || lower == null)
             return false;
-        if (convRate != 4 && convRate != 9)
-            return false;
 
         unregisterUpperTarget(upper);
         unregisterLowerTarget(lower);
