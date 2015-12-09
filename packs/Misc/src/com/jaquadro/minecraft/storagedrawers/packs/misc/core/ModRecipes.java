@@ -80,10 +80,10 @@ public class ModRecipes
                 if (slab != null) {
                     if (blockConfig.isBlockEnabled(nameHalf2))
                         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfDrawers2[p], blockConfig.getBlockRecipeOutput(nameHalf2), i), "xyx", "xxx", "xyx",
-                            'x', new ItemStack(slab, 1, slabMeta), 'y', "chestWood"));
+                            'x', new ItemStack(slab, 1, slabMeta % 8), 'y', "chestWood"));
                     if (blockConfig.isBlockEnabled(nameHalf4))
                         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfDrawers4[p], blockConfig.getBlockRecipeOutput(nameHalf4), i), "yxy", "xxx", "yxy",
-                            'x', new ItemStack(slab, 1, slabMeta), 'y', "chestWood"));
+                            'x', new ItemStack(slab, 1, slabMeta % 8), 'y', "chestWood"));
                 }
             }
         }
