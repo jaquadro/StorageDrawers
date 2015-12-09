@@ -28,7 +28,7 @@ public class BlockSortingDrawers extends BlockDrawers
 
     public static boolean upgradeToSorting (World world, int x, int y, int z) {
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (!(tile instanceof TileEntityDrawersStandard))
+        if (!(tile instanceof TileEntityDrawersStandard) || tile instanceof TileSortingDrawersStandard)
             return false;
 
         Block block = world.getBlock(x, y, z);

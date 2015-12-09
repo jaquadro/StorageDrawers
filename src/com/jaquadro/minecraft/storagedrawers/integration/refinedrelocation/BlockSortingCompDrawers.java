@@ -3,16 +3,11 @@ package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
-import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.integration.RefinedRelocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -32,7 +27,7 @@ public class BlockSortingCompDrawers extends BlockCompDrawers
 
     public static boolean upgradeToSorting (World world, int x, int y, int z) {
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (!(tile instanceof TileEntityDrawersComp))
+        if (!(tile instanceof TileEntityDrawersComp) || tile instanceof TileSortingDrawersComp)
             return false;
 
         Block block = world.getBlock(x, y, z);
@@ -48,7 +43,10 @@ public class BlockSortingCompDrawers extends BlockCompDrawers
         world.removeTileEntity(x, y, z);
         world.setBlockToAir(x, y, z);
 
-        world.setBlock(x, y, z, RefinedRelocation.compDrawers, meta, 3);
+        Block sortingBlock = SortingBlockRegistry.resolveSortingBlock(block);
+        if (sortingBlock != null) {
+            world.setBlock(x, y, z, sortingBlock, meta, 3);
+        }
 
         world.setTileEntity(x, y, z, newDrawer);
 
