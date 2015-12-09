@@ -1,0 +1,183 @@
+itemGroup.storageDrawers=儲物抽屜
+itemGroup.storageDrawersSorting=儲物抽屜|分揀升級
+
+storageDrawers.container.drawers=抽屜
+storageDrawers.container.compDrawers=緻密抽屜
+storageDrawers.container.upgrades=升級組件
+storageDrawers.container.controller=抽屜管理器
+storageDrawers.container.unboundSlave=未連接的傳動方塊
+
+storagedrawers.msg.maxUpgrades=這個抽屜已無法容納更多的升級組件.
+
+# 物件
+item.storagedrawers.upgradeTemplate.name=升級模板
+item.storagedrawers.upgrade.iron.name=抽屜容量升級 (II)
+item.storagedrawers.upgrade.gold.name=抽屜容量升級 (III)
+item.storagedrawers.upgrade.obsidian.name=抽屜容量升級 (IV)
+item.storagedrawers.upgrade.diamond.name=抽屜容量升級 (V)
+item.storagedrawers.upgrade.emerald.name=抽屜容量升級 (VI)
+item.storagedrawers.upgradeStatus.level1.name=狀態顯示升級 (I)
+item.storagedrawers.upgradeStatus.level1.description=抽屜裝滿時亮起提示燈.
+item.storagedrawers.upgradeStatus.level2.name=狀態顯示升級 (II)
+item.storagedrawers.upgradeStatus.level2.description=顯示抽屜容量等級.
+item.storagedrawers.upgradeLock.name=抽屜鑰匙
+item.storagedrawers.upgradeLock.description=給抽屜上鎖或解鎖.
+item.storagedrawers.upgradeVoid.name=清空升級
+item.storagedrawers.upgradeVoid.description=銷毀存儲超過上限的物品.
+item.storagedrawers.upgradeCreative.store.name=Creative Storage Upgrade
+item.storagedrawers.upgradeCreative.store.description=Near-infinite storage
+item.storagedrawers.upgradeCreative.vend.name=Creative Vending Upgrade
+item.storagedrawers.upgradeCreative.vend.description=Unlimited item withdrawal
+item.storagedrawers.upgradeSorting.name=分揀升級
+item.storagedrawers.upgradeSorting.description=將抽屜升級為分揀抽屜.
+item.storagedrawers.shroudKey.name=屏蔽鑰匙
+item.storagedrawers.shroudKey.description=設定隱藏或顯示抽屜上的物品圖標.
+item.storagedrawers.tape.name=Packing Tape
+item.storagedrawers.tape.description=Seals drawers for moving
+
+# 方塊
+tile.fullDrawers1.oak.name=橡木抽屜
+tile.fullDrawers1.spruce.name=雲杉木抽屜
+tile.fullDrawers1.birch.name=白樺木抽屜
+tile.fullDrawers1.jungle.name=叢林木抽屜
+tile.fullDrawers1.acacia.name=金合歡木抽屜
+tile.fullDrawers1.big_oak.name=深色橡木抽屜
+
+tile.fullDrawers2.oak.name=橡木抽屜 (1x2)
+tile.fullDrawers2.spruce.name=雲杉木抽屜 (1x2)
+tile.fullDrawers2.birch.name=白樺木抽屜 (1x2)
+tile.fullDrawers2.jungle.name=叢林木抽屜 (1x2)
+tile.fullDrawers2.acacia.name=金合歡木抽屜 (1x2)
+tile.fullDrawers2.big_oak.name=深色橡木抽屜 (1x2)
+
+tile.fullDrawers4.oak.name=橡木抽屜 (2x2)
+tile.fullDrawers4.spruce.name=雲杉木抽屜 (2x2)
+tile.fullDrawers4.birch.name=白樺木抽屜 (2x2)
+tile.fullDrawers4.jungle.name=叢林木抽屜 (2x2)
+tile.fullDrawers4.acacia.name=金合歡木抽屜 (2x2)
+tile.fullDrawers4.big_oak.name=深色橡木抽屜 (2x2)
+
+tile.halfDrawers2.oak.name=小型橡木抽屜 (1x2)
+tile.halfDrawers2.spruce.name=小型雲杉木抽屜 (1x2)
+tile.halfDrawers2.birch.name=小型白樺木抽屜 (1x2)
+tile.halfDrawers2.jungle.name=小型叢林木抽屜 (1x2)
+tile.halfDrawers2.acacia.name=小型金合歡木抽屜 (1x2)
+tile.halfDrawers2.big_oak.name=小型深色橡木抽屜 (1x2)
+
+tile.halfDrawers4.oak.name=小型橡木抽屜 (2x2)
+tile.halfDrawers4.spruce.name=小型雲杉木抽屜 (2x2)
+tile.halfDrawers4.birch.name=小型白樺木抽屜 (2x2)
+tile.halfDrawers4.jungle.name=小型叢林木抽屜 (2x2)
+tile.halfDrawers4.acacia.name=小型金合歡木抽屜 (2x2)
+tile.halfDrawers4.big_oak.name=小型深色橡木抽屜 (2x2)
+
+tile.compDrawers.name=緻密抽屜
+tile.drawerController.name=抽屜管理器
+tile.controllerSlave.name=管理器傳動方塊
+
+tile.trim.oak.name=橡木橋接方塊
+tile.trim.spruce.name=雲杉木橋接方塊
+tile.trim.birch.name=白樺木橋接方塊
+tile.trim.jungle.name=叢林木橋接方塊
+tile.trim.acacia.name=金合歡木橋接方塊
+tile.trim.big_oak.name=深色橡木橋接方塊
+
+storageDrawers.drawers.description=每個抽屜格可以儲存%d組同類物品.
+storageDrawers.drawers.sealed=Contents sealed within
+storageDrawers.upgrade.description=將抽屜容量升級為其基礎容量的%d倍.
+storageDrawers.controller.description=將放入的物品分配存入鄰接的抽屜中.
+storageDrawers.controllerSlave.description=為抽屜管理器擴展存儲連接面.
+
+# 高亮顯示
+storageDrawers.waila.empty=<空>
+storageDrawers.waila.level=級別: %s
+storageDrawers.waila.drawer=#%s: %s
+storageDrawers.waila.locked=鎖定
+storageDrawers.waila.void=清空
+storageDrawers.waila.sorting=分揀
+
+# 配置
+storageDrawers.config.title=儲物抽屜 模組配置
+
+storageDrawers.config.general=一般設定
+storageDrawers.config.general.tooltip=各種通用設定.
+
+storageDrawers.config.blocks=抽屜設定
+storageDrawers.config.blocks.tooltip=設定關於儲物抽屜的配置.
+
+storageDrawers.config.blocks.fullDrawers1=1x1抽屜
+storageDrawers.config.blocks.fullDrawers2=1x2抽屜
+storageDrawers.config.blocks.fullDrawers4=2x2抽屜
+storageDrawers.config.blocks.halfDrawers2=1x2小型抽屜
+storageDrawers.config.blocks.halfDrawers4=2x2小型抽屜
+storageDrawers.config.blocks.compDrawers=緻密抽屜
+storageDrawers.config.blocks.controller=抽屜管理器
+storageDrawers.config.blocks.trim=橋接方塊
+storageDrawers.config.blocks.controllerSlave=管理器傳動方塊
+
+storageDrawers.config.upgrades=升級設定
+storageDrawers.config.upgrades.tooltip=設定關於升級抽屜的配置.
+
+storageDrawers.config.upgrades.level2Mult=抽屜容量翻倍升級 (II)
+storageDrawers.config.upgrades.level3Mult=抽屜容量翻倍升級 (III)
+storageDrawers.config.upgrades.level4Mult=抽屜容量翻倍升級 (IV)
+storageDrawers.config.upgrades.level5Mult=抽屜容量翻倍升級 (V)
+storageDrawers.config.upgrades.level6Mult=抽屜容量翻倍升級 (VI)
+
+storageDrawers.config.prop.itemRenderType=存儲物品顯示設定
+storageDrawers.config.prop.itemRenderType.tooltip=設定抽屜是否渲染3D物品.
+storageDrawers.config.prop.enableIndicatorUpgrades=允許狀態顯示升級
+storageDrawers.config.prop.enableStorageUpgrades=允許容量升級
+storageDrawers.config.prop.enableLockUpgrades=允許抽屜鑰匙
+storageDrawers.config.prop.enableShroudUpgrades=允許屏蔽鑰匙
+storageDrawers.config.prop.enableVoidUpgrades=允許清空升級
+storageDrawers.config.prop.enableCreativeUpgrades=Enable Creative Upgrade
+storageDrawers.config.prop.enableSortingUpgrades=允許分揀升級
+storageDrawers.config.prop.enableSortingUpgrades.tooltip=需安裝精準重定位.
+storageDrawers.config.prop.renderStorageUpgrades=渲染容量升級顯示
+storageDrawers.config.prop.creativeTabVanillaWoods=顯示所有種類抽屜
+storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=允許創造模式窗口或NEI中顯示所有種類抽屜.
+storageDrawers.config.prop.enabled=啟用
+storageDrawers.config.prop.enabled.tooltip=在遊戲中啟用該物品.
+storageDrawers.config.prop.baseStorage=基礎容量
+storageDrawers.config.prop.baseStorage.tooltip=設定每個抽屜格中可存儲的物品組數量.
+storageDrawers.config.prop.recipeOutput=合成數量
+storageDrawers.config.prop.recipeOutput.tooltip=設定使用默認合成公式可合成多少抽屜.
+storageDrawers.config.prop.enableDrawerUI=允許抽屜UI
+storageDrawers.config.prop.enableDrawerUI.tooltip=在界面中顯示物品信息以及更方便的管理升級組件.
+storageDrawers.config.prop.enableSidedInput=允許抽屜輸入
+storageDrawers.config.prop.enableSidedInput.tooltip=允許向抽屜側面輸入物品.
+storageDrawers.config.prop.enableSidedOutput=允許抽屜輸出
+storageDrawers.config.prop.enableSidedOutput.tooltip=允許從抽屜側面輸出物品.
+storageDrawers.config.prop.enableItemConversion=允許礦辭轉換
+storageDrawers.config.prop.enableItemConversion.tooltip=使存入抽屜的物品通過礦辭自動統一.
+storageDrawers.config.prop.enableFallbackRecipes=Enable Fallback Recipes
+storageDrawers.config.prop.enableFallbackRecipes.tooltip=Any valid plank wood can craft oak drawers.
+storageDrawers.config.prop.invertShift=Shift偏好
+storageDrawers.config.prop.invertShift.tooltip=對換shift與shift單擊的組合鍵作用.
+storageDrawers.config.prop.enableDebugLogging=允許調試記錄
+storageDrawers.config.prop.enableDebugLogging.tooltip=允許向log輸入本模組的更多信息.
+storageDrawers.config.prop.enableTape=Enable Tape
+storageDrawers.config.prop.enableTape.tooltip=For moving drawers with contents.
+storageDrawers.config.prop.wailaStackRemainder=WAILA amount presentation
+storageDrawers.config.prop.wailaStackRemainder.tooltip=How item amounts are displayed by WAILA.
+storageDrawers.config.prop.controllerRange=Controller Range
+storageDrawers.config.prop.controllerRange.tooltip=Range for detecting networked blocks.
+
+storageDrawers.config.addons=附屬模組
+storageDrawers.config.addons.tooltip=儲物抽屜擴充包的全局設定.
+
+storageDrawers.config.addons.showNEI=在NEI中顯示擴充包方塊.
+storageDrawers.config.addons.showCreative=在創造模式窗口中顯示擴充包方塊.
+storageDrawers.config.addons.separateTabs=Tab分類
+storageDrawers.config.addons.tooltip=設定顯示獨立的擴充包Tab.
+
+storageDrawers.config.integration=關聯設定
+storageDrawers.config.integration.tooltip=設定本模組與其它模組之間的聯動性.
+
+storageDrawers.config.integration.enableAE2=允許關聯應用能源2
+storageDrawers.config.integration.enableWaila=允許關聯Waila顯示
+storageDrawers.config.integration.enableThaumcraft=允許關聯秘術時代
+storageDrawers.config.integration.enableMineTweaker=允許關聯MineTweaker
+storageDrawers.config.integration.enableRefinedRelocation=允許關聯精準重定位
+
