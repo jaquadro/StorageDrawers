@@ -2,8 +2,8 @@ package com.jaquadro.minecraft.storagedrawers.block.pack;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.pack.*;
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
+import com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation.BlockSortingTrim;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -14,16 +14,16 @@ import net.minecraft.util.IIcon;
 
 import java.util.List;
 
-public class BlockDrawersPack extends BlockDrawers implements IPackBlock
+public class BlockSortingTrimPack extends BlockSortingTrim implements IPackBlock
 {
-    private IPackDataResolver resolver;
+    IPackDataResolver resolver;
 
-    public BlockDrawersPack (IPackDataResolver resolver, int drawerCount, boolean halfDepth) {
-        super(resolver.getBlockName(BlockConfiguration.by(BlockType.Drawers, drawerCount, halfDepth)), drawerCount, halfDepth);
+    public BlockSortingTrimPack (IPackDataResolver resolver) {
+        super(resolver.getBlockName(BlockConfiguration.TrimSorting));
 
         this.resolver = resolver;
 
-        CreativeTabs tabs = resolver.getCreativeTabs(BlockType.Drawers);
+        CreativeTabs tabs = resolver.getCreativeTabs(BlockType.TrimSorting);
         if (StorageDrawers.config.cache.addonSeparateVanilla && tabs != null)
             setCreativeTab(tabs);
         else
@@ -58,28 +58,21 @@ public class BlockDrawersPack extends BlockDrawers implements IPackBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerBlockIcons (IIconRegister register) {
-        super.registerBlockIcons(register);
+    public IIcon getIcon (int side, int meta) {
+        meta = meta % 16;
+        return iconTrim[meta];
+    }
 
-        iconSide = new IIcon[16];
-        iconSideH = new IIcon[16];
-        iconSideV = new IIcon[16];
-        iconFront1 = new IIcon[16];
-        iconFront2 = new IIcon[16];
-        iconFront4 = new IIcon[16];
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerBlockIcons (IIconRegister register) {
         iconTrim = new IIcon[16];
 
         for (int i = 0; i < 16; i++) {
             if (!resolver.isValidMetaValue(i))
                 continue;
 
-            iconFront1[i] = register.registerIcon(resolver.getTexturePath(TextureType.Front1, i));
-            iconFront2[i] = register.registerIcon(resolver.getTexturePath(TextureType.Front2, i));
-            iconFront4[i] = register.registerIcon(resolver.getTexturePath(TextureType.Front4, i));
-            iconSide[i] = register.registerIcon(resolver.getTexturePath(TextureType.Side, i));
-            iconSideV[i] = register.registerIcon(resolver.getTexturePath(TextureType.SideVSplit, i));
-            iconSideH[i] = register.registerIcon(resolver.getTexturePath(TextureType.SideHSplit, i));
-            iconTrim[i] = register.registerIcon(resolver.getTexturePath(TextureType.TrimBorder, i));
+            iconTrim[i] = register.registerIcon(resolver.getTexturePath(TextureType.TrimBlock, i));
         }
     }
 }

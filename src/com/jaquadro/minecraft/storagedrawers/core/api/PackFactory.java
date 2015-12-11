@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
 import com.jaquadro.minecraft.storagedrawers.api.pack.IPackBlockFactory;
 import com.jaquadro.minecraft.storagedrawers.api.pack.IPackDataResolver;
+import com.jaquadro.minecraft.storagedrawers.block.pack.BlockSortingTrimPack;
 import com.jaquadro.minecraft.storagedrawers.integration.IntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.block.pack.BlockDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.block.pack.BlockSortingDrawersPack;
@@ -12,6 +13,7 @@ import com.jaquadro.minecraft.storagedrawers.integration.notenoughitems.NEIStora
 import com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation.SortingBlockRegistry;
 import com.jaquadro.minecraft.storagedrawers.item.pack.ItemDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.item.pack.ItemSortingDrawersPack;
+import com.jaquadro.minecraft.storagedrawers.item.pack.ItemSortingTrimPack;
 import com.jaquadro.minecraft.storagedrawers.item.pack.ItemTrimPack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
@@ -31,6 +33,10 @@ public class PackFactory implements IPackBlockFactory
                 return null;
             case Trim:
                 return new BlockTrimPack(dataResolver);
+            case TrimSorting:
+                if (IntegrationRegistry.instance().isModLoaded("RefinedRelocation"))
+                    return new BlockSortingTrimPack(dataResolver);
+                return null;
         }
 
         return null;
@@ -53,15 +59,17 @@ public class PackFactory implements IPackBlockFactory
 
     @Override
     public void registerBlock (Block block, String name) {
-        if (block instanceof BlockDrawersPack) {
+        if (block instanceof BlockSortingDrawersPack) {
+            GameRegistry.registerBlock(block, ItemSortingDrawersPack.class, name);
+            StorageDrawers.proxy.registerDrawer(block);
+        }
+        else if (block instanceof BlockDrawersPack) {
             GameRegistry.registerBlock(block, ItemDrawersPack.class, name);
             OreDictionary.registerOre("drawerBasic", new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE));
             StorageDrawers.proxy.registerDrawer(block);
         }
-        else if (block instanceof BlockSortingDrawersPack) {
-            GameRegistry.registerBlock(block, ItemSortingDrawersPack.class, name);
-            StorageDrawers.proxy.registerDrawer(block);
-        }
+        else if (block instanceof BlockSortingTrimPack)
+            GameRegistry.registerBlock(block, ItemSortingTrimPack.class, name);
         else if (block instanceof BlockTrimPack)
             GameRegistry.registerBlock(block, ItemTrimPack.class, name);
     }

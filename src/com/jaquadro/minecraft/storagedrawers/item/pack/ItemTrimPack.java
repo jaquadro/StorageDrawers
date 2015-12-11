@@ -10,6 +10,10 @@ public class ItemTrimPack extends ItemTrim
         super(block, getUnlocalizedNames(block));
     }
 
+    protected ItemTrimPack (Block block, String[] unlocalizedNames) {
+        super(block, unlocalizedNames);
+    }
+
     private static String[] getUnlocalizedNames (Block block) {
         if (block instanceof BlockTrimPack)
             return ((BlockTrimPack) block).getUnlocalizedNames();

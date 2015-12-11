@@ -128,6 +128,7 @@ public class ConfigManager
                 case SortingHalf4:
                     return "halfdrawers4";
                 case Trim:
+                case TrimSorting:
                     return "trim";
                 default:
                     return null;
