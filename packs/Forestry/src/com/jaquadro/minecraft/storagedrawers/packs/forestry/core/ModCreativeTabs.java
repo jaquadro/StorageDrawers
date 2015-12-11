@@ -53,15 +53,15 @@ public final class ModCreativeTabs
         IBlockConfig blockConfig = api.userConfig().blockConfig();
 
         if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull2)))
-            return Item.getItemFromBlock(ModBlocks.fullDrawers2A);
+            return Item.getItemFromBlock(ModBlocks.fullDrawers2[0]);
         if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull4)))
-            return Item.getItemFromBlock(ModBlocks.fullDrawers4A);
+            return Item.getItemFromBlock(ModBlocks.fullDrawers4[0]);
         if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull1)))
-            return Item.getItemFromBlock(ModBlocks.fullDrawers1A);
+            return Item.getItemFromBlock(ModBlocks.fullDrawers1[0]);
         if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicHalf2)))
-            return Item.getItemFromBlock(ModBlocks.halfDrawers2A);
+            return Item.getItemFromBlock(ModBlocks.halfDrawers2[0]);
         if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicHalf4)))
-            return Item.getItemFromBlock(ModBlocks.halfDrawers4A);
+            return Item.getItemFromBlock(ModBlocks.halfDrawers4[0]);
 
         return Item.getItemFromBlock(Blocks.chest);
     }
