@@ -10,7 +10,6 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandar
 import com.jaquadro.minecraft.storagedrawers.client.model.BasicDrawerModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.CompDrawerModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.TrimModel;
-import com.jaquadro.minecraft.storagedrawers.client.renderer.DrawersItemRenderer;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
@@ -31,7 +30,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ClientProxy extends CommonProxy
 {
-    private DrawersItemRenderer itemRenderer = new DrawersItemRenderer();
+    //private DrawersItemRenderer itemRenderer = new DrawersItemRenderer();
 
     @SubscribeEvent
     public void onModelBakeEvent (ModelBakeEvent event) {
@@ -69,6 +68,7 @@ public class ClientProxy extends CommonProxy
 
         renderItem.getItemModelMesher().register(ModItems.upgradeTemplate, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.upgradeTemplate), "inventory"));
         renderItem.getItemModelMesher().register(ModItems.upgradeVoid, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.upgradeVoid), "inventory"));
+        renderItem.getItemModelMesher().register(ModItems.tape, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.tape), "inventory"));
         renderItem.getItemModelMesher().register(ModItems.drawerKey, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.drawerKey), "inventory"));
         renderItem.getItemModelMesher().register(ModItems.shroudKey, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.shroudKey), "inventory"));
 
@@ -122,6 +122,6 @@ public class ClientProxy extends CommonProxy
 
     @Override
     public void registerDrawer (Block block) {
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), itemRenderer);
+        //MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), itemRenderer);
     }
 }

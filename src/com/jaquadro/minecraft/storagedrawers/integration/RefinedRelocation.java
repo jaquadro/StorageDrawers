@@ -125,6 +125,11 @@ public class RefinedRelocation extends IntegrationModule
                 'y', Items.gold_nugget, 'z', ModItems.upgradeTemplate);*/
     }
 
+    @Override
+    public void postInit () {
+
+    }
+
     private static Item getTabItem () {
         ConfigManager config = StorageDrawers.config;
 

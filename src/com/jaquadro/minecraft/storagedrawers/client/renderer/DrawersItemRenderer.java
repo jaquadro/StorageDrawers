@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
+/*
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
 import net.minecraft.block.Block;
@@ -149,3 +150,4 @@ public class DrawersItemRenderer implements IItemRenderer
         return null;
     }
 }
+*/
