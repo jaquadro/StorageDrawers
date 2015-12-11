@@ -24,7 +24,6 @@ public class StorageDrawersPack
     };
 
     public ModBlocks blocks = new ModBlocks();
-    //public ModRecipes recipes = new ModRecipes();
 
     @Mod.Instance(MOD_ID)
     public static StorageDrawersPack instance;
@@ -42,7 +41,6 @@ public class StorageDrawersPack
         RefinedRelocation.init();
         for (DataResolver resolver : resolvers)
             resolver.init();
-        //recipes.init();
     }
 
     @Mod.EventHandler
@@ -52,7 +50,5 @@ public class StorageDrawersPack
             for (IExtendedDataResolver resolver : resolvers)
                 api.registerStandardPackRecipes(resolver);
         }
-
-        //RefinedRelocation.postInit();
     }
 }
