@@ -139,16 +139,18 @@ public class RefinedRelocation extends IntegrationModule
     private static Item getTabItem () {
         ConfigManager config = StorageDrawers.config;
 
-        if (config.isBlockEnabled("fulldrawers2"))
+        if (config.isBlockEnabled("fulldrawers2") && fullDrawers1 != null)
             return Item.getItemFromBlock(fullDrawers2);
-        if (config.isBlockEnabled("fulldrawers4"))
+        if (config.isBlockEnabled("fulldrawers4") && fullDrawers2 != null)
             return Item.getItemFromBlock(fullDrawers4);
-        if (config.isBlockEnabled("fulldrawers1"))
+        if (config.isBlockEnabled("fulldrawers1") && fullDrawers4 != null)
             return Item.getItemFromBlock(fullDrawers1);
-        if (config.isBlockEnabled("halfdrawers2"))
+        if (config.isBlockEnabled("halfdrawers2") && halfDrawers2 != null)
             return Item.getItemFromBlock(halfDrawers2);
-        if (config.isBlockEnabled("halfdrawers4"))
+        if (config.isBlockEnabled("halfdrawers4") && halfDrawers4 != null)
             return Item.getItemFromBlock(halfDrawers4);
+        if (config.isBlockEnabled("trim") && trim != null)
+            return Item.getItemFromBlock(trim);
 
         return Item.getItemFromBlock(Blocks.chest);
     }
