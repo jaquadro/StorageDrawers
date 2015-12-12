@@ -659,12 +659,12 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing (int slot) {
+    public ItemStack removeStackFromSlot (int slot) {
         IDrawerInventory inventory = getDrawerInventory(slot);
         if (inventory == null)
             return null;
 
-        return inventory.getStackInSlotOnClosing(getLocalInvSlot(slot));
+        return inventory.removeStackFromSlot(getLocalInvSlot(slot));
     }
 
     @Override

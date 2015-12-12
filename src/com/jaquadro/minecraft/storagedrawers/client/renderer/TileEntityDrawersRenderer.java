@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -113,7 +114,13 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         mc.gameSettings.fancyGraphics = cache;
 
+        //Tessellator tessellator = Tessellator.getInstance();
+        //WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        //worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
+
         renderUpgrades(tileDrawers);
+
+        //tessellator.draw();
 
         GlStateManager.enableLighting();
         GlStateManager.enableLight(0);

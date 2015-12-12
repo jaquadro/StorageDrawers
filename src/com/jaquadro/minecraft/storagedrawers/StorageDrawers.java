@@ -81,8 +81,8 @@ public class StorageDrawers
         proxy.registerRenderers();
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
-        FMLCommonHandler.instance().bus().register(instance);
         MinecraftForge.EVENT_BUS.register(proxy);
+        MinecraftForge.EVENT_BUS.register(instance);
         //MinecraftForge.EVENT_BUS.register(DrawerModelBakeEventHandler.instance);
 
         IntegrationRegistry.instance().init();

@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.model.IBakedModel;
@@ -45,8 +46,8 @@ public class StorageRenderItem extends RenderItem
     }
 
     @Override
-    public void renderItemModel (ItemStack stack) {
-        parent.renderItemModel(stack);
+    public void func_181564_a (ItemStack stack, ItemCameraTransforms.TransformType transformType) {
+        parent.func_181564_a(stack, transformType);
     }
 
     @Override
@@ -127,9 +128,9 @@ public class StorageRenderItem extends RenderItem
                 WorldRenderer worldrenderer = tessellator.getWorldRenderer();
                 int l = 255 - k << 16 | k << 8;
                 int i1 = (255 - k) / 4 << 16 | 16128;
-                this.renderQuad(worldrenderer, x + 2, y + 13, 13, 2, 0);
-                this.renderQuad(worldrenderer, x + 2, y + 13, 12, 1, i1);
-                this.renderQuad(worldrenderer, x + 2, y + 13, j1, 1, l);
+                this.renderQuad(worldrenderer, x + 2, y + 13, 13, 2, 0, 0, 0, 255);
+                this.renderQuad(worldrenderer, x + 2, y + 13, 12, 1, (255 - k) / 4, 64, 0, 255);
+                this.renderQuad(worldrenderer, x + 2, y + 13, j1, 1, 255 - k, k, 0, 255);
                 //GL11.glEnable(GL11.GL_BLEND); // Forge: Disable Bled because it screws with a lot of things down the line.
                 GlStateManager.enableAlpha();
                 GlStateManager.enableTexture2D();
@@ -139,14 +140,13 @@ public class StorageRenderItem extends RenderItem
         }
     }
 
-    private void renderQuad (WorldRenderer tessellator, int x, int y, int w, int h, int color)
+    private void renderQuad (WorldRenderer tessellator, int x, int y, int w, int h, int r, int g, int b, int a)
     {
-        tessellator.startDrawingQuads();
-        tessellator.setColorOpaque_I(color);
-        tessellator.addVertex(x + 0, y + 0, 0);
-        tessellator.addVertex(x + 0, y + h, 0);
-        tessellator.addVertex(x + w, y + h, 0);
-        tessellator.addVertex(x + w, y + 0, 0);
-        tessellator.finishDrawing();
+        tessellator.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        tessellator.pos(x + 0, y + 0, 0).color(r, g, b, a).endVertex();
+        tessellator.pos(x + 0, y + h, 0).color(r, g, b, a).endVertex();
+        tessellator.pos(x + w, y + h, 0).color(r, g, b, a).endVertex();
+        tessellator.pos(x + w, y + 0, 0).color(r, g, b, a).endVertex();
+        Tessellator.getInstance().draw();
     }
 }

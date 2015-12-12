@@ -144,12 +144,12 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, ISidedI
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing (int slot) {
+    public ItemStack removeStackFromSlot (int slot) {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getPos()))
             return null;
 
-        return controller.getStackInSlotOnClosing(slot);
+        return controller.removeStackFromSlot(slot);
     }
 
     @Override

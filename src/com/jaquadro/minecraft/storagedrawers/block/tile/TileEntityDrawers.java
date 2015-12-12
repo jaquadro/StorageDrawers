@@ -642,8 +642,8 @@ public void setMaterial (String material) {
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing (int slot) {
-        return inventory.getStackInSlotOnClosing(slot);
+    public ItemStack removeStackFromSlot (int slot) {
+        return inventory.removeStackFromSlot(slot);
     }
 
     @Override

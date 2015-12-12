@@ -41,7 +41,7 @@ public class InventoryUpgrade implements IInventory
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing (int slot) {
+    public ItemStack removeStackFromSlot (int slot) {
         return null;
     }
 

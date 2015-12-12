@@ -164,7 +164,7 @@ public class StorageInventory implements IDrawerInventory
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing (int slot) {
+    public ItemStack removeStackFromSlot (int slot) {
         return null;
     }
 
