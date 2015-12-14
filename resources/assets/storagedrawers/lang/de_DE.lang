@@ -1,0 +1,183 @@
+itemGroup.storageDrawers=Storage Drawers
+itemGroup.storageDrawersSorting=Storage Drawers - Sortieren
+
+storageDrawers.container.drawers=Schubfächer
+storageDrawers.container.compDrawers=Verdichtende Schubfächer
+storageDrawers.container.upgrades=Upgrades
+storageDrawers.container.controller=Schubfach-Controller
+storageDrawers.container.unboundSlave=Uneingebundener Slave
+
+storagedrawers.msg.maxUpgrades=Dieses Schubfach kann keine Upgrades mehr annehmen.
+
+# Items
+item.storagedrawers.upgradeTemplate.name=Upgradeschablone
+item.storagedrawers.upgrade.iron.name=Speicherupgrade (II)
+item.storagedrawers.upgrade.gold.name=Speicherupgrade (III)
+item.storagedrawers.upgrade.obsidian.name=Speicherupgrade (IV)
+item.storagedrawers.upgrade.diamond.name=Speicherupgrade (V)
+item.storagedrawers.upgrade.emerald.name=Speicherupgrade (VI)
+item.storagedrawers.upgradeStatus.level1.name=Statusupgrade (I)
+item.storagedrawers.upgradeStatus.level1.description=Zeige volle Speicher
+item.storagedrawers.upgradeStatus.level2.name=Statusupgrade (II)
+item.storagedrawers.upgradeStatus.level2.description=Zeige Füllstand
+item.storagedrawers.upgradeLock.name=Schubfachschlüssel
+item.storagedrawers.upgradeLock.description=Schließt und öffnet Schubfach
+item.storagedrawers.upgradeVoid.name=Void Upgrade
+item.storagedrawers.upgradeVoid.description=Zerstört überschüssige Items
+item.storagedrawers.upgradeCreative.store.name=Kreativspeicherupgrade
+item.storagedrawers.upgradeCreative.store.description=Fast unendlicher Speicher
+item.storagedrawers.upgradeCreative.vend.name=Kreativautomatenupgrade
+item.storagedrawers.upgradeCreative.vend.description=Uneingeschränkte Itementnahme
+item.storagedrawers.upgradeSorting.name=Sortierungsupgrade
+item.storagedrawers.upgradeSorting.description=Für Refined Relocation
+item.storagedrawers.shroudKey.name=Verbergungsschlüssel
+item.storagedrawers.shroudKey.description=Zeige oder verstecke Itemlabels
+item.storagedrawers.tape.name=Packband
+item.storagedrawers.tape.description=Dichte Schubfächer ab für den Umzug
+
+# Blocks
+tile.fullDrawers1.oak.name=Eichenschubfach
+tile.fullDrawers1.spruce.name=Fichtenschubfach
+tile.fullDrawers1.birch.name=Birkenschubfach
+tile.fullDrawers1.jungle.name=Tropenschubfach
+tile.fullDrawers1.acacia.name=Akazienschubfach
+tile.fullDrawers1.big_oak.name=Dunkles Eichenschubfach
+
+tile.fullDrawers2.oak.name=Eichenschubfach 1x2
+tile.fullDrawers2.spruce.name=Fichtenschubfach 1x2
+tile.fullDrawers2.birch.name=Birkenschubfach 1x2
+tile.fullDrawers2.jungle.name=Tropenschubfach 1x2
+tile.fullDrawers2.acacia.name=Akazienschubfach 1x2
+tile.fullDrawers2.big_oak.name=Dunkles Eichenschubfach 1x2
+
+tile.fullDrawers4.oak.name=Eichenschubfach 2x2
+tile.fullDrawers4.spruce.name=Fichtenschubfach 2x2
+tile.fullDrawers4.birch.name=Birkenschubfach 2x2
+tile.fullDrawers4.jungle.name=Tropenschubfach 2x2
+tile.fullDrawers4.acacia.name=Akazienschubfach 2x2
+tile.fullDrawers4.big_oak.name=Dunkles Eichenschubfach 2x2
+
+tile.halfDrawers2.oak.name=Kompaktes Eichenschubfach 1x2
+tile.halfDrawers2.spruce.name=Kompaktes Fichtenschubfach 1x2
+tile.halfDrawers2.birch.name=Kompaktes Birkenschubfach 1x2
+tile.halfDrawers2.jungle.name=Kompaktes Tropenschubfach 1x2
+tile.halfDrawers2.acacia.name=Kompaktes Akazienschubfach 1x2
+tile.halfDrawers2.big_oak.name=Kompaktes Dunkles Eichenschubfach 1x2
+
+tile.halfDrawers4.oak.name=Kompaktes Eichenschubfach 2x2
+tile.halfDrawers4.spruce.name=Kompaktes Fichtenschubfach 2x2
+tile.halfDrawers4.birch.name=Kompaktes Birkenschubfach 2x2
+tile.halfDrawers4.jungle.name=Kompaktes Tropenschubfach 2x2
+tile.halfDrawers4.acacia.name=Kompaktes Akazienschubfach 2x2
+tile.halfDrawers4.big_oak.name=Kompaktes Dunkles Eichenschubfach 2x2
+
+tile.compDrawers.name=Verdichtendes Schubfach
+tile.drawerController.name=Schubfach-Controller
+tile.controllerSlave.name=Controller Slave
+
+tile.trim.oak.name=Eichenverkleidung
+tile.trim.spruce.name=Fichtenverkleidung
+tile.trim.birch.name=Birkenverkleidung
+tile.trim.jungle.name=Tropenverkleidung
+tile.trim.acacia.name=Akazienverkleidung
+tile.trim.big_oak.name=Dunkle Eichenverkleidung
+
+storageDrawers.drawers.description=Hält %d Stapel pro Schubfach
+storageDrawers.drawers.sealed=Inhalt abgedichtet
+storageDrawers.upgrade.description=Erhöht den Speicher zu %d mal dem Grundwert
+storageDrawers.controller.description=Interagiere mit einer Bank an verbundenen Schubfächern
+storageDrawers.controllerSlave.description=Zusätzlich Anhangspunkte für Controller
+
+# Integration
+storageDrawers.waila.empty=<Leer>
+storageDrawers.waila.level=Upgrade Level: %s
+storageDrawers.waila.drawer=#%s: %s
+storageDrawers.waila.locked=Gelockt
+storageDrawers.waila.void=Void
+storageDrawers.waila.sorting=Sortieren
+
+# Configuration
+storageDrawers.config.title=Storage Drawers Konfiguration
+
+storageDrawers.config.general=Allgemeine Einstellungen
+storageDrawers.config.general.tooltip=Dies und Jenes.
+
+storageDrawers.config.blocks=Blockeinstellungen
+storageDrawers.config.blocks.tooltip=Konfiguriere individuelle Speicherblocks.
+
+storageDrawers.config.blocks.fullDrawers1=Schubfächer 1x1
+storageDrawers.config.blocks.fullDrawers2=Schubfächer 1x2
+storageDrawers.config.blocks.fullDrawers4=Schubfächer 2x2
+storageDrawers.config.blocks.halfDrawers2=Kompakte Schubfächer 1x2
+storageDrawers.config.blocks.halfDrawers4=Kompakte Schubfächer 2x2
+storageDrawers.config.blocks.compDrawers=Verdichtende Schubfächer
+storageDrawers.config.blocks.controller=Schubfachcontroller
+storageDrawers.config.blocks.trim=Verkleidung
+storageDrawers.config.blocks.controllerSlave=Controller Slave
+
+storageDrawers.config.upgrades=Upgradeeinstellungen
+storageDrawers.config.upgrades.tooltip=Konfiguriere einzelne Speicherupgrades.
+
+storageDrawers.config.upgrades.level2Mult=Speichermultiplikator (II)
+storageDrawers.config.upgrades.level3Mult=Speichermultiplikator (III)
+storageDrawers.config.upgrades.level4Mult=Speichermultiplikator (IV)
+storageDrawers.config.upgrades.level5Mult=Speichermultiplikator (V)
+storageDrawers.config.upgrades.level6Mult=Speichermultiplikator (VI)
+
+storageDrawers.config.prop.itemRenderType=Itemrendertyp
+storageDrawers.config.prop.itemRenderType.tooltip=Rendere Items in 3D oder flach (2D).
+storageDrawers.config.prop.enableIndicatorUpgrades=Erlaube Indikatorupgrades
+storageDrawers.config.prop.enableStorageUpgrades=Erlaube Storageupgrades
+storageDrawers.config.prop.enableLockUpgrades=Erlaube Schubfachverschließung
+storageDrawers.config.prop.enableShroudUpgrades=Erlaube Verbergen
+storageDrawers.config.prop.enableVoidUpgrades=Erlaube Voidupgrade
+storageDrawers.config.prop.enableCreativeUpgrades=Erlaube Kreativupgrade
+storageDrawers.config.prop.enableSortingUpgrades=Erlaube Sortierungsupgrade
+storageDrawers.config.prop.enableSortingUpgrades.tooltip=Refined Relocation muss geladen seien.
+storageDrawers.config.prop.renderStorageUpgrades=Zeige Speicherupgrades
+storageDrawers.config.prop.creativeTabVanillaWoods=Kreativ-Tab Vanillaholz
+storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Erlaube alle Vanillaholzarten in Kreativemenütab.
+storageDrawers.config.prop.enabled=Erlaubt
+storageDrawers.config.prop.enabled.tooltip=Erlaube Block im Spiel.
+storageDrawers.config.prop.baseStorage=Basisspeicher
+storageDrawers.config.prop.baseStorage.tooltip=Anzahl an Stapeln gehalten in einem Schubfach
+storageDrawers.config.prop.recipeOutput=Rezeptausgabe
+storageDrawers.config.prop.recipeOutput.tooltip=Anzahl an Items von Einzelcrafting
+storageDrawers.config.prop.enableDrawerUI=Erlaube Schubfach UI
+storageDrawers.config.prop.enableDrawerUI.tooltip=Zeigt Itemzahlen und erlaubt Upgrades
+storageDrawers.config.prop.enableSidedInput=Erlaube seitliche Itemeingabe
+storageDrawers.config.prop.enableSidedInput.tooltip=Andere Blöcke können Items in Schubfächer einfügen
+storageDrawers.config.prop.enableSidedOutput=Erlaube seitliche Itemausgabe
+storageDrawers.config.prop.enableSidedOutput.tooltip=Andere Blöcke können Items auf Schubfächern entnehmen
+storageDrawers.config.prop.enableItemConversion=Erlaube Itemumwandlung
+storageDrawers.config.prop.enableItemConversion.tooltip=Schubfächer konvertieren automatich OreDict-kompatible Items
+storageDrawers.config.prop.enableFallbackRecipes=Erlaube Fallback-Rezepte
+storageDrawers.config.prop.enableFallbackRecipes.tooltip=Jedes valide Brettholz kann zu Eichenschubfächern gefertigt werden
+storageDrawers.config.prop.invertShift=Invertiere Shift
+storageDrawers.config.prop.invertShift.tooltip=Invertiert Klick- und Shift-Klick-Verhalten
+storageDrawers.config.prop.enableDebugLogging=Enable Debug Logging
+storageDrawers.config.prop.enableDebugLogging.tooltip=Gibt zusätzliche Informationen in das Log
+storageDrawers.config.prop.enableTape=Erlaube Packband
+storageDrawers.config.prop.enableTape.tooltip=Zum Verschieben der Schubfächer mit Iteminhalten
+storageDrawers.config.prop.wailaStackRemainder=WAILA Anzahl-Darstellung
+storageDrawers.config.prop.wailaStackRemainder.tooltip=Bestimme wie Anzahlen in WAILA dargestellt werden
+storageDrawers.config.prop.controllerRange=Controllerreichweite
+storageDrawers.config.prop.controllerRange.tooltip=Reichweite zur Erkennung von Netzwerkblöcken
+
+storageDrawers.config.addons=Addons
+storageDrawers.config.addons.tooltip=Konfiguriere globale Addons-Einstellungen
+
+storageDrawers.config.addons.showNEI=Zeige Blöcke in NEI
+storageDrawers.config.addons.showCreative=Zeige Blöcke in Kreativtabs
+storageDrawers.config.addons.separateTabs=Separate Kreativtabs
+storageDrawers.config.addons.tooltip=Jedes Pack benutzt seinen eigenen Kreativtab.
+
+storageDrawers.config.integration=Integration
+storageDrawers.config.integration.tooltip=Konfiguriere Integration mit anderen Mods
+
+storageDrawers.config.integration.enableAE2=Erlaube Applied Energistics 2 Integration
+storageDrawers.config.integration.enableWaila=Erlaube WAILA Integration
+storageDrawers.config.integration.enableThaumcraft=Erlaube Thaumcraft Integration
+storageDrawers.config.integration.enableMineTweaker=Erlaube MineTweaker Integration
+storageDrawers.config.integration.enableRefinedRelocation=Erlaube Refined Relocation Integration
+storageDrawers.config.integration.enableThermalExpansion=Elaube Thermal Expansion Integration
