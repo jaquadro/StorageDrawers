@@ -5,8 +5,10 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 
 public class DrawersCustomRenderer extends DrawersRenderer
@@ -17,12 +19,24 @@ public class DrawersCustomRenderer extends DrawersRenderer
     protected void renderBaseBlock (IBlockAccess world, TileEntityDrawers tile, int x, int y, int z, BlockDrawers block, RenderBlocks renderer) {
         BlockDrawersCustom custom = (BlockDrawersCustom)block;
 
-        panelRenderer.setTrimWidth(block.trimWidth);
+        ItemStack materialSide = tile.getMaterialSide();
+        if (materialSide == null)
+            materialSide = new ItemStack(block);
+
+        ItemStack materialFront = tile.getMaterialFront();
+        if (materialFront == null)
+            materialFront = materialSide;
+
+        ItemStack materialTrim = tile.getMaterialTrim();
+        if (materialTrim == null)
+            materialTrim = materialSide;
+
+        panelRenderer.setTrimWidth(block.getTrimWidth());
         panelRenderer.setTrimDepth(0);
         panelRenderer.setTrimColor(ModularBoxRenderer.COLOR_WHITE);
-        panelRenderer.setTrimIcon(Blocks.lapis_block.getIcon(0, 0));
+        panelRenderer.setTrimIcon(Block.getBlockFromItem(materialTrim.getItem()).getIcon(0, materialTrim.getItemDamage()));
         panelRenderer.setPanelColor(ModularBoxRenderer.COLOR_WHITE);
-        panelRenderer.setPanelIcon(Blocks.planks.getIcon(0, 0));
+        panelRenderer.setPanelIcon(Block.getBlockFromItem(materialSide.getItem()).getIcon(0, materialSide.getItemDamage()));
 
         if (ClientProxy.renderPass == 0) {
             for (int i = 0; i < 6; i++) {
@@ -33,15 +47,15 @@ public class DrawersCustomRenderer extends DrawersRenderer
                 panelRenderer.renderFacePanel(i, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
             }
 
-            panelRenderer.setPanelIcon(Blocks.planks.getIcon(0, 2));
-            panelRenderer.setTrimDepth(block.trimDepth);
+            panelRenderer.setPanelIcon(Block.getBlockFromItem(materialFront.getItem()).getIcon(4, materialFront.getItemDamage()));
+            panelRenderer.setTrimDepth(block.getTrimDepth());
 
             panelRenderer.renderFaceTrim(2, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
             panelRenderer.renderInteriorTrim(2, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
             panelRenderer.renderFacePanel(2, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
         }
         else if (ClientProxy.renderPass == 1) {
-            panelRenderer.setTrimDepth(block.trimDepth);
+            panelRenderer.setTrimDepth(block.getTrimDepth());
             panelRenderer.setTrimIcon(custom.getTrimShadowOverlay());
             panelRenderer.renderFaceTrim(2, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
 

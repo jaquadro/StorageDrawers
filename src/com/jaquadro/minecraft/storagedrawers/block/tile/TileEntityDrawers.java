@@ -56,7 +56,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
     private String customName;
 
-    private NBTTagCompound failureSnapshot;
+    private ItemStack materialSide;
+    private ItemStack materialFront;
+    private ItemStack materialTrim;
 
     protected TileEntityDrawers (int drawerCount) {
         initWithDrawerCount(drawerCount);
@@ -303,6 +305,30 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         return false;
     }
 
+    public ItemStack getMaterialSide () {
+        return materialSide;
+    }
+
+    public ItemStack getMaterialFront () {
+        return materialFront;
+    }
+
+    public ItemStack getMaterialTrim () {
+        return materialTrim;
+    }
+
+    public void setMaterialSide (ItemStack material) {
+        materialSide = material;
+    }
+
+    public void setMaterialFront (ItemStack material) {
+        materialFront = material;
+    }
+
+    public void setMaterialTrim (ItemStack material) {
+        materialTrim = material;
+    }
+
     public ItemStack takeItemsFromSlot (int slot, int count) {
         if (slot < 0 || slot >= getDrawerCount())
             return null;
@@ -472,6 +498,18 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         }
 
         inventory = new StorageInventory(this, getSideManager(), this);
+
+        materialSide = null;
+        if (tag.hasKey("MatS"))
+            materialSide = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatS"));
+
+        materialFront = null;
+        if (tag.hasKey("MatF"))
+            materialFront = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatF"));
+
+        materialTrim = null;
+        if (tag.hasKey("MatT"))
+            materialTrim = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatT"));
     }
 
     @Override
@@ -507,6 +545,24 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         }
 
         tag.setTag("Slots", slots);
+
+        if (materialSide != null) {
+            NBTTagCompound itag = new NBTTagCompound();
+            materialSide.writeToNBT(itag);
+            tag.setTag("MatS", itag);
+        }
+
+        if (materialFront != null) {
+            NBTTagCompound itag = new NBTTagCompound();
+            materialFront.writeToNBT(itag);
+            tag.setTag("MatF", itag);
+        }
+
+        if (materialTrim != null) {
+            NBTTagCompound itag = new NBTTagCompound();
+            materialTrim.writeToNBT(itag);
+            tag.setTag("MatT", itag);
+        }
     }
 
     @Override

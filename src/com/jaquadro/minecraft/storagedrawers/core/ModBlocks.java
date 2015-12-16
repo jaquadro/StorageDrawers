@@ -30,6 +30,7 @@ public class ModBlocks
     public static BlockSlave controllerSlave;
 
     public static BlockDrawersCustom fullCustom1;
+    public static BlockDrawersCustom fullCustom2;
 
     public void init () {
         fullDrawers1 = new BlockDrawers("fullDrawers1", 1, false);
@@ -43,6 +44,7 @@ public class ModBlocks
         controllerSlave = new BlockSlave("controllerSlave");
 
         fullCustom1 = new BlockDrawersCustom("fullCustom1", 1, false);
+        fullCustom2 = new BlockDrawersCustom("fullCustom2", 2, false);
 
         ConfigManager config = StorageDrawers.config;
 
@@ -66,6 +68,7 @@ public class ModBlocks
             GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
 
         GameRegistry.registerBlock(fullCustom1, ItemDrawers.class, "fullCustom1");
+        GameRegistry.registerBlock(fullCustom2, ItemDrawers.class, "fullCustom2");
 
         GameRegistry.registerTileEntityWithAlternatives(TileEntityDrawersStandard.class, getQualifiedName("tileDrawersStandard"),
             getQualifiedName(fullDrawers1), getQualifiedName(fullDrawers2), getQualifiedName(fullDrawers4),

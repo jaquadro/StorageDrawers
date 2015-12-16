@@ -146,7 +146,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         renderInterior(block, x, y, z, side, renderer);
 
         if (renderer.overrideBlockTexture != null && renderer.overrideBlockTexture.getIconName().startsWith("destroy_stage"))
-            return true;
+            return;
 
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
             renderIndicator(block, x, y, z, side, renderer, tile.getEffectiveStatusLevel());
@@ -159,7 +159,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         renderShroud(block, x, y, z, side, renderer, tile.isShrouded());
 
-        return true;
+        return;
     }
 
     private void renderLock (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean locked) {
