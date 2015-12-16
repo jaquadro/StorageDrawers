@@ -19,8 +19,6 @@ public class Compaction
 
         if (upperStack == null || lowerStack == null)
             MineTweakerAPI.logError("Tried to add compacting tier with invalid item stack.");
-        else if (conversion != 4 && conversion != 9)
-            MineTweakerAPI.logError("Tried to add compacting tier with invalid conversion value (must be 4 or 9).");
         else
             MineTweakerAPI.apply(new AddRecordAction(upperStack, lowerStack, conversion));
     }

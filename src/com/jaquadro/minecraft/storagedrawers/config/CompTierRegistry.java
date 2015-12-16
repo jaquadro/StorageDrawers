@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
+import cpw.mods.fml.common.Loader;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -25,13 +26,13 @@ public class CompTierRegistry
         register(new ItemStack(Blocks.nether_brick), new ItemStack(Items.netherbrick), 4);
         register(new ItemStack(Blocks.quartz_block), new ItemStack(Items.quartz), 4);
         register(new ItemStack(Blocks.melon_block), new ItemStack(Items.melon), 9);
-        register(new ItemStack(Blocks.sandstone), new ItemStack(Blocks.sand), 4);
+
+        if (!Loader.isModLoaded("ExtraUtilities"))
+            register(new ItemStack(Blocks.sandstone), new ItemStack(Blocks.sand), 4);
     }
 
     public boolean register (ItemStack upper, ItemStack lower, int convRate) {
         if (upper == null || lower == null)
-            return false;
-        if (convRate != 4 && convRate != 9)
             return false;
 
         unregisterUpperTarget(upper);

@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -16,4 +17,6 @@ public class CommonProxy
         if (player instanceof EntityPlayerMP)
             ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
     }
+
+    public void registerDrawer (Block block) { }
 }

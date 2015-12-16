@@ -65,5 +65,15 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
             TileEntityDrawersStandard.this.setIsShrouded(state);
             return true;
         }
+
+        @Override
+        public boolean isStorageUnlimited (int slot) {
+            return TileEntityDrawersStandard.this.isUnlimited();
+        }
+
+        @Override
+        public boolean isVendingUnlimited (int slot) {
+            return TileEntityDrawersStandard.this.isVending();
+        }
     }
 }

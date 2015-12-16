@@ -28,6 +28,8 @@ public class IntegrationRegistry
             reg.add(new RefinedRelocation());
         if (Loader.isModLoaded("NotEnoughItems"))
             reg.add(new NotEnoughItems());
+        if (Loader.isModLoaded("ThermalExpansion") && StorageDrawers.config.cache.enableThermalExpansionIntegration)
+            reg.add(new ThermalExpansion());
     }
 
     private IntegrationRegistry () {

@@ -24,6 +24,7 @@ public class RefinedRelocation extends IntegrationModule
     public static BlockSortingDrawers halfDrawers2;
     public static BlockSortingDrawers halfDrawers4;
     public static BlockSortingCompDrawers compDrawers;
+    public static BlockSortingTrim trim;
 
     public static ItemUpgradeSorting upgradeSorting;
 
@@ -53,6 +54,7 @@ public class RefinedRelocation extends IntegrationModule
         halfDrawers2 = new BlockSortingDrawers("halfDrawers2", 2, true);
         halfDrawers4 = new BlockSortingDrawers("halfDrawers4", 4, true);
         compDrawers = new BlockSortingCompDrawers("compDrawers");
+        trim = new BlockSortingTrim("trim");
 
         upgradeSorting = new ItemUpgradeSorting("upgradeSorting");
 
@@ -62,6 +64,7 @@ public class RefinedRelocation extends IntegrationModule
         SortingBlockRegistry.register(ModBlocks.halfDrawers2, halfDrawers2);
         SortingBlockRegistry.register(ModBlocks.halfDrawers4, halfDrawers4);
         SortingBlockRegistry.register(ModBlocks.compDrawers, compDrawers);
+        SortingBlockRegistry.register(ModBlocks.trim, trim);
 
         ConfigManager config = StorageDrawers.config;
 
@@ -77,16 +80,27 @@ public class RefinedRelocation extends IntegrationModule
             GameRegistry.registerBlock(halfDrawers4, ItemSortingDrawers.class, "halfDrawersSort4");
         if (config.isBlockEnabled("compdrawers"))
             GameRegistry.registerBlock(compDrawers, ItemSortingCompDrawers.class, "compDrawersSort");
+        if (config.isBlockEnabled("trim"))
+            GameRegistry.registerBlock(trim, ItemSortingTrim.class, "trimSort");
 
         if (config.cache.enableSortingUpgrades)
             GameRegistry.registerItem(upgradeSorting, "upgradeSorting");
 
+        StorageDrawers.proxy.registerDrawer(fullDrawers1);
+        StorageDrawers.proxy.registerDrawer(fullDrawers2);
+        StorageDrawers.proxy.registerDrawer(fullDrawers4);
+        StorageDrawers.proxy.registerDrawer(halfDrawers2);
+        StorageDrawers.proxy.registerDrawer(halfDrawers4);
+        StorageDrawers.proxy.registerDrawer(compDrawers);
+
         GameRegistry.registerTileEntityWithAlternatives(TileSortingDrawersStandard.class, ModBlocks.getQualifiedName("tileSortingDrawersStandard"),
-            ModBlocks.getQualifiedName(fullDrawers1), ModBlocks.getQualifiedName(fullDrawers2), ModBlocks.getQualifiedName(fullDrawers4),
-            ModBlocks.getQualifiedName(halfDrawers2), ModBlocks.getQualifiedName(halfDrawers4));
+                ModBlocks.getQualifiedName(fullDrawers1), ModBlocks.getQualifiedName(fullDrawers2), ModBlocks.getQualifiedName(fullDrawers4),
+                ModBlocks.getQualifiedName(halfDrawers2), ModBlocks.getQualifiedName(halfDrawers4));
 
         GameRegistry.registerTileEntityWithAlternatives(TileSortingDrawersComp.class, ModBlocks.getQualifiedName("tileSortingDrawersComp"),
             ModBlocks.getQualifiedName(compDrawers));
+
+        GameRegistry.registerTileEntityWithAlternatives(TileSortingTrim.class, ModBlocks.getQualifiedName("tileSortingTrim"), ModBlocks.getQualifiedName(trim));
     }
 
     @Override
@@ -109,11 +123,13 @@ public class RefinedRelocation extends IntegrationModule
             if (config.isBlockEnabled("halfdrawers4"))
                 GameRegistry.addRecipe(new ItemStack(halfDrawers4, 1, i), "x x", " y ", "x x",
                     'x', Items.gold_nugget, 'y', new ItemStack(ModBlocks.halfDrawers4, 1, i));
+            if (config.isBlockEnabled("trim"))
+                GameRegistry.addRecipe(new ItemStack(trim, 1, i), "x x", " y ", "x x", 'x', Items.gold_nugget, 'y', new ItemStack(ModBlocks.trim, 1, i));
         }
 
         if (config.isBlockEnabled("compdrawers"))
             GameRegistry.addRecipe(new ItemStack(compDrawers, 1), "x x", " y ", "x x",
-                'x', Items.gold_nugget, 'y', new ItemStack(compDrawers, 1));
+                'x', Items.gold_nugget, 'y', new ItemStack(ModBlocks.compDrawers, 1));
 
         if (config.cache.enableSortingUpgrades)
             GameRegistry.addRecipe(new ItemStack(upgradeSorting), "y y", " z ", "y y",
@@ -123,16 +139,18 @@ public class RefinedRelocation extends IntegrationModule
     private static Item getTabItem () {
         ConfigManager config = StorageDrawers.config;
 
-        if (config.isBlockEnabled("fulldrawers2"))
+        if (config.isBlockEnabled("fulldrawers2") && fullDrawers1 != null)
             return Item.getItemFromBlock(fullDrawers2);
-        if (config.isBlockEnabled("fulldrawers4"))
+        if (config.isBlockEnabled("fulldrawers4") && fullDrawers2 != null)
             return Item.getItemFromBlock(fullDrawers4);
-        if (config.isBlockEnabled("fulldrawers1"))
+        if (config.isBlockEnabled("fulldrawers1") && fullDrawers4 != null)
             return Item.getItemFromBlock(fullDrawers1);
-        if (config.isBlockEnabled("halfdrawers2"))
+        if (config.isBlockEnabled("halfdrawers2") && halfDrawers2 != null)
             return Item.getItemFromBlock(halfDrawers2);
-        if (config.isBlockEnabled("halfdrawers4"))
+        if (config.isBlockEnabled("halfdrawers4") && halfDrawers4 != null)
             return Item.getItemFromBlock(halfDrawers4);
+        if (config.isBlockEnabled("trim") && trim != null)
+            return Item.getItemFromBlock(trim);
 
         return Item.getItemFromBlock(Blocks.chest);
     }

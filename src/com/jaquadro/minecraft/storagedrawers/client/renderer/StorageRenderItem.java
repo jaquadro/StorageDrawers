@@ -22,17 +22,26 @@ public class StorageRenderItem extends RenderItem
         if (item != null)
         {
             float scale = .5f;
+            float xoff = 0;
+            if (font.getUnicodeFlag()) {
+                scale = 1f;
+                xoff = 1;
+            }
 
             if (item.stackSize > 1 || text != null)
             {
-                if (item.stackSize >= 10000)
-                    text = (text == null) ? String.format("%.1fK", item.stackSize / 1000f) : text;
+                if (item.stackSize >= 100000000 || (item.stackSize >= 1000000 && font.getUnicodeFlag()))
+                    text = (text == null) ? String.format("%.0fM", item.stackSize / 1000000f) : text;
                 else if (item.stackSize >= 1000000)
                     text = (text == null) ? String.format("%.1fM", item.stackSize / 1000000f) : text;
+                else if (item.stackSize >= 100000 || (item.stackSize >= 10000 && font.getUnicodeFlag()))
+                    text = (text == null) ? String.format("%.0fK", item.stackSize / 1000f) : text;
+                else if (item.stackSize >= 10000)
+                    text = (text == null) ? String.format("%.1fK", item.stackSize / 1000f) : text;
                 else
                     text = (text == null) ? String.valueOf(item.stackSize) : text;
 
-                int textX = (int)((x + 16 - font.getStringWidth(text) * scale) / scale) - 1;
+                int textX = (int)((x + 16 + xoff - font.getStringWidth(text) * scale) / scale) - 1;
                 int textY = (int)((y + 16 - 7 * scale) / scale) - 1;
 
                 GL11.glDisable(GL11.GL_LIGHTING);

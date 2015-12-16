@@ -1,10 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
-import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
@@ -24,7 +22,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.*;
 
-public class TileEntityController extends TileEntity implements IDrawerGroup, ISidedInventory
+public class TileEntityController extends TileEntity implements IDrawerGroup, IPriorityGroup, ISidedInventory
 {
     private static final int PRI_VOID = 0;
     private static final int PRI_LOCKED = 1;
@@ -116,6 +114,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     private int direction;
 
     private int drawerSize = 0;
+    private int range;
 
     private long lastClickTime;
     private UUID lastClickUUID;
@@ -125,6 +124,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     public TileEntityController () {
         invSlotList.add(new SlotRecord(null, 0));
         inventorySlots = new int[] { 0 };
+        range = StorageDrawers.config.getControllerRange();
     }
 
     public int getDirection () {
@@ -421,7 +421,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
         while (!searchQueue.isEmpty()) {
             BlockCoord coord = searchQueue.remove();
             int depth = Math.max(Math.max(Math.abs(coord.x() - x), Math.abs(coord.y() - y)), Math.abs(coord.z() - z));
-            if (depth > DEPTH_LIMIT)
+            if (depth > range)
                 continue;
 
             Block block = worldObj.getBlock(coord.x(), coord.y(), coord.z());
@@ -588,6 +588,11 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             return false;
 
         return group.isDrawerEnabled(getLocalDrawerSlot(slot));
+    }
+
+    @Override
+    public int[] getAccessibleDrawerSlots () {
+        return drawerSlots;
     }
 
     @Override

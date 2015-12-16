@@ -3,7 +3,9 @@ package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
+import com.jaquadro.minecraft.storagedrawers.integration.RefinedRelocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -39,6 +41,13 @@ public class ItemUpgradeSorting extends Item
     public boolean onItemUseFirst (ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         if (world.isRemote)
             return false;
+
+        if(world.getBlock(x, y, z) == ModBlocks.trim) {
+            if(BlockSortingTrim.upgradeToSorting(world, x, y, z)) {
+                stack.stackSize--;
+                return true;
+            }
+        }
 
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile == null)

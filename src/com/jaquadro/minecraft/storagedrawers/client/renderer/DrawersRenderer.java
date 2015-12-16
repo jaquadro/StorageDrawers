@@ -10,6 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -19,6 +20,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 {
     private static final double unit = .0625f;
 
+    private RenderHelper renderHelper = new RenderHelper();
     private ModularBoxRenderer boxRenderer = new ModularBoxRenderer();
 
     private double[] boxCoord = new double[6];
@@ -115,7 +117,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
                 break;
         }
 
-        boxRenderer.setUnit(block.trimWidth);
+        boxRenderer.setUnit(block.getTrimWidth());
         boxRenderer.setColor(ModularBoxRenderer.COLOR_WHITE);
         for (int i = 0; i < 6; i++)
             boxRenderer.setExteriorIcon(block.getIcon(world, x, y, z, i), i);
@@ -142,6 +144,22 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         boxRenderer.setInteriorIcon(block.getIcon(world, x, y, z, side), ForgeDirection.OPPOSITES[side]);
 
         renderInterior(block, x, y, z, side, renderer);
+
+        if (renderer.overrideBlockTexture != null && renderer.overrideBlockTexture.getIconName().startsWith("destroy_stage"))
+            return true;
+
+        if (StorageDrawers.config.cache.enableIndicatorUpgrades)
+            renderIndicator(block, x, y, z, side, renderer, tile.getEffectiveStatusLevel());
+        if (StorageDrawers.config.cache.enableLockUpgrades)
+            renderLock(block, x, y, z, side, renderer, tile.isLocked(LockAttribute.LOCK_POPULATED));
+        if (StorageDrawers.config.cache.enableVoidUpgrades)
+            renderVoid(block, x, y, z, side, renderer, tile.isVoid());
+        if (StorageDrawers.config.cache.enableTape)
+            renderTape(block, x, y, z, side, renderer, tile.isSealed());
+
+        renderShroud(block, x, y, z, side, renderer, tile.isShrouded());
+
+        return true;
     }
 
     private void renderLock (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean locked) {
@@ -167,6 +185,19 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         RenderHelper.instance.setRenderBounds(1 - .0625, 0.9375, 0, 1, 1, depth + .005);
         RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
         RenderHelper.instance.renderPartialFace(RenderHelper.ZPOS, renderer.blockAccess, block, x, y, z, iconVoid, 0, 0, 1, 1);
+        RenderHelper.instance.state.clearRotateTransform();
+    }
+
+    private void renderTape (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean taped) {
+        if (!taped)
+            return;
+
+        double depth = block.halfDepth ? .5 : 1;
+        IIcon iconTape = block.getTapeIcon();
+
+        RenderHelper.instance.setRenderBounds(0, 0, 0, 1, 1, depth + .005);
+        RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
+        RenderHelper.instance.renderFace(RenderHelper.ZPOS, renderer.blockAccess, block, x, y, z, iconTape);
         RenderHelper.instance.state.clearRotateTransform();
     }
 
@@ -200,7 +231,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         TileEntityDrawers tile = block.getTileEntity(renderer.blockAccess, x, y, z);
 
         double depth = block.halfDepth ? 8 : 16;
-        double depthAdj = block.trimDepth * 16;
+        double depthAdj = block.getTrimDepth() * 16;
 
         int count = 0;
         float w = 2;
@@ -251,7 +282,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         TileEntityDrawers tile = block.getTileEntity(renderer.blockAccess, x, y, z);
 
         double depth = block.halfDepth ? 8 : 16;
-        double depthAdj = block.trimDepth * 16;
+        double depthAdj = block.getTrimDepth() * 16;
 
         int count = 0;
         float[][] xywhSet = null;
@@ -290,9 +321,9 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
                 boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
             }
             else if (level >= 2) {
-                double indStart = xywh[0] + block.indStart / unit;
-                double indEnd = xywh[0] + block.indEnd / unit;
-                double indCur = getIndEnd(block, tile, i, indStart, (block.indEnd - block.indStart) / unit);
+                double indStart = xywh[0] + block.getIndStart() / unit;
+                double indEnd = xywh[0] + block.getIndEnd() / unit;
+                double indCur = getIndEnd(block, tile, i, indStart, (block.getIndEnd() - block.getIndStart()) / unit);
 
                 if (indCur > indStart) {
                     if (indCur >= indEnd)
@@ -321,8 +352,8 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         if (cap == 0 || count == 0)
             return x;
 
-        int step = block.indSteps > 0 ? block.indSteps : 1000;
-        float fillAmt = (float)(step * count / cap) / step;
+        int step = block.getIndSteps() > 0 ? block.getIndSteps() : 1000;
+        float fillAmt = (float)((double)step * count / cap) / step;
 
         return x + (w * fillAmt);
     }
@@ -404,7 +435,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
     }
 
     private void renderInterior (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
-        double unit = block.trimDepth;
+        double unit = block.getTrimDepth();
         double depth = block.halfDepth ? .5 : 1;
         double xMin = 0, xMax = 0, zMin = 0, zMax = 0;
 

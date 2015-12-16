@@ -21,6 +21,10 @@ public interface IStorageProvider
 
     public boolean setIsShrouded (int slot, boolean state);
 
+    public boolean isStorageUnlimited (int slot);
+
+    public boolean isVendingUnlimited (int slot);
+
     public void markAmountDirty (int slot);
 
     public void markDirty (int slot);

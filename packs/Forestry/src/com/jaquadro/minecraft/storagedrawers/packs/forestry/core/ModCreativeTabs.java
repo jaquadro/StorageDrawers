@@ -1,7 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.packs.forestry.core;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.api.IStorageDrawersApi;
+import com.jaquadro.minecraft.storagedrawers.api.StorageDrawersApi;
+import com.jaquadro.minecraft.storagedrawers.api.config.IBlockConfig;
+import com.jaquadro.minecraft.storagedrawers.api.config.IUserConfig;
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,32 +15,53 @@ public final class ModCreativeTabs
 {
     private ModCreativeTabs () { }
 
-    public static final CreativeTabs tabStorageDrawers = new CreativeTabs("storageDrawersForestry") {
-        @Override
-        @SideOnly(Side.CLIENT)
-        public Item getTabIconItem () {
-            return getTabItem();
+    private static CreativeTabs tabStorageDrawers = null;
+
+    public static CreativeTabs getTabStorageDrawers () {
+        if (tabStorageDrawers != null)
+            return tabStorageDrawers;
+
+        IStorageDrawersApi api = StorageDrawersApi.instance();
+        if (api == null)
+            return null;
+
+        IUserConfig config = api.userConfig();
+        if (config.addonConfig().addonItemsUseSeparateTab() && config.addonConfig().showAddonItemsVanilla()) {
+            tabStorageDrawers = new CreativeTabs("storageDrawersForestry")
+            {
+                @Override
+                @SideOnly(Side.CLIENT)
+                public Item getTabIconItem () {
+                    return getTabItem();
+                }
+
+                @Override
+                public int func_151243_f () {
+                    return 1;
+                }
+            };
         }
 
-        @Override
-        public int func_151243_f () {
-            return 1;
-        }
-    };
+        return tabStorageDrawers;
+    }
 
     private static Item getTabItem () {
-        ConfigManager config = StorageDrawers.config;
+        IStorageDrawersApi api = StorageDrawersApi.instance();
+        if (api == null)
+            return Item.getItemFromBlock(Blocks.chest);
 
-        if (config.isBlockEnabled("fulldrawers2"))
-            return Item.getItemFromBlock(ModBlocks.fullDrawers2A);
-        if (config.isBlockEnabled("fulldrawers4"))
-            return Item.getItemFromBlock(ModBlocks.fullDrawers4A);
-        if (config.isBlockEnabled("fulldrawers1"))
-            return Item.getItemFromBlock(ModBlocks.fullDrawers1A);
-        if (config.isBlockEnabled("halfdrawers2"))
-            return Item.getItemFromBlock(ModBlocks.halfDrawers2A);
-        if (config.isBlockEnabled("halfdrawers4"))
-            return Item.getItemFromBlock(ModBlocks.halfDrawers4A);
+        IBlockConfig blockConfig = api.userConfig().blockConfig();
+
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull2)))
+            return Item.getItemFromBlock(ModBlocks.fullDrawers2[0]);
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull4)))
+            return Item.getItemFromBlock(ModBlocks.fullDrawers4[0]);
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull1)))
+            return Item.getItemFromBlock(ModBlocks.fullDrawers1[0]);
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicHalf2)))
+            return Item.getItemFromBlock(ModBlocks.halfDrawers2[0]);
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicHalf4)))
+            return Item.getItemFromBlock(ModBlocks.halfDrawers4[0]);
 
         return Item.getItemFromBlock(Blocks.chest);
     }

@@ -80,6 +80,13 @@ public class ModBlocks
         GameRegistry.registerTileEntityWithAlternatives(TileEntitySlave.class, getQualifiedName("tileControllerSlave"),
             getQualifiedName(controllerSlave));
 
+        StorageDrawers.proxy.registerDrawer(fullDrawers1);
+        StorageDrawers.proxy.registerDrawer(fullDrawers2);
+        StorageDrawers.proxy.registerDrawer(fullDrawers4);
+        StorageDrawers.proxy.registerDrawer(halfDrawers2);
+        StorageDrawers.proxy.registerDrawer(halfDrawers4);
+        StorageDrawers.proxy.registerDrawer(compDrawers);
+
         for (String key : new String[] { "drawerBasic" })
             OreDictionary.registerOre(key, new ItemStack(fullDrawers1, 1, OreDictionary.WILDCARD_VALUE));
         for (String key : new String[] { "drawerBasic" })

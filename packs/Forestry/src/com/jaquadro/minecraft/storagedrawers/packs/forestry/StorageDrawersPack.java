@@ -1,7 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.packs.forestry;
 
+import com.jaquadro.minecraft.storagedrawers.api.IStorageDrawersApi;
+import com.jaquadro.minecraft.storagedrawers.api.StorageDrawersApi;
+import com.jaquadro.minecraft.storagedrawers.api.pack.IExtendedDataResolver;
+import com.jaquadro.minecraft.storagedrawers.packs.forestry.core.DataResolver;
 import com.jaquadro.minecraft.storagedrawers.packs.forestry.core.ModBlocks;
-import com.jaquadro.minecraft.storagedrawers.packs.forestry.core.ModRecipes;
 import com.jaquadro.minecraft.storagedrawers.packs.forestry.core.RefinedRelocation;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -17,8 +20,12 @@ public class StorageDrawersPack
     public static final String MOD_VERSION = "@VERSION@";
     public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.packs.forestry.";
 
+    public DataResolver[] resolvers = new DataResolver[] {
+        new DataResolver(MOD_ID, 0),
+        new DataResolver(MOD_ID, 1)
+    };
+
     public ModBlocks blocks = new ModBlocks();
-    public ModRecipes recipes = new ModRecipes();
 
     @Mod.Instance(MOD_ID)
     public static StorageDrawersPack instance;
@@ -34,11 +41,16 @@ public class StorageDrawersPack
     @Mod.EventHandler
     public void init (FMLInitializationEvent event) {
         RefinedRelocation.init();
-        recipes.init();
+        for (DataResolver resolver : resolvers)
+            resolver.init();
     }
 
     @Mod.EventHandler
     public void postInit (FMLPostInitializationEvent event) {
-        RefinedRelocation.postInit();
+        IStorageDrawersApi api = StorageDrawersApi.instance();
+        if (api != null) {
+            for (IExtendedDataResolver resolver : resolvers)
+                api.registerStandardPackRecipes(resolver);
+        }
     }
 }

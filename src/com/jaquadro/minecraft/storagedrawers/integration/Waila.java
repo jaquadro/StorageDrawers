@@ -76,8 +76,20 @@ public class Waila extends IntegrationModule
                     for (int j = 0, n = handlers.size(); j < n; j++)
                         stackName = handlers.get(j).transformItemName(drawer, stackName);
 
-                    if (drawer instanceof IFractionalDrawer && ((IFractionalDrawer) drawer).getConversionRate() > 1)
+                    if (drawer.getStoredItemCount() == Integer.MAX_VALUE)
+                        name = stackName + " [\u221E]";
+                    else if (drawer instanceof IFractionalDrawer && ((IFractionalDrawer) drawer).getConversionRate() > 1)
                         name = stackName + ((i == 0) ? " [" : " [+") + ((IFractionalDrawer) drawer).getStoredItemRemainder() + "]";
+                    else if (StorageDrawers.config.cache.stackRemainderWaila) {
+                        int stacks = drawer.getStoredItemCount() / drawer.getStoredItemStackSize();
+                        int remainder = drawer.getStoredItemCount() - (stacks * drawer.getStoredItemStackSize());
+                        if (stacks > 0 && remainder > 0)
+                            name = stackName + " [" + stacks + "x" + drawer.getStoredItemStackSize() + " + " + remainder + "]";
+                        else if (stacks > 0)
+                            name = stackName + " [" + stacks + "x" + drawer.getStoredItemStackSize() + "]";
+                        else
+                            name = stackName + " [" + remainder + "]";
+                    }
                     else
                         name = stackName + " [" + drawer.getStoredItemCount() + "]";
                 }

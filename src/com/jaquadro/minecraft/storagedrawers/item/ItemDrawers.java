@@ -13,8 +13,12 @@ import net.minecraft.block.BlockWood;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.List;
 
@@ -35,14 +39,19 @@ public class ItemDrawers extends ItemMultiTexture
 
         TileEntityDrawers tile = (TileEntityDrawers) world.getTileEntity(x, y, z);
         if (tile != null) {
-            if (side > 1)
-                tile.setDirection(side);
-
             BlockDrawers block = (BlockDrawers) field_150939_a;
             if (tile instanceof TileEntityDrawersStandard)
                 ((TileEntityDrawersStandard)tile).setDrawerCount(block.drawerCount);
 
             tile.setDrawerCapacity(getCapacityForBlock(block));
+
+            if (stack.hasTagCompound() && stack.getTagCompound().hasKey("tile"))
+                tile.readFromPortableNBT(stack.getTagCompound().getCompoundTag("tile"));
+
+            if (side > 1)
+                tile.setDirection(side);
+
+            tile.setIsSealed(false);
         }
 
         return true;
@@ -53,6 +62,10 @@ public class ItemDrawers extends ItemMultiTexture
     public void addInformation (ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         Block block = Block.getBlockFromItem(itemStack.getItem());
         list.add(StatCollector.translateToLocalFormatted("storageDrawers.drawers.description", getCapacityForBlock(block)));
+
+        if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("tile")) {
+            list.add(EnumChatFormatting.YELLOW + StatCollector.translateToLocalFormatted("storageDrawers.drawers.sealed"));
+        }
     }
 
     protected int getCapacityForBlock (Block block) {

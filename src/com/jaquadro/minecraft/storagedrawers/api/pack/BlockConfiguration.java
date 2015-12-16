@@ -14,7 +14,8 @@ public enum BlockConfiguration
     SortingHalf2(BlockType.DrawersSorting, 2, true),
     SortingHalf4(BlockType.DrawersSorting, 4, true),
 
-    Trim(BlockType.Trim, 0, false);
+    Trim(BlockType.Trim, 0, false),
+    TrimSorting(BlockType.TrimSorting, 0, false);
 
     private final BlockType type;
     private final int drawerCount;
