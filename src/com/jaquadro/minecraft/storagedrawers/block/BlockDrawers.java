@@ -465,17 +465,19 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                     dropBlockAsItem(world, x, y, z, stack);
             }
 
-            for (int i = 0; i < tile.getDrawerCount(); i++) {
-                if (!tile.isDrawerEnabled(i))
-                    continue;
+            if (!tile.isVending()) {
+                for (int i = 0; i < tile.getDrawerCount(); i++) {
+                    if (!tile.isDrawerEnabled(i))
+                        continue;
 
-                IDrawer drawer = tile.getDrawer(i);
-                while (drawer.getStoredItemCount() > 0) {
-                    ItemStack stack = tile.takeItemsFromSlot(i, drawer.getStoredItemStackSize());
-                    if (stack == null || stack.stackSize == 0)
-                        break;
+                    IDrawer drawer = tile.getDrawer(i);
+                    while (drawer.getStoredItemCount() > 0) {
+                        ItemStack stack = tile.takeItemsFromSlot(i, drawer.getStoredItemStackSize());
+                        if (stack == null || stack.stackSize == 0)
+                            break;
 
-                    dropStackInBatches(world, x, y, z, stack);
+                        dropStackInBatches(world, x, y, z, stack);
+                    }
                 }
             }
 
