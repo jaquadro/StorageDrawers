@@ -19,6 +19,8 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class ModBlocks
 {
+    public static DataResolver resolver;
+
     public static BlockDrawers fullDrawers1;
     public static BlockDrawers fullDrawers2;
     public static BlockDrawers fullDrawers4;
@@ -30,6 +32,8 @@ public class ModBlocks
     public static BlockSlave controllerSlave;
 
     public void init () {
+        resolver = new DataResolver(StorageDrawers.MOD_ID);
+
         fullDrawers1 = new BlockDrawers("fullDrawers1", 1, false);
         fullDrawers2 = new BlockDrawers("fullDrawers2", 2, false);
         fullDrawers4 = new BlockDrawers("fullDrawers4", 4, false);
@@ -91,6 +95,8 @@ public class ModBlocks
             OreDictionary.registerOre(key, new ItemStack(halfDrawers2, 1, OreDictionary.WILDCARD_VALUE));
         for (String key : new String[] { "drawerBasic" })
             OreDictionary.registerOre(key, new ItemStack(halfDrawers4, 1, OreDictionary.WILDCARD_VALUE));
+
+        resolver.init();
     }
 
     public static String getQualifiedName (String name) {

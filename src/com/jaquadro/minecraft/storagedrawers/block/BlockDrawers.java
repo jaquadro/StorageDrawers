@@ -3,6 +3,8 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
@@ -11,6 +13,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandar
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
+import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import cpw.mods.fml.common.FMLLog;
@@ -120,6 +123,48 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         setBlockName(blockName);
         setConfigName(blockName);
         setLightOpacity(255);
+    }
+
+    public boolean retrimBlock (World world, int x, int y, int z, ItemStack prototype) {
+        if (retrimType() == null)
+            return false;
+
+        Block protoBlock = Block.getBlockFromItem(prototype.getItem());
+        int protoMeta = prototype.getItemDamage();
+
+        BlockConfiguration config = BlockConfiguration.by(retrimType(), drawerCount, halfDepth);
+
+        Block plankBlock = StorageDrawers.blockRegistry.getPlankBlock(BlockConfiguration.Trim, protoBlock, protoMeta);
+        int plankMeta = StorageDrawers.blockRegistry.getPlankMeta(BlockConfiguration.Trim, protoBlock, protoMeta);
+
+        Block newBlock = StorageDrawers.blockRegistry.getBlock(config, plankBlock, plankMeta);
+        int newMeta = StorageDrawers.blockRegistry.getMeta(config, plankBlock, plankMeta);
+
+        if (newBlock == null)
+            return false;
+
+        if (newBlock == this)
+            world.setBlockMetadataWithNotify(x, y, z, newMeta, 3);
+        else {
+            TileEntity tile = world.getTileEntity(x, y, z);
+            TileEntity newDrawer = createNewTileEntity(world, newMeta);
+
+            NBTTagCompound tag = new NBTTagCompound();
+            tile.writeToNBT(tag);
+            newDrawer.readFromNBT(tag);
+
+            world.removeTileEntity(x, y, z);
+            world.setBlockToAir(x, y, z);
+
+            world.setBlock(x, y, z, newBlock, newMeta, 3);
+            world.setTileEntity(x, y, z, newDrawer);
+        }
+
+        return true;
+    }
+
+    protected BlockType retrimType () {
+        return BlockType.Drawers;
     }
 
     public float getTrimWidth () {
@@ -252,7 +297,18 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         if (item != null && item.getItem() != null) {
-            if (item.getItem() == ModItems.upgrade || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid || item.getItem() == ModItems.upgradeCreative) {
+            if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
+                if (!retrimBlock(world, x, y, z, item))
+                    return false;
+
+                if (player != null && !player.capabilities.isCreativeMode) {
+                    if (--item.stackSize <= 0)
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                }
+
+                return true;
+            }
+            else if (item.getItem() == ModItems.upgrade || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid || item.getItem() == ModItems.upgradeCreative) {
                 if (!tileDrawers.addUpgrade(item)) {
                     player.addChatMessage(new ChatComponentTranslation("storagedrawers.msg.maxUpgrades"));
                     return false;

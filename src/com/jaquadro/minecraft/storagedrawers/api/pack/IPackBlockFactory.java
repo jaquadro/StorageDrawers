@@ -21,4 +21,9 @@ public interface IPackBlockFactory
      * Hides block from NEI if NEI is active.
      */
     void hideBlock (String blockID);
+
+    /**
+     * Registers block metadata from an initialized DataResolver with Storage Drawers.
+     */
+    void registerResolver (IExtendedDataResolver resolver);
 }

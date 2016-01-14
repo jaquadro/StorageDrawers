@@ -2,7 +2,9 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWood;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMultiTexture;
+import net.minecraft.world.World;
 
 public class ItemTrim extends ItemMultiTexture
 {
@@ -12,5 +14,10 @@ public class ItemTrim extends ItemMultiTexture
 
     protected ItemTrim (Block block, String[] names) {
         super(block, block, names);
+    }
+
+    @Override
+    public boolean doesSneakBypassUse (World world, int x, int y, int z, EntityPlayer player) {
+        return true;
     }
 }

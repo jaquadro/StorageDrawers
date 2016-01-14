@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
@@ -50,6 +51,11 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
             return 1;
         else
             return 2;
+    }
+
+    @Override
+    protected BlockType retrimType () {
+        return null;
     }
 
     @Override
