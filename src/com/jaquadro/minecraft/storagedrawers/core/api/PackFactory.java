@@ -17,6 +17,7 @@ import com.jaquadro.minecraft.storagedrawers.item.pack.ItemDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.item.pack.ItemSortingDrawersPack;
 import com.jaquadro.minecraft.storagedrawers.item.pack.ItemSortingTrimPack;
 import com.jaquadro.minecraft.storagedrawers.item.pack.ItemTrimPack;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -91,32 +92,32 @@ public class PackFactory implements IPackBlockFactory
         ConfigManager config = StorageDrawers.config;
         if (config.isBlockEnabled("fulldrawers1")) {
             StorageDrawers.blockRegistry.register(BlockConfiguration.BasicFull1, resolver);
-            if (config.cache.enableRefinedRelocationIntegration)
+            if (Loader.isModLoaded("RefinedRelocation") && config.cache.enableRefinedRelocationIntegration)
                 StorageDrawers.blockRegistry.register(BlockConfiguration.SortingFull1, resolver);
         }
         if (config.isBlockEnabled("fulldrawers2")) {
             StorageDrawers.blockRegistry.register(BlockConfiguration.BasicFull2, resolver);
-            if (config.cache.enableRefinedRelocationIntegration)
+            if (Loader.isModLoaded("RefinedRelocation") && config.cache.enableRefinedRelocationIntegration)
                 StorageDrawers.blockRegistry.register(BlockConfiguration.SortingFull2, resolver);
         }
         if (config.isBlockEnabled("fulldrawers4")) {
             StorageDrawers.blockRegistry.register(BlockConfiguration.BasicFull4, resolver);
-            if (config.cache.enableRefinedRelocationIntegration)
+            if (Loader.isModLoaded("RefinedRelocation") && config.cache.enableRefinedRelocationIntegration)
                 StorageDrawers.blockRegistry.register(BlockConfiguration.SortingFull4, resolver);
         }
         if (config.isBlockEnabled("halfdrawers2")) {
             StorageDrawers.blockRegistry.register(BlockConfiguration.BasicHalf2, resolver);
-            if (config.cache.enableRefinedRelocationIntegration)
+            if (Loader.isModLoaded("RefinedRelocation") && config.cache.enableRefinedRelocationIntegration)
                 StorageDrawers.blockRegistry.register(BlockConfiguration.SortingHalf2, resolver);
         }
         if (config.isBlockEnabled("halfdrawers4")) {
             StorageDrawers.blockRegistry.register(BlockConfiguration.BasicHalf4, resolver);
-            if (config.cache.enableRefinedRelocationIntegration)
+            if (Loader.isModLoaded("RefinedRelocation") && config.cache.enableRefinedRelocationIntegration)
                 StorageDrawers.blockRegistry.register(BlockConfiguration.SortingHalf4, resolver);
         }
         if (config.isBlockEnabled("trim")) {
             StorageDrawers.blockRegistry.register(BlockConfiguration.Trim, resolver);
-            if (config.cache.enableRefinedRelocationIntegration)
+            if (Loader.isModLoaded("RefinedRelocation") && config.cache.enableRefinedRelocationIntegration)
                 StorageDrawers.blockRegistry.register(BlockConfiguration.TrimSorting, resolver);
         }
     }
