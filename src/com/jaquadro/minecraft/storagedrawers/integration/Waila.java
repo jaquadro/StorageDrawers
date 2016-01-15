@@ -96,6 +96,9 @@ public class Waila extends IntegrationModule
                 currenttip.add(StatCollector.translateToLocalFormatted("storageDrawers.waila.drawer", i + 1, name));
             }
 
+            int limit = tile.getDrawerCapacity() * tile.getEffectiveStorageMultiplier();
+            currenttip.add(StatCollector.translateToLocalFormatted("storageDrawers.waila.limit", limit, tile.getEffectiveStorageMultiplier()));
+
             String attrib = "";
             if (tile.isLocked(LockAttribute.LOCK_POPULATED))
                 attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.locked");

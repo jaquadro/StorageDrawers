@@ -56,7 +56,7 @@ public class BlockSortingDrawers extends BlockDrawers
     }
 
     @Override
-    protected BlockType retrimType () {
+    public BlockType retrimType () {
         return BlockType.DrawersSorting;
     }
 

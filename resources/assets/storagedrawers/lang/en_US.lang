@@ -92,6 +92,7 @@ storageDrawers.controllerSlave.description=Extra attach points for controllers
 storageDrawers.waila.empty=<Empty>
 storageDrawers.waila.level=Upgrade Level: %s
 storageDrawers.waila.drawer=#%s: %s
+storageDrawers.waila.limit=Stack Limit: %s (x%s)
 storageDrawers.waila.locked=Locked
 storageDrawers.waila.void=Void
 storageDrawers.waila.sorting=Sorting

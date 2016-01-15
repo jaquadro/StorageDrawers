@@ -143,10 +143,16 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (newBlock == null)
             return false;
 
+        TileEntityDrawers tile = getTileEntity(world, x, y, z);
+        if (newBlock == this && newMeta == world.getBlockMetadata(x, y, z) && !tile.shouldHideUpgrades()) {
+            tile.setShouldHideUpgrades(true);
+            return true;
+        }
+
         if (newBlock == this)
             world.setBlockMetadataWithNotify(x, y, z, newMeta, 3);
         else {
-            TileEntity tile = world.getTileEntity(x, y, z);
+
             TileEntity newDrawer = createNewTileEntity(world, newMeta);
 
             NBTTagCompound tag = new NBTTagCompound();
@@ -163,7 +169,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         return true;
     }
 
-    protected BlockType retrimType () {
+    public BlockType retrimType () {
         return BlockType.Drawers;
     }
 

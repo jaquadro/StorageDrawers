@@ -46,6 +46,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     private int drawerCapacity = 1;
     private boolean shrouded = false;
     private boolean taped = false;
+    private boolean hideUpgrade = false;
 
     private EnumSet<LockAttribute> lockAttributes = null;
 
@@ -237,6 +238,19 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
                 markDirty();
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
+        }
+    }
+
+    public boolean shouldHideUpgrades () {
+        return hideUpgrade;
+    }
+
+    public void setShouldHideUpgrades (boolean hide) {
+        hideUpgrade = hide;
+
+        if (worldObj != null && !worldObj.isRemote) {
+            markDirty();
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
     }
 
@@ -462,6 +476,10 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         if (tag.hasKey("Shr"))
             shrouded = tag.getBoolean("Shr");
 
+        hideUpgrade = false;
+        if (tag.hasKey("HideUp"))
+            hideUpgrade = tag.getBoolean("HideUp");
+
         NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
         drawers = new IDrawer[slots.tagCount()];
 
@@ -498,6 +516,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
         if (shrouded)
             tag.setBoolean("Shr", shrouded);
+
+        if (hideUpgrade)
+            tag.setBoolean("HideUp", hideUpgrade);
 
         NBTTagList slots = new NBTTagList();
         for (IDrawer drawer : drawers) {

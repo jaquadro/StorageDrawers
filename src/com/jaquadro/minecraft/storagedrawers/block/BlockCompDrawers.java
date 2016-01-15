@@ -54,7 +54,7 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }
 
     @Override
-    protected BlockType retrimType () {
+    public BlockType retrimType () {
         return null;
     }
 
