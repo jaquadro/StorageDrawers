@@ -121,37 +121,41 @@ public class ThermalExpansion extends IntegrationModule
                     continue;
 
                 Block plank = resolver.getPlankBlock(i);
+                int plankMeta = resolver.getPlankMeta(i);
+
                 if (plank != null) {
                     if (basicFull1 != null)
-                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(basicFull1, 1, i), new ItemStack(plank, 6, i), new ItemStack(Blocks.planks, 8, 0), 100);
+                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(basicFull1, 1, i), new ItemStack(plank, 6, plankMeta), new ItemStack(Blocks.planks, 8, 0), 100);
                     if (basicFull2 != null)
-                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(basicFull2, 1, i), new ItemStack(plank, 7, i), new ItemStack(Blocks.planks, 8, 0), 100);
+                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(basicFull2, 1, i), new ItemStack(plank, 7, plankMeta), new ItemStack(Blocks.planks, 8, 0), 100);
                     if (basicFull4 != null)
-                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(basicFull4, 1, i), new ItemStack(plank, 5, i), new ItemStack(Blocks.planks, 8, 0), 100);
+                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(basicFull4, 1, i), new ItemStack(plank, 5, plankMeta), new ItemStack(Blocks.planks, 8, 0), 100);
                     if (basicTrim != null)
-                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(basicTrim, 1, i), new ItemStack(plank, 5, i), itemSawdust, 100);
+                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(basicTrim, 1, i), new ItemStack(plank, 5, plankMeta), itemSawdust, 100);
 
                     if (sortingFull1 != null)
-                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(sortingFull1, 1, i), new ItemStack(plank, 6, i), new ItemStack(Blocks.planks, 8, 0), 100);
+                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(sortingFull1, 1, i), new ItemStack(plank, 6, plankMeta), new ItemStack(Blocks.planks, 8, 0), 100);
                     if (sortingFull2 != null)
-                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(sortingFull2, 1, i), new ItemStack(plank, 7, i), new ItemStack(Blocks.planks, 8, 0), 100);
+                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(sortingFull2, 1, i), new ItemStack(plank, 7, plankMeta), new ItemStack(Blocks.planks, 8, 0), 100);
                     if (sortingFull4 != null)
-                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(sortingFull4, 1, i), new ItemStack(plank, 5, i), new ItemStack(Blocks.planks, 8, 0), 100);
+                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(sortingFull4, 1, i), new ItemStack(plank, 5, plankMeta), new ItemStack(Blocks.planks, 8, 0), 100);
                     if (sortingTrim != null)
-                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(sortingTrim, 1, i), new ItemStack(plank, 5, i), itemSawdust, 100);
+                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(sortingTrim, 1, i), new ItemStack(plank, 5, plankMeta), itemSawdust, 100);
                 }
 
                 Block slab = resolver.getSlabBlock(i);
+                int slabMeta = resolver.getSlabMeta(i);
+
                 if (slab != null) {
                     if (basicHalf2 != null)
-                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(basicHalf2, 1, i), new ItemStack(slab, 7, i), new ItemStack(Blocks.planks, 8, 0), 100);
+                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(basicHalf2, 1, i), new ItemStack(slab, 7, slabMeta), new ItemStack(Blocks.planks, 8, 0), 100);
                     if (basicHalf4 != null)
-                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(basicHalf4, 1, i), new ItemStack(slab, 5, i), new ItemStack(Blocks.planks, 8, 0), 100);
+                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(basicHalf4, 1, i), new ItemStack(slab, 5, slabMeta), new ItemStack(Blocks.planks, 8, 0), 100);
 
                     if (sortingHalf2 != null)
-                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(sortingHalf2, 1, i), new ItemStack(slab, 7, i), new ItemStack(Blocks.planks, 8, 0), 100);
+                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(sortingHalf2, 1, i), new ItemStack(slab, 7, slabMeta), new ItemStack(Blocks.planks, 8, 0), 100);
                     if (sortingHalf4 != null)
-                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(sortingHalf4, 1, i), new ItemStack(slab, 5, i), new ItemStack(Blocks.planks, 8, 0), 100);
+                        mtSawmillAddRecipe.invoke(null, 2400, new ItemStack(sortingHalf4, 1, i), new ItemStack(slab, 5, slabMeta), new ItemStack(Blocks.planks, 8, 0), 100);
                 }
             }
         }
