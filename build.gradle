@@ -80,7 +80,7 @@ dependencies {
     compile "codechicken:CodeChickenCore:1.7.10-1.0.6.44:dev"
     compile "codechicken:NotEnoughItems:1.7.10-1.0.4.107:dev"
 
-    compile "appeng:appliedenergistics2:rv3-beta-1:api"
+    compile "appeng:appliedenergistics2:rv2-stable-3:api"
 
     compile name: 'MineTweaker3', version: "Dev-1.7.10-3.0.9B", ext: 'jar'
 }
