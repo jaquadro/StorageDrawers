@@ -3,7 +3,7 @@ package com.jaquadro.minecraft.storagedrawers;
 import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
-import com.jaquadro.minecraft.storagedrawers.integration.IntegrationRegistry;
+import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import net.minecraftforge.common.MinecraftForge;
@@ -85,14 +85,14 @@ public class StorageDrawers
         MinecraftForge.EVENT_BUS.register(instance);
         //MinecraftForge.EVENT_BUS.register(DrawerModelBakeEventHandler.instance);
 
-        IntegrationRegistry.instance().init();
+        LocalIntegrationRegistry.instance().init();
     }
 
     @Mod.EventHandler
     public void postInit (FMLPostInitializationEvent event) {
         recipes.init();
 
-        IntegrationRegistry.instance().postInit();
+        LocalIntegrationRegistry.instance().postInit();
     }
 
     @SubscribeEvent

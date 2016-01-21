@@ -1,5 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
 
+import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
+
 public class MineTweaker extends IntegrationModule
 {
     @Override

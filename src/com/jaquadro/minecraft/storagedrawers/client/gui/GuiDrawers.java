@@ -2,7 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.client.gui;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
-import com.jaquadro.minecraft.storagedrawers.integration.IntegrationRegistry;
+import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.integration.NotEnoughItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.*;
 import net.minecraft.client.Minecraft;
@@ -147,7 +147,7 @@ public class GuiDrawers extends GuiContainer
     }
 
     private RenderItem setItemRender (RenderItem renderItem) {
-        if (IntegrationRegistry.instance().isModLoaded("NotEnoughItems"))
+        if (LocalIntegrationRegistry.instance().isModLoaded("NotEnoughItems"))
             return NotEnoughItems.setItemRender(renderItem);
         else {
             RenderItem prev = itemRender;

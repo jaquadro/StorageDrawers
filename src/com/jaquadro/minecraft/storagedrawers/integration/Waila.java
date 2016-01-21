@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
 
+import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IWailaTooltipHandler;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
@@ -8,13 +9,18 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.IWailaDataProvider;
+import mcp.mobius.waila.api.IWailaRegistrar;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 import java.util.List;
 
@@ -31,13 +37,14 @@ public class Waila extends IntegrationModule
 
     @Override
     public void init () throws Throwable {
-        //FMLInterModComms.sendMessage("Waila", "register", StorageDrawers.SOURCE_PATH + "integration.Waila.registerProvider");
+        FMLInterModComms.sendMessage("Waila", "register", StorageDrawers.SOURCE_PATH + "integration.Waila.registerProvider");
     }
 
     @Override
     public void postInit () { }
 
-    /*public static void registerProvider(IWailaRegistrar registrar) {
+    @SuppressWarnings("unused")
+    public static void registerProvider(IWailaRegistrar registrar) {
         registrar.registerBodyProvider(new WailaDrawer(), BlockDrawers.class);
     }
 
@@ -56,15 +63,13 @@ public class Waila extends IntegrationModule
         @Override
         public List<String> getWailaBody (ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
             TileEntityDrawers tile = (TileEntityDrawers) accessor.getTileEntity();
-
-            IDrawerGroup group = tile;
-            for (int i = 0; i < group.getDrawerCount(); i++) {
-                if (!group.isDrawerEnabled(i))
+            for (int i = 0; i < tile.getDrawerCount(); i++) {
+                if (!tile.isDrawerEnabled(i))
                     continue;
 
                 String name = StatCollector.translateToLocal("storageDrawers.waila.empty");
 
-                IDrawer drawer = group.getDrawer(i);
+                IDrawer drawer = tile.getDrawer(i);
                 ItemStack stack = drawer.getStoredItemPrototype();
                 if (stack != null && stack.getItem() != null) {
                     String stackName = stack.getDisplayName();
@@ -72,13 +77,28 @@ public class Waila extends IntegrationModule
                     for (int j = 0, n = handlers.size(); j < n; j++)
                         stackName = handlers.get(j).transformItemName(drawer, stackName);
 
-                    if (drawer instanceof IFractionalDrawer && ((IFractionalDrawer) drawer).getConversionRate() > 1)
+                    if (drawer.getStoredItemCount() == Integer.MAX_VALUE)
+                        name = stackName + " [\u221E]";
+                    else if (drawer instanceof IFractionalDrawer && ((IFractionalDrawer) drawer).getConversionRate() > 1)
                         name = stackName + ((i == 0) ? " [" : " [+") + ((IFractionalDrawer) drawer).getStoredItemRemainder() + "]";
+                    else if (StorageDrawers.config.cache.stackRemainderWaila) {
+                        int stacks = drawer.getStoredItemCount() / drawer.getStoredItemStackSize();
+                        int remainder = drawer.getStoredItemCount() - (stacks * drawer.getStoredItemStackSize());
+                        if (stacks > 0 && remainder > 0)
+                            name = stackName + " [" + stacks + "x" + drawer.getStoredItemStackSize() + " + " + remainder + "]";
+                        else if (stacks > 0)
+                            name = stackName + " [" + stacks + "x" + drawer.getStoredItemStackSize() + "]";
+                        else
+                            name = stackName + " [" + remainder + "]";
+                    }
                     else
                         name = stackName + " [" + drawer.getStoredItemCount() + "]";
                 }
                 currenttip.add(StatCollector.translateToLocalFormatted("storageDrawers.waila.drawer", i + 1, name));
             }
+
+            int limit = tile.getDrawerCapacity() * tile.getEffectiveStorageMultiplier();
+            currenttip.add(StatCollector.translateToLocalFormatted("storageDrawers.waila.limit", limit, tile.getEffectiveStorageMultiplier()));
 
             String attrib = "";
             if (tile.isLocked(LockAttribute.LOCK_POPULATED))
@@ -100,8 +120,8 @@ public class Waila extends IntegrationModule
         }
 
         @Override
-        public NBTTagCompound getNBTData (EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
+        public NBTTagCompound getNBTData (EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
             return null;
         }
-    }*/
+    }
 }

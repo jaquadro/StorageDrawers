@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
 
+import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.api.StorageDrawersApi;
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IWailaTooltipHandler;

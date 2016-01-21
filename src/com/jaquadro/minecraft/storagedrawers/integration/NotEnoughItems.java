@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
 
+import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import net.minecraft.client.renderer.entity.RenderItem;
 
 import java.lang.reflect.Field;
