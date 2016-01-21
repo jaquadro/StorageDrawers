@@ -1,3 +1,4 @@
+#Traslated by xuyu_staryG(gxy17886) From InfinityStudio
 itemGroup.storageDrawers=储物抽屉
 itemGroup.storageDrawersSorting=储物抽屉|分拣升级
 
@@ -9,64 +10,35 @@ storageDrawers.container.unboundSlave=未连接的传动方块
 
 storagedrawers.msg.maxUpgrades=这个抽屉已无法容纳更多的升级组件.
 
-# 物件
+# Items
 item.upgradeTemplate.name=升级模板
-item.upgrade.iron.name=抽屉容量升级 (II)
-item.upgrade.gold.name=抽屉容量升级 (III)
-item.upgrade.obsidian.name=抽屉容量升级 (IV)
-item.upgrade.diamond.name=抽屉容量升级 (V)
-item.upgrade.emerald.name=抽屉容量升级 (VI)
+item.upgradeStorage.iron.name=抽屉容量升级 (II)
+item.upgradeStorage.gold.name=抽屉容量升级 (III)
+item.upgradeStorage.obsidian.name=抽屉容量升级 (IV)
+item.upgradeStorage.diamond.name=抽屉容量升级 (V)
+item.upgradeStorage.emerald.name=抽屉容量升级 (VI)
 item.upgradeStatus.level1.name=状态显示升级 (I)
 item.upgradeStatus.level1.description=抽屉装满时亮起提示灯.
 item.upgradeStatus.level2.name=状态显示升级 (II)
 item.upgradeStatus.level2.description=显示抽屉容量等级.
-item.upgradeLock.name=抽屉钥匙
-item.upgradeLock.description=给抽屉上锁或解锁.
 item.upgradeVoid.name=清空升级
 item.upgradeVoid.description=销毁存储超过上限的物品.
 item.upgradeSorting.name=分拣升级
 item.upgradeSorting.description=将抽屉升级为分拣抽屉.
+item.drawerKey.name=抽屉钥匙
+item.drawerKey.description=给抽屉上锁或解锁.
 item.shroudKey.name=屏蔽钥匙
 item.shroudKey.description=设定隐藏或显示抽屉上的物品图标.
 
-# 方块
-tile.fullDrawers1.oak.name=橡木抽屉
-tile.fullDrawers1.spruce.name=云杉木抽屉
-tile.fullDrawers1.birch.name=白桦木抽屉
-tile.fullDrawers1.jungle.name=丛林木抽屉
-tile.fullDrawers1.acacia.name=金合欢木抽屉
-tile.fullDrawers1.big_oak.name=深色橡木抽屉
-
-tile.fullDrawers2.oak.name=橡木抽屉 (1x2)
-tile.fullDrawers2.spruce.name=云杉木抽屉 (1x2)
-tile.fullDrawers2.birch.name=白桦木抽屉 (1x2)
-tile.fullDrawers2.jungle.name=丛林木抽屉 (1x2)
-tile.fullDrawers2.acacia.name=金合欢木抽屉 (1x2)
-tile.fullDrawers2.big_oak.name=深色橡木抽屉 (1x2)
-
-tile.fullDrawers4.oak.name=橡木抽屉 (2x2)
-tile.fullDrawers4.spruce.name=云杉木抽屉 (2x2)
-tile.fullDrawers4.birch.name=白桦木抽屉 (2x2)
-tile.fullDrawers4.jungle.name=丛林木抽屉 (2x2)
-tile.fullDrawers4.acacia.name=金合欢木抽屉 (2x2)
-tile.fullDrawers4.big_oak.name=深色橡木抽屉 (2x2)
-
-tile.halfDrawers2.oak.name=小型橡木抽屉 (1x2)
-tile.halfDrawers2.spruce.name=小型云杉木抽屉 (1x2)
-tile.halfDrawers2.birch.name=小型白桦木抽屉 (1x2)
-tile.halfDrawers2.jungle.name=小型丛林木抽屉 (1x2)
-tile.halfDrawers2.acacia.name=小型金合欢木抽屉 (1x2)
-tile.halfDrawers2.big_oak.name=小型深色橡木抽屉 (1x2)
-
-tile.halfDrawers4.oak.name=小型橡木抽屉 (2x2)
-tile.halfDrawers4.spruce.name=小型云杉木抽屉 (2x2)
-tile.halfDrawers4.birch.name=小型白桦木抽屉 (2x2)
-tile.halfDrawers4.jungle.name=小型丛林木抽屉 (2x2)
-tile.halfDrawers4.acacia.name=小型金合欢木抽屉 (2x2)
-tile.halfDrawers4.big_oak.name=小型深色橡木抽屉 (2x2)
+# Blocks
+tile.basicDrawers.fulldrawers1.name=基础抽屉
+tile.basicDrawers.fulldrawers2.name=1x2基础抽屉
+tile.basicDrawers.fulldrawers4.name=2x2基础抽屉
+tile.basicDrawers.halfdrawers2.name=1x2小型基础抽屉
+tile.basicDrawers.halfdrawers4.name=2x2小型基础抽屉
 
 tile.compDrawers.name=致密抽屉
-tile.drawerController.name=抽屉管理器
+tile.controller.name=抽屉管理器
 tile.controllerSlave.name=管理器传动方块
 
 tile.trim.oak.name=橡木桥接方块
@@ -81,15 +53,26 @@ storageDrawers.upgrade.description=将抽屉容量升级为其基础容量的%d�
 storageDrawers.controller.description=将放入的物品分配存入邻接的抽屉中.
 storageDrawers.controllerSlave.description=为抽屉管理器扩展存储连接面.
 
-# 高亮显示
+# Material
+
+storageDrawers.material=材料: %s
+storageDrawers.material.oak=橡木
+storageDrawers.material.spruce=云杉木
+storageDrawers.material.birch=白桦木
+storageDrawers.material.jungle=丛林木
+storageDrawers.material.acacia=金合欢木
+storageDrawers.material.dark_oak=深色橡木
+
+# Integration
 storageDrawers.waila.empty=<空>
-storageDrawers.waila.level=级别: %s
+storageDrawers.waila.level=升级级别: %s
 storageDrawers.waila.drawer=#%s: %s
+storageDrawers.waila.limit=堆栈限制: %s (x%s)
 storageDrawers.waila.locked=锁定
 storageDrawers.waila.void=清空
 storageDrawers.waila.sorting=分拣
 
-# 配置
+# Configuration
 storageDrawers.config.title=储物抽屉 模组配置
 
 storageDrawers.config.general=一般设定
@@ -147,6 +130,8 @@ storageDrawers.config.prop.invertShift=Shift偏好
 storageDrawers.config.prop.invertShift.tooltip=对换shift与shift单击的组合键作用.
 storageDrawers.config.prop.enableDebugLogging=允许调试记录
 storageDrawers.config.prop.enableDebugLogging.tooltip=允许向log输入本模组的更多信息.
+storageDrawers.config.prop.wailaStackRemainder=WAILA 物品数量展示
+storageDrawers.config.prop.wailaStackRemainder.tooltip=WAILA中显示物品数量.
 
 storageDrawers.config.addons=附属模组
 storageDrawers.config.addons.tooltip=储物抽屉扩充包的全局设定.
