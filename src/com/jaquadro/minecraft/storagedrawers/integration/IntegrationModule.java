@@ -11,9 +11,7 @@ import java.util.List;
 
 public abstract class IntegrationModule
 {
-    public String getModID () {
-        return null;
-    }
+    public abstract String getModID ();
 
     public boolean versionCheck () {
         String pattern = versionPattern();

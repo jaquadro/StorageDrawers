@@ -30,6 +30,11 @@ public class ThermalExpansion extends IntegrationModule
     static boolean initialized;
 
     @Override
+    public String getModID () {
+        return MOD_ID;
+    }
+
+    @Override
     public void init () throws Throwable {
         clSawmillManager = Class.forName("cofh.thermalexpansion.util.crafting.SawmillManager");
         clPulverizerManager = Class.forName("cofh.thermalexpansion.util.crafting.PulverizerManager");
