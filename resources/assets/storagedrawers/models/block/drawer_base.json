@@ -13,7 +13,7 @@
             "__comment": "Front Face"
         }, {
             "from": [ 0, 15, 0 ],
-            "to": [ 1, 16, 1],
+            "to": [ 1, 16, 1 ],
             "faces": {
                 "up":    { "texture": "#trim", "cullface": "up" },
                 "north": { "texture": "#trim", "cullface": "north" },
@@ -22,7 +22,7 @@
             "__comment": "Top-Right Corner"
         }, {
             "from": [ 15, 15, 0 ],
-            "to": [ 16, 16, 1],
+            "to": [ 16, 16, 1 ],
             "faces": {
                 "up":    { "texture": "#trim", "cullface": "up" },
                 "north": { "texture": "#trim", "cullface": "north" },
@@ -31,7 +31,7 @@
             "__comment": "Top-Left Corner"
         }, {
             "from": [ 0, 0, 0 ],
-            "to": [ 1, 1, 1],
+            "to": [ 1, 1, 1 ],
             "faces": {
                 "down":  { "texture": "#trim", "cullface": "down" },
                 "north": { "texture": "#trim", "cullface": "north" },
@@ -40,7 +40,7 @@
             "__comment": "Bottom-Right Corner"
         }, {
             "from": [ 15, 0, 0 ],
-            "to": [ 16, 1, 1],
+            "to": [ 16, 1, 1 ],
             "faces": {
                 "down":  { "texture": "#trim", "cullface": "down" },
                 "north": { "texture": "#trim", "cullface": "north" },
@@ -49,7 +49,7 @@
             "__comment": "Bottom-Left Corner"
         }, {
             "from": [ 1, 15, 0 ],
-            "to": [ 15, 16, 1],
+            "to": [ 15, 16, 1 ],
             "faces": {
                 "down":  { "texture": "#trim" },
                 "up":    { "texture": "#trim", "cullface": "up" },
@@ -58,7 +58,7 @@
             "__comment": "Top Edge"
         }, {
             "from": [ 1, 0, 0 ],
-            "to": [ 15, 1, 1],
+            "to": [ 15, 1, 1 ],
             "faces": {
                 "down":  { "texture": "#trim", "cullface": "down" },
                 "up":    { "texture": "#trim" },
@@ -67,7 +67,7 @@
             "__comment": "Bottom Edge"
         }, {
             "from": [ 0, 1, 0 ],
-            "to": [ 1, 15, 1],
+            "to": [ 1, 15, 1 ],
             "faces": {
                 "north": { "texture": "#trim", "cullface": "north" },
                 "west":  { "texture": "#trim", "cullface": "west" },
@@ -76,7 +76,7 @@
             "__comment": "Right Edge"
         }, {
             "from": [ 15, 1, 0 ],
-            "to": [ 16, 15, 1],
+            "to": [ 16, 15, 1 ],
             "faces": {
                 "north": { "texture": "#trim", "cullface": "north" },
                 "west":  { "texture": "#trim" },
