@@ -51,7 +51,7 @@ sourceSets.main {
 
 sourceSets.api {
     java {
-        //srcDirs project.projectDir.getPath() + '/api'
+        srcDirs project.projectDir.getPath() + '/api/mcp'
     }
 }
 
