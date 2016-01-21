@@ -3,6 +3,7 @@
     "textures": {
         "top": "StorageDrawers:blocks/drawers_oak_side",
         "front": "StorageDrawers:blocks/drawers_oak_front_1",
-        "side": "StorageDrawers:blocks/drawers_oak_side"
+        "side": "StorageDrawers:blocks/drawers_oak_side",
+        "trim": "StorageDrawers:blocks/drawers_oak_trim"
     }
 }

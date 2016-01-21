@@ -199,11 +199,14 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         float size = (drawerCount == 1) ? .5f : .25f;
 
         BlockDrawers block = (BlockDrawers)tile.getBlockType();
+        IBlockState blockState = tile.getWorld().getBlockState(tile.getPos());
+        StatusModelData statusInfo = block.getStatusInfo(blockState);
+        float frontDepth = (float)statusInfo.getFrontDepth() * .0625f;
 
         GlStateManager.pushMatrix();
 
         alignRendering(side);
-        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, 1f - depth + 0); // 0 = trimDepth
+        moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, 1f - depth + frontDepth);
 
         List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
         for (int i = 0, n = renderHandlers.size(); i < n; i++) {

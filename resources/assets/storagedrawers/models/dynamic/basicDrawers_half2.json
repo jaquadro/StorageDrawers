@@ -1,5 +1,5 @@
 {
-    "frontDepth": 0,
+    "frontDepth": 1,
     "slots": [ {
         "statusAreaFrom": [ 0, 8 ],
         "statusAreaTo": [ 16, 16 ],

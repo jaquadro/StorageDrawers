@@ -4,6 +4,7 @@
         "top": "StorageDrawers:blocks/drawers_acacia_side_h",
         "front": "StorageDrawers:blocks/drawers_acacia_front_2",
         "back": "StorageDrawers:blocks/drawers_acacia_side",
-        "side": "StorageDrawers:blocks/drawers_acacia_side_v"
+        "side": "StorageDrawers:blocks/drawers_acacia_side_v",
+        "trim": "StorageDrawers:blocks/drawers_acacia_trim"
     }
 }

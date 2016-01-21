@@ -3,6 +3,7 @@
     "textures": {
         "top": "StorageDrawers:blocks/drawers_acacia_side",
         "front": "StorageDrawers:blocks/drawers_acacia_front_2",
-        "side": "StorageDrawers:blocks/drawers_acacia_side"
+        "side": "StorageDrawers:blocks/drawers_acacia_side",
+        "trim": "StorageDrawers:blocks/drawers_acacia_trim"
     }
 }

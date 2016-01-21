@@ -2,6 +2,7 @@
     "parent": "StorageDrawers:block/drawer_base",
     "textures": {
         "particle": "#front",
+        "trim": "#trim",
         "down": "#top",
         "up": "#top",
         "north": "#front",

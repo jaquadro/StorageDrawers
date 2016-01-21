@@ -3,6 +3,7 @@
     "textures": {
         "top": "StorageDrawers:blocks/drawers_jungle_side",
         "front": "StorageDrawers:blocks/drawers_jungle_front_4",
-        "side": "StorageDrawers:blocks/drawers_jungle_side"
+        "side": "StorageDrawers:blocks/drawers_jungle_side",
+        "trim": "StorageDrawers:blocks/drawers_jungle_trim"
     }
 }
