@@ -1,6 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.packs.forestry.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.IStorageDrawersApi;
+import com.jaquadro.minecraft.storagedrawers.api.StorageDrawersApi;
+import com.jaquadro.minecraft.storagedrawers.api.config.IBlockConfig;
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,17 +30,21 @@ public final class ModCreativeTabs
     };
 
     private static Item getTabItem () {
-        ConfigManager config = StorageDrawers.config;
+        IStorageDrawersApi api = StorageDrawersApi.instance();
+        if (api == null)
+            return Item.getItemFromBlock(Blocks.chest);
 
-        if (config.isBlockEnabled("fulldrawers2"))
+        IBlockConfig blockConfig = api.userConfig().blockConfig();
+
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull2)))
             return Item.getItemFromBlock(ModBlocks.fullDrawers2A);
-        if (config.isBlockEnabled("fulldrawers4"))
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull4)))
             return Item.getItemFromBlock(ModBlocks.fullDrawers4A);
-        if (config.isBlockEnabled("fulldrawers1"))
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull1)))
             return Item.getItemFromBlock(ModBlocks.fullDrawers1A);
-        if (config.isBlockEnabled("halfdrawers2"))
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicHalf2)))
             return Item.getItemFromBlock(ModBlocks.halfDrawers2A);
-        if (config.isBlockEnabled("halfdrawers4"))
+        if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicHalf4)))
             return Item.getItemFromBlock(ModBlocks.halfDrawers4A);
 
         return Item.getItemFromBlock(Blocks.chest);

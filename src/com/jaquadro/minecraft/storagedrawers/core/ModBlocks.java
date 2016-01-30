@@ -53,6 +53,9 @@ public class ModBlocks
             GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
         }
 
+        StorageDrawers.proxy.registerDrawer(basicDrawers);
+        StorageDrawers.proxy.registerDrawer(compDrawers);
+
         for (String key : new String[] { "drawerBasic" })
             OreDictionary.registerOre(key, new ItemStack(basicDrawers, 1, OreDictionary.WILDCARD_VALUE));
     }

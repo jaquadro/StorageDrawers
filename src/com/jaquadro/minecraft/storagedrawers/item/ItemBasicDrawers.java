@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -65,8 +66,13 @@ public class ItemBasicDrawers extends ItemMultiTexture
                 EnumBasicDrawer info = EnumBasicDrawer.byMetadata(stack.getMetadata());
                 ((TileEntityDrawersStandard) tile).setDrawerCount(info.getDrawerCount());
 
+                if (stack.hasTagCompound() && stack.getTagCompound().hasKey("tile"))
+                    tile.readFromPortableNBT(stack.getTagCompound().getCompoundTag("tile"));
+
                 if (stack.hasTagCompound() && stack.getTagCompound().hasKey("material"))
                     tile.setMaterial(stack.getTagCompound().getString("material"));
+
+                tile.setIsSealed(false);
             }
 
             tile.setDrawerCapacity(getCapacityForBlock(stack));
@@ -82,7 +88,11 @@ public class ItemBasicDrawers extends ItemMultiTexture
             String key = itemStack.getTagCompound().getString("material");
             list.add(StatCollector.translateToLocalFormatted("storageDrawers.material", StatCollector.translateToLocalFormatted("storageDrawers.material." + key)));
         }
+
         list.add(StatCollector.translateToLocalFormatted("storageDrawers.drawers.description", getCapacityForBlock(itemStack)));
+
+        if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("tile"))
+            list.add(EnumChatFormatting.YELLOW + StatCollector.translateToLocalFormatted("storageDrawers.drawers.sealed"));
     }
 
     @Override

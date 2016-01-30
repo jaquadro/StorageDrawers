@@ -18,10 +18,10 @@ public class PackFactory implements IPackBlockFactory
         switch (blockConfig.getBlockType()) {
             case Drawers:
                 return new BlockDrawersPack(dataResolver, blockConfig.getDrawerCount(), blockConfig.isHalfDepth());
-            //case DrawersSorting:
-            //    if (IntegrationRegistry.instance().isModLoaded("RefinedRelocation"))
-            //        return new BlockSortingDrawersPack(dataResolver, blockConfig.getDrawerCount(), blockConfig.isHalfDepth());
-            //    return null;
+            case DrawersSorting:
+                if (IntegrationRegistry.instance().isModLoaded("RefinedRelocation"))
+                    return new BlockSortingDrawersPack(dataResolver, blockConfig.getDrawerCount(), blockConfig.isHalfDepth());
+                return null;
             case Trim:
                 return new BlockTrimPack(dataResolver);
         }
@@ -29,12 +29,32 @@ public class PackFactory implements IPackBlockFactory
         return null;
     }
 
+    private static String getConfigName (BlockConfiguration blockConfig) {
+        if (blockConfig.getDrawerCount() == 1)
+            return "fullDrawers1";
+        if (blockConfig.getDrawerCount() == 2 && !blockConfig.isHalfDepth())
+            return "fullDrawers2";
+        if (blockConfig.getDrawerCount() == 4 && !blockConfig.isHalfDepth())
+            return "fullDrawers4";
+        if (blockConfig.getDrawerCount() == 2 && blockConfig.isHalfDepth())
+            return "halfDrawers2";
+        if (blockConfig.getDrawerCount() == 4 && blockConfig.isHalfDepth())
+            return "halfDrawers4";
+
+        return "";
+    }
+
     @Override
     public void registerBlock (Block block, String name) {
         if (block instanceof BlockDrawersPack)
             GameRegistry.registerBlock(block, ItemDrawersPack.class, name);
-        //else if (block instanceof BlockSortingDrawersPack)
-        //    GameRegistry.registerBlock(block, ItemSortingDrawersPack.class, name);
+            OreDictionary.registerOre("drawerBasic", new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE));
+            StorageDrawers.proxy.registerDrawer(block);
+        }
+        else if (block instanceof BlockSortingDrawersPack) {
+            GameRegistry.registerBlock(block, ItemSortingDrawersPack.class, name);
+            StorageDrawers.proxy.registerDrawer(block);
+        }
         else if (block instanceof BlockTrimPack)
             GameRegistry.registerBlock(block, ItemTrimPack.class, name);
     }

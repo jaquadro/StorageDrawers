@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -35,6 +36,11 @@ public class ItemCompDrawers extends ItemBlock
 
             int initCapacity = StorageDrawers.config.getBlockBaseStorage("compdrawers");
             tile.setDrawerCapacity(initCapacity);
+
+            if (stack.hasTagCompound() && stack.getTagCompound().hasKey("tile"))
+                tile.readFromPortableNBT(stack.getTagCompound().getCompoundTag("tile"));
+
+            tile.setIsSealed(false);
         }
 
         return true;
@@ -47,5 +53,9 @@ public class ItemCompDrawers extends ItemBlock
 
         int count = config.getBlockBaseStorage("compdrawers");
         list.add(StatCollector.translateToLocalFormatted("storageDrawers.drawers.description", count));
+
+        if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("tile")) {
+            list.add(EnumChatFormatting.YELLOW + StatCollector.translateToLocalFormatted("storageDrawers.drawers.sealed"));
+        }
     }
 }
