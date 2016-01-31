@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.integration.RefinedRelocation;
@@ -21,7 +22,7 @@ public class BlockSortingDrawers //extends BlockDrawers
 
     public static boolean upgradeToSorting (World world, int x, int y, int z) {
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (!(tile instanceof TileEntityDrawersStandard))
+        if (!(tile instanceof TileEntityDrawersStandard) || tile instanceof TileSortingDrawersStandard)
             return false;
 
         Block block = world.getBlock(x, y, z);
@@ -45,6 +46,11 @@ public class BlockSortingDrawers //extends BlockDrawers
         world.setTileEntity(x, y, z, newDrawer);
 
         return true;
+    }
+
+    @Override
+    public BlockType retrimType () {
+        return BlockType.DrawersSorting;
     }
 
     @Override

@@ -59,6 +59,16 @@ public class DefaultStorageProvider implements IStorageProvider
     }
 
     @Override
+    public boolean isStorageUnlimited (int slot) {
+        return false;
+    }
+
+    @Override
+    public boolean isVendingUnlimited (int slot) {
+        return false;
+    }
+
+    @Override
     public void markAmountDirty (int slot) {
         if (tile.getWorld().isRemote)
             return;

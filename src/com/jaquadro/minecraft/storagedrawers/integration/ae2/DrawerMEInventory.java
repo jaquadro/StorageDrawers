@@ -2,6 +2,11 @@ package com.jaquadro.minecraft.storagedrawers.integration.ae2;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IPriorityGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import net.minecraft.item.ItemStack;
 
 public class DrawerMEInventory //implements IMEInventory<IAEItemStack>
@@ -14,12 +19,17 @@ public class DrawerMEInventory //implements IMEInventory<IAEItemStack>
 
     @Override
     public IAEItemStack injectItems (IAEItemStack input, Actionable type, BaseActionSource src) {
+        int[] order = null;
+        if (group instanceof IPriorityGroup)
+            order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
+
         long itemsLeft = input.getStackSize();
         for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
-            if (!group.isDrawerEnabled(i))
+            int slot = (order != null) ? order[i] : i;
+            if (!group.isDrawerEnabled(slot))
                 continue;
 
-            IDrawer drawer = group.getDrawer(i);
+            IDrawer drawer = group.getDrawer(slot);
             ItemStack itemProto = drawer.getStoredItemPrototype();
             if (itemProto != null) {
                 if (drawer.canItemBeStored(input.getItemStack())) {
@@ -33,13 +43,14 @@ public class DrawerMEInventory //implements IMEInventory<IAEItemStack>
         }
 
         for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
-            if (!group.isDrawerEnabled(i))
+            int slot = (order != null) ? order[i] : i;
+            if (!group.isDrawerEnabled(slot))
                 continue;
 
             if (group instanceof ILockable && ((ILockable) group).isLocked(LockAttribute.LOCK_EMPTY))
                 continue;
 
-            IDrawer drawer = group.getDrawer(i);
+            IDrawer drawer = group.getDrawer(slot);
             ItemStack itemProto = drawer.getStoredItemPrototype();
 
             if (itemProto == null && drawer instanceof ILockable && ((ILockable) drawer).isLocked(LockAttribute.LOCK_EMPTY))
@@ -92,12 +103,17 @@ public class DrawerMEInventory //implements IMEInventory<IAEItemStack>
 
     @Override
     public IAEItemStack extractItems (IAEItemStack request, Actionable mode, BaseActionSource src) {
+        int[] order = null;
+        if (group instanceof IPriorityGroup)
+            order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
+
         long itemsLeft = request.getStackSize();
         for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
-            if (!group.isDrawerEnabled(i))
+            int slot = (order != null) ? order[i] : i;
+            if (!group.isDrawerEnabled(slot))
                 continue;
 
-            IDrawer drawer = group.getDrawer(i);
+            IDrawer drawer = group.getDrawer(slot);
             if (drawer.canItemBeExtracted(request.getItemStack())) {
                 int itemCount = drawer.getStoredItemCount();
                 if (itemsLeft > itemCount) {
@@ -125,11 +141,16 @@ public class DrawerMEInventory //implements IMEInventory<IAEItemStack>
 
     @Override
     public IItemList<IAEItemStack> getAvailableItems (IItemList<IAEItemStack> out) {
+        int[] order = null;
+        if (group instanceof IPriorityGroup)
+            order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
+
         for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
-            if (!group.isDrawerEnabled(i))
+            int slot = (order != null) ? order[i] : i;
+            if (!group.isDrawerEnabled(slot))
                 continue;
 
-            IDrawer drawer = group.getDrawer(i);
+            IDrawer drawer = group.getDrawer(slot);
             if (!drawer.isEmpty())
                 out.add(AEApi.instance().storage().createItemStack(drawer.getStoredItemCopy()));
         }

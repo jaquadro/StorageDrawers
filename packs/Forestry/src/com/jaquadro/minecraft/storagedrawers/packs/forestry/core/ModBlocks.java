@@ -13,19 +13,12 @@ import net.minecraft.block.Block;
 
 public class ModBlocks
 {
-    public static Block fullDrawers1A;
-    public static Block fullDrawers2A;
-    public static Block fullDrawers4A;
-    public static Block halfDrawers2A;
-    public static Block halfDrawers4A;
-    public static Block trimA;
-
-    public static Block fullDrawers1B;
-    public static Block fullDrawers2B;
-    public static Block fullDrawers4B;
-    public static Block halfDrawers2B;
-    public static Block halfDrawers4B;
-    public static Block trimB;
+    public static Block[] fullDrawers1;
+    public static Block[] fullDrawers2;
+    public static Block[] fullDrawers4;
+    public static Block[] halfDrawers2;
+    public static Block[] halfDrawers4;
+    public static Block[] trim;
 
     public void init () {
         IStorageDrawersApi api = StorageDrawersApi.instance();
@@ -33,65 +26,65 @@ public class ModBlocks
             return;
 
         IPackBlockFactory factory = api.packFactory();
-        IPackDataResolver resolver1 = StorageDrawersPack.instance.resolver1;
-        IPackDataResolver resolver2 = StorageDrawersPack.instance.resolver2;
+        IPackDataResolver[] resolvers = StorageDrawersPack.instance.resolvers;
 
-        fullDrawers1A = factory.createBlock(BlockConfiguration.BasicFull1, resolver1);
-        fullDrawers2A = factory.createBlock(BlockConfiguration.BasicFull2, resolver1);
-        fullDrawers4A = factory.createBlock(BlockConfiguration.BasicFull4, resolver1);
-        halfDrawers2A = factory.createBlock(BlockConfiguration.BasicHalf2, resolver1);
-        halfDrawers4A = factory.createBlock(BlockConfiguration.BasicHalf4, resolver1);
-        trimA = factory.createBlock(BlockConfiguration.Trim, resolver1);
+        fullDrawers1 = new Block[resolvers.length];
+        fullDrawers2 = new Block[resolvers.length];
+        fullDrawers4 = new Block[resolvers.length];
+        halfDrawers2 = new Block[resolvers.length];
+        halfDrawers4 = new Block[resolvers.length];
+        trim = new Block[resolvers.length];
 
-        fullDrawers1B = factory.createBlock(BlockConfiguration.BasicFull1, resolver2);
-        fullDrawers2B = factory.createBlock(BlockConfiguration.BasicFull2, resolver2);
-        fullDrawers4B = factory.createBlock(BlockConfiguration.BasicFull4, resolver2);
-        halfDrawers2B = factory.createBlock(BlockConfiguration.BasicHalf2, resolver2);
-        halfDrawers4B = factory.createBlock(BlockConfiguration.BasicHalf4, resolver2);
-        trimB = factory.createBlock(BlockConfiguration.Trim, resolver2);
+        for (int i = 0; i < resolvers.length; i++) {
+            IPackDataResolver resolver = resolvers[i];
+
+            fullDrawers1[i] = factory.createBlock(BlockConfiguration.BasicFull1, resolver);
+            fullDrawers2[i] = factory.createBlock(BlockConfiguration.BasicFull2, resolver);
+            fullDrawers4[i] = factory.createBlock(BlockConfiguration.BasicFull4, resolver);
+            halfDrawers2[i] = factory.createBlock(BlockConfiguration.BasicHalf2, resolver);
+            halfDrawers4[i] = factory.createBlock(BlockConfiguration.BasicHalf4, resolver);
+            trim[i] = factory.createBlock(BlockConfiguration.Trim, resolver);
+        }
 
         IUserConfig config = api.userConfig();
         IBlockConfig blockConfig = config.blockConfig();
 
+        char[] tail = new char[] { 'A', 'B' };
+
         if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull1))) {
-            factory.registerBlock(fullDrawers1A, "fullDrawers1A");
-            factory.registerBlock(fullDrawers1B, "fullDrawers1B");
+            for (int i = 0; i < resolvers.length; i++)
+                factory.registerBlock(fullDrawers1[i], "fullDrawers1" + tail[i]);
         }
         if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull2))) {
-            factory.registerBlock(fullDrawers2A, "fullDrawers2A");
-            factory.registerBlock(fullDrawers2B, "fullDrawers2B");
+            for (int i = 0; i < resolvers.length; i++)
+                factory.registerBlock(fullDrawers2[i], "fullDrawers2" + tail[i]);
         }
         if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicFull4))) {
-            factory.registerBlock(fullDrawers4A, "fullDrawers4A");
-            factory.registerBlock(fullDrawers4B, "fullDrawers4B");
+            for (int i = 0; i < resolvers.length; i++)
+                factory.registerBlock(fullDrawers4[i], "fullDrawers4" + tail[i]);
         }
         if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicHalf2))) {
-            factory.registerBlock(halfDrawers2A, "halfDrawers2A");
-            factory.registerBlock(halfDrawers2B, "halfDrawers2B");
+            for (int i = 0; i < resolvers.length; i++)
+                factory.registerBlock(halfDrawers2[i], "halfDrawers2" + tail[i]);
         }
         if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.BasicHalf4))) {
-            factory.registerBlock(halfDrawers4A, "halfDrawers4A");
-            factory.registerBlock(halfDrawers4B, "halfDrawers4B");
+            for (int i = 0; i < resolvers.length; i++)
+                factory.registerBlock(halfDrawers4[i], "halfDrawers4" + tail[i]);
         }
         if (blockConfig.isBlockEnabled(blockConfig.getBlockConfigName(BlockConfiguration.Trim))) {
-            factory.registerBlock(trimA, "trimA");
-            factory.registerBlock(trimB, "trimB");
+            for (int i = 0; i < resolvers.length; i++)
+                factory.registerBlock(trim[i], "trim" + tail[i]);
         }
 
         if (!config.addonConfig().showAddonItemsNEI()) {
-            factory.hideBlock(getQualifiedName(fullDrawers1A));
-            factory.hideBlock(getQualifiedName(fullDrawers2A));
-            factory.hideBlock(getQualifiedName(fullDrawers4A));
-            factory.hideBlock(getQualifiedName(halfDrawers2A));
-            factory.hideBlock(getQualifiedName(halfDrawers4A));
-            factory.hideBlock(getQualifiedName(trimA));
-
-            factory.hideBlock(getQualifiedName(fullDrawers1B));
-            factory.hideBlock(getQualifiedName(fullDrawers2B));
-            factory.hideBlock(getQualifiedName(fullDrawers4B));
-            factory.hideBlock(getQualifiedName(halfDrawers2B));
-            factory.hideBlock(getQualifiedName(halfDrawers4B));
-            factory.hideBlock(getQualifiedName(trimB));
+            for (int i = 0; i < resolvers.length; i++) {
+                factory.hideBlock(getQualifiedName(fullDrawers1[i]));
+                factory.hideBlock(getQualifiedName(fullDrawers2[i]));
+                factory.hideBlock(getQualifiedName(fullDrawers4[i]));
+                factory.hideBlock(getQualifiedName(halfDrawers2[i]));
+                factory.hideBlock(getQualifiedName(halfDrawers4[i]));
+                factory.hideBlock(getQualifiedName(trim[i]));
+            }
         }
     }
 

@@ -1,6 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
@@ -11,6 +13,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
+import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import net.minecraft.block.*;
@@ -90,6 +93,54 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         setDefaultState(blockState.getBaseState().withProperty(BLOCK, EnumBasicDrawer.FULL2));
         setDefaultState(blockState.getBaseState().withProperty(VARIANT, BlockPlanks.EnumType.OAK));
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+    }
+
+    public boolean retrimBlock (World world, int x, int y, int z, ItemStack prototype) {
+        if (retrimType() == null)
+            return false;
+
+        Block protoBlock = Block.getBlockFromItem(prototype.getItem());
+        int protoMeta = prototype.getItemDamage();
+
+        BlockConfiguration config = BlockConfiguration.by(retrimType(), drawerCount, halfDepth);
+
+        Block plankBlock = StorageDrawers.blockRegistry.getPlankBlock(BlockConfiguration.Trim, protoBlock, protoMeta);
+        int plankMeta = StorageDrawers.blockRegistry.getPlankMeta(BlockConfiguration.Trim, protoBlock, protoMeta);
+
+        Block newBlock = StorageDrawers.blockRegistry.getBlock(config, plankBlock, plankMeta);
+        int newMeta = StorageDrawers.blockRegistry.getMeta(config, plankBlock, plankMeta);
+
+        if (newBlock == null)
+            return false;
+
+        TileEntityDrawers tile = getTileEntity(world, x, y, z);
+        if (newBlock == this && newMeta == world.getBlockMetadata(x, y, z) && !tile.shouldHideUpgrades()) {
+            tile.setShouldHideUpgrades(true);
+            return true;
+        }
+
+        if (newBlock == this)
+            world.setBlockMetadataWithNotify(x, y, z, newMeta, 3);
+        else {
+
+            TileEntity newDrawer = createNewTileEntity(world, newMeta);
+
+            NBTTagCompound tag = new NBTTagCompound();
+            tile.writeToNBT(tag);
+            newDrawer.readFromNBT(tag);
+
+            world.removeTileEntity(x, y, z);
+            world.setBlockToAir(x, y, z);
+
+            world.setBlock(x, y, z, newBlock, newMeta, 3);
+            world.setTileEntity(x, y, z, newDrawer);
+        }
+
+        return true;
+    }
+
+    public BlockType retrimType () {
+        return BlockType.Drawers;
     }
 
     public int getDrawerCount (IBlockState state) {
@@ -231,6 +282,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (world.isRemote && Minecraft.getMinecraft().getSystemTime() == ignoreEventTime) {
+            ignoreEventTime = 0;
+            return false;
+        }
+
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, pos);
         ItemStack item = player.inventory.getCurrentItem();
 
@@ -240,7 +296,18 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         if (item != null && item.getItem() != null) {
-            if (item.getItem() == ModItems.upgradeStorage || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid) {
+            if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
+                if (!retrimBlock(world, x, y, z, item))
+                    return false;
+
+                if (player != null && !player.capabilities.isCreativeMode) {
+                    if (--item.stackSize <= 0)
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                }
+
+                return true;
+            }
+            else if (item.getItem() == ModItems.upgradeStorage || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid) {
                 if (!tileDrawers.addUpgrade(item) && !world.isRemote) {
                     player.addChatMessage(new ChatComponentTranslation("storagedrawers.msg.maxUpgrades"));
                     return false;
@@ -391,8 +458,33 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
-    public boolean isSideSolid (IBlockAccess world, BlockPos pos, EnumFacing side) {
-        if (isHalfDepth(world.getBlockState(pos)))
+    public boolean rotateBlock (World world, int x, int y, int z, ForgeDirection axis) {
+        TileEntityDrawers tile = getTileEntitySafe(world, x, y, z);
+        if (tile.isSealed()) {
+            dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+            world.setBlockToAir(x, y, z);
+            return true;
+        }
+
+        if (tile.getDirection() == axis.ordinal())
+            return false;
+
+        if (axis == ForgeDirection.UP || axis == ForgeDirection.DOWN)
+            return false;
+
+        tile.setDirection(axis.ordinal());
+
+        world.markBlockForUpdate(x, y, z);
+
+        if (world.isRemote)
+            ignoreEventTime = Minecraft.getMinecraft().getSystemTime();
+
+        return true;
+    }
+
+    @Override
+    public boolean isSideSolid (IBlockAccess world, int x, int y, int z, ForgeDirection side) {
+        if (halfDepth)
             return false;
 
         if (side == EnumFacing.DOWN) {
@@ -446,7 +538,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                     spawnAsEntity(world, pos, stack);
             }
 
-            DrawerInventoryHelper.dropInventoryItems(world, pos, tile);
+            if (!tile.isVending())
+                DrawerInventoryHelper.dropInventoryItems(world, pos, tile);
         }
 
         super.breakBlock(world, pos, state);

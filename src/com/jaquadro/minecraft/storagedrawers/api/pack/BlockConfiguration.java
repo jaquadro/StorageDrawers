@@ -16,7 +16,8 @@ public enum BlockConfiguration
     SortingHalf2(BlockType.DrawersSorting, EnumBasicDrawer.HALF2),
     SortingHalf4(BlockType.DrawersSorting, EnumBasicDrawer.HALF4),
 
-    Trim(BlockType.Trim, null);
+    Trim(BlockType.Trim, null),
+    TrimSorting(BlockType.TrimSorting, null);
 
     private final BlockType type;
     private final EnumBasicDrawer drawer;

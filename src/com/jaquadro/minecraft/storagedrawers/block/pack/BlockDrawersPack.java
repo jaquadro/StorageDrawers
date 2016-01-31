@@ -1,10 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.pack;
 /*
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
-import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
-import com.jaquadro.minecraft.storagedrawers.api.pack.IPackDataResolver;
-import com.jaquadro.minecraft.storagedrawers.api.pack.TextureType;
+import com.jaquadro.minecraft.storagedrawers.api.pack.*;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
@@ -18,7 +15,7 @@ import net.minecraft.util.IIcon;
 
 import java.util.List;
 
-public class BlockDrawersPack extends BlockDrawers
+public class BlockDrawersPack extends BlockDrawers implements IPackBlock
 {
     private IPackDataResolver resolver;
 
@@ -44,6 +41,11 @@ public class BlockDrawersPack extends BlockDrawers
         }
 
         return names;
+    }
+
+    @Override
+    public IPackDataResolver getDataResolver () {
+        return resolver;
     }
 
     @Override

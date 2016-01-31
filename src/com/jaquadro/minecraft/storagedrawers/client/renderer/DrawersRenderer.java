@@ -109,7 +109,7 @@ public class DrawersRenderer //implements ISimpleBlockRenderingHandler
         renderer.uvRotateTop = 0;
 
         int maxStorageLevel = tile.getMaxStorageLevel();
-        if (maxStorageLevel > 1 && StorageDrawers.config.cache.renderStorageUpgrades) {
+        if (maxStorageLevel > 1 && StorageDrawers.config.cache.renderStorageUpgrades && !tile.shouldHideUpgrades()) {
             for (int i = 0; i < 6; i++)
                 boxRenderer.setExteriorIcon(block.getOverlayIcon(world, x, y, z, i, maxStorageLevel), i);
 
@@ -332,7 +332,7 @@ public class DrawersRenderer //implements ISimpleBlockRenderingHandler
             return x;
 
         int step = block.indSteps > 0 ? block.indSteps : 1000;
-        float fillAmt = (float)(step * count / cap) / step;
+        float fillAmt = (float)((double)step * count / cap) / step;
 
         return x + (w * fillAmt);
     }

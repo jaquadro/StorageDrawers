@@ -1,10 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.pack;
 /*
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
-import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
-import com.jaquadro.minecraft.storagedrawers.api.pack.IPackDataResolver;
-import com.jaquadro.minecraft.storagedrawers.api.pack.TextureType;
+import com.jaquadro.minecraft.storagedrawers.api.pack.*;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation.BlockSortingDrawers;
 import cpw.mods.fml.relauncher.Side;
@@ -17,7 +14,7 @@ import net.minecraft.util.IIcon;
 
 import java.util.List;
 
-public class BlockSortingDrawersPack extends BlockSortingDrawers
+public class BlockSortingDrawersPack extends BlockSortingDrawers implements IPackBlock
 {
     private IPackDataResolver resolver;
 
@@ -41,6 +38,11 @@ public class BlockSortingDrawersPack extends BlockSortingDrawers
         }
 
         return names;
+    }
+
+    @Override
+    public IPackDataResolver getDataResolver () {
+        return resolver;
     }
 
     @Override

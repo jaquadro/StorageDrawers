@@ -48,9 +48,9 @@ public class BlockClickMessage implements IMessage
             y = buf.readShort();
             z = buf.readInt();
             side = buf.readByte();
-            hitX = buf.readByte() / 16f;
-            hitY = buf.readByte() / 16f;
-            hitZ = buf.readByte() / 16f;
+            hitX = buf.readFloat();
+            hitY = buf.readFloat();
+            hitZ = buf.readFloat();
             invertShift = buf.readBoolean();
         }
         catch (IndexOutOfBoundsException e) {
@@ -65,9 +65,9 @@ public class BlockClickMessage implements IMessage
         buf.writeShort(y);
         buf.writeInt(z);
         buf.writeByte(side);
-        buf.writeByte((int)(hitX * 16));
-        buf.writeByte((int)(hitY * 16));
-        buf.writeByte((int)(hitZ * 16));
+        buf.writeFloat(hitX);
+        buf.writeFloat(hitY);
+        buf.writeFloat(hitZ);
         buf.writeBoolean(invertShift);
     }
 

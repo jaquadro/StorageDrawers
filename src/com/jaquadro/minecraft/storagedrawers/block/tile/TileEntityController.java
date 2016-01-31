@@ -1,10 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
-import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
@@ -28,7 +26,7 @@ import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 
-public class TileEntityController extends TileEntity implements IDrawerGroup, ISidedInventory
+public class TileEntityController extends TileEntity implements IDrawerGroup, IPriorityGroup, ISidedInventory
 {
     private static final int PRI_VOID = 0;
     private static final int PRI_LOCKED = 1;
@@ -118,6 +116,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     private int[] autoSides = new int[] { 0, 1, 2, 3, 4, 5 };
 
     private int drawerSize = 0;
+    private int range;
 
     private long lastClickTime;
     private UUID lastClickUUID;
@@ -127,11 +126,20 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
     public TileEntityController () {
         invSlotList.add(new SlotRecord(null, 0));
         inventorySlots = new int[] { 0 };
+        range = StorageDrawers.config.getControllerRange();
     }
 
     @Override
     public boolean shouldRefresh (World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
         return oldState.getBlock() != newSate.getBlock();
+    }
+
+    public int getDirection () {
+        return direction;
+    }
+
+    public void setDirection (int direction) {
+        this.direction = direction % 6;
     }
 
     public int interactPutItemsIntoInventory (EntityPlayer player) {
@@ -578,6 +586,11 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IS
             return false;
 
         return group.isDrawerEnabled(getLocalDrawerSlot(slot));
+    }
+
+    @Override
+    public int[] getAccessibleDrawerSlots () {
+        return drawerSlots;
     }
 
     @Override

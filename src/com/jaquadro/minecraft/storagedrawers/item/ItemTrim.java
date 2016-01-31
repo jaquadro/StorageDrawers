@@ -34,6 +34,15 @@ public class ItemTrim extends ItemMultiTexture
         super(block, block, function);
     }
 
+    @Override
+    public boolean doesSneakBypassUse (World world, int x, int y, int z, EntityPlayer player) {
+        Block block = world.getBlock(x, y, z);
+        if (block instanceof BlockDrawers && ((BlockDrawers) block).retrimType() != null)
+            return true;
+
+        return false;
+    }
+
     /*@SideOnly(Side.CLIENT)
     public ItemMeshDefinition getMeshResolver () {
         if (meshResolver == null)

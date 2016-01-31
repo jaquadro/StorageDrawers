@@ -44,6 +44,7 @@ public class StandardDataResolver implements IPackDataResolver
                     return makeBlockName("halfDrawers4");
                 break;
             case Trim:
+            case TrimSorting:
                 return makeBlockName("trim");
         }
         return null;

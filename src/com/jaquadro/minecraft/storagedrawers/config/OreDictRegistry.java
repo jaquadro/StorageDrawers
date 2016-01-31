@@ -54,7 +54,7 @@ public class OreDictRegistry
         for (String item : new String[] { "oreIron", "oreGold", "oreAluminum", "oreAluminium", "oreTin", "oreCopper", "oreLead", "oreSilver", "orePlatinum", "oreNickel" })
             addWhitelist(item);
 
-        for (String item : new String[] { "blockIron", "blockGold", "blockAluminum", "blockAluminium", "blockTin", "blockCopper", "blockLead", "blockSilver", "blockPlatinum", "blockeNickel" })
+        for (String item : new String[] { "blockIron", "blockGold", "blockAluminum", "blockAluminium", "blockTin", "blockCopper", "blockLead", "blockSilver", "blockPlatinum", "blockNickel" })
             addWhitelist(item);
 
         for (String item : new String[] { "ingotIron", "ingotGold", "ingotAluminum", "ingotAluminium", "ingotTin", "ingotCopper", "ingotLead", "ingotSilver", "ingotPlatinum", "ingotNickel" })

@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.block.state.IBlockState;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IPriorityGroup;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -18,11 +19,12 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntitySlave extends TileEntity implements IDrawerGroup, ISidedInventory
+public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriorityGroup, ISidedInventory
 {
     private BlockPos controllerCoord;
 
     private int[] inventorySlots = new int[] { 0 };
+    private int[] drawerSlots = new int[] { 0 };
 
     @Override
     public void readFromNBT (NBTTagCompound tag) {
@@ -87,6 +89,15 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, ISidedI
         }
 
         return (TileEntityController)te;
+    }
+
+    @Override
+    public int[] getAccessibleDrawerSlots () {
+        TileEntityController controller = getController();
+        if (controller == null || !controller.isValidSlave(selfCoord))
+            return drawerSlots;
+
+        return controller.getAccessibleDrawerSlots();
     }
 
     @Override
