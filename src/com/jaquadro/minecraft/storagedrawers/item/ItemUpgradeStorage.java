@@ -6,8 +6,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,6 +14,16 @@ import java.util.List;
 
 public class ItemUpgradeStorage extends Item
 {
+    public String[] getResourceVariants () {
+        String[] variants = new String[EnumUpgradeStorage.values().length];
+        int index = 0;
+
+        for (EnumUpgradeStorage upgrade : EnumUpgradeStorage.values())
+            variants[index++] = '_' + upgrade.getName();
+
+        return variants;
+    }
+
     public ItemUpgradeStorage (String name) {
         setUnlocalizedName(name);
         setHasSubtypes(true);

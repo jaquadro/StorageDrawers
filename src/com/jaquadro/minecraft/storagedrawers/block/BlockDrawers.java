@@ -50,6 +50,17 @@ import java.util.List;
 
 public class BlockDrawers extends BlockContainer implements IExtendedBlockClickHandler, INetworked
 {
+    public String[] getResourceVariants () {
+        String[] variants = new String[EnumBasicDrawer.values().length * BlockPlanks.EnumType.values().length];
+        int index = 0;
+
+        for (EnumBasicDrawer type : EnumBasicDrawer.values())
+            for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values())
+                variants[index++] = '_' + type.getName() + '_' + material.getName();
+
+        return variants;
+    }
+
     public static final PropertyEnum BLOCK = PropertyEnum.create("block", EnumBasicDrawer.class);
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     public static final PropertyEnum VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);

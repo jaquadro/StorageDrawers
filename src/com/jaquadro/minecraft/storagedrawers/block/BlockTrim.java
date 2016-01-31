@@ -17,6 +17,16 @@ import java.util.List;
 
 public class BlockTrim extends Block implements INetworked
 {
+    public String[] getResourceVariants () {
+        String[] variants = new String[BlockPlanks.EnumType.values().length];
+        int index = 0;
+
+        for (BlockPlanks.EnumType type : BlockPlanks.EnumType.values())
+            variants[index++] = '_' + type.getName();
+
+        return variants;
+    }
+
     public static final PropertyEnum VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
 
     public BlockTrim (String name) {
