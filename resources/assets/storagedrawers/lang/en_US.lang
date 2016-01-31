@@ -93,6 +93,7 @@ storageDrawers.waila.empty=<Empty>
 storageDrawers.waila.level=Upgrade Level: %s
 storageDrawers.waila.drawer=#%s: %s
 storageDrawers.waila.limit=Stack Limit: %s (x%s)
+storageDrawers.waila.nolimit=Stack Limit: ∞
 storageDrawers.waila.locked=Locked
 storageDrawers.waila.void=Void
 storageDrawers.waila.sorting=Sorting
