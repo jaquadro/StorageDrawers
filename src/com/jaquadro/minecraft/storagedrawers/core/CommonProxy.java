@@ -34,6 +34,7 @@ public class CommonProxy
     };
 
     public final ResourceLocation iconShroudCover = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/drawers_oak_trim");
+    public final ResourceLocation iconTapeCover = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/tape");
 
     public void initDynamic ()
     { }

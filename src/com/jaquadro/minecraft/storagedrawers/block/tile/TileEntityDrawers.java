@@ -97,11 +97,12 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         return material;
     }
 
-public String getMaterialOrDefault () {
+    public String getMaterialOrDefault () {
         String mat = getMaterial();
         return (mat != null) ? mat : "oak";
     }
-public void setMaterial (String material) {
+
+    public void setMaterial (String material) {
         this.material = material;
     }
 

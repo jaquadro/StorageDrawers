@@ -26,13 +26,13 @@ public class ItemTape extends Item
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation (ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+    public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
         String name = getUnlocalizedName(itemStack);
         list.add(StatCollector.translateToLocalFormatted(name + ".description"));
     }
 
     @Override
-    public boolean onItemUseFirst (ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onItemUse (ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!player.canPlayerEdit(pos, side, stack))
             return false;
 
