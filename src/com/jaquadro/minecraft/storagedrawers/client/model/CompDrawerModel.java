@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IRegistry;
@@ -16,10 +17,11 @@ import java.util.*;
 public class CompDrawerModel extends IFlexibleBakedModel.Wrapper implements ISmartBlockModel
 {
     private static final Set<ModelResourceLocation> resourceLocations = new HashSet<ModelResourceLocation>();
+    private static final Set<ModelResourceLocation> itemResourceLocations = new HashSet<ModelResourceLocation>();
     private static final Map<EnumCompDrawer, Map<EnumFacing, ModelResourceLocation>> stateMap = new HashMap<EnumCompDrawer, Map<EnumFacing, ModelResourceLocation>>();
     private static final Map<ModelResourceLocation, IFlexibleBakedModel> modelCache = new HashMap<ModelResourceLocation, IFlexibleBakedModel>();
 
-    public static void initialize (IRegistry modelRegistry) {
+    public static void initialize (IRegistry<ModelResourceLocation, IBakedModel> modelRegistry) {
         initailizeResourceLocations();
 
         for (ModelResourceLocation loc : resourceLocations) {
@@ -27,6 +29,13 @@ public class CompDrawerModel extends IFlexibleBakedModel.Wrapper implements ISma
             if (object instanceof IFlexibleBakedModel) {
                 modelCache.put(loc, (IFlexibleBakedModel)object);
                 modelRegistry.putObject(loc, new CompDrawerModel((IFlexibleBakedModel)object));
+            }
+        }
+
+        for (ModelResourceLocation loc : itemResourceLocations) {
+            IBakedModel object = modelRegistry.getObject(loc);
+            if (object != null) {
+                modelRegistry.putObject(loc, new BasicDrawerItemModel(object));
             }
         }
     }
@@ -46,6 +55,13 @@ public class CompDrawerModel extends IFlexibleBakedModel.Wrapper implements ISma
                 resourceLocations.add(location);
                 dirMap.put(dir, location);
             }
+        }
+
+        for (EnumCompDrawer drawerType : EnumCompDrawer.values()) {
+            String key = StorageDrawers.MOD_ID + ":compDrawers_" + drawerType + "#inventory";
+            ModelResourceLocation location = new ModelResourceLocation(key);
+
+            itemResourceLocations.add(location);
         }
     }
 

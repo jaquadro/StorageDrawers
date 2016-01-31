@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IRegistry;
@@ -16,17 +17,25 @@ import java.util.*;
 public class BasicDrawerModel extends IFlexibleBakedModel.Wrapper implements ISmartBlockModel
 {
     private static final Set<ModelResourceLocation> resourceLocations = new HashSet<ModelResourceLocation>();
+    private static final Set<ModelResourceLocation> itemResourceLocations = new HashSet<ModelResourceLocation>();
     private static final Map<EnumBasicDrawer, Map<EnumFacing, Map<BlockPlanks.EnumType, ModelResourceLocation>>> stateMap = new HashMap<EnumBasicDrawer, Map<EnumFacing, Map<BlockPlanks.EnumType, ModelResourceLocation>>>();
     private static final Map<ModelResourceLocation, IFlexibleBakedModel> modelCache = new HashMap<ModelResourceLocation, IFlexibleBakedModel>();
 
-    public static void initialize (IRegistry modelRegistry) {
+    public static void initialize (IRegistry<ModelResourceLocation, IBakedModel> modelRegistry) {
         initailizeResourceLocations();
 
         for (ModelResourceLocation loc : resourceLocations) {
-            Object object = modelRegistry.getObject(loc);
+            IBakedModel object = modelRegistry.getObject(loc);
             if (object instanceof IFlexibleBakedModel) {
                 modelCache.put(loc, (IFlexibleBakedModel)object);
                 modelRegistry.putObject(loc, new BasicDrawerModel((IFlexibleBakedModel)object));
+            }
+        }
+
+        for (ModelResourceLocation loc : itemResourceLocations) {
+            IBakedModel object = modelRegistry.getObject(loc);
+            if (object != null) {
+                modelRegistry.putObject(loc, new BasicDrawerItemModel(object));
             }
         }
     }
@@ -50,6 +59,13 @@ public class BasicDrawerModel extends IFlexibleBakedModel.Wrapper implements ISm
                     resourceLocations.add(location);
                     typeMap.put(woodType, location);
                 }
+            }
+
+            for (BlockPlanks.EnumType woodType : BlockPlanks.EnumType.values()) {
+                String key = StorageDrawers.MOD_ID + ":basicDrawers_" + drawerType.getName() + "_" + woodType.getName() + "#inventory";
+                ModelResourceLocation location = new ModelResourceLocation(key);
+
+                itemResourceLocations.add(location);
             }
         }
     }
