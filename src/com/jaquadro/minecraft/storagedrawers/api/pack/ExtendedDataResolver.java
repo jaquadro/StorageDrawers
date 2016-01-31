@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.api.pack;
+/*package com.jaquadro.minecraft.storagedrawers.api.pack;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -60,3 +60,4 @@ public class ExtendedDataResolver extends StandardDataResolver implements IExten
         }
     }
 }
+*/

@@ -8,7 +8,6 @@ import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -73,7 +72,7 @@ public class BlockController extends BlockContainer implements INetworked
             Block blockWest = world.getBlockState(pos.west()).getBlock();
             Block blockEast = world.getBlockState(pos.east()).getBlock();
 
-            EnumFacing facing = (EnumFacing)state.getValue(FACING);
+            EnumFacing facing = state.getValue(FACING);
 
             if (facing == EnumFacing.NORTH && blockNorth.isFullBlock() && !blockSouth.isFullBlock())
                 facing = EnumFacing.SOUTH;
@@ -106,7 +105,7 @@ public class BlockController extends BlockContainer implements INetworked
 
     @Override
     public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
-        EnumFacing blockDir = (EnumFacing)state.getValue(FACING);
+        EnumFacing blockDir = state.getValue(FACING);
         TileEntityController te = getTileEntitySafe(world, pos);
 
         ItemStack item = player.inventory.getCurrentItem();
@@ -138,27 +137,8 @@ public class BlockController extends BlockContainer implements INetworked
         if (state == null)
             return true;
 
-        EnumFacing facing = (EnumFacing)state.getValue(FACING);
-        if (side != facing)
-            return true;
-
-        return false;
-    }
-
-    @Override
-    public boolean rotateBlock (World world, int x, int y, int z, ForgeDirection axis) {
-        TileEntityController tile = getTileEntitySafe(world, x, y, z);
-
-        if (tile.getDirection() == axis.ordinal())
-            return false;
-
-        if (axis == ForgeDirection.UP || axis == ForgeDirection.DOWN)
-            return false;
-
-        tile.setDirection(axis.ordinal());
-        world.markBlockForUpdate(x, y, z);
-
-        return true;
+        EnumFacing facing = state.getValue(FACING);
+        return side != facing;
     }
 
     @Override
@@ -191,12 +171,12 @@ public class BlockController extends BlockContainer implements INetworked
 
     @Override
     public int getMetaFromState (IBlockState state) {
-        return ((EnumFacing)state.getValue(FACING)).getIndex();
+        return (state.getValue(FACING)).getIndex();
     }
 
     @Override
     protected BlockState createBlockState () {
-        return new BlockState(this, new IProperty[] { FACING });
+        return new BlockState(this, FACING);
     }
 
     @Override

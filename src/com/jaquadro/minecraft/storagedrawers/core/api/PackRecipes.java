@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.core.api;
+/*package com.jaquadro.minecraft.storagedrawers.core.api;
 
 import com.jaquadro.minecraft.storagedrawers.api.IStorageDrawersApi;
 import com.jaquadro.minecraft.storagedrawers.api.StorageDrawersApi;
@@ -127,3 +127,4 @@ public class PackRecipes
         }
     }
 }
+*/

@@ -26,7 +26,7 @@ public class ModBlocks
     public static BlockTrim trim;
 
     public void init () {
-        resolver = new DataResolver(StorageDrawers.MOD_ID);
+        //resolver = new DataResolver(StorageDrawers.MOD_ID);
 
         basicDrawers = new BlockDrawers("basicDrawers");
         compDrawers = new BlockCompDrawers("compDrawers");
@@ -61,7 +61,7 @@ public class ModBlocks
         for (String key : new String[] { "drawerBasic" })
             OreDictionary.registerOre(key, new ItemStack(basicDrawers, 1, OreDictionary.WILDCARD_VALUE));
 
-        resolver.init();
+        //resolver.init();
     }
 
     public static String getQualifiedName (Block block) {

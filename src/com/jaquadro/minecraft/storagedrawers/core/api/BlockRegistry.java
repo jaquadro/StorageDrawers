@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.core.api;
+/*package com.jaquadro.minecraft.storagedrawers.core.api;
 
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
 import com.jaquadro.minecraft.storagedrawers.api.pack.IExtendedDataResolver;
@@ -79,3 +79,4 @@ public class BlockRegistry
         return id.meta;
     }
 }
+*/

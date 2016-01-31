@@ -1,16 +1,11 @@
-package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
+/*package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
 import com.jaquadro.minecraft.storagedrawers.integration.RefinedRelocation;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockWood;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 public class BlockSortingTrim extends BlockTrim implements ITileEntityProvider
@@ -60,3 +55,4 @@ public class BlockSortingTrim extends BlockTrim implements ITileEntityProvider
         return true;
     }
 }
+*/

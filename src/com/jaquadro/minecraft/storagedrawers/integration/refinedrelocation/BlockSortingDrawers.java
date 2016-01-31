@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
+/*package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 
 public class BlockSortingDrawers //extends BlockDrawers
 {
-    /*
     @SideOnly(Side.CLIENT)
     protected IIcon[] iconSort;
 
@@ -88,5 +87,5 @@ public class BlockSortingDrawers //extends BlockDrawers
             iconSort[i] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_" + subtex[i] + "_sort");
         }
     }
-    */
 }
+*/

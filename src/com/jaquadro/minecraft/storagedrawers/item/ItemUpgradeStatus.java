@@ -42,14 +42,14 @@ public class ItemUpgradeStatus extends Item
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation (ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+    public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
         String name = getUnlocalizedName(itemStack);
         list.add(StatCollector.translateToLocalFormatted(name + ".description"));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems (Item item, CreativeTabs creativeTabs, List list) {
+    public void getSubItems (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
         for (EnumUpgradeStatus upgrade : EnumUpgradeStatus.values())
             list.add(new ItemStack(item, 1, upgrade.getMetadata()));
     }

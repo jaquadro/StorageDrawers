@@ -5,7 +5,6 @@ import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -41,7 +40,7 @@ public class BlockTrim extends Block implements INetworked
     }
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List list) {
+    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
         for (BlockPlanks.EnumType type : BlockPlanks.EnumType.values())
             list.add(new ItemStack(item, 1, type.getMetadata()));
     }
@@ -63,6 +62,6 @@ public class BlockTrim extends Block implements INetworked
 
     @Override
     protected BlockState createBlockState () {
-        return new BlockState(this, new IProperty[] { VARIANT });
+        return new BlockState(this, VARIANT);
     }
 }

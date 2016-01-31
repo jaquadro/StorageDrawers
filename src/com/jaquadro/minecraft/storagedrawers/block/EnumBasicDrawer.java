@@ -18,7 +18,7 @@ public enum EnumBasicDrawer implements IStringSerializable
     private final String name;
     private final String unlocalizedName;
 
-    private EnumBasicDrawer (int meta, int drawerCount, boolean halfDepth, String name, String unlocalizedName) {
+    EnumBasicDrawer (int meta, int drawerCount, boolean halfDepth, String name, String unlocalizedName) {
         this.meta = meta;
         this.name = name;
         this.drawerCount = drawerCount;

@@ -15,7 +15,7 @@ public enum EnumUpgradeStatus implements IStringSerializable
     private final String name;
     private final String unlocalizedName;
 
-    private EnumUpgradeStatus (int meta, int level, String name, String unlocalizedName) {
+    EnumUpgradeStatus (int meta, int level, String name, String unlocalizedName) {
         this.meta = meta;
         this.name = name;
         this.level = level;

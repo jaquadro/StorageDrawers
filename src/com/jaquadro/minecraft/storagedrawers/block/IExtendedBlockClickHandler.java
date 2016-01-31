@@ -7,5 +7,5 @@ import net.minecraft.world.World;
 
 public interface IExtendedBlockClickHandler
 {
-    public void onBlockClicked (World world, BlockPos pos, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ, boolean invertShift);
+    void onBlockClicked (World world, BlockPos pos, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ, boolean invertShift);
 }

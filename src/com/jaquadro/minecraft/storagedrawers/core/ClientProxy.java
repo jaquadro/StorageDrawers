@@ -69,6 +69,7 @@ public class ClientProxy extends CommonProxy
 
         registerItemVariants(ModItems.upgradeStorage, ModItems.upgradeStorage.getResourceVariants());
         registerItemVariants(ModItems.upgradeStatus, ModItems.upgradeStatus.getResourceVariants());
+        registerItemVariants(ModItems.upgradeCreative, ModItems.upgradeCreative.getResourceVariants());
 
         for (EnumUpgradeStorage upgrade : EnumUpgradeStorage.values()) {
             String resName = ModItems.getQualifiedName(ModItems.upgradeStorage) + "_" + upgrade.getName();
@@ -78,6 +79,11 @@ public class ClientProxy extends CommonProxy
         for (EnumUpgradeStatus upgrade : EnumUpgradeStatus.values()) {
             String resName = ModItems.getQualifiedName(ModItems.upgradeStatus) + "_" + upgrade.getName();
             renderItem.getItemModelMesher().register(ModItems.upgradeStatus, upgrade.getMetadata(), new ModelResourceLocation(resName, "inventory"));
+        }
+
+        for (EnumUpgradeCreative upgrade : EnumUpgradeCreative.values()) {
+            String resName = ModItems.getQualifiedName(ModItems.upgradeCreative) + "_" + upgrade.getName();
+            renderItem.getItemModelMesher().register(ModItems.upgradeCreative, upgrade.getMetadata(), new ModelResourceLocation(resName, "inventory"));
         }
 
         renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.controller), 0, new ModelResourceLocation(ModBlocks.getQualifiedName(ModBlocks.controller), "inventory"));

@@ -1,9 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers;
 
-import com.jaquadro.minecraft.storagedrawers.api.StorageDrawersApi;
 import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
-import com.jaquadro.minecraft.storagedrawers.core.api.BlockRegistry;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
@@ -45,7 +43,7 @@ public class StorageDrawers
     public static RecipeHandlerRegistry recipeHandlerRegistry;
     public static RenderRegistry renderRegistry;
     public static WailaRegistry wailaRegistry;
-    public static BlockRegistry blockRegistry;
+    //public static BlockRegistry blockRegistry;
 
     @Mod.Instance(MOD_ID)
     public static StorageDrawers instance;
@@ -72,7 +70,7 @@ public class StorageDrawers
         recipeHandlerRegistry = new RecipeHandlerRegistry();
         renderRegistry = new RenderRegistry();
         wailaRegistry = new WailaRegistry();
-        blockRegistry = new BlockRegistry();
+        //blockRegistry = new BlockRegistry();
 
         blocks.init();
         items.init();
@@ -97,7 +95,7 @@ public class StorageDrawers
         recipes.init();
 
         LocalIntegrationRegistry.instance().postInit();
-        StorageDrawersApi.instance().packFactory().registerResolver(ModBlocks.resolver);
+        //StorageDrawersApi.instance().packFactory().registerResolver(ModBlocks.resolver);
     }
 
     @SubscribeEvent

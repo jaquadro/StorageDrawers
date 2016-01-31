@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration;
+/*package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
@@ -47,7 +47,7 @@ public class RefinedRelocation extends IntegrationModule
 
     @Override
     public void init () throws Throwable {
-        /*fullDrawers1 = new BlockSortingDrawers("fullDrawers1", 1, false);
+        fullDrawers1 = new BlockSortingDrawers("fullDrawers1", 1, false);
         fullDrawers2 = new BlockSortingDrawers("fullDrawers2", 2, false);
         fullDrawers4 = new BlockSortingDrawers("fullDrawers4", 4, false);
         halfDrawers2 = new BlockSortingDrawers("halfDrawers2", 2, true);
@@ -99,12 +99,12 @@ public class RefinedRelocation extends IntegrationModule
         GameRegistry.registerTileEntityWithAlternatives(TileSortingDrawersComp.class, ModBlocks.getQualifiedName("tileSortingDrawersComp"),
             ModBlocks.getQualifiedName(compDrawers));
 
-        GameRegistry.registerTileEntityWithAlternatives(TileSortingTrim.class, ModBlocks.getQualifiedName("tileSortingTrim"), ModBlocks.getQualifiedName(trim));*/
+        GameRegistry.registerTileEntityWithAlternatives(TileSortingTrim.class, ModBlocks.getQualifiedName("tileSortingTrim"), ModBlocks.getQualifiedName(trim));
     }
 
     @Override
     public void postInit () {
-        /*ConfigManager config = StorageDrawers.config;
+        ConfigManager config = StorageDrawers.config;
 
         for (int i = 0; i < BlockWood.field_150096_a.length; i++) {
             if (config.isBlockEnabled("fulldrawers1"))
@@ -132,12 +132,7 @@ public class RefinedRelocation extends IntegrationModule
 
         if (config.cache.enableSortingUpgrades)
             GameRegistry.addRecipe(new ItemStack(upgradeSorting), "y y", " z ", "y y",
-                'y', Items.gold_nugget, 'z', ModItems.upgradeTemplate);*/
-    }
-
-    @Override
-    public void postInit () {
-
+                'y', Items.gold_nugget, 'z', ModItems.upgradeTemplate);
     }
 
     private static Item getTabItem () {
@@ -154,8 +149,9 @@ public class RefinedRelocation extends IntegrationModule
         if (config.isBlockEnabled("halfdrawers4") && halfDrawers4 != null)
             return Item.getItemFromBlock(halfDrawers4);
         if (config.isBlockEnabled("trim") && trim != null)
-            return Item.getItemFromBlock(trim);*/
+            return Item.getItemFromBlock(trim);
 
         return Item.getItemFromBlock(Blocks.chest);
     }
 }
+*/

@@ -1,16 +1,15 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.base.Function;
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
@@ -35,8 +34,10 @@ public class ItemTrim extends ItemMultiTexture
     }
 
     @Override
-    public boolean doesSneakBypassUse (World world, int x, int y, int z, EntityPlayer player) {
-        Block block = world.getBlock(x, y, z);
+    public boolean doesSneakBypassUse (World world, BlockPos pos, EntityPlayer player) {
+        IBlockState blockState = world.getBlockState(pos);
+        Block block = blockState.getBlock();
+
         if (block instanceof BlockDrawers && ((BlockDrawers) block).retrimType() != null)
             return true;
 

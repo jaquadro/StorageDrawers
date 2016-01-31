@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item.pack;
+/*package com.jaquadro.minecraft.storagedrawers.item.pack;
 
 import com.jaquadro.minecraft.storagedrawers.block.pack.BlockSortingTrimPack;
 import cpw.mods.fml.relauncher.Side;
@@ -31,3 +31,4 @@ public class ItemSortingTrimPack extends ItemTrimPack
         list.add(EnumChatFormatting.YELLOW + StatCollector.translateToLocalFormatted("storageDrawers.waila.sorting"));
     }
 }
+*/

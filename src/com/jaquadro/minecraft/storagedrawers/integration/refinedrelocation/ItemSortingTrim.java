@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
+/*package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
 
 import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import cpw.mods.fml.relauncher.Side;
@@ -26,3 +26,4 @@ public class ItemSortingTrim extends ItemTrim
         list.add(EnumChatFormatting.YELLOW + StatCollector.translateToLocalFormatted("storageDrawers.waila.sorting"));
     }
 }
+*/

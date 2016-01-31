@@ -94,7 +94,7 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
     @Override
     public int[] getAccessibleDrawerSlots () {
         TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(selfCoord))
+        if (controller == null || !controller.isValidSlave(getPos()))
             return drawerSlots;
 
         return controller.getAccessibleDrawerSlots();

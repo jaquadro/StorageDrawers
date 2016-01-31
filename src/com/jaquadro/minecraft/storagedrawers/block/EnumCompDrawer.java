@@ -14,7 +14,7 @@ public enum EnumCompDrawer implements IStringSerializable
     private final int openSlots;
     private final String name;
 
-    private EnumCompDrawer (int meta, int openSlots, String name) {
+    EnumCompDrawer (int meta, int openSlots, String name) {
         this.meta = meta;
         this.name = name;
         this.openSlots = openSlots;

@@ -134,14 +134,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         return oldState.getBlock() != newSate.getBlock();
     }
 
-    public int getDirection () {
-        return direction;
-    }
-
-    public void setDirection (int direction) {
-        this.direction = direction % 6;
-    }
-
     public int interactPutItemsIntoInventory (EntityPlayer player) {
         if (inventorySlots.length <= 1)
             updateCache();

@@ -36,7 +36,7 @@ public enum BlockConfiguration
     }
 
     public boolean isHalfDepth () {
-        return (drawer != null) ? drawer.isHalfDepth() : false;
+        return (drawer != null) && drawer.isHalfDepth();
     }
 
     public static BlockConfiguration by (BlockType type, EnumBasicDrawer drawer) {

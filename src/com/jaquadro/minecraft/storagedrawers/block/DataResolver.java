@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block;
+/*package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
@@ -65,3 +65,4 @@ public class DataResolver extends ExtendedDataResolver
             setPlankSlab(i, Blocks.planks, p, Blocks.wooden_slab, m);
     }
 }
+*/

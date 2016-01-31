@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block.pack;
+/*package com.jaquadro.minecraft.storagedrawers.block.pack;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.pack.*;
@@ -76,3 +76,4 @@ public class BlockSortingTrimPack extends BlockSortingTrim implements IPackBlock
         }
     }
 }
+*/

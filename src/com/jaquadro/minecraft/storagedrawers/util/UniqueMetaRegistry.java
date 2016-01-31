@@ -25,13 +25,13 @@ public class UniqueMetaRegistry<E>
         if (registry.containsKey(id))
             return registry.get(id);
 
-        if (id.meta != OreDictionary.WILDCARD_VALUE) {
-            id = new UniqueMetaIdentifier(id.modId, id.name);
+        if (id.getMeta() != OreDictionary.WILDCARD_VALUE) {
+            id = new UniqueMetaIdentifier(id.getResourceLocation());
             if (registry.containsKey(id))
                 return registry.get(id);
 
-            if (!id.name.isEmpty()) {
-                id = new UniqueMetaIdentifier(id.modId);
+            if (!id.getName().isEmpty()) {
+                id = new UniqueMetaIdentifier(id.getModID(), "");
                 if (registry.containsKey(id))
                     return registry.get(id);
             }

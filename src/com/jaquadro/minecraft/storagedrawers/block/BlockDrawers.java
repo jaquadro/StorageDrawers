@@ -1,7 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
@@ -13,7 +12,6 @@ import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
-import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import net.minecraft.block.*;
@@ -39,7 +37,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -71,6 +68,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @SideOnly(Side.CLIENT)
     private StatusModelData[] statusInfo;
 
+    private long ignoreEventTime;
+
     public BlockDrawers (String blockName) {
         this(Material.wood, blockName);
     }
@@ -95,14 +94,20 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
-    public boolean retrimBlock (World world, int x, int y, int z, ItemStack prototype) {
+    /*public boolean retrimBlock (World world, BlockPos pos, ItemStack prototype) {
         if (retrimType() == null)
             return false;
 
         Block protoBlock = Block.getBlockFromItem(prototype.getItem());
         int protoMeta = prototype.getItemDamage();
 
-        BlockConfiguration config = BlockConfiguration.by(retrimType(), drawerCount, halfDepth);
+        IBlockState state = world.getBlockState(pos);
+        if (state == null || !(state.getBlock() instanceof BlockDrawers))
+            return false;
+
+        EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
+
+        BlockConfiguration config = BlockConfiguration.by(retrimType(), info);
 
         Block plankBlock = StorageDrawers.blockRegistry.getPlankBlock(BlockConfiguration.Trim, protoBlock, protoMeta);
         int plankMeta = StorageDrawers.blockRegistry.getPlankMeta(BlockConfiguration.Trim, protoBlock, protoMeta);
@@ -113,8 +118,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (newBlock == null)
             return false;
 
-        TileEntityDrawers tile = getTileEntity(world, x, y, z);
-        if (newBlock == this && newMeta == world.getBlockMetadata(x, y, z) && !tile.shouldHideUpgrades()) {
+        TileEntityDrawers tile = getTileEntity(world, pos);
+        if (newBlock == this && newMeta == state. && !tile.shouldHideUpgrades()) {
             tile.setShouldHideUpgrades(true);
             return true;
         }
@@ -137,7 +142,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         return true;
-    }
+    }*/
 
     public BlockType retrimType () {
         return BlockType.Drawers;
@@ -229,7 +234,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
-    public void addCollisionBoxesToList (World world, BlockPos pos, IBlockState state, AxisAlignedBB aabb, List list, Entity entity) {
+    public void addCollisionBoxesToList (World world, BlockPos pos, IBlockState state, AxisAlignedBB aabb, List<AxisAlignedBB> list, Entity entity) {
         setBlockBoundsBasedOnState(world, pos);
         super.addCollisionBoxesToList(world, pos, state, aabb, list, entity);
     }
@@ -242,7 +247,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             Block blockWest = world.getBlockState(pos.west()).getBlock();
             Block blockEast = world.getBlockState(pos.east()).getBlock();
 
-            EnumFacing facing = (EnumFacing)state.getValue(FACING);
+            EnumFacing facing = state.getValue(FACING);
 
             if (facing == EnumFacing.NORTH && blockNorth.isFullBlock() && !blockSouth.isFullBlock())
                 facing = EnumFacing.SOUTH;
@@ -282,7 +287,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (world.isRemote && Minecraft.getMinecraft().getSystemTime() == ignoreEventTime) {
+        if (world.isRemote && Minecraft.getSystemTime() == ignoreEventTime) {
             ignoreEventTime = 0;
             return false;
         }
@@ -296,7 +301,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         if (item != null && item.getItem() != null) {
-            if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
+            /*if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
                 if (!retrimBlock(world, x, y, z, item))
                     return false;
 
@@ -307,7 +312,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-            else if (item.getItem() == ModItems.upgradeStorage || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid) {
+            else*/ if (item.getItem() == ModItems.upgradeStorage || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid || item.getItem() == ModItems.upgradeCreative) {
                 if (!tileDrawers.addUpgrade(item) && !world.isRemote) {
                     player.addChatMessage(new ChatComponentTranslation("storagedrawers.msg.maxUpgrades"));
                     return false;
@@ -315,7 +320,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 world.markBlockForUpdate(pos);
 
-                if (player != null && !player.capabilities.isCreativeMode) {
+                if (!player.capabilities.isCreativeMode) {
                     if (--item.stackSize <= 0)
                         player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
                 }
@@ -442,7 +447,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         int slot = getDrawerSlot(getDrawerCount(world.getBlockState(pos)), side.ordinal(), hitX, hitY, hitZ);
         IDrawer drawer = tileDrawers.getDrawer(slot);
 
-        ItemStack item = null;
+        ItemStack item;
         if (player.isSneaking() != invertShift)
             item = tileDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
         else
@@ -452,39 +457,26 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item == null) ? "  null item" : "  " + item.toString());
 
         if (item != null && item.stackSize > 0) {
-            dropItemStack(world, pos, player, item);
+            dropItemStack(world, player, item);
             world.markBlockForUpdate(pos);
         }
     }
 
     @Override
-    public boolean rotateBlock (World world, int x, int y, int z, ForgeDirection axis) {
-        TileEntityDrawers tile = getTileEntitySafe(world, x, y, z);
+    public boolean rotateBlock (World world, BlockPos pos, EnumFacing axis) {
+        TileEntityDrawers tile = getTileEntitySafe(world, pos);
         if (tile.isSealed()) {
-            dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-            world.setBlockToAir(x, y, z);
+            dropBlockAsItem(world, pos, world.getBlockState(pos), 0);
+            world.setBlockToAir(pos);
             return true;
         }
 
-        if (tile.getDirection() == axis.ordinal())
-            return false;
-
-        if (axis == ForgeDirection.UP || axis == ForgeDirection.DOWN)
-            return false;
-
-        tile.setDirection(axis.ordinal());
-
-        world.markBlockForUpdate(x, y, z);
-
-        if (world.isRemote)
-            ignoreEventTime = Minecraft.getMinecraft().getSystemTime();
-
-        return true;
+        return super.rotateBlock(world, pos, axis);
     }
 
     @Override
-    public boolean isSideSolid (IBlockAccess world, int x, int y, int z, ForgeDirection side) {
-        if (halfDepth)
+    public boolean isSideSolid (IBlockAccess world, BlockPos pos, EnumFacing side) {
+        if (isHalfDepth(world.getBlockState(pos)))
             return false;
 
         if (side == EnumFacing.DOWN) {
@@ -493,13 +485,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 return false;
         }
 
-        if (side.ordinal() != getTileEntity(world, pos).getDirection())
-            return true;
+        return side.ordinal() != getTileEntity(world, pos).getDirection();
 
-        return false;
     }
 
-    private void dropItemStack (World world, BlockPos pos, EntityPlayer player, ItemStack stack) {
+    private void dropItemStack (World world, EntityPlayer player, ItemStack stack) {
         EntityItem entity = new EntityItem(world, player.posX, player.posY, player.posZ, stack);
         world.spawnEntityInWorld(entity);
     }
@@ -521,10 +511,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             }
         }
 
-        if (willHarvest)
-            return true;
+        return willHarvest || super.removedByPlayer(world, pos, player, false);
 
-        return super.removedByPlayer(world, pos, player, willHarvest);
     }
 
     @Override
@@ -617,7 +605,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }*/
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List list) {
+    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
         for (EnumBasicDrawer type : EnumBasicDrawer.values()) {
             for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
                 ItemStack stack = new ItemStack(item, 1, type.getMetadata());
@@ -645,14 +633,12 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public IBlockState getStateFromMeta (int meta) {
-        IBlockState state = getDefaultState().withProperty(BLOCK, EnumBasicDrawer.byMetadata(meta));
-        return state;
+        return getDefaultState().withProperty(BLOCK, EnumBasicDrawer.byMetadata(meta));
     }
 
     @Override
     public int getMetaFromState (IBlockState state) {
-        int meta = ((EnumBasicDrawer)state.getValue(BLOCK)).getMetadata();
-        return meta;
+        return ((EnumBasicDrawer)state.getValue(BLOCK)).getMetadata();
     }
 
     @Override
