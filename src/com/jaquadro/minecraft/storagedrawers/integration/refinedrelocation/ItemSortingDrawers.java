@@ -2,7 +2,6 @@ package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
-import com.jaquadro.minecraft.storagedrawers.integration.RefinedRelocation;
 import com.jaquadro.minecraft.storagedrawers.item.ItemBasicDrawers;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
