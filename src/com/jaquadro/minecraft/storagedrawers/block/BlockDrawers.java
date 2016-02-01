@@ -12,6 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
+import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import net.minecraft.block.*;
@@ -94,55 +95,33 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
-    /*public boolean retrimBlock (World world, BlockPos pos, ItemStack prototype) {
+    public boolean retrimBlock (World world, BlockPos pos, ItemStack prototype) {
         if (retrimType() == null)
+            return false;
+
+        IBlockState curState = getActualState(world.getBlockState(pos), world, pos);
+        if (curState == null || !(curState.getBlock() instanceof BlockDrawers))
             return false;
 
         Block protoBlock = Block.getBlockFromItem(prototype.getItem());
         int protoMeta = prototype.getItemDamage();
 
-        IBlockState state = world.getBlockState(pos);
-        if (state == null || !(state.getBlock() instanceof BlockDrawers))
+        IBlockState newState = protoBlock.getStateFromMeta(protoMeta);
+        if (newState == null || !(newState.getBlock() instanceof BlockTrim))
             return false;
 
-        EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
-
-        BlockConfiguration config = BlockConfiguration.by(retrimType(), info);
-
-        Block plankBlock = StorageDrawers.blockRegistry.getPlankBlock(BlockConfiguration.Trim, protoBlock, protoMeta);
-        int plankMeta = StorageDrawers.blockRegistry.getPlankMeta(BlockConfiguration.Trim, protoBlock, protoMeta);
-
-        Block newBlock = StorageDrawers.blockRegistry.getBlock(config, plankBlock, plankMeta);
-        int newMeta = StorageDrawers.blockRegistry.getMeta(config, plankBlock, plankMeta);
-
-        if (newBlock == null)
+        BlockPlanks.EnumType curVariant = (BlockPlanks.EnumType)curState.getValue(VARIANT);
+        BlockPlanks.EnumType newVariant = (BlockPlanks.EnumType)newState.getValue(VARIANT);
+        if (curVariant == newVariant)
             return false;
 
         TileEntityDrawers tile = getTileEntity(world, pos);
-        if (newBlock == this && newMeta == state. && !tile.shouldHideUpgrades()) {
-            tile.setShouldHideUpgrades(true);
-            return true;
-        }
+        tile.setMaterial(newVariant.getName());
 
-        if (newBlock == this)
-            world.setBlockMetadataWithNotify(x, y, z, newMeta, 3);
-        else {
-
-            TileEntity newDrawer = createNewTileEntity(world, newMeta);
-
-            NBTTagCompound tag = new NBTTagCompound();
-            tile.writeToNBT(tag);
-            newDrawer.readFromNBT(tag);
-
-            world.removeTileEntity(x, y, z);
-            world.setBlockToAir(x, y, z);
-
-            world.setBlock(x, y, z, newBlock, newMeta, 3);
-            world.setTileEntity(x, y, z, newDrawer);
-        }
+        world.setBlockState(pos, curState.withProperty(VARIANT, newVariant));
 
         return true;
-    }*/
+    }
 
     public BlockType retrimType () {
         return BlockType.Drawers;
@@ -301,18 +280,18 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         if (item != null && item.getItem() != null) {
-            /*if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
-                if (!retrimBlock(world, x, y, z, item))
+            if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
+                if (!retrimBlock(world, pos, item))
                     return false;
 
-                if (player != null && !player.capabilities.isCreativeMode) {
+                if (!player.capabilities.isCreativeMode) {
                     if (--item.stackSize <= 0)
                         player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
                 }
 
                 return true;
             }
-            else*/ if (item.getItem() == ModItems.upgradeStorage || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid || item.getItem() == ModItems.upgradeCreative) {
+            else if (item.getItem() == ModItems.upgradeStorage || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid || item.getItem() == ModItems.upgradeCreative) {
                 if (!tileDrawers.addUpgrade(item) && !world.isRemote) {
                     player.addChatMessage(new ChatComponentTranslation("storagedrawers.msg.maxUpgrades"));
                     return false;
@@ -614,16 +593,10 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 data.setString("material", material.getName());
                 stack.setTagCompound(data);
 
-                list.add(stack);
+                if (StorageDrawers.config.cache.creativeTabVanillaWoods || material == BlockPlanks.EnumType.OAK)
+                    list.add(stack);
             }
         }
-        /*if (StorageDrawers.config.cache.creativeTabVanillaWoods) {
-            BlockPlanks.EnumType[] plankTypes = BlockPlanks.EnumType.values();
-            for (int i = 0; i < plankTypes.length; i++)
-                list.add(new ItemStack(item, 1, plankTypes[i].getMetadata()));
-        }
-        else
-            list.add(new ItemStack(item, 1, BlockPlanks.EnumType.values()[0].getMetadata()));*/
     }
 
     @Override
