@@ -8,18 +8,23 @@ import com.jaquadro.minecraft.storagedrawers.api.render.IRenderLabel;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.lwjgl.opengl.GL11;
+import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectHelper;
+import thaumcraft.api.aspects.AspectList;
 
 public class Thaumcraft extends IntegrationModule
 {
@@ -32,19 +37,17 @@ public class Thaumcraft extends IntegrationModule
 
     @Override
     public void init () throws Throwable {
-        /*MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(this);
 
         aspectItems = new Item[] {
-            GameRegistry.findItem(getModID(), "ItemResource"),
-            GameRegistry.findItem(getModID(), "ItemEssence"),
-            GameRegistry.findItem(getModID(), "ItemWispEssence"),
-            GameRegistry.findItem(getModID(), "ItemCrystalEssence"),
-            GameRegistry.findItem(getModID(), "BlockJarFilledItem"),
-            GameRegistry.findItem(getModID(), "ItemManaBean"),
+            GameRegistry.findItem(getModID(), "phial"),
+            GameRegistry.findItem(getModID(), "wispy_essence"),
+            GameRegistry.findItem(getModID(), "crystal_essence"),
+            GameRegistry.findItem(getModID(), "jar"),
         };
 
         StorageDrawersApi.instance().renderRegistry().registerPreLabelRenderHandler(new LabelRenderHandler());
-        StorageDrawersApi.instance().wailaRegistry().registerTooltipHandler(new WailaTooltipHandler());*/
+        StorageDrawersApi.instance().wailaRegistry().registerTooltipHandler(new WailaTooltipHandler());
     }
 
     @Override
@@ -52,7 +55,7 @@ public class Thaumcraft extends IntegrationModule
 
     }
 
-    /*@SubscribeEvent
+    @SubscribeEvent
     public void onDrawerPopulated (DrawerPopulatedEvent event) {
         IDrawer drawer = event.drawer;
         if (drawer.isEmpty()) {
@@ -70,34 +73,11 @@ public class Thaumcraft extends IntegrationModule
     }
 
     private void setDrawerAspect (IDrawer drawer, ItemStack itemStack) {
-        NBTTagCompound tag = itemStack.getTagCompound();
-        if (tag == null)
-            return;
-        
-        if (tag.hasKey("AspectFilter")) {
-	        setDrawerAspectName(drawer, tag.getString("AspectFilter"));
-	        return;
-        }
-        
-        NBTTagList tagAspects = tag.getTagList("Aspects", Constants.NBT.TAG_COMPOUND);
-        if (tagAspects == null || tagAspects.tagCount() == 0)
+        AspectList aspects = AspectHelper.getObjectAspects(itemStack);
+        if (aspects == null || aspects.size() == 0)
             return;
 
-        NBTTagCompound tagAspect = tagAspects.getCompoundTagAt(0);
-        if (tagAspect == null || !tagAspect.hasKey("key"))
-            return;
-
-        setDrawerAspectName(drawer, tagAspect.getString("key"));
-    }
-    
-    private void setDrawerAspectName (IDrawer drawer, String aspectName) {
-        AspectList allAspects = ThaumcraftApiHelper.getAllAspects(1);
-        for (Aspect a : allAspects.aspects.keySet()) {
-            if (a.getTag().equals(aspectName)) {
-                drawer.setExtendedData("aspect", a);
-                return;
-            }
-        }
+        drawer.setExtendedData("aspect", aspects.getAspects()[0]);
     }
 
     private class WailaTooltipHandler implements IWailaTooltipHandler {
@@ -109,10 +89,10 @@ public class Thaumcraft extends IntegrationModule
                 return defaultName;
 
             Aspect aspect = (Aspect)aspectObj;
-            EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+            EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 
-            if (!ThaumcraftApiHelper.hasDiscoveredAspect(player.getDisplayName(), aspect))
-                return defaultName + " (???)";
+            //if (!ThaumcraftApiHelper.hasDiscoveredAspect(player.getDisplayName(), aspect))
+            //    return defaultName + " (???)";
 
             return defaultName + " (" + aspect.getName() + ")";
         }
@@ -130,16 +110,16 @@ public class Thaumcraft extends IntegrationModule
             if (!(aspectObj instanceof Aspect))
                 return;
 
-            EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-            Vec3 blockPos = Vec3.createVectorHelper(tileEntity.xCoord + .5, tileEntity.yCoord + .5, tileEntity.zCoord + .5);
-            double distance = blockPos.distanceTo(player.getPosition(partialTickTime));
+            EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+            BlockPos blockPos = tileEntity.getPos().add(.5, .5, .5);
+            double distance = Math.sqrt(blockPos.distanceSq(player.getPosition()));
 
             if (distance > 10)
                 return;
 
             Aspect aspect = (Aspect)aspectObj;
-            if (!ThaumcraftApiHelper.hasDiscoveredAspect(player.getDisplayName(), aspect))
-                return;
+            //if (!ThaumcraftApiHelper.hasDiscoveredAspect(player.getDisplayName(), aspect))
+            //    return;
 
             int x = -4;
             int y = -4;
@@ -158,35 +138,40 @@ public class Thaumcraft extends IntegrationModule
                 alpha = 1f - (float)((distance - 3) / 7);
 
             int color = aspect.getColor();
-            float r = (float)(color >> 16 & 255) / 255.0F;
-            float g = (float)(color >> 8 & 255) / 255.0F;
-            float b = (float)(color & 255) / 255.0F;
-            GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
+            float r = (color >> 16 & 255);
+            float g = (color >> 8 & 255);
+            float b = (color & 255);
 
-            OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glEnable(GL11.GL_ALPHA_TEST);
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GlStateManager.disableLighting();
+            GlStateManager.enableBlend();
+            GlStateManager.enableAlpha();
 
-            GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
-            GL11.glPolygonOffset(-1f, -1);
+            GlStateManager.enablePolygonOffset();
+            GlStateManager.doPolygonOffset(-1, -1);
 
             ResourceLocation aspectResource = aspect.getImage();
             Minecraft.getMinecraft().renderEngine.bindTexture(aspectResource);
 
-            Tessellator tessellator = Tessellator.instance;
-            tessellator.startDrawingQuads();
-            tessellator.addVertexWithUV(x, y + h, 0, 0, 1);
-            tessellator.addVertexWithUV(x + w, y + h, 0, 1, 1);
-            tessellator.addVertexWithUV(x + w, y, 0, 1, 0);
-            tessellator.addVertexWithUV(x, y, 0, 0, 0);
-            tessellator.draw();
+            Tessellator tessellator = Tessellator.getInstance();
+            WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+            renderQuad(worldRenderer, x, y, w, h, (int)(r), (int)(g), (int)(b), (int)(alpha * 255));
 
-            GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
+            GlStateManager.disablePolygonOffset();
 
-            GL11.glDisable(GL11.GL_ALPHA_TEST);
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glEnable(GL11.GL_LIGHTING);
+            GlStateManager.disableAlpha();
+            GlStateManager.disableBlend();
+            GlStateManager.enableLighting();
         }
-    }*/
+    }
+
+    private void renderQuad (WorldRenderer tessellator, int x, int y, int w, int h, int r, int g, int b, int a)
+    {
+        tessellator.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+        tessellator.pos(x + 0, y + 0, 0).tex(0, 0).color(r, g, b, a).endVertex();
+        tessellator.pos(x + 0, y + h, 0).tex(0, 1).color(r, g, b, a).endVertex();
+        tessellator.pos(x + w, y + h, 0).tex(1, 1).color(r, g, b, a).endVertex();
+        tessellator.pos(x + w, y + 0, 0).tex(1, 0).color(r, g, b, a).endVertex();
+        Tessellator.getInstance().draw();
+    }
 }

@@ -248,7 +248,7 @@ public class ConfigManager
 
         //cache.enableAE2Integration = config.get(sectionIntegration.getQualifiedName(), "enableAE2", true).setLanguageKey(LANG_PREFIX + "integration.enableAE2").setRequiresMcRestart(true).getBoolean();
         cache.enableWailaIntegration = config.get(sectionIntegration.getQualifiedName(), "enableWaila", true).setLanguageKey(LANG_PREFIX + "integration.enableWaila").setRequiresMcRestart(true).getBoolean();
-        //cache.enableThaumcraftIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThaumcraft", true).setLanguageKey(LANG_PREFIX + "integration.enableThaumcraft").setRequiresMcRestart(true).getBoolean();
+        cache.enableThaumcraftIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThaumcraft", true).setLanguageKey(LANG_PREFIX + "integration.enableThaumcraft").setRequiresMcRestart(true).getBoolean();
         //cache.enableMineTweakerIntegration = config.get(sectionIntegration.getQualifiedName(), "enableMineTweaker", true).setLanguageKey(LANG_PREFIX + "integration.enableMineTweaker").setRequiresMcRestart(true).getBoolean();
         //cache.enableRefinedRelocationIntegration = config.get(sectionIntegration.getQualifiedName(), "enableRefinedRelocation", true).setLanguageKey(LANG_PREFIX + "integration.enableRefinedRelocation").setRequiresMcRestart(true).getBoolean();
         //cache.enableThermalExpansionIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThermalExpansion", true).setLanguageKey(LANG_PREFIX + "integration.enableThermalExpansion").setRequiresMcRestart(true).getBoolean();
