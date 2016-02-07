@@ -155,33 +155,75 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         boolean dumpInventory = worldObj.getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID);
         int count = 0;
 
-        for (int i = 0, n = drawerSlots.length; i < n; i++) {
-            int slotIndex = drawerSlots[i];
+        if (!dumpInventory) {
+            ItemStack currentStack = player.inventory.getCurrentItem();
+            count = insertItems(currentStack);
 
-            IDrawerGroup group = getGroupForDrawerSlot(slotIndex);
-            if (group == null || !(group instanceof IDrawerGroupInteractive))
-                continue;
+            if (currentStack.stackSize == 0)
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+        }
+        else {
+            for (int i = 0, n = player.inventory.getSizeInventory(); i < n; i++) {
+                ItemStack subStack = player.inventory.getStackInSlot(i);
+                if (subStack != null) {
+                    count += insertItems(subStack);
+                    if (subStack.stackSize == 0)
+                        player.inventory.setInventorySlotContents(i, null);
+                }
+            }
 
-            IDrawerGroupInteractive intGroup = (IDrawerGroupInteractive)group;
-
-            int slot = getLocalDrawerSlot(slotIndex);
-            if (!group.isDrawerEnabled(slot))
-                continue;
-
-            IDrawer drawer = group.getDrawer(slot);
-            if (drawer == null || drawer.isEmpty())
-                continue;
-
-            if (dumpInventory)
-                count += intGroup.interactPutCurrentInventoryIntoSlot(slot, player);
-            else
-                count += intGroup.interactPutCurrentItemIntoSlot(slot, player);
+            if (count > 0)
+                StorageDrawers.proxy.updatePlayerInventory(player);
         }
 
         lastClickTime = worldObj.getTotalWorldTime();
         lastClickUUID = player.getPersistentID();
 
         return count;
+    }
+
+    private int insertItems (ItemStack stack) {
+        int itemsLeft = stack.stackSize;
+
+        for (int slot : enumerateDrawersForInsertion(stack, false)) {
+            IDrawer drawer = getDrawer(slot);
+            ItemStack itemProto = drawer.getStoredItemPrototype();
+            if (itemProto == null)
+                break;
+
+            itemsLeft = insertItemsIntoDrawer(drawer, itemsLeft);
+
+            if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
+                itemsLeft = 0;
+            if (itemsLeft == 0)
+                break;
+        }
+
+        int count = stack.stackSize - itemsLeft;
+        stack.stackSize = itemsLeft;
+
+        return count;
+    }
+
+    private int insertItemsIntoDrawer (IDrawer drawer, int itemCount) {
+        int capacity = drawer.getMaxCapacity();
+        int storedItems = drawer.getStoredItemCount();
+
+        int storableItems = capacity - storedItems;
+        if (drawer instanceof IFractionalDrawer) {
+            IFractionalDrawer fracDrawer = (IFractionalDrawer)drawer;
+            if (!fracDrawer.isSmallestUnit() && fracDrawer.getStoredItemRemainder() > 0)
+                storableItems--;
+        }
+
+        if (storableItems == 0)
+            return itemCount;
+
+        int remainder = Math.max(itemCount - storableItems, 0);
+        storedItems += Math.min(itemCount, storableItems);
+        drawer.setStoredItemCount(storedItems);
+
+        return remainder;
     }
 
     public void toggleShroud () {
