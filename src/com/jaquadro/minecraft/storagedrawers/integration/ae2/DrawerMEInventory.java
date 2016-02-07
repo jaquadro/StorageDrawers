@@ -7,14 +7,13 @@ import appeng.api.storage.IMEInventory;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IPriorityGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import net.minecraft.item.ItemStack;
+
+import java.util.Iterator;
 
 public class DrawerMEInventory implements IMEInventory<IAEItemStack>
 {
@@ -26,52 +25,71 @@ public class DrawerMEInventory implements IMEInventory<IAEItemStack>
 
     @Override
     public IAEItemStack injectItems (IAEItemStack input, Actionable type, BaseActionSource src) {
-        int[] order = null;
-        if (group instanceof IPriorityGroup)
-            order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
-
         long itemsLeft = input.getStackSize();
-        for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
-            int slot = (order != null) ? order[i] : i;
-            if (!group.isDrawerEnabled(slot))
-                continue;
 
-            IDrawer drawer = group.getDrawer(slot);
-            ItemStack itemProto = drawer.getStoredItemPrototype();
-            if (itemProto != null) {
-                if (drawer.canItemBeStored(input.getItemStack())) {
-                    itemsLeft = injectItemsIntoDrawer(drawer, itemsLeft, type);
-                    if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
-                        itemsLeft = 0;
-                    if (itemsLeft == 0)
-                        return null;
-                }
+        if (group instanceof ISmartGroup) {
+            for (int slot : ((ISmartGroup) group).enumerateDrawersForInsertion(input.getItemStack(), false)) {
+                IDrawer drawer = group.getDrawer(slot);
+                ItemStack itemProto = drawer.getStoredItemPrototype();
+                if (itemProto == null)
+                    drawer.setStoredItem(input.getItemStack(), 0);
+
+                itemsLeft = injectItemsIntoDrawer(drawer, itemsLeft, type);
+
+                if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
+                    itemsLeft = 0;
+                if (itemsLeft == 0)
+                    return null;
             }
         }
+        else {
+            int[] order = null;
+            if (group instanceof IPriorityGroup)
+                order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
 
-        for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
-            int slot = (order != null) ? order[i] : i;
-            if (!group.isDrawerEnabled(slot))
-                continue;
 
-            if (group instanceof ILockable && ((ILockable) group).isLocked(LockAttribute.LOCK_EMPTY))
-                continue;
+            for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
+                int slot = (order != null) ? order[i] : i;
+                if (!group.isDrawerEnabled(slot))
+                    continue;
 
-            IDrawer drawer = group.getDrawer(slot);
-            ItemStack itemProto = drawer.getStoredItemPrototype();
+                IDrawer drawer = group.getDrawer(slot);
+                ItemStack itemProto = drawer.getStoredItemPrototype();
+                if (itemProto != null) {
+                    if (drawer.canItemBeStored(input.getItemStack())) {
+                        itemsLeft = injectItemsIntoDrawer(drawer, itemsLeft, type);
+                        if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
+                            itemsLeft = 0;
+                        if (itemsLeft == 0)
+                            return null;
+                    }
+                }
+            }
 
-            if (itemProto == null && drawer instanceof ILockable && ((ILockable) drawer).isLocked(LockAttribute.LOCK_EMPTY))
-                continue;
+            for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
+                int slot = (order != null) ? order[i] : i;
+                if (!group.isDrawerEnabled(slot))
+                    continue;
 
-            if (itemProto == null) {
-                itemProto = input.getItemStack();
-                if (drawer.canItemBeStored(itemProto)) {
-                    drawer.setStoredItem(itemProto, 0);
-                    itemsLeft = injectItemsIntoDrawer(drawer, itemsLeft, type);
-                    if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
-                        itemsLeft = 0;
-                    if (itemsLeft == 0)
-                        return null;
+                if (group instanceof ILockable && ((ILockable) group).isLocked(LockAttribute.LOCK_EMPTY))
+                    continue;
+
+                IDrawer drawer = group.getDrawer(slot);
+                ItemStack itemProto = drawer.getStoredItemPrototype();
+
+                if (itemProto == null && drawer instanceof ILockable && ((ILockable) drawer).isLocked(LockAttribute.LOCK_EMPTY))
+                    continue;
+
+                if (itemProto == null) {
+                    itemProto = input.getItemStack();
+                    if (drawer.canItemBeStored(itemProto)) {
+                        drawer.setStoredItem(itemProto, 0);
+                        itemsLeft = injectItemsIntoDrawer(drawer, itemsLeft, type);
+                        if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
+                            itemsLeft = 0;
+                        if (itemsLeft == 0)
+                            return null;
+                    }
                 }
             }
         }
@@ -110,18 +128,13 @@ public class DrawerMEInventory implements IMEInventory<IAEItemStack>
 
     @Override
     public IAEItemStack extractItems (IAEItemStack request, Actionable mode, BaseActionSource src) {
-        int[] order = null;
-        if (group instanceof IPriorityGroup)
-            order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
-
         long itemsLeft = request.getStackSize();
-        for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
-            int slot = (order != null) ? order[i] : i;
-            if (!group.isDrawerEnabled(slot))
-                continue;
+        if (group instanceof ISmartGroup) {
+            for (int slot : ((ISmartGroup) group).enumerateDrawersForExtraction(request.getItemStack(), true)) {
+                if (itemsLeft == 0)
+                    break;
 
-            IDrawer drawer = group.getDrawer(slot);
-            if (drawer.canItemBeExtracted(request.getItemStack())) {
+                IDrawer drawer = group.getDrawer(slot);
                 int itemCount = drawer.getStoredItemCount();
                 if (itemsLeft > itemCount) {
                     if (mode == Actionable.MODULATE)
@@ -133,6 +146,33 @@ public class DrawerMEInventory implements IMEInventory<IAEItemStack>
                         drawer.setStoredItemCount(itemCount - (int)itemsLeft);
                     itemsLeft = 0;
                     break;
+                }
+            }
+        }
+        else {
+            int[] order = null;
+            if (group instanceof IPriorityGroup)
+                order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
+
+
+            for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
+                int slot = (order != null) ? order[i] : i;
+                if (!group.isDrawerEnabled(slot))
+                    continue;
+
+                IDrawer drawer = group.getDrawer(slot);
+                if (drawer.canItemBeExtracted(request.getItemStack())) {
+                    int itemCount = drawer.getStoredItemCount();
+                    if (itemsLeft > itemCount) {
+                        if (mode == Actionable.MODULATE)
+                            drawer.setStoredItemCount(0);
+                        itemsLeft -= itemCount;
+                    } else {
+                        if (mode == Actionable.MODULATE)
+                            drawer.setStoredItemCount(itemCount - (int) itemsLeft);
+                        itemsLeft = 0;
+                        break;
+                    }
                 }
             }
         }
