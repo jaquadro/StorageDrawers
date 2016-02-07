@@ -35,7 +35,7 @@ item.storagedrawers.shroudKey.description=隱藏或顯示抽屜上的物品圖�
 item.storagedrawers.tape.name=打包帶
 item.storagedrawers.tape.description=捆紮封裝抽屜以便攜帶。
 
-# Block
+# Blocks
 tile.fullDrawers1.oak.name=橡木抽屜
 tile.fullDrawers1.spruce.name=雲杉木抽屜
 tile.fullDrawers1.birch.name=白樺木抽屜
@@ -88,15 +88,17 @@ storageDrawers.upgrade.description=將抽屜容量升級為其基礎容量的%d�
 storageDrawers.controller.description=將放入的物品分配存入鄰接的抽屜中。
 storageDrawers.controllerSlave.description=為抽屜管理器擴展存儲連接面。
 
-# Integration/WAILA
+# Integration
 storageDrawers.waila.empty=<空>
 storageDrawers.waila.level=級別：%s
 storageDrawers.waila.drawer=#%s：%s
+storageDrawers.waila.limit=堆疊上限： %s (x%s)
+storageDrawers.waila.nolimit=堆疊上限： ∞
 storageDrawers.waila.locked=鎖定
 storageDrawers.waila.void=清空
 storageDrawers.waila.sorting=分揀
 
-# Configruation
+# Configuration
 storageDrawers.config.title=儲物抽屜-模組選項
 
 storageDrawers.config.general=一般設定
@@ -180,3 +182,4 @@ storageDrawers.config.integration.enableWaila=允許關聯WAILA顯示
 storageDrawers.config.integration.enableThaumcraft=允許關聯秘術時代
 storageDrawers.config.integration.enableMineTweaker=允許關聯MineTweaker
 storageDrawers.config.integration.enableRefinedRelocation=允許關聯精準重定位
+storageDrawers.config.integration.enableThermalExpansion=允許關聯精煉機械
