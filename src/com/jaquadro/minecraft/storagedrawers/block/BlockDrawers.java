@@ -520,17 +520,20 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         drops.add(drawerStack);
 
         TileEntityDrawers tile = getTileEntity(world, pos);
-        if (tile == null || !tile.isSealed())
+        if (tile == null)
             return drops;
 
         BlockPlanks.EnumType material = translateMaterial(tile.getMaterialOrDefault());
 
-        NBTTagCompound tiledata = new NBTTagCompound();
-        tile.writeToNBT(tiledata);
-
         NBTTagCompound data = new NBTTagCompound();
         data.setString("material", material.getName());
-        data.setTag("tile", tiledata);
+
+        if (tile.isSealed()) {
+            NBTTagCompound tiledata = new NBTTagCompound();
+            tile.writeToNBT(tiledata);
+
+            data.setTag("tile", tiledata);
+        }
 
         drawerStack.setTagCompound(data);
 
