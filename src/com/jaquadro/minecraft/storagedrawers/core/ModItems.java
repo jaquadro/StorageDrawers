@@ -18,7 +18,7 @@ public class ModItems
     public static ItemTape tape;
 
     public void init () {
-        upgradeTemplate = new Item().setUnlocalizedName("upgradeTemplate").setCreativeTab(ModCreativeTabs.tabStorageDrawers);
+        upgradeTemplate = new Item().setUnlocalizedName(makeName("upgradeTemplate")).setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         upgradeStorage = new ItemUpgradeStorage(makeName("upgradeStorage"));
         upgradeStatus = new ItemUpgradeStatus(makeName("upgradeStatus"));
         upgradeVoid = new ItemUpgradeVoid(makeName("upgradeVoid"));
