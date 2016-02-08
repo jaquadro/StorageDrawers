@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration.ae2;
+/*package com.jaquadro.minecraft.storagedrawers.integration.ae2;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -13,9 +13,9 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import net.minecraft.item.ItemStack;
 
-public class DrawerMEInventory //implements IMEInventory<IAEItemStack>
+public class DrawerMEInventory implements IMEInventory<IAEItemStack>
 {
-    /*final IDrawerGroup group;
+    final IDrawerGroup group;
 
     public DrawerMEInventory (IDrawerGroup drawerGroup) {
         group = drawerGroup;
@@ -206,5 +206,6 @@ public class DrawerMEInventory //implements IMEInventory<IAEItemStack>
     @Override
     public StorageChannel getChannel () {
         return StorageChannel.ITEMS;
-    }*/
+    }
 }
+*/
