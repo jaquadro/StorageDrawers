@@ -157,10 +157,11 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
         if (!dumpInventory) {
             ItemStack currentStack = player.inventory.getCurrentItem();
-            count = insertItems(currentStack);
-
-            if (currentStack.stackSize == 0)
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+            if (currentStack != null) {
+                count = insertItems(currentStack);
+                if (currentStack.stackSize == 0)
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+            }
         }
         else {
             for (int i = 0, n = player.inventory.getSizeInventory(); i < n; i++) {
