@@ -20,8 +20,6 @@ item.storagedrawers.upgradeStatus.level1.name=Statusupgrade (I)
 item.storagedrawers.upgradeStatus.level1.description=Zeige volle Speicher
 item.storagedrawers.upgradeStatus.level2.name=Statusupgrade (II)
 item.storagedrawers.upgradeStatus.level2.description=Zeige Füllstand
-item.storagedrawers.upgradeLock.name=Schubfachschlüssel
-item.storagedrawers.upgradeLock.description=Schließt und öffnet Schubfach
 item.storagedrawers.upgradeVoid.name=Void Upgrade
 item.storagedrawers.upgradeVoid.description=Zerstört überschüssige Items
 item.storagedrawers.upgradeCreative.store.name=Kreativspeicherupgrade
@@ -30,46 +28,19 @@ item.storagedrawers.upgradeCreative.vend.name=Kreativautomatenupgrade
 item.storagedrawers.upgradeCreative.vend.description=Uneingeschränkte Itementnahme
 item.storagedrawers.upgradeSorting.name=Sortierungsupgrade
 item.storagedrawers.upgradeSorting.description=Für Refined Relocation
+item.storagedrawers.drawerKey.name=Schubfachschlüssel
+item.storagedrawers.drawerKey.description=Schließt und öffnet Schubfach
 item.storagedrawers.shroudKey.name=Verbergungsschlüssel
 item.storagedrawers.shroudKey.description=Zeige oder verstecke Itemlabels
 item.storagedrawers.tape.name=Packband
 item.storagedrawers.tape.description=Dichte Schubfächer ab für den Umzug
 
 # Blocks
-tile.fullDrawers1.oak.name=Eichenschubfach
-tile.fullDrawers1.spruce.name=Fichtenschubfach
-tile.fullDrawers1.birch.name=Birkenschubfach
-tile.fullDrawers1.jungle.name=Tropenschubfach
-tile.fullDrawers1.acacia.name=Akazienschubfach
-tile.fullDrawers1.big_oak.name=Dunkles Eichenschubfach
-
-tile.fullDrawers2.oak.name=Eichenschubfach 1x2
-tile.fullDrawers2.spruce.name=Fichtenschubfach 1x2
-tile.fullDrawers2.birch.name=Birkenschubfach 1x2
-tile.fullDrawers2.jungle.name=Tropenschubfach 1x2
-tile.fullDrawers2.acacia.name=Akazienschubfach 1x2
-tile.fullDrawers2.big_oak.name=Dunkles Eichenschubfach 1x2
-
-tile.fullDrawers4.oak.name=Eichenschubfach 2x2
-tile.fullDrawers4.spruce.name=Fichtenschubfach 2x2
-tile.fullDrawers4.birch.name=Birkenschubfach 2x2
-tile.fullDrawers4.jungle.name=Tropenschubfach 2x2
-tile.fullDrawers4.acacia.name=Akazienschubfach 2x2
-tile.fullDrawers4.big_oak.name=Dunkles Eichenschubfach 2x2
-
-tile.halfDrawers2.oak.name=Kompaktes Eichenschubfach 1x2
-tile.halfDrawers2.spruce.name=Kompaktes Fichtenschubfach 1x2
-tile.halfDrawers2.birch.name=Kompaktes Birkenschubfach 1x2
-tile.halfDrawers2.jungle.name=Kompaktes Tropenschubfach 1x2
-tile.halfDrawers2.acacia.name=Kompaktes Akazienschubfach 1x2
-tile.halfDrawers2.big_oak.name=Kompaktes Dunkles Eichenschubfach 1x2
-
-tile.halfDrawers4.oak.name=Kompaktes Eichenschubfach 2x2
-tile.halfDrawers4.spruce.name=Kompaktes Fichtenschubfach 2x2
-tile.halfDrawers4.birch.name=Kompaktes Birkenschubfach 2x2
-tile.halfDrawers4.jungle.name=Kompaktes Tropenschubfach 2x2
-tile.halfDrawers4.acacia.name=Kompaktes Akazienschubfach 2x2
-tile.halfDrawers4.big_oak.name=Kompaktes Dunkles Eichenschubfach 2x2
+tile.basicDrawers.fulldrawers1.name=Basic Drawer
+tile.basicDrawers.fulldrawers2.name=Basic Drawers 1x2
+tile.basicDrawers.fulldrawers4.name=Basic Drawers 2x2
+tile.basicDrawers.halfdrawers2.name=Half Drawers 1x2
+tile.basicDrawers.halfdrawers4.name=Half Drawers 2x2
 
 tile.compDrawers.name=Verdichtendes Schubfach
 tile.drawerController.name=Schubfach-Controller
@@ -87,6 +58,15 @@ storageDrawers.drawers.sealed=Inhalt abgedichtet
 storageDrawers.upgrade.description=Erhöht den Speicher zu %d mal dem Grundwert
 storageDrawers.controller.description=Interagiere mit einer Bank an verbundenen Schubfächern
 storageDrawers.controllerSlave.description=Zusätzlich Anhangspunkte für Controller
+
+# Material
+storageDrawers.material=Material: %s
+storageDrawers.material.oak=Oak
+storageDrawers.material.spruce=Spruce
+storageDrawers.material.birch=Birch
+storageDrawers.material.jungle=Jungle
+storageDrawers.material.acacia=Acacia
+storageDrawers.material.dark_oak=Dark Oak
 
 # Integration
 storageDrawers.waila.empty=<Leer>

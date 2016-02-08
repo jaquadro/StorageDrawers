@@ -60,7 +60,6 @@ storageDrawers.controller.description=Interact with a bank of connected drawers
 storageDrawers.controllerSlave.description=Extra attach points for controllers
 
 # Material
-
 storageDrawers.material=Material: %s
 storageDrawers.material.oak=Oak
 storageDrawers.material.spruce=Spruce

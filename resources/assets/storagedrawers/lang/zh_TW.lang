@@ -20,8 +20,6 @@ item.storagedrawers.upgradeStatus.level1.name=狀態顯示升級(I)
 item.storagedrawers.upgradeStatus.level1.description=抽屜裝滿時亮起提示燈。
 item.storagedrawers.upgradeStatus.level2.name=狀態顯示升級(II)
 item.storagedrawers.upgradeStatus.level2.description=顯示抽屜容量等級。
-item.storagedrawers.upgradeLock.name=抽屜鑰匙
-item.storagedrawers.upgradeLock.description=給抽屜上鎖或解鎖。
 item.storagedrawers.upgradeVoid.name=虛空升級
 item.storagedrawers.upgradeVoid.description=銷毀存儲超過上限的物品。
 item.storagedrawers.upgradeCreative.store.name=創造模式容量升級
@@ -30,46 +28,19 @@ item.storagedrawers.upgradeCreative.vend.name=Creative Vending Upgrade
 item.storagedrawers.upgradeCreative.vend.description=Unlimited item withdrawal
 item.storagedrawers.upgradeSorting.name=分揀升級
 item.storagedrawers.upgradeSorting.description=將抽屜升級為分揀抽屜。
+item.storagedrawers.drawerKey.name=抽屜鑰匙
+item.storagedrawers.drawerKey.description=給抽屜上鎖或解鎖。
 item.storagedrawers.shroudKey.name=屏蔽鑰匙
 item.storagedrawers.shroudKey.description=隱藏或顯示抽屜上的物品圖標。
 item.storagedrawers.tape.name=打包帶
 item.storagedrawers.tape.description=捆紮封裝抽屜以便攜帶。
 
 # Blocks
-tile.fullDrawers1.oak.name=橡木抽屜
-tile.fullDrawers1.spruce.name=雲杉木抽屜
-tile.fullDrawers1.birch.name=白樺木抽屜
-tile.fullDrawers1.jungle.name=叢林木抽屜
-tile.fullDrawers1.acacia.name=金合歡木抽屜
-tile.fullDrawers1.big_oak.name=深色橡木抽屜
-
-tile.fullDrawers2.oak.name=橡木抽屜(1x2)
-tile.fullDrawers2.spruce.name=雲杉木抽屜(1x2)
-tile.fullDrawers2.birch.name=白樺木抽屜(1x2)
-tile.fullDrawers2.jungle.name=叢林木抽屜(1x2)
-tile.fullDrawers2.acacia.name=金合歡木抽屜(1x2)
-tile.fullDrawers2.big_oak.name=深色橡木抽屜(1x2)
-
-tile.fullDrawers4.oak.name=橡木抽屜(2x2)
-tile.fullDrawers4.spruce.name=雲杉木抽屜(2x2)
-tile.fullDrawers4.birch.name=白樺木抽屜(2x2)
-tile.fullDrawers4.jungle.name=叢林木抽屜(2x2)
-tile.fullDrawers4.acacia.name=金合歡木抽屜(2x2)
-tile.fullDrawers4.big_oak.name=深色橡木抽屜(2x2)
-
-tile.halfDrawers2.oak.name=小型橡木抽屜(1x2)
-tile.halfDrawers2.spruce.name=小型雲杉木抽屜(1x2)
-tile.halfDrawers2.birch.name=小型白樺木抽屜(1x2)
-tile.halfDrawers2.jungle.name=小型叢林木抽屜(1x2)
-tile.halfDrawers2.acacia.name=小型金合歡木抽屜(1x2)
-tile.halfDrawers2.big_oak.name=小型深色橡木抽屜(1x2)
-
-tile.halfDrawers4.oak.name=小型橡木抽屜(2x2)
-tile.halfDrawers4.spruce.name=小型雲杉木抽屜(2x2)
-tile.halfDrawers4.birch.name=小型白樺木抽屜(2x2)
-tile.halfDrawers4.jungle.name=小型叢林木抽屜(2x2)
-tile.halfDrawers4.acacia.name=小型金合歡木抽屜(2x2)
-tile.halfDrawers4.big_oak.name=小型深色橡木抽屜(2x2)
+tile.basicDrawers.fulldrawers1.name=Basic Drawer
+tile.basicDrawers.fulldrawers2.name=Basic Drawers 1x2
+tile.basicDrawers.fulldrawers4.name=Basic Drawers 2x2
+tile.basicDrawers.halfdrawers2.name=Half Drawers 1x2
+tile.basicDrawers.halfdrawers4.name=Half Drawers 2x2
 
 tile.compDrawers.name=壓縮抽屜
 tile.drawerController.name=抽屜管理器
@@ -87,6 +58,15 @@ storageDrawers.drawers.sealed=內容物已經封存，可供搬運。
 storageDrawers.upgrade.description=將抽屜容量升級為其基礎容量的%d倍。
 storageDrawers.controller.description=將放入的物品分配存入鄰接的抽屜中。
 storageDrawers.controllerSlave.description=為抽屜管理器擴展存儲連接面。
+
+# Material
+storageDrawers.material=Material: %s
+storageDrawers.material.oak=Oak
+storageDrawers.material.spruce=Spruce
+storageDrawers.material.birch=Birch
+storageDrawers.material.jungle=Jungle
+storageDrawers.material.acacia=Acacia
+storageDrawers.material.dark_oak=Dark Oak
 
 # Integration
 storageDrawers.waila.empty=<空>
