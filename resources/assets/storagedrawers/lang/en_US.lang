@@ -32,6 +32,8 @@ item.storagedrawers.upgradeSorting.name=Sorting Upgrade
 item.storagedrawers.upgradeSorting.description=For Refined Relocation
 item.storagedrawers.shroudKey.name=Concealment Key
 item.storagedrawers.shroudKey.description=Show or hide item labels
+item.storagedrawers.personalKey.name=Personal Key
+item.storagedrawers.personalKey.description=Protect access from other players
 item.storagedrawers.tape.name=Packing Tape
 item.storagedrawers.tape.description=Seals drawers for moving
 
@@ -97,6 +99,7 @@ storageDrawers.waila.nolimit=Stack Limit: ∞
 storageDrawers.waila.locked=Locked
 storageDrawers.waila.void=Void
 storageDrawers.waila.sorting=Sorting
+storageDrawers.waila.protected=Protected
 
 # Configuration
 storageDrawers.config.title=Storage Drawers Configuration
@@ -132,6 +135,7 @@ storageDrawers.config.prop.enableIndicatorUpgrades=Enable Indicator Upgrades
 storageDrawers.config.prop.enableStorageUpgrades=Enable Storage Upgrades
 storageDrawers.config.prop.enableLockUpgrades=Enable Drawer Locking
 storageDrawers.config.prop.enableShroudUpgrades=Enable Item Concealing
+storageDrawers.config.prop.enablePersonalUpgrades=Enable Access Protection
 storageDrawers.config.prop.enableVoidUpgrades=Enable Void Upgrade
 storageDrawers.config.prop.enableCreativeUpgrades=Enable Creative Upgrade
 storageDrawers.config.prop.enableSortingUpgrades=Enable Sorting Upgrade

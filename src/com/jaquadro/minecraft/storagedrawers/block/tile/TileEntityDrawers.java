@@ -47,6 +47,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     private boolean shrouded = false;
     private boolean taped = false;
     private boolean hideUpgrade = false;
+    private UUID owner;
 
     private EnumSet<LockAttribute> lockAttributes = null;
 
@@ -233,6 +234,24 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     public void setIsShrouded (boolean shrouded) {
         if (this.shrouded != shrouded) {
             this.shrouded = shrouded;
+
+            if (worldObj != null && !worldObj.isRemote) {
+                markDirty();
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
+        }
+    }
+
+    public UUID getOwner () {
+        if (!StorageDrawers.config.cache.enablePersonalUpgrades)
+            return null;
+
+        return owner;
+    }
+
+    public void setOwner (UUID owner) {
+        if ((this.owner != null && !this.owner.equals(owner)) || (owner != null && !owner.equals(this.owner))) {
+            this.owner = owner;
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
@@ -476,6 +495,10 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         if (tag.hasKey("Shr"))
             shrouded = tag.getBoolean("Shr");
 
+        owner = null;
+        if (tag.hasKey("Own"))
+            owner = UUID.fromString(tag.getString("Own"));
+
         hideUpgrade = false;
         if (tag.hasKey("HideUp"))
             hideUpgrade = tag.getBoolean("HideUp");
@@ -516,6 +539,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
         if (shrouded)
             tag.setBoolean("Shr", shrouded);
+
+        if (owner != null)
+            tag.setString("Own", owner.toString());
 
         if (hideUpgrade)
             tag.setBoolean("HideUp", hideUpgrade);

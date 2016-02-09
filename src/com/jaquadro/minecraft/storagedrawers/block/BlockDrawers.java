@@ -99,6 +99,10 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @SideOnly(Side.CLIENT)
     private IIcon iconLock;
     @SideOnly(Side.CLIENT)
+    private IIcon iconClaim;
+    @SideOnly(Side.CLIENT)
+    private IIcon iconClaimLock;
+    @SideOnly(Side.CLIENT)
     private IIcon iconVoid;
 
     @SideOnly(Side.CLIENT)
@@ -297,6 +301,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, x, y, z);
         ItemStack item = player.inventory.getCurrentItem();
 
+        if (tileDrawers.getOwner() != null && !player.getPersistentID().equals(tileDrawers.getOwner()))
+            return false;
+
         if (StorageDrawers.config.cache.debugTrace) {
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockActivated");
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item == null) ? "  null item" : "  " + item.toString());
@@ -338,6 +345,15 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             }
             else if (item.getItem() == ModItems.shroudKey) {
                 tileDrawers.setIsShrouded(!tileDrawers.isShrouded());
+                return true;
+            }
+            else if (item.getItem() == ModItems.personalKey) {
+                if (tileDrawers.getOwner() == null)
+                    tileDrawers.setOwner(player.getPersistentID());
+                else if (player.getPersistentID().equals(tileDrawers.getOwner()))
+                    tileDrawers.setOwner(null);
+                else
+                    return false;
                 return true;
             }
             else if (item.getItem() == ModItems.tape)
@@ -431,6 +447,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             return;
 
         if (tileDrawers.isSealed())
+            return;
+
+        if (tileDrawers.getOwner() != null && !tileDrawers.getOwner().equals(player.getPersistentID()))
             return;
 
         int slot = getDrawerSlot(side, hitX, hitY, hitZ);
@@ -791,8 +810,15 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @SideOnly(Side.CLIENT)
-    public IIcon getLockIcon () {
-        return iconLock;
+    public IIcon getLockIcon (boolean locked, boolean claimed) {
+        if (locked && claimed)
+            return iconClaimLock;
+        else if (locked)
+            return iconLock;
+        else if (claimed)
+            return iconClaim;
+        else
+            return null;
     }
 
     @SideOnly(Side.CLIENT)
@@ -854,6 +880,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         iconIndicator4[1] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_4_on");
 
         iconLock = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/lock_icon");
+        iconClaim = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/claim_icon");
+        iconClaimLock = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/claim_lock_icon");
         iconVoid = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/void_icon");
 
         loadBlockConfig();
