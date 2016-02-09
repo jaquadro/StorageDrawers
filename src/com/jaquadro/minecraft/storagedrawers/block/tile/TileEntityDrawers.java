@@ -287,7 +287,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                worldObj.markBlockForUpdate(getPos());
             }
         }
 

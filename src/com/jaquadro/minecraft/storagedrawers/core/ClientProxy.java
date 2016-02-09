@@ -47,6 +47,8 @@ public class ClientProxy extends CommonProxy
 
         IconRegistry iconRegistry = Chameleon.instance.iconRegistry;
         iconRegistry.registerIcon(iconLockResource);
+        iconRegistry.registerIcon(iconClaimResource);
+        iconRegistry.registerIcon(iconClaimLockResource);
         iconRegistry.registerIcon(iconVoidResource);
         iconRegistry.registerIcon(iconIndicatorCompOnResource);
         iconRegistry.registerIcon(iconIndicatorCompOffResource);
@@ -71,6 +73,8 @@ public class ClientProxy extends CommonProxy
             renderItem.getItemModelMesher().register(ModItems.drawerKey, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.drawerKey), "inventory"));
         if (StorageDrawers.config.cache.enableShroudUpgrades)
             renderItem.getItemModelMesher().register(ModItems.shroudKey, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.shroudKey), "inventory"));
+        if (StorageDrawers.config.cache.enablePersonalUpgrades)
+            renderItem.getItemModelMesher().register(ModItems.personalKey, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.personalKey), "inventory"));
 
         if (StorageDrawers.config.cache.enableStorageUpgrades)
             registerItemVariants(ModItems.upgradeStorage, ModItems.upgradeStorage.getResourceVariants());

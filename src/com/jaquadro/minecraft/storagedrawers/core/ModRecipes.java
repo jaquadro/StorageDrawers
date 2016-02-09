@@ -133,7 +133,7 @@ public class ModRecipes
         }
 
         if (config.cache.enablePersonalUpgrades) {
-            GameRegistry.addShapelessRecipe(new ItemStack(ModItems.personalKey), ModItems.upgradeLock, Items.name_tag);
+            GameRegistry.addShapelessRecipe(new ItemStack(ModItems.personalKey), ModItems.drawerKey, Items.name_tag);
         }
 
         if (config.cache.enableTape) {

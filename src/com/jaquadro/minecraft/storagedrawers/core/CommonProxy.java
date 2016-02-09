@@ -13,6 +13,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class CommonProxy
 {
     public final ResourceLocation iconLockResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/lock_icon");
+    public final ResourceLocation iconClaimResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/claim_icon");
+    public final ResourceLocation iconClaimLockResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/claim_lock_icon");
     public final ResourceLocation iconVoidResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/void_icon");
 
     public final ResourceLocation iconIndicatorCompOnResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_comp_on");

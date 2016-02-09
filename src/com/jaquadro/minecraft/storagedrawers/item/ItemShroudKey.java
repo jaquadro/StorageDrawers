@@ -23,7 +23,7 @@ public class ItemShroudKey extends Item
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation (ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+    public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
         String name = getUnlocalizedName(itemStack);
         list.add(StatCollector.translateToLocalFormatted(name + ".description"));
     }
@@ -35,8 +35,8 @@ public class ItemShroudKey extends Item
     }
 
     @Override
-    public Multimap getAttributeModifiers (ItemStack item) {
-        Multimap multimap = super.getAttributeModifiers(item);
+    public Multimap<String, AttributeModifier> getAttributeModifiers (ItemStack item) {
+        Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(item);
         multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Weapon modifier", (double)2, 0));
         return multimap;
     }

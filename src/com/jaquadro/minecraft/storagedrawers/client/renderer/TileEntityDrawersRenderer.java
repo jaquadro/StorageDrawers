@@ -284,21 +284,28 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         IBlockState blockState = tile.getWorld().getBlockState(tile.getPos());
 
-        renderLock(blockState, tile.getDirection(), tile.isLocked(LockAttribute.LOCK_POPULATED));
+        renderLock(blockState, tile.getDirection(), tile.isLocked(LockAttribute.LOCK_POPULATED), tile.getOwner() != null);
         renderVoid(blockState, tile.getDirection(), tile.isVoid());
         renderIndicator(tile, blockState, tile.getDirection(), tile.getEffectiveStatusLevel());
         renderShroud(tile, blockState, tile.getDirection(), tile.isShrouded());
         renderTape(tile, blockState, tile.getDirection(), tile.isSealed());
     }
 
-    private void renderLock (IBlockState blockState, int side, boolean locked) {
-        if (!locked)
+    private void renderLock (IBlockState blockState, int side, boolean locked, boolean claimed) {
+        if (!locked && !claimed)
             return;
 
         BlockDrawers block = (BlockDrawers)blockState.getBlock();
 
         double depth = block.isHalfDepth(blockState) ? .5 : 1;
-        TextureAtlasSprite iconLock = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconLockResource);
+
+        TextureAtlasSprite iconLock;
+        if (locked && claimed)
+            iconLock = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconClaimLockResource);
+        else if (locked)
+            iconLock = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconLockResource);
+        else
+            iconLock = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconClaimResource);
 
         GlStateManager.enablePolygonOffset();
         GlStateManager.doPolygonOffset(-1, -1);
