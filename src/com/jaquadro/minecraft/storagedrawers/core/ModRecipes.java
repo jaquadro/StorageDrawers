@@ -132,6 +132,10 @@ public class ModRecipes
             GameRegistry.addShapelessRecipe(new ItemStack(ModItems.shroudKey), ModItems.drawerKey, Items.ender_eye);
         }
 
+        if (config.cache.enablePersonalUpgrades) {
+            GameRegistry.addShapelessRecipe(new ItemStack(ModItems.personalKey), ModItems.upgradeLock, Items.name_tag);
+        }
+
         if (config.cache.enableTape) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.tape), " x ", "yyy",
                 'x', "slimeball", 'y', Items.paper));

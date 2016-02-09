@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ISealable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
@@ -42,7 +43,7 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, ILockable, ISealable
+public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, ILockable, ISealable, IProtectable
 {
     private IDrawer[] drawers;
     private IDrawerInventory inventory;
@@ -55,6 +56,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     private boolean shrouded = false;
     private boolean taped = false;
     private boolean hideUpgrade = false;
+    private UUID owner;
 
     private EnumSet<LockAttribute> lockAttributes = null;
 
@@ -265,6 +267,31 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
                 worldObj.markBlockForUpdate(getPos());
             }
         }
+    }
+
+    @Override
+    public UUID getOwner () {
+        if (!StorageDrawers.config.cache.enablePersonalUpgrades)
+            return null;
+
+        return owner;
+    }
+
+    @Override
+    public boolean setOwner (UUID owner) {
+        if (!StorageDrawers.config.cache.enablePersonalUpgrades)
+            return false;
+
+        if ((this.owner != null && !this.owner.equals(owner)) || (owner != null && !owner.equals(this.owner))) {
+            this.owner = owner;
+
+            if (worldObj != null && !worldObj.isRemote) {
+                markDirty();
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
+        }
+
+        return true;
     }
 
     public boolean shouldHideUpgrades () {
@@ -524,6 +551,10 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         if (tag.hasKey("Shr"))
             shrouded = tag.getBoolean("Shr");
 
+        owner = null;
+        if (tag.hasKey("Own"))
+            owner = UUID.fromString(tag.getString("Own"));
+
         hideUpgrade = false;
         if (tag.hasKey("HideUp"))
             hideUpgrade = tag.getBoolean("HideUp");
@@ -567,6 +598,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
         if (shrouded)
             tag.setBoolean("Shr", shrouded);
+
+        if (owner != null)
+            tag.setString("Own", owner.toString());
 
         if (hideUpgrade)
             tag.setBoolean("HideUp", hideUpgrade);

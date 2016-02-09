@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ISealable;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,6 +38,12 @@ public class ItemTape extends Item
             return false;
 
         TileEntity tile = world.getTileEntity(pos);
+        if (tile instanceof IProtectable) {
+            IProtectable protectable = (IProtectable)tile;
+            if (protectable.getOwner() != null && !protectable.getOwner().equals(player.getPersistentID()))
+                return false;
+        }
+
         if (tile instanceof ISealable) {
             ISealable tileseal = (ISealable) tile;
             if (tileseal.isSealed())

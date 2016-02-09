@@ -274,6 +274,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, pos);
         ItemStack item = player.inventory.getCurrentItem();
 
+        if (tileDrawers.getOwner() != null && !player.getPersistentID().equals(tileDrawers.getOwner()))
+            return false;
+
         if (StorageDrawers.config.cache.debugTrace) {
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockActivated");
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item == null) ? "  null item" : "  " + item.toString());
@@ -315,6 +318,15 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             }
             else if (item.getItem() == ModItems.shroudKey) {
                 tileDrawers.setIsShrouded(!tileDrawers.isShrouded());
+                return true;
+            }
+            else if (item.getItem() == ModItems.personalKey) {
+                if (tileDrawers.getOwner() == null)
+                    tileDrawers.setOwner(player.getPersistentID());
+                else if (player.getPersistentID().equals(tileDrawers.getOwner()))
+                    tileDrawers.setOwner(null);
+                else
+                    return false;
                 return true;
             }
             else if (item.getItem() == ModItems.tape)
@@ -421,6 +433,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             return;
 
         if (tileDrawers.isSealed())
+            return;
+
+        if (tileDrawers.getOwner() != null && !tileDrawers.getOwner().equals(player.getPersistentID()))
             return;
 
         int slot = getDrawerSlot(getDrawerCount(world.getBlockState(pos)), side.ordinal(), hitX, hitY, hitZ);
