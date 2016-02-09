@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ISealable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
@@ -35,7 +36,7 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, ILockable, ISealable
+public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, ILockable, ISealable, IProtectable
 {
     private IDrawer[] drawers;
     private IDrawerInventory inventory;
@@ -242,6 +243,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         }
     }
 
+    @Override
     public UUID getOwner () {
         if (!StorageDrawers.config.cache.enablePersonalUpgrades)
             return null;
@@ -249,7 +251,11 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         return owner;
     }
 
-    public void setOwner (UUID owner) {
+    @Override
+    public boolean setOwner (UUID owner) {
+        if (!StorageDrawers.config.cache.enablePersonalUpgrades)
+            return false;
+
         if ((this.owner != null && !this.owner.equals(owner)) || (owner != null && !owner.equals(this.owner))) {
             this.owner = owner;
 
@@ -258,6 +264,8 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         }
+
+        return true;
     }
 
     public boolean shouldHideUpgrades () {
