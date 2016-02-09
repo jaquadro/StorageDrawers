@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.resources.IconRegistry;
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
@@ -62,32 +63,47 @@ public class ClientProxy extends CommonProxy
         RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 
         renderItem.getItemModelMesher().register(ModItems.upgradeTemplate, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.upgradeTemplate), "inventory"));
-        renderItem.getItemModelMesher().register(ModItems.upgradeVoid, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.upgradeVoid), "inventory"));
-        renderItem.getItemModelMesher().register(ModItems.tape, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.tape), "inventory"));
-        renderItem.getItemModelMesher().register(ModItems.drawerKey, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.drawerKey), "inventory"));
-        renderItem.getItemModelMesher().register(ModItems.shroudKey, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.shroudKey), "inventory"));
+        if (StorageDrawers.config.cache.enableVoidUpgrades)
+            renderItem.getItemModelMesher().register(ModItems.upgradeVoid, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.upgradeVoid), "inventory"));
+        if (StorageDrawers.config.cache.enableTape)
+            renderItem.getItemModelMesher().register(ModItems.tape, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.tape), "inventory"));
+        if (StorageDrawers.config.cache.enableLockUpgrades)
+            renderItem.getItemModelMesher().register(ModItems.drawerKey, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.drawerKey), "inventory"));
+        if (StorageDrawers.config.cache.enableShroudUpgrades)
+            renderItem.getItemModelMesher().register(ModItems.shroudKey, 0, new ModelResourceLocation(ModItems.getQualifiedName(ModItems.shroudKey), "inventory"));
 
-        registerItemVariants(ModItems.upgradeStorage, ModItems.upgradeStorage.getResourceVariants());
-        registerItemVariants(ModItems.upgradeStatus, ModItems.upgradeStatus.getResourceVariants());
-        registerItemVariants(ModItems.upgradeCreative, ModItems.upgradeCreative.getResourceVariants());
+        if (StorageDrawers.config.cache.enableStorageUpgrades)
+            registerItemVariants(ModItems.upgradeStorage, ModItems.upgradeStorage.getResourceVariants());
+        if (StorageDrawers.config.cache.enableIndicatorUpgrades)
+            registerItemVariants(ModItems.upgradeStatus, ModItems.upgradeStatus.getResourceVariants());
+        if (StorageDrawers.config.cache.enableCreativeUpgrades)
+            registerItemVariants(ModItems.upgradeCreative, ModItems.upgradeCreative.getResourceVariants());
 
-        for (EnumUpgradeStorage upgrade : EnumUpgradeStorage.values()) {
-            String resName = ModItems.getQualifiedName(ModItems.upgradeStorage) + "_" + upgrade.getName();
-            renderItem.getItemModelMesher().register(ModItems.upgradeStorage, upgrade.getMetadata(), new ModelResourceLocation(resName, "inventory"));
+        if (StorageDrawers.config.cache.enableStorageUpgrades) {
+            for (EnumUpgradeStorage upgrade : EnumUpgradeStorage.values()) {
+                String resName = ModItems.getQualifiedName(ModItems.upgradeStorage) + "_" + upgrade.getName();
+                renderItem.getItemModelMesher().register(ModItems.upgradeStorage, upgrade.getMetadata(), new ModelResourceLocation(resName, "inventory"));
+            }
         }
 
-        for (EnumUpgradeStatus upgrade : EnumUpgradeStatus.values()) {
-            String resName = ModItems.getQualifiedName(ModItems.upgradeStatus) + "_" + upgrade.getName();
-            renderItem.getItemModelMesher().register(ModItems.upgradeStatus, upgrade.getMetadata(), new ModelResourceLocation(resName, "inventory"));
+        if (StorageDrawers.config.cache.enableIndicatorUpgrades) {
+            for (EnumUpgradeStatus upgrade : EnumUpgradeStatus.values()) {
+                String resName = ModItems.getQualifiedName(ModItems.upgradeStatus) + "_" + upgrade.getName();
+                renderItem.getItemModelMesher().register(ModItems.upgradeStatus, upgrade.getMetadata(), new ModelResourceLocation(resName, "inventory"));
+            }
         }
 
-        for (EnumUpgradeCreative upgrade : EnumUpgradeCreative.values()) {
-            String resName = ModItems.getQualifiedName(ModItems.upgradeCreative) + "_" + upgrade.getName();
-            renderItem.getItemModelMesher().register(ModItems.upgradeCreative, upgrade.getMetadata(), new ModelResourceLocation(resName, "inventory"));
+        if (StorageDrawers.config.cache.enableCreativeUpgrades) {
+            for (EnumUpgradeCreative upgrade : EnumUpgradeCreative.values()) {
+                String resName = ModItems.getQualifiedName(ModItems.upgradeCreative) + "_" + upgrade.getName();
+                renderItem.getItemModelMesher().register(ModItems.upgradeCreative, upgrade.getMetadata(), new ModelResourceLocation(resName, "inventory"));
+            }
         }
 
-        renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.controller), 0, new ModelResourceLocation(ModBlocks.getQualifiedName(ModBlocks.controller), "inventory"));
-        renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.controllerSlave), 0, new ModelResourceLocation(ModBlocks.getQualifiedName(ModBlocks.controllerSlave), "inventory"));
+        if (StorageDrawers.config.isBlockEnabled("controller"))
+            renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.controller), 0, new ModelResourceLocation(ModBlocks.getQualifiedName(ModBlocks.controller), "inventory"));
+        if (StorageDrawers.config.isBlockEnabled("controllerslave"))
+            renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.controllerSlave), 0, new ModelResourceLocation(ModBlocks.getQualifiedName(ModBlocks.controllerSlave), "inventory"));
 
         // Basic Drawers
 
@@ -100,20 +116,24 @@ public class ClientProxy extends CommonProxy
 
         // Comp Drawers
 
-        registerItemVariants(ModBlocks.compDrawers, ModBlocks.compDrawers.getResourceVariants());
+        if (StorageDrawers.config.isBlockEnabled("compdrawers")) {
+            registerItemVariants(ModBlocks.compDrawers, ModBlocks.compDrawers.getResourceVariants());
 
-        for (EnumCompDrawer slots : EnumCompDrawer.values()) {
-            String resName = ModBlocks.getQualifiedName(ModBlocks.compDrawers) + "_" + slots.getName();
-            renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.compDrawers), slots.getMetadata(), new ModelResourceLocation(resName, "inventory"));
+            for (EnumCompDrawer slots : EnumCompDrawer.values()) {
+                String resName = ModBlocks.getQualifiedName(ModBlocks.compDrawers) + "_" + slots.getName();
+                renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.compDrawers), slots.getMetadata(), new ModelResourceLocation(resName, "inventory"));
+            }
         }
 
         // Trim
 
-        registerItemVariants(ModBlocks.trim, ModBlocks.trim.getResourceVariants());
+        if (StorageDrawers.config.isBlockEnabled("trim")) {
+            registerItemVariants(ModBlocks.trim, ModBlocks.trim.getResourceVariants());
 
-        for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
-            String resName = ModBlocks.getQualifiedName(ModBlocks.trim) + "_" + material.getName();
-            renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.trim), material.getMetadata(), new ModelResourceLocation(resName, "inventory"));
+            for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
+                String resName = ModBlocks.getQualifiedName(ModBlocks.trim) + "_" + material.getName();
+                renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.trim), material.getMetadata(), new ModelResourceLocation(resName, "inventory"));
+            }
         }
     }
 
