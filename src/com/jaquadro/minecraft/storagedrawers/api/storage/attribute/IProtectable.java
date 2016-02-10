@@ -1,5 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage.attribute;
 
+import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
+
 import java.util.UUID;
 
 public interface IProtectable
@@ -14,4 +16,10 @@ public interface IProtectable
      * @return false if the operation is not supported, true otherwise.
      */
     boolean setOwner (UUID owner);
+
+    /**
+     * Gets the provider managing security for the target.
+     * @return null to use the default provider, which enforces strict owner access.
+     */
+    ISecurityProvider getSecurityProvider ();
 }

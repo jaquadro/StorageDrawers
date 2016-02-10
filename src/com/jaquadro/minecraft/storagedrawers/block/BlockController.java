@@ -121,17 +121,17 @@ public class BlockController extends BlockContainer implements INetworked
         if (item != null && item.getItem() != null) {
             if (item.getItem() == ModItems.shroudKey) {
                 if (!world.isRemote)
-                    te.toggleShroud(player.getPersistentID());
+                    te.toggleShroud(player.getGameProfile());
                 return true;
             }
             else if (item.getItem() == ModItems.upgradeLock) {
                 if (!world.isRemote)
-                    te.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getPersistentID());
+                    te.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());
                 return true;
             }
             else if (item.getItem() == ModItems.personalKey) {
                 if (!world.isRemote)
-                    te.toggleProtection(player.getPersistentID());
+                    te.toggleProtection(player.getGameProfile());
                 return true;
             }
         }

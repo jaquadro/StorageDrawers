@@ -16,6 +16,7 @@ import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
+import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -301,7 +302,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, x, y, z);
         ItemStack item = player.inventory.getCurrentItem();
 
-        if (tileDrawers.getOwner() != null && !player.getPersistentID().equals(tileDrawers.getOwner()))
+        if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
             return false;
 
         if (StorageDrawers.config.cache.debugTrace) {
@@ -449,7 +450,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (tileDrawers.isSealed())
             return;
 
-        if (tileDrawers.getOwner() != null && !tileDrawers.getOwner().equals(player.getPersistentID()))
+        if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
             return;
 
         int slot = getDrawerSlot(side, hitX, hitY, hitZ);

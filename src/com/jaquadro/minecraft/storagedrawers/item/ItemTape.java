@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ISealable;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
+import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,10 +40,8 @@ public class ItemTape extends Item
 
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile instanceof IProtectable) {
-            IProtectable protectable = (IProtectable)tile;
-            if (protectable.getOwner() != null && !protectable.getOwner().equals(player.getPersistentID()))
+            if (!SecurityManager.hasAccess(player.getGameProfile(), (IProtectable)tile))
                 return false;
-
         }
 
         if (tile instanceof ISealable) {

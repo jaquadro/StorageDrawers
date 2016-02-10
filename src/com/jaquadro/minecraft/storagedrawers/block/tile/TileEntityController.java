@@ -5,9 +5,11 @@ import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
+import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.ItemMetaListRegistry;
 import com.jaquadro.minecraft.storagedrawers.util.ItemMetaRegistry;
 import com.jaquadro.minecraft.storagedrawers.util.UniqueMetaIdentifier;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -155,7 +157,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         if (!dumpInventory) {
             ItemStack currentStack = player.inventory.getCurrentItem();
             if (currentStack != null) {
-                count = insertItems(currentStack, player.getPersistentID());
+                count = insertItems(currentStack, player.getGameProfile());
                 if (currentStack.stackSize == 0)
                     player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -164,7 +166,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             for (int i = 0, n = player.inventory.getSizeInventory(); i < n; i++) {
                 ItemStack subStack = player.inventory.getStackInSlot(i);
                 if (subStack != null) {
-                    count += insertItems(subStack, player.getPersistentID());
+                    count += insertItems(subStack, player.getGameProfile());
                     if (subStack.stackSize == 0)
                         player.inventory.setInventorySlotContents(i, null);
                 }
@@ -180,14 +182,13 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         return count;
     }
 
-    private int insertItems (ItemStack stack, UUID owner) {
+    private int insertItems (ItemStack stack, GameProfile profile) {
         int itemsLeft = stack.stackSize;
 
         for (int slot : enumerateDrawersForInsertion(stack, false)) {
             IDrawerGroup group = getGroupForDrawerSlot(slot);
             if (group instanceof IProtectable) {
-                IProtectable protectable = (IProtectable)group;
-                if (protectable.getOwner() != null && !protectable.getOwner().equals(owner))
+                if (!SecurityManager.hasAccess(profile, (IProtectable)group))
                     continue;
             }
 
@@ -231,7 +232,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         return remainder;
     }
 
-    public void toggleProtection (UUID owner) {
+    public void toggleProtection (GameProfile profile) {
         IProtectable template = null;
         UUID state = null;
 
@@ -241,14 +242,14 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
             if (record.storage instanceof IProtectable) {
                 IProtectable protectable = (IProtectable)record.storage;
-                if (protectable.getOwner() != null && !protectable.getOwner().equals(owner))
+                if (!SecurityManager.hasAccess(profile, protectable))
                     continue;
 
                 if (template == null) {
                     template = protectable;
 
                     if (template.getOwner() == null)
-                        state = owner;
+                        state = profile.getId();
                     else
                         state = null;
                 }
@@ -258,7 +259,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         }
     }
 
-    public void toggleShroud (UUID owner) {
+    public void toggleShroud (GameProfile profile) {
         IShroudable template = null;
         boolean state = false;
 
@@ -267,8 +268,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                 continue;
 
             if (record.storage instanceof IProtectable) {
-                IProtectable protectable = (IProtectable)record.storage;
-                if (protectable.getOwner() != null && !protectable.getOwner().equals(owner))
+                if (!SecurityManager.hasAccess(profile, (IProtectable)record.storage))
                     continue;
             }
 
@@ -291,7 +291,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         }
     }
 
-    public void toggleLock (EnumSet<LockAttribute> attributes, LockAttribute key, UUID owner) {
+    public void toggleLock (EnumSet<LockAttribute> attributes, LockAttribute key, GameProfile profile) {
         ILockable template = null;
         boolean state = false;
 
@@ -300,8 +300,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                 continue;
 
             if (record.storage instanceof IProtectable) {
-                IProtectable protectable = (IProtectable)record.storage;
-                if (protectable.getOwner() != null && !protectable.getOwner().equals(owner))
+                if (!SecurityManager.hasAccess(profile, (IProtectable)record.storage))
                     continue;
             }
 

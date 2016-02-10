@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
+import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
@@ -266,6 +267,11 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         }
 
         return true;
+    }
+
+    @Override
+    public ISecurityProvider getSecurityProvider () {
+        return null;
     }
 
     public boolean shouldHideUpgrades () {

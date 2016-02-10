@@ -8,6 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -62,15 +63,14 @@ public class Waila extends IntegrationModule
         public List<String> getWailaBody (ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
             TileEntityDrawers tile = (TileEntityDrawers) accessor.getTileEntity();
 
-            if (tile.getOwner() == null || tile.getOwner().equals(Minecraft.getMinecraft().thePlayer.getPersistentID())) {
-                IDrawerGroup group = tile;
-                for (int i = 0; i < group.getDrawerCount(); i++) {
-                    if (!group.isDrawerEnabled(i))
+            if (SecurityManager.hasAccess(Minecraft.getMinecraft().thePlayer.getGameProfile(), tile)) {
+                for (int i = 0; i < tile.getDrawerCount(); i++) {
+                    if (!tile.isDrawerEnabled(i))
                         continue;
 
                     String name = StatCollector.translateToLocal("storageDrawers.waila.empty");
 
-                    IDrawer drawer = group.getDrawer(i);
+                    IDrawer drawer = tile.getDrawer(i);
                     ItemStack stack = drawer.getStoredItemPrototype();
                     if (stack != null && stack.getItem() != null) {
                         String stackName = stack.getDisplayName();
