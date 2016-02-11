@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
+import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
@@ -13,6 +14,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandar
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
+import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
@@ -348,11 +350,18 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 tileDrawers.setIsShrouded(!tileDrawers.isShrouded());
                 return true;
             }
-            else if (item.getItem() == ModItems.personalKey) {
-                if (tileDrawers.getOwner() == null)
+            else if (item.getItem() instanceof ItemPersonalKey) {
+                String securityKey = ((ItemPersonalKey) item.getItem()).getSecurityProviderKey(item.getItemDamage());
+                ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
+
+                if (tileDrawers.getOwner() == null) {
                     tileDrawers.setOwner(player.getPersistentID());
-                else if (player.getPersistentID().equals(tileDrawers.getOwner()))
+                    tileDrawers.setSecurityProvider(provider);
+                }
+                else if (SecurityManager.hasOwnership(player.getGameProfile(), tileDrawers)) {
                     tileDrawers.setOwner(null);
+                    tileDrawers.setSecurityProvider(null);
+                }
                 else
                     return false;
                 return true;

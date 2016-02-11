@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
+import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
@@ -232,7 +233,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         return remainder;
     }
 
-    public void toggleProtection (GameProfile profile) {
+    public void toggleProtection (GameProfile profile, ISecurityProvider provider) {
         IProtectable template = null;
         UUID state = null;
 
@@ -242,7 +243,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
             if (record.storage instanceof IProtectable) {
                 IProtectable protectable = (IProtectable)record.storage;
-                if (!SecurityManager.hasAccess(profile, protectable))
+                if (!SecurityManager.hasOwnership(profile, protectable))
                     continue;
 
                 if (template == null) {
@@ -250,11 +251,14 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
                     if (template.getOwner() == null)
                         state = profile.getId();
-                    else
+                    else {
                         state = null;
+                        provider = null;
+                    }
                 }
 
                 protectable.setOwner(state);
+                protectable.setSecurityProvider(provider);
             }
         }
     }

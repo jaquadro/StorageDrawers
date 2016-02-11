@@ -30,6 +30,8 @@ public class IntegrationRegistry
             reg.add(new NotEnoughItems());
         if (Loader.isModLoaded("ThermalExpansion") && StorageDrawers.config.cache.enableThermalExpansionIntegration)
             reg.add(new ThermalExpansion());
+        if (Loader.isModLoaded("ThermalFoundation") && StorageDrawers.config.cache.enableThermalFoundationIntegration)
+            reg.add(new ThermalFoundation());
     }
 
     private IntegrationRegistry () {

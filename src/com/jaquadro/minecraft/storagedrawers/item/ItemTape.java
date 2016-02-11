@@ -40,7 +40,7 @@ public class ItemTape extends Item
 
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile instanceof IProtectable) {
-            if (!SecurityManager.hasAccess(player.getGameProfile(), (IProtectable)tile))
+            if (!SecurityManager.hasOwnership(player.getGameProfile(), (IProtectable)tile))
                 return false;
         }
 

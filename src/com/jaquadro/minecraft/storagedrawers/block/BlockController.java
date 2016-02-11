@@ -1,11 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -130,8 +132,13 @@ public class BlockController extends BlockContainer implements INetworked
                 return true;
             }
             else if (item.getItem() == ModItems.personalKey) {
-                if (!world.isRemote)
-                    te.toggleProtection(player.getGameProfile());
+                if (!world.isRemote) {
+                    String securityKey = ((ItemPersonalKey) item.getItem()).getSecurityProviderKey(item.getItemDamage());
+                    ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
+
+                    te.toggleProtection(player.getGameProfile(), provider);
+                }
+
                 return true;
             }
         }

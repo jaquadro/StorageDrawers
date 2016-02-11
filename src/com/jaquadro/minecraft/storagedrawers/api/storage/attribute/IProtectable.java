@@ -22,4 +22,10 @@ public interface IProtectable
      * @return null to use the default provider, which enforces strict owner access.
      */
     ISecurityProvider getSecurityProvider ();
+
+    /**
+     * Sets the provider managing security for the target.  Set to null for default provider.
+     * @return false if the operation is not supported, true otherwise.
+     */
+    boolean setSecurityProvider (ISecurityProvider provder);
 }

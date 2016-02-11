@@ -32,8 +32,10 @@ item.storagedrawers.upgradeSorting.name=Sorting Upgrade
 item.storagedrawers.upgradeSorting.description=For Refined Relocation
 item.storagedrawers.shroudKey.name=Concealment Key
 item.storagedrawers.shroudKey.description=Show or hide item labels
-item.storagedrawers.personalKey.name=Personal Key
-item.storagedrawers.personalKey.description=Protect access from other players
+item.storagedrawers.personalKey.default.name=Personal Key
+item.storagedrawers.personalKey.default.description=Protect access from other players
+item.storagedrawers.personalKey.cofh.name=Personal Key (CoFH)
+item.storagedrawers.personalKey.cofh.description=Protect access from other players
 item.storagedrawers.tape.name=Packing Tape
 item.storagedrawers.tape.description=Seals drawers for moving
 
@@ -187,3 +189,4 @@ storageDrawers.config.integration.enableThaumcraft=Enable Thaumcraft Integration
 storageDrawers.config.integration.enableMineTweaker=Enable MineTweaker Integration
 storageDrawers.config.integration.enableRefinedRelocation=Enable Refined Relocation Integration
 storageDrawers.config.integration.enableThermalExpansion=Enable Thermal Expansion Integration
+storageDrawers.config.integration.enableThermalFoundation=Enable Thermal Foundation Integration
