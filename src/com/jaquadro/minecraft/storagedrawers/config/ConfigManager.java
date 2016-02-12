@@ -75,6 +75,7 @@ public class ConfigManager
         public boolean enableMineTweakerIntegration;
         public boolean enableRefinedRelocationIntegration;
         public boolean enableThermalExpansionIntegration;
+        public boolean enableThermalFoundationIntegration;
         public boolean enableTape;
         public boolean enableFallbackRecipes;
         public boolean invertShift;
@@ -254,6 +255,7 @@ public class ConfigManager
         //cache.enableMineTweakerIntegration = config.get(sectionIntegration.getQualifiedName(), "enableMineTweaker", true).setLanguageKey(LANG_PREFIX + "integration.enableMineTweaker").setRequiresMcRestart(true).getBoolean();
         //cache.enableRefinedRelocationIntegration = config.get(sectionIntegration.getQualifiedName(), "enableRefinedRelocation", true).setLanguageKey(LANG_PREFIX + "integration.enableRefinedRelocation").setRequiresMcRestart(true).getBoolean();
         //cache.enableThermalExpansionIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThermalExpansion", true).setLanguageKey(LANG_PREFIX + "integration.enableThermalExpansion").setRequiresMcRestart(true).getBoolean();
+        //cache.enableThermalFoundationIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThermalFoundation", true).setLanguageKey(LANG_PREFIX + "integration.enableThermalFoundation").setRequiresMcRestart(true).getBoolean();
 
         config.get(sectionBlocksFullDrawers1x1.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksFullDrawers1x1.getQualifiedName(), "baseStorage", 32).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);

@@ -167,3 +167,4 @@ storageDrawers.config.integration.enableThaumcraft=Enable Thaumcraft Integration
 storageDrawers.config.integration.enableMineTweaker=Enable MineTweaker Integration
 storageDrawers.config.integration.enableRefinedRelocation=Enable Refined Relocation Integration
 storageDrawers.config.integration.enableThermalExpansion=Enable Thermal Expansion Integration
+storageDrawers.config.integration.enableThermalFoundation=Enable Thermal Foundation Integration

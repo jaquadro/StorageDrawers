@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
+import com.jaquadro.minecraft.storagedrawers.security.SecurityRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -44,6 +45,7 @@ public class StorageDrawers
     public static RenderRegistry renderRegistry;
     public static WailaRegistry wailaRegistry;
     //public static BlockRegistry blockRegistry;
+    public static SecurityRegistry securityRegistry;
 
     @Mod.Instance(MOD_ID)
     public static StorageDrawers instance;
@@ -71,6 +73,7 @@ public class StorageDrawers
         renderRegistry = new RenderRegistry();
         wailaRegistry = new WailaRegistry();
         //blockRegistry = new BlockRegistry();
+        securityRegistry = new SecurityRegistry();
 
         blocks.init();
         items.init();

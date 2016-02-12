@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
+import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
@@ -57,6 +58,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     private boolean taped = false;
     private boolean hideUpgrade = false;
     private UUID owner;
+    private String securityKey;
 
     private EnumSet<LockAttribute> lockAttributes = null;
 
@@ -284,6 +286,29 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
         if ((this.owner != null && !this.owner.equals(owner)) || (owner != null && !owner.equals(this.owner))) {
             this.owner = owner;
+
+            if (worldObj != null && !worldObj.isRemote) {
+                markDirty();
+                worldObj.markBlockForUpdate(getPos());
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public ISecurityProvider getSecurityProvider () {
+        return StorageDrawers.securityRegistry.getProvider(securityKey);
+    }
+
+    @Override
+    public boolean setSecurityProvider (ISecurityProvider provider) {
+        if (!StorageDrawers.config.cache.enablePersonalUpgrades)
+            return false;
+
+        String newKey = (provider == null) ? null : provider.getProviderID();
+        if ((newKey != null && !newKey.equals(securityKey)) || (securityKey != null && !securityKey.equals(newKey))) {
+            securityKey = newKey;
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
@@ -555,6 +580,10 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         if (tag.hasKey("Own"))
             owner = UUID.fromString(tag.getString("Own"));
 
+        securityKey = null;
+        if (tag.hasKey("Sec"))
+            securityKey = tag.getString("Sec");
+
         hideUpgrade = false;
         if (tag.hasKey("HideUp"))
             hideUpgrade = tag.getBoolean("HideUp");
@@ -601,6 +630,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
         if (owner != null)
             tag.setString("Own", owner.toString());
+
+        if (securityKey != null)
+            tag.setString("Sec", securityKey);
 
         if (hideUpgrade)
             tag.setBoolean("HideUp", hideUpgrade);

@@ -40,4 +40,11 @@ public class ItemPersonalKey extends Item
         multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Weapon modifier", (double)2, 0));
         return multimap;
     }
+
+    public String getSecurityProviderKey (int meta) {
+        switch (meta) {
+            case 0: return null;
+            default: return null;
+        }
+    }
 }
