@@ -41,7 +41,9 @@ public class StorageDrawersPack
     @Mod.EventHandler
     public void postInit (FMLPostInitializationEvent event) {
         IStorageDrawersApi api = StorageDrawersApi.instance();
-        if (api != null)
+        if (api != null) {
             api.registerStandardPackRecipes(resolver);
+            api.packFactory().registerResolver(resolver);
+        }
     }
 }

@@ -32,33 +32,37 @@ public class DataResolver extends ExtendedDataResolver
     public Block getBlock (BlockConfiguration blockConfig) {
         switch (blockConfig.getBlockType()) {
             case Drawers:
-                if (blockConfig.getDrawerCount() == 1)
+                if (blockConfig.getDrawerCount() == 1 && ModBlocks.fullDrawers1 != null)
                     return ModBlocks.fullDrawers1[bank];
-                if (blockConfig.getDrawerCount() == 2 && !blockConfig.isHalfDepth())
+                if (blockConfig.getDrawerCount() == 2 && !blockConfig.isHalfDepth() && ModBlocks.fullDrawers2 != null)
                     return ModBlocks.fullDrawers2[bank];
-                if (blockConfig.getDrawerCount() == 4 && !blockConfig.isHalfDepth())
+                if (blockConfig.getDrawerCount() == 4 && !blockConfig.isHalfDepth() && ModBlocks.fullDrawers4 != null)
                     return ModBlocks.fullDrawers4[bank];
-                if (blockConfig.getDrawerCount() == 2 && blockConfig.isHalfDepth())
+                if (blockConfig.getDrawerCount() == 2 && blockConfig.isHalfDepth() && ModBlocks.halfDrawers2 != null)
                     return ModBlocks.halfDrawers2[bank];
-                if (blockConfig.getDrawerCount() == 4 && blockConfig.isHalfDepth())
+                if (blockConfig.getDrawerCount() == 4 && blockConfig.isHalfDepth() && ModBlocks.halfDrawers4 != null)
                     return ModBlocks.halfDrawers4[bank];
                 break;
             case DrawersSorting:
-                if (blockConfig.getDrawerCount() == 1)
+                if (blockConfig.getDrawerCount() == 1 && RefinedRelocation.fullDrawers1 != null)
                     return RefinedRelocation.fullDrawers1[bank];
-                if (blockConfig.getDrawerCount() == 2 && !blockConfig.isHalfDepth())
+                if (blockConfig.getDrawerCount() == 2 && !blockConfig.isHalfDepth() && RefinedRelocation.fullDrawers2 != null)
                     return RefinedRelocation.fullDrawers2[bank];
-                if (blockConfig.getDrawerCount() == 4 && !blockConfig.isHalfDepth())
+                if (blockConfig.getDrawerCount() == 4 && !blockConfig.isHalfDepth() && RefinedRelocation.fullDrawers4 != null)
                     return RefinedRelocation.fullDrawers4[bank];
-                if (blockConfig.getDrawerCount() == 2 && blockConfig.isHalfDepth())
+                if (blockConfig.getDrawerCount() == 2 && blockConfig.isHalfDepth() && RefinedRelocation.halfDrawers2 != null)
                     return RefinedRelocation.halfDrawers2[bank];
-                if (blockConfig.getDrawerCount() == 4 && blockConfig.isHalfDepth())
+                if (blockConfig.getDrawerCount() == 4 && blockConfig.isHalfDepth() && RefinedRelocation.halfDrawers4 != null)
                     return RefinedRelocation.halfDrawers4[bank];
                 break;
             case Trim:
-                return ModBlocks.trim[bank];
+                if (ModBlocks.trim != null)
+                    return ModBlocks.trim[bank];
+                break;
             case TrimSorting:
-                return RefinedRelocation.trim[bank];
+                if (RefinedRelocation.trim != null)
+                    return RefinedRelocation.trim[bank];
+                break;
         }
         return null;
     }

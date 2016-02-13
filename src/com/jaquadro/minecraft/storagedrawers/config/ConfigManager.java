@@ -60,6 +60,7 @@ public class ConfigManager
         public boolean enableVoidUpgrades;
         public boolean enableCreativeUpgrades;
         public boolean enableShroudUpgrades;
+        public boolean enablePersonalUpgrades;
         public boolean enableSortingUpgrades;
         public boolean renderStorageUpgrades;
         public boolean enableDrawerUI;
@@ -74,6 +75,7 @@ public class ConfigManager
         public boolean enableMineTweakerIntegration;
         public boolean enableRefinedRelocationIntegration;
         public boolean enableThermalExpansionIntegration;
+        public boolean enableThermalFoundationIntegration;
         public boolean enableTape;
         public boolean enableFallbackRecipes;
         public boolean invertShift;
@@ -229,6 +231,7 @@ public class ConfigManager
         cache.enableVoidUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableVoidUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableVoidUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableCreativeUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableCreativeUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableCreativeUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableShroudUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableShroudUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableShroudUpgrades").setRequiresMcRestart(true).getBoolean();
+        cache.enablePersonalUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enablePersonalUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enablePersonalUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableSortingUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableSortingUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableSortingUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableTape = config.get(Configuration.CATEGORY_GENERAL, "enableTape", true).setLanguageKey(LANG_PREFIX + "prop.enableTape").setRequiresMcRestart(true).getBoolean();
         cache.itemRenderType = config.get(Configuration.CATEGORY_GENERAL, "itemRenderType", "fast", null, new String[]{"fancy", "fast"}).setLanguageKey(LANG_PREFIX + "prop.itemRenderType").getString();
@@ -239,7 +242,7 @@ public class ConfigManager
         cache.enableSidedOutput = config.get(Configuration.CATEGORY_GENERAL, "enableSidedOutput", true).setLanguageKey(LANG_PREFIX + "prop.enableSidedOutput").getBoolean();
         cache.enableItemConversion = config.get(Configuration.CATEGORY_GENERAL, "enableItemConversion", true).setLanguageKey(LANG_PREFIX + "prop.enableItemConversion").getBoolean();
         cache.enableFallbackRecipes = config.get(Configuration.CATEGORY_GENERAL, "enableFallbackRecipes", true).setLanguageKey(LANG_PREFIX + "prop.enableFallbackRecipes").setRequiresMcRestart(true).getBoolean();
-        cache.stackRemainderWaila = !config.get(Configuration.CATEGORY_GENERAL, "wailaStackRemainder", "exact", null, new String[]{"exact", "stack + remainder"}).setLanguageKey(LANG_PREFIX + "prop.wailaStackRemainder").getString().equals("exact");
+        cache.stackRemainderWaila = !config.get(Configuration.CATEGORY_GENERAL, "wailaStackRemainder", "stack + remainder", null, new String[]{"exact", "stack + remainder"}).setLanguageKey(LANG_PREFIX + "prop.wailaStackRemainder").getString().equals("exact");
         cache.invertShift = config.get(Configuration.CATEGORY_GENERAL, "invertShift", false,
             "Inverts how shift works with drawers. If this is true, shifting will only give one item, where regular clicks will give a full stack. Leave false for default behavior.")
             .setLanguageKey(LANG_PREFIX + "prop.invertShift").getBoolean();
@@ -253,6 +256,7 @@ public class ConfigManager
         cache.enableMineTweakerIntegration = config.get(sectionIntegration.getQualifiedName(), "enableMineTweaker", true).setLanguageKey(LANG_PREFIX + "integration.enableMineTweaker").setRequiresMcRestart(true).getBoolean();
         cache.enableRefinedRelocationIntegration = config.get(sectionIntegration.getQualifiedName(), "enableRefinedRelocation", true).setLanguageKey(LANG_PREFIX + "integration.enableRefinedRelocation").setRequiresMcRestart(true).getBoolean();
         cache.enableThermalExpansionIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThermalExpansion", true).setLanguageKey(LANG_PREFIX + "integration.enableThermalExpansion").setRequiresMcRestart(true).getBoolean();
+        cache.enableThermalFoundationIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThermalFoundation", true).setLanguageKey(LANG_PREFIX + "integration.enableThermalFoundation").setRequiresMcRestart(true).getBoolean();
 
         config.get(sectionBlocksFullDrawers1x1.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksFullDrawers1x1.getQualifiedName(), "baseStorage", 32).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);

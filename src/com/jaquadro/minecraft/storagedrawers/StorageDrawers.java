@@ -1,11 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers;
 
+import com.jaquadro.minecraft.storagedrawers.api.StorageDrawersApi;
 import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
+import com.jaquadro.minecraft.storagedrawers.core.api.BlockRegistry;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.integration.IntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
+import com.jaquadro.minecraft.storagedrawers.security.SecurityRegistry;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -43,6 +46,8 @@ public class StorageDrawers
     public static RecipeHandlerRegistry recipeHandlerRegistry;
     public static RenderRegistry renderRegistry;
     public static WailaRegistry wailaRegistry;
+    public static BlockRegistry blockRegistry;
+    public static SecurityRegistry securityRegistry;
 
     @Mod.Instance(MOD_ID)
     public static StorageDrawers instance;
@@ -69,6 +74,8 @@ public class StorageDrawers
         recipeHandlerRegistry = new RecipeHandlerRegistry();
         renderRegistry = new RenderRegistry();
         wailaRegistry = new WailaRegistry();
+        blockRegistry = new BlockRegistry();
+        securityRegistry = new SecurityRegistry();
 
         blocks.init();
         items.init();
@@ -90,6 +97,8 @@ public class StorageDrawers
         recipes.init();
 
         IntegrationRegistry.instance().postInit();
+
+        StorageDrawersApi.instance().packFactory().registerResolver(ModBlocks.resolver);
     }
 
     @SubscribeEvent

@@ -3,6 +3,9 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
+import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
@@ -11,8 +14,11 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandar
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
+import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
+import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
+import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -96,6 +102,10 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @SideOnly(Side.CLIENT)
     private IIcon iconLock;
     @SideOnly(Side.CLIENT)
+    private IIcon iconClaim;
+    @SideOnly(Side.CLIENT)
+    private IIcon iconClaimLock;
+    @SideOnly(Side.CLIENT)
     private IIcon iconVoid;
 
     @SideOnly(Side.CLIENT)
@@ -120,6 +130,54 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         setBlockName(blockName);
         setConfigName(blockName);
         setLightOpacity(255);
+    }
+
+    public boolean retrimBlock (World world, int x, int y, int z, ItemStack prototype) {
+        if (retrimType() == null)
+            return false;
+
+        Block protoBlock = Block.getBlockFromItem(prototype.getItem());
+        int protoMeta = prototype.getItemDamage();
+
+        BlockConfiguration config = BlockConfiguration.by(retrimType(), drawerCount, halfDepth);
+
+        Block plankBlock = StorageDrawers.blockRegistry.getPlankBlock(BlockConfiguration.Trim, protoBlock, protoMeta);
+        int plankMeta = StorageDrawers.blockRegistry.getPlankMeta(BlockConfiguration.Trim, protoBlock, protoMeta);
+
+        Block newBlock = StorageDrawers.blockRegistry.getBlock(config, plankBlock, plankMeta);
+        int newMeta = StorageDrawers.blockRegistry.getMeta(config, plankBlock, plankMeta);
+
+        if (newBlock == null)
+            return false;
+
+        TileEntityDrawers tile = getTileEntity(world, x, y, z);
+        if (newBlock == this && newMeta == world.getBlockMetadata(x, y, z) && !tile.shouldHideUpgrades()) {
+            tile.setShouldHideUpgrades(true);
+            return true;
+        }
+
+        if (newBlock == this)
+            world.setBlockMetadataWithNotify(x, y, z, newMeta, 3);
+        else {
+
+            TileEntity newDrawer = createNewTileEntity(world, newMeta);
+
+            NBTTagCompound tag = new NBTTagCompound();
+            tile.writeToNBT(tag);
+            newDrawer.readFromNBT(tag);
+
+            world.removeTileEntity(x, y, z);
+            world.setBlockToAir(x, y, z);
+
+            world.setBlock(x, y, z, newBlock, newMeta, 3);
+            world.setTileEntity(x, y, z, newDrawer);
+        }
+
+        return true;
+    }
+
+    public BlockType retrimType () {
+        return BlockType.Drawers;
     }
 
     public float getTrimWidth () {
@@ -246,13 +304,27 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, x, y, z);
         ItemStack item = player.inventory.getCurrentItem();
 
+        if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
+            return false;
+
         if (StorageDrawers.config.cache.debugTrace) {
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockActivated");
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item == null) ? "  null item" : "  " + item.toString());
         }
 
         if (item != null && item.getItem() != null) {
-            if (item.getItem() == ModItems.upgrade || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid || item.getItem() == ModItems.upgradeCreative) {
+            if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
+                if (!retrimBlock(world, x, y, z, item))
+                    return false;
+
+                if (player != null && !player.capabilities.isCreativeMode) {
+                    if (--item.stackSize <= 0)
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                }
+
+                return true;
+            }
+            else if (item.getItem() == ModItems.upgrade || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid || item.getItem() == ModItems.upgradeCreative) {
                 if (!tileDrawers.addUpgrade(item)) {
                     player.addChatMessage(new ChatComponentTranslation("storagedrawers.msg.maxUpgrades"));
                     return false;
@@ -276,6 +348,22 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             }
             else if (item.getItem() == ModItems.shroudKey) {
                 tileDrawers.setIsShrouded(!tileDrawers.isShrouded());
+                return true;
+            }
+            else if (item.getItem() instanceof ItemPersonalKey) {
+                String securityKey = ((ItemPersonalKey) item.getItem()).getSecurityProviderKey(item.getItemDamage());
+                ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
+
+                if (tileDrawers.getOwner() == null) {
+                    tileDrawers.setOwner(player.getPersistentID());
+                    tileDrawers.setSecurityProvider(provider);
+                }
+                else if (SecurityManager.hasOwnership(player.getGameProfile(), tileDrawers)) {
+                    tileDrawers.setOwner(null);
+                    tileDrawers.setSecurityProvider(null);
+                }
+                else
+                    return false;
                 return true;
             }
             else if (item.getItem() == ModItems.tape)
@@ -369,6 +457,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             return;
 
         if (tileDrawers.isSealed())
+            return;
+
+        if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
             return;
 
         int slot = getDrawerSlot(side, hitX, hitY, hitZ);
@@ -465,17 +556,19 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                     dropBlockAsItem(world, x, y, z, stack);
             }
 
-            for (int i = 0; i < tile.getDrawerCount(); i++) {
-                if (!tile.isDrawerEnabled(i))
-                    continue;
+            if (!tile.isVending()) {
+                for (int i = 0; i < tile.getDrawerCount(); i++) {
+                    if (!tile.isDrawerEnabled(i))
+                        continue;
 
-                IDrawer drawer = tile.getDrawer(i);
-                while (drawer.getStoredItemCount() > 0) {
-                    ItemStack stack = tile.takeItemsFromSlot(i, drawer.getStoredItemStackSize());
-                    if (stack == null || stack.stackSize == 0)
-                        break;
+                    IDrawer drawer = tile.getDrawer(i);
+                    while (drawer.getStoredItemCount() > 0) {
+                        ItemStack stack = tile.takeItemsFromSlot(i, drawer.getStoredItemStackSize());
+                        if (stack == null || stack.stackSize == 0)
+                            break;
 
-                    dropStackInBatches(world, x, y, z, stack);
+                        dropStackInBatches(world, x, y, z, stack);
+                    }
                 }
             }
 
@@ -727,8 +820,15 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @SideOnly(Side.CLIENT)
-    public IIcon getLockIcon () {
-        return iconLock;
+    public IIcon getLockIcon (boolean locked, boolean claimed) {
+        if (locked && claimed)
+            return iconClaimLock;
+        else if (locked)
+            return iconLock;
+        else if (claimed)
+            return iconClaim;
+        else
+            return null;
     }
 
     @SideOnly(Side.CLIENT)
@@ -790,6 +890,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         iconIndicator4[1] = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/indicator_4_on");
 
         iconLock = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/lock_icon");
+        iconClaim = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/claim_icon");
+        iconClaimLock = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/claim_lock_icon");
         iconVoid = register.registerIcon(StorageDrawers.MOD_ID + ":indicator/void_icon");
 
         loadBlockConfig();

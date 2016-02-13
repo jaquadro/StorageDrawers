@@ -47,8 +47,10 @@ public class StorageDrawersPack
     public void postInit (FMLPostInitializationEvent event) {
         IStorageDrawersApi api = StorageDrawersApi.instance();
         if (api != null) {
-            for (IExtendedDataResolver resolver : resolvers)
+            for (IExtendedDataResolver resolver : resolvers) {
                 api.registerStandardPackRecipes(resolver);
+                api.packFactory().registerResolver(resolver);
+            }
         }
     }
 }

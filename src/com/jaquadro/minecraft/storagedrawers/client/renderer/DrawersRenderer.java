@@ -130,7 +130,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         renderer.uvRotateTop = 0;
 
         int maxStorageLevel = tile.getMaxStorageLevel();
-        if (maxStorageLevel > 1 && StorageDrawers.config.cache.renderStorageUpgrades) {
+        if (maxStorageLevel > 1 && StorageDrawers.config.cache.renderStorageUpgrades && !tile.shouldHideUpgrades()) {
             for (int i = 0; i < 6; i++)
                 boxRenderer.setExteriorIcon(block.getOverlayIcon(world, x, y, z, i, maxStorageLevel), i);
 
@@ -151,7 +151,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
             renderIndicator(block, x, y, z, side, renderer, tile.getEffectiveStatusLevel());
         if (StorageDrawers.config.cache.enableLockUpgrades)
-            renderLock(block, x, y, z, side, renderer, tile.isLocked(LockAttribute.LOCK_POPULATED));
+            renderLock(block, x, y, z, side, renderer, tile.isLocked(LockAttribute.LOCK_POPULATED), tile.getOwner() != null);
         if (StorageDrawers.config.cache.enableVoidUpgrades)
             renderVoid(block, x, y, z, side, renderer, tile.isVoid());
         if (StorageDrawers.config.cache.enableTape)
@@ -162,12 +162,12 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         return;
     }
 
-    private void renderLock (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean locked) {
-        if (!locked)
+    private void renderLock (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean locked, boolean owned) {
+        if (!locked && !owned)
             return;
 
         double depth = block.halfDepth ? .5 : 1;
-        IIcon iconLock = block.getLockIcon();
+        IIcon iconLock = block.getLockIcon(locked, owned);
 
         RenderHelper.instance.setRenderBounds(0.46875, 0.9375, 0, 0.53125, 1, depth + .005);
         RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
