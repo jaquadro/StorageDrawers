@@ -2,15 +2,9 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.*;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
+import com.jaquadro.minecraft.storagedrawers.block.tile.*;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
-import com.jaquadro.minecraft.storagedrawers.item.ItemCompDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemController;
-import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
+import com.jaquadro.minecraft.storagedrawers.item.*;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
@@ -30,9 +24,11 @@ public class ModBlocks
     public static BlockController controller;
     public static BlockTrim trim;
     public static BlockSlave controllerSlave;
+    public static BlockFramingTable framingTable;
 
     public static BlockDrawersCustom fullCustom1;
     public static BlockDrawersCustom fullCustom2;
+    public static BlockDrawersCustom fullCustom4;
 
     public void init () {
         resolver = new DataResolver(StorageDrawers.MOD_ID);
@@ -46,22 +42,24 @@ public class ModBlocks
         controller = new BlockController("drawerController");
         trim = new BlockTrim("trim");
         controllerSlave = new BlockSlave("controllerSlave");
+        framingTable = new BlockFramingTable("framingTable");
 
         fullCustom1 = new BlockDrawersCustom("fullCustom1", 1, false);
         fullCustom2 = new BlockDrawersCustom("fullCustom2", 2, false);
+        fullCustom4 = new BlockDrawersCustom("fullCustom4", 4, false);
 
         ConfigManager config = StorageDrawers.config;
 
         if (config.isBlockEnabled("fulldrawers1"))
-            GameRegistry.registerBlock(fullDrawers1, ItemDrawers.class, "fullDrawers1");
+            GameRegistry.registerBlock(fullDrawers1, ItemBasicDrawers.class, "fullDrawers1");
         if (config.isBlockEnabled("fulldrawers2"))
-            GameRegistry.registerBlock(fullDrawers2, ItemDrawers.class, "fullDrawers2");
+            GameRegistry.registerBlock(fullDrawers2, ItemBasicDrawers.class, "fullDrawers2");
         if (config.isBlockEnabled("fulldrawers4"))
-            GameRegistry.registerBlock(fullDrawers4, ItemDrawers.class, "fullDrawers4");
+            GameRegistry.registerBlock(fullDrawers4, ItemBasicDrawers.class, "fullDrawers4");
         if (config.isBlockEnabled("halfdrawers2"))
-            GameRegistry.registerBlock(halfDrawers2, ItemDrawers.class, "halfDrawers2");
+            GameRegistry.registerBlock(halfDrawers2, ItemBasicDrawers.class, "halfDrawers2");
         if (config.isBlockEnabled("halfdrawers4"))
-            GameRegistry.registerBlock(halfDrawers4, ItemDrawers.class, "halfDrawers4");
+            GameRegistry.registerBlock(halfDrawers4, ItemBasicDrawers.class, "halfDrawers4");
         if (config.isBlockEnabled("compdrawers"))
             GameRegistry.registerBlock(compDrawers, ItemCompDrawers.class, "compDrawers");
         if (config.isBlockEnabled("controller"))
@@ -71,8 +69,11 @@ public class ModBlocks
         if (config.isBlockEnabled("trim"))
             GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
 
-        GameRegistry.registerBlock(fullCustom1, ItemDrawers.class, "fullCustom1");
-        GameRegistry.registerBlock(fullCustom2, ItemDrawers.class, "fullCustom2");
+        GameRegistry.registerBlock(framingTable, "framingTable");
+
+        GameRegistry.registerBlock(fullCustom1, ItemCustomDrawers.class, "fullCustom1");
+        GameRegistry.registerBlock(fullCustom2, ItemCustomDrawers.class, "fullCustom2");
+        GameRegistry.registerBlock(fullCustom4, ItemCustomDrawers.class, "fullCustom4");
 
         GameRegistry.registerTileEntityWithAlternatives(TileEntityDrawersStandard.class, getQualifiedName("tileDrawersStandard"),
             getQualifiedName(fullDrawers1), getQualifiedName(fullDrawers2), getQualifiedName(fullDrawers4),
@@ -87,12 +88,18 @@ public class ModBlocks
         GameRegistry.registerTileEntityWithAlternatives(TileEntitySlave.class, getQualifiedName("tileControllerSlave"),
             getQualifiedName(controllerSlave));
 
+        GameRegistry.registerTileEntity(TileEntityFramingTable.class, getQualifiedName("framingTable"));
+
         StorageDrawers.proxy.registerDrawer(fullDrawers1);
         StorageDrawers.proxy.registerDrawer(fullDrawers2);
         StorageDrawers.proxy.registerDrawer(fullDrawers4);
         StorageDrawers.proxy.registerDrawer(halfDrawers2);
         StorageDrawers.proxy.registerDrawer(halfDrawers4);
         StorageDrawers.proxy.registerDrawer(compDrawers);
+
+        StorageDrawers.proxy.registerDrawer(fullCustom1);
+        StorageDrawers.proxy.registerDrawer(fullCustom2);
+        StorageDrawers.proxy.registerDrawer(fullCustom4);
 
         for (String key : new String[] { "drawerBasic" })
             OreDictionary.registerOre(key, new ItemStack(fullDrawers1, 1, OreDictionary.WILDCARD_VALUE));
@@ -104,9 +111,6 @@ public class ModBlocks
             OreDictionary.registerOre(key, new ItemStack(halfDrawers2, 1, OreDictionary.WILDCARD_VALUE));
         for (String key : new String[] { "drawerBasic" })
             OreDictionary.registerOre(key, new ItemStack(halfDrawers4, 1, OreDictionary.WILDCARD_VALUE));
-
-        for (String key : new String[] { "drawerBasic" })
-            OreDictionary.registerOre(key, new ItemStack(fullCustom1, 1, OreDictionary.WILDCARD_VALUE));
 
         resolver.init();
     }

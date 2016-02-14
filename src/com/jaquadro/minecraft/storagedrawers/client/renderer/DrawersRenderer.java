@@ -90,7 +90,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
             renderIndicator(block, x, y, z, side, renderer, tile.getEffectiveStatusLevel());
         if (StorageDrawers.config.cache.enableLockUpgrades)
-            renderLock(block, x, y, z, side, renderer, tile.isLocked(LockAttribute.LOCK_POPULATED));
+            renderLock(block, x, y, z, side, renderer, tile.isLocked(LockAttribute.LOCK_POPULATED), tile.getOwner() != null);
         if (StorageDrawers.config.cache.enableVoidUpgrades)
             renderVoid(block, x, y, z, side, renderer, tile.isVoid());
         renderShroud(block, x, y, z, side, renderer, tile.isShrouded());
@@ -158,8 +158,6 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
             renderTape(block, x, y, z, side, renderer, tile.isSealed());
 
         renderShroud(block, x, y, z, side, renderer, tile.isShrouded());
-
-        return;
     }
 
     private void renderLock (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean locked, boolean owned) {
