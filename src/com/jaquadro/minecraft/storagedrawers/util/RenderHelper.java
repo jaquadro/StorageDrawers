@@ -21,15 +21,6 @@ public class RenderHelper
 
     public static final int FULL_BRIGHTNESS = 15728880;
 
-    private static final float rgbMap[][] = {
-        { 0.5f, 0.5f, 0.5f },
-        { 1.0f, 1.0f, 1.0f },
-        { 0.8f, 0.8f, 0.8f },
-        { 0.8f, 0.8f, 0.8f },
-        { 0.6f, 0.6f, 0.6f },
-        { 0.6f, 0.6f, 0.6f },
-    };
-
     private static final float normMap[][] = {
         { 0, -1, 0 },
         { 0, 1, 0 },
@@ -91,6 +82,14 @@ public class RenderHelper
         setRenderBounds(block.getBlockBoundsMinX(), block.getBlockBoundsMinY(), block.getBlockBoundsMinZ(), block.getBlockBoundsMaxX(), block.getBlockBoundsMaxY(), block.getBlockBoundsMaxZ());
     }
 
+    public void setColorAndBrightness (IBlockAccess blockAccess, Block block, int x, int y, int z) {
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, x, y, z));
+
+        calculateBaseColor(colorScratch, block.colorMultiplier(blockAccess, x, y, z));
+        setTessellatorColor(tessellator, colorScratch);
+    }
+
     public void renderBlock (IBlockAccess blockAccess, Block block, int meta) {
         calculateBaseColor(colorScratch, block.getRenderColor(meta));
         float r = colorScratch[0];
@@ -141,19 +140,19 @@ public class RenderHelper
     }
 
     public void renderFaceColorMult (int face, IBlockAccess blockAccess, Block block, int x, int y, int z, IIcon icon, float r, float g, float b) {
-        face = state.getTransformedFace(face);
         setupColorMult(face, blockAccess, block, x, y, z, r, g, b);
 
+        face = RenderHelperState.FACE_BY_FACE_ROTATION[face][state.rotateTransform];
         llHelper.drawFace(face, x, y, z, icon);
 
         if (blockAccess == null)
             Tessellator.instance.draw();
     }
-    
+
     public void renderFaceAOPartial (int face, IBlockAccess blockAccess, Block block, int x, int y, int z, IIcon icon, float r, float g, float b) {
         state.enableAO = true;
 
-        face = state.getTransformedFace(face);
+        face = RenderHelperState.FACE_BY_FACE_ROTATION[face][state.rotateTransform];
 
         switch (face) {
             case YNEG:
@@ -211,7 +210,7 @@ public class RenderHelper
     public void renderPartialFaceAOPartial (int face, IBlockAccess blockAccess, Block block, int x, int y, int z, IIcon icon, double uMin, double vMin, double uMax, double vMax, float r, float g, float b) {
         state.enableAO = true;
 
-        switch (state.getTransformedFace(face)) {
+        switch (RenderHelperState.FACE_BY_FACE_ROTATION[face][state.rotateTransform]) {
             case YNEG:
                 aoHelper.setupYNegAOPartial(blockAccess, block, x, y, z, r, g, b);
                 break;
@@ -238,12 +237,12 @@ public class RenderHelper
 
     public void renderPartialFace (int face, IIcon icon, double uMin, double vMin, double uMax, double vMax) {
         state.enableAO = false;
-        face = state.getTransformedFace(face);
+        face = RenderHelperState.FACE_BY_FACE_ROTATION[face][state.rotateTransform];
         llHelper.drawPartialFace(face, 0, 0, 0, icon, uMin, vMin, uMax, vMax);
     }
 
     public void renderPartialFace (int face, double x, double y, double z, IIcon icon, double uMin, double vMin, double uMax, double vMax) {
-        face = state.getTransformedFace(face);
+        face = RenderHelperState.FACE_BY_FACE_ROTATION[face][state.rotateTransform];
         llHelper.drawPartialFace(face, x, y, z, icon, uMin, vMin, uMax, vMax);
     }
 
@@ -289,6 +288,10 @@ public class RenderHelper
     {
         Tessellator tessellator = Tessellator.instance;
 
+        x += state.renderOffsetX;
+        y += state.renderOffsetY;
+        z += state.renderOffsetZ;
+
         double uMin = icon.getInterpolatedU(state.renderMinX * 16.0D);
         double uMax = icon.getInterpolatedU(state.renderMaxX * 16.0D);
         double vMin = icon.getInterpolatedV(16 - state.renderMaxY * 16.0D);
@@ -324,6 +327,10 @@ public class RenderHelper
     public void drawCrossedSquaresBounded(IIcon icon, double x, double y, double z, float scale)
     {
         Tessellator tessellator = Tessellator.instance;
+
+        x += state.renderOffsetX;
+        y += state.renderOffsetY;
+        z += state.renderOffsetZ;
 
         double vMin = icon.getInterpolatedV(16 - state.renderMaxY * 16.0D);
         double vMax = icon.getInterpolatedV(16 - state.renderMinY * 16.0D);
@@ -378,10 +385,10 @@ public class RenderHelper
 
     private void setupColorMult (int face, float r, float g, float b) {
         Tessellator tessellator = Tessellator.instance;
-        float[] rgb = rgbMap[face];
         float[] norm = normMap[face];
+        float scale = state.getColorMult(face);
 
-        tessellator.setColorOpaque_F(rgb[0] * r, rgb[1] * g, rgb[2] * b);
+        tessellator.setColorOpaque_F(scale * r, scale * g, scale * b);
         tessellator.startDrawingQuads();
         tessellator.setNormal(norm[0], norm[1], norm[2]);
 
@@ -390,8 +397,8 @@ public class RenderHelper
 
     private void setupColorMult (int face, IBlockAccess blockAccess, Block block, int x, int y, int z, float r, float g, float b) {
         Tessellator tessellator = Tessellator.instance;
-        float[] rgb = rgbMap[face];
         float[] norm = normMap[face];
+        float scale = state.getColorMult(face);
 
         if (blockAccess == null) {
             tessellator.startDrawingQuads();
@@ -412,7 +419,7 @@ public class RenderHelper
                 case XPOS: brightX = (state.renderMaxX < 1) ? x : x + 1; break;
             }
 
-            tessellator.setColorOpaque_F(rgb[0] * r, rgb[1] * g, rgb[2] * b);
+            tessellator.setColorOpaque_F(scale * r, scale * g, scale * b);
             tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, brightX, brightY, brightZ));
         }
 

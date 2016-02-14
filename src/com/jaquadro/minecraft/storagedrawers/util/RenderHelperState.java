@@ -2,11 +2,12 @@ package com.jaquadro.minecraft.storagedrawers.util;
 
 public class RenderHelperState
 {
+    public static final int ROTATE0 = 0;
     public static final int ROTATE90 = 1;
     public static final int ROTATE180 = 2;
     public static final int ROTATE270 = 3;
 
-    public static final int[][] ROTATION_BY_FACE_FACE_Y = {
+    public static final int[][] ROTATION_BY_FACE_FACE = {
         { 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 2, 3, 1 },
@@ -15,49 +16,13 @@ public class RenderHelperState
         { 0, 0, 3, 1, 2, 0 },
     };
 
-    public static final int[][] ROTATION_BY_FACE_FACE_Z = {
-        { 0, 2, 0, 0, 1, 3 },
-        { 2, 0, 0, 0, 3, 1 },
-        { 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0 },
-        { 3, 1, 0, 0, 0, 2 },
-        { 1, 3, 0, 0, 2, 0 },
-    };
-
-    public static final int[][] ROTATION_BY_FACE_FACE_X = {
-        { 0, 2, 1, 3, 0, 0 },
-        { 2, 0, 3, 1, 0, 0 },
-        { 3, 1, 0, 2, 0, 0 },
-        { 1, 3, 2, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0 },
-    };
-
-    public static final int[][] FACE_BY_FACE_ROTATION_Y = {
+    public static final int[][] FACE_BY_FACE_ROTATION = {
         { 0, 0, 0, 0 },
         { 1, 1, 1, 1 },
         { 2, 5, 3, 4 },
         { 3, 4, 2, 5 },
         { 4, 2, 5, 3 },
         { 5, 3, 4, 2 },
-    };
-
-    public static final int[][] FACE_BY_FACE_ROTATION_Z = {
-        { 0, 4, 1, 5 },
-        { 1, 5, 0, 4 },
-        { 2, 2, 2, 2 },
-        { 3, 3, 3, 3 },
-        { 4, 1, 5, 0 },
-        { 5, 0, 4, 1 },
-    };
-
-    public static final int[][] FACE_BY_FACE_ROTATION_X = {
-        { 0, 2, 1, 3 },
-        { 1, 3, 0, 2 },
-        { 2, 1, 3, 0 },
-        { 3, 0, 2, 1 },
-        { 4, 4, 4, 4 },
-        { 5, 5, 5, 5 },
     };
 
     public double renderMinX;
@@ -67,13 +32,15 @@ public class RenderHelperState
     public double renderMaxY;
     public double renderMaxZ;
 
+    public double renderOffsetX;
+    public double renderOffsetY;
+    public double renderOffsetZ;
+
     public boolean flipTexture;
     public boolean renderFromInside;
     public boolean enableAO;
 
-    public int rotateTransformX;
-    public int rotateTransformY;
-    public int rotateTransformZ;
+    public int rotateTransform;
 
     public float shiftU;
     public float shiftV;
@@ -111,6 +78,33 @@ public class RenderHelperState
         renderMaxX = xMax;
         renderMaxY = yMax;
         renderMaxZ = zMax;
+
+        if (rotateTransform != 0)
+            transformRenderBound(rotateTransform);
+    }
+
+    public void setRenderOffset (double xOffset, double yOffset, double zOffset) {
+        renderOffsetX = xOffset;
+        renderOffsetY = yOffset;
+        renderOffsetZ = zOffset;
+
+        if (rotateTransform != 0)
+            transformRenderOffset(rotateTransform);
+    }
+
+    public void clearRenderOffset () {
+        renderOffsetX = 0;
+        renderOffsetY = 0;
+        renderOffsetZ = 0;
+    }
+
+    public void setColorMult (float yPos, float z, float x, float yNeg) {
+        colorMultYNeg = yNeg;
+        colorMultYPos = yPos;
+        colorMultZNeg = z;
+        colorMultZPos = z;
+        colorMultXNeg = x;
+        colorMultXPos = x;
     }
 
     public void resetColorMult () {
@@ -120,6 +114,18 @@ public class RenderHelperState
         colorMultZPos = 0.8f;
         colorMultXNeg = 0.6f;
         colorMultXPos = 0.6f;
+    }
+
+    public float getColorMult (int side) {
+        switch (side) {
+            case 0: return colorMultYNeg;
+            case 1: return colorMultYPos;
+            case 2: return colorMultZNeg;
+            case 3: return colorMultZPos;
+            case 4: return colorMultXNeg;
+            case 5: return colorMultXPos;
+            default: return 0;
+        }
     }
 
     public void setTextureOffset (float u, float v) {
@@ -163,40 +169,51 @@ public class RenderHelperState
             color[i] *= scale;
     }
 
-    public int getTransformedFace (int face) {
-        face = FACE_BY_FACE_ROTATION_X[face][rotateTransformX];
-        face = FACE_BY_FACE_ROTATION_Y[face][rotateTransformY];
-        face = FACE_BY_FACE_ROTATION_Z[face][rotateTransformZ];
-
-        return face;
+    public void setRotateTransform (int faceFrom, int faceTo) {
+        rotateTransform = ROTATION_BY_FACE_FACE[faceFrom][faceTo];
+        if (rotateTransform != 0) {
+            transformRenderBound(rotateTransform);
+            transformRenderOffset(rotateTransform);
+        }
     }
 
-    public void setRotateTransform (int faceFrom, int faceTo) {
-        rotateTransformX = ROTATION_BY_FACE_FACE_X[faceFrom][faceTo];
-        faceFrom = FACE_BY_FACE_ROTATION_X[faceFrom][rotateTransformX];
-        rotateTransformY = ROTATION_BY_FACE_FACE_Y[faceFrom][faceTo];
-        faceFrom = FACE_BY_FACE_ROTATION_Y[faceFrom][rotateTransformY];
-        rotateTransformZ = ROTATION_BY_FACE_FACE_Z[faceFrom][faceTo];
-
-        transformRenderBound();
+    public void undoRotateTransform () {
+        if (rotateTransform != 0) {
+            transformRenderBound(4 - rotateTransform);
+            transformRenderOffset(4 - rotateTransform);
+        }
+        clearRotateTransform();
     }
 
     public void clearRotateTransform () {
-        rotateTransformX = 0;
-        rotateTransformY = 0;
-        rotateTransformZ = 0;
+        rotateTransform = 0;
     }
 
-    private void transformRenderBound () {
-        if (rotateTransformX == 0 && rotateTransformY == 0 && rotateTransformZ == 0)
-            return;
+    private void transformRenderOffset (int rotation) {
+        double scratch;
+        switch (rotation) {
+            case ROTATE90:
+                scratch = renderOffsetX;
+                renderOffsetX = -renderOffsetZ;
+                renderOffsetZ = scratch;
+                break;
+            case ROTATE180:
+                renderOffsetX = -renderOffsetX;
+                renderOffsetZ = -renderOffsetZ;
+                break;
+            case ROTATE270:
+                scratch = renderOffsetX;
+                renderOffsetX = renderOffsetZ;
+                renderOffsetZ = -scratch;
+                break;
+        }
+    }
 
+    private void transformRenderBound (int rotation) {
         scratchIn[0] = renderMinX;
         scratchIn[1] = renderMinY;
         scratchIn[2] = renderMinZ;
-        transformCoordX(scratchIn, scratchOut, rotateTransformX);
-        transformCoordY(scratchOut, scratchIn, rotateTransformY);
-        transformCoordZ(scratchIn, scratchOut, rotateTransformZ);
+        transformCoord(scratchIn, scratchOut, rotation);
         renderMinX = scratchOut[0];
         renderMinY = scratchOut[1];
         renderMinZ = scratchOut[2];
@@ -204,9 +221,7 @@ public class RenderHelperState
         scratchIn[0] = renderMaxX;
         scratchIn[1] = renderMaxY;
         scratchIn[2] = renderMaxZ;
-        transformCoordX(scratchIn, scratchOut, rotateTransformX);
-        transformCoordY(scratchOut, scratchIn, rotateTransformY);
-        transformCoordZ(scratchIn, scratchOut, rotateTransformZ);
+        transformCoord(scratchIn, scratchOut, rotation);
         renderMaxX = scratchOut[0];
         renderMaxY = scratchOut[1];
         renderMaxZ = scratchOut[2];
@@ -217,12 +232,6 @@ public class RenderHelperState
             renderMaxX = temp;
         }
 
-        if (renderMinY > renderMaxY) {
-            double temp = renderMinY;
-            renderMinY = renderMaxY;
-            renderMaxY = temp;
-        }
-
         if (renderMinZ > renderMaxZ) {
             double temp = renderMinZ;
             renderMinZ = renderMaxZ;
@@ -230,74 +239,33 @@ public class RenderHelperState
         }
     }
 
-    public void transformCoordY (double[] coordIn, double[] coordOut, int rotation) {
+    public void transformCoord (double x, double y, double z, double[] coordCout, int rotation) {
+        scratchIn[0] = x;
+        scratchIn[1] = y;
+        scratchIn[2] = z;
+        transformCoord(scratchIn, coordCout, rotation);
+    }
+
+    public void transformCoord (double[] coordIn, double[] coordOut, int rotation) {
         coordOut[1] = coordIn[1];
 
         switch (rotation) {
-            case 1: // 90
+            case 1:
                 coordOut[0] = 1 - coordIn[2];
                 coordOut[2] = coordIn[0];
                 break;
-            case 2: // 180
+            case 2:
                 coordOut[0] = 1 - coordIn[0];
                 coordOut[2] = 1 - coordIn[2];
                 break;
-            case 3: // 270
+            case 3:
                 coordOut[0] = coordIn[2];
                 coordOut[2] = 1 - coordIn[0];
                 break;
-            case 0: // 0
+            case 0:
             default:
                 coordOut[0] = coordIn[0];
                 coordOut[2] = coordIn[2];
-                break;
-        }
-    }
-
-    public void transformCoordZ (double[] coordIn, double[] coordOut, int rotation) {
-        coordOut[2] = coordIn[2];
-
-        switch (rotation) {
-            case 1: // 90
-                coordOut[0] = coordIn[1];
-                coordOut[1] = 1 - coordIn[0];
-                break;
-            case 2: // 180
-                coordOut[0] = 1 - coordIn[0];
-                coordOut[1] = 1 - coordIn[1];
-                break;
-            case 3: // 270
-                coordOut[0] = 1 - coordIn[1];
-                coordOut[1] = coordIn[0];
-                break;
-            case 0: // 0
-            default:
-                coordOut[0] = coordIn[0];
-                coordOut[1] = coordIn[1];
-                break;
-        }
-    }
-
-    public void transformCoordX (double[] coordIn, double[] coordOut, int rotation) {
-        coordOut[0] = coordIn[0];
-
-        switch (rotation) {
-            case 1: // 90
-                coordOut[2] = coordIn[1];
-                coordOut[1] = 1 - coordIn[2];
-                break;
-            case 2: // 180
-                coordOut[2] = 1 - coordIn[2];
-                coordOut[1] = 1 - coordIn[1];
-                break;
-            case 3: // 270
-                coordOut[2] = 1 - coordIn[1];
-                coordOut[1] = coordIn[2];
-                break;
-            case 0: // 0
-            default:
-                coordOut[2] = coordIn[2];
-                coordOut[1] = coordIn[1];
                 break;
         }
     }
