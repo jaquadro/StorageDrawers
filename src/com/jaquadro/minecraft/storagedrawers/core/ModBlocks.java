@@ -29,6 +29,8 @@ public class ModBlocks
     public static BlockDrawersCustom fullCustom1;
     public static BlockDrawersCustom fullCustom2;
     public static BlockDrawersCustom fullCustom4;
+    public static BlockDrawersCustom halfCustom2;
+    public static BlockDrawersCustom halfCustom4;
 
     public void init () {
         resolver = new DataResolver(StorageDrawers.MOD_ID);
@@ -47,6 +49,8 @@ public class ModBlocks
         fullCustom1 = new BlockDrawersCustom("fullCustom1", 1, false);
         fullCustom2 = new BlockDrawersCustom("fullCustom2", 2, false);
         fullCustom4 = new BlockDrawersCustom("fullCustom4", 4, false);
+        halfCustom2 = new BlockDrawersCustom("halfCustom2", 2, true);
+        halfCustom4 = new BlockDrawersCustom("halfCustom4", 4, true);
 
         ConfigManager config = StorageDrawers.config;
 
@@ -74,6 +78,8 @@ public class ModBlocks
         GameRegistry.registerBlock(fullCustom1, ItemCustomDrawers.class, "fullCustom1");
         GameRegistry.registerBlock(fullCustom2, ItemCustomDrawers.class, "fullCustom2");
         GameRegistry.registerBlock(fullCustom4, ItemCustomDrawers.class, "fullCustom4");
+        GameRegistry.registerBlock(halfCustom2, ItemCustomDrawers.class, "halfCustom2");
+        GameRegistry.registerBlock(halfCustom4, ItemCustomDrawers.class, "halfCustom4");
 
         GameRegistry.registerTileEntityWithAlternatives(TileEntityDrawersStandard.class, getQualifiedName("tileDrawersStandard"),
             getQualifiedName(fullDrawers1), getQualifiedName(fullDrawers2), getQualifiedName(fullDrawers4),
@@ -100,6 +106,8 @@ public class ModBlocks
         StorageDrawers.proxy.registerDrawer(fullCustom1);
         StorageDrawers.proxy.registerDrawer(fullCustom2);
         StorageDrawers.proxy.registerDrawer(fullCustom4);
+        StorageDrawers.proxy.registerDrawer(halfCustom2);
+        StorageDrawers.proxy.registerDrawer(halfCustom4);
 
         for (String key : new String[] { "drawerBasic" })
             OreDictionary.registerOre(key, new ItemStack(fullDrawers1, 1, OreDictionary.WILDCARD_VALUE));

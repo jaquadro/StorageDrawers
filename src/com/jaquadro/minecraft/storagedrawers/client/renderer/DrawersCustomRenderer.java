@@ -4,16 +4,19 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.client.renderer.common.CommonDrawerRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
+import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 public class DrawersCustomRenderer extends DrawersRenderer
 {
-    private PanelBoxRenderer panelRenderer = new PanelBoxRenderer();
+    private CommonDrawerRenderer commonRender = new CommonDrawerRenderer();
 
     @Override
     protected void renderBaseBlock (IBlockAccess world, TileEntityDrawers tile, int x, int y, int z, BlockDrawers block, RenderBlocks renderer) {
@@ -31,39 +34,14 @@ public class DrawersCustomRenderer extends DrawersRenderer
         if (materialTrim == null)
             materialTrim = materialSide;
 
-        panelRenderer.setTrimWidth(block.getTrimWidth());
-        panelRenderer.setTrimDepth(0);
-        panelRenderer.setTrimColor(ModularBoxRenderer.COLOR_WHITE);
-        panelRenderer.setTrimIcon(Block.getBlockFromItem(materialTrim.getItem()).getIcon(0, materialTrim.getItemDamage()));
-        panelRenderer.setPanelColor(ModularBoxRenderer.COLOR_WHITE);
-        panelRenderer.setPanelIcon(Block.getBlockFromItem(materialSide.getItem()).getIcon(0, materialSide.getItemDamage()));
+        IIcon trimIcon = Block.getBlockFromItem(materialTrim.getItem()).getIcon(4, materialTrim.getItemDamage());
+        IIcon panelIcon = Block.getBlockFromItem(materialSide.getItem()).getIcon(4, materialSide.getItemDamage());
+        IIcon frontIcon = Block.getBlockFromItem(materialFront.getItem()).getIcon(4, materialFront.getItemDamage());
 
-        if (ClientProxy.renderPass == 0) {
-            for (int i = 0; i < 6; i++) {
-                if (i == 2)
-                    continue;
-                panelRenderer.renderFaceTrim(i, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
-                panelRenderer.renderInteriorTrim(i, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
-                panelRenderer.renderFacePanel(i, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
-            }
-
-            panelRenderer.setPanelIcon(Block.getBlockFromItem(materialFront.getItem()).getIcon(4, materialFront.getItemDamage()));
-            panelRenderer.setTrimDepth(block.getTrimDepth());
-
-            panelRenderer.renderFaceTrim(2, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
-            panelRenderer.renderInteriorTrim(2, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
-            panelRenderer.renderFacePanel(2, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
-        }
-        else if (ClientProxy.renderPass == 1) {
-            panelRenderer.setTrimDepth(block.getTrimDepth());
-            panelRenderer.setTrimIcon(custom.getTrimShadowOverlay());
-            panelRenderer.renderFaceTrim(2, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
-
-            panelRenderer.setPanelIcon(custom.getHandleOverlay());
-            panelRenderer.renderFacePanel(2, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
-            panelRenderer.setPanelIcon(custom.getFaceShadowOverlay());
-            panelRenderer.renderFacePanel(2, world, block, x, y, z, 0, 0, 0, 1, 1, 1);
-        }
+        if (ClientProxy.renderPass == 0)
+            commonRender.renderBasePass(world, x, y, z, custom, tile.getDirection(), panelIcon, trimIcon, frontIcon);
+        else if (ClientProxy.renderPass == 1)
+            commonRender.renderOverlayPass(world, x, y, z, custom, tile.getDirection());
     }
 
     @Override

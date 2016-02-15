@@ -2,22 +2,25 @@ package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
+import com.jaquadro.minecraft.storagedrawers.client.renderer.common.CommonDrawerRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 public class DrawersItemRenderer implements IItemRenderer
 {
-    private RenderHelper renderHelper = new RenderHelper();
+    //private RenderHelper renderHelper = new RenderHelper();
+    private CommonDrawerRenderer commonRender = new CommonDrawerRenderer();
     private ModularBoxRenderer boxRenderer = new ModularBoxRenderer();
-    private PanelBoxRenderer panelRenderer = new PanelBoxRenderer();
-    private float[] colorScratch = new float[3];
+    //private PanelBoxRenderer panelRenderer = new PanelBoxRenderer();
+    //private float[] colorScratch = new float[3];
 
     @Override
     public boolean handleRenderType (ItemStack item, ItemRenderType type) {
@@ -123,39 +126,12 @@ public class DrawersItemRenderer implements IItemRenderer
         if (materialFront == null)
             materialFront = materialSide;
 
-        panelRenderer.setTrimWidth(block.getTrimWidth());
-        panelRenderer.setTrimDepth(0);
-        panelRenderer.setTrimColor(ModularBoxRenderer.COLOR_WHITE);
-        panelRenderer.setTrimIcon(Block.getBlockFromItem(materialTrim.getItem()).getIcon(0, materialTrim.getItemDamage()));
-        panelRenderer.setPanelColor(ModularBoxRenderer.COLOR_WHITE);
-        panelRenderer.setPanelIcon(Block.getBlockFromItem(materialSide.getItem()).getIcon(0, materialSide.getItemDamage()));
+        IIcon trimIcon = Block.getBlockFromItem(materialTrim.getItem()).getIcon(4, materialTrim.getItemDamage());
+        IIcon panelIcon = Block.getBlockFromItem(materialSide.getItem()).getIcon(4, materialSide.getItemDamage());
+        IIcon frontIcon = Block.getBlockFromItem(materialFront.getItem()).getIcon(4, materialFront.getItemDamage());
 
-        //if (ClientProxy.renderPass == 0) {
-            for (int i = 0; i < 6; i++) {
-                if (i == 2)
-                    continue;
-                panelRenderer.renderFaceTrim(i, null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
-                panelRenderer.renderInteriorTrim(i, null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
-                panelRenderer.renderFacePanel(i, null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
-            }
-
-            panelRenderer.setPanelIcon(Block.getBlockFromItem(materialFront.getItem()).getIcon(4, materialFront.getItemDamage()));
-            panelRenderer.setTrimDepth(block.getTrimDepth());
-
-            panelRenderer.renderFaceTrim(2, null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
-            panelRenderer.renderInteriorTrim(2, null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
-            panelRenderer.renderFacePanel(2, null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
-        //}
-        //else if (ClientProxy.renderPass == 1) {
-            panelRenderer.setTrimDepth(block.getTrimDepth());
-            panelRenderer.setTrimIcon(custom.getTrimShadowOverlay());
-            panelRenderer.renderFaceTrim(2, null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
-
-            panelRenderer.setPanelIcon(custom.getHandleOverlay());
-            panelRenderer.renderFacePanel(2, null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
-            panelRenderer.setPanelIcon(custom.getFaceShadowOverlay());
-            panelRenderer.renderFacePanel(2, null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
-        //}
+        commonRender.renderBasePass(null, 0, 0, 0, custom, RenderHelper.XNEG, panelIcon, trimIcon, frontIcon);
+        commonRender.renderOverlayPass(null, 0, 0, 0, custom, RenderHelper.XNEG);
     }
 
     private void renderExterior (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
