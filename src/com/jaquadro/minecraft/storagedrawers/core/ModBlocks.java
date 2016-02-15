@@ -73,7 +73,7 @@ public class ModBlocks
         if (config.isBlockEnabled("trim"))
             GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
 
-        GameRegistry.registerBlock(framingTable, "framingTable");
+        GameRegistry.registerBlock(framingTable, ItemFramingTable.class, "framingTable");
 
         GameRegistry.registerBlock(fullCustom1, ItemCustomDrawers.class, "fullCustom1");
         GameRegistry.registerBlock(fullCustom2, ItemCustomDrawers.class, "fullCustom2");

@@ -2,11 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
-import com.jaquadro.minecraft.storagedrawers.client.renderer.ControllerRenderer;
-import com.jaquadro.minecraft.storagedrawers.client.renderer.DrawersCustomRenderer;
-import com.jaquadro.minecraft.storagedrawers.client.renderer.DrawersItemRenderer;
-import com.jaquadro.minecraft.storagedrawers.client.renderer.DrawersRenderer;
-import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
+import com.jaquadro.minecraft.storagedrawers.client.renderer.*;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.block.Block;
@@ -23,10 +19,12 @@ public class ClientProxy extends CommonProxy
         drawersRenderID = RenderingRegistry.getNextAvailableRenderId();
         controllerRenderID = RenderingRegistry.getNextAvailableRenderId();
         drawersCustomRenderID = RenderingRegistry.getNextAvailableRenderId();
+        framingTableRenderID = RenderingRegistry.getNextAvailableRenderId();
 
         RenderingRegistry.registerBlockHandler(drawersRenderID, new DrawersRenderer());
         RenderingRegistry.registerBlockHandler(controllerRenderID, new ControllerRenderer());
         RenderingRegistry.registerBlockHandler(drawersCustomRenderID, new DrawersCustomRenderer());
+        RenderingRegistry.registerBlockHandler(framingTableRenderID, new FramingTableRenderer());
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.class, new TileEntityDrawersRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersComp.class, new TileEntityDrawersRenderer());

@@ -78,6 +78,10 @@ public class RenderHelper
         state.setRenderBounds(xMin, yMin, zMin, xMax, yMax, zMax);
     }
 
+    public void setRenderBounds (double[] bound) {
+        state.setRenderBounds(bound[0], bound[1], bound[2], bound[3], bound[4], bound[5]);
+    }
+
     public void setRenderBounds (Block block) {
         setRenderBounds(block.getBlockBoundsMinX(), block.getBlockBoundsMinY(), block.getBlockBoundsMinZ(), block.getBlockBoundsMaxX(), block.getBlockBoundsMaxY(), block.getBlockBoundsMaxZ());
     }
