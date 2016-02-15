@@ -69,6 +69,25 @@ public class CommonFramingRenderer
         renderStructure(blockAccess, x, y, z, block, false);
     }
 
+    public void renderOverlayLeft (IBlockAccess blockAccess, int x, int y, int z, BlockFramingTable block) {
+        renderOverlay(blockAccess, x, y, z, block, baseBoundsLeftY, true);
+    }
+
+    public void renderOverlayRight (IBlockAccess blockAccess, int x, int y, int z, BlockFramingTable block) {
+        renderOverlay(blockAccess, x, y, z, block, baseBoundsRightY, false);
+    }
+
+    public void renderOverlay (IBlockAccess blockAccess, int x, int y, int z, BlockFramingTable block, double[][] baseBoundsY, boolean left) {
+        IIcon iconOverlay = block.getIconOverlay(left);
+
+        RenderHelper renderer = RenderHelper.instance;
+
+        for (double[] bound : baseBoundsY) {
+            renderer.setRenderBounds(bound);
+            renderer.renderFace(RenderHelper.YPOS, blockAccess, block, x, y, z, iconOverlay);
+        }
+    }
+
     private void renderStructure (IBlockAccess blockAccess, int x, int y, int z, BlockFramingTable block, boolean left) {
         IIcon iconSurface = block.getIconBase();
 

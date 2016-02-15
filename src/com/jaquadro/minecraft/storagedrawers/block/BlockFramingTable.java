@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
+import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -20,6 +21,11 @@ public class BlockFramingTable extends BlockContainer
     IIcon iconBase;
     @SideOnly(Side.CLIENT)
     IIcon iconTrim;
+
+    @SideOnly(Side.CLIENT)
+    IIcon iconOverlayLeft;
+    @SideOnly(Side.CLIENT)
+    IIcon iconOverlayRight;
 
     public BlockFramingTable (String blockName) {
         super(Material.wood);
@@ -56,6 +62,17 @@ public class BlockFramingTable extends BlockContainer
         return StorageDrawers.proxy.framingTableRenderID;
     }
 
+    @Override
+    public int getRenderBlockPass () {
+        return 1;
+    }
+
+    @Override
+    public boolean canRenderInPass (int pass) {
+        ClientProxy.renderPass = pass;
+        return true;
+    }
+
     @SideOnly(Side.CLIENT)
     public IIcon getIconBase () {
         return iconBase;
@@ -66,9 +83,17 @@ public class BlockFramingTable extends BlockContainer
         return iconTrim;
     }
 
+    @SideOnly(Side.CLIENT)
+    public IIcon getIconOverlay (boolean left) {
+        return left ? iconOverlayLeft : iconOverlayRight;
+    }
+
     @Override
     public void registerBlockIcons (IIconRegister register) {
         iconBase = register.registerIcon(StorageDrawers.MOD_ID + ":base/base_oak");
         iconTrim = register.registerIcon(StorageDrawers.MOD_ID + ":base/trim_oak");
+
+        iconOverlayLeft = register.registerIcon(StorageDrawers.MOD_ID + ":overlay/shading_worktable_left");
+        iconOverlayRight = register.registerIcon(StorageDrawers.MOD_ID + ":overlay/shading_worktable_right");
     }
 }

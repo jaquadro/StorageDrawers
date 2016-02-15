@@ -19,15 +19,15 @@ public class RenderHelperLL
 
     private static final int xyzuvMap[][][] = {
         {       // Y-NEG
-            { 0, 2, 5, 0, 3 },
-            { 0, 2, 4, 0, 2 },
-            { 1, 2, 4, 1, 2 },
-            { 1, 2, 5, 1, 3 }
+            { 0, 2, 5, 0, 2 },
+            { 0, 2, 4, 0, 3 },
+            { 1, 2, 4, 1, 3 },
+            { 1, 2, 5, 1, 2 }
         }, {    // Y-POS
-            { 1, 3, 5, 1, 3 },
-            { 1, 3, 4, 1, 2 },
-            { 0, 3, 4, 0, 2 },
-            { 0, 3, 5, 0, 3 }
+            { 1, 3, 5, 0, 2 },
+            { 1, 3, 4, 0, 3 },
+            { 0, 3, 4, 1, 3 },
+            { 0, 3, 5, 1, 2 }
         }, {    // Z-NEG
             { 0, 3, 4, 1, 2 },
             { 1, 3, 4, 0, 2 },
@@ -105,13 +105,18 @@ public class RenderHelperLL
             xyz[MAXX] = z + state.renderMinX;
         }
 
+        int rotate = (face == 0) ? state.uvRotate[0] : state.uvRotate[1];
+
         if (rangeX <= 1 && rangeZ <= 1) {
-            setUV(icon, state.renderMinX + state.shiftU, state.renderMinZ + state.shiftV, state.renderMaxX + state.shiftU, state.renderMaxZ + state.shiftV);
+            if (face == RenderHelper.YNEG)
+                setFaceYNegUV(icon, state.renderMinX, state.renderMinZ, state.renderMaxX, state.renderMaxZ);
+            else
+                setFaceYPosUV(icon, state.renderMinX, state.renderMinZ, state.renderMaxX, state.renderMaxZ);
 
             if (state.enableAO)
-                renderXYZUVAO(xyzuvMap[face]);
+                renderXYZUVAO(xyzuvMap[face], state.uvRotate[face]);
             else
-                renderXYZUV(xyzuvMap[face]);
+                renderXYZUV(xyzuvMap[face], state.uvRotate[face]);
             return;
         }
 
@@ -122,8 +127,6 @@ public class RenderHelperLL
 
         setupUVPoints(uStart, vStart, uStop, vStop, rangeX, rangeZ, icon);
         setupAOBrightnessLerp(state.renderMinX, state.renderMaxX, state.renderMinZ, state.renderMaxZ, rangeX, rangeZ);
-
-        int rotate = (face == 0) ? state.uvRotate[0] : state.uvRotate[1];
 
         for (int ix = 0; ix < rangeX; ix++) {
             xyz[MAXX] = xyz[MINX] + maxUDiv[ix] - minUDiv[ix];
@@ -139,25 +142,49 @@ public class RenderHelperLL
 
                 switch (rotate) {
                     case RenderHelperState.ROTATE90:
-                        setUV(icon, maxVDiv[ix], minUDiv[iz], minVDiv[ix], maxUDiv[iz]);
+                        setUV(icon, maxVDiv[ix], minVDiv[ix], minUDiv[iz], maxUDiv[iz]);
                         break;
                     case RenderHelperState.ROTATE180:
-                        setUV(icon, maxUDiv[ix], maxVDiv[iz], minUDiv[ix], minVDiv[iz]);
+                        setUV(icon, maxUDiv[ix], minUDiv[ix], maxVDiv[iz], minVDiv[iz]);
                         break;
                     case RenderHelperState.ROTATE270:
-                        setUV(icon, minVDiv[ix], maxUDiv[iz], maxVDiv[ix], minUDiv[iz]);
+                        setUV(icon, minVDiv[ix], maxVDiv[ix], maxUDiv[iz], minUDiv[iz]);
                         break;
                     default:
-                        setUV(icon, minUDiv[ix], minVDiv[iz], maxUDiv[ix], maxVDiv[iz]);
+                        setUV(icon, minUDiv[ix], maxUDiv[ix], minVDiv[iz], maxVDiv[iz]);
                         break;
                 }
 
-                renderXYZUVAO(xyzuvMap[face]);
+                renderXYZUVAO(xyzuvMap[face], state.uvRotate[face]);
 
                 xyz[MINZ] = xyz[MAXZ];
             }
             xyz[MINX] = xyz[MAXX];
         }
+    }
+
+    private void setFaceYNegUV (IIcon icon, double minX, double minZ, double maxX, double maxZ) {
+        int rotate = state.uvRotate[0];
+        if (rotate == RenderHelperState.ROTATE0)
+            setUV(icon, minX + state.shiftU, maxX + state.shiftU, maxZ + state.shiftV, minZ + state.shiftV);
+        if (rotate == RenderHelperState.ROTATE90)
+            setUV(icon, 1 - maxZ + state.shiftU, 1 - minZ + state.shiftU, minX + state.shiftV, maxX + state.shiftV);
+        if (rotate == RenderHelperState.ROTATE180)
+            setUV(icon, 1 - minX + state.shiftU, 1 - maxX + state.shiftU, 1 - maxZ + state.shiftV, 1 - minZ + state.shiftV);
+        if (rotate == RenderHelperState.ROTATE270)
+            setUV(icon, maxZ + state.shiftU, minZ + state.shiftU, 1 - minX + state.shiftV, 1 - maxX + state.shiftV);
+    }
+
+    private void setFaceYPosUV (IIcon icon, double minX, double minZ, double maxX, double maxZ) {
+        int rotate = state.uvRotate[1];
+        if (rotate == RenderHelperState.ROTATE0)
+            setUV(icon, maxX + state.shiftU, minX + state.shiftU, maxZ + state.shiftV, minZ + state.shiftV);
+        if (rotate == RenderHelperState.ROTATE90)
+            setUV(icon, maxZ + state.shiftU, minZ + state.shiftU, 1 - maxX + state.shiftV, 1 - minX + state.shiftV);
+        if (rotate == RenderHelperState.ROTATE180)
+            setUV(icon, 1 - maxX + state.shiftU, 1 - minX + state.shiftU, 1 - maxZ + state.shiftV, 1 - minZ + state.shiftV);
+        if (rotate == RenderHelperState.ROTATE270)
+            setUV(icon, 1 - maxZ + state.shiftU, 1 - minZ + state.shiftU, maxX + state.shiftV, minX + state.shiftV);
     }
 
     private void drawFaceZ (int face, double x, double y, double z, IIcon icon) {
@@ -172,14 +199,14 @@ public class RenderHelperLL
 
         if (rangeX <= 1 && rangeY <= 1) {
             if (state.flipTexture)
-                setUV(icon, state.renderMaxX + state.shiftU, 1 - state.renderMaxY + state.shiftV, state.renderMinX + state.shiftU, 1 - state.renderMinY + state.shiftV);
+                setUV(icon, state.renderMaxX + state.shiftU, state.renderMinX + state.shiftU, 1 - state.renderMaxY + state.shiftV, 1 - state.renderMinY + state.shiftV);
             else
-                setUV(icon, state.renderMinX + state.shiftU, 1 - state.renderMaxY + state.shiftV, state.renderMaxX + state.shiftU, 1 - state.renderMinY + state.shiftV);
+                setUV(icon, state.renderMinX + state.shiftU, state.renderMaxX + state.shiftU, 1 - state.renderMaxY + state.shiftV, 1 - state.renderMinY + state.shiftV);
 
             if (state.enableAO)
-                renderXYZUVAO(xyzuvMap[face]);
+                renderXYZUVAO(xyzuvMap[face], state.uvRotate[face]);
             else
-                renderXYZUV(xyzuvMap[face]);
+                renderXYZUV(xyzuvMap[face], state.uvRotate[face]);
             return;
         }
 
@@ -190,6 +217,8 @@ public class RenderHelperLL
 
         setupUVPoints(uStart, vStart, uStop, vStop, rangeX, rangeY, icon);
         setupAOBrightnessLerp(state.renderMinX, state.renderMaxX, state.renderMinY, state.renderMaxY, rangeX, rangeY);
+
+        //int rotate = (face == 2) ? state.uvRotate[2] : state.uvRotate[3];
 
         for (int ix = 0; ix < rangeX; ix++) {
             xyz[MAXX] = xyz[MINX] + maxUDiv[ix] - minUDiv[ix];
@@ -204,11 +233,26 @@ public class RenderHelperLL
                 state.brightnessBottomRight = brightnessLerp[ix + 1][iy + 1];
 
                 if (state.flipTexture)
-                    setUV(icon, 1 - minUDiv[ix], 1 - maxVDiv[iy], 1 - maxUDiv[ix], 1 - minVDiv[iy]);
+                    setUV(icon, 1 - minUDiv[ix], 1 - maxUDiv[ix], 1 - maxVDiv[iy], 1 - minVDiv[iy]);
                 else
-                    setUV(icon, minUDiv[ix], 1 - maxVDiv[iy], maxUDiv[ix], 1 - minVDiv[iy]);
+                    setUV(icon, minUDiv[ix], maxUDiv[ix], 1 - maxVDiv[iy], 1 - minVDiv[iy]);
 
-                renderXYZUVAO(xyzuvMap[face]);
+                /*switch (rotate) {
+                    case RenderHelperState.ROTATE90:
+                        setUV(icon, 1 - minVDiv[ix], minUDiv[iy], 1 - maxVDiv[ix], maxUDiv[iy]);
+                        break;
+                    case RenderHelperState.ROTATE180:
+                        setUV(icon, maxUDiv[ix], 1 - minVDiv[iy], minUDiv[ix], 1 - maxVDiv[iy]);
+                        break;
+                    case RenderHelperState.ROTATE270:
+                        setUV(icon, 1 - maxVDiv[ix], maxUDiv[iy], 1 - minVDiv[ix], minUDiv[iy]);
+                        break;
+                    default:
+                        setUV(icon, minUDiv[ix], 1 - maxVDiv[iy], maxUDiv[ix], 1 - minVDiv[iy]);
+                        break;
+                }*/
+
+                renderXYZUVAO(xyzuvMap[face], state.uvRotate[face]);
 
                 xyz[MINY] = xyz[MAXY];
             }
@@ -228,14 +272,14 @@ public class RenderHelperLL
 
         if (rangeZ <= 1 && rangeY <= 1) {
             if (state.flipTexture)
-                setUV(icon, state.renderMaxZ + state.shiftU, 1 - state.renderMaxY + state.shiftV, state.renderMinZ + state.shiftU, 1 - state.renderMinY + state.shiftV);
+                setUV(icon, state.renderMaxZ + state.shiftU, state.renderMinZ + state.shiftU, 1 - state.renderMaxY + state.shiftV, 1 - state.renderMinY + state.shiftV);
             else
-                setUV(icon, state.renderMinZ + state.shiftU, 1 - state.renderMaxY + state.shiftV, state.renderMaxZ + state.shiftU, 1 - state.renderMinY + state.shiftV);
+                setUV(icon, state.renderMinZ + state.shiftU, state.renderMaxZ + state.shiftU, 1 - state.renderMaxY + state.shiftV, 1 - state.renderMinY + state.shiftV);
 
             if (state.enableAO)
-                renderXYZUVAO(xyzuvMap[face]);
+                renderXYZUVAO(xyzuvMap[face], state.uvRotate[face]);
             else
-                renderXYZUV(xyzuvMap[face]);
+                renderXYZUV(xyzuvMap[face], state.uvRotate[face]);
             return;
         }
 
@@ -260,11 +304,11 @@ public class RenderHelperLL
                 state.brightnessBottomRight = brightnessLerp[iz + 1][iy + 1];
 
                 if (state.flipTexture)
-                    setUV(icon, 1 - minUDiv[iz], 1 - maxVDiv[iy], 1 - maxUDiv[iz], 1 - minVDiv[iy]);
+                    setUV(icon, 1 - minUDiv[iz], 1 - maxUDiv[iz], 1 - maxVDiv[iy], 1 - minVDiv[iy]);
                 else
-                    setUV(icon, minUDiv[iz], 1 - maxVDiv[iy], maxUDiv[iz], 1 - minVDiv[iy]);
+                    setUV(icon, minUDiv[iz], maxUDiv[iz], 1 - maxVDiv[iy], 1 - minVDiv[iy]);
 
-                renderXYZUVAO(xyzuvMap[face]);
+                renderXYZUVAO(xyzuvMap[face], state.uvRotate[face]);
 
                 xyz[MINY] = xyz[MAXY];
             }
@@ -274,12 +318,12 @@ public class RenderHelperLL
 
     public void drawPartialFace (int face, double x, double y, double z, IIcon icon, double uMin, double vMin, double uMax, double vMax) {
         setXYZ(x, y, z);
-        setUV(icon, uMin, vMin, uMax, vMax);
+        setUV(icon, uMin, uMax, vMin, vMax);
 
         if (state.enableAO)
-            renderXYZUVAO(xyzuvMap[face]);
+            renderXYZUVAO(xyzuvMap[face], state.uvRotate[face]);
         else
-            renderXYZUV(xyzuvMap[face]);
+            renderXYZUV(xyzuvMap[face], state.uvRotate[face]);
     }
 
     private void setupUVPoints (double uStart, double vStart, double uStop, double vStop, int rangeU, int rangeV, IIcon icon) {
@@ -341,14 +385,14 @@ public class RenderHelperLL
         }
     }
 
-    private void setUV (IIcon icon, double uMin, double vMin, double uMax, double vMax) {
+    private void setUV (IIcon icon, double uMin, double uMax, double vMin, double vMax) {
         uv[0] = icon.getInterpolatedU(uMin * 16);
         uv[1] = icon.getInterpolatedU(uMax * 16);
         uv[2] = icon.getInterpolatedV(vMin * 16);
         uv[3] = icon.getInterpolatedV(vMax * 16);
     }
 
-    private void setUV (double uMin, double vMin, double uMax, double vMax) {
+    private void setUV (double uMin, double uMax, double vMin, double vMax) {
         uv[0] = uMin;
         uv[1] = uMax;
         uv[2] = vMin;
@@ -364,27 +408,51 @@ public class RenderHelperLL
         xyz[5] = z + state.renderOffsetZ + state.renderMaxZ;
     }
 
-    private void renderXYZUV (int[][] index) {
+    private void renderXYZUV (int[][] index, int uvRotate) {
         Tessellator tessellator = Tessellator.instance;
 
         int[] tl = index[TL];
         int[] bl = index[BL];
         int[] br = index[BR];
         int[] tr = index[TR];
+
+        double ubl = uv[bl[3]];
+        double vbl = uv[bl[4]];
+        double utr = uv[tr[3]];
+        double vtr = uv[tr[4]];
+
+        if (uvRotate == RenderHelperState.ROTATE90 || uvRotate == RenderHelperState.ROTATE270) {
+            ubl = uv[tr[3]];
+            vbl = uv[tr[4]];
+            utr = uv[bl[3]];
+            vtr = uv[bl[4]];
+        }
 
         tessellator.addVertexWithUV(xyz[tl[0]], xyz[tl[1]], xyz[tl[2]], uv[tl[3]], uv[tl[4]]);
-        tessellator.addVertexWithUV(xyz[bl[0]], xyz[bl[1]], xyz[bl[2]], uv[bl[3]], uv[bl[4]]);
+        tessellator.addVertexWithUV(xyz[bl[0]], xyz[bl[1]], xyz[bl[2]], ubl, vbl);
         tessellator.addVertexWithUV(xyz[br[0]], xyz[br[1]], xyz[br[2]], uv[br[3]], uv[br[4]]);
-        tessellator.addVertexWithUV(xyz[tr[0]], xyz[tr[1]], xyz[tr[2]], uv[tr[3]], uv[tr[4]]);
+        tessellator.addVertexWithUV(xyz[tr[0]], xyz[tr[1]], xyz[tr[2]], utr, vtr);
     }
 
-    private void renderXYZUVAO (int[][] index) {
+    private void renderXYZUVAO (int[][] index, int uvRotate) {
         Tessellator tessellator = Tessellator.instance;
 
         int[] tl = index[TL];
         int[] bl = index[BL];
         int[] br = index[BR];
         int[] tr = index[TR];
+
+        double ubl = uv[bl[3]];
+        double vbl = uv[bl[4]];
+        double utr = uv[tr[3]];
+        double vtr = uv[tr[4]];
+
+        if (uvRotate == RenderHelperState.ROTATE90 || uvRotate == RenderHelperState.ROTATE270) {
+            ubl = uv[tr[3]];
+            vbl = uv[tr[4]];
+            utr = uv[bl[3]];
+            vtr = uv[bl[4]];
+        }
 
         tessellator.setColorOpaque_F(state.colorTopLeft[0], state.colorTopLeft[1], state.colorTopLeft[2]);
         tessellator.setBrightness(state.brightnessTopLeft);
@@ -392,7 +460,7 @@ public class RenderHelperLL
 
         tessellator.setColorOpaque_F(state.colorBottomLeft[0], state.colorBottomLeft[1], state.colorBottomLeft[2]);
         tessellator.setBrightness(state.brightnessBottomLeft);
-        tessellator.addVertexWithUV(xyz[bl[0]], xyz[bl[1]], xyz[bl[2]], uv[bl[3]], uv[bl[4]]);
+        tessellator.addVertexWithUV(xyz[bl[0]], xyz[bl[1]], xyz[bl[2]], ubl, vbl);
 
         tessellator.setColorOpaque_F(state.colorBottomRight[0], state.colorBottomRight[1], state.colorBottomRight[2]);
         tessellator.setBrightness(state.brightnessBottomRight);
@@ -400,6 +468,6 @@ public class RenderHelperLL
 
         tessellator.setColorOpaque_F(state.colorTopRight[0], state.colorTopRight[1], state.colorTopRight[2]);
         tessellator.setBrightness(state.brightnessTopRight);
-        tessellator.addVertexWithUV(xyz[tr[0]], xyz[tr[1]], xyz[tr[2]], uv[tr[3]], uv[tr[4]]);
+        tessellator.addVertexWithUV(xyz[tr[0]], xyz[tr[1]], xyz[tr[2]], utr, vtr);
     }
 }
