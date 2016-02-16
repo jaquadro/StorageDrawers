@@ -131,15 +131,24 @@ public class CommonFramingRenderer
     private void renderFoot (IBlockAccess blockAccess, int x, int y, int z, BlockFramingTable block, IIcon icon, boolean left) {
         RenderHelper renderer = RenderHelper.instance;
 
+        for (int i = 0; i < 2; i++)
+            renderer.state.setUVRotation(i, (renderer.state.rotateTransform + RenderHelperState.ROTATE90) % 4);
+
         double xStart = left ? unit2 : 1 - unit2 - unit2;
 
         renderer.setRenderBounds(xStart, 0, 0, xStart + unit2, unit2, 1);
         for (int i = 0; i < 6; i++)
             renderer.renderFace(i, blockAccess, block, x,y , z, icon);
+
+        for (int i = 0; i < 2; i++)
+            renderer.state.clearUVRotation(i);
     }
 
     private void renderLegs (IBlockAccess blockAccess, int x, int y, int z, BlockFramingTable block, IIcon icon, boolean left) {
         RenderHelper renderer = RenderHelper.instance;
+
+        for (int i = 2; i < 6; i++)
+            renderer.state.setUVRotation(i, RenderHelperState.ROTATE90);
 
         double xStart = left ? unit2 : 1 - unit2 - unit2;
 
@@ -150,10 +159,16 @@ public class CommonFramingRenderer
         renderer.setRenderBounds(xStart, unit2, 1 - unit2 - unit2, xStart + unit2, 1 - unit2, 1 - unit2);
         for (int i = 2; i < 6; i++)
             renderer.renderFace(i, blockAccess, block, x, y, z, icon);
+
+        for (int i = 2; i < 6; i++)
+            renderer.state.clearUVRotation(i);
     }
 
     private void renderBraces (IBlockAccess blockAccess, int x, int y, int z, BlockFramingTable block, IIcon icon, boolean left) {
         RenderHelper renderer = RenderHelper.instance;
+
+        for (int i = 0; i < 2; i++)
+            renderer.state.setUVRotation(i, renderer.state.rotateTransform);
 
         double xStart = left ? unit2 + unit2 : 0;
         double xStop = left ? 1 : 1 - unit2 - unit2;
@@ -165,5 +180,8 @@ public class CommonFramingRenderer
         renderer.setRenderBounds(xStart, unit4, 1 - unit2 - unit2, xStop, unit4 + unit2, 1 - unit2);
         for (int i = 0; i < 4; i++)
             renderer.renderFace(i, blockAccess, block, x, y, z, icon);
+
+        for (int i = 0; i < 2; i++)
+            renderer.state.clearUVRotation(i);
     }
 }
