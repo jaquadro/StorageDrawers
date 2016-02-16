@@ -43,8 +43,40 @@ public class BlockFramingTable extends BlockContainer
 
     @Override
     public boolean onBlockActivated (World world, int x, int y, int z, EntityPlayer player, int side, float vx, float vy, float vz) {
-        player.openGui(StorageDrawers.instance, GuiHandler.framingGuiID, world, x, y, z);
+        int meta = world.getBlockMetadata(x, y, z);
+        int priX = x + getXOff(meta);
+        int priZ = z + getZOff(meta);
+        if (world.getBlock(priX, y, priZ) != this || (world.getBlockMetadata(priX, y, priZ) & 0x8) != 0)
+            return false;
+
+        player.openGui(StorageDrawers.instance, GuiHandler.framingGuiID, world, priX, y, priZ);
         return true;
+    }
+
+    private int getXOff (int meta) {
+        if ((meta & 0x8) == 0)
+            return 0;
+
+        int side = meta & 0x7;
+        if (side == 2)
+            return -1;
+        else if (side == 3)
+            return 1;
+        else
+            return 0;
+    }
+
+    private int getZOff (int meta) {
+        if ((meta & 0x8) == 0)
+            return 0;
+
+        int side = meta & 0x7;
+        if (side == 4)
+            return 1;
+        else if (side == 5)
+            return -1;
+        else
+            return 0;
     }
 
     @Override

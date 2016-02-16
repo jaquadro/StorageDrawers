@@ -131,6 +131,9 @@ public class CommonFramingRenderer
     private void renderFoot (IBlockAccess blockAccess, int x, int y, int z, BlockFramingTable block, IIcon icon, boolean left) {
         RenderHelper renderer = RenderHelper.instance;
 
+        float oldColor = renderer.state.colorMultYPos;
+        renderer.state.colorMultYPos = .9f;
+
         for (int i = 0; i < 2; i++)
             renderer.state.setUVRotation(i, (renderer.state.rotateTransform + RenderHelperState.ROTATE90) % 4);
 
@@ -142,6 +145,8 @@ public class CommonFramingRenderer
 
         for (int i = 0; i < 2; i++)
             renderer.state.clearUVRotation(i);
+
+        renderer.state.colorMultYPos = oldColor;
     }
 
     private void renderLegs (IBlockAccess blockAccess, int x, int y, int z, BlockFramingTable block, IIcon icon, boolean left) {
@@ -167,6 +172,9 @@ public class CommonFramingRenderer
     private void renderBraces (IBlockAccess blockAccess, int x, int y, int z, BlockFramingTable block, IIcon icon, boolean left) {
         RenderHelper renderer = RenderHelper.instance;
 
+        float oldColor = renderer.state.colorMultYPos;
+        renderer.state.colorMultYPos = .85f;
+
         for (int i = 0; i < 2; i++)
             renderer.state.setUVRotation(i, renderer.state.rotateTransform);
 
@@ -183,5 +191,7 @@ public class CommonFramingRenderer
 
         for (int i = 0; i < 2; i++)
             renderer.state.clearUVRotation(i);
+
+        renderer.state.colorMultYPos = oldColor;
     }
 }
