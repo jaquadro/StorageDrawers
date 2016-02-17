@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
+import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.ItemMetaListRegistry;
 import com.jaquadro.minecraft.storagedrawers.util.ItemMetaRegistry;
@@ -26,7 +27,9 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.*;
 
@@ -898,6 +901,22 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     @Override
     public void clear () {
 
+    }
+
+    private DrawerItemHandler itemHandler = new DrawerItemHandler(this);
+
+    @Override
+    public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+            return true;
+        return super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+            return (T) itemHandler;
+        return super.getCapability(capability, facing);
     }
 
     private class DrawerStackIterator implements Iterable<Integer>
