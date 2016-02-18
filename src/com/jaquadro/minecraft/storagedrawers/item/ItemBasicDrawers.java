@@ -2,7 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.base.Function;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;

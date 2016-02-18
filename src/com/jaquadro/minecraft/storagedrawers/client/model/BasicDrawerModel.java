@@ -2,7 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.model.IBakedModel;

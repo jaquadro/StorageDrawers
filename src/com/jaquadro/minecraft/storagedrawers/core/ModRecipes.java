@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;

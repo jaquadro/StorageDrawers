@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
+import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;

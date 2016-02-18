@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block;
+package com.jaquadro.minecraft.storagedrawers.api.storage;
 
 import net.minecraft.util.IStringSerializable;
 
