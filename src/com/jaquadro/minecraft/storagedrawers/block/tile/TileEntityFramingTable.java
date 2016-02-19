@@ -11,6 +11,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants;
 
 public class TileEntityFramingTable extends TileEntity implements IInventory
@@ -68,7 +69,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
 
     @Override
     public String getInventoryName () {
-        return hasCustomInventoryName() ? customName : "container.storagedrawers.framingTable";
+        return hasCustomInventoryName() ? customName : "storageDrawers.container.framingTable";
     }
 
     @Override
@@ -185,5 +186,33 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity pkt) {
         readFromNBT(pkt.func_148857_g());
         //getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
+    }
+
+    private static final AxisAlignedBB ZERO_EXTENT_AABB = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+
+    @Override
+    public AxisAlignedBB getRenderBoundingBox () {
+        int meta = getBlockMetadata();
+        if ((meta & 0x8) != 0)
+            return ZERO_EXTENT_AABB;
+
+        int side = meta & 0x7;
+        int xOff = 0;
+        int zOff = 0;
+
+        if (side == 2)
+            xOff = 1;
+        if (side == 3)
+            xOff = -1;
+        if (side == 4)
+            zOff = -1;
+        if (side == 5)
+            zOff = 1;
+
+        int xMin = Math.min(xCoord, xCoord + xOff);
+        int xMax = Math.max(xCoord, xCoord + xOff) + 1;
+        int zMin = Math.min(zCoord, zCoord + zOff);
+        int zMax = Math.max(zCoord, zCoord + zOff) + 1;
+        return AxisAlignedBB.getBoundingBox(xMin, yCoord + 1, xMax, zMin, yCoord + 2, zMax);
     }
 }

@@ -44,8 +44,6 @@ public class TileEntityFramingRenderer extends TileEntitySpecialRenderer
         if ((meta & 8) != 0)
             return;
 
-        int side = meta & 0x07;
-
         itemRenderer.setRenderManager(RenderManager.instance);
 
         ItemStack target = tileTable.getStackInSlot(0);
@@ -60,77 +58,6 @@ public class TileEntityFramingRenderer extends TileEntitySpecialRenderer
         renderSlot(tileTable, x, y, z, tileTable.getStackInSlot(1), 1.15f, -.225f, .15f, .65f);
         renderSlot(tileTable, x, y, z, tileTable.getStackInSlot(2), 1.15f, -.225f, .15f, -.65f);
         renderSlot(tileTable, x, y, z, tileTable.getStackInSlot(3), 1.15f, .225f, .15f, .65f);
-
-        /*ItemStack result = tileTable.getStackInSlot(0);
-        if (result != null) {
-            Block itemBlock = Block.getBlockFromItem(result.getItem());
-            if (itemBlock != null) {
-                itemBlock.setBlockBoundsBasedOnState(tile.getWorldObj(), 0, 0, 0);
-                itemBlock.setBlockBoundsForItemRender();
-
-                GL11.glPushMatrix();
-
-                GL11.glTranslated(x + .5, y + 1, z + .5);
-
-                if (side == 2)
-                    GL11.glRotatef(90, 0, 1, 0);
-                if (side == 3)
-                    GL11.glRotatef(270, 0, 1, 0);
-                if (side == 4)
-                    GL11.glRotatef(180, 0, 1, 0);
-
-                GL11.glTranslatef(0f, .25f, .5f);
-                GL11.glScalef(2f, 2f, 2f);
-
-                GL11.glDisable(GL11.GL_BLEND);
-                GL11.glEnable(GL11.GL_LIGHTING);
-
-                try {
-                    EntityItem itemEnt = new EntityItem(null, 0, 0, 0, result);
-                    itemEnt.hoverStart = 0;
-                    itemRenderer.doRender(itemEnt, 0, 0, 0, 0, 0);
-                }
-                catch (Exception e) { }
-
-                GL11.glPopMatrix();
-            }
-        }
-
-        ItemStack materialSide = tileTable.getStackInSlot(1);
-        if (materialSide != null) {
-            Block itemBlock = Block.getBlockFromItem(materialSide.getItem());
-            if (itemBlock != null) {
-                itemBlock.setBlockBoundsBasedOnState(tile.getWorldObj(), 0, 0, 0);
-                itemBlock.setBlockBoundsForItemRender();
-
-                GL11.glPushMatrix();
-
-                GL11.glTranslated(x + .5, y, z + .5);
-
-                if (side == 2)
-                    GL11.glRotatef(90, 0, 1, 0);
-                if (side == 3)
-                    GL11.glRotatef(270, 0, 1, 0);
-                if (side == 4)
-                    GL11.glRotatef(180, 0, 1, 0);
-
-                GL11.glTranslatef(0, 0f, .5f);
-                GL11.glTranslatef(-.225f, 1.15f, .5f + .15f);
-                GL11.glScalef(1.15f, 1.15f, 1.15f);
-
-                GL11.glDisable(GL11.GL_BLEND);
-                GL11.glEnable(GL11.GL_LIGHTING);
-
-                try {
-                    EntityItem itemEnt = new EntityItem(null, 0, 0, 0, materialSide);
-                    itemEnt.hoverStart = 0;
-                    itemRenderer.doRender(itemEnt, 0, 0, 0, 0, 0);
-                }
-                catch (Exception e) { }
-
-                GL11.glPopMatrix();
-            }
-        }*/
     }
 
     private void renderSlot (TileEntityFramingTable tileTable, double x, double y, double z, ItemStack item, float scale, float tx, float ty, float tz) {

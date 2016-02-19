@@ -6,6 +6,7 @@ storageDrawers.container.compDrawers=Compacting Drawers
 storageDrawers.container.upgrades=Upgrades
 storageDrawers.container.controller=Drawer Controller
 storageDrawers.container.unboundSlave=Unbound Slave
+storageDrawers.container.framingTable=Framing Table
 
 storagedrawers.msg.maxUpgrades=This drawer cannot accept any more upgrades.
 
@@ -75,9 +76,16 @@ tile.halfDrawers4.jungle.name=Compact Jungle Drawers 2x2
 tile.halfDrawers4.acacia.name=Compact Acacia Drawers 2x2
 tile.halfDrawers4.big_oak.name=Compact Dark Oak Drawers 2x2
 
+tile.fullCustom1.name=Framed Drawer
+tile.fullCustom2.name=Framed Drawers 1x2
+tile.fullCustom4.name=Framed Drawers 2x2
+tile.halfCustom2.name=Framed Drawers 1x2
+tile.halfCustom4.name=Framed Drawers 2x2
+
 tile.compDrawers.name=Compacting Drawer
 tile.drawerController.name=Drawer Controller
 tile.controllerSlave.name=Controller Slave
+tile.framingTable.name=Framing Table
 
 tile.trim.oak.name=Oak Trim
 tile.trim.spruce.name=Spruce Trim
