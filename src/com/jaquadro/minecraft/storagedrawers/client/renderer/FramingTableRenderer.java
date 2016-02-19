@@ -9,6 +9,7 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
+import org.lwjgl.opengl.GL11;
 
 public class FramingTableRenderer implements ISimpleBlockRenderingHandler
 {
@@ -16,7 +17,37 @@ public class FramingTableRenderer implements ISimpleBlockRenderingHandler
 
     @Override
     public void renderInventoryBlock (Block block, int metadata, int modelId, RenderBlocks renderer) {
+        if (!(block instanceof BlockFramingTable))
+            return;
 
+        BlockFramingTable framingTable = (BlockFramingTable)block;
+
+        boolean blendEnabled = GL11.glIsEnabled(GL11.GL_BLEND);
+        if (blendEnabled)
+            GL11.glDisable(GL11.GL_BLEND);
+
+        boolean depthMask = GL11.glGetBoolean(GL11.GL_DEPTH_WRITEMASK);
+        if (!depthMask)
+            GL11.glDepthMask(true);
+
+        GL11.glPushMatrix();
+        GL11.glRotatef(90, 0, 1, 0);
+        GL11.glTranslatef(.15f, -.5f, -.5f);
+        GL11.glScalef(.65f, .65f, .65f);
+
+        RenderHelper.instance.state.setUVRotation(RenderHelper.YPOS, RenderHelper.instance.state.rotateTransform);
+
+        framingRenderer.renderRight(null, 0, 0, 0, framingTable);
+        framingRenderer.renderLeft(null, -1, 0, 0, framingTable);
+
+        RenderHelper.instance.state.clearUVRotation(RenderHelper.YPOS);
+
+        if (!blendEnabled)
+            GL11.glDisable(GL11.GL_BLEND);
+        if (!depthMask)
+            GL11.glDepthMask(false);
+
+        GL11.glPopMatrix();
     }
 
     @Override
