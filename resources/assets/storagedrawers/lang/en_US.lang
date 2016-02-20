@@ -179,6 +179,8 @@ storageDrawers.config.prop.wailaStackRemainder=WAILA amount presentation
 storageDrawers.config.prop.wailaStackRemainder.tooltip=How item amounts are displayed by WAILA.
 storageDrawers.config.prop.controllerRange=Controller Range
 storageDrawers.config.prop.controllerRange.tooltip=Range for detecting networked blocks.
+storageDrawers.config.prop.enableFramedDrawers=Enable Framed Drawers
+storageDrawers.config.prop.enableFramedDrawers.tooltip=Drawers with custom materials.
 
 storageDrawers.config.addons=Addons
 storageDrawers.config.addons.tooltip=Configure global addon pack settings.

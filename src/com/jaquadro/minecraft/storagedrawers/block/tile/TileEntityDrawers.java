@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ISealable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
@@ -383,6 +384,18 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         return materialTrim;
     }
 
+    public ItemStack getEffectiveMaterialSide () {
+        return materialSide;
+    }
+
+    public ItemStack getEffectiveMaterialFront () {
+        return materialFront != null ? materialFront : materialSide;
+    }
+
+    public ItemStack getEffectiveMaterialTrim () {
+        return materialTrim != null ? materialTrim : materialSide;
+    }
+
     public void setMaterialSide (ItemStack material) {
         materialSide = material;
     }
@@ -724,6 +737,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     @Override
     public boolean isDrawerEnabled (int slot) {
         if (isSealed())
+            return false;
+
+        if (getBlockType() instanceof BlockDrawersCustom && materialSide == null)
             return false;
 
         return getDrawer(slot) != null;

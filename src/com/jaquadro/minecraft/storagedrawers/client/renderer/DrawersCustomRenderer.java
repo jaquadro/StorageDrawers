@@ -41,7 +41,7 @@ public class DrawersCustomRenderer extends DrawersRenderer
         if (ClientProxy.renderPass == 0)
             commonRender.renderBasePass(world, x, y, z, custom, tile.getDirection(), panelIcon, trimIcon, frontIcon);
         else if (ClientProxy.renderPass == 1)
-            commonRender.renderOverlayPass(world, x, y, z, custom, tile.getDirection());
+            commonRender.renderOverlayPass(world, x, y, z, custom, tile.getDirection(), trimIcon, frontIcon);
     }
 
     @Override

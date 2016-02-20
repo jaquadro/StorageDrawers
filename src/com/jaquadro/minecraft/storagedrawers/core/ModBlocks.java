@@ -73,13 +73,20 @@ public class ModBlocks
         if (config.isBlockEnabled("trim"))
             GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
 
-        GameRegistry.registerBlock(framingTable, ItemFramingTable.class, "framingTable");
+        if (config.cache.enableFramedDrawers) {
+            GameRegistry.registerBlock(framingTable, ItemFramingTable.class, "framingTable");
 
-        GameRegistry.registerBlock(fullCustom1, ItemCustomDrawers.class, "fullCustom1");
-        GameRegistry.registerBlock(fullCustom2, ItemCustomDrawers.class, "fullCustom2");
-        GameRegistry.registerBlock(fullCustom4, ItemCustomDrawers.class, "fullCustom4");
-        GameRegistry.registerBlock(halfCustom2, ItemCustomDrawers.class, "halfCustom2");
-        GameRegistry.registerBlock(halfCustom4, ItemCustomDrawers.class, "halfCustom4");
+            if (config.isBlockEnabled("fulldrawers1"))
+                GameRegistry.registerBlock(fullCustom1, ItemCustomDrawers.class, "fullCustom1");
+            if (config.isBlockEnabled("fulldrawers2"))
+                GameRegistry.registerBlock(fullCustom2, ItemCustomDrawers.class, "fullCustom2");
+            if (config.isBlockEnabled("fulldrawers4"))
+                GameRegistry.registerBlock(fullCustom4, ItemCustomDrawers.class, "fullCustom4");
+            if (config.isBlockEnabled("halfdrawers2"))
+                GameRegistry.registerBlock(halfCustom2, ItemCustomDrawers.class, "halfCustom2");
+            if (config.isBlockEnabled("halfdrawers4"))
+                GameRegistry.registerBlock(halfCustom4, ItemCustomDrawers.class, "halfCustom4");
+        }
 
         GameRegistry.registerTileEntityWithAlternatives(TileEntityDrawersStandard.class, getQualifiedName("tileDrawersStandard"),
             getQualifiedName(fullDrawers1), getQualifiedName(fullDrawers2), getQualifiedName(fullDrawers4),

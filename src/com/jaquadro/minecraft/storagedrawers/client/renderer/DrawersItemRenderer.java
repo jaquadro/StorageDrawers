@@ -133,7 +133,7 @@ public class DrawersItemRenderer implements IItemRenderer
         IIcon frontIcon = Block.getBlockFromItem(materialFront.getItem()).getIcon(4, materialFront.getItemDamage());
 
         commonRender.renderBasePass(null, 0, 0, 0, custom, RenderHelper.XNEG, panelIcon, trimIcon, frontIcon);
-        commonRender.renderOverlayPass(null, 0, 0, 0, custom, RenderHelper.XNEG);
+        commonRender.renderOverlayPass(null, 0, 0, 0, custom, RenderHelper.XNEG, trimIcon, frontIcon);
     }
 
     private void renderExterior (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {

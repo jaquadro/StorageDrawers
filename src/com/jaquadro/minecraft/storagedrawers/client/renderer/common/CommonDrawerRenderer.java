@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer.common;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.ModularBoxRenderer;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.PanelBoxRenderer;
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
@@ -96,10 +97,12 @@ public class CommonDrawerRenderer
         end();
     }
 
-    public void renderOverlayPass (IBlockAccess world, int x, int y, int z, BlockDrawersCustom block, int direction) {
+    public void renderOverlayPass (IBlockAccess world, int x, int y, int z, BlockDrawersCustom block, int direction, IIcon iconTrim, IIcon iconFront) {
         RenderHelper renderHelper = start(world, x, y, z, block, direction);
 
-        panelRenderer.setTrimIcon(block.getTrimShadowOverlay());
+        IIcon trimShadow = block.getTrimShadowOverlay(iconTrim == iconFront);
+
+        panelRenderer.setTrimIcon(trimShadow);
         panelRenderer.renderFaceTrim(RenderHelper.ZNEG, world, block, x, y, z, 0, 0, depth, 1, 1, 1);
 
         if (block.drawerCount == 1) {
@@ -117,7 +120,7 @@ public class CommonDrawerRenderer
             renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, block.getFaceShadowOverlay());
 
             renderHelper.setRenderBounds(trimWidth, unit7, depth + trimDepth, 1 - trimWidth, unit9, 1);
-            renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, block.getTrimShadowOverlay());
+            renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, trimShadow);
         }
         else if (block.drawerCount == 4) {
             renderHelper.setRenderBounds(trimWidth, trimWidth, depth + trimDepth, unit7, unit7, 1);
@@ -137,15 +140,15 @@ public class CommonDrawerRenderer
             renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, block.getFaceShadowOverlay());
 
             renderHelper.setRenderBounds(trimWidth, unit7, depth + trimDepth, unit7, unit9, 1);
-            renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, block.getTrimShadowOverlay());
+            renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, trimShadow);
             renderHelper.setRenderBounds(unit9, unit7, depth + trimDepth, 1 - trimWidth, unit9, 1);
-            renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, block.getTrimShadowOverlay());
+            renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, trimShadow);
             renderHelper.setRenderBounds(unit7, trimWidth, depth + trimDepth, unit9, unit7, 1);
-            renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, block.getTrimShadowOverlay());
+            renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, trimShadow);
             renderHelper.setRenderBounds(unit7, unit9, depth + trimDepth, unit9, 1 - trimWidth, 1);
-            renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, block.getTrimShadowOverlay());
+            renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, trimShadow);
             renderHelper.setRenderBounds(unit7, unit7, depth + trimDepth, unit9, unit9, 1);
-            renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, block.getTrimShadowOverlay());
+            renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, trimShadow);
         }
         else
             RenderHelper.instance.renderEmptyPlane(x, y, z);
