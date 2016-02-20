@@ -30,6 +30,11 @@ public class BlockDrawersCustom extends BlockDrawers
     @SideOnly(Side.CLIENT)
     private IIcon overlayTrimFace;
 
+    @SideOnly(Side.CLIENT)
+    private IIcon defaultFace;
+    @SideOnly(Side.CLIENT)
+    private IIcon defaultTrim;
+
     public BlockDrawersCustom (String blockName, int drawerCount, boolean halfDepth) {
         super(blockName, drawerCount, halfDepth);
     }
@@ -92,6 +97,16 @@ public class BlockDrawersCustom extends BlockDrawers
             return overlayTrimShadow;
     }
 
+    @SideOnly(Side.CLIENT)
+    public IIcon getDefaultFaceIcon () {
+        return defaultFace;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public IIcon getDefaultTrimIcon () {
+        return defaultTrim;
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons (IIconRegister register) {
@@ -102,6 +117,9 @@ public class BlockDrawersCustom extends BlockDrawers
         overlayTrimShadow = register.registerIcon(StorageDrawers.MOD_ID + ":overlay/shading_trim_" + drawerCount);
 
         overlayTrimFace = register.registerIcon(StorageDrawers.MOD_ID + ":overlay/shading_boldtrim_" + drawerCount);
+
+        defaultFace = register.registerIcon(StorageDrawers.MOD_ID + ":base/base_default");
+        defaultTrim = register.registerIcon(StorageDrawers.MOD_ID + ":base/trim_default");
 
         iconSide[0] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_raw_side");
         iconSideV[0] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_raw_side");

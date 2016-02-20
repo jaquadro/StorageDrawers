@@ -38,6 +38,13 @@ public class DrawersCustomRenderer extends DrawersRenderer
         IIcon panelIcon = Block.getBlockFromItem(materialSide.getItem()).getIcon(4, materialSide.getItemDamage());
         IIcon frontIcon = Block.getBlockFromItem(materialFront.getItem()).getIcon(4, materialFront.getItemDamage());
 
+        if (trimIcon == null)
+            trimIcon = custom.getDefaultTrimIcon();
+        if (panelIcon == null)
+            panelIcon = custom.getDefaultFaceIcon();
+        if (frontIcon == null)
+            frontIcon = custom.getDefaultFaceIcon();
+
         if (ClientProxy.renderPass == 0)
             commonRender.renderBasePass(world, x, y, z, custom, tile.getDirection(), panelIcon, trimIcon, frontIcon);
         else if (ClientProxy.renderPass == 1)

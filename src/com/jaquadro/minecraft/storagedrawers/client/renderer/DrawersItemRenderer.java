@@ -131,6 +131,13 @@ public class DrawersItemRenderer implements IItemRenderer
         IIcon panelIcon = Block.getBlockFromItem(materialSide.getItem()).getIcon(4, materialSide.getItemDamage());
         IIcon frontIcon = Block.getBlockFromItem(materialFront.getItem()).getIcon(4, materialFront.getItemDamage());
 
+        if (trimIcon == null)
+            trimIcon = custom.getDefaultTrimIcon();
+        if (panelIcon == null)
+            panelIcon = custom.getDefaultFaceIcon();
+        if (frontIcon == null)
+            frontIcon = custom.getDefaultFaceIcon();
+
         commonRender.renderBasePass(null, 0, 0, 0, custom, RenderHelper.XNEG, panelIcon, trimIcon, frontIcon);
         commonRender.renderOverlayPass(null, 0, 0, 0, custom, RenderHelper.XNEG, trimIcon, frontIcon);
     }
