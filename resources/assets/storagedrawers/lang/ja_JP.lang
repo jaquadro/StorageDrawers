@@ -1,0 +1,147 @@
+itemGroup.storageDrawers=収納ひきだし
+itemGroup.storageDrawersSorting=収納ひきだし - ソート
+
+storageDrawers.container.drawers=ひきだし
+storageDrawers.container.compDrawers=変換ひきだし
+storageDrawers.container.upgrades=アップグレード
+storageDrawers.container.controller=ひきだしコントローラ
+storageDrawers.container.unboundSlave=孤立している
+
+storagedrawers.msg.maxUpgrades=このひきだしはこれ以上機能を追加できません
+
+# Items
+item.upgradeTemplate.name=ひきだし改良キット
+item.upgradeStorage.iron.name=ひきだし容量キット(II)
+item.upgradeStorage.gold.name=ひきだし容量キット(III)
+item.upgradeStorage.obsidian.name=ひきだし容量キット(IV)
+item.upgradeStorage.diamond.name=ひきだし容量キット(V)
+item.upgradeStorage.emerald.name=ひきだし容量キット(VI)
+item.upgradeStatus.level1.name=ひきだし容量ランプ(I)
+item.upgradeStatus.level1.description=満タンになると光る
+item.upgradeStatus.level2.name=ひきだし容量ランプ(II)
+item.upgradeStatus.level2.description=容量ゲージを表示する
+item.upgradeVoid.name=ひきだしブラックホール
+item.upgradeVoid.description=あふれた分は消滅する
+item.upgradeSorting.name=ひきだしソート
+item.upgradeSorting.description=きれいに整頓する
+item.drawerKey.name=ひきだしのカギ
+item.drawerKey.description=タンスに鍵をかける
+item.shroudKey.name=ひきだしのひみつカギ
+item.shroudKey.description=ひきだしのアイテムを隠す
+
+# Blocks
+tile.basicDrawers.fulldrawers1.name=ひきだし
+tile.basicDrawers.fulldrawers2.name=ひきだし 1x2
+tile.basicDrawers.fulldrawers4.name=ひきだし 2x2
+tile.basicDrawers.halfdrawers2.name=ハーフひきだし 1x2
+tile.basicDrawers.halfdrawers4.name=ハーフひきだし 2x2
+
+tile.compDrawers.name=変換ひきだし
+tile.controller.name=ひきだしコントローラ
+tile.controllerSlave.name=ひきだし子コントローラ
+
+tile.trim.oak.name=オークのハコ
+tile.trim.spruce.name=マツのハコ
+tile.trim.birch.name=シラカバのハコ
+tile.trim.jungle.name=ジャングルのハコ
+tile.trim.acacia.name=アカシアのハコ
+tile.trim.big_oak.name=ダークオークのハコ
+
+storageDrawers.drawers.description=1つのひきだしに %d ストック
+storageDrawers.upgrade.description=ひきだしの容量を %d 倍にする
+storageDrawers.controller.description=接続しているひきだしに作用する
+storageDrawers.controllerSlave.description=コントローラの接続ポイントを増やす
+
+# Material
+
+storageDrawers.material=材質: %s
+storageDrawers.material.oak=オーク
+storageDrawers.material.spruce=マツ
+storageDrawers.material.birch=シラカバ
+storageDrawers.material.jungle=ジャングル
+storageDrawers.material.acacia=アカシア
+storageDrawers.material.dark_oak=ダークオーク
+
+# Integration
+storageDrawers.waila.empty=<空>
+storageDrawers.waila.level=アップグレードレベル: %s
+storageDrawers.waila.drawer=#%s: %s
+storageDrawers.waila.locked=ロック中
+storageDrawers.waila.void=ブラックホール
+storageDrawers.waila.sorting=ソート
+
+# Configuration
+storageDrawers.config.title=収納タンス設定
+
+storageDrawers.config.general=一般設定
+storageDrawers.config.general.tooltip=いろいろ。
+
+storageDrawers.config.blocks=ブロック設定
+storageDrawers.config.blocks.tooltip=各収納ブロックの設定。
+
+storageDrawers.config.blocks.fullDrawers1=ひきだし 1x1
+storageDrawers.config.blocks.fullDrawers2=ひきだし 1x2
+storageDrawers.config.blocks.fullDrawers4=ひきだし 2x2
+storageDrawers.config.blocks.halfDrawers2=ハーフひきだし 1x2
+storageDrawers.config.blocks.halfDrawers4=ハーフひきだし 2x2
+storageDrawers.config.blocks.compDrawers=圧縮ひきだし
+storageDrawers.config.blocks.controller=タンスコントローラ
+storageDrawers.config.blocks.trim=箱
+storageDrawers.config.blocks.controllerSlave=タンス子コントローラ
+
+storageDrawers.config.upgrades=ひきだしアップグレード設定
+storageDrawers.config.upgrades.tooltip=ひきだし容量キットの増加倍数を設定。
+
+storageDrawers.config.upgrades.level2Mult=ひきだし容量キット(II)
+storageDrawers.config.upgrades.level3Mult=ひきだし容量キット(III)
+storageDrawers.config.upgrades.level4Mult=ひきだし容量キット(IV)
+storageDrawers.config.upgrades.level5Mult=ひきだし容量キット(V)
+storageDrawers.config.upgrades.level6Mult=ひきだし容量キット(VI)
+
+storageDrawers.config.prop.itemRenderType=アイテム描画方法
+storageDrawers.config.prop.itemRenderType.tooltip=アイテムを3D/平面で描画する
+storageDrawers.config.prop.enableIndicatorUpgrades=ひきだし容量ランプ有効化
+storageDrawers.config.prop.enableStorageUpgrades=ひきだし容量キット有効化
+storageDrawers.config.prop.enableLockUpgrades=ひきだしのカギ有効化
+storageDrawers.config.prop.enableShroudUpgrades=ひきだしのひみつカギ有効化
+storageDrawers.config.prop.enableVoidUpgrades=ひきだしブラックホール有効化
+storageDrawers.config.prop.enableSortingUpgrades=ひきだしソート有効化
+storageDrawers.config.prop.enableSortingUpgrades.tooltip=Refined Relocationが必要
+storageDrawers.config.prop.renderStorageUpgrades=ひきだしアップグレードを描画する
+storageDrawers.config.prop.creativeTabVanillaWoods=クリエイティブタブのVanilla木ひきだし
+storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=すべてのVanilla木のひきだしを表示する
+storageDrawers.config.prop.enabled=有効化
+storageDrawers.config.prop.enabled.tooltip=ゲーム内で使用するかどうか
+storageDrawers.config.prop.baseStorage=基本容量
+storageDrawers.config.prop.baseStorage.tooltip=各ひきだしに入るスタックの数
+storageDrawers.config.prop.recipeOutput=レシピ出力数
+storageDrawers.config.prop.recipeOutput.tooltip=一回のクラフトで入手できる数
+storageDrawers.config.prop.enableDrawerUI=ひきだしUI有効化
+storageDrawers.config.prop.enableDrawerUI.tooltip=アイテム個数やアップグレードを適用するUI
+storageDrawers.config.prop.enableSidedInput=アイテム入力有効化
+storageDrawers.config.prop.enableSidedInput.tooltip=他のブロックからひきだしにアイテムを入れられる
+storageDrawers.config.prop.enableSidedOutput=アイテム出力有効化
+storageDrawers.config.prop.enableSidedOutput.tooltip=ひきだしから他のブロックにアイテムを入れられる
+storageDrawers.config.prop.enableItemConversion=アイテム変換有効化
+storageDrawers.config.prop.enableItemConversion.tooltip=インゴットやブロックを相互変換する
+storageDrawers.config.prop.invertShift=Shift反転
+storageDrawers.config.prop.invertShift.tooltip=クリックとShift+クリックを反転する
+storageDrawers.config.prop.enableDebugLogging=デバッグログ有効化
+storageDrawers.config.prop.enableDebugLogging.tooltip=冗長なログを記録する
+
+storageDrawers.config.addons=アドオン
+storageDrawers.config.addons.tooltip=一般のアドオン設定をする
+
+storageDrawers.config.addons.showNEI=ブロックをNEIで表示
+storageDrawers.config.addons.showCreative=ブロックをクリエイティブのタブで表示
+storageDrawers.config.addons.separateTabs=クリエイティブのタブを分離
+storageDrawers.config.addons.tooltip=各アドオンは収納タンスのタブの代わりに自身のタブを使う
+
+storageDrawers.config.integration=互換性
+storageDrawers.config.integration.tooltip=他のmodとの互換性を設定
+
+storageDrawers.config.integration.enableAE2=Applied Energistics 2統合を有効化
+storageDrawers.config.integration.enableWaila=WAILA統合を有効化
+storageDrawers.config.integration.enableThaumcraft=Thaumcraft統合を有効化
+storageDrawers.config.integration.enableMineTweaker=MineTweaker統合を有効化
+storageDrawers.config.integration.enableRefinedRelocation=Refined Relocation統合を有効化
