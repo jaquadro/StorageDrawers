@@ -205,7 +205,7 @@ public class RenderHelperLL
                 maxX = state.renderMinX;
             }
 
-            if (face == RenderHelper.YNEG)
+            if (face == RenderHelper.ZNEG)
                 setFaceZNegUV(icon, minX, state.renderMinY, maxX, state.renderMaxY);
             else
                 setFaceZPosUV(icon, minX, state.renderMinY, maxX, state.renderMaxY);
@@ -309,7 +309,7 @@ public class RenderHelperLL
                 maxZ = state.renderMinZ;
             }
 
-            if (face == RenderHelper.YNEG)
+            if (face == RenderHelper.XNEG)
                 setFaceXNegUV(icon, minZ, state.renderMinY, maxZ, state.renderMaxY);
             else
                 setFaceXPosUV(icon, minZ, state.renderMinY, maxZ, state.renderMaxY);

@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.ModularBoxRenderer;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.PanelBoxRenderer;
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
+import com.jaquadro.minecraft.storagedrawers.util.RenderHelperState;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
@@ -34,14 +35,18 @@ public class CommonDrawerRenderer
         RenderHelper renderHelper = RenderHelper.instance;
         if (world != null)
             renderHelper.setColorAndBrightness(world, block, x, y, z);
+
         renderHelper.state.setRotateTransform(RenderHelper.ZNEG, direction);
+        renderHelper.state.setUVRotation(RenderHelper.YPOS, RenderHelperState.ROTATION_BY_FACE_FACE[RenderHelper.ZNEG][direction]);
 
         return renderHelper;
     }
 
     private void end () {
         RenderHelper renderHelper = RenderHelper.instance;
+
         renderHelper.state.clearRotateTransform();
+        renderHelper.state.clearUVRotation(RenderHelper.YPOS);
     }
 
     public void renderBasePass (IBlockAccess world, int x, int y, int z, BlockDrawersCustom block, int direction, IIcon iconSide, IIcon iconTrim, IIcon iconFront) {
@@ -73,6 +78,7 @@ public class CommonDrawerRenderer
             renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, iconTrim);
         }
         else if (block.drawerCount == 4) {
+            renderHelper.state.flipTexture = true;
             renderHelper.setRenderBounds(trimWidth, trimWidth, depth + trimDepth, unit7, unit7, 1);
             renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, iconFront);
             renderHelper.setRenderBounds(trimWidth, unit9, depth + trimDepth, unit7, 1 - trimWidth, 1);
@@ -81,6 +87,7 @@ public class CommonDrawerRenderer
             renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, iconFront);
             renderHelper.setRenderBounds(unit9, unit9, depth + trimDepth, 1 - trimWidth, 1 - trimWidth, 1);
             renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, iconFront);
+            renderHelper.state.flipTexture = false;
 
             renderHelper.setRenderBounds(trimWidth, unit7, depth + trimDepth, unit7, unit9, 1);
             renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, iconTrim);

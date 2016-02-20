@@ -50,10 +50,9 @@ public class DrawersItemRenderer implements IItemRenderer
 
         if (renderType == ItemRenderType.INVENTORY)
             GL11.glRotatef(90, 0, 1, 0);
-        if (renderType == ItemRenderType.ENTITY) {
+        if (renderType == ItemRenderType.ENTITY)
             GL11.glRotatef(180, 0, 1, 0);
-            GL11.glRotatef(180, 1, 0, 0);
-        }
+        
         if (renderType == ItemRenderType.INVENTORY || renderType == ItemRenderType.ENTITY)
             GL11.glTranslatef(block.halfDepth ? -.75f : -.5f, -.5f, -.5f);
 
