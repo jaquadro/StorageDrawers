@@ -52,7 +52,7 @@ public class DrawersItemRenderer implements IItemRenderer
             GL11.glRotatef(90, 0, 1, 0);
         if (renderType == ItemRenderType.ENTITY)
             GL11.glRotatef(180, 0, 1, 0);
-        
+
         if (renderType == ItemRenderType.INVENTORY || renderType == ItemRenderType.ENTITY)
             GL11.glTranslatef(block.halfDepth ? -.75f : -.5f, -.5f, -.5f);
 

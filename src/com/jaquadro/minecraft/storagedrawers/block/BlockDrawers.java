@@ -625,7 +625,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public ArrayList<ItemStack> getDrops (World world, int x, int y, int z, int metadata, int fortune) {
-        ItemStack dropStack = new ItemStack(Item.getItemFromBlock(this), 1, metadata);
+        ItemStack dropStack = getMainDrop(world, x, y, z, metadata);
 
         ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
         drops.add(dropStack);
@@ -637,12 +637,18 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         NBTTagCompound tiledata = new NBTTagCompound();
         tile.writeToNBT(tiledata);
 
-        NBTTagCompound data = new NBTTagCompound();
-        data.setTag("tile", tiledata);
+        NBTTagCompound data = dropStack.getTagCompound();
+        if (data == null)
+            data = new NBTTagCompound();
 
+        data.setTag("tile", tiledata);
         dropStack.setTagCompound(data);
 
         return drops;
+    }
+
+    protected ItemStack getMainDrop (World world, int x, int y, int z, int metadata) {
+        return new ItemStack(Item.getItemFromBlock(this), 1, metadata);
     }
 
     @Override
@@ -658,7 +664,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     public TileEntityDrawers getTileEntitySafe (World world, int x, int y, int z) {
         TileEntityDrawers tile = getTileEntity(world, x, y, z);
         if (tile == null) {
-            tile = (TileEntityDrawers)createNewTileEntity(world, world.getBlockMetadata(x, y, z));
+            tile = createNewTileEntity(world, world.getBlockMetadata(x, y, z));
             world.setTileEntity(x, y, z, tile);
         }
 

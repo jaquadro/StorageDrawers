@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
+import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -47,6 +48,15 @@ public class BlockDrawersCustom extends BlockDrawers
     public boolean canRenderInPass (int pass) {
         ClientProxy.renderPass = pass;
         return true;
+    }
+
+    @Override
+    protected ItemStack getMainDrop (World world, int x, int y, int z, int metadata) {
+        TileEntityDrawers tile = getTileEntity(world, x, y, z);
+        if (tile == null)
+            return ItemCustomDrawers.makeItemStack(this, 1, null, null, null);
+
+        return ItemCustomDrawers.makeItemStack(this, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront());
     }
 
     @Override
