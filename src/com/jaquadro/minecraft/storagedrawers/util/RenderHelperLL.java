@@ -96,6 +96,9 @@ public class RenderHelperLL
     }
 
     private void drawFaceY (int face, double x, double y, double z, IIcon icon) {
+        if (icon == null)
+            return;
+
         int rangeX = (int)(Math.ceil(state.renderMaxX + state.shiftU) - Math.floor(state.renderMinX + state.shiftU));
         int rangeZ = (int)(Math.ceil(state.renderMaxZ + state.shiftV) - Math.floor(state.renderMinZ + state.shiftV));
 
@@ -188,6 +191,9 @@ public class RenderHelperLL
     }
 
     private void drawFaceZ (int face, double x, double y, double z, IIcon icon) {
+        if (icon == null)
+            return;
+
         int rangeX = (int)(Math.ceil(state.renderMaxX + state.shiftU) - Math.floor(state.renderMinX + state.shiftU));
         int rangeY = (int)(Math.ceil(state.renderMaxY + state.shiftV) - Math.floor(state.renderMinY + state.shiftV));
 
@@ -292,6 +298,9 @@ public class RenderHelperLL
     }
 
     private void drawFaceX (int face, double x, double y, double z, IIcon icon) {
+        if (icon == null)
+            return;
+        
         int rangeZ = (int)(Math.ceil(state.renderMaxZ + state.shiftU) - Math.floor(state.renderMinZ + state.shiftU));
         int rangeY = (int)(Math.ceil(state.renderMaxY + state.shiftV) - Math.floor(state.renderMinY + state.shiftV));
 
