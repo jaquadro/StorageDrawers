@@ -84,7 +84,7 @@ public class DrawerItemHandler implements IItemHandler
             return null;
 
         IDrawer drawer = group.getDrawer(slot);
-        if (drawer.isEmpty())
+        if (drawer.isEmpty() || drawer.getStoredItemCount() == 0)
             return null;
 
         ItemStack returnStack = drawer.getStoredItemCopy();
