@@ -61,6 +61,8 @@ public class ContainerFramingTable extends Container
         hotbarSlots = new ArrayList<Slot>();
         for (int i = 0; i < 9; i++)
             hotbarSlots.add(addSlotToContainer(new Slot(inventory, i, InventoryX + i * 18, HotbarY)));
+
+        onCraftMatrixChanged(tableInventory);
     }
 
     @Override
@@ -78,7 +80,7 @@ public class ContainerFramingTable extends Container
         if (target != null) {
             Block block = Block.getBlockFromItem(target.getItem());
             if (block instanceof BlockDrawersCustom) {
-                if (matSide != null || (matTrim == null && matFront == null)) {
+                if (matSide != null) {
                     craftResult.setInventorySlotContents(0, ItemCustomDrawers.makeItemStack(block, 1, matSide, matTrim, matFront));
                     return;
                 }
