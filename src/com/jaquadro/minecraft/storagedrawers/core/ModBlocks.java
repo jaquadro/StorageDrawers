@@ -52,6 +52,12 @@ public class ModBlocks
         halfCustom2 = new BlockDrawersCustom("halfCustom2", 2, true);
         halfCustom4 = new BlockDrawersCustom("halfCustom4", 4, true);
 
+        fullCustom1.setConfigName("fullDrawers1");
+        fullCustom2.setConfigName("fullDrawers2");
+        fullCustom4.setConfigName("fullDrawers4");
+        halfCustom2.setConfigName("halfDrawers2");
+        halfCustom4.setConfigName("halfDrawers4");
+
         ConfigManager config = StorageDrawers.config;
 
         if (config.isBlockEnabled("fulldrawers1"))

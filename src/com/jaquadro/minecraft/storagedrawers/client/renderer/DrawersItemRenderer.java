@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.common.CommonDrawerRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
+import com.jaquadro.minecraft.storagedrawers.util.RenderHelperState;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
@@ -74,20 +75,7 @@ public class DrawersItemRenderer implements IItemRenderer
     private void renderBaseBlock (BlockDrawers block, ItemStack item, RenderBlocks renderer) {
         int side = 4;
 
-        switch (side - 2) {
-            case 0:
-                renderer.uvRotateTop = 3;
-                break;
-            case 1:
-                renderer.uvRotateTop = 0;
-                break;
-            case 2:
-                renderer.uvRotateTop = 1;
-                break;
-            case 3:
-                renderer.uvRotateTop = 2;
-                break;
-        }
+        RenderHelper.instance.state.setUVRotation(RenderHelper.YPOS, RenderHelperState.ROTATION_BY_FACE_FACE[RenderHelper.ZPOS][side]);
 
         boxRenderer.setUnit(block.getTrimWidth());
         boxRenderer.setColor(ModularBoxRenderer.COLOR_WHITE);
@@ -96,7 +84,7 @@ public class DrawersItemRenderer implements IItemRenderer
 
         renderExterior(block, 0, 0, 0,side, renderer);
 
-        renderer.uvRotateTop = 0;
+        RenderHelper.instance.state.clearUVRotation(RenderHelper.YPOS);
 
         boxRenderer.setUnit(0);
         boxRenderer.setInteriorIcon(block.getIcon(side, item.getItemDamage()), ForgeDirection.OPPOSITES[side]);
@@ -165,7 +153,7 @@ public class DrawersItemRenderer implements IItemRenderer
                 break;
         }
 
-        boxRenderer.renderExterior(renderer, block, x, y, z, xMin, 0, zMin, xMax, 1, zMax, 0, ModularBoxRenderer.sideCut[side]);
+        boxRenderer.renderExterior(renderer.blockAccess, block, x, y, z, xMin, 0, zMin, xMax, 1, zMax, 0, ModularBoxRenderer.sideCut[side]);
     }
 
     private void renderInterior (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
@@ -192,7 +180,7 @@ public class DrawersItemRenderer implements IItemRenderer
                 break;
         }
 
-        boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit, zMin, xMax, 1 - unit, zMax, 0, ModularBoxRenderer.sideCut[side]);
+        boxRenderer.renderInterior(renderer.blockAccess, block, x, y, z, xMin, unit, zMin, xMax, 1 - unit, zMax, 0, ModularBoxRenderer.sideCut[side]);
     }
 
     private RenderBlocks getRenderer (Object[] data) {

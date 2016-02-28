@@ -87,7 +87,6 @@ public class CommonDrawerRenderer
             renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, iconFront);
             renderHelper.setRenderBounds(unit9, unit9, depth + trimDepth, 1 - trimWidth, 1 - trimWidth, 1);
             renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, iconFront);
-            renderHelper.state.flipTexture = false;
 
             renderHelper.setRenderBounds(trimWidth, unit7, depth + trimDepth, unit7, unit9, 1);
             renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, iconTrim);
@@ -99,6 +98,7 @@ public class CommonDrawerRenderer
             renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, iconTrim);
             renderHelper.setRenderBounds(unit7, unit7, depth + trimDepth, unit9, unit9, 1);
             renderHelper.renderFace(RenderHelper.ZNEG, world, block, x, y, z, iconTrim);
+            renderHelper.state.flipTexture = false;
         }
 
         end();

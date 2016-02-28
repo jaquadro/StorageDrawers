@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
+import com.jaquadro.minecraft.storagedrawers.util.RenderHelperState;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -19,56 +20,11 @@ import org.lwjgl.opengl.GL11;
 public class DrawersRenderer implements ISimpleBlockRenderingHandler
 {
     private static final double unit = .0625f;
-
-    private RenderHelper renderHelper = new RenderHelper();
     private ModularBoxRenderer boxRenderer = new ModularBoxRenderer();
-
-    private double[] boxCoord = new double[6];
 
     @Override
     public void renderInventoryBlock (Block block, int metadata, int modelId, RenderBlocks renderer) {
-        if (!(block instanceof BlockDrawers))
-            return;
-
-        renderInventoryBlock((BlockDrawers) block, metadata, modelId, renderer);
-    }
-
-    private void renderInventoryBlock (BlockDrawers block, int metadata, int modelId, RenderBlocks renderer) {
-        int side = 4;
-
-        boxRenderer.setUnit(unit);
-        boxRenderer.setColor(ModularBoxRenderer.COLOR_WHITE);
-        for (int i = 0; i < 6; i++)
-            boxRenderer.setIcon(block.getIcon(i, metadata), i);
-
-        GL11.glRotatef(90, 0, 1, 0);
-        GL11.glTranslatef(-.5f, -.5f, -.5f);
-
-        switch (side - 2) {
-            case 0:
-                renderer.uvRotateTop = 3;
-                break;
-            case 1:
-                renderer.uvRotateTop = 0;
-                break;
-            case 2:
-                renderer.uvRotateTop = 1;
-                break;
-            case 3:
-                renderer.uvRotateTop = 2;
-                break;
-        }
-
-        renderExterior(block, 0, 0, 0,side, renderer);
-
-        renderer.uvRotateTop = 0;
-
-        boxRenderer.setUnit(0);
-        boxRenderer.setInteriorIcon(block.getIcon(side, metadata), ForgeDirection.OPPOSITES[side]);
-
-        renderInterior(block, 0, 0, 0, side, renderer);
-
-        GL11.glTranslatef(.5f, .5f, .5f);
+        return;
     }
 
     @Override
@@ -102,20 +58,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         int side = tile.getDirection();
         int meta = world.getBlockMetadata(x, y, z);
 
-        switch (side - 2) {
-            case 0:
-                renderer.uvRotateTop = 3;
-                break;
-            case 1:
-                renderer.uvRotateTop = 0;
-                break;
-            case 2:
-                renderer.uvRotateTop = 1;
-                break;
-            case 3:
-                renderer.uvRotateTop = 2;
-                break;
-        }
+        RenderHelper.instance.state.setUVRotation(RenderHelper.YPOS, RenderHelperState.ROTATION_BY_FACE_FACE[RenderHelper.ZNEG][side]);
 
         boxRenderer.setUnit(block.getTrimWidth());
         boxRenderer.setColor(ModularBoxRenderer.COLOR_WHITE);
@@ -127,7 +70,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         renderExterior(block, x, y, z, side, renderer);
 
-        renderer.uvRotateTop = 0;
+        RenderHelper.instance.state.clearUVRotation(RenderHelper.YPOS);
 
         int maxStorageLevel = tile.getMaxStorageLevel();
         if (maxStorageLevel > 1 && StorageDrawers.config.cache.renderStorageUpgrades && !tile.shouldHideUpgrades()) {
@@ -266,10 +209,10 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
             float subX = xywh[0] + (xywh[2] - w) / 2;
             float subY = xywh[1] + (xywh[3] - h) / 2;
 
-            setCoord(boxCoord, subX * unit, subY * unit, (depth - depthAdj) * unit, (subX + w) * unit, (subY + h) * unit, (depth - depthAdj + .05) * unit, side);
-
-            boxRenderer.setExteriorIcon(icon);
-            boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
+            RenderHelper.instance.setRenderBounds(subX * unit, subY * unit, 0, (subX + w) * unit, (subY + h) * unit, (depth - depthAdj + .05) * unit);
+            RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
+            RenderHelper.instance.renderFace(RenderHelper.ZPOS, renderer.blockAccess, block, x, y, z, icon);
+            RenderHelper.instance.state.clearRotateTransform();
         }
     }
 
@@ -300,6 +243,8 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         IIcon iconOff = block.getIndicatorIcon(count, false);
         IIcon iconOn = block.getIndicatorIcon(count, true);
 
+        boxRenderer.setColor(ModularBoxRenderer.COLOR_WHITE);
+
         for (int i = 0; i < count; i++) {
             IDrawer drawer = tile.getDrawer(i);
             if (drawer == null)
@@ -307,34 +252,35 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
             float[] xywh = xywhSet[i];
 
-            setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .05) * unit, side);
-
-            boxRenderer.setExteriorIcon(iconOff);
-            boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
+            RenderHelper.instance.setRenderBounds(xywh[0] * unit, xywh[1] * unit, 0, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .05) * unit);
+            RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
+            RenderHelper.instance.renderFace(RenderHelper.ZPOS, renderer.blockAccess, block, x, y, z, iconOff);
+            RenderHelper.instance.state.clearRotateTransform();
 
             if (level == 1 && drawer.getMaxCapacity() > 0 && drawer.getRemainingCapacity() == 0) {
-                setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .06) * unit, side);
-
-                boxRenderer.setExteriorIcon(iconOn);
-                boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
+                RenderHelper.instance.state.setColorMult(1, 1, .9f, 1);
+                RenderHelper.instance.setRenderBounds(xywh[0] * unit, xywh[1] * unit, 0, (xywh[0] + xywh[2]) * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .06) * unit);
+                RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
+                RenderHelper.instance.renderFace(RenderHelper.ZPOS, renderer.blockAccess, block, x, y, z, iconOn);
+                RenderHelper.instance.state.clearRotateTransform();
+                RenderHelper.instance.state.resetColorMult();
             }
             else if (level >= 2) {
-                double indStart = xywh[0] + block.getIndStart() / unit;
-                double indEnd = xywh[0] + block.getIndEnd() / unit;
-                double indCur = getIndEnd(block, tile, i, indStart, (block.getIndEnd() - block.getIndStart()) / unit);
+                double indXStart = xywh[0] + block.getIndStart() / unit;
+                double indXEnd = xywh[0] + block.getIndEnd() / unit;
+                double indXCur = (block.getIndSteps() == 0) ? indXEnd : getIndEnd(block, tile, i, indXStart, (block.getIndEnd() - block.getIndStart()) / unit);
 
-                if (indCur > indStart) {
-                    if (indCur >= indEnd)
-                        indCur = xywh[0] + xywh[2];
+                double indYStart = xywh[1];
+                double indYEnd = xywh[1] + xywh[3];
+                double indYCur = indYEnd;
 
-                    setCoord(boxCoord, xywh[0] * unit, xywh[1] * unit, (depth - depthAdj) * unit, indCur * unit, (xywh[1] + xywh[3]) * unit, (depth - depthAdj + .06) * unit, side);
-                    if (side == 2 || side == 5)
-                        renderer.flipTexture = true;
-
-                    boxRenderer.setExteriorIcon(iconOn);
-                    boxRenderer.renderExterior(renderer, block, x, y, z, boxCoord[0], boxCoord[1], boxCoord[2], boxCoord[3], boxCoord[4], boxCoord[5], 0, cut[side - 2]);
-
-                    renderer.flipTexture = false;
+                if (indXCur > indXStart) {
+                    RenderHelper.instance.state.setColorMult(1, 1, .9f, 1);
+                    RenderHelper.instance.setRenderBounds(indXStart * unit, indYStart * unit, 0, indXCur * unit, indYCur * unit, (depth - depthAdj + .06) * unit);
+                    RenderHelper.instance.state.setRotateTransform(RenderHelper.ZPOS, side);
+                    RenderHelper.instance.renderFace(RenderHelper.ZPOS, renderer.blockAccess, block, x, y, z, iconOn);
+                    RenderHelper.instance.state.clearRotateTransform();
+                    RenderHelper.instance.state.resetColorMult();
                 }
             }
         }
@@ -354,56 +300,6 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         float fillAmt = (float)((double)step * count / cap) / step;
 
         return x + (w * fillAmt);
-    }
-
-    private void setCoord (double[] coords, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
-        coords[0] = xMin;
-        coords[1] = yMin;
-        coords[2] = zMin;
-        coords[3] = xMax;
-        coords[4] = yMax;
-        coords[5] = zMax;
-    }
-
-    private void setCoord (double[] coords, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, int side) {
-        setCoord(coords, xMin, yMin, zMin, xMax, yMax, zMax);
-        transformCoord(coords, side);
-    }
-
-    private void transformCoord (double[] coords, int side) {
-        double tmpX, tmpZ;
-
-        switch (side) {
-            case 2:
-                tmpX = coords[0];
-                coords[0] = 1 - coords[3];
-                coords[3] = 1 - tmpX;
-
-                tmpZ = coords[2];
-                coords[2] = 1 - coords[5];
-                coords[5] = 1 - tmpZ;
-                return;
-            case 3:
-                return;
-            case 4:
-                tmpX = coords[0];
-                tmpZ = coords[3];
-                coords[0] = 1 - coords[5];
-                coords[3] = 1 - coords[2];
-
-                coords[2] = tmpX;
-                coords[5] = tmpZ;
-                return;
-            case 5:
-                tmpX = coords[0];
-                tmpZ = coords[3];
-                coords[0] = coords[2];
-                coords[3] = coords[5];
-
-                coords[2] = 1 - tmpZ;
-                coords[5] = 1 - tmpX;
-                return;
-        }
     }
 
     private void renderExterior (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
@@ -429,7 +325,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
                 break;
         }
 
-        boxRenderer.renderExterior(renderer, block, x, y, z, xMin, 0, zMin, xMax, 1, zMax, 0, ModularBoxRenderer.sideCut[side]);
+        boxRenderer.renderExterior(renderer.blockAccess, block, x, y, z, xMin, 0, zMin, xMax, 1, zMax, 0, ModularBoxRenderer.sideCut[side]);
     }
 
     private void renderInterior (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer) {
@@ -456,7 +352,7 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
                 break;
         }
 
-        boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit, zMin, xMax, 1 - unit, zMax, 0, ModularBoxRenderer.sideCut[side]);
+        boxRenderer.renderInterior(renderer.blockAccess, block, x, y, z, xMin, unit, zMin, xMax, 1 - unit, zMax, 0, ModularBoxRenderer.sideCut[side]);
     }
 
     @Override
