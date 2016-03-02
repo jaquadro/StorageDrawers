@@ -6,6 +6,7 @@ storageDrawers.container.compDrawers=压缩抽屉
 storageDrawers.container.upgrades=升级组件
 storageDrawers.container.controller=抽屉管理器
 storageDrawers.container.unboundSlave=未连接的传动方块
+storageDrawers.container.framingTable=成型台
 
 storagedrawers.msg.maxUpgrades=这个抽屉已无法容纳更多的升级组件.
 
@@ -27,11 +28,15 @@ item.storagedrawers.upgradeVoid.description=销毁存储超过上限的物品。
 item.storagedrawers.upgradeCreative.store.name=创造模式容量升级
 item.storagedrawers.upgradeCreative.store.description=接近无限的存储容量。
 item.storagedrawers.upgradeCreative.vend.name=Creative Vending Upgrade
-item.storagedrawers.upgradeCreative.vend.description=Unlimited item withdrawal
+item.storagedrawers.upgradeCreative.vend.description=能无限的取出被存入的物品。
 item.storagedrawers.upgradeSorting.name=分拣升级
 item.storagedrawers.upgradeSorting.description=将抽屉升级为分拣抽屉。
 item.storagedrawers.shroudKey.name=屏蔽钥匙
 item.storagedrawers.shroudKey.description=隐藏或显示抽屉上的物品图标。
+item.storagedrawers.personalKey.default.name=私人钥匙
+item.storagedrawers.personalKey.default.description=禁止其他玩家访问抽屉
+item.storagedrawers.personalKey.cofh.name=私人钥匙 (CoFH)
+item.storagedrawers.personalKey.cofh.description=禁止其他玩家访问抽屉
 item.storagedrawers.tape.name=打包带
 item.storagedrawers.tape.description=捆扎封装抽屉以便带走。
 
@@ -71,9 +76,16 @@ tile.halfDrawers4.jungle.name=小型丛林木抽屉(2x2)
 tile.halfDrawers4.acacia.name=小型金合欢木抽屉(2x2)
 tile.halfDrawers4.big_oak.name=小型深色橡木抽屉(2x2)
 
+tile.fullCustom1.name=自定义抽屉
+tile.fullCustom2.name=自定义抽屉(1x2)
+tile.fullCustom4.name=自定义抽屉(2x2)
+tile.halfCustom2.name=小型自定义抽屉(1x2)
+tile.halfCustom4.name=小型自定义抽屉(2x2)
+
 tile.compDrawers.name=压缩抽屉
 tile.drawerController.name=抽屉管理器
 tile.controllerSlave.name=管理器传动方块
+tile.framingTable.name=成型台
 
 tile.trim.oak.name=橡木桥接方块
 tile.trim.spruce.name=云杉木桥接方块
@@ -92,9 +104,12 @@ storageDrawers.controllerSlave.description=为抽屉管理器扩展存储连接�
 storageDrawers.waila.empty=<空>
 storageDrawers.waila.level=级别：%s
 storageDrawers.waila.drawer=#%s：%s
+storageDrawers.waila.limit=组上限: %s (x%s)
+storageDrawers.waila.nolimit=组上限: ∞
 storageDrawers.waila.locked=锁定
 storageDrawers.waila.void=清空
 storageDrawers.waila.sorting=分拣
+storageDrawers.waila.protected=受保护
 
 # Configruation/配置
 storageDrawers.config.title=储物抽屉-模组配置
@@ -130,6 +145,7 @@ storageDrawers.config.prop.enableIndicatorUpgrades=允许状态显示升级
 storageDrawers.config.prop.enableStorageUpgrades=允许容量升级
 storageDrawers.config.prop.enableLockUpgrades=允许抽屉钥匙
 storageDrawers.config.prop.enableShroudUpgrades=允许屏蔽钥匙
+storageDrawers.config.prop.enablePersonalUpgrades=允许访问保护
 storageDrawers.config.prop.enableVoidUpgrades=允许清空升级
 storageDrawers.config.prop.enableCreativeUpgrades=允许创造模式专用升级
 storageDrawers.config.prop.enableSortingUpgrades=允许分拣升级
@@ -154,7 +170,7 @@ storageDrawers.config.prop.enableItemConversion.tooltip=使存入抽屉的物品
 storageDrawers.config.prop.enableFallbackRecipes=允许缺省合成
 storageDrawers.config.prop.enableFallbackRecipes.tooltip=任何有效木板混用都可以合成橡木材质的抽屉。
 storageDrawers.config.prop.invertShift=Shift反转设定
-storageDrawers.config.prop.invertShift.tooltip=对换shift与shift单击的组合键作用。
+storageDrawers.config.prop.invertShift.tooltip=对换单击与shift单击的组合键作用。
 storageDrawers.config.prop.enableDebugLogging=允许调试记录
 storageDrawers.config.prop.enableDebugLogging.tooltip=允许向日志文件中输入本模组的更多信息。
 storageDrawers.config.prop.enableTape=允许打包带
@@ -163,6 +179,8 @@ storageDrawers.config.prop.wailaStackRemainder=物品数量显示
 storageDrawers.config.prop.wailaStackRemainder.tooltip=改变高亮显示增强(WAILA)中物品数量的显示方式。
 storageDrawers.config.prop.controllerRange=管理器管理范围
 storageDrawers.config.prop.controllerRange.tooltip=抽屉管理器检测抽屉网络的范围。
+storageDrawers.config.prop.enableFramedDrawers=允许自定义抽屉
+storageDrawers.config.prop.enableFramedDrawers.tooltip=自定义抽屉的材质。
 
 storageDrawers.config.addons=扩展包
 storageDrawers.config.addons.tooltip=储物抽屉扩展包的全局设定。
@@ -180,3 +198,5 @@ storageDrawers.config.integration.enableWaila=允许关联高亮显示增强(WAI
 storageDrawers.config.integration.enableThaumcraft=允许关联神秘时代
 storageDrawers.config.integration.enableMineTweaker=允许关联MineTweaker
 storageDrawers.config.integration.enableRefinedRelocation=允许关联精准重定位
+storageDrawers.config.integration.enableThermalExpansion=允许关联热力膨胀
+storageDrawers.config.integration.enableThermalFoundation=允许关联热力基础
