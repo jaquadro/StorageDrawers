@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IPriorityGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
@@ -51,6 +52,9 @@ public class DrawerItemHandler implements IItemHandler
             return stack;
 
         int availableCount = drawer.isEmpty() ? drawer.getMaxCapacity(stack) : drawer.getRemainingCapacity();
+        if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
+            availableCount = Integer.MAX_VALUE;
+
         int insertCount = Math.min(stack.stackSize, availableCount);
         int remainder = stack.stackSize - insertCount;
 
