@@ -43,8 +43,8 @@ public class StorageRenderItem extends RenderItem
     }
 
     @Override
-    public void func_181564_a (ItemStack stack, ItemCameraTransforms.TransformType transformType) {
-        parent.func_181564_a(stack, transformType);
+    public void renderItem (ItemStack stack, ItemCameraTransforms.TransformType transformType) {
+        parent.renderItem(stack, transformType);
     }
 
     @Override
