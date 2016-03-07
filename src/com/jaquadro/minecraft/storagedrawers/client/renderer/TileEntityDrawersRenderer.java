@@ -308,7 +308,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         ChamRender.instance.setRenderBounds(0.46875, 0.9375, 0, 0.53125, 1, depth);
         ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
-        ChamRender.instance.renderPartialFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconLock, 0, 0, 1, 1, 1, 1, 1);
+        ChamRender.instance.renderPartialFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconLock, 0, 0, 1, 1, 1, 1, 1);
         ChamRender.instance.state.clearRotateTransform();
 
         GlStateManager.disablePolygonOffset();
@@ -328,7 +328,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         ChamRender.instance.setRenderBounds(1 - .0625, 0.9375, 0, 1, 1, depth);
         ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
-        ChamRender.instance.renderPartialFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconVoid, 0, 0, 1, 1, 1, 1, 1);
+        ChamRender.instance.renderPartialFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconVoid, 0, 0, 1, 1, 1, 1, 1);
         ChamRender.instance.state.clearRotateTransform();
 
         GlStateManager.disablePolygonOffset();
@@ -365,7 +365,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             ChamRender.instance.setRenderBounds(xunit - size / 2, (yunit - .25) * unit + size / 2, 0,
                 xunit - size / 2 + size, (yunit - .25) * unit + size / 2 + size, depth - frontDepth);
             ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
-            ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconCover, 1, 1, 1);
+            ChamRender.instance.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconCover, 1, 1, 1);
             ChamRender.instance.state.clearRotateTransform();
         }
 
@@ -401,7 +401,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
             ChamRender.instance.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
                 (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth);
             ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
-            ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconOff, 1, 1, 1);
+            ChamRender.instance.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconOff, 1, 1, 1);
             ChamRender.instance.state.clearRotateTransform();
 
             GlStateManager.doPolygonOffset(-1, -10);
@@ -410,7 +410,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                 ChamRender.instance.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
                     (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth);
                 ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
-                ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
+                ChamRender.instance.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
                 ChamRender.instance.state.clearRotateTransform();
             }
             else if (level >= 2) {
@@ -432,7 +432,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
                     ChamRender.instance.setRenderBounds(indXStart * unit, indYStart * unit, 0,
                         indXCur * unit, indYCur * unit, depth - frontDepth);
                     ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
-                    ChamRender.instance.renderFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
+                    ChamRender.instance.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
                     ChamRender.instance.state.clearRotateTransform();
                 }
             }
@@ -455,7 +455,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         ChamRender.instance.setRenderBounds(0, 0, 0, 1, 1, depth);
         ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
-        ChamRender.instance.renderPartialFace(ChamRender.ZPOS, null, blockState, BlockPos.ORIGIN, iconTape, 0, 0, 1, 1, 1, 1, 1);
+        ChamRender.instance.renderPartialFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconTape, 0, 0, 1, 1, 1, 1, 1);
         ChamRender.instance.state.clearRotateTransform();
 
         GlStateManager.disablePolygonOffset();

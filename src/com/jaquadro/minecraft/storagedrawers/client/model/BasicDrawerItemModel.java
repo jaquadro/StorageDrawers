@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
-import com.google.common.primitives.Ints;
 import com.jaquadro.minecraft.chameleon.Chameleon;
+import com.jaquadro.minecraft.chameleon.render.ChamRender;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
@@ -10,12 +10,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.ISmartItemModel;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,17 +48,17 @@ public class BasicDrawerItemModel implements ISmartItemModel
 
     @Override
     public List<BakedQuad> getFaceQuads (EnumFacing facing) {
-        return baseModel.getFaceQuads(facing);
+        if (!sealed || !(block instanceof BlockDrawers))
+            return baseModel.getFaceQuads(facing);
+
+        List<BakedQuad> combined = new ArrayList<BakedQuad>(baseModel.getFaceQuads(facing));
+        combined.addAll(createSealedQuad(ModBlocks.basicDrawers));
+        return combined;
     }
 
     @Override
     public List<BakedQuad> getGeneralQuads () {
-        if (!sealed || !(block instanceof BlockDrawers))
             return baseModel.getGeneralQuads();
-
-        List<BakedQuad> combined = new ArrayList<BakedQuad>(baseModel.getGeneralQuads());
-        combined.add(createSealedQuad(ModBlocks.basicDrawers, 0));
-        return combined;
     }
 
     @Override
@@ -86,29 +86,14 @@ public class BasicDrawerItemModel implements ISmartItemModel
         return baseModel.getItemCameraTransforms();
     }
 
-    private BakedQuad createSealedQuad (BlockDrawers block, int itemRenderLayer) {
-        IBlockState blockState = block.getStateFromMeta(meta);
-        float depth = block.isHalfDepth(blockState) ? .5f : 1f;
+    private List<BakedQuad> createSealedQuad (BlockDrawers block) {
+        IBlockState blockState = block.getStateFromMeta(0);
+        float depth = ModBlocks.basicDrawers.isHalfDepth(blockState) ? .5f : 1f;
         TextureAtlasSprite iconTape = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconTapeCover);
 
-        return new BakedQuad(Ints.concat(
-            vertexToInts(0, 0, 1 - depth, Color.WHITE.getRGB(), iconTape, 16, 16),
-            vertexToInts(0, 1, 1 - depth, Color.WHITE.getRGB(), iconTape, 16, 0),
-            vertexToInts(1, 1, 1 - depth, Color.WHITE.getRGB(), iconTape, 0, 0),
-            vertexToInts(1, 0, 1 - depth, Color.WHITE.getRGB(), iconTape, 0, 16)
-        ), itemRenderLayer, EnumFacing.NORTH);
-    }
-
-    private int[] vertexToInts(float x, float y, float z, int color, TextureAtlasSprite texture, float u, float v)
-    {
-        return new int[] {
-            Float.floatToRawIntBits(x),
-            Float.floatToRawIntBits(y),
-            Float.floatToRawIntBits(z),
-            color,
-            Float.floatToRawIntBits(texture.getInterpolatedU(u)),
-            Float.floatToRawIntBits(texture.getInterpolatedV(v)),
-            0
-        };
+        ChamRender.instance.startBaking(DefaultVertexFormats.ITEM, 0);
+        ChamRender.instance.setRenderBounds(0, 0, .995f - depth, 1, 1, 1);
+        ChamRender.instance.bakeFace(ChamRender.FACE_ZNEG, blockState, iconTape);
+        return ChamRender.instance.stopBaking();
     }
 }
