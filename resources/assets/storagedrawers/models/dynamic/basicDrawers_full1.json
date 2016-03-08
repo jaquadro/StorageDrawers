@@ -6,6 +6,7 @@
         "statusActiveFrom": [ 6.25, 1 ],
         "statusActiveTo": [ 9.75, 2 ],
         "statusActiveSteps": [ 14, 0 ],
+        "iconSize": [ 4, 4 ],
         "textures": {
             "level1Off": "StorageDrawers:blocks/indicator/indicator_1_off",
             "level1On": "StorageDrawers:blocks/indicator/indicator_1_on",

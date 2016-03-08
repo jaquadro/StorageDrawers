@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.chameleon.block.properties.UnlistedTileEntity;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
@@ -21,9 +22,7 @@ import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.*;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -42,6 +41,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -69,6 +69,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     public static final PropertyEnum BLOCK = PropertyEnum.create("block", EnumBasicDrawer.class);
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     public static final PropertyEnum VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
+
+    public static final IUnlistedProperty<TileEntityDrawers> TILE = UnlistedTileEntity.create(TileEntityDrawers.class);
 
     @SideOnly(Side.CLIENT)
     private StatusModelData[] statusInfo;
@@ -184,6 +186,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @Override
     public int getRenderType () {
         return 3;
+    }
+
+    @Override
+    public EnumWorldBlockLayer getBlockLayer () {
+        return EnumWorldBlockLayer.CUTOUT_MIPPED;
     }
 
     @Override
@@ -645,7 +652,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     protected BlockState createBlockState () {
-        return new ExtendedBlockState(this, new IProperty[] { BLOCK, VARIANT, FACING }, new IUnlistedProperty[0]);
+        return new ExtendedBlockState(this, new IProperty[] { BLOCK, VARIANT, FACING }, new IUnlistedProperty[] { TILE });
     }
 
     @Override
@@ -660,7 +667,22 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
         BlockPlanks.EnumType woodType = translateMaterial(tile.getMaterialOrDefault());
 
-        return state.withProperty(BLOCK, state.getValue(BLOCK)).withProperty(FACING, facing).withProperty(VARIANT, woodType);
+        return state.withProperty(BLOCK, state.getValue(BLOCK))
+            .withProperty(FACING, facing)
+            .withProperty(VARIANT, woodType);
+    }
+
+    @Override
+    public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
+        state = getActualState(state, world, pos);
+        if (!(state instanceof IExtendedBlockState))
+            return state;
+
+        TileEntityDrawers tile = getTileEntity(world, pos);
+        if (tile == null)
+            return state;
+
+        return ((IExtendedBlockState)state).withProperty(TILE, tile);
     }
 
     private BlockPlanks.EnumType translateMaterial (String materal) {

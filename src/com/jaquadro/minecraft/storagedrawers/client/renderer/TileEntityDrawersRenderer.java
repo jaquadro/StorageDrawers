@@ -280,10 +280,10 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         IBlockState blockState = tile.getWorld().getBlockState(tile.getPos());
 
-        renderLock(blockState, tile.getDirection(), tile.isLocked(LockAttribute.LOCK_POPULATED), tile.getOwner() != null);
+        //renderLock(blockState, tile.getDirection(), tile.isLocked(LockAttribute.LOCK_POPULATED), tile.getOwner() != null);
         renderVoid(blockState, tile.getDirection(), tile.isVoid());
         renderIndicator(tile, blockState, tile.getDirection(), tile.getEffectiveStatusLevel());
-        renderShroud(tile, blockState, tile.getDirection(), tile.isShrouded());
+        //renderShroud(tile, blockState, tile.getDirection(), tile.isShrouded());
         renderTape(tile, blockState, tile.getDirection(), tile.isSealed());
     }
 

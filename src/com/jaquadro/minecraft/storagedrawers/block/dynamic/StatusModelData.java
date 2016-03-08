@@ -67,6 +67,7 @@ public class StatusModelData
 
         private Area2D statusArea;
         private Area2D statusActiveArea;
+        private Area2D iconArea;
 
         private int activeStepsX;
         private int activeStepsY;
@@ -77,6 +78,7 @@ public class StatusModelData
 
             statusArea = readArea(json, "statusAreaFrom", "statusAreaTo");
             statusActiveArea = readArea(json, "statusActiveFrom", "statusActiveTo");
+            iconArea = readIconArea(json, "iconSize", statusArea);
 
             if (json.has("statusActiveSteps")) {
                 JsonArray arr = json.getAsJsonArray("statusActiveSteps");
@@ -105,6 +107,10 @@ public class StatusModelData
 
         public Area2D getStatusActiveArea () {
             return statusActiveArea;
+        }
+
+        public Area2D getIconArea () {
+            return iconArea;
         }
 
         public int getActiveStepsX () {
@@ -141,28 +147,35 @@ public class StatusModelData
             if (object == null)
                 return Area2D.EMPTY;
 
-            double startX = 0;
-            double startY = 0;
-            double stopX = 0;
-            double stopY = 0;
+            double[] start = readDoublePair(object, keyStart);
+            double[] stop = readDoublePair(object, keyStop);
 
-            if (object.has(keyStart)) {
-                JsonArray arr = object.getAsJsonArray(keyStart);
+            return Area2D.From(start[0], start[1], stop[0], stop[1]);
+        }
+
+        private Area2D readIconArea (JsonObject object, String key, Area2D bound) {
+            if (object == null)
+                return Area2D.EMPTY;
+
+            double[] size = readDoublePair(object, key);
+            double startX = bound.getX() + bound.getWidth() / 2 - size[0] / 2;
+            double startY = bound.getY() + bound.getHeight() / 2 - size[1] / 2;
+
+            return Area2D.From(startX, startY, startX + size[0], startY + size[1]);
+        }
+
+        private double[] readDoublePair (JsonObject object, String key) {
+            double[] size = new double[] { 0, 0 };
+
+            if (object.has(key)) {
+                JsonArray arr = object.getAsJsonArray(key);
                 if (arr != null && arr.size() == 2) {
-                    startX = arr.get(0).getAsDouble();
-                    startY = arr.get(1).getAsDouble();
+                    size[0] = arr.get(0).getAsDouble();
+                    size[1] = arr.get(1).getAsDouble();
                 }
             }
 
-            if (object.has(keyStop)) {
-                JsonArray arr = object.getAsJsonArray(keyStop);
-                if (arr != null && arr.size() == 2) {
-                    stopX = arr.get(0).getAsDouble();
-                    stopY = arr.get(1).getAsDouble();
-                }
-            }
-
-            return Area2D.From(startX, startY, stopX, stopY);
+            return size;
         }
     }
 }

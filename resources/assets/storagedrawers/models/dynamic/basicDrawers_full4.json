@@ -6,6 +6,7 @@
         "statusActiveFrom": [ 2.25, 9 ],
         "statusActiveTo": [ 5.75, 10 ],
         "statusActiveSteps": [ 14, 0 ],
+        "iconSize": [ 2, 2 ],
         "textures": {
             "level1Off": "StorageDrawers:blocks/indicator/indicator_4_off",
             "level1On": "StorageDrawers:blocks/indicator/indicator_4_on",
@@ -18,6 +19,7 @@
         "statusActiveFrom": [ 2.25, 1 ],
         "statusActiveTo": [ 5.75, 2 ],
         "statusActiveSteps": [ 14, 0 ],
+        "iconSize": [ 2, 2 ],
         "textures": {
             "level1Off": "StorageDrawers:blocks/indicator/indicator_4_off",
             "level1On": "StorageDrawers:blocks/indicator/indicator_4_on",
@@ -30,6 +32,7 @@
         "statusActiveFrom": [ 10.25, 9 ],
         "statusActiveTo": [ 13.75, 10 ],
         "statusActiveSteps": [ 14, 0 ],
+        "iconSize": [ 2, 2 ],
         "textures": {
             "level1Off": "StorageDrawers:blocks/indicator/indicator_4_off",
             "level1On": "StorageDrawers:blocks/indicator/indicator_4_on",
@@ -42,6 +45,7 @@
         "statusActiveFrom": [ 10.25, 1 ],
         "statusActiveTo": [ 13.75, 2 ],
         "statusActiveSteps": [ 14, 0 ],
+        "iconSize": [ 2, 2 ],
         "textures": {
             "level1Off": "StorageDrawers:blocks/indicator/indicator_4_off",
             "level1On": "StorageDrawers:blocks/indicator/indicator_4_on",
