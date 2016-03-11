@@ -1,8 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGeometry;
 import net.minecraft.util.IStringSerializable;
 
-public enum EnumCompDrawer implements IStringSerializable
+public enum EnumCompDrawer implements IDrawerGeometry, IStringSerializable
 {
     OPEN1(0, 1, "open1"),
     OPEN2(1, 2, "open2"),
@@ -18,6 +19,16 @@ public enum EnumCompDrawer implements IStringSerializable
         this.meta = meta;
         this.name = name;
         this.openSlots = openSlots;
+    }
+
+    @Override
+    public boolean isHalfDepth () {
+        return false;
+    }
+
+    @Override
+    public int getDrawerCount () {
+        return 3;
     }
 
     public int getMetadata () {

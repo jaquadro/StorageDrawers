@@ -60,7 +60,7 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     @SideOnly(Side.CLIENT)
     public void initDynamic () {
         ResourceLocation location = new ResourceLocation(StorageDrawers.MOD_ID + ":models/dynamic/compDrawers.json");
-        statusInfo = new StatusModelData(1, location);
+        statusInfo = new StatusModelData(3, location);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
 
     @Override
     protected BlockState createBlockState () {
-        return new ExtendedBlockState(this, new IProperty[] { SLOTS, FACING }, new IUnlistedProperty[0]);
+        return new ExtendedBlockState(this, new IProperty[] { SLOTS, FACING }, new IUnlistedProperty[] { TILE });
     }
 
     @Override

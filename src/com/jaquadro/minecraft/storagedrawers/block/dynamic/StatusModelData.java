@@ -67,6 +67,7 @@ public class StatusModelData
 
         private Area2D statusArea;
         private Area2D statusActiveArea;
+        private Area2D slotArea;
         private Area2D iconArea;
 
         private int activeStepsX;
@@ -78,7 +79,10 @@ public class StatusModelData
 
             statusArea = readArea(json, "statusAreaFrom", "statusAreaTo");
             statusActiveArea = readArea(json, "statusActiveFrom", "statusActiveTo");
-            iconArea = readIconArea(json, "iconSize", statusArea);
+            slotArea = readArea(json, "slotAreaFrom", "slotAreaTo");
+            if (slotArea.equals(Area2D.EMPTY))
+                slotArea = statusArea;
+            iconArea = readIconArea(json, "iconSize", slotArea);
 
             if (json.has("statusActiveSteps")) {
                 JsonArray arr = json.getAsJsonArray("statusActiveSteps");

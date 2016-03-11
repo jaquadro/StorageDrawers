@@ -6,6 +6,8 @@
         "statusActiveFrom": [ 7, 1 ],
         "statusActiveTo": [ 9, 7 ],
         "statusActiveSteps": [ 0, 12 ],
+        "slotAreaFrom": [ 0, 8 ],
+        "slotAreaTo": [ 16, 15 ],
         "iconSize": [ 2, 2 ],
         "textures": {
             "level1Off": "StorageDrawers:blocks/indicator/indicator_comp_off",
@@ -13,5 +15,13 @@
             "level2Off": "StorageDrawers:blocks/indicator/indicator_comp_off",
             "level2On": "StorageDrawers:blocks/indicator/indicator_comp_on"
         }
+    }, {
+        "statusAreaFrom": [ 0, 0 ],
+        "statusAreaTo": [ 8, 8 ],
+        "iconSize": [ 2, 2 ]
+    }, {
+        "statusAreaFrom": [ 8, 0 ],
+        "statusAreaTo": [ 16, 8 ],
+        "iconSize": [ 2, 2 ]
     } ]
 }

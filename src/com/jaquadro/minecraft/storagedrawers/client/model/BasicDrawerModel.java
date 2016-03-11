@@ -1,21 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
-import com.jaquadro.minecraft.chameleon.Chameleon;
-import com.jaquadro.minecraft.chameleon.geometry.Area2D;
-import com.jaquadro.minecraft.chameleon.render.ChamRender;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
-import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.util.EnumFacing;
@@ -110,114 +102,9 @@ public class BasicDrawerModel extends IFlexibleBakedModel.Wrapper implements ISm
         IExtendedBlockState xstate = (IExtendedBlockState)state;
         TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
 
-        if (!tile.isShrouded() && !tile.isLocked(LockAttribute.LOCK_POPULATED) && tile.getOwner() == null)
+        if (!DrawerDecoratorModel.shouldHandleState(tile))
             return modelCache.get(location);
 
-        return new CompositeModel(modelCache.get(location), xstate, drawer, dir, tile);
-    }
-
-    public class CompositeModel implements IBakedModel {
-        private IBakedModel baseModel;
-        private IExtendedBlockState blockState;
-        private EnumBasicDrawer drawer;
-        private EnumFacing dir;
-        private boolean shrouded;
-        private boolean locked;
-        private boolean owned;
-
-        public CompositeModel (IBakedModel baseModel, IExtendedBlockState blockState, EnumBasicDrawer drawer, EnumFacing dir, TileEntityDrawers tile) {
-            this.baseModel = baseModel;
-            this.blockState = blockState;
-            this.drawer = drawer;
-            this.dir = dir;
-            this.shrouded = tile.isShrouded();
-            this.locked = tile.isLocked(LockAttribute.LOCK_POPULATED);
-            this.owned = tile.getOwner() != null;
-        }
-
-        @Override
-        public List<BakedQuad> getFaceQuads (EnumFacing facing) {
-            return baseModel.getFaceQuads(facing);
-        }
-
-        @Override
-        public List<BakedQuad> getGeneralQuads () {
-            ChamRender.instance.startBaking(DefaultVertexFormats.BLOCK);
-            if (shrouded)
-                buildShroudGeometry();
-            if (locked || owned)
-                buildLockGeometry();
-
-            List<BakedQuad> quads = ChamRender.instance.stopBaking();
-            quads.addAll(baseModel.getGeneralQuads());
-
-            return quads;
-        }
-
-        @Override
-        public boolean isAmbientOcclusion () {
-            return baseModel.isAmbientOcclusion();
-        }
-
-        @Override
-        public boolean isGui3d () {
-            return baseModel.isGui3d();
-        }
-
-        @Override
-        public boolean isBuiltInRenderer () {
-            return false;
-        }
-
-        @Override
-        public TextureAtlasSprite getParticleTexture () {
-            return baseModel.getParticleTexture();
-        }
-
-        @Override
-        public ItemCameraTransforms getItemCameraTransforms () {
-            return baseModel.getItemCameraTransforms();
-        }
-
-        private void buildLockGeometry () {
-            double depth = drawer.isHalfDepth() ? .5 : 1;
-
-            TextureAtlasSprite lockIcon;
-            if (locked && owned)
-                lockIcon = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconClaimLockResource);
-            else if (locked)
-                lockIcon = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconLockResource);
-            else if (owned)
-                lockIcon = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconClaimResource);
-            else
-                return;
-
-            ChamRender.instance.setRenderBounds(0.46875, 0.9375, 0, 0.53125, 1, depth + .003);
-            ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, dir.getIndex());
-            ChamRender.instance.bakePartialFace(ChamRender.FACE_ZPOS, blockState, lockIcon, 0, 0, 1, 1, 1, 1, 1);
-            ChamRender.instance.state.clearRotateTransform();
-        }
-
-        private void buildShroudGeometry () {
-            StatusModelData data = ModBlocks.basicDrawers.getStatusInfo(blockState);
-            int count = drawer.getDrawerCount();
-            double depth = drawer.isHalfDepth() ? .5 : 1;
-
-            double unit = 0.0625;
-            double frontDepth = data.getFrontDepth() * unit;
-
-            TextureAtlasSprite iconCover = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconShroudCover);
-
-            for (int i = 0; i < count; i++) {
-                StatusModelData.Slot slot = data.getSlot(i);
-                Area2D bounds = slot.getIconArea();
-
-                ChamRender.instance.setRenderBounds(bounds.getX() * unit, bounds.getY() * unit, 0,
-                    (bounds.getX() + bounds.getWidth()) * unit, (bounds.getY() + bounds.getHeight()) * unit, depth - frontDepth + .003);
-                ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, dir.getIndex());
-                ChamRender.instance.bakeFace(ChamRender.FACE_ZPOS, blockState, iconCover, 1, 1, 1);
-                ChamRender.instance.state.clearRotateTransform();
-            }
-        }
+        return new DrawerDecoratorModel(modelCache.get(location), xstate, drawer, dir, tile);
     }
 }

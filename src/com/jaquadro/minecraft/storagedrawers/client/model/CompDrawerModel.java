@@ -4,6 +4,8 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -11,6 +13,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IRegistry;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
+import net.minecraftforge.common.property.IExtendedBlockState;
 
 import java.util.*;
 
@@ -70,9 +73,9 @@ public class CompDrawerModel extends IFlexibleBakedModel.Wrapper implements ISma
     }
 
     @Override
-    public IFlexibleBakedModel handleBlockState (IBlockState state) {
+    public IBakedModel handleBlockState (IBlockState state) {
         EnumCompDrawer drawer = (EnumCompDrawer)state.getValue(BlockCompDrawers.SLOTS);
-        EnumFacing dir = (EnumFacing)state.getValue(BlockDrawers.FACING);
+        EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
         Map<EnumFacing, ModelResourceLocation> dirMap = stateMap.get(drawer);
         if (dirMap == null)
@@ -82,6 +85,12 @@ public class CompDrawerModel extends IFlexibleBakedModel.Wrapper implements ISma
         if (location == null)
             return null;
 
-        return modelCache.get(location);
+        IExtendedBlockState xstate = (IExtendedBlockState)state;
+        TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
+
+        if (!DrawerDecoratorModel.shouldHandleState(tile))
+            return modelCache.get(location);
+
+        return new DrawerDecoratorModel(modelCache.get(location), xstate, drawer, dir, tile);
     }
 }
