@@ -3,8 +3,6 @@ package com.jaquadro.minecraft.storagedrawers.client.renderer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -14,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
+/*
 @SideOnly(Side.CLIENT)
 public class TileEntityFramingRenderer extends TileEntitySpecialRenderer
 {
@@ -101,4 +100,4 @@ public class TileEntityFramingRenderer extends TileEntitySpecialRenderer
 
         GL11.glPopMatrix();
     }
-}
+}*/

@@ -1,10 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
-import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.util.IIcon;
-
 public class ModularBoxRenderer
 {
     /*public static final int CONNECT_YNEG = 1 << 0;

@@ -1,12 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class SlotCraftResult extends Slot
 {
@@ -49,30 +47,14 @@ public class SlotCraftResult extends Slot
     }
 
     @Override
-    public void onPickupFromSlot (EntityPlayer player, ItemStack itemStack) {
-        FMLCommonHandler.instance().firePlayerCraftingEvent(player, itemStack, inputInventory);
-        onCrafting(itemStack);
+    public void onPickupFromSlot (EntityPlayer player, ItemStack stack) {
+        FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack, inputInventory);
+        onCrafting(stack);
 
         for (int slot : inputSlots) {
             ItemStack itemTarget = inputInventory.getStackInSlot(slot);
-            if (itemTarget != null) {
+            if (itemTarget != null)
                 inputInventory.decrStackSize(slot, 1);
-
-                if (itemTarget.getItem().hasContainerItem(itemTarget)) {
-                    ItemStack itemContainer = itemTarget.getItem().getContainerItem(itemTarget);
-                    if (itemContainer != null && itemContainer.isItemStackDamageable() && itemContainer.getItemDamage() > itemContainer.getMaxDamage()) {
-                        MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(this.player, itemContainer));
-                        continue;
-                    }
-
-                    if (!itemTarget.getItem().doesContainerItemLeaveCraftingGrid(itemTarget) || !this.player.inventory.addItemStackToInventory(itemContainer)) {
-                        if (inputInventory.getStackInSlot(slot) == null)
-                            inputInventory.setInventorySlotContents(slot, itemContainer);
-                        else
-                            this.player.dropPlayerItemWithRandomChoice(itemContainer, false);
-                    }
-                }
-            }
         }
     }
 }

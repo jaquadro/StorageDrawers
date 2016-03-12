@@ -6,12 +6,10 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
-
+/*
 public class DrawersRenderer //implements ISimpleBlockRenderingHandler
 {
     private static final double unit = .0625f;
@@ -360,5 +358,6 @@ public class DrawersRenderer //implements ISimpleBlockRenderingHandler
     @Override
     public int getRenderId () {
         return StorageDrawers.proxy.drawersRenderID;
-    }*/
+    }
 }
+*/
