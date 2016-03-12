@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.util;
 
 public class RenderHelperState
 {
+    public static final int ROTATE0 = 0;
     public static final int ROTATE90 = 1;
     public static final int ROTATE180 = 2;
     public static final int ROTATE270 = 3;
@@ -30,6 +31,10 @@ public class RenderHelperState
     public double renderMaxX;
     public double renderMaxY;
     public double renderMaxZ;
+
+    public double renderOffsetX;
+    public double renderOffsetY;
+    public double renderOffsetZ;
 
     public boolean flipTexture;
     public boolean renderFromInside;
@@ -73,6 +78,33 @@ public class RenderHelperState
         renderMaxX = xMax;
         renderMaxY = yMax;
         renderMaxZ = zMax;
+
+        if (rotateTransform != 0)
+            transformRenderBound(rotateTransform);
+    }
+
+    public void setRenderOffset (double xOffset, double yOffset, double zOffset) {
+        renderOffsetX = xOffset;
+        renderOffsetY = yOffset;
+        renderOffsetZ = zOffset;
+
+        if (rotateTransform != 0)
+            transformRenderOffset(rotateTransform);
+    }
+
+    public void clearRenderOffset () {
+        renderOffsetX = 0;
+        renderOffsetY = 0;
+        renderOffsetZ = 0;
+    }
+
+    public void setColorMult (float yPos, float z, float x, float yNeg) {
+        colorMultYNeg = yNeg;
+        colorMultYPos = yPos;
+        colorMultZNeg = z;
+        colorMultZPos = z;
+        colorMultXNeg = x;
+        colorMultXPos = x;
     }
 
     public void resetColorMult () {
@@ -82,6 +114,18 @@ public class RenderHelperState
         colorMultZPos = 0.8f;
         colorMultXNeg = 0.6f;
         colorMultXPos = 0.6f;
+    }
+
+    public float getColorMult (int side) {
+        switch (side) {
+            case 0: return colorMultYNeg;
+            case 1: return colorMultYPos;
+            case 2: return colorMultZNeg;
+            case 3: return colorMultZPos;
+            case 4: return colorMultXNeg;
+            case 5: return colorMultXPos;
+            default: return 0;
+        }
     }
 
     public void setTextureOffset (float u, float v) {
@@ -127,13 +171,17 @@ public class RenderHelperState
 
     public void setRotateTransform (int faceFrom, int faceTo) {
         rotateTransform = ROTATION_BY_FACE_FACE[faceFrom][faceTo];
-        if (rotateTransform != 0)
+        if (rotateTransform != 0) {
             transformRenderBound(rotateTransform);
+            transformRenderOffset(rotateTransform);
+        }
     }
 
     public void undoRotateTransform () {
-        if (rotateTransform != 0)
+        if (rotateTransform != 0) {
             transformRenderBound(4 - rotateTransform);
+            transformRenderOffset(4 - rotateTransform);
+        }
         clearRotateTransform();
     }
 
@@ -141,11 +189,31 @@ public class RenderHelperState
         rotateTransform = 0;
     }
 
+    private void transformRenderOffset (int rotation) {
+        double scratch;
+        switch (rotation) {
+            case ROTATE90:
+                scratch = renderOffsetX;
+                renderOffsetX = -renderOffsetZ;
+                renderOffsetZ = scratch;
+                break;
+            case ROTATE180:
+                renderOffsetX = -renderOffsetX;
+                renderOffsetZ = -renderOffsetZ;
+                break;
+            case ROTATE270:
+                scratch = renderOffsetX;
+                renderOffsetX = renderOffsetZ;
+                renderOffsetZ = -scratch;
+                break;
+        }
+    }
+
     private void transformRenderBound (int rotation) {
         scratchIn[0] = renderMinX;
         scratchIn[1] = renderMinY;
         scratchIn[2] = renderMinZ;
-        transformCoord(scratchIn, scratchOut, rotateTransform);
+        transformCoord(scratchIn, scratchOut, rotation);
         renderMinX = scratchOut[0];
         renderMinY = scratchOut[1];
         renderMinZ = scratchOut[2];
@@ -153,7 +221,7 @@ public class RenderHelperState
         scratchIn[0] = renderMaxX;
         scratchIn[1] = renderMaxY;
         scratchIn[2] = renderMaxZ;
-        transformCoord(scratchIn, scratchOut, rotateTransform);
+        transformCoord(scratchIn, scratchOut, rotation);
         renderMaxX = scratchOut[0];
         renderMaxY = scratchOut[1];
         renderMaxZ = scratchOut[2];
@@ -169,6 +237,13 @@ public class RenderHelperState
             renderMinZ = renderMaxZ;
             renderMaxZ = temp;
         }
+    }
+
+    public void transformCoord (double x, double y, double z, double[] coordCout, int rotation) {
+        scratchIn[0] = x;
+        scratchIn[1] = y;
+        scratchIn[2] = z;
+        transformCoord(scratchIn, coordCout, rotation);
     }
 
     public void transformCoord (double[] coordIn, double[] coordOut, int rotation) {

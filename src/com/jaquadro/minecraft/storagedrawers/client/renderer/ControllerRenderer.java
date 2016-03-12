@@ -3,6 +3,9 @@ package com.jaquadro.minecraft.storagedrawers.client.renderer;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
+import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
+import com.jaquadro.minecraft.storagedrawers.core.CommonProxy;
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
@@ -31,12 +34,16 @@ public class ControllerRenderer // implements ISimpleBlockRenderingHandler
         GL11.glRotatef(90, 0, 1, 0);
         GL11.glTranslatef(-.5f, -.5f, -.5f);
 
+        RenderHelper.instance.state.setUVRotation(RenderHelper.YPOS, RenderHelperState.ROTATION_BY_FACE_FACE[RenderHelper.ZNEG][side]);
+
         renderExterior(block, 0, 0, 0,side, renderer);
 
         boxRenderer.setUnit(0);
         boxRenderer.setInteriorIcon(block.getIcon(side, metadata), ForgeDirection.OPPOSITES[side]);
 
         renderInterior(block, 0, 0, 0, side, renderer);
+
+        RenderHelper.instance.state.clearUVRotation(RenderHelper.YPOS);
 
         GL11.glTranslatef(.5f, .5f, .5f);
     }
@@ -56,6 +63,8 @@ public class ControllerRenderer // implements ISimpleBlockRenderingHandler
 
         int side = tile.getDirection();
 
+        RenderHelper.instance.state.setUVRotation(RenderHelper.YPOS, RenderHelperState.ROTATION_BY_FACE_FACE[RenderHelper.ZNEG][side]);
+
         boxRenderer.setUnit(unit);
         boxRenderer.setColor(ModularBoxRenderer.COLOR_WHITE);
         for (int i = 0; i < 6; i++)
@@ -70,6 +79,8 @@ public class ControllerRenderer // implements ISimpleBlockRenderingHandler
         boxRenderer.setInteriorIcon(block.getIcon(world, x, y, z, side), ForgeDirection.OPPOSITES[side]);
 
         renderInterior(block, x, y, z, side, renderer);
+
+        RenderHelper.instance.state.clearUVRotation(RenderHelper.YPOS);
 
         return true;
     }
@@ -97,7 +108,7 @@ public class ControllerRenderer // implements ISimpleBlockRenderingHandler
                 break;
         }
 
-        boxRenderer.renderExterior(renderer, block, x, y, z, xMin, 0, zMin, xMax, 1, zMax, 0, ModularBoxRenderer.sideCut[side]);
+        boxRenderer.renderExterior(renderer.blockAccess, block, x, y, z, xMin, 0, zMin, xMax, 1, zMax, 0, ModularBoxRenderer.sideCut[side]);
     }
 
     private void renderInterior (BlockController block, int x, int y, int z, int side, RenderBlocks renderer) {
@@ -124,7 +135,7 @@ public class ControllerRenderer // implements ISimpleBlockRenderingHandler
                 break;
         }
 
-        boxRenderer.renderInterior(renderer, block, x, y, z, xMin, unit, zMin, xMax, 1 - unit, zMax, 0, ModularBoxRenderer.sideCut[side]);
+        boxRenderer.renderInterior(renderer.blockAccess, block, x, y, z, xMin, unit, zMin, xMax, 1 - unit, zMax, 0, ModularBoxRenderer.sideCut[side]);
     }
 
     @Override

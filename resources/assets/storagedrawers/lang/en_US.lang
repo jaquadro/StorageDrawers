@@ -6,6 +6,7 @@ storageDrawers.container.compDrawers=Compacting Drawers
 storageDrawers.container.upgrades=Upgrades
 storageDrawers.container.controller=Drawer Controller
 storageDrawers.container.unboundSlave=Unbound Slave
+storageDrawers.container.framingTable=Framing Table
 
 storagedrawers.msg.maxUpgrades=This drawer cannot accept any more upgrades.
 
@@ -44,9 +45,16 @@ tile.basicDrawers.fulldrawers4.name=Basic Drawers 2x2
 tile.basicDrawers.halfdrawers2.name=Half Drawers 1x2
 tile.basicDrawers.halfdrawers4.name=Half Drawers 2x2
 
+tile.fullCustom1.name=Framed Drawer
+tile.fullCustom2.name=Framed Drawers 1x2
+tile.fullCustom4.name=Framed Drawers 2x2
+tile.halfCustom2.name=Framed Drawers 1x2
+tile.halfCustom4.name=Framed Drawers 2x2
+
 tile.compDrawers.name=Compacting Drawer
 tile.controller.name=Drawer Controller
 tile.controllerSlave.name=Controller Slave
+tile.framingTable.name=Framing Table
 
 tile.trim.oak.name=Oak Trim
 tile.trim.spruce.name=Spruce Trim
@@ -149,6 +157,8 @@ storageDrawers.config.prop.wailaStackRemainder=WAILA amount presentation
 storageDrawers.config.prop.wailaStackRemainder.tooltip=How item amounts are displayed by WAILA.
 storageDrawers.config.prop.controllerRange=Controller Range
 storageDrawers.config.prop.controllerRange.tooltip=Range for detecting networked blocks.
+storageDrawers.config.prop.enableFramedDrawers=Enable Framed Drawers
+storageDrawers.config.prop.enableFramedDrawers.tooltip=Drawers with custom materials.
 
 storageDrawers.config.addons=Addons
 storageDrawers.config.addons.tooltip=Configure global addon pack settings.
