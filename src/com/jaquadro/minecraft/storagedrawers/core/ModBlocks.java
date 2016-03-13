@@ -49,8 +49,11 @@ public class ModBlocks
         }
         if (config.isBlockEnabled("trim"))
             GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
-        if (config.cache.enableFramedDrawers)
+
+        if (config.cache.enableFramedDrawers) {
             GameRegistry.registerBlock(framingTable, ItemFramingTable.class, "framingTable");
+            GameRegistry.registerTileEntity(TileEntityFramingTable.class, ModBlocks.getQualifiedName(framingTable));
+        }
 
         StorageDrawers.proxy.registerDrawer(basicDrawers);
         StorageDrawers.proxy.registerDrawer(compDrawers);

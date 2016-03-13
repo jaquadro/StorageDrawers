@@ -88,6 +88,16 @@ public class BlockFramingTable extends BlockContainer
     }
 
     @Override
+    public boolean isFullCube () {
+        return false;
+    }
+
+    @Override
+    public boolean shouldSideBeRendered (IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
+        return true;
+    }
+
+    @Override
     public int getRenderType () {
         return 3;
     }
@@ -95,6 +105,11 @@ public class BlockFramingTable extends BlockContainer
     @Override
     public EnumWorldBlockLayer getBlockLayer () {
         return EnumWorldBlockLayer.TRANSLUCENT;
+    }
+
+    @Override
+    public boolean canRenderInLayer (EnumWorldBlockLayer layer) {
+        return layer == EnumWorldBlockLayer.SOLID || layer == EnumWorldBlockLayer.TRANSLUCENT;
     }
 
     @Override
@@ -165,7 +180,11 @@ public class BlockFramingTable extends BlockContainer
 
     @Override
     public IBlockState getStateFromMeta (int meta) {
-        return getDefaultState().withProperty(RIGHT_SIDE, (meta & 0x8) == 0).withProperty(FACING, EnumFacing.getFront(meta & 0x7));
+        EnumFacing side = EnumFacing.getFront(meta & 0x7);
+        if (side.getAxis() == EnumFacing.Axis.Y)
+            side = EnumFacing.NORTH;
+
+        return getDefaultState().withProperty(RIGHT_SIDE, (meta & 0x8) == 0).withProperty(FACING, side);
     }
 
     @Override

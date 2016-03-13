@@ -24,7 +24,7 @@ public class ItemFramingTable extends ItemBlock
         if (side == EnumFacing.DOWN)
             return false;
         if (side == EnumFacing.UP)
-            side = EnumFacing.fromAngle(player.rotationYaw);
+            side = EnumFacing.fromAngle(player.rotationYaw).getOpposite();
 
         newState = newState.withProperty(BlockFramingTable.FACING, side);
 
@@ -37,7 +37,7 @@ public class ItemFramingTable extends ItemBlock
             xOff = -1;
         if (side == EnumFacing.WEST)
             zOff = -1;
-        if (side == EnumFacing.SOUTH)
+        if (side == EnumFacing.EAST)
             zOff = 1;
 
         if (!world.isAirBlock(pos) || !world.isAirBlock(pos.add(0, 1, 0)))
