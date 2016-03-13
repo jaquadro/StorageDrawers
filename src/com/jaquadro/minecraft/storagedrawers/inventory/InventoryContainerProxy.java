@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IChatComponent;
 
 public class InventoryContainerProxy implements IInventory
 {
@@ -42,8 +43,13 @@ public class InventoryContainerProxy implements IInventory
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing (int slot) {
-        return parent.getStackInSlotOnClosing(slot);
+    public ItemStack removeStackFromSlot (int index) {
+        ItemStack stack = parent.removeStackFromSlot(index);
+        if (stack == null)
+            return null;
+
+        container.onCraftMatrixChanged(this);
+        return stack;
     }
 
     @Override
@@ -53,13 +59,18 @@ public class InventoryContainerProxy implements IInventory
     }
 
     @Override
-    public String getInventoryName () {
-        return parent.getInventoryName();
+    public String getName () {
+        return parent.getName();
     }
 
     @Override
-    public boolean hasCustomInventoryName () {
-        return parent.hasCustomInventoryName();
+    public IChatComponent getDisplayName () {
+        return parent.getDisplayName();
+    }
+
+    @Override
+    public boolean hasCustomName () {
+        return parent.hasCustomName();
     }
 
     @Override
@@ -78,17 +89,37 @@ public class InventoryContainerProxy implements IInventory
     }
 
     @Override
-    public void openInventory () {
-        parent.openInventory();
+    public void openInventory (EntityPlayer player) {
+        parent.openInventory(player);
     }
 
     @Override
-    public void closeInventory () {
-        parent.closeInventory();
+    public void closeInventory (EntityPlayer player) {
+        parent.closeInventory(player);
     }
 
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack stack) {
         return parent.isItemValidForSlot(slot, stack);
+    }
+
+    @Override
+    public int getField (int id) {
+        return parent.getField(id);
+    }
+
+    @Override
+    public void setField (int id, int value) {
+        parent.setField(id, value);
+    }
+
+    @Override
+    public int getFieldCount () {
+        return parent.getFieldCount();
+    }
+
+    @Override
+    public void clear () {
+        parent.clear();
     }
 }

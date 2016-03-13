@@ -1,12 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer.common;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockFramingTable;
-import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
-import com.jaquadro.minecraft.storagedrawers.util.RenderHelperState;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
-public class CommonFramingRenderer
+/*public class CommonFramingRenderer
 {
     private static double unit = .0625;
     private static double unit2 = unit * 2;
@@ -195,3 +192,4 @@ public class CommonFramingRenderer
         renderer.state.colorMultYPos = oldColor;
     }
 }
+*/

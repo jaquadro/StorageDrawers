@@ -1,10 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.storagedrawers.block.BlockFramingTable;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 public class ItemFramingTable extends ItemBlock
@@ -15,57 +18,52 @@ public class ItemFramingTable extends ItemBlock
     }
 
     @Override
-    public boolean placeBlockAt (ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata) {
-        metadata = 0;
-        if (side == 0)
+    public boolean placeBlockAt (ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
+        newState = newState.withProperty(BlockFramingTable.RIGHT_SIDE, true);
+
+        if (side == EnumFacing.DOWN)
             return false;
-        if (side == 1) {
-            int quad = (MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3);
-            if (quad == 0)
-                side = 2;
-            if (quad == 1)
-                side = 5;
-            if (quad == 2)
-                side = 3;
-            if (quad == 3)
-                side = 4;
-        }
+        if (side == EnumFacing.UP)
+            side = EnumFacing.fromAngle(player.rotationYaw);
+
+        newState = newState.withProperty(BlockFramingTable.FACING, side);
 
         int xOff = 0;
         int zOff = 0;
 
-        if (side == 2)
+        if (side == EnumFacing.NORTH)
             xOff = 1;
-        if (side == 3)
+        if (side == EnumFacing.SOUTH)
             xOff = -1;
-        if (side == 4)
+        if (side == EnumFacing.WEST)
             zOff = -1;
-        if (side == 5)
+        if (side == EnumFacing.SOUTH)
             zOff = 1;
 
-        if (!world.isAirBlock(x, y, z) || !world.isAirBlock(x, y + 1, z))
+        if (!world.isAirBlock(pos) || !world.isAirBlock(pos.add(0, 1, 0)))
             return false;
-        if (!world.isAirBlock(x + xOff, y, z + zOff) || !world.isAirBlock(x + xOff, y + 1, z + zOff)) {
-            if (side == 2 || side == 3)
+        if (!world.isAirBlock(pos.add(xOff, 0, zOff)) || !world.isAirBlock(pos.add(xOff, 1, zOff))) {
+            if (side == EnumFacing.NORTH || side == EnumFacing.SOUTH)
                 xOff *= -1;
-            if (side == 4 || side == 5)
+            if (side == EnumFacing.WEST || side == EnumFacing.EAST)
                 zOff *= -1;
-            if (!world.isAirBlock(x + xOff, y, z + zOff) || !world.isAirBlock(x + xOff, y + 1, z + zOff))
+            if (!world.isAirBlock(pos.add(xOff, 0, zOff)) || !world.isAirBlock(pos.add(xOff, 1, zOff)))
                 return false;
-            metadata = 8;
+
+            newState = newState.withProperty(BlockFramingTable.RIGHT_SIDE, false);
         }
 
-        if (!world.setBlock(x, y, z, field_150939_a, metadata | side, 3))
+        if (!world.setBlockState(pos, newState, 3))
             return false;
-        if (!world.setBlock(x + xOff, y, z + zOff, field_150939_a, (8 - metadata) | side, 3)) {
-            world.setBlockToAir(x, y, z);
+
+        IBlockState altState = newState.withProperty(BlockFramingTable.RIGHT_SIDE, !newState.getValue(BlockFramingTable.RIGHT_SIDE));
+        if (!world.setBlockState(pos.add(xOff, 0, zOff), altState, 3)) {
+            world.setBlockToAir(pos);
             return false;
         }
 
-        if (world.getBlock(x, y, z) == field_150939_a) {
-            field_150939_a.onBlockPlacedBy(world, x, y, z, player, stack);
-            field_150939_a.onPostBlockPlaced(world, x, y, z, metadata | side);
-        }
+        if (world.getBlockState(pos).getBlock() == block)
+            block.onBlockPlacedBy(world, pos, newState, player, stack);
 
         return true;
     }

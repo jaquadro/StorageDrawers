@@ -2,10 +2,13 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 public class ItemCustomDrawers extends ItemDrawers
@@ -15,11 +18,11 @@ public class ItemCustomDrawers extends ItemDrawers
     }
 
     @Override
-    public boolean placeBlockAt (ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata) {
-        if (!super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, metadata))
+    public boolean placeBlockAt (ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
+        if (!super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState))
             return false;
 
-        TileEntityDrawers tile = (TileEntityDrawers) world.getTileEntity(x, y, z);
+        TileEntityDrawers tile = (TileEntityDrawers) world.getTileEntity(pos);
         if (tile != null && stack.hasTagCompound() && !stack.getTagCompound().hasKey("tile")) {
             if (stack.getTagCompound().hasKey("MatS"))
                 tile.setMaterialSide(ItemStack.loadItemStackFromNBT(stack.getTagCompound().getCompoundTag("MatS")));

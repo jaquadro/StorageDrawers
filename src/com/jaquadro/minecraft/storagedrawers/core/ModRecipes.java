@@ -141,7 +141,7 @@ public class ModRecipes
                 'x', "slimeball", 'y', Items.paper));
         }
 
-        if (config.cache.enableFramedDrawers) {
+        /*if (config.cache.enableFramedDrawers) {
             GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.framingTable), "xxx", "x x",
                 'x', ModBlocks.trim);
 
@@ -160,6 +160,6 @@ public class ModRecipes
             if (config.isBlockEnabled("halfdrawers4"))
                 GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfCustom4, config.getBlockRecipeOutput("halfdrawers4"), 0), "yxy", "xzx", "yxy",
                     'x', "stickWood", 'y', "chestWood", 'z', "slabWood"));
-        }
+        }*/
     }
 }

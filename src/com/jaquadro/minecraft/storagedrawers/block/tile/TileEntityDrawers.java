@@ -531,24 +531,6 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         return count;
     }
 
-    protected void trapLoadFailure (Throwable t, NBTTagCompound tag) {
-        failureSnapshot = (NBTTagCompound)tag.copy();
-        FMLLog.log(StorageDrawers.MOD_ID, Level.ERROR, t, "Tile Load Failure.");
-    }
-
-    protected void restoreLoadFailure (NBTTagCompound tag) {
-        Iterator<String> iter = failureSnapshot.getKeySet().iterator();
-        while (iter.hasNext()) {
-            String key = iter.next();
-            if (!tag.hasKey(key))
-                tag.setTag(key, failureSnapshot.getTag(key));
-        }
-    }
-
-    protected boolean loadDidFail () {
-        return failureSnapshot != null;
-    }
-
     private void readLegacyUpgradeNBT (NBTTagCompound tag) {
         if (tag.hasKey("Lev") && tag.getByte("Lev") > 1)
             addUpgrade(new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.byLevel(tag.getByte("Lev")).getMetadata()));

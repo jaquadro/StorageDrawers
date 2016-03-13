@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
+/*
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockFramingTable;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.common.CommonFramingRenderer;
@@ -95,3 +96,4 @@ public class FramingTableRenderer implements ISimpleBlockRenderingHandler
         return StorageDrawers.proxy.framingTableRenderID;
     }
 }
+*/

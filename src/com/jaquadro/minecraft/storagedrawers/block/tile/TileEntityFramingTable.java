@@ -1,7 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
+import com.jaquadro.minecraft.storagedrawers.block.BlockFramingTable;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -12,6 +14,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.Constants;
 
 public class TileEntityFramingTable extends TileEntity implements IInventory
@@ -53,7 +56,14 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing (int slot) {
+    public ItemStack removeStackFromSlot (int index) {
+        if (tableItemStacks[index] != null) {
+            ItemStack stack = tableItemStacks[index];
+            tableItemStacks[index] = null;
+            markDirty();
+            return stack;
+        }
+
         return null;
     }
 
@@ -68,13 +78,18 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     }
 
     @Override
-    public String getInventoryName () {
-        return hasCustomInventoryName() ? customName : "storageDrawers.container.framingTable";
+    public String getName () {
+        return hasCustomName() ? customName : "storageDrawers.container.framingTable";
     }
 
     @Override
-    public boolean hasCustomInventoryName () {
+    public boolean hasCustomName () {
         return customName != null && customName.length() > 0;
+    }
+
+    @Override
+    public IChatComponent getDisplayName () {
+        return null;
     }
 
     public void setCustomName (String name) {
@@ -88,19 +103,19 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
 
     @Override
     public boolean isUseableByPlayer (EntityPlayer player) {
-        if (worldObj.getTileEntity(xCoord, yCoord, zCoord) != this)
+        if (worldObj.getTileEntity(pos) != this)
             return false;
 
-        return player.getDistanceSq(xCoord + .5, yCoord + .5, zCoord + .5) <= 64;
+        return player.getDistanceSq(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5) <= 64;
     }
 
     @Override
-    public void openInventory () {
+    public void openInventory (EntityPlayer player) {
 
     }
 
     @Override
-    public void closeInventory () {
+    public void closeInventory (EntityPlayer player) {
 
     }
 
@@ -114,6 +129,26 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
             return isItemValidMaterial(stack);
 
         return false;
+    }
+
+    @Override
+    public int getField (int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField (int id, int value) {
+
+    }
+
+    @Override
+    public int getFieldCount () {
+        return 0;
+    }
+
+    @Override
+    public void clear () {
+
     }
 
     public static boolean isItemValidDrawer (ItemStack stack) {
@@ -170,7 +205,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
 
         tag.setTag("Items", itemList);
 
-        if (hasCustomInventoryName())
+        if (hasCustomName())
             tag.setString("CustomName", customName);
     }
 
@@ -179,24 +214,24 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
 
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, tag);
+        return new S35PacketUpdateTileEntity(pos, 5, tag);
     }
 
     @Override
     public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity pkt) {
-        readFromNBT(pkt.func_148857_g());
+        readFromNBT(pkt.getNbtCompound());
         //getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
     }
 
-    private static final AxisAlignedBB ZERO_EXTENT_AABB = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+    private static final AxisAlignedBB ZERO_EXTENT_AABB = AxisAlignedBB.fromBounds(0, 0, 0, 0, 0, 0);
 
     @Override
     public AxisAlignedBB getRenderBoundingBox () {
-        int meta = getBlockMetadata();
-        if ((meta & 0x8) != 0)
+        IBlockState state = worldObj.getBlockState(pos);
+        if (!state.getValue(BlockFramingTable.RIGHT_SIDE))
             return ZERO_EXTENT_AABB;
 
-        int side = meta & 0x7;
+        int side = state.getValue(BlockFramingTable.FACING).getIndex();
         int xOff = 0;
         int zOff = 0;
 
@@ -209,10 +244,10 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
         if (side == 5)
             zOff = 1;
 
-        int xMin = Math.min(xCoord, xCoord + xOff);
-        int xMax = Math.max(xCoord, xCoord + xOff) + 1;
-        int zMin = Math.min(zCoord, zCoord + zOff);
-        int zMax = Math.max(zCoord, zCoord + zOff) + 1;
-        return AxisAlignedBB.getBoundingBox(xMin, yCoord + 1, xMax, zMin, yCoord + 2, zMax);
+        int xMin = Math.min(pos.getX(), pos.getX() + xOff);
+        int xMax = Math.max(pos.getX(), pos.getX() + xOff) + 1;
+        int zMin = Math.min(pos.getZ(), pos.getZ() + zOff);
+        int zMax = Math.max(pos.getZ(), pos.getZ() + zOff) + 1;
+        return AxisAlignedBB.fromBounds(xMin, pos.getY() + 1, xMax, zMin, pos.getY() + 2, zMax);
     }
 }

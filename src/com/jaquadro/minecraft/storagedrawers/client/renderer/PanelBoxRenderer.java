@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
-
+/*
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
 import net.minecraft.block.Block;
 import net.minecraft.util.IIcon;
@@ -307,3 +307,4 @@ public class PanelBoxRenderer
         target[2] = b;
     }
 }
+*/

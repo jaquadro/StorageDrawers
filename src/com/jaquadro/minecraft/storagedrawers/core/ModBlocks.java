@@ -4,10 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.*;
 import com.jaquadro.minecraft.storagedrawers.block.tile.*;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
-import com.jaquadro.minecraft.storagedrawers.item.ItemCompDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemBasicDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemController;
-import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
+import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameData;
@@ -21,6 +18,7 @@ public class ModBlocks
     public static BlockController controller;
     public static BlockSlave controllerSlave;
     public static BlockTrim trim;
+    public static BlockFramingTable framingTable;
 
     public void init () {
         //resolver = new DataResolver(StorageDrawers.MOD_ID);
@@ -30,6 +28,7 @@ public class ModBlocks
         controller = new BlockController("controller");
         controllerSlave = new BlockSlave("controllerSlave");
         trim = new BlockTrim("trim");
+        framingTable = new BlockFramingTable("framingTable");
 
         ConfigManager config = StorageDrawers.config;
 
@@ -48,9 +47,10 @@ public class ModBlocks
             GameRegistry.registerBlock(controllerSlave, "controllerSlave");
             GameRegistry.registerTileEntity(TileEntitySlave.class, ModBlocks.getQualifiedName(controllerSlave));
         }
-        if (config.isBlockEnabled("trim")) {
+        if (config.isBlockEnabled("trim"))
             GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
-        }
+        if (config.cache.enableFramedDrawers)
+            GameRegistry.registerBlock(framingTable, ItemFramingTable.class, "framingTable");
 
         StorageDrawers.proxy.registerDrawer(basicDrawers);
         StorageDrawers.proxy.registerDrawer(compDrawers);

@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
-
+/*
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
@@ -56,3 +56,4 @@ public class DrawersCustomRenderer extends DrawersRenderer
         return StorageDrawers.proxy.drawersCustomRenderID;
     }
 }
+*/

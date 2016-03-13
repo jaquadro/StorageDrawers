@@ -5,7 +5,6 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
 import com.jaquadro.minecraft.storagedrawers.core.CommonProxy;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;

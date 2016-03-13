@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer.common;
-
+/*
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.ModularBoxRenderer;
@@ -163,3 +163,4 @@ public class CommonDrawerRenderer
         end();
     }
 }
+*/
