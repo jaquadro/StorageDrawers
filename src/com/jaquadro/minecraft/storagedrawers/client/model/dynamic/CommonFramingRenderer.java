@@ -86,10 +86,14 @@ public class CommonFramingRenderer
 
     public void renderOverlay (IBlockAccess blockAccess, IBlockState state, TextureAtlasSprite iconOverlay, double[][] baseBoundsY, boolean left, EnumQuadGroup quadGroup) {
         if (quadGroup.isFaceType()) {
+            renderer.state.setUVRotation(ChamRender.YPOS, renderer.state.rotateTransform);
+
             for (double[] bound : baseBoundsY) {
                 renderer.setRenderBounds(bound);
                 renderer.renderFace(ChamRender.FACE_YPOS, blockAccess, state, iconOverlay);
             }
+
+            renderer.state.clearUVRotation(ChamRender.YPOS);
         }
     }
 

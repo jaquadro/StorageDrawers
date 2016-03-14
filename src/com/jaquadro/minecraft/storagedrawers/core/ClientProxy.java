@@ -56,8 +56,11 @@ public class ClientProxy extends CommonProxy
         iconRegistry.registerIcon(iconIndicatorCompOffResource);
         iconRegistry.registerIcon(iconShroudCover);
         iconRegistry.registerIcon(iconTapeCover);
+
         iconRegistry.registerIcon(iconBaseOak);
         iconRegistry.registerIcon(iconTrimOak);
+        iconRegistry.registerIcon(iconOverlayFramingTableLeft);
+        iconRegistry.registerIcon(iconOverlayFramingTableRight);
 
         for (int i = 0; i < 5; i++) {
             if (iconIndicatorOffResource[i] != null)

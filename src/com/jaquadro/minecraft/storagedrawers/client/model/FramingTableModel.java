@@ -28,6 +28,8 @@ public class FramingTableModel implements IFlexibleBakedModel {
 
     private TextureAtlasSprite iconBase;
     private TextureAtlasSprite iconTrim;
+    private TextureAtlasSprite iconOverlayLeft;
+    private TextureAtlasSprite iconOverlayRight;
 
     public FramingTableModel (IBlockState state) {
         renderer = new CommonFramingRenderer(ChamRender.instance);
@@ -35,6 +37,8 @@ public class FramingTableModel implements IFlexibleBakedModel {
 
         iconBase = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconBaseOak);
         iconTrim = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconTrimOak);
+        iconOverlayLeft = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconOverlayFramingTableLeft);
+        iconOverlayRight = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconOverlayFramingTableRight);
     }
 
     @Override
@@ -44,15 +48,25 @@ public class FramingTableModel implements IFlexibleBakedModel {
 
     @Override
     public List<BakedQuad> getFaceQuads (EnumFacing facing) {
-        if (MinecraftForgeClient.getRenderLayer() != EnumWorldBlockLayer.SOLID)
+        if (MinecraftForgeClient.getRenderLayer() != EnumWorldBlockLayer.SOLID && MinecraftForgeClient.getRenderLayer() != EnumWorldBlockLayer.TRANSLUCENT)
             return EMPTY;
-        
+
         ChamRender.instance.startBaking(getFormat());
         ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, blockState.getValue(BlockFramingTable.FACING).getIndex());
-        if (blockState.getValue(BlockFramingTable.RIGHT_SIDE))
-            renderer.renderRight(null, blockState, iconBase, iconTrim, EnumQuadGroup.FACE);
-        else
-            renderer.renderLeft(null, blockState, iconBase, iconTrim, EnumQuadGroup.FACE);
+
+        if (MinecraftForgeClient.getRenderLayer() == EnumWorldBlockLayer.SOLID) {
+            if (blockState.getValue(BlockFramingTable.RIGHT_SIDE))
+                renderer.renderRight(null, blockState, iconBase, iconTrim, EnumQuadGroup.FACE);
+            else
+                renderer.renderLeft(null, blockState, iconBase, iconTrim, EnumQuadGroup.FACE);
+        }
+        else if (MinecraftForgeClient.getRenderLayer() == EnumWorldBlockLayer.TRANSLUCENT) {
+            if (blockState.getValue(BlockFramingTable.RIGHT_SIDE))
+                renderer.renderOverlayRight(null, blockState, iconOverlayRight, EnumQuadGroup.FACE);
+            else
+                renderer.renderOverlayLeft(null, blockState, iconOverlayLeft, EnumQuadGroup.FACE);
+        }
+
         ChamRender.instance.state.clearRotateTransform();
         return ChamRender.instance.stopBaking();
     }
@@ -64,10 +78,12 @@ public class FramingTableModel implements IFlexibleBakedModel {
 
         ChamRender.instance.startBaking(getFormat());
         ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, blockState.getValue(BlockFramingTable.FACING).getIndex());
+
         if (blockState.getValue(BlockFramingTable.RIGHT_SIDE))
             renderer.renderRight(null, blockState, iconBase, iconTrim, EnumQuadGroup.GENERAL);
         else
             renderer.renderLeft(null, blockState, iconBase, iconTrim, EnumQuadGroup.GENERAL);
+
         ChamRender.instance.state.clearRotateTransform();
         return ChamRender.instance.stopBaking();
     }
