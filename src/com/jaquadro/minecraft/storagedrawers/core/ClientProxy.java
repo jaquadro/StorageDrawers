@@ -8,7 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.client.model.BasicDrawerModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.CompDrawerModel;
-import com.jaquadro.minecraft.storagedrawers.client.model.register.FramingTableRegister;
+import com.jaquadro.minecraft.storagedrawers.client.model.FramingTableModel;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.block.Block;
@@ -32,8 +32,6 @@ public class ClientProxy extends CommonProxy
     public void onModelBakeEvent (ModelBakeEvent event) {
         BasicDrawerModel.initialize(event.modelRegistry);
         CompDrawerModel.initialize(event.modelRegistry);
-        FramingTableRegister.initalize(event.modelRegistry);
-        //TrimModel.initialize(event.modelRegistry);
     }
 
     @Override
@@ -57,10 +55,7 @@ public class ClientProxy extends CommonProxy
         iconRegistry.registerIcon(iconShroudCover);
         iconRegistry.registerIcon(iconTapeCover);
 
-        iconRegistry.registerIcon(iconBaseOak);
-        iconRegistry.registerIcon(iconTrimOak);
-        iconRegistry.registerIcon(iconOverlayFramingTableLeft);
-        iconRegistry.registerIcon(iconOverlayFramingTableRight);
+        Chameleon.instance.modelRegistry.registerModel(new FramingTableModel.Register());
 
         for (int i = 0; i < 5; i++) {
             if (iconIndicatorOffResource[i] != null)
