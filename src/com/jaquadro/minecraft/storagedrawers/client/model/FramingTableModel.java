@@ -1,33 +1,41 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.jaquadro.minecraft.chameleon.Chameleon;
+import com.jaquadro.minecraft.chameleon.model.BlockModel;
 import com.jaquadro.minecraft.chameleon.model.EnumQuadGroup;
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
-import com.jaquadro.minecraft.chameleon.resources.IModelRegister;
+import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockFramingTable;
 import com.jaquadro.minecraft.storagedrawers.client.model.dynamic.CommonFramingRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.model.IFlexibleBakedModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class FramingTableModel implements IFlexibleBakedModel
+public class FramingTableModel extends BlockModel
 {
-    public static class Register implements IModelRegister
+    public static class Register extends DefaultRegister
     {
+        public static final ResourceLocation iconBaseOak = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/base/base_oak");
+        public static final ResourceLocation iconTrimOak = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/base/trim_oak");
+        public static final ResourceLocation iconOverlayLeft = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/overlay/shading_worktable_left");
+        public static final ResourceLocation iconOverlayRight = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/overlay/shading_worktable_right");
+
+        public Register () {
+            super(ModBlocks.framingTable);
+        }
+
         @Override
         public List<IBlockState> getBlockStates () {
             List<IBlockState> states = new ArrayList<IBlockState>();
@@ -47,19 +55,17 @@ public class FramingTableModel implements IFlexibleBakedModel
 
         @Override
         public List<ResourceLocation> getTextureResources () {
-            List<ResourceLocation> locs = new ArrayList<ResourceLocation>();
-
-            locs.add(new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/base/base_oak"));
-            locs.add(new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/base/trim_oak"));
-            locs.add(new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/overlay/shading_worktable_left"));
-            locs.add(new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/overlay/shading_worktable_right"));
-
-            return locs;
+            return Arrays.asList(iconBaseOak, iconTrimOak, iconOverlayLeft, iconOverlayRight);
         }
 
         @Override
         public IBakedModel getModel (IBlockState state) {
-            return new FramingTableModel(state);
+            return new FramingTableModel(state, null);
+        }
+
+        @Override
+        public IBakedModel getModel (ItemStack stack) {
+            return new FramingTableModel(null, stack);
         }
     }
 
@@ -73,19 +79,18 @@ public class FramingTableModel implements IFlexibleBakedModel
     private final TextureAtlasSprite iconOverlayLeft;
     private final TextureAtlasSprite iconOverlayRight;
 
-    public FramingTableModel (IBlockState state) {
+    public FramingTableModel (IBlockState state, ItemStack stack) {
         renderer = new CommonFramingRenderer(ChamRender.instance);
-        blockState = state;
 
-        iconBase = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconBaseOak);
-        iconTrim = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconTrimOak);
-        iconOverlayLeft = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconOverlayFramingTableLeft);
-        iconOverlayRight = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconOverlayFramingTableRight);
-    }
+        if (state == null)
+            blockState = ModBlocks.framingTable.getStateFromMeta(stack.getMetadata());
+        else
+            blockState = state;
 
-    @Override
-    public VertexFormat getFormat () {
-        return DefaultVertexFormats.BLOCK;
+        iconBase = Chameleon.instance.iconRegistry.getIcon(Register.iconBaseOak);
+        iconTrim = Chameleon.instance.iconRegistry.getIcon(Register.iconTrimOak);
+        iconOverlayLeft = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayLeft);
+        iconOverlayRight = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayRight);
     }
 
     @Override
@@ -101,8 +106,8 @@ public class FramingTableModel implements IFlexibleBakedModel
                 renderer.renderRight(null, blockState, iconBase, iconTrim, EnumQuadGroup.FACE);
             else
                 renderer.renderLeft(null, blockState, iconBase, iconTrim, EnumQuadGroup.FACE);
-        }
-        else if (MinecraftForgeClient.getRenderLayer() == EnumWorldBlockLayer.TRANSLUCENT) {
+        //}
+        //else if (MinecraftForgeClient.getRenderLayer() == EnumWorldBlockLayer.TRANSLUCENT) {
             if (blockState.getValue(BlockFramingTable.RIGHT_SIDE))
                 renderer.renderOverlayRight(null, blockState, iconOverlayRight, EnumQuadGroup.FACE);
             else
@@ -131,27 +136,7 @@ public class FramingTableModel implements IFlexibleBakedModel
     }
 
     @Override
-    public boolean isAmbientOcclusion () {
-        return true;
-    }
-
-    @Override
-    public boolean isGui3d () {
-        return true;
-    }
-
-    @Override
-    public boolean isBuiltInRenderer () {
-        return false;
-    }
-
-    @Override
     public TextureAtlasSprite getParticleTexture () {
         return iconBase;
-    }
-
-    @Override
-    public ItemCameraTransforms getItemCameraTransforms () {
-        return null;
     }
 }

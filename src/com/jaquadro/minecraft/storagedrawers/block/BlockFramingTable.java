@@ -105,12 +105,6 @@ public class BlockFramingTable extends BlockContainer
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public EnumWorldBlockLayer getBlockLayer () {
-        return EnumWorldBlockLayer.TRANSLUCENT;
-    }
-
-    @Override
     public boolean canRenderInLayer (EnumWorldBlockLayer layer) {
         return layer == EnumWorldBlockLayer.SOLID || layer == EnumWorldBlockLayer.TRANSLUCENT;
     }

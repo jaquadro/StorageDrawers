@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.base.Function;
+import com.jaquadro.minecraft.chameleon.resources.IItemMeshResolver;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import net.minecraft.block.Block;
@@ -13,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public class ItemBasicDrawers extends ItemDrawers
+public class ItemBasicDrawers extends ItemDrawers implements IItemMeshResolver
 {
     @SideOnly(Side.CLIENT)
     private MeshDefinition meshResolver;
@@ -47,6 +48,7 @@ public class ItemBasicDrawers extends ItemDrawers
         return super.getUnlocalizedName() + "." + nameFunction.apply(stack);
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public ItemMeshDefinition getMeshResolver () {
         if (meshResolver == null)
