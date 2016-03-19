@@ -40,6 +40,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -204,8 +205,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public AxisAlignedBB getBoundingBox (IBlockState state, IBlockAccess blockAccess, BlockPos pos) {
-        EnumBasicDrawer info = (EnumBasicDrawer)state.getValue(BLOCK);
-        if (info.isHalfDepth()) {
+        if (isHalfDepth(state)) {
             switch (state.getValue(FACING)) {
                 case NORTH:
                     return AABB_NORTH_HALF;
@@ -248,6 +248,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             TileEntityDrawers tile = getTileEntitySafe(world, pos);
             tile.setDirection(facing.ordinal());
             tile.markDirty();
+
+            world.setBlockState(pos, state.withProperty(FACING, facing));
+            //world.notifyBlockUpdate(pos, state, state.withProperty(FACING, facing), 3);
         }
 
         super.onBlockAdded(world, pos, state);
@@ -269,7 +272,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (itemStack.hasDisplayName())
             tile.setInventoryName(itemStack.getDisplayName());
 
-        world.setBlockState(pos, state, 3);
+        world.setBlockState(pos, state.withProperty(FACING, facing), 3);
     }
 
     @Override
@@ -438,7 +441,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "IExtendedBlockClickHandler.onBlockClicked");
 
         if (!player.capabilities.isCreativeMode) {
-            PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, world, pos, side);
+            PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, world, pos, side, new Vec3d(hitX, hitY, hitZ));
             if (event.isCanceled())
                 return;
         }
