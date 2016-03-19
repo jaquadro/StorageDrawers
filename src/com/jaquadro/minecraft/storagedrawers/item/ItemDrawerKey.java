@@ -5,9 +5,10 @@ import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,7 +26,7 @@ public class ItemDrawerKey extends Item
     @SideOnly(Side.CLIENT)
     public void addInformation (ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         String name = getUnlocalizedName(itemStack);
-        list.add(StatCollector.translateToLocalFormatted(name + ".description"));
+        list.add(I18n.translateToLocal(name + ".description"));
     }
 
     @SideOnly(Side.CLIENT)
@@ -34,9 +35,9 @@ public class ItemDrawerKey extends Item
     }
 
     @Override
-    public Multimap getAttributeModifiers (ItemStack item) {
-        Multimap multimap = super.getAttributeModifiers(item);
-        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Weapon modifier", (double)2, 0));
+    public Multimap<String, AttributeModifier> getAttributeModifiers (EntityEquipmentSlot slot, ItemStack stack) {
+        Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
+        multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double)2, 0));
         return multimap;
     }
 }

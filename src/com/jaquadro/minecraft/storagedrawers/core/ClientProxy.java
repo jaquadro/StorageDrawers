@@ -13,9 +13,9 @@ import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -29,8 +29,8 @@ public class ClientProxy extends CommonProxy
 
     @SubscribeEvent
     public void onModelBakeEvent (ModelBakeEvent event) {
-        BasicDrawerModel.initialize(event.modelRegistry);
-        CompDrawerModel.initialize(event.modelRegistry);
+        BasicDrawerModel.initialize(event.getModelRegistry());
+        CompDrawerModel.initialize(event.getModelRegistry());
         //TrimModel.initialize(event.modelRegistry);
     }
 

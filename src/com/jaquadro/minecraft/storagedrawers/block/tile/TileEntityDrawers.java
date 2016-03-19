@@ -27,11 +27,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
@@ -194,7 +194,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
         if (worldObj != null && !worldObj.isRemote) {
             markDirty();
-            worldObj.markBlockForUpdate(getPos());
+
+            IBlockState state = worldObj.getBlockState(getPos());
+            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
         }
     }
 
@@ -236,6 +238,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         if (!StorageDrawers.config.cache.enableLockUpgrades)
             return;
 
+        IBlockState state = worldObj.getBlockState(getPos());
         if (isLocked && (lockAttributes == null || !lockAttributes.contains(attr))) {
             if (lockAttributes == null)
                 lockAttributes = EnumSet.of(attr);
@@ -244,7 +247,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-                worldObj.markBlockForUpdate(getPos());
+                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
             }
         }
         else if (!isLocked && lockAttributes != null && lockAttributes.contains(attr)) {
@@ -252,7 +255,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-                worldObj.markBlockForUpdate(getPos());
+                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
             }
         }
     }
@@ -270,7 +273,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-                worldObj.markBlockForUpdate(getPos());
+
+                IBlockState state = worldObj.getBlockState(getPos());
+                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
             }
         }
     }
@@ -293,7 +298,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-                worldObj.markBlockForUpdate(getPos());
+
+                IBlockState state = worldObj.getBlockState(getPos());
+                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
             }
         }
 
@@ -316,7 +323,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-                worldObj.markBlockForUpdate(getPos());
+
+                IBlockState state = worldObj.getBlockState(getPos());
+                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
             }
         }
 
@@ -332,7 +341,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
         if (worldObj != null && !worldObj.isRemote) {
             markDirty();
-            worldObj.markBlockForUpdate(getPos());
+
+            IBlockState state = worldObj.getBlockState(getPos());
+            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
         }
     }
 
@@ -343,16 +354,18 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         return taped;
     }
 
-    public boolean setIsSealed (boolean state) {
+    public boolean setIsSealed (boolean sealed) {
         if (!StorageDrawers.config.cache.enableTape)
             return false;
 
-        if (this.taped != state) {
-            this.taped = state;
+        if (this.taped != sealed) {
+            this.taped = sealed;
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-                worldObj.markBlockForUpdate(getPos());
+
+                IBlockState state = worldObj.getBlockState(getPos());
+                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
             }
         }
 
@@ -688,13 +701,15 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         IDrawer drawer = getDrawer(slot);
         if (drawer != null && drawer.getStoredItemCount() != count) {
             drawer.setStoredItemCount(count);
-            getWorld().markBlockForUpdate(getPos());
+
+            IBlockState state = worldObj.getBlockState(getPos());
+            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
         }
     }
 
     private void syncClientCount (int slot) {
         IMessage message = new CountUpdateMessage(getPos(), slot, drawers[slot].getStoredItemCount());
-        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.getDimensionId(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
+        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
 
         StorageDrawers.network.sendToAllAround(message, targetPoint);
     }
@@ -709,14 +724,16 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
 
-        return new S35PacketUpdateTileEntity(getPos(), 5, tag);
+        return new SPacketUpdateTileEntity(getPos(), 5, tag);
     }
 
     @Override
-    public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity pkt) {
+    public void onDataPacket (NetworkManager net, SPacketUpdateTileEntity pkt) {
         readFromNBT(pkt.getNbtCompound());
-        if (getWorld().isRemote)
-            getWorld().markBlockForUpdate(getPos());
+        if (getWorld().isRemote) {
+            IBlockState state = worldObj.getBlockState(getPos());
+            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+        }
     }
 
     @Override
@@ -817,7 +834,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     }
 
     @Override
-    public IChatComponent getDisplayName () {
+    public ITextComponent getDisplayName () {
         return inventory.getDisplayName();
     }
 

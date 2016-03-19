@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -125,7 +126,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         if (worldObj != null && !worldObj.isRemote) {
-            worldObj.markBlockForUpdate(getPos());
+            IBlockState state = worldObj.getBlockState(getPos());
+            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
         }
     }
 
@@ -147,7 +149,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     public void clientUpdateCount (int slot, int count) {
         if (count != pooledCount) {
             pooledCount = count;
-            getWorld().markBlockForUpdate(getPos());
+            IBlockState state = worldObj.getBlockState(getPos());
+            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
         }
     }
 
@@ -519,7 +522,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 }
 
                 if (worldObj != null && !worldObj.isRemote) {
-                    worldObj.markBlockForUpdate(getPos());
+                    IBlockState state = worldObj.getBlockState(getPos());
+                    worldObj.notifyBlockUpdate(getPos(), state, state, 3);
                 }
             }
             else if (itemPrototype == null) {
@@ -559,7 +563,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 else {
                     clear();
                     if (worldObj != null && !worldObj.isRemote) {
-                        worldObj.markBlockForUpdate(getPos());
+                        IBlockState state = worldObj.getBlockState(getPos());
+                        worldObj.notifyBlockUpdate(getPos(), state, state, 3);
                     }
                 }
             }
@@ -731,7 +736,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 return;
 
             IMessage message = new CountUpdateMessage(getPos(), 0, pooledCount);
-            NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(getWorld().provider.getDimensionId(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
+            NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
 
             StorageDrawers.network.sendToAllAround(message, targetPoint);
         }
@@ -740,7 +745,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (getWorld().isRemote)
                 return;
 
-            getWorld().markBlockForUpdate(getPos());
+            IBlockState state = worldObj.getBlockState(getPos());
+            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
         }
     }
 

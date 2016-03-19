@@ -4,6 +4,8 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -95,6 +97,7 @@ public class DefaultStorageProvider implements IStorageProvider
         if (tile.getWorld().isRemote)
             return;
 
-        tile.getWorld().markBlockForUpdate(tile.getPos());
+        IBlockState state = tile.getWorld().getBlockState(tile.getPos());
+        tile.getWorld().notifyBlockUpdate(tile.getPos(), state, state, 3);
     }
 }

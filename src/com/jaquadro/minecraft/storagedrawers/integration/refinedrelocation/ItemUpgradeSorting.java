@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
+/*package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
@@ -10,15 +10,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import java.util.List;
 
 public class ItemUpgradeSorting extends Item
 {
-    /*
     public ItemUpgradeSorting (String name) {
         setUnlocalizedName(name);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
@@ -62,5 +59,5 @@ public class ItemUpgradeSorting extends Item
         }
 
         return false;
-    }*/
 }
+*/

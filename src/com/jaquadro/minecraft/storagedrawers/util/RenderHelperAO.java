@@ -1,7 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 
 public class RenderHelperAO

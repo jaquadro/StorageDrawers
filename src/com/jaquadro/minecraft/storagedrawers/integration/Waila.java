@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration;
+/*package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
@@ -26,10 +26,6 @@ import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 import java.util.List;
 
-/**
- * @author dmillerw
- * @author jaquadro
- */
 public class Waila extends IntegrationModule
 {
     @Override
@@ -135,3 +131,4 @@ public class Waila extends IntegrationModule
         }
     }
 }
+*/

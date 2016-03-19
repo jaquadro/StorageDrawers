@@ -26,14 +26,14 @@ archivesBaseName = "StorageDrawers"
 
 minecraft {
     version = forge_version
-    runDir = "runtime-1.8.8"
+    runDir = "runtime-1.9"
 
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not allways work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "stable_22"
+    mappings = "snapshot_20160312"
 
     replaceIn "StorageDrawers.java"
     replace '@VERSION@', project.version

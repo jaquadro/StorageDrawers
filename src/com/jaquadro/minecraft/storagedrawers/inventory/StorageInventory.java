@@ -12,7 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 
 public class StorageInventory implements IDrawerInventory
 {
@@ -241,7 +241,7 @@ public class StorageInventory implements IDrawerInventory
     }
 
     @Override
-    public IChatComponent getDisplayName () {
+    public ITextComponent getDisplayName () {
         return null;
     }
 

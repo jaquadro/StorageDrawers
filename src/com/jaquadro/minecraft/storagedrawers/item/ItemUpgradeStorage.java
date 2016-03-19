@@ -6,7 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -47,7 +47,7 @@ public class ItemUpgradeStorage extends Item
         EnumUpgradeStorage upgrade = EnumUpgradeStorage.byMetadata(itemStack.getMetadata());
         if (upgrade != null) {
             int mult = StorageDrawers.config.getStorageUpgradeMultiplier(upgrade.getLevel());
-            list.add(StatCollector.translateToLocalFormatted("storageDrawers.upgrade.description", mult));
+            list.add(I18n.translateToLocalFormatted("storageDrawers.upgrade.description", mult));
         }
     }
 

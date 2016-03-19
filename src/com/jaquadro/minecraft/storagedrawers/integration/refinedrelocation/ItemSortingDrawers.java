@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
+/*package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
@@ -6,14 +6,11 @@ import com.jaquadro.minecraft.storagedrawers.item.ItemBasicDrawers;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
 
 import java.util.List;
 
 public class ItemSortingDrawers //extends ItemBasicDrawers
 {
-    /*
     public ItemSortingDrawers (Block block) {
         super(block);
     }
@@ -46,5 +43,6 @@ public class ItemSortingDrawers //extends ItemBasicDrawers
             count = config.getBlockBaseStorage("compDrawers");
 
         return count;
-    }*/
+    }
 }
+*/

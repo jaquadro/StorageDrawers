@@ -12,11 +12,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
@@ -57,14 +57,16 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
 
-        return new S35PacketUpdateTileEntity(getPos(), 5, tag);
+        return new SPacketUpdateTileEntity(getPos(), 5, tag);
     }
 
     @Override
-    public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity pkt) {
+    public void onDataPacket (NetworkManager net, SPacketUpdateTileEntity pkt) {
         readFromNBT(pkt.getNbtCompound());
-        if (getWorld().isRemote)
-            getWorld().markBlockForUpdate(getPos());
+        if (getWorld().isRemote) {
+            IBlockState state = worldObj.getBlockState(getPos());
+            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+        }
     }
 
     public void bindController (BlockPos coord) {
@@ -194,7 +196,7 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
     }
 
     @Override
-    public IChatComponent getDisplayName () {
+    public ITextComponent getDisplayName () {
         return null;
     }
 

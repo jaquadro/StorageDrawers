@@ -10,17 +10,20 @@ import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -39,22 +42,21 @@ public class BlockController extends BlockContainer implements INetworked
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
-        setStepSound(Block.soundTypeStone);
+        setStepSound(SoundType.STONE);
         setLightOpacity(255);
-        setBlockBounds(0, 0, 0, 1, 1, 1);
         setTickRandomly(true);
 
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
     @Override
-    public boolean isOpaqueCube () {
+    public boolean isOpaqueCube (IBlockState state) {
         return false;
     }
 
     @Override
-    public int getRenderType () {
-        return 3;
+    public EnumBlockRenderType getRenderType (IBlockState state) {
+        return EnumBlockRenderType.MODEL;
     }
 
     @Override
@@ -77,13 +79,13 @@ public class BlockController extends BlockContainer implements INetworked
 
             EnumFacing facing = state.getValue(FACING);
 
-            if (facing == EnumFacing.NORTH && blockNorth.isFullBlock() && !blockSouth.isFullBlock())
+            if (facing == EnumFacing.NORTH && blockNorth.isFullBlock(state) && !blockSouth.isFullBlock(state))
                 facing = EnumFacing.SOUTH;
-            if (facing == EnumFacing.SOUTH && blockSouth.isFullBlock() && !blockNorth.isFullBlock())
+            if (facing == EnumFacing.SOUTH && blockSouth.isFullBlock(state) && !blockNorth.isFullBlock(state))
                 facing = EnumFacing.NORTH;
-            if (facing == EnumFacing.WEST && blockWest.isFullBlock() && !blockEast.isFullBlock())
+            if (facing == EnumFacing.WEST && blockWest.isFullBlock(state) && !blockEast.isFullBlock(state))
                 facing = EnumFacing.EAST;
-            if (facing == EnumFacing.EAST && blockEast.isFullBlock() && !blockWest.isFullBlock())
+            if (facing == EnumFacing.EAST && blockEast.isFullBlock(state) && !blockWest.isFullBlock(state))
                 facing = EnumFacing.WEST;
 
             world.setBlockState(pos, state.withProperty(FACING, facing), 2);
@@ -107,7 +109,7 @@ public class BlockController extends BlockContainer implements INetworked
     }
 
     @Override
-    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         EnumFacing blockDir = state.getValue(FACING);
         TileEntityController te = getTileEntitySafe(world, pos);
 
@@ -145,13 +147,8 @@ public class BlockController extends BlockContainer implements INetworked
     }
 
     @Override
-    public boolean isSideSolid (IBlockAccess world, BlockPos pos, EnumFacing side) {
-        IBlockState state = world.getBlockState(pos);
-        if (state == null)
-            return true;
-
-        EnumFacing facing = state.getValue(FACING);
-        return side != facing;
+    public boolean isSideSolid (IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+        return state == null || state.getValue(FACING) != side;
     }
 
     @Override
@@ -169,11 +166,6 @@ public class BlockController extends BlockContainer implements INetworked
     }
 
     @Override
-    public IBlockState getStateForEntityRender (IBlockState state) {
-        return getDefaultState().withProperty(FACING, EnumFacing.SOUTH);
-    }
-
-    @Override
     public IBlockState getStateFromMeta (int meta) {
         EnumFacing facing = EnumFacing.getFront(meta);
         if (facing.getAxis() == EnumFacing.Axis.Y)
@@ -188,8 +180,8 @@ public class BlockController extends BlockContainer implements INetworked
     }
 
     @Override
-    protected BlockState createBlockState () {
-        return new BlockState(this, FACING);
+    protected BlockStateContainer createBlockState () {
+        return new BlockStateContainer(this, FACING);
     }
 
     @Override

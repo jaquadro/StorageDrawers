@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.client.model;
+/*package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
@@ -11,10 +11,8 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.client.model.ISmartItemModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,3 +95,4 @@ public class BasicDrawerItemModel implements ISmartItemModel
         return ChamRender.instance.stopBaking();
     }
 }
+*/

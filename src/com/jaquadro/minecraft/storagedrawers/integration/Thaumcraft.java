@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration;
+/*package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.api.StorageDrawersApi;
@@ -11,13 +11,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -154,7 +154,7 @@ public class Thaumcraft extends IntegrationModule
             Minecraft.getMinecraft().renderEngine.bindTexture(aspectResource);
 
             Tessellator tessellator = Tessellator.getInstance();
-            WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+            VertexBuffer worldRenderer = tessellator.getBuffer();
             renderQuad(worldRenderer, x, y, w, h, (int)(r), (int)(g), (int)(b), (int)(alpha * 255));
 
             GlStateManager.disablePolygonOffset();
@@ -165,7 +165,7 @@ public class Thaumcraft extends IntegrationModule
         }
     }
 
-    private void renderQuad (WorldRenderer tessellator, int x, int y, int w, int h, int r, int g, int b, int a)
+    private void renderQuad (VertexBuffer tessellator, int x, int y, int w, int h, int r, int g, int b, int a)
     {
         tessellator.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
         tessellator.pos(x + 0, y + 0, 0).tex(0, 0).color(r, g, b, a).endVertex();
@@ -175,3 +175,4 @@ public class Thaumcraft extends IntegrationModule
         Tessellator.getInstance().draw();
     }
 }
+*/

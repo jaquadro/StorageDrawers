@@ -3,11 +3,10 @@ package com.jaquadro.minecraft.storagedrawers.client.gui;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
 import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
-import com.jaquadro.minecraft.storagedrawers.integration.NotEnoughItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -43,7 +42,7 @@ public class GuiDrawers extends GuiContainer
         if (storageItemRender == null) {
             Minecraft minecraft = Minecraft.getMinecraft();
             RenderItem defaultRenderItem = minecraft.getRenderItem();
-            storageItemRender = new StorageRenderItem(minecraft.getTextureManager(), defaultRenderItem.getItemModelMesher().getModelManager());
+            storageItemRender = new StorageRenderItem(minecraft.getTextureManager(), defaultRenderItem.getItemModelMesher().getModelManager(), minecraft.getItemColors());
         }
 
         itemRender = storageItemRender;
@@ -147,13 +146,13 @@ public class GuiDrawers extends GuiContainer
     }
 
     private RenderItem setItemRender (RenderItem renderItem) {
-        if (LocalIntegrationRegistry.instance().isModLoaded("NotEnoughItems"))
-            return NotEnoughItems.setItemRender(renderItem);
-        else {
+        //if (LocalIntegrationRegistry.instance().isModLoaded("NotEnoughItems"))
+        //    return NotEnoughItems.setItemRender(renderItem);
+        //else {
             RenderItem prev = itemRender;
             itemRender = renderItem;
 
             return prev;
-        }
+        //}
     }
 }

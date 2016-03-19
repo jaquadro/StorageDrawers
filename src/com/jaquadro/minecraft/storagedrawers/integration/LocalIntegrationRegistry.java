@@ -10,10 +10,10 @@ public class LocalIntegrationRegistry
 
     static {
         IntegrationRegistry reg = instance();
-        if (Loader.isModLoaded("Waila") && StorageDrawers.config.cache.enableWailaIntegration)
-            reg.add(new Waila());
-        if (Loader.isModLoaded("Thaumcraft") && StorageDrawers.config.cache.enableThaumcraftIntegration)
-            reg.add(new Thaumcraft());
+        //if (Loader.isModLoaded("Waila") && StorageDrawers.config.cache.enableWailaIntegration)
+        //    reg.add(new Waila());
+        //if (Loader.isModLoaded("Thaumcraft") && StorageDrawers.config.cache.enableThaumcraftIntegration)
+        //    reg.add(new Thaumcraft());
 
         //if (Loader.isModLoaded("ThermalFoundation") && StorageDrawers.config.cache.enableThermalFoundationIntegration)
         //    reg.add(new ThermalFoundation());

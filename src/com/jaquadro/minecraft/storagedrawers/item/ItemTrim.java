@@ -8,8 +8,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 
 import javax.annotation.Nullable;
 
@@ -34,7 +34,7 @@ public class ItemTrim extends ItemMultiTexture
     }
 
     @Override
-    public boolean doesSneakBypassUse (World world, BlockPos pos, EntityPlayer player) {
+    public boolean doesSneakBypassUse (ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player) {
         IBlockState blockState = world.getBlockState(pos);
         Block block = blockState.getBlock();
 

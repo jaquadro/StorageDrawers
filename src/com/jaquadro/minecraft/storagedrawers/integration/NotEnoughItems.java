@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration;
+/*package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -44,3 +44,4 @@ public class NotEnoughItems extends IntegrationModule
         }
     }
 }
+*/

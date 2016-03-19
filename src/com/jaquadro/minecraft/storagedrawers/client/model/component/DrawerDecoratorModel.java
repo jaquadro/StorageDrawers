@@ -4,19 +4,18 @@ import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.geometry.Area2D;
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGeometry;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
@@ -54,12 +53,7 @@ public class DrawerDecoratorModel implements IBakedModel
     }
 
     @Override
-    public List<BakedQuad> getFaceQuads (EnumFacing facing) {
-        return baseModel.getFaceQuads(facing);
-    }
-
-    @Override
-    public List<BakedQuad> getGeneralQuads () {
+    public List<BakedQuad> getQuads (IBlockState state, EnumFacing side, long rand) {
         ChamRender.instance.startBaking(DefaultVertexFormats.BLOCK);
         if (shrouded)
             buildShroudGeometry();
@@ -69,7 +63,7 @@ public class DrawerDecoratorModel implements IBakedModel
             buildVoidGeometry();
 
         List<BakedQuad> quads = ChamRender.instance.stopBaking();
-        quads.addAll(baseModel.getGeneralQuads());
+        quads.addAll(baseModel.getQuads(state, side, rand));
 
         return quads;
     }
@@ -97,6 +91,11 @@ public class DrawerDecoratorModel implements IBakedModel
     @Override
     public ItemCameraTransforms getItemCameraTransforms () {
         return baseModel.getItemCameraTransforms();
+    }
+
+    @Override
+    public ItemOverrideList getOverrides () {
+        return baseModel.getOverrides();
     }
 
     private void buildLockGeometry () {
