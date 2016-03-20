@@ -66,9 +66,15 @@ public class CommonDrawerRenderer
         panelRenderer.setPanelIcon(iconSide);
 
         for (EnumFacing dir : EnumFacing.VALUES) {
-            if (dir != ChamRender.FACE_ZNEG)
+            if (dir != ChamRender.FACE_ZNEG) {
+                renderHelper.targetFaceGroup(true);
                 panelRenderer.renderFacePanel(dir, world, state, pos, 0, 0, depth, 1, 1, 1);
+            }
+            else if (dir == ChamRender.FACE_ZNEG && depth == 0)
+                renderHelper.targetFaceGroup(true);
+
             panelRenderer.renderFaceTrim(dir, world, state, pos, 0, 0, depth, 1, 1, 1);
+            renderHelper.targetFaceGroup(false);
         }
 
         panelRenderer.setTrimDepth(trimDepth);
@@ -118,7 +124,11 @@ public class CommonDrawerRenderer
         start(world, state, pos, direction);
 
         panelRenderer.setTrimIcon(trimShadow);
+
+        if (depth == 0)
+            renderHelper.targetFaceGroup(true);
         panelRenderer.renderFaceTrim(ChamRender.FACE_ZNEG, world, state, pos, 0, 0, depth, 1, 1, 1);
+        renderHelper.targetFaceGroup(false);
 
         if (blockInfo.getDrawerCount() == 1) {
             renderHelper.setRenderBounds(trimWidth, trimWidth, depth + trimDepth, 1 - trimWidth, 1 - trimWidth, 1);

@@ -97,12 +97,9 @@ public class FramingTableModel extends BlockModel
     }
 
     private void buildModelCache () {
-        ChamRender.instance.startBaking(getFormat());
         ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, blockState.getValue(BlockFramingTable.FACING).getIndex());
-
+        ChamRender.instance.startBaking(getFormat());
         renderQuads(EnumWorldBlockLayer.SOLID);
-
-        ChamRender.instance.state.clearRotateTransform();
         ChamRender.instance.stopBaking();
 
         solidCache[6] = ChamRender.instance.takeBakedQuads(null);
@@ -110,10 +107,7 @@ public class FramingTableModel extends BlockModel
             solidCache[facing.getIndex()] = ChamRender.instance.takeBakedQuads(facing);
 
         ChamRender.instance.startBaking(getFormat());
-        ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, blockState.getValue(BlockFramingTable.FACING).getIndex());
-
         renderQuads(EnumWorldBlockLayer.TRANSLUCENT);
-
         ChamRender.instance.state.clearRotateTransform();
         ChamRender.instance.stopBaking();
 

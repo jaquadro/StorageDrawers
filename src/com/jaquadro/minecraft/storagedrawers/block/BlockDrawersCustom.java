@@ -1,8 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
+import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +17,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
 
 import java.util.List;
 
@@ -20,6 +26,11 @@ public class BlockDrawersCustom extends BlockDrawers
 {
     public BlockDrawersCustom (String blockName) {
         super(blockName);
+    }
+
+    protected void initDefaultState () {
+        setDefaultState(blockState.getBaseState().withProperty(BLOCK, EnumBasicDrawer.FULL2));
+        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
     @Override
@@ -49,5 +60,24 @@ public class BlockDrawersCustom extends BlockDrawers
             return false;
 
         return super.onBlockActivated(world, pos, state, player, side, hitX, hitY, hitZ);
+    }
+
+    @Override
+    protected BlockState createBlockState () {
+        return new ExtendedBlockState(this, new IProperty[] { BLOCK, FACING }, new IUnlistedProperty[] { TILE });
+    }
+
+    @Override
+    public IBlockState getActualState (IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+        TileEntityDrawers tile = getTileEntity(worldIn, pos);
+        if (tile == null)
+            return state;
+
+        EnumFacing facing = EnumFacing.getFront(tile.getDirection());
+        if (facing.getAxis() == EnumFacing.Axis.Y)
+            facing = EnumFacing.NORTH;
+
+        return state.withProperty(BLOCK, state.getValue(BLOCK))
+            .withProperty(FACING, facing);
     }
 }
