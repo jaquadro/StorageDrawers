@@ -68,7 +68,8 @@ public class DrawerDecoratorModel implements IBakedModel
         if (voiding)
             buildVoidGeometry();
 
-        List<BakedQuad> quads = ChamRender.instance.stopBaking();
+        ChamRender.instance.stopBaking();
+        List<BakedQuad> quads = ChamRender.instance.takeBakedQuads(null);
         quads.addAll(baseModel.getGeneralQuads());
 
         return quads;
@@ -114,7 +115,7 @@ public class DrawerDecoratorModel implements IBakedModel
 
         ChamRender.instance.setRenderBounds(0.46875, 0.9375, 0, 0.53125, 1, depth + .003);
         ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, dir.getIndex());
-        ChamRender.instance.bakePartialFace(ChamRender.FACE_ZPOS, blockState, lockIcon, 0, 0, 1, 1, 1, 1, 1);
+        ChamRender.instance.bakePartialFace(ChamRender.FACE_ZPOS, blockState, lockIcon, 0, 0, 1, 1, false, 1, 1, 1);
         ChamRender.instance.state.clearRotateTransform();
     }
 
@@ -124,7 +125,7 @@ public class DrawerDecoratorModel implements IBakedModel
 
         ChamRender.instance.setRenderBounds(1 - .0625, 0.9375, 0, 1, 1, depth + .003);
         ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, dir.getIndex());
-        ChamRender.instance.bakePartialFace(ChamRender.FACE_ZPOS, blockState, iconVoid, 0, 0, 1, 1, 1, 1, 1);
+        ChamRender.instance.bakePartialFace(ChamRender.FACE_ZPOS, blockState, iconVoid, 0, 0, 1, 1, false, 1, 1, 1);
         ChamRender.instance.state.clearRotateTransform();
     }
 
@@ -152,7 +153,7 @@ public class DrawerDecoratorModel implements IBakedModel
             ChamRender.instance.setRenderBounds(bounds.getX() * unit, bounds.getY() * unit, 0,
                 (bounds.getX() + bounds.getWidth()) * unit, (bounds.getY() + bounds.getHeight()) * unit, depth - frontDepth + .003);
             ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, dir.getIndex());
-            ChamRender.instance.bakeFace(ChamRender.FACE_ZPOS, blockState, iconCover, 1, 1, 1);
+            ChamRender.instance.bakeFace(ChamRender.FACE_ZPOS, blockState, iconCover, false, 1, 1, 1);
             ChamRender.instance.state.clearRotateTransform();
         }
     }

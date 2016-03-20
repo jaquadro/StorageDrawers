@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.client.model.dynamic;
 
-import com.jaquadro.minecraft.chameleon.model.EnumQuadGroup;
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
 import com.jaquadro.minecraft.chameleon.render.ChamRenderState;
 import net.minecraft.block.state.IBlockState;
@@ -67,81 +66,79 @@ public class CommonFramingRenderer
         this.renderer = renderer;
     }
 
-    public void renderLeft (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite iconBase, TextureAtlasSprite iconTrim, EnumQuadGroup quadGroup) {
-        renderTableBox(blockAccess, state, pos, iconBase, iconTrim, baseBoundsLeftY, trimBoundsLeftY, trimBoundsLeftZ, trimBoundsLeftX, true, quadGroup);
-        renderStructure(blockAccess, state, pos, iconBase, true, quadGroup);
+    public void renderLeft (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite iconBase, TextureAtlasSprite iconTrim) {
+        renderTableBox(blockAccess, state, pos, iconBase, iconTrim, baseBoundsLeftY, trimBoundsLeftY, trimBoundsLeftZ, trimBoundsLeftX, true);
+        renderStructure(blockAccess, state, pos, iconBase, true);
     }
 
-    public void renderRight (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite iconBase, TextureAtlasSprite iconTrim, EnumQuadGroup quadGroup) {
-        renderTableBox(blockAccess, state, pos, iconBase, iconTrim, baseBoundsRightY, trimBoundsRightY, trimBoundsRightZ, trimBoundsRightX, false, quadGroup);
-        renderStructure(blockAccess, state, pos, iconBase, false, quadGroup);
+    public void renderRight (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite iconBase, TextureAtlasSprite iconTrim) {
+        renderTableBox(blockAccess, state, pos, iconBase, iconTrim, baseBoundsRightY, trimBoundsRightY, trimBoundsRightZ, trimBoundsRightX, false);
+        renderStructure(blockAccess, state, pos, iconBase, false);
     }
 
-    public void renderOverlayLeft (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite iconOverlay, EnumQuadGroup quadGroup) {
-        renderOverlay(blockAccess, state, pos, iconOverlay, baseBoundsLeftY, true, quadGroup);
+    public void renderOverlayLeft (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite iconOverlay) {
+        renderOverlay(blockAccess, state, pos, iconOverlay, baseBoundsLeftY);
     }
 
-    public void renderOverlayRight (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite iconOverlay, EnumQuadGroup quadGroup) {
-        renderOverlay(blockAccess, state, pos, iconOverlay, baseBoundsRightY, false, quadGroup);
+    public void renderOverlayRight (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite iconOverlay) {
+        renderOverlay(blockAccess, state, pos, iconOverlay, baseBoundsRightY);
     }
 
-    public void renderOverlay (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite iconOverlay, double[][] baseBoundsY, boolean left, EnumQuadGroup quadGroup) {
-        if (quadGroup.isFaceType()) {
-            renderer.state.setUVRotation(ChamRender.YPOS, renderer.state.rotateTransform);
+    public void renderOverlay (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite iconOverlay, double[][] baseBoundsY) {
+        renderer.targetFaceGroup(true);
+        renderer.state.setUVRotation(ChamRender.YPOS, renderer.state.rotateTransform);
 
-            for (double[] bound : baseBoundsY) {
-                renderer.setRenderBounds(bound);
-                renderer.renderFace(ChamRender.FACE_YPOS, blockAccess, state, pos, iconOverlay);
-            }
-
-            renderer.state.clearUVRotation(ChamRender.YPOS);
+        for (double[] bound : baseBoundsY) {
+            renderer.setRenderBounds(bound);
+            renderer.renderFace(ChamRender.FACE_YPOS, blockAccess, state, pos, iconOverlay);
         }
+
+        renderer.state.clearUVRotation(ChamRender.YPOS);
+        renderer.targetFaceGroup(false);
     }
 
-    private void renderStructure (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite iconBase, boolean left, EnumQuadGroup quadGroup) {
-        if (quadGroup.isGeneralType()) {
-            renderFoot(blockAccess, state, pos, iconBase, left);
-            renderLegs(blockAccess, state, pos, iconBase, left);
-            renderBraces(blockAccess, state, pos, iconBase, left);
-        }
+    private void renderStructure (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite iconBase, boolean left) {
+        renderFoot(blockAccess, state, pos, iconBase, left);
+        renderLegs(blockAccess, state, pos, iconBase, left);
+        renderBraces(blockAccess, state, pos, iconBase, left);
     }
 
     private void renderTableBox (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite iconBase, TextureAtlasSprite iconTrim,
-                                 double[][] baseBoundsY, double[][] trimBoundsY, double[][] trimBoundsZ, double[][] trimBoundsX, boolean left, EnumQuadGroup quadGroup) {
+                                 double[][] baseBoundsY, double[][] trimBoundsY, double[][] trimBoundsZ, double[][] trimBoundsX, boolean left) {
         EnumFacing xSide = left ? ChamRender.FACE_XNEG : ChamRender.FACE_XPOS;
 
         for (int i = 0; i < 2; i++)
             renderer.state.setUVRotation(i, renderer.state.rotateTransform);
 
         for (double[] bound : baseBoundsY)
-            renderTableSurface(blockAccess, state, pos, iconBase, bound, quadGroup);
+            renderTableSurface(blockAccess, state, pos, iconBase, bound);
 
         for (double[] bound : trimBoundsY)
-            renderTableSurface(blockAccess, state, pos, iconTrim, bound, quadGroup);
+            renderTableSurface(blockAccess, state, pos, iconTrim, bound);
 
-        if (quadGroup.isFaceType()) {
-            for (double[] bound : trimBoundsZ) {
-                renderer.setRenderBounds(bound);
-                renderer.renderFace(ChamRender.FACE_ZNEG, blockAccess, state, pos, iconTrim);
-                renderer.renderFace(ChamRender.FACE_ZPOS, blockAccess, state, pos, iconTrim);
-            }
-
-            for (double[] bound : trimBoundsX) {
-                renderer.setRenderBounds(bound);
-                renderer.renderFace(xSide, blockAccess, state, pos, iconTrim);
-            }
+        renderer.targetFaceGroup(true);
+        for (double[] bound : trimBoundsZ) {
+            renderer.setRenderBounds(bound);
+            renderer.renderFace(ChamRender.FACE_ZNEG, blockAccess, state, pos, iconTrim);
+            renderer.renderFace(ChamRender.FACE_ZPOS, blockAccess, state, pos, iconTrim);
         }
+
+        for (double[] bound : trimBoundsX) {
+            renderer.setRenderBounds(bound);
+            renderer.renderFace(xSide, blockAccess, state, pos, iconTrim);
+        }
+        renderer.targetFaceGroup(false);
 
         for (int i = 0; i < 2; i++)
             renderer.state.clearUVRotation(i);
     }
 
-    private void renderTableSurface (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite icon, double[] bound, EnumQuadGroup quadGroup) {
+    private void renderTableSurface (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite icon, double[] bound) {
         renderer.setRenderBounds(bound);
-        if (quadGroup.isFaceType())
-            renderer.renderFace(ChamRender.FACE_YPOS, blockAccess, state, pos, icon);
-        if (quadGroup.isGeneralType())
-            renderer.renderFace(ChamRender.FACE_YNEG, blockAccess, state, pos, icon);
+        renderer.targetFaceGroup(true);
+        renderer.renderFace(ChamRender.FACE_YPOS, blockAccess, state, pos, icon);
+        renderer.targetFaceGroup(false);
+        renderer.renderFace(ChamRender.FACE_YNEG, blockAccess, state, pos, icon);
     }
 
     private void renderFoot (IBlockAccess blockAccess, IBlockState state, BlockPos pos, TextureAtlasSprite icon, boolean left) {

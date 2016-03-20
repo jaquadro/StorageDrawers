@@ -23,6 +23,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.util.vector.Vector3f;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -78,6 +79,11 @@ public class FramingTableModel extends BlockModel
     protected final TextureAtlasSprite iconOverlayLeft;
     protected final TextureAtlasSprite iconOverlayRight;
 
+    @SuppressWarnings("unchecked")
+    protected final List<BakedQuad>[] solidCache = (List[]) Array.newInstance(ArrayList.class, 7);
+    @SuppressWarnings("unchecked")
+    protected final List<BakedQuad>[] transCache = (List[]) Array.newInstance(ArrayList.class, 7);
+
     public FramingTableModel (IBlockState state) {
         renderer = new CommonFramingRenderer(ChamRender.instance);
         blockState = state;
@@ -86,34 +92,56 @@ public class FramingTableModel extends BlockModel
         iconTrim = Chameleon.instance.iconRegistry.getIcon(Register.iconTrimOak);
         iconOverlayLeft = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayLeft);
         iconOverlayRight = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayRight);
+
+        buildModelCache();
+    }
+
+    private void buildModelCache () {
+        ChamRender.instance.startBaking(getFormat());
+        ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, blockState.getValue(BlockFramingTable.FACING).getIndex());
+
+        renderQuads(EnumWorldBlockLayer.SOLID);
+
+        ChamRender.instance.state.clearRotateTransform();
+        ChamRender.instance.stopBaking();
+
+        solidCache[6] = ChamRender.instance.takeBakedQuads(null);
+        for (EnumFacing facing : EnumFacing.VALUES)
+            solidCache[facing.getIndex()] = ChamRender.instance.takeBakedQuads(facing);
+
+        ChamRender.instance.startBaking(getFormat());
+        ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, blockState.getValue(BlockFramingTable.FACING).getIndex());
+
+        renderQuads(EnumWorldBlockLayer.TRANSLUCENT);
+
+        ChamRender.instance.state.clearRotateTransform();
+        ChamRender.instance.stopBaking();
+
+        transCache[6] = ChamRender.instance.takeBakedQuads(null);
+        for (EnumFacing facing : EnumFacing.VALUES)
+            transCache[facing.getIndex()] = ChamRender.instance.takeBakedQuads(facing);
     }
 
     @Override
     public List<BakedQuad> getFaceQuads (EnumFacing facing) {
-        if (MinecraftForgeClient.getRenderLayer() != EnumWorldBlockLayer.SOLID && MinecraftForgeClient.getRenderLayer() != EnumWorldBlockLayer.TRANSLUCENT)
-            return EMPTY;
-
-        ChamRender.instance.startBaking(getFormat());
-        ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, blockState.getValue(BlockFramingTable.FACING).getIndex());
-
-        renderFaceQuads();
-
-        ChamRender.instance.state.clearRotateTransform();
-        return ChamRender.instance.stopBaking();
+        switch (MinecraftForgeClient.getRenderLayer()) {
+            case SOLID:
+                return solidCache[facing.getIndex()];
+            case TRANSLUCENT:
+                return transCache[facing.getIndex()];
+            default:
+                return EMPTY;
+        }
     }
 
     @Override
     public List<BakedQuad> getGeneralQuads () {
-        if (MinecraftForgeClient.getRenderLayer() != EnumWorldBlockLayer.SOLID)
-            return EMPTY;
-
-        ChamRender.instance.startBaking(getFormat());
-        ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, blockState.getValue(BlockFramingTable.FACING).getIndex());
-
-        renderGeneralQuads();
-
-        ChamRender.instance.state.clearRotateTransform();
-        return ChamRender.instance.stopBaking();
+        switch (MinecraftForgeClient.getRenderLayer()) {
+            case SOLID:
+                return solidCache[6];
+            default:
+                return EMPTY;
+        }
     }
 
     @Override
@@ -121,26 +149,19 @@ public class FramingTableModel extends BlockModel
         return iconBase;
     }
 
-    protected void renderFaceQuads () {
-        if (MinecraftForgeClient.getRenderLayer() == EnumWorldBlockLayer.SOLID) {
+    protected void renderQuads (EnumWorldBlockLayer layer) {
+        if (layer == EnumWorldBlockLayer.SOLID) {
             if (blockState.getValue(BlockFramingTable.RIGHT_SIDE))
-                renderer.renderRight(null, blockState, BlockPos.ORIGIN, iconBase, iconTrim, EnumQuadGroup.FACE);
+                renderer.renderRight(null, blockState, BlockPos.ORIGIN, iconBase, iconTrim);
             else
-                renderer.renderLeft(null, blockState, BlockPos.ORIGIN, iconBase, iconTrim, EnumQuadGroup.FACE);
+                renderer.renderLeft(null, blockState, BlockPos.ORIGIN, iconBase, iconTrim);
         }
-        else if (MinecraftForgeClient.getRenderLayer() == EnumWorldBlockLayer.TRANSLUCENT) {
+        else if (layer == EnumWorldBlockLayer.TRANSLUCENT) {
             if (blockState.getValue(BlockFramingTable.RIGHT_SIDE))
-                renderer.renderOverlayRight(null, blockState, BlockPos.ORIGIN, iconOverlayRight, EnumQuadGroup.FACE);
+                renderer.renderOverlayRight(null, blockState, BlockPos.ORIGIN, iconOverlayRight);
             else
-                renderer.renderOverlayLeft(null, blockState, BlockPos.ORIGIN, iconOverlayLeft, EnumQuadGroup.FACE);
+                renderer.renderOverlayLeft(null, blockState, BlockPos.ORIGIN, iconOverlayLeft);
         }
-    }
-
-    protected void renderGeneralQuads () {
-        if (blockState.getValue(BlockFramingTable.RIGHT_SIDE))
-            renderer.renderRight(null, blockState, BlockPos.ORIGIN, iconBase, iconTrim, EnumQuadGroup.GENERAL);
-        else
-            renderer.renderLeft(null, blockState, BlockPos.ORIGIN, iconBase, iconTrim, EnumQuadGroup.GENERAL);
     }
 
     @SuppressWarnings("deprecation")
@@ -156,18 +177,14 @@ public class FramingTableModel extends BlockModel
         }
 
         @Override
-        protected void renderFaceQuads () {
-            renderer.renderRight(null, blockState, BlockPos.ORIGIN, iconBase, iconTrim, EnumQuadGroup.FACE);
-            renderer.renderLeft(null, blockState, BlockPos.ORIGIN.east(), iconBase, iconTrim, EnumQuadGroup.FACE);
+        protected void renderQuads (EnumWorldBlockLayer layer) {
+            if (layer == EnumWorldBlockLayer.SOLID) {
+                renderer.renderRight(null, blockState, BlockPos.ORIGIN, iconBase, iconTrim);
+                renderer.renderLeft(null, blockState, BlockPos.ORIGIN.east(), iconBase, iconTrim);
 
-            renderer.renderOverlayRight(null, blockState, BlockPos.ORIGIN, iconOverlayRight, EnumQuadGroup.FACE);
-            renderer.renderOverlayLeft(null, blockState, BlockPos.ORIGIN.east(), iconOverlayLeft, EnumQuadGroup.FACE);
-        }
-
-        @Override
-        protected void renderGeneralQuads () {
-            renderer.renderRight(null, blockState, BlockPos.ORIGIN, iconBase, iconTrim, EnumQuadGroup.GENERAL);
-            renderer.renderLeft(null, blockState, BlockPos.ORIGIN.east(), iconBase, iconTrim, EnumQuadGroup.GENERAL);
+                renderer.renderOverlayRight(null, blockState, BlockPos.ORIGIN, iconOverlayRight);
+                renderer.renderOverlayLeft(null, blockState, BlockPos.ORIGIN.east(), iconOverlayLeft);
+            }
         }
 
         @Override

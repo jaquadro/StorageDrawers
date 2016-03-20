@@ -93,7 +93,8 @@ public class BasicDrawerItemModel implements ISmartItemModel
 
         ChamRender.instance.startBaking(DefaultVertexFormats.ITEM, 0);
         ChamRender.instance.setRenderBounds(0, 0, .995f - depth, 1, 1, 1);
-        ChamRender.instance.bakeFace(ChamRender.FACE_ZNEG, blockState, iconTape);
-        return ChamRender.instance.stopBaking();
+        ChamRender.instance.bakeFace(ChamRender.FACE_ZNEG, blockState, iconTape, false);
+        ChamRender.instance.stopBaking();
+        return ChamRender.instance.takeBakedQuads(null);
     }
 }
