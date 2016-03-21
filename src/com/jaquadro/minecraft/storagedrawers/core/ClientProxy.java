@@ -6,10 +6,13 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
 import com.jaquadro.minecraft.storagedrawers.client.model.BasicDrawerModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.CompDrawerModel;
+import com.jaquadro.minecraft.storagedrawers.client.model.CustomDrawerModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.FramingTableModel;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
+import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityFramingRenderer;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
@@ -38,12 +41,14 @@ public class ClientProxy extends CommonProxy
     public void initDynamic () {
         ModBlocks.basicDrawers.initDynamic();
         ModBlocks.compDrawers.initDynamic();
+        ModBlocks.customDrawers.initDynamic();
     }
 
     @Override
     public void registerRenderers () {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.class, new TileEntityDrawersRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersComp.class, new TileEntityDrawersRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFramingTable.class, new TileEntityFramingRenderer());
 
         IconRegistry iconRegistry = Chameleon.instance.iconRegistry;
         iconRegistry.registerIcon(iconLockResource);
@@ -56,6 +61,7 @@ public class ClientProxy extends CommonProxy
         iconRegistry.registerIcon(iconTapeCover);
 
         Chameleon.instance.modelRegistry.registerModel(new FramingTableModel.Register());
+        Chameleon.instance.modelRegistry.registerModel(new CustomDrawerModel.Register());
 
         for (int i = 0; i < 5; i++) {
             if (iconIndicatorOffResource[i] != null)

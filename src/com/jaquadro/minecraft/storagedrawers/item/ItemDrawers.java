@@ -30,6 +30,11 @@ public class ItemDrawers extends ItemBlock
     }
 
     @Override
+    public int getMetadata (int damage) {
+        return damage;
+    }
+
+    @Override
     public boolean placeBlockAt (ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
         if (!super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState))
             return false;
@@ -76,7 +81,7 @@ public class ItemDrawers extends ItemBlock
         ConfigManager config = StorageDrawers.config;
         Block block = Block.getBlockFromItem(itemStack.getItem());
 
-        if (block == ModBlocks.basicDrawers) {
+        if (block == ModBlocks.basicDrawers || block == ModBlocks.customDrawers) {
             EnumBasicDrawer info = EnumBasicDrawer.byMetadata(itemStack.getMetadata());
             switch (info) {
                 case FULL1:

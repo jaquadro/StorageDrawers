@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -80,8 +81,9 @@ public class ContainerFramingTable extends Container
         if (target != null) {
             Block block = Block.getBlockFromItem(target.getItem());
             if (block instanceof BlockDrawersCustom) {
+                IBlockState state = block.getStateFromMeta(target.getMetadata());
                 if (matSide != null) {
-                    craftResult.setInventorySlotContents(0, ItemCustomDrawers.makeItemStack(block, 1, matSide, matTrim, matFront));
+                    craftResult.setInventorySlotContents(0, ItemCustomDrawers.makeItemStack(state, 1, matSide, matTrim, matFront));
                     return;
                 }
             }

@@ -38,7 +38,7 @@ public class CommonDrawerRenderer
 
         depth = blockInfo.isHalfDepth() ? .5 : 0;
         trimWidth = .0625;
-        trimDepth = status.getFrontDepth();
+        trimDepth = status.getFrontDepth() / 16f;
         unit7 = 0.4375;
         unit9 = 0.5625;
 

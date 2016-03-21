@@ -19,6 +19,7 @@ public class ModBlocks
     public static BlockSlave controllerSlave;
     public static BlockTrim trim;
     public static BlockFramingTable framingTable;
+    public static BlockDrawersCustom customDrawers;
 
     public void init () {
         //resolver = new DataResolver(StorageDrawers.MOD_ID);
@@ -29,6 +30,7 @@ public class ModBlocks
         controllerSlave = new BlockSlave("controllerSlave");
         trim = new BlockTrim("trim");
         framingTable = new BlockFramingTable("framingTable");
+        customDrawers = new BlockDrawersCustom("customDrawers");
 
         ConfigManager config = StorageDrawers.config;
 
@@ -53,6 +55,8 @@ public class ModBlocks
         if (config.cache.enableFramedDrawers) {
             GameRegistry.registerBlock(framingTable, ItemFramingTable.class, "framingTable");
             GameRegistry.registerTileEntity(TileEntityFramingTable.class, ModBlocks.getQualifiedName(framingTable));
+
+            GameRegistry.registerBlock(customDrawers, ItemCustomDrawers.class, "customDrawers");
         }
 
         StorageDrawers.proxy.registerDrawer(basicDrawers);

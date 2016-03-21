@@ -45,6 +45,12 @@ tile.basicDrawers.fulldrawers4.name=Basic Drawers 2x2
 tile.basicDrawers.halfdrawers2.name=Half Drawers 1x2
 tile.basicDrawers.halfdrawers4.name=Half Drawers 2x2
 
+tile.customDrawers.fulldrawers1.name=Framed Drawer
+tile.customDrawers.fulldrawers2.name=Framed Drawers 1x2
+tile.customDrawers.fulldrawers4.name=Framed Drawers 2x2
+tile.customDrawers.halfdrawers2.name=Framed Half Drawers 1x2
+tile.customDrawers.halfdrawers4.name=Framed Half Drawers 2x2
+
 tile.fullCustom1.name=Framed Drawer
 tile.fullCustom2.name=Framed Drawers 1x2
 tile.fullCustom4.name=Framed Drawers 2x2

@@ -34,23 +34,23 @@ public class BlockDrawersCustom extends BlockDrawers
     }
 
     @Override
-    public EnumWorldBlockLayer getBlockLayer () {
-        return EnumWorldBlockLayer.TRANSLUCENT;
+    public boolean canRenderInLayer (EnumWorldBlockLayer layer) {
+        return layer == EnumWorldBlockLayer.CUTOUT_MIPPED || layer == EnumWorldBlockLayer.TRANSLUCENT;
     }
 
     @Override
     protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile == null)
-            return ItemCustomDrawers.makeItemStack(this, 1, null, null, null);
+            return ItemCustomDrawers.makeItemStack(state, 1, null, null, null);
 
-        return ItemCustomDrawers.makeItemStack(this, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront());
+        return ItemCustomDrawers.makeItemStack(state, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront());
     }
 
     @Override
     public void getSubBlocks (Item item, CreativeTabs creativeTabs, List list) {
-        if (StorageDrawers.config.cache.addonShowVanilla)
-            list.add(new ItemStack(item));
+        for (EnumBasicDrawer type : EnumBasicDrawer.values())
+            list.add(new ItemStack(item, 1, type.getMetadata()));
     }
 
     @Override

@@ -63,7 +63,8 @@ public class BlockFramingTable extends BlockContainer
         int priX = pos.getX() + getXOff(state);
         int priZ = pos.getZ() + getZOff(state);
 
-        if (world.getBlockState(new BlockPos(priX, pos.getY(), priZ)).getBlock() != this || !isRightBlock(state))
+        IBlockState targetState = world.getBlockState(new BlockPos(priX, pos.getY(), priZ));
+        if (targetState.getBlock() != this || !isRightBlock(targetState))
             return false;
 
         player.openGui(StorageDrawers.instance, GuiHandler.framingGuiID, world, priX, pos.getY(), priZ);

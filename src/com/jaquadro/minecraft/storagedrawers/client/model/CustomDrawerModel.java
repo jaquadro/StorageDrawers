@@ -8,6 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.dynamic.CommonDrawerRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.Block;
@@ -16,17 +17,24 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
+import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.util.Constants;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -40,9 +48,9 @@ public class CustomDrawerModel extends BlockModel
         public static final ResourceLocation iconDefaultSide = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/drawers_raw_side");
 
         public static final ResourceLocation[] iconDefaultFront = new ResourceLocation[] {
-            new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/drawers_raw_font_1"),
-            new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/drawers_raw_font_2"),
-            new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/drawers_raw_font_4"),
+            new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/drawers_raw_front_1"),
+            new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/drawers_raw_front_2"),
+            new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/drawers_raw_front_4"),
         };
         public static final ResourceLocation[] iconOverlayTrim = new ResourceLocation[] {
             new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/overlay/shading_trim_1"),
@@ -65,8 +73,11 @@ public class CustomDrawerModel extends BlockModel
             new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/overlay/handle_4"),
         };
 
+        private static IBakedModel blockModel;
+        private static IBakedModel itemModel;
+
         public Register () {
-            super(ModBlocks.basicDrawers);
+            super(ModBlocks.customDrawers);
         }
 
         @Override
@@ -75,7 +86,7 @@ public class CustomDrawerModel extends BlockModel
 
             for (EnumBasicDrawer drawer : EnumBasicDrawer.values()) {
                 for (EnumFacing dir : EnumFacing.HORIZONTALS)
-                    states.add(ModBlocks.basicDrawers.getDefaultState().withProperty(BlockDrawers.BLOCK, drawer).withProperty(BlockDrawers.FACING, dir));
+                    states.add(ModBlocks.customDrawers.getDefaultState().withProperty(BlockDrawers.BLOCK, drawer).withProperty(BlockDrawers.FACING, dir));
             }
 
             return states;
@@ -83,12 +94,19 @@ public class CustomDrawerModel extends BlockModel
 
         @Override
         public IBakedModel getModel (IBlockState state) {
-            return new CustomDrawerModel(state);
+            if (blockModel == null)
+                blockModel = new ModelHandler();
+
+            return blockModel;
         }
 
         @Override
         public IBakedModel getModel (ItemStack stack) {
-            return new CustomDrawerModel(ModBlocks.basicDrawers.getStateFromMeta(stack.getMetadata()));
+            if (itemModel == null)
+                itemModel = new ItemModelHandler();
+
+            return itemModel;
+            //return new CustomDrawerModel(ModBlocks.customDrawers.getStateFromMeta(stack.getMetadata()));
         }
 
         @Override
@@ -124,7 +142,46 @@ public class CustomDrawerModel extends BlockModel
     @SuppressWarnings("unchecked")
     protected final List<BakedQuad>[] transCache = (List[]) Array.newInstance(ArrayList.class, 7);
 
-    public CustomDrawerModel (IBlockState state) {
+    public static CustomDrawerModel fromBlock (IBlockState state) {
+        if (state instanceof IExtendedBlockState) {
+            IExtendedBlockState xstate = (IExtendedBlockState) state;
+            TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
+
+            ItemStack matFront = tile.getEffectiveMaterialFront();
+            ItemStack matSide = tile.getEffectiveMaterialSide();
+            ItemStack matTrim = tile.getEffectiveMaterialTrim();
+
+            return new CustomDrawerModel(state, matFront, matSide, matTrim, false);
+        }
+
+        return new CustomDrawerModel(state, false);
+    }
+
+    public static CustomDrawerModel fromItem (ItemStack stack) {
+        IBlockState state = ModBlocks.customDrawers.getStateFromMeta(stack.getMetadata());
+        if (!stack.hasTagCompound())
+            return new CustomDrawerModel(state, true);
+
+        NBTTagCompound tag = stack.getTagCompound();
+        ItemStack matFront = null;
+        ItemStack matSide = null;
+        ItemStack matTrim = null;
+
+        if (tag.hasKey("MatF", Constants.NBT.TAG_COMPOUND))
+            matFront = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatF"));
+        if (tag.hasKey("MatS", Constants.NBT.TAG_COMPOUND))
+            matSide = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatS"));
+        if (tag.hasKey("MatT", Constants.NBT.TAG_COMPOUND))
+            matTrim = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatT"));
+
+        return new CustomDrawerModel(state, matFront, matSide, matTrim, true);
+    }
+
+    private CustomDrawerModel (IBlockState state, boolean mergeLayers) {
+        this(state, null, null, null, mergeLayers);
+    }
+
+    private CustomDrawerModel (IBlockState state, ItemStack matFront, ItemStack matSide, ItemStack matTrim, boolean mergeLayers) {
         renderer = new CommonDrawerRenderer(ChamRender.instance);
         blockState = state;
 
@@ -135,14 +192,14 @@ public class CustomDrawerModel extends BlockModel
         iconOverlayHandle = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayHandle[index]);
         iconOverlayTrim = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayTrim[index]);
 
-        if (state instanceof IExtendedBlockState) {
-            IExtendedBlockState xstate = (IExtendedBlockState) state;
-            TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
+        iconFront = getIconFromStack(matFront);
+        iconSide = getIconFromStack(matSide);
+        iconTrim = getIconFromStack(matTrim);
 
-            iconFront = getIconFromStack(tile.getEffectiveMaterialFront());
-            iconSide = getIconFromStack(tile.getEffectiveMaterialSide());
-            iconTrim = getIconFromStack(tile.getEffectiveMaterialTrim());
-        }
+        if (iconFront == null)
+            iconFront = iconSide;
+        if (iconTrim == null)
+            iconTrim = iconSide;
 
         if (iconFront == null)
             iconFront = Chameleon.instance.iconRegistry.getIcon(Register.iconDefaultFront[index]);
@@ -150,6 +207,8 @@ public class CustomDrawerModel extends BlockModel
             iconSide = Chameleon.instance.iconRegistry.getIcon(Register.iconDefaultSide);
         if (iconTrim == null)
             iconTrim = Chameleon.instance.iconRegistry.getIcon(Register.iconDefaultSide);
+
+        buildModelCache(mergeLayers);
     }
 
     private TextureAtlasSprite getIconFromStack (ItemStack stack) {
@@ -170,30 +229,40 @@ public class CustomDrawerModel extends BlockModel
         return model.getParticleTexture();
     }
 
-    private void buildModelCache () {
-        ChamRender.instance.state.setRotateTransform(ChamRender.ZNEG, blockState.getValue(BlockDrawers.FACING).getIndex());
+    private void buildModelCache (boolean mergeLayers) {
+        for (int i = 0; i < 7; i++) {
+            solidCache[i] = EMPTY;
+            transCache[i] = EMPTY;
+        }
+
+        EnumFacing dir = blockState.getValue(BlockDrawers.FACING);
+
         ChamRender.instance.startBaking(getFormat());
-        renderer.renderBasePass(null, blockState, BlockPos.ORIGIN, ChamRender.FACE_ZNEG, iconSide, iconTrim, iconFront);
+        renderer.renderBasePass(null, blockState, BlockPos.ORIGIN, dir, iconSide, iconTrim, iconFront);
+        if (mergeLayers)
+            renderer.renderOverlayPass(null, blockState, BlockPos.ORIGIN, dir, iconOverlayTrim, iconOverlayHandle, iconOverlayFace);
         ChamRender.instance.stopBaking();
 
         solidCache[6] = ChamRender.instance.takeBakedQuads(null);
         for (EnumFacing facing : EnumFacing.VALUES)
             solidCache[facing.getIndex()] = ChamRender.instance.takeBakedQuads(facing);
 
-        ChamRender.instance.startBaking(getFormat());
-        renderer.renderOverlayPass(null, blockState, BlockPos.ORIGIN, ChamRender.FACE_ZNEG, iconOverlayTrim, iconOverlayHandle, iconOverlayFace);
-        ChamRender.instance.state.clearRotateTransform();
-        ChamRender.instance.stopBaking();
+        if (!mergeLayers) {
+            ChamRender.instance.startBaking(getFormat());
+            renderer.renderOverlayPass(null, blockState, BlockPos.ORIGIN, dir, iconOverlayTrim, iconOverlayHandle, iconOverlayFace);
+            ChamRender.instance.stopBaking();
 
-        transCache[6] = ChamRender.instance.takeBakedQuads(null);
-        for (EnumFacing facing : EnumFacing.VALUES)
-            transCache[facing.getIndex()] = ChamRender.instance.takeBakedQuads(facing);
+            transCache[6] = ChamRender.instance.takeBakedQuads(null);
+            for (EnumFacing facing : EnumFacing.VALUES)
+                transCache[facing.getIndex()] = ChamRender.instance.takeBakedQuads(facing);
+        }
     }
 
     @Override
     public List<BakedQuad> getFaceQuads (EnumFacing facing) {
         switch (MinecraftForgeClient.getRenderLayer()) {
             case SOLID:
+            case CUTOUT_MIPPED:
                 return solidCache[facing.getIndex()];
             case TRANSLUCENT:
                 return transCache[facing.getIndex()];
@@ -206,6 +275,7 @@ public class CustomDrawerModel extends BlockModel
     public List<BakedQuad> getGeneralQuads () {
         switch (MinecraftForgeClient.getRenderLayer()) {
             case SOLID:
+            case CUTOUT_MIPPED:
                 return solidCache[6];
             case TRANSLUCENT:
                 return transCache[6];
@@ -234,13 +304,128 @@ public class CustomDrawerModel extends BlockModel
         return iconSide;
     }
 
+    private static final ItemTransformVec3f transformThirdPerson = new ItemTransformVec3f(new Vector3f(10, -45, 170), new Vector3f(0, 0.09375f, -0.078125f), new Vector3f(.375f, .375f, .375f));
+    private static final ItemCameraTransforms transform = new ItemCameraTransforms(transformThirdPerson,
+        ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT);
+
     @Override
     public ItemCameraTransforms getItemCameraTransforms () {
-        return ItemCameraTransforms.DEFAULT;
+        return transform;
     }
 
     @Override
     public VertexFormat getFormat () {
         return DefaultVertexFormats.ITEM;
+    }
+
+    public static class ModelHandler implements ISmartBlockModel
+    {
+        private TextureAtlasSprite iconRawSide;
+
+        public ModelHandler () {
+            iconRawSide = Chameleon.instance.iconRegistry.getIcon(Register.iconDefaultSide);
+        }
+
+        @Override
+        public IBakedModel handleBlockState (IBlockState state) {
+            IBakedModel mainModel = CustomDrawerModel.fromBlock(state);
+            if (!(state instanceof IExtendedBlockState))
+                return mainModel;
+
+            IExtendedBlockState xstate = (IExtendedBlockState)state;
+            TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
+
+            if (!DrawerDecoratorModel.shouldHandleState(tile))
+                return mainModel;
+
+            EnumBasicDrawer drawer = (EnumBasicDrawer)state.getValue(BlockDrawers.BLOCK);
+            EnumFacing dir = state.getValue(BlockDrawers.FACING);
+
+            return new DrawerDecoratorModel(mainModel, xstate, drawer, dir, tile);
+        }
+
+        @Override
+        public List<BakedQuad> getFaceQuads (EnumFacing facing) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<BakedQuad> getGeneralQuads () {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isAmbientOcclusion () {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isGui3d () {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isBuiltInRenderer () {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public TextureAtlasSprite getParticleTexture () {
+            return iconRawSide;
+        }
+
+        @Override
+        public ItemCameraTransforms getItemCameraTransforms () {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    public static class ItemModelHandler implements ISmartItemModel
+    {
+        private TextureAtlasSprite iconRawSide;
+
+        public ItemModelHandler () {
+            iconRawSide = Chameleon.instance.iconRegistry.getIcon(Register.iconDefaultSide);
+        }
+
+        @Override
+        public IBakedModel handleItemState (ItemStack stack) {
+            return CustomDrawerModel.fromItem(stack);
+        }
+
+        @Override
+        public List<BakedQuad> getFaceQuads (EnumFacing facing) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<BakedQuad> getGeneralQuads () {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isAmbientOcclusion () {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isGui3d () {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isBuiltInRenderer () {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public TextureAtlasSprite getParticleTexture () {
+            return iconRawSide;
+        }
+
+        @Override
+        public ItemCameraTransforms getItemCameraTransforms () {
+            throw new UnsupportedOperationException();
+        }
     }
 }
