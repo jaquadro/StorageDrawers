@@ -60,12 +60,12 @@ public class FramingTableModel extends ChamModel
         }
 
         @Override
-        public IBakedModel getModel (IBlockState state) {
+        public IBakedModel getModel (IBlockState state, IBakedModel existingModel) {
             return new FramingTableModel(state);
         }
 
         @Override
-        public IBakedModel getModel (ItemStack stack) {
+        public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
             return new FramingTableModel.ItemModel(stack);
         }
     }

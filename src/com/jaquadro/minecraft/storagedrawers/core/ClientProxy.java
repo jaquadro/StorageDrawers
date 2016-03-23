@@ -33,7 +33,7 @@ public class ClientProxy extends CommonProxy
 
     @SubscribeEvent
     public void onModelBakeEvent (ModelBakeEvent event) {
-        BasicDrawerModel.initialize(event.modelRegistry);
+        //BasicDrawerModel.initialize(event.modelRegistry);
         CompDrawerModel.initialize(event.modelRegistry);
     }
 
@@ -60,6 +60,7 @@ public class ClientProxy extends CommonProxy
         iconRegistry.registerIcon(iconShroudCover);
         iconRegistry.registerIcon(iconTapeCover);
 
+        Chameleon.instance.modelRegistry.registerModel(new BasicDrawerModel.Register());
         Chameleon.instance.modelRegistry.registerModel(new FramingTableModel.Register());
         Chameleon.instance.modelRegistry.registerModel(new CustomDrawerModel.Register());
 
@@ -121,10 +122,10 @@ public class ClientProxy extends CommonProxy
 
         registerItemVariants(ModBlocks.basicDrawers, ModBlocks.basicDrawers.getResourceVariants());
 
-        if (Item.getItemFromBlock(ModBlocks.basicDrawers) instanceof ItemBasicDrawers) {
+        /*if (Item.getItemFromBlock(ModBlocks.basicDrawers) instanceof ItemBasicDrawers) {
             ItemBasicDrawers itemDrawers = (ItemBasicDrawers)Item.getItemFromBlock(ModBlocks.basicDrawers);
             renderItem.getItemModelMesher().register(itemDrawers, itemDrawers.getMeshResolver());
-        }
+        }*/
 
         // Comp Drawers
 

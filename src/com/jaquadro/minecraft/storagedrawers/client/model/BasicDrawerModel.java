@@ -1,110 +1,110 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.chameleon.model.*;
+import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
+import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IRegistry;
-import net.minecraftforge.client.model.IFlexibleBakedModel;
-import net.minecraftforge.client.model.ISmartBlockModel;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 
-public class BasicDrawerModel extends IFlexibleBakedModel.Wrapper implements ISmartBlockModel
+public final class BasicDrawerModel
 {
-    private static final Set<ModelResourceLocation> resourceLocations = new HashSet<ModelResourceLocation>();
-    private static final Set<ModelResourceLocation> itemResourceLocations = new HashSet<ModelResourceLocation>();
-    private static final Map<EnumBasicDrawer, Map<EnumFacing, Map<BlockPlanks.EnumType, ModelResourceLocation>>> stateMap = new HashMap<EnumBasicDrawer, Map<EnumFacing, Map<BlockPlanks.EnumType, ModelResourceLocation>>>();
-    private static final Map<ModelResourceLocation, IFlexibleBakedModel> modelCache = new HashMap<ModelResourceLocation, IFlexibleBakedModel>();
-
-    public static void initialize (IRegistry<ModelResourceLocation, IBakedModel> modelRegistry) {
-        initailizeResourceLocations();
-
-        for (ModelResourceLocation loc : resourceLocations) {
-            IBakedModel object = modelRegistry.getObject(loc);
-            if (object instanceof IFlexibleBakedModel) {
-                modelCache.put(loc, (IFlexibleBakedModel)object);
-                modelRegistry.putObject(loc, new BasicDrawerModel((IFlexibleBakedModel)object));
-            }
+    public static class Register extends DefaultRegister
+    {
+        public Register () {
+            super(ModBlocks.basicDrawers);
         }
 
-        for (ModelResourceLocation loc : itemResourceLocations) {
-            IBakedModel object = modelRegistry.getObject(loc);
-            if (object != null) {
-                modelRegistry.putObject(loc, new BasicDrawerItemModel(object));
-            }
-        }
-    }
+        @Override
+        public List<IBlockState> getBlockStates () {
+            List<IBlockState> states = new ArrayList<IBlockState>();
 
-    public static void initailizeResourceLocations () {
-        for (EnumBasicDrawer drawerType : EnumBasicDrawer.values()) {
-            Map<EnumFacing, Map<BlockPlanks.EnumType, ModelResourceLocation>> dirMap = new HashMap<EnumFacing, Map<BlockPlanks.EnumType, ModelResourceLocation>>();
-            stateMap.put(drawerType, dirMap);
-
-            for (EnumFacing dir : EnumFacing.values()) {
-                if (dir.getAxis() == EnumFacing.Axis.Y)
-                    continue;
-
-                Map<BlockPlanks.EnumType, ModelResourceLocation> typeMap = new HashMap<BlockPlanks.EnumType, ModelResourceLocation>();
-                dirMap.put(dir, typeMap);
-
-                for (BlockPlanks.EnumType woodType : BlockPlanks.EnumType.values()) {
-                    String key = StorageDrawers.MOD_ID + ":basicDrawers#block=" + drawerType + ",facing=" + dir + ",variant=" + woodType;
-                    ModelResourceLocation location = new ModelResourceLocation(key);
-
-                    resourceLocations.add(location);
-                    typeMap.put(woodType, location);
+            for (EnumBasicDrawer drawer : EnumBasicDrawer.values()) {
+                for (EnumFacing dir : EnumFacing.HORIZONTALS) {
+                    for (BlockPlanks.EnumType woodType : BlockPlanks.EnumType.values()) {
+                        states.add(ModBlocks.basicDrawers.getDefaultState()
+                            .withProperty(BlockDrawers.BLOCK, drawer)
+                            .withProperty(BlockDrawers.FACING, dir)
+                            .withProperty(BlockDrawers.VARIANT, woodType));
+                    }
                 }
             }
 
-            for (BlockPlanks.EnumType woodType : BlockPlanks.EnumType.values()) {
-                String key = StorageDrawers.MOD_ID + ":basicDrawers_" + drawerType.getName() + "_" + woodType.getName() + "#inventory";
-                ModelResourceLocation location = new ModelResourceLocation(key);
+            return states;
+        }
 
-                itemResourceLocations.add(location);
-            }
+        @Override
+        public IBakedModel getModel (IBlockState state, IBakedModel existingModel) {
+            return new ModelHandler(existingModel);
+        }
+
+        @Override
+        public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
+            return new ModelHandler(existingModel);
+        }
+
+        @Override
+        public List<ResourceLocation> getTextureResources () {
+            return new ArrayList<ResourceLocation>();
         }
     }
 
-    public BasicDrawerModel (IFlexibleBakedModel parent) {
-        super(parent, parent.getFormat());
-    }
+    public static class ModelHandler extends DefaultHandler
+    {
+        private IBakedModel parent;
 
-    @Override
-    public IBakedModel handleBlockState (IBlockState state) {
-        EnumBasicDrawer drawer = (EnumBasicDrawer)state.getValue(BlockDrawers.BLOCK);
-        EnumFacing dir = state.getValue(BlockDrawers.FACING);
-        BlockPlanks.EnumType woodType = (BlockPlanks.EnumType)state.getValue(BlockDrawers.VARIANT);
+        public ModelHandler (IBakedModel parent) {
+            this.parent = parent;
+        }
 
-        Map<EnumFacing, Map<BlockPlanks.EnumType, ModelResourceLocation>> dirMap = stateMap.get(drawer);
-        if (dirMap == null)
-            return null;
+        @Override
+        public IBakedModel handleBlockState (IBlockState state) {
+            EnumBasicDrawer drawer = (EnumBasicDrawer)state.getValue(BlockDrawers.BLOCK);
+            EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
-        Map<BlockPlanks.EnumType, ModelResourceLocation> typeMap = dirMap.get(dir);
-        if (typeMap == null)
-            return null;
+            if (!(state instanceof IExtendedBlockState))
+                return parent;
 
-        ModelResourceLocation location = typeMap.get(woodType);
-        if (location == null)
-            return null;
+            IExtendedBlockState xstate = (IExtendedBlockState)state;
+            TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
 
-        if (!(state instanceof IExtendedBlockState))
-            return modelCache.get(location);
+            if (!DrawerDecoratorModel.shouldHandleState(tile))
+                return parent;
 
-        IExtendedBlockState xstate = (IExtendedBlockState)state;
-        TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
+            return new DrawerDecoratorModel(parent, xstate, drawer, dir, tile);
+        }
 
-        if (!DrawerDecoratorModel.shouldHandleState(tile))
-            return modelCache.get(location);
+        @Override
+        public IBakedModel handleItemState (ItemStack stack) {
+            if (stack == null)
+                return parent;
 
-        return new DrawerDecoratorModel(modelCache.get(location), xstate, drawer, dir, tile);
+            if (!stack.hasTagCompound() || !stack.getTagCompound().hasKey("tile", Constants.NBT.TAG_COMPOUND))
+                return parent;
+
+            Block block = Block.getBlockFromItem(stack.getItem());
+            IBlockState state = block.getStateFromMeta(stack.getMetadata());
+
+            return new DrawerSealedModel(parent, state, true);
+        }
+
+        @Override
+        public TextureAtlasSprite getParticleTexture () {
+            return parent.getParticleTexture();
+        }
     }
 }

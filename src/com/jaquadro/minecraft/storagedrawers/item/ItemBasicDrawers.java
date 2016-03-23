@@ -56,11 +56,11 @@ public class ItemBasicDrawers extends ItemDrawers implements IItemMeshResolver
         return meshResolver;
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public ModelResourceLocation getModel (ItemStack stack, EntityPlayer player, int useRemaining) {
         return meshResolver.getModelLocation(stack);
-    }
+    }*/
 
     @SideOnly(Side.CLIENT)
     private class MeshDefinition implements ItemMeshDefinition {
