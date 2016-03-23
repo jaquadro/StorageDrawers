@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.model.BlockModel;
+import com.jaquadro.minecraft.chameleon.model.ChamModel;
 import com.jaquadro.minecraft.chameleon.model.EnumQuadGroup;
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
 import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FramingTableModel extends BlockModel
+public class FramingTableModel extends ChamModel
 {
     public static class Register extends DefaultRegister
     {
@@ -69,93 +70,60 @@ public class FramingTableModel extends BlockModel
         }
     }
 
-    private static final List<BakedQuad> EMPTY = new ArrayList<BakedQuad>(0);
-
-    protected final CommonFramingRenderer renderer;
-    protected final IBlockState blockState;
-
-    protected final TextureAtlasSprite iconBase;
-    protected final TextureAtlasSprite iconTrim;
-    protected final TextureAtlasSprite iconOverlayLeft;
-    protected final TextureAtlasSprite iconOverlayRight;
-
-    @SuppressWarnings("unchecked")
-    protected final List<BakedQuad>[] solidCache = (List[]) Array.newInstance(ArrayList.class, 7);
-    @SuppressWarnings("unchecked")
-    protected final List<BakedQuad>[] transCache = (List[]) Array.newInstance(ArrayList.class, 7);
+    private TextureAtlasSprite iconParticle;
 
     public FramingTableModel (IBlockState state) {
-        renderer = new CommonFramingRenderer(ChamRender.instance);
-        blockState = state;
-
-        iconBase = Chameleon.instance.iconRegistry.getIcon(Register.iconBaseOak);
-        iconTrim = Chameleon.instance.iconRegistry.getIcon(Register.iconTrimOak);
-        iconOverlayLeft = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayLeft);
-        iconOverlayRight = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayRight);
-
-        buildModelCache();
+        this(state, false);
     }
 
-    private void buildModelCache () {
-        ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, blockState.getValue(BlockFramingTable.FACING).getIndex());
-        ChamRender.instance.startBaking(getFormat());
-        renderQuads(EnumWorldBlockLayer.SOLID);
-        ChamRender.instance.stopBaking();
-
-        solidCache[6] = ChamRender.instance.takeBakedQuads(null);
-        for (EnumFacing facing : EnumFacing.VALUES)
-            solidCache[facing.getIndex()] = ChamRender.instance.takeBakedQuads(facing);
-
-        ChamRender.instance.startBaking(getFormat());
-        renderQuads(EnumWorldBlockLayer.TRANSLUCENT);
-        ChamRender.instance.state.clearRotateTransform();
-        ChamRender.instance.stopBaking();
-
-        transCache[6] = ChamRender.instance.takeBakedQuads(null);
-        for (EnumFacing facing : EnumFacing.VALUES)
-            transCache[facing.getIndex()] = ChamRender.instance.takeBakedQuads(facing);
+    protected FramingTableModel (IBlockState state, boolean mergeLayers) {
+        super(state, mergeLayers);
     }
 
     @Override
-    public List<BakedQuad> getFaceQuads (EnumFacing facing) {
-        switch (MinecraftForgeClient.getRenderLayer()) {
-            case SOLID:
-                return solidCache[facing.getIndex()];
-            case TRANSLUCENT:
-                return transCache[facing.getIndex()];
-            default:
-                return EMPTY;
-        }
+    protected void renderStart (ChamRender renderer, IBlockState state, Object... args) {
+        renderer.state.setRotateTransform(ChamRender.ZPOS, state.getValue(BlockFramingTable.FACING).getIndex());
     }
 
     @Override
-    public List<BakedQuad> getGeneralQuads () {
-        switch (MinecraftForgeClient.getRenderLayer()) {
-            case SOLID:
-                return solidCache[6];
-            default:
-                return EMPTY;
-        }
+    protected void renderEnd (ChamRender renderer, IBlockState state, Object... args) {
+        renderer.state.clearRotateTransform();
+    }
+
+    @Override
+    protected void renderSolidLayer (ChamRender renderer, IBlockState state, Object... args) {
+        TextureAtlasSprite iconBase = Chameleon.instance.iconRegistry.getIcon(Register.iconBaseOak);
+        TextureAtlasSprite iconTrim = Chameleon.instance.iconRegistry.getIcon(Register.iconTrimOak);
+
+        renderSolidLayer(state, new CommonFramingRenderer(renderer), iconBase, iconTrim);
+        iconParticle = iconBase;
+    }
+
+    @Override
+    protected void renderTransLayer (ChamRender renderer, IBlockState state, Object... args) {
+        TextureAtlasSprite iconOverlayLeft = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayLeft);
+        TextureAtlasSprite iconOverlayRight = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayRight);
+
+        renderTransLayer(state, new CommonFramingRenderer(renderer), iconOverlayLeft, iconOverlayRight);
+    }
+
+    protected void renderSolidLayer (IBlockState state, CommonFramingRenderer common, TextureAtlasSprite iconBase, TextureAtlasSprite iconTrim) {
+        if (state.getValue(BlockFramingTable.RIGHT_SIDE))
+            common.renderRight(null, state, BlockPos.ORIGIN, iconBase, iconTrim);
+        else
+            common.renderLeft(null, state, BlockPos.ORIGIN, iconBase, iconTrim);
+    }
+
+    protected void renderTransLayer (IBlockState state, CommonFramingRenderer common, TextureAtlasSprite iconLeft, TextureAtlasSprite iconRight) {
+        if (state.getValue(BlockFramingTable.RIGHT_SIDE))
+            common.renderOverlayRight(null, state, BlockPos.ORIGIN, iconRight);
+        else
+            common.renderOverlayLeft(null, state, BlockPos.ORIGIN, iconLeft);
     }
 
     @Override
     public TextureAtlasSprite getParticleTexture () {
-        return iconBase;
-    }
-
-    protected void renderQuads (EnumWorldBlockLayer layer) {
-        if (layer == EnumWorldBlockLayer.SOLID) {
-            if (blockState.getValue(BlockFramingTable.RIGHT_SIDE))
-                renderer.renderRight(null, blockState, BlockPos.ORIGIN, iconBase, iconTrim);
-            else
-                renderer.renderLeft(null, blockState, BlockPos.ORIGIN, iconBase, iconTrim);
-        }
-        else if (layer == EnumWorldBlockLayer.TRANSLUCENT) {
-            if (blockState.getValue(BlockFramingTable.RIGHT_SIDE))
-                renderer.renderOverlayRight(null, blockState, BlockPos.ORIGIN, iconOverlayRight);
-            else
-                renderer.renderOverlayLeft(null, blockState, BlockPos.ORIGIN, iconOverlayLeft);
-        }
+        return iconParticle;
     }
 
     @SuppressWarnings("deprecation")
@@ -167,18 +135,19 @@ public class FramingTableModel extends BlockModel
             transformDefault, transformDefault, transformDefault, transformDefault, transformDefault);
 
         public ItemModel (ItemStack stack) {
-            super(ModBlocks.framingTable.getStateFromMeta(stack.getMetadata()));
+            super(ModBlocks.framingTable.getStateFromMeta(stack.getMetadata()), true);
         }
 
         @Override
-        protected void renderQuads (EnumWorldBlockLayer layer) {
-            if (layer == EnumWorldBlockLayer.SOLID) {
-                renderer.renderRight(null, blockState, BlockPos.ORIGIN, iconBase, iconTrim);
-                renderer.renderLeft(null, blockState, BlockPos.ORIGIN.east(), iconBase, iconTrim);
+        protected void renderSolidLayer (IBlockState state, CommonFramingRenderer common, TextureAtlasSprite iconBase, TextureAtlasSprite iconTrim) {
+            common.renderRight(null, state, BlockPos.ORIGIN, iconBase, iconTrim);
+            common.renderLeft(null, state, BlockPos.ORIGIN.east(), iconBase, iconTrim);
+        }
 
-                renderer.renderOverlayRight(null, blockState, BlockPos.ORIGIN, iconOverlayRight);
-                renderer.renderOverlayLeft(null, blockState, BlockPos.ORIGIN.east(), iconOverlayLeft);
-            }
+        @Override
+        protected void renderTransLayer (IBlockState state, CommonFramingRenderer common, TextureAtlasSprite iconLeft, TextureAtlasSprite iconRight) {
+            common.renderOverlayRight(null, state, BlockPos.ORIGIN, iconRight);
+            common.renderOverlayLeft(null, state, BlockPos.ORIGIN.east(), iconLeft);
         }
 
         @Override
