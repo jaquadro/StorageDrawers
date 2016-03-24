@@ -56,14 +56,14 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     private float itemOffset3X[] = new float[] { .5f, .25f, .75f };
     private float itemOffset3Y[] = new float[] { 9.75f, 2.25f, 2.25f };
 
-    private static int[] glStateRender = { GL11.GL_LIGHTING, GL11.GL_BLEND };
-    private List<int[]> savedGLStateRender = GLUtil.makeGLState(glStateRender);
+    //private static int[] glStateRender = { GL11.GL_LIGHTING, GL11.GL_BLEND };
+    //private List<int[]> savedGLStateRender = GLUtil.makeGLState(glStateRender);
 
-    private static int[] glStateItemRender = { GL11.GL_LIGHTING, GL11.GL_ALPHA_TEST, GL11.GL_BLEND };
-    private List<int[]> savedGLStateItemRender = GLUtil.makeGLState(glStateItemRender);
+    //private static int[] glStateItemRender = { GL11.GL_LIGHTING, GL11.GL_ALPHA_TEST, GL11.GL_BLEND };
+    //private List<int[]> savedGLStateItemRender = GLUtil.makeGLState(glStateItemRender);
 
-    private static int[] glLightRender = { GL11.GL_LIGHT0, GL11.GL_LIGHT1, GL11.GL_COLOR_MATERIAL, GL12.GL_RESCALE_NORMAL };
-    private List<int[]> savedGLLightRender = GLUtil.makeGLState(glLightRender);
+    //private static int[] glLightRender = { GL11.GL_LIGHT0, GL11.GL_LIGHT1, GL11.GL_COLOR_MATERIAL, GL12.GL_RESCALE_NORMAL };
+    //private List<int[]> savedGLLightRender = GLUtil.makeGLState(glLightRender);
 
     @Override
     public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime, int destroyStage) {
