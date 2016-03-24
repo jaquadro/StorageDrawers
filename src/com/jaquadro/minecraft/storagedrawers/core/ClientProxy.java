@@ -120,7 +120,7 @@ public class ClientProxy extends CommonProxy
 
         // Basic Drawers
 
-        registerItemVariants(ModBlocks.basicDrawers, ModBlocks.basicDrawers.getResourceVariants());
+        //registerItemVariants(ModBlocks.basicDrawers, ModBlocks.basicDrawers.getResourceVariants());
 
         /*if (Item.getItemFromBlock(ModBlocks.basicDrawers) instanceof ItemBasicDrawers) {
             ItemBasicDrawers itemDrawers = (ItemBasicDrawers)Item.getItemFromBlock(ModBlocks.basicDrawers);

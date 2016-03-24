@@ -2,19 +2,25 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.base.Function;
 import com.jaquadro.minecraft.chameleon.resources.IItemMeshResolver;
+import com.jaquadro.minecraft.chameleon.resources.IItemVariantProvider;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ItemBasicDrawers extends ItemDrawers implements IItemMeshResolver
+public class ItemBasicDrawers extends ItemDrawers implements IItemMeshResolver, IItemVariantProvider
 {
     @SideOnly(Side.CLIENT)
     private MeshDefinition meshResolver;
@@ -56,11 +62,17 @@ public class ItemBasicDrawers extends ItemDrawers implements IItemMeshResolver
         return meshResolver;
     }
 
-    /*@Override
-    @SideOnly(Side.CLIENT)
-    public ModelResourceLocation getModel (ItemStack stack, EntityPlayer player, int useRemaining) {
-        return meshResolver.getModelLocation(stack);
-    }*/
+    @Override
+    public List<ResourceLocation> getItemVariants () {
+        ResourceLocation location = GameData.getItemRegistry().getNameForObject(this);
+        List<ResourceLocation> variants = new ArrayList<ResourceLocation>();
+
+        for (EnumBasicDrawer type : EnumBasicDrawer.values())
+            for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values())
+                variants.add(new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + '_' + type.getName() + '_' + material.getName()));
+
+        return variants;
+    }
 
     @SideOnly(Side.CLIENT)
     private class MeshDefinition implements ItemMeshDefinition {
