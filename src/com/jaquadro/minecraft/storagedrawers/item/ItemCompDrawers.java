@@ -1,27 +1,39 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.chameleon.resources.IItemMeshProvider;
+import com.jaquadro.minecraft.chameleon.resources.IItemVariantProvider;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ItemCompDrawers extends ItemBlock
+public class ItemCompDrawers extends ItemBlock implements IItemMeshProvider, IItemVariantProvider
 {
+    @SideOnly(Side.CLIENT)
+    private MeshDefinition meshResolver;
+
     public ItemCompDrawers (Block block) {
         super(block);
+    }
+
+    @Override
+    public int getMetadata (int damage) {
+        return damage;
     }
 
     @Override
@@ -56,6 +68,38 @@ public class ItemCompDrawers extends ItemBlock
 
         if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("tile")) {
             list.add(EnumChatFormatting.YELLOW + StatCollector.translateToLocalFormatted("storageDrawers.drawers.sealed"));
+        }
+    }
+
+    @Override
+    public ItemMeshDefinition getMeshResolver () {
+        if (meshResolver == null)
+            meshResolver = new MeshDefinition();
+        return meshResolver;
+    }
+
+    @Override
+    public List<ResourceLocation> getItemVariants () {
+        ResourceLocation location = GameData.getItemRegistry().getNameForObject(this);
+        List<ResourceLocation> variants = new ArrayList<ResourceLocation>();
+
+        for (EnumCompDrawer type : EnumCompDrawer.values())
+            variants.add(new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + '_' + type.getName()));
+
+        return variants;
+    }
+
+    @SideOnly(Side.CLIENT)
+    private class MeshDefinition implements ItemMeshDefinition {
+        @Override
+        public ModelResourceLocation getModelLocation (ItemStack stack) {
+            if (stack == null)
+                return null;
+
+            EnumCompDrawer drawer = EnumCompDrawer.byMetadata(stack.getMetadata());
+
+            String key = StorageDrawers.MOD_ID + ":compDrawers_" + drawer;
+            return new ModelResourceLocation(key, "inventory");
         }
     }
 }

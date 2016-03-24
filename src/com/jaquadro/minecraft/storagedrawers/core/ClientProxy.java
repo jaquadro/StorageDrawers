@@ -3,7 +3,6 @@ package com.jaquadro.minecraft.storagedrawers.core;
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.resources.IconRegistry;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
@@ -22,21 +21,11 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameData;
 
 public class ClientProxy extends CommonProxy
 {
-    //private DrawersItemRenderer itemRenderer = new DrawersItemRenderer();
-
-    @SubscribeEvent
-    public void onModelBakeEvent (ModelBakeEvent event) {
-        //BasicDrawerModel.initialize(event.modelRegistry);
-        CompDrawerModel.initialize(event.modelRegistry);
-    }
-
     @Override
     public void initDynamic () {
         ModBlocks.basicDrawers.initDynamic();
@@ -61,6 +50,7 @@ public class ClientProxy extends CommonProxy
         iconRegistry.registerIcon(iconTapeCover);
 
         Chameleon.instance.modelRegistry.registerModel(new BasicDrawerModel.Register());
+        Chameleon.instance.modelRegistry.registerModel(new CompDrawerModel.Register());
         Chameleon.instance.modelRegistry.registerModel(new FramingTableModel.Register());
         Chameleon.instance.modelRegistry.registerModel(new CustomDrawerModel.Register());
 
@@ -117,26 +107,6 @@ public class ClientProxy extends CommonProxy
             renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.controller), 0, new ModelResourceLocation(ModBlocks.getQualifiedName(ModBlocks.controller), "inventory"));
         if (StorageDrawers.config.isBlockEnabled("controllerslave"))
             renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.controllerSlave), 0, new ModelResourceLocation(ModBlocks.getQualifiedName(ModBlocks.controllerSlave), "inventory"));
-
-        // Basic Drawers
-
-        //registerItemVariants(ModBlocks.basicDrawers, ModBlocks.basicDrawers.getResourceVariants());
-
-        /*if (Item.getItemFromBlock(ModBlocks.basicDrawers) instanceof ItemBasicDrawers) {
-            ItemBasicDrawers itemDrawers = (ItemBasicDrawers)Item.getItemFromBlock(ModBlocks.basicDrawers);
-            renderItem.getItemModelMesher().register(itemDrawers, itemDrawers.getMeshResolver());
-        }*/
-
-        // Comp Drawers
-
-        if (StorageDrawers.config.isBlockEnabled("compdrawers")) {
-            registerItemVariants(ModBlocks.compDrawers, ModBlocks.compDrawers.getResourceVariants());
-
-            for (EnumCompDrawer slots : EnumCompDrawer.values()) {
-                String resName = ModBlocks.getQualifiedName(ModBlocks.compDrawers) + "_" + slots.getName();
-                renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.compDrawers), slots.getMetadata(), new ModelResourceLocation(resName, "inventory"));
-            }
-        }
 
         // Trim
 
