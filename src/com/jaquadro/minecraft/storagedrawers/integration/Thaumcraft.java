@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectHelper;
+import thaumcraft.api.aspects.IEssentiaContainerItem;
 import thaumcraft.api.aspects.AspectList;
 
 public class Thaumcraft extends IntegrationModule
@@ -74,11 +74,13 @@ public class Thaumcraft extends IntegrationModule
     }
 
     private void setDrawerAspect (IDrawer drawer, ItemStack itemStack) {
-        AspectList aspects = AspectHelper.getObjectAspects(itemStack);
-        if (aspects == null || aspects.size() == 0)
-            return;
-
-        drawer.setExtendedData("aspect", aspects.getAspects()[0]);
+        if(itemStack.getItem() instanceof IEssentiaContainerItem) {
+            IEssentiaContainerItem container = (IEssentiaContainerItem)itemStack.getItem();
+            AspectList aspects = container.getAspects(itemStack);
+            if (!(aspects == null || aspects.size() == 0)) {
+                drawer.setExtendedData("aspect", aspects.getAspects()[0]);
+            }
+        }
     }
 
     private class WailaTooltipHandler implements IWailaTooltipHandler {
