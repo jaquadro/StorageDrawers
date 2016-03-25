@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block.pack;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.pack.*;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -11,6 +12,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 
 import java.util.List;
 
@@ -54,6 +56,51 @@ public class BlockDrawersPack extends BlockDrawers implements IPackBlock
             if (resolver.isValidMetaValue(i))
                 list.add(new ItemStack(item, 1, i));
         }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon (int side, int meta) {
+        meta = (meta < 0 || meta >= iconSide.length) ? 0 : meta;
+        if (!resolver.isValidMetaValue(meta))
+            getSimilarBlock().getIcon(side, meta);
+
+        return super.getIcon(side, meta);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    protected IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side, int level) {
+        int meta = blockAccess.getBlockMetadata(x, y, z);
+        meta = (meta < 0 || meta >= iconSide.length) ? 0 : meta;
+        if (!resolver.isValidMetaValue(meta))
+            getSimilarBlock().getIcon(side, meta);
+
+        return super.getIcon(blockAccess, x, y, z, side, level);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIconTrim (int meta) {
+        meta = (meta < 0 || meta >= iconSide.length) ? 0 : meta;
+        if (!resolver.isValidMetaValue(meta))
+            getSimilarBlock().getIconTrim(meta);
+
+        return super.getIconTrim(meta);
+    }
+
+    private BlockDrawers getSimilarBlock () {
+        if (drawerCount == 1 && !halfDepth)
+            return ModBlocks.fullDrawers1;
+        if (drawerCount == 2 && !halfDepth)
+            return ModBlocks.fullDrawers2;
+        if (drawerCount == 4 && !halfDepth)
+            return ModBlocks.fullDrawers4;
+        if (drawerCount == 2 && halfDepth)
+            return ModBlocks.halfDrawers2;
+        if (drawerCount == 4 && halfDepth)
+            return ModBlocks.halfDrawers4;
+        return ModBlocks.fullDrawers1;
     }
 
     @Override

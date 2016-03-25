@@ -625,7 +625,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public ArrayList<ItemStack> getDrops (World world, int x, int y, int z, int metadata, int fortune) {
-        ItemStack dropStack = new ItemStack(Item.getItemFromBlock(this), 1, metadata);
+        ItemStack dropStack = getMainDrop(world, x, y, z, metadata);
 
         ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
         drops.add(dropStack);
@@ -637,12 +637,18 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         NBTTagCompound tiledata = new NBTTagCompound();
         tile.writeToNBT(tiledata);
 
-        NBTTagCompound data = new NBTTagCompound();
-        data.setTag("tile", tiledata);
+        NBTTagCompound data = dropStack.getTagCompound();
+        if (data == null)
+            data = new NBTTagCompound();
 
+        data.setTag("tile", tiledata);
         dropStack.setTagCompound(data);
 
         return drops;
+    }
+
+    protected ItemStack getMainDrop (World world, int x, int y, int z, int metadata) {
+        return new ItemStack(Item.getItemFromBlock(this), 1, metadata);
     }
 
     @Override
@@ -658,7 +664,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     public TileEntityDrawers getTileEntitySafe (World world, int x, int y, int z) {
         TileEntityDrawers tile = getTileEntity(world, x, y, z);
         if (tile == null) {
-            tile = (TileEntityDrawers)createNewTileEntity(world, world.getBlockMetadata(x, y, z));
+            tile = createNewTileEntity(world, world.getBlockMetadata(x, y, z));
             world.setTileEntity(x, y, z, tile);
         }
 
@@ -697,14 +703,14 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @SideOnly(Side.CLIENT)
     public IIcon getIconTrim (int meta) {
-        meta %= iconTrim.length;
+        meta = (meta < 0 || meta >= iconTrim.length) ? 0 : meta;
         return iconTrim[meta];
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon (int side, int meta) {
-        meta %= iconSide.length;
+        meta = (meta < 0 || meta >= iconSide.length) ? 0 : meta;
 
         switch (side) {
             case 0:
@@ -751,7 +757,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @SideOnly(Side.CLIENT)
     protected IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side, int level) {
-        int meta = blockAccess.getBlockMetadata(x, y, z) % iconSide.length;
+        int meta = blockAccess.getBlockMetadata(x, y, z);
+        meta = (meta < 0 || meta >= iconSide.length) ? 0 : meta;
 
         TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
         if (tile == null || side == tile.getDirection()) {
@@ -898,7 +905,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @SideOnly(Side.CLIENT)
-    private void loadBlockConfig () {
+    protected void loadBlockConfig () {
         try {
             IResource configResource = Minecraft.getMinecraft().getResourceManager().getResource(blockConfig);
             BufferedReader reader = null;

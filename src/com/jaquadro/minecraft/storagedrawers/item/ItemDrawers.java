@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWood;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,14 +23,11 @@ import net.minecraftforge.common.util.Constants;
 
 import java.util.List;
 
-public class ItemDrawers extends ItemMultiTexture
+public class ItemDrawers extends ItemBlock
 {
     public ItemDrawers (Block block) {
-        super(block, block, BlockWood.field_150096_a);
-    }
-
-    protected ItemDrawers (Block block, String[] names) {
-        super(block, block, names);
+        super(block);
+        setMaxDamage(0);
     }
 
     @Override

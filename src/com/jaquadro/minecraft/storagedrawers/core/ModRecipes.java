@@ -124,5 +124,26 @@ public class ModRecipes
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.tape), " x ", "yyy",
                 'x', "slimeball", 'y', Items.paper));
         }
+
+        if (config.cache.enableFramedDrawers) {
+            GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.framingTable), "xxx", "x x",
+                'x', ModBlocks.trim);
+
+            if (config.isBlockEnabled("fulldrawers1"))
+                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullCustom1, config.getBlockRecipeOutput("fulldrawers1"), 0), "xxx", " y ", "xxx",
+                    'x', "stickWood", 'y', "chestWood"));
+            if (config.isBlockEnabled("fulldrawers2"))
+                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullCustom2, config.getBlockRecipeOutput("fulldrawers2"), 0), "xyx", "xzx", "xyx",
+                    'x', "stickWood", 'y', "chestWood", 'z', "plankWood"));
+            if (config.isBlockEnabled("halfdrawers2"))
+                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfCustom2, config.getBlockRecipeOutput("halfdrawers2"), 0), "xyx", "xzx", "xyx",
+                    'x', "stickWood", 'y', "chestWood", 'z', "slabWood"));
+            if (config.isBlockEnabled("fulldrawers4"))
+                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.fullCustom4, config.getBlockRecipeOutput("fulldrawers4"), 0), "yxy", "xzx", "yxy",
+                    'x', "stickWood", 'y', "chestWood", 'z', "plankWood"));
+            if (config.isBlockEnabled("halfdrawers4"))
+                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfCustom4, config.getBlockRecipeOutput("halfdrawers4"), 0), "yxy", "xzx", "yxy",
+                    'x', "stickWood", 'y', "chestWood", 'z', "slabWood"));
+        }
     }
 }

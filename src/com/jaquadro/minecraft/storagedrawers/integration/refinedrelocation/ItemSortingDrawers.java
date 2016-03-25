@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.integration.refinedrelocation;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.integration.RefinedRelocation;
+import com.jaquadro.minecraft.storagedrawers.item.ItemBasicDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -14,7 +15,7 @@ import net.minecraft.util.StatCollector;
 
 import java.util.List;
 
-public class ItemSortingDrawers extends ItemDrawers
+public class ItemSortingDrawers extends ItemBasicDrawers
 {
     public ItemSortingDrawers (Block block) {
         super(block);
