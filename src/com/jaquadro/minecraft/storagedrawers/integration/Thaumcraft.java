@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
@@ -74,6 +75,19 @@ public class Thaumcraft extends IntegrationModule
     }
 
     private void setDrawerAspect (IDrawer drawer, ItemStack itemStack) {
+        /* Check for labeled jars first */
+        NBTTagCompound compound = itemStack.getTagCompound();
+        if (compound != null) {
+            if (compound.hasKey("AspectFilter")) {
+                String aspectFilter = compound.getString("AspectFilter");
+                Aspect aspect = Aspect.getAspect(aspectFilter);
+                if (aspect != null) {
+                    drawer.setExtendedData("aspect", aspect);
+                    return;
+                }
+            }
+        }
+        /* Otherwise, see if the item contains essentia */
         if(itemStack.getItem() instanceof IEssentiaContainerItem) {
             IEssentiaContainerItem container = (IEssentiaContainerItem)itemStack.getItem();
             AspectList aspects = container.getAspects(itemStack);
