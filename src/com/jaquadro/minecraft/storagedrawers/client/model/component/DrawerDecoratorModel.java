@@ -57,7 +57,7 @@ public class DrawerDecoratorModel implements IBakedModel
     }
 
     public static boolean shouldHandleState (TileEntityDrawers tile) {
-        return tile.isShrouded() || tile.isVoid() || tile.isLocked(LockAttribute.LOCK_POPULATED) || tile.getOwner() != null;
+        return tile != null && tile.isShrouded() || tile.isVoid() || tile.isLocked(LockAttribute.LOCK_POPULATED) || tile.getOwner() != null;
     }
 
     @Override
