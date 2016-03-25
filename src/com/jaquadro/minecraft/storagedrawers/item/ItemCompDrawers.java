@@ -1,14 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
-import com.jaquadro.minecraft.chameleon.resources.IItemMeshProvider;
+import com.jaquadro.minecraft.chameleon.resources.IItemMeshMapper;
 import com.jaquadro.minecraft.chameleon.resources.IItemVariantProvider;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -18,15 +18,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemCompDrawers extends ItemBlock implements IItemMeshProvider, IItemVariantProvider
+public class ItemCompDrawers extends ItemBlock implements IItemMeshMapper, IItemVariantProvider
 {
-    @SideOnly(Side.CLIENT)
-    private MeshDefinition meshResolver;
-
     public ItemCompDrawers (Block block) {
         super(block);
     }
@@ -72,13 +70,6 @@ public class ItemCompDrawers extends ItemBlock implements IItemMeshProvider, IIt
     }
 
     @Override
-    public ItemMeshDefinition getMeshResolver () {
-        if (meshResolver == null)
-            meshResolver = new MeshDefinition();
-        return meshResolver;
-    }
-
-    @Override
     public List<ResourceLocation> getItemVariants () {
         ResourceLocation location = GameData.getItemRegistry().getNameForObject(this);
         List<ResourceLocation> variants = new ArrayList<ResourceLocation>();
@@ -89,17 +80,15 @@ public class ItemCompDrawers extends ItemBlock implements IItemMeshProvider, IIt
         return variants;
     }
 
-    @SideOnly(Side.CLIENT)
-    private class MeshDefinition implements ItemMeshDefinition {
-        @Override
-        public ModelResourceLocation getModelLocation (ItemStack stack) {
-            if (stack == null)
-                return null;
+    @Override
+    public List<Pair<ItemStack, ModelResourceLocation>> getMeshMappings () {
+        List<Pair<ItemStack, ModelResourceLocation>> mappings = new ArrayList<Pair<ItemStack, ModelResourceLocation>>();
 
-            EnumCompDrawer drawer = EnumCompDrawer.byMetadata(stack.getMetadata());
-
-            String key = StorageDrawers.MOD_ID + ":compDrawers_" + drawer;
-            return new ModelResourceLocation(key, "inventory");
+        for (EnumCompDrawer type : EnumCompDrawer.values()) {
+            ModelResourceLocation location = new ModelResourceLocation(StorageDrawers.MOD_ID + ":compDrawers_" + type.getName(), "inventory");
+            mappings.add(Pair.of(new ItemStack(this, 1, type.getMetadata()), location));
         }
+
+        return mappings;
     }
 }

@@ -14,7 +14,6 @@ import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRe
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityFramingRenderer;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPlanks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.ModelBakery;
@@ -53,6 +52,8 @@ public class ClientProxy extends CommonProxy
         Chameleon.instance.modelRegistry.registerModel(new CompDrawerModel.Register());
         Chameleon.instance.modelRegistry.registerModel(new FramingTableModel.Register());
         Chameleon.instance.modelRegistry.registerModel(new CustomDrawerModel.Register());
+
+        Chameleon.instance.modelRegistry.registerItemVariants(ModBlocks.trim);
 
         for (int i = 0; i < 5; i++) {
             if (iconIndicatorOffResource[i] != null)
@@ -107,26 +108,11 @@ public class ClientProxy extends CommonProxy
             renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.controller), 0, new ModelResourceLocation(ModBlocks.getQualifiedName(ModBlocks.controller), "inventory"));
         if (StorageDrawers.config.isBlockEnabled("controllerslave"))
             renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.controllerSlave), 0, new ModelResourceLocation(ModBlocks.getQualifiedName(ModBlocks.controllerSlave), "inventory"));
-
-        // Trim
-
-        if (StorageDrawers.config.isBlockEnabled("trim")) {
-            registerItemVariants(ModBlocks.trim, ModBlocks.trim.getResourceVariants());
-
-            for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
-                String resName = ModBlocks.getQualifiedName(ModBlocks.trim) + "_" + material.getName();
-                renderItem.getItemModelMesher().register(Item.getItemFromBlock(ModBlocks.trim), material.getMetadata(), new ModelResourceLocation(resName, "inventory"));
-            }
-        }
     }
 
     @Override
     public void registerDrawer (Block block) {
         //MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), itemRenderer);
-    }
-
-    private void registerItemVariants (Block block, String... variants) {
-        registerItemVariants(Item.getItemFromBlock(block), variants);
     }
 
     private void registerItemVariants (Item item, String... variants) {

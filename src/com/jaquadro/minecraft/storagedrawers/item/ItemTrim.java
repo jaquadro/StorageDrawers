@@ -1,23 +1,30 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.base.Function;
+import com.jaquadro.minecraft.chameleon.resources.IItemMeshMapper;
+import com.jaquadro.minecraft.chameleon.resources.IItemVariantProvider;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameData;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ItemTrim extends ItemMultiTexture
+public class ItemTrim extends ItemMultiTexture implements IItemMeshMapper, IItemVariantProvider
 {
-    //@SideOnly(Side.CLIENT)
-    //private MeshDefinition meshResolver;
-
     public ItemTrim (Block block) {
         super(block, block, new Function() {
             @Nullable
@@ -44,33 +51,27 @@ public class ItemTrim extends ItemMultiTexture
         return false;
     }
 
-    /*@SideOnly(Side.CLIENT)
-    public ItemMeshDefinition getMeshResolver () {
-        if (meshResolver == null)
-            meshResolver = new MeshDefinition();
-        return meshResolver;
+    @Override
+    public List<ResourceLocation> getItemVariants () {
+        ResourceLocation location = GameData.getItemRegistry().getNameForObject(this);
+        List<ResourceLocation> variants = new ArrayList<ResourceLocation>();
+
+        for (BlockPlanks.EnumType woodType : BlockPlanks.EnumType.values())
+            variants.add(new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + '_' + woodType.getName()));
+
+        return variants;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public ModelResourceLocation getModel (ItemStack stack, EntityPlayer player, int useRemaining) {
-        return meshResolver.getModelLocation(stack);
-    }
+    public List<Pair<ItemStack, ModelResourceLocation>> getMeshMappings () {
+        List<Pair<ItemStack, ModelResourceLocation>> mappings = new ArrayList<Pair<ItemStack, ModelResourceLocation>>();
 
-    @SideOnly(Side.CLIENT)
-    private class MeshDefinition implements ItemMeshDefinition
-    {
-        @Override
-        public ModelResourceLocation getModelLocation (ItemStack stack) {
-            if (stack == null)
-                return null;
-
-            String material = "oak";
-            if (stack.hasTagCompound() && stack.getTagCompound().hasKey("material"))
-                material = stack.getTagCompound().getString("material");
-
-            String key = StorageDrawers.MOD_ID + ":trim_" + material;
-            return new ModelResourceLocation(key, "inventory");
+        for (BlockPlanks.EnumType woodType : BlockPlanks.EnumType.values()) {
+            IBlockState state = block.getDefaultState().withProperty(BlockTrim.VARIANT, woodType);
+            ModelResourceLocation location = new ModelResourceLocation(ModBlocks.getQualifiedName(ModBlocks.trim) + '_' + woodType.getName(), "inventory");
+            mappings.add(Pair.of(new ItemStack(this, 1, block.getMetaFromState(state)), location));
         }
-    }*/
+
+        return mappings;
+    }
 }
