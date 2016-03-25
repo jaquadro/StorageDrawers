@@ -6,22 +6,21 @@ storageDrawers.container.compDrawers=変換ひきだし
 storageDrawers.container.upgrades=アップグレード
 storageDrawers.container.controller=ひきだしコントローラ
 storageDrawers.container.unboundSlave=孤立している
+storageDrawers.container.framingTable=組み立て台
 
 storagedrawers.msg.maxUpgrades=このひきだしはこれ以上機能を追加できません。
 
 # Items
 item.storagedrawers.upgradeTemplate.name=改良テンプレート
-item.storagedrawers.upgrade.iron.name=容量キット(II)
-item.storagedrawers.upgrade.gold.name=容量キット(III)
-item.storagedrawers.upgrade.obsidian.name=容量キット(IV)
-item.storagedrawers.upgrade.diamond.name=容量キット(V)
-item.storagedrawers.upgrade.emerald.name=容量キット(VI)
+item.storagedrawers.upgradeStorage.iron.name=容量キット(II)
+item.storagedrawers.upgradeStorage.gold.name=容量キット(III)
+item.storagedrawers.upgradeStorage.obsidian.name=容量キット(IV)
+item.storagedrawers.upgradeStorage.diamond.name=容量キット(V)
+item.storagedrawers.upgradeStorage.emerald.name=容量キット(VI)
 item.storagedrawers.upgradeStatus.level1.name=容量ランプ(I)
 item.storagedrawers.upgradeStatus.level1.description=満タンになると光る
 item.storagedrawers.upgradeStatus.level2.name=容量ランプ(II)
 item.storagedrawers.upgradeStatus.level2.description=容量ゲージを表示する
-item.storagedrawers.upgradeLock.name=ひきだしのカギ
-item.storagedrawers.upgradeLock.description=カギをかけられる
 item.storagedrawers.upgradeVoid.name=ひきだしブラックホール
 item.storagedrawers.upgradeVoid.description=入りきらない分が消滅する
 item.storagedrawers.upgradeCreative.store.name=クリエイティブ容量キット
@@ -30,54 +29,32 @@ item.storagedrawers.upgradeCreative.vend.name=クリエイティブ供給キッ�
 item.storagedrawers.upgradeCreative.vend.description=入れたものを無限に取り出せる
 item.storagedrawers.upgradeSorting.name=ひきだしソート
 item.storagedrawers.upgradeSorting.description=きれいに整頓する
+item.storagedrawers.drawerKey.name=ひきだしのカギ
+item.storagedrawers.drawerKey.description=ひきだしにカギをかけられる
 item.storagedrawers.shroudKey.name=ひみつのカギ
 item.storagedrawers.shroudKey.description=ラベルを非表示にできる
-item.storagedrawers.personalKey.default.name=じぶんのカギ
-item.storagedrawers.personalKey.default.description=他のプレイヤーからアイテムを守る
-item.storagedrawers.personalKey.cofh.name=じぶんのカギ(CoFH)
-item.storagedrawers.personalKey.cofh.description=他のプレイヤーからアイテムを守る
+item.storagedrawers.personalKey.name=じぶんのカギ
+item.storagedrawers.personalKey.description=他のプレイヤーからアイテムを守る
 item.storagedrawers.tape.name=梱包テープ
 item.storagedrawers.tape.description=ひきだしの中身をそのままに持ち運べる
 
 # Blocks
-tile.fullDrawers1.oak.name=オークのひきだし
-tile.fullDrawers1.spruce.name=マツのひきだし
-tile.fullDrawers1.birch.name=シラカバのひきだし
-tile.fullDrawers1.jungle.name=ジャングルのひきだし
-tile.fullDrawers1.acacia.name=アカシアのひきだし
-tile.fullDrawers1.big_oak.name=ダークオークのひきだし
+tile.basicDrawers.fulldrawers1.name=普通のひきだし
+tile.basicDrawers.fulldrawers2.name=普通のひきだし 1x2
+tile.basicDrawers.fulldrawers4.name=普通のひきだし 2x2
+tile.basicDrawers.halfdrawers2.name=ハーフひきだし 1x2
+tile.basicDrawers.halfdrawers4.name=ハーフひきだし 2x2
 
-tile.fullDrawers2.oak.name=オークのひきだし 1x2
-tile.fullDrawers2.spruce.name=マツのひきだし 1x2
-tile.fullDrawers2.birch.name=シラカバのひきだし 1x2
-tile.fullDrawers2.jungle.name=ジャングルのひきだし 1x2
-tile.fullDrawers2.acacia.name=アカシアのひきだし 1x2
-tile.fullDrawers2.big_oak.name=ダークオークのひきだし 1x2
-
-tile.fullDrawers4.oak.name=オークのひきだし 2x2
-tile.fullDrawers4.spruce.name=マツのひきだし 2x2
-tile.fullDrawers4.birch.name=シラカバのひきだし 2x2
-tile.fullDrawers4.jungle.name=ジャングルのひきだし 2x2
-tile.fullDrawers4.acacia.name=アカシアのひきだし 2x2
-tile.fullDrawers4.big_oak.name=ダークオークのひきだし 2x2
-
-tile.halfDrawers2.oak.name=オークのハーフひきだし 1x2
-tile.halfDrawers2.spruce.name=マツのハーフひきだし 1x2
-tile.halfDrawers2.birch.name=シラカバのハーフひきだし 1x2
-tile.halfDrawers2.jungle.name=ジャングルのハーフひきだし 1x2
-tile.halfDrawers2.acacia.name=アカシアのハーフひきだし 1x2
-tile.halfDrawers2.big_oak.name=ダークオークのハーフひきだし 1x2
-
-tile.halfDrawers4.oak.name=オークのハーフひきだし 2x2
-tile.halfDrawers4.spruce.name=マツのハーフひきだし 2x2
-tile.halfDrawers4.birch.name=シラカバのハーフひきだし 2x2
-tile.halfDrawers4.jungle.name=ジャングルのハーフひきだし 2x2
-tile.halfDrawers4.acacia.name=アカシアのハーフひきだし 2x2
-tile.halfDrawers4.big_oak.name=ダークオークのハーフひきだし 2x2
+tile.customDrawers.fulldrawers1.name=ひきだしの骨組み
+tile.customDrawers.fulldrawers2.name=ひきだしの骨組み 1x2
+tile.customDrawers.fulldrawers4.name=ひきだしの骨組み 2x2
+tile.customDrawers.halfdrawers2.name=ひきだしの骨組み 1x2
+tile.customDrawers.halfdrawers4.name=ひきだしの骨組み 2x2
 
 tile.compDrawers.name=変換ひきだし
-tile.drawerController.name=ひきだしコントローラ
+tile.controller.name=ひきだしコントローラ
 tile.controllerSlave.name=ひきだし子コントローラ
+tile.framingTable.name=組み立て台
 
 tile.trim.oak.name=オークの飾り箱
 tile.trim.spruce.name=マツの飾り箱
@@ -91,6 +68,15 @@ storageDrawers.drawers.sealed=テープでぐるぐる巻きだ
 storageDrawers.upgrade.description=容量を %d 倍にする
 storageDrawers.controller.description=接続している近くのひきだしに作用する
 storageDrawers.controllerSlave.description=コントローラの接続ポイントを増やせる
+
+# Material
+storageDrawers.material=材質: %s
+storageDrawers.material.oak=オーク
+storageDrawers.material.spruce=マツ
+storageDrawers.material.birch=シラカバ
+storageDrawers.material.jungle=ジャングル
+storageDrawers.material.acacia=アカシア
+storageDrawers.material.dark_oak=ダークオーク
 
 # Integration
 storageDrawers.waila.empty=<Empty>
@@ -107,10 +93,10 @@ storageDrawers.waila.protected=保護
 storageDrawers.config.title=収納ひきだしの設定
 
 storageDrawers.config.general=一般設定
-storageDrawers.config.general.tooltip=あれこれ。
+storageDrawers.config.general.tooltip=あれこれ
 
 storageDrawers.config.blocks=ブロック設定
-storageDrawers.config.blocks.tooltip=各ひきだしブロックの設定。
+storageDrawers.config.blocks.tooltip=各ひきだしブロックの設定
 
 storageDrawers.config.blocks.fullDrawers1=ひきだし 1x1
 storageDrawers.config.blocks.fullDrawers2=ひきだし 1x2
@@ -123,7 +109,7 @@ storageDrawers.config.blocks.trim=飾り箱
 storageDrawers.config.blocks.controllerSlave=ひきだし子コントローラ
 
 storageDrawers.config.upgrades=アップグレード設定
-storageDrawers.config.upgrades.tooltip=ひきだしをアップグレードするアイテムの設定。
+storageDrawers.config.upgrades.tooltip=ひきだしをアップグレードするアイテムの設定
 
 storageDrawers.config.upgrades.level2Mult=容量キット(II)の倍数
 storageDrawers.config.upgrades.level3Mult=容量キット(IIIの倍数
@@ -141,7 +127,7 @@ storageDrawers.config.prop.enablePersonalUpgrades=アクセス保護を有効化
 storageDrawers.config.prop.enableVoidUpgrades=ひきだしブラックホールを有効化
 storageDrawers.config.prop.enableCreativeUpgrades=クリエイティブ系アイテムを有効化
 storageDrawers.config.prop.enableSortingUpgrades=ひきだしソートを有効化
-storageDrawers.config.prop.enableSortingUpgrades.tooltip=Refined Relocation MODが必要。
+storageDrawers.config.prop.enableSortingUpgrades.tooltip=Refined Relocation MODが必要
 storageDrawers.config.prop.renderStorageUpgrades=アップグレードの見た目を描画する
 storageDrawers.config.prop.creativeTabVanillaWoods=クリエイティブでの木の種類
 storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=クリエイティブモードですべての木の種類のひきだしを表示する
@@ -171,6 +157,8 @@ storageDrawers.config.prop.wailaStackRemainder=WAILA個数表示
 storageDrawers.config.prop.wailaStackRemainder.tooltip=WAILAでアイテムの個数として表示されるもの
 storageDrawers.config.prop.controllerRange=コントローラー有効範囲
 storageDrawers.config.prop.controllerRange.tooltip=接続しているひきだしを検出する範囲
+storageDrawers.config.prop.enableFramedDrawers=ひきだしの骨組みを有効化
+storageDrawers.config.prop.enableFramedDrawers.tooltip=好きな材質のひきだしをつくれる
 
 storageDrawers.config.addons=アドオン
 storageDrawers.config.addons.tooltip=グローバルなアドオンの設定。
