@@ -44,6 +44,7 @@ public class Thaumcraft extends IntegrationModule
             GameRegistry.findItem(getModID(), "wispy_essence"),
             GameRegistry.findItem(getModID(), "crystal_essence"),
             GameRegistry.findItem(getModID(), "jar"),
+            GameRegistry.findItem(getModID(), "label"),
         };
 
         StorageDrawersApi.instance().renderRegistry().registerPreLabelRenderHandler(new LabelRenderHandler());
