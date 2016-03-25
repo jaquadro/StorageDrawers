@@ -11,6 +11,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
+import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -24,18 +25,15 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
+public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEntityDrawers>
 {
     //private float brightness;
 
@@ -66,9 +64,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
     //private List<int[]> savedGLLightRender = GLUtil.makeGLState(glLightRender);
 
     @Override
-    public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime, int destroyStage) {
-        TileEntityDrawers tileDrawers = (TileEntityDrawers) tile;
-        if (tileDrawers == null)
+    public void renderTileEntityAt (TileEntityDrawers tile, double x, double y, double z, float partialTickTime, int destroyStage) {
+        if (tile == null)
             return;
 
         float depth = 1;
@@ -92,7 +89,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
 
         renderItem = Minecraft.getMinecraft().getRenderItem();
 
-        EnumFacing side = EnumFacing.getFront(tileDrawers.getDirection());
+        EnumFacing side = EnumFacing.getFront(tile.getDirection());
         int ambLight = getWorld().getCombinedLight(tile.getPos().offset(side), 0);
         int lu = ambLight % 65536;
         int lv = ambLight / 65536;
@@ -106,8 +103,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         boolean cache = mc.gameSettings.fancyGraphics;
         mc.gameSettings.fancyGraphics = true;
 
-        if (!tileDrawers.isShrouded() && !tileDrawers.isSealed())
-            renderFastItemSet(tileDrawers, side, depth, partialTickTime);
+        if (!tile.isShrouded() && !tile.isSealed())
+            renderFastItemSet(tile, side, depth, partialTickTime);
 
         mc.gameSettings.fancyGraphics = cache;
 
@@ -115,7 +112,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         //WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         //worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
-        renderUpgrades(tileDrawers);
+        renderUpgrades(tile);
 
         //tessellator.draw();
 
@@ -358,7 +355,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer
         BlockDrawers block = (BlockDrawers)blockState.getBlock();
 
         double depth = block.isHalfDepth(blockState) ? .5 : 1;
-        TextureAtlasSprite iconTape = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconTapeCover);
+        TextureAtlasSprite iconTape = Chameleon.instance.iconRegistry.getIcon(DrawerSealedModel.iconTapeCover);
 
         GlStateManager.enablePolygonOffset();
         GlStateManager.doPolygonOffset(-1, -1);

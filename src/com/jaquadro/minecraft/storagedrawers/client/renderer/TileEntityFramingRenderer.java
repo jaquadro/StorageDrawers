@@ -8,12 +8,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
@@ -21,33 +17,30 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class TileEntityFramingRenderer extends TileEntitySpecialRenderer
+public class TileEntityFramingRenderer extends TileEntitySpecialRenderer<TileEntityFramingTable>
 {
     @Override
-    public void renderTileEntityAt (TileEntity tile, double x, double y, double z, float partialTickTime, int destroyStage) {
-        TileEntityFramingTable tileTable = (TileEntityFramingTable) tile;
-        if (tileTable == null)
+    public void renderTileEntityAt (TileEntityFramingTable tile, double x, double y, double z, float partialTickTime, int destroyStage) {
+        if (tile == null)
             return;
 
         IBlockState state = getWorld().getBlockState(tile.getPos());
         if (!state.getValue(BlockFramingTable.RIGHT_SIDE))
             return;
 
-        //itemRenderer.setRenderManager(RenderManager.instance);
-
-        ItemStack target = tileTable.getStackInSlot(0);
+        ItemStack target = tile.getStackInSlot(0);
         if (target != null) {
             Block block = Block.getBlockFromItem(target.getItem());
             IBlockState blockState = block.getStateFromMeta(target.getMetadata());
             if (block instanceof BlockDrawersCustom) {
-                ItemStack result = ItemCustomDrawers.makeItemStack(blockState, 1, tileTable.getStackInSlot(1), tileTable.getStackInSlot(2), tileTable.getStackInSlot(3));
-                renderSlot(tileTable, x, y, z, result, 1f, .5f, .25f, -.5f);
+                ItemStack result = ItemCustomDrawers.makeItemStack(blockState, 1, tile.getStackInSlot(1), tile.getStackInSlot(2), tile.getStackInSlot(3));
+                renderSlot(tile, x, y, z, result, 1f, .5f, .25f, -.5f);
             }
         }
 
-        renderSlot(tileTable, x, y, z, tileTable.getStackInSlot(1), .575f, .5f + .65f, .15f, .225f - .5f);
-        renderSlot(tileTable, x, y, z, tileTable.getStackInSlot(2), .575f, .5f - .65f, .15f, .225f - .5f);
-        renderSlot(tileTable, x, y, z, tileTable.getStackInSlot(3), .575f, .5f + .65f, .15f, -.225f - .5f);
+        renderSlot(tile, x, y, z, tile.getStackInSlot(1), .575f, .5f + .65f, .15f, .225f - .5f);
+        renderSlot(tile, x, y, z, tile.getStackInSlot(2), .575f, .5f - .65f, .15f, .225f - .5f);
+        renderSlot(tile, x, y, z, tile.getStackInSlot(3), .575f, .5f + .65f, .15f, -.225f - .5f);
     }
 
     private void renderSlot (TileEntityFramingTable tileTable, double x, double y, double z, ItemStack item, float scale, float tx, float ty, float tz) {

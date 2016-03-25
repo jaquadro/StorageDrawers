@@ -18,12 +18,19 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
 import java.util.List;
 
 public class DrawerDecoratorModel implements IBakedModel
 {
+    public static final ResourceLocation iconLock = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/lock_icon");
+    public static final ResourceLocation iconClaim = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/claim_icon");
+    public static final ResourceLocation iconClaimLock = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/claim_lock_icon");
+    public static final ResourceLocation iconVoid = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/void_icon");
+    public static final ResourceLocation iconShroudCover = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/drawers_oak_trim");
+
     private IBakedModel baseModel;
     private IExtendedBlockState blockState;
     private IDrawerGeometry drawer;
@@ -105,11 +112,11 @@ public class DrawerDecoratorModel implements IBakedModel
 
         TextureAtlasSprite lockIcon;
         if (locked && owned)
-            lockIcon = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconClaimLockResource);
+            lockIcon = Chameleon.instance.iconRegistry.getIcon(iconClaimLock);
         else if (locked)
-            lockIcon = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconLockResource);
+            lockIcon = Chameleon.instance.iconRegistry.getIcon(iconLock);
         else if (owned)
-            lockIcon = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconClaimResource);
+            lockIcon = Chameleon.instance.iconRegistry.getIcon(iconClaim);
         else
             return;
 
@@ -121,11 +128,11 @@ public class DrawerDecoratorModel implements IBakedModel
 
     private void buildVoidGeometry () {
         double depth = drawer.isHalfDepth() ? .5 : 1;
-        TextureAtlasSprite iconVoid = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconVoidResource);
+        TextureAtlasSprite icon = Chameleon.instance.iconRegistry.getIcon(iconVoid);
 
         ChamRender.instance.setRenderBounds(1 - .0625, 0.9375, 0, 1, 1, depth + .003);
         ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, dir.getIndex());
-        ChamRender.instance.bakePartialFace(ChamRender.FACE_ZPOS, blockState, iconVoid, 0, 0, 1, 1, false, 1, 1, 1);
+        ChamRender.instance.bakePartialFace(ChamRender.FACE_ZPOS, blockState, icon, 0, 0, 1, 1, false, 1, 1, 1);
         ChamRender.instance.state.clearRotateTransform();
     }
 
@@ -141,7 +148,7 @@ public class DrawerDecoratorModel implements IBakedModel
         double unit = 0.0625;
         double frontDepth = data.getFrontDepth() * unit;
 
-        TextureAtlasSprite iconCover = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconShroudCover);
+        TextureAtlasSprite iconCover = Chameleon.instance.iconRegistry.getIcon(iconShroudCover);
 
         for (int i = 0; i < count; i++) {
             if (!enabled[i])

@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.util.Constants;
 
@@ -54,6 +55,18 @@ public final class BasicDrawerModel
         @Override
         public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
             return new ModelHandler(existingModel);
+        }
+
+        @Override
+        public List<ResourceLocation> getTextureResources () {
+            List<ResourceLocation> resource = new ArrayList<ResourceLocation>();
+            resource.add(DrawerDecoratorModel.iconClaim);
+            resource.add(DrawerDecoratorModel.iconClaimLock);
+            resource.add(DrawerDecoratorModel.iconLock);
+            resource.add(DrawerDecoratorModel.iconShroudCover);
+            resource.add(DrawerDecoratorModel.iconVoid);
+            resource.add(DrawerSealedModel.iconTapeCover);
+            return resource;
         }
     }
 

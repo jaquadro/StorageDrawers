@@ -9,9 +9,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.util.ResourceLocation;
 
 public class DrawerSealedModel extends WrappedChamModel
 {
+    public static final ResourceLocation iconTapeCover = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/tape");
+
     public DrawerSealedModel (IBakedModel model, IBlockState state, boolean mergeLayers) {
         super(model, state, mergeLayers);
     }
@@ -19,7 +22,7 @@ public class DrawerSealedModel extends WrappedChamModel
     @Override
     protected void renderMippedLayer (ChamRender renderer, IBlockState state, Object... args) {
         float depth = ModBlocks.basicDrawers.isHalfDepth(state) ? .5f : 1f;
-        TextureAtlasSprite iconTape = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconTapeCover);
+        TextureAtlasSprite iconTape = Chameleon.instance.iconRegistry.getIcon(iconTapeCover);
 
         ChamRender.instance.startBaking(DefaultVertexFormats.ITEM, 0);
         ChamRender.instance.setRenderBounds(0, 0, .995f - depth, 1, 1, 1);
