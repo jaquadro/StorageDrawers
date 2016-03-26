@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
@@ -23,7 +24,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectHelper;
+import thaumcraft.api.aspects.IEssentiaContainerItem;
 import thaumcraft.api.aspects.AspectList;
 
 public class Thaumcraft extends IntegrationModule
@@ -44,6 +45,7 @@ public class Thaumcraft extends IntegrationModule
             GameRegistry.findItem(getModID(), "wispy_essence"),
             GameRegistry.findItem(getModID(), "crystal_essence"),
             GameRegistry.findItem(getModID(), "jar"),
+            GameRegistry.findItem(getModID(), "label"),
         };
 
         StorageDrawersApi.instance().renderRegistry().registerPreLabelRenderHandler(new LabelRenderHandler());
@@ -73,11 +75,26 @@ public class Thaumcraft extends IntegrationModule
     }
 
     private void setDrawerAspect (IDrawer drawer, ItemStack itemStack) {
-        AspectList aspects = AspectHelper.getObjectAspects(itemStack);
-        if (aspects == null || aspects.size() == 0)
-            return;
-
-        drawer.setExtendedData("aspect", aspects.getAspects()[0]);
+        /* Check for labeled jars first */
+        NBTTagCompound compound = itemStack.getTagCompound();
+        if (compound != null) {
+            if (compound.hasKey("AspectFilter")) {
+                String aspectFilter = compound.getString("AspectFilter");
+                Aspect aspect = Aspect.getAspect(aspectFilter);
+                if (aspect != null) {
+                    drawer.setExtendedData("aspect", aspect);
+                    return;
+                }
+            }
+        }
+        /* Otherwise, see if the item contains essentia */
+        if(itemStack.getItem() instanceof IEssentiaContainerItem) {
+            IEssentiaContainerItem container = (IEssentiaContainerItem)itemStack.getItem();
+            AspectList aspects = container.getAspects(itemStack);
+            if (!(aspects == null || aspects.size() == 0)) {
+                drawer.setExtendedData("aspect", aspects.getAspects()[0]);
+            }
+        }
     }
 
     private class WailaTooltipHandler implements IWailaTooltipHandler {
