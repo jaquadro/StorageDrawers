@@ -4,7 +4,9 @@ import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.model.WrappedChamModel;
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -21,7 +23,11 @@ public class DrawerSealedModel extends WrappedChamModel
 
     @Override
     protected void renderMippedLayer (ChamRender renderer, IBlockState state, Object... args) {
-        float depth = ModBlocks.basicDrawers.isHalfDepth(state) ? .5f : 1f;
+        if (!(state.getBlock() instanceof BlockDrawers))
+            return;
+
+        BlockDrawers block = (BlockDrawers) state.getBlock();
+        float depth = block.isHalfDepth(state) ? .5f : 1f;
         TextureAtlasSprite iconTape = Chameleon.instance.iconRegistry.getIcon(iconTapeCover);
 
         ChamRender.instance.startBaking(DefaultVertexFormats.ITEM, 0);
