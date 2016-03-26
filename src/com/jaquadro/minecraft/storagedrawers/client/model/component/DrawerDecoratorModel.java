@@ -3,15 +3,13 @@ package com.jaquadro.minecraft.storagedrawers.client.model.component;
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.geometry.Area2D;
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
+import com.jaquadro.minecraft.chameleon.render.ChamRenderManager;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGeometry;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -57,7 +55,7 @@ public class DrawerDecoratorModel implements IBakedModel
     }
 
     public static boolean shouldHandleState (TileEntityDrawers tile) {
-        return tile != null && tile.isShrouded() || tile.isVoid() || tile.isLocked(LockAttribute.LOCK_POPULATED) || tile.getOwner() != null;
+        return tile != null && (tile.isShrouded() || tile.isVoid() || tile.isLocked(LockAttribute.LOCK_POPULATED) || tile.getOwner() != null);
     }
 
     @Override
@@ -67,17 +65,19 @@ public class DrawerDecoratorModel implements IBakedModel
 
     @Override
     public List<BakedQuad> getGeneralQuads () {
-        ChamRender.instance.startBaking(DefaultVertexFormats.BLOCK);
+        ChamRender renderer = ChamRenderManager.instance.getRenderer(null);
+        renderer.startBaking(DefaultVertexFormats.ITEM);
         if (shrouded)
-            buildShroudGeometry();
+            buildShroudGeometry(renderer);
         if (locked || owned)
-            buildLockGeometry();
+            buildLockGeometry(renderer);
         if (voiding)
-            buildVoidGeometry();
+            buildVoidGeometry(renderer);
 
-        ChamRender.instance.stopBaking();
-        List<BakedQuad> quads = ChamRender.instance.takeBakedQuads(null);
+        renderer.stopBaking();
+        List<BakedQuad> quads = renderer.takeBakedQuads(null);
         quads.addAll(baseModel.getGeneralQuads());
+        ChamRenderManager.instance.releaseRenderer(renderer);
 
         return quads;
     }
@@ -107,7 +107,7 @@ public class DrawerDecoratorModel implements IBakedModel
         return baseModel.getItemCameraTransforms();
     }
 
-    private void buildLockGeometry () {
+    private void buildLockGeometry (ChamRender renderer) {
         double depth = drawer.isHalfDepth() ? .5 : 1;
 
         TextureAtlasSprite lockIcon;
@@ -120,23 +120,23 @@ public class DrawerDecoratorModel implements IBakedModel
         else
             return;
 
-        ChamRender.instance.setRenderBounds(0.46875, 0.9375, 0, 0.53125, 1, depth + .003);
-        ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, dir.getIndex());
-        ChamRender.instance.bakePartialFace(ChamRender.FACE_ZPOS, blockState, lockIcon, 0, 0, 1, 1, false, 1, 1, 1);
-        ChamRender.instance.state.clearRotateTransform();
+        renderer.setRenderBounds(0.46875, 0.9375, 0, 0.53125, 1, depth + .003);
+        renderer.state.setRotateTransform(ChamRender.ZPOS, dir.getIndex());
+        renderer.bakePartialFace(ChamRender.FACE_ZPOS, blockState, lockIcon, 0, 0, 1, 1, false, 1, 1, 1);
+        renderer.state.clearRotateTransform();
     }
 
-    private void buildVoidGeometry () {
+    private void buildVoidGeometry (ChamRender renderer) {
         double depth = drawer.isHalfDepth() ? .5 : 1;
         TextureAtlasSprite icon = Chameleon.instance.iconRegistry.getIcon(iconVoid);
 
-        ChamRender.instance.setRenderBounds(1 - .0625, 0.9375, 0, 1, 1, depth + .003);
-        ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, dir.getIndex());
-        ChamRender.instance.bakePartialFace(ChamRender.FACE_ZPOS, blockState, icon, 0, 0, 1, 1, false, 1, 1, 1);
-        ChamRender.instance.state.clearRotateTransform();
+        renderer.setRenderBounds(1 - .0625, 0.9375, 0, 1, 1, depth + .003);
+        renderer.state.setRotateTransform(ChamRender.ZPOS, dir.getIndex());
+        renderer.bakePartialFace(ChamRender.FACE_ZPOS, blockState, icon, 0, 0, 1, 1, false, 1, 1, 1);
+        renderer.state.clearRotateTransform();
     }
 
-    private void buildShroudGeometry () {
+    private void buildShroudGeometry (ChamRender renderer) {
         if (!(blockState.getBlock() instanceof BlockDrawers))
             return;
 
@@ -157,11 +157,11 @@ public class DrawerDecoratorModel implements IBakedModel
             StatusModelData.Slot slot = data.getSlot(i);
             Area2D bounds = slot.getIconArea();
 
-            ChamRender.instance.setRenderBounds(bounds.getX() * unit, bounds.getY() * unit, 0,
+            renderer.setRenderBounds(bounds.getX() * unit, bounds.getY() * unit, 0,
                 (bounds.getX() + bounds.getWidth()) * unit, (bounds.getY() + bounds.getHeight()) * unit, depth - frontDepth + .003);
-            ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, dir.getIndex());
-            ChamRender.instance.bakeFace(ChamRender.FACE_ZPOS, blockState, iconCover, false, 1, 1, 1);
-            ChamRender.instance.state.clearRotateTransform();
+            renderer.state.setRotateTransform(ChamRender.ZPOS, dir.getIndex());
+            renderer.bakeFace(ChamRender.FACE_ZPOS, blockState, iconCover, false, 1, 1, 1);
+            renderer.state.clearRotateTransform();
         }
     }
 }

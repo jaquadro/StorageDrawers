@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.client.renderer;
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.geometry.Area2D;
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
+import com.jaquadro.minecraft.chameleon.render.ChamRenderManager;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.render.IRenderLabel;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
@@ -99,12 +100,14 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         //if (brightness > 1)
         //    brightness = 1;
 
+        ChamRender renderer = ChamRenderManager.instance.getRenderer(Tessellator.getInstance().getWorldRenderer());
+
         Minecraft mc = Minecraft.getMinecraft();
         boolean cache = mc.gameSettings.fancyGraphics;
         mc.gameSettings.fancyGraphics = true;
 
         if (!tile.isShrouded() && !tile.isSealed())
-            renderFastItemSet(tile, side, depth, partialTickTime);
+            renderFastItemSet(renderer, tile, side, depth, partialTickTime);
 
         mc.gameSettings.fancyGraphics = cache;
 
@@ -112,7 +115,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         //WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         //worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
-        renderUpgrades(tile);
+        renderUpgrades(renderer, tile);
 
         //tessellator.draw();
 
@@ -127,10 +130,10 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         GlStateManager.popMatrix();
 
-
+        ChamRenderManager.instance.releaseRenderer(renderer);
     }
 
-    private void renderFastItemSet (TileEntityDrawers tile, EnumFacing side, float depth, float partialTickTime) {
+    private void renderFastItemSet (ChamRender renderer, TileEntityDrawers tile, EnumFacing side, float depth, float partialTickTime) {
         int drawerCount = tile.getDrawerCount();
         boolean restoreItemState = false;
         boolean restoreBlockState = false;
@@ -161,7 +164,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         for (int i = 0; i < drawerCount; i++) {
             if (renderStacks[i] != null && !renderAsBlock[i])
-                renderFastItem(renderStacks[i], tile, i, side, depth, partialTickTime);
+                renderFastItem(renderer, renderStacks[i], tile, i, side, depth, partialTickTime);
         }
 
         //if (restoreBlockState) {
@@ -171,7 +174,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         for (int i = 0; i < drawerCount; i++) {
             if (renderStacks[i] != null && renderAsBlock[i])
-                renderFastItem(renderStacks[i], tile, i, side, depth, partialTickTime);
+                renderFastItem(renderer, renderStacks[i], tile, i, side, depth, partialTickTime);
         }
 
         //GlStateManager.popAttrib();
@@ -185,7 +188,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         //    GLUtil.restoreGLState(savedGLStateItemRender);
     }
 
-    private void renderFastItem (ItemStack itemStack, TileEntityDrawers tile, int slot, EnumFacing side, float depth, float partialTickTime) {
+    private void renderFastItem (ChamRender renderer, ItemStack itemStack, TileEntityDrawers tile, int slot, EnumFacing side, float depth, float partialTickTime) {
         int drawerCount = tile.getDrawerCount();
         float xunit = getXOffset(drawerCount, slot);
         float yunit = getYOffset(drawerCount, slot);
@@ -268,18 +271,18 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         return Math.abs(offsetX[side.ordinal()] - x);
     }
 
-    private void renderUpgrades (TileEntityDrawers tile) {
+    private void renderUpgrades (ChamRender renderer, TileEntityDrawers tile) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 
         GlStateManager.enableAlpha();
 
         IBlockState blockState = tile.getWorld().getBlockState(tile.getPos());
 
-        renderIndicator(tile, blockState, tile.getDirection(), tile.getEffectiveStatusLevel());
-        renderTape(tile, blockState, tile.getDirection(), tile.isSealed());
+        renderIndicator(renderer, tile, blockState, tile.getDirection(), tile.getEffectiveStatusLevel());
+        renderTape(renderer, tile, blockState, tile.getDirection(), tile.isSealed());
     }
 
-    private void renderIndicator (TileEntityDrawers tile, IBlockState blockState, int side, int level) {
+    private void renderIndicator (ChamRender renderer, TileEntityDrawers tile, IBlockState blockState, int side, int level) {
         if (level <= 0 || side < 2 || side > 5)
             return;
 
@@ -305,20 +308,20 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
             GlStateManager.enablePolygonOffset();
             GlStateManager.doPolygonOffset(-1, -1);
 
-            ChamRender.instance.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
+            renderer.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
                 (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth);
-            ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
-            ChamRender.instance.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconOff, 1, 1, 1);
-            ChamRender.instance.state.clearRotateTransform();
+            renderer.state.setRotateTransform(ChamRender.ZPOS, side);
+            renderer.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconOff, 1, 1, 1);
+            renderer.state.clearRotateTransform();
 
             GlStateManager.doPolygonOffset(-1, -10);
 
             if (level == 1 && drawer.getMaxCapacity() > 0 && drawer.getRemainingCapacity() == 0) {
-                ChamRender.instance.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
+                renderer.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
                     (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth);
-                ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
-                ChamRender.instance.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
-                ChamRender.instance.state.clearRotateTransform();
+                renderer.state.setRotateTransform(ChamRender.ZPOS, side);
+                renderer.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
+                renderer.state.clearRotateTransform();
             }
             else if (level >= 2) {
                 int stepX = statusInfo.getSlot(i).getActiveStepsX();
@@ -336,11 +339,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
                     indXCur = Math.min(indXCur, indXEnd);
                     indYCur = Math.min(indYCur, indYEnd);
 
-                    ChamRender.instance.setRenderBounds(indXStart * unit, indYStart * unit, 0,
+                    renderer.setRenderBounds(indXStart * unit, indYStart * unit, 0,
                         indXCur * unit, indYCur * unit, depth - frontDepth);
-                    ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
-                    ChamRender.instance.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
-                    ChamRender.instance.state.clearRotateTransform();
+                    renderer.state.setRotateTransform(ChamRender.ZPOS, side);
+                    renderer.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
+                    renderer.state.clearRotateTransform();
                 }
             }
 
@@ -348,7 +351,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         }
     }
 
-    private void renderTape (TileEntityDrawers tile, IBlockState blockState, int side, boolean taped) {
+    private void renderTape (ChamRender renderer, TileEntityDrawers tile, IBlockState blockState, int side, boolean taped) {
         if (!taped || side < 2 || side > 5)
             return;
 
@@ -360,10 +363,10 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         GlStateManager.enablePolygonOffset();
         GlStateManager.doPolygonOffset(-1, -1);
 
-        ChamRender.instance.setRenderBounds(0, 0, 0, 1, 1, depth);
-        ChamRender.instance.state.setRotateTransform(ChamRender.ZPOS, side);
-        ChamRender.instance.renderPartialFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconTape, 0, 0, 1, 1, 1, 1, 1);
-        ChamRender.instance.state.clearRotateTransform();
+        renderer.setRenderBounds(0, 0, 0, 1, 1, depth);
+        renderer.state.setRotateTransform(ChamRender.ZPOS, side);
+        renderer.renderPartialFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconTape, 0, 0, 1, 1, 1, 1, 1);
+        renderer.state.clearRotateTransform();
 
         GlStateManager.disablePolygonOffset();
     }
