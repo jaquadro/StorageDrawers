@@ -51,11 +51,11 @@ public class CommonProxy
 
     @SubscribeEvent
     public void playerInteracts (PlayerInteractEvent event) {
-        if (event.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK && event.entityPlayer.capabilities.isCreativeMode) {
-            TileEntity tile = event.world.getTileEntity(event.pos);
+        if (event.getAction() == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK && event.getEntityPlayer().capabilities.isCreativeMode) {
+            TileEntity tile = event.getWorld().getTileEntity(event.getPos());
             if (tile instanceof TileEntityDrawers) {
                 int dir = ((TileEntityDrawers) tile).getDirection();
-                if (dir == event.face.ordinal()) {
+                if (dir == event.getFace().ordinal()) {
                     event.setCanceled(true);
                     return;
                 }

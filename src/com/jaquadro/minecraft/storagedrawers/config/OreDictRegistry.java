@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
+import com.jaquadro.minecraft.storagedrawers.util.UniqueMetaIdentifier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameData;
@@ -149,8 +150,8 @@ public class OreDictRegistry
         if (itemId == null)
             return null;
 
-        GameRegistry.UniqueIdentifier uid = new GameRegistry.UniqueIdentifier(itemId);
-        return uid.modId;
+        UniqueMetaIdentifier uid = new UniqueMetaIdentifier(itemId);
+        return uid.getModID();
     }
 
     private boolean isValidForEquiv (String oreName) {

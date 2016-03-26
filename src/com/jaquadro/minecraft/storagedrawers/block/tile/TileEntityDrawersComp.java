@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
+import com.jaquadro.minecraft.storagedrawers.util.UniqueMetaIdentifier;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -380,12 +381,12 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     private ItemStack findMatchingModCandidate (ItemStack reference, List<ItemStack> candidates) {
         String referenceName = GameData.getItemRegistry().getNameForObject(reference.getItem()).toString();
         if (referenceName != null) {
-            GameRegistry.UniqueIdentifier referneceID = new GameRegistry.UniqueIdentifier(referenceName);
+           UniqueMetaIdentifier referneceID = new UniqueMetaIdentifier(referenceName);
             for (ItemStack candidate : candidates) {
                 String matchName = GameData.getItemRegistry().getNameForObject(candidate.getItem()).toString();
                 if (matchName != null) {
-                    GameRegistry.UniqueIdentifier matchID = new GameRegistry.UniqueIdentifier(matchName);
-                    if (referneceID.modId.equals(matchID.modId))
+                    UniqueMetaIdentifier matchID = new UniqueMetaIdentifier(matchName);
+                    if (referneceID.getModID().equals(matchID.getModID()))
                         return candidate;
                 }
             }

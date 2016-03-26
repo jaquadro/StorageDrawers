@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 
-@Mod(modid = StorageDrawers.MOD_ID, name = StorageDrawers.MOD_NAME, version = StorageDrawers.MOD_VERSION, dependencies = "required-after:Forge@[11.15.1.1722,);required-after:Chameleon;after:waila;", guiFactory = StorageDrawers.SOURCE_PATH + "core.ModGuiFactory")
+@Mod(modid = StorageDrawers.MOD_ID, name = StorageDrawers.MOD_NAME, version = StorageDrawers.MOD_VERSION, dependencies = "required-after:Forge@[12.16.0.1805,);required-after:Chameleon;after:waila;", guiFactory = StorageDrawers.SOURCE_PATH + "core.ModGuiFactory")
 public class StorageDrawers
 {
     public static final String MOD_ID = "StorageDrawers";
@@ -103,7 +103,7 @@ public class StorageDrawers
 
     @SubscribeEvent
     public void onConfigChanged (ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.modID.equals(MOD_ID))
+        if (event.getModID().equals(MOD_ID))
             config.syncConfig();
     }
 }

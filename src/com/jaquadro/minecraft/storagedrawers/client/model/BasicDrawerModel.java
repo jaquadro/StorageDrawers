@@ -213,7 +213,7 @@ public class BasicDrawerModel implements IBakedModel
 
         @Override
         public ItemOverrideList getOverrides () {
-            return ItemOverrideList.NONE;
+            return ItemModelOverride.INSTANCE;
         }
 
         private List<BakedQuad> createSealedQuad (BlockDrawers block) {
