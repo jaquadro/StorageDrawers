@@ -67,10 +67,12 @@ public class CountUpdateMessage implements IMessage
         public IMessage onMessage (CountUpdateMessage message, MessageContext ctx) {
             if (!message.failed && ctx.side == Side.CLIENT) {
                 World world = Minecraft.getMinecraft().theWorld;
-                BlockPos pos = new BlockPos(message.x, message.y, message.z);
-                TileEntity tileEntity = world.getTileEntity(pos);
-                if (tileEntity instanceof TileEntityDrawers) {
-                    ((TileEntityDrawers) tileEntity).clientUpdateCount(message.slot, message.count);
+                if (world != null) {
+                    BlockPos pos = new BlockPos(message.x, message.y, message.z);
+                    TileEntity tileEntity = world.getTileEntity(pos);
+                    if (tileEntity instanceof TileEntityDrawers) {
+                        ((TileEntityDrawers) tileEntity).clientUpdateCount(message.slot, message.count);
+                    }
                 }
             }
 
