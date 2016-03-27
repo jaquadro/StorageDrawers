@@ -163,6 +163,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         return false;
     }
 
+    public EnumFacing getDirection (IBlockAccess blockAccess, BlockPos pos) {
+        TileEntityDrawers tile = getTileEntity(blockAccess, pos);
+        return (tile != null) ? EnumFacing.getFront(tile.getDirection()) : EnumFacing.NORTH;
+    }
+
     @SideOnly(Side.CLIENT)
     public void initDynamic () {
         statusInfo = new StatusModelData[EnumBasicDrawer.values().length];
@@ -205,8 +210,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public AxisAlignedBB getBoundingBox (IBlockState state, IBlockAccess blockAccess, BlockPos pos) {
-        if (isHalfDepth(state)) {
-            switch (state.getValue(FACING)) {
+        TileEntityDrawers tile = getTileEntity(blockAccess, pos);
+        if (tile != null && isHalfDepth(state)) {
+            switch (EnumFacing.getFront(tile.getDirection())) {
                 case NORTH:
                     return AABB_NORTH_HALF;
                 case SOUTH:
@@ -250,7 +256,6 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             tile.markDirty();
 
             world.setBlockState(pos, state.withProperty(FACING, facing));
-            //world.notifyBlockUpdate(pos, state, state.withProperty(FACING, facing), 3);
         }
 
         super.onBlockAdded(world, pos, state);
@@ -516,7 +521,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (world.isRemote && player.capabilities.isCreativeMode) {
             RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
 
-            if (state.getValue(FACING) == ray.sideHit) {
+            if (getDirection(world, pos) == ray.sideHit) {
                 onBlockClicked(world, pos, player);
                 return false;
             }
@@ -601,7 +606,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @Override
     @SideOnly(Side.CLIENT)
     public boolean addHitEffects (IBlockState state, World worldObj, RayTraceResult target, EffectRenderer effectRenderer) {
-        if (state.getValue(FACING) == target.sideHit)
+        if (getDirection(worldObj, target.getBlockPos()) == target.sideHit)
             return true;
 
         return super.addHitEffects(state, worldObj, target, effectRenderer);
