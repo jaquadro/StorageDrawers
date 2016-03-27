@@ -2,20 +2,19 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -65,16 +64,16 @@ public class ItemDrawers extends ItemBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation (ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+    public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
         if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("material")) {
             String key = itemStack.getTagCompound().getString("material");
-            list.add(StatCollector.translateToLocalFormatted("storageDrawers.material", StatCollector.translateToLocalFormatted("storageDrawers.material." + key)));
+            list.add(I18n.translateToLocalFormatted("storageDrawers.material", I18n.translateToLocal("storageDrawers.material." + key)));
         }
 
-        list.add(StatCollector.translateToLocalFormatted("storageDrawers.drawers.description", getCapacityForBlock(itemStack)));
+        list.add(I18n.translateToLocalFormatted("storageDrawers.drawers.description", getCapacityForBlock(itemStack)));
 
         if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("tile"))
-            list.add(EnumChatFormatting.YELLOW + StatCollector.translateToLocalFormatted("storageDrawers.drawers.sealed"));
+            list.add(ChatFormatting.YELLOW + I18n.translateToLocal("storageDrawers.drawers.sealed"));
     }
 
     private int getCapacityForBlock (ItemStack itemStack) {

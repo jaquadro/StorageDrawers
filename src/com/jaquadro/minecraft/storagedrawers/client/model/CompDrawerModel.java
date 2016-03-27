@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
-import com.jaquadro.minecraft.chameleon.model.DefaultHandler;
 import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
@@ -11,8 +10,8 @@ import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealed
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -45,16 +44,16 @@ public final class CompDrawerModel
 
         @Override
         public IBakedModel getModel (IBlockState state, IBakedModel existingModel) {
-            return new ModelHandler(existingModel);
+            return existingModel; // new ModelHandler(existingModel);
         }
 
         @Override
         public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
-            return new ModelHandler(existingModel);
+            return existingModel; // new ModelHandler(existingModel);
         }
     }
 
-    public static class ModelHandler extends DefaultHandler
+    /*public static class ModelHandler extends DefaultHandler
     {
         private IBakedModel parent;
 
@@ -97,5 +96,5 @@ public final class CompDrawerModel
         public TextureAtlasSprite getParticleTexture () {
             return parent.getParticleTexture();
         }
-    }
+    }*/
 }

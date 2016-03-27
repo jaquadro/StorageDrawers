@@ -1,20 +1,19 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
-import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
@@ -34,8 +33,8 @@ public class BlockDrawersCustom extends BlockDrawers
     }
 
     @Override
-    public boolean canRenderInLayer (EnumWorldBlockLayer layer) {
-        return layer == EnumWorldBlockLayer.CUTOUT_MIPPED || layer == EnumWorldBlockLayer.TRANSLUCENT;
+    public boolean canRenderInLayer (BlockRenderLayer layer) {
+        return layer == BlockRenderLayer.CUTOUT_MIPPED || layer == BlockRenderLayer.TRANSLUCENT;
     }
 
     @Override
@@ -48,22 +47,22 @@ public class BlockDrawersCustom extends BlockDrawers
     }
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List list) {
+    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
         for (EnumBasicDrawer type : EnumBasicDrawer.values())
             list.add(new ItemStack(item, 1, type.getMetadata()));
     }
 
     @Override
-    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile != null && tile.getMaterialSide() == null)
             return false;
 
-        return super.onBlockActivated(world, pos, state, player, side, hitX, hitY, hitZ);
+        return super.onBlockActivated(world, pos, state, player, hand, item, side, hitX, hitY, hitZ);
     }
 
     @Override
-    protected BlockState createBlockState () {
+    protected BlockStateContainer createBlockState () {
         return new ExtendedBlockState(this, new IProperty[] { BLOCK, FACING }, new IUnlistedProperty[] { TILE });
     }
 

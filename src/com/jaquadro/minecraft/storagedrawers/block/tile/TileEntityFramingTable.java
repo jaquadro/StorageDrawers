@@ -11,10 +11,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 
 public class TileEntityFramingTable extends TileEntity implements IInventory
@@ -88,7 +88,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     }
 
     @Override
-    public IChatComponent getDisplayName () {
+    public ITextComponent getDisplayName () {
         return null;
     }
 
@@ -167,7 +167,8 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
         if (block == null)
             return false;
 
-        return block.isOpaqueCube();
+        IBlockState state = block.getStateFromMeta(stack.getMetadata());
+        return block.isOpaqueCube(state);
     }
 
     @Override
@@ -214,16 +215,16 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
 
-        return new S35PacketUpdateTileEntity(pos, 5, tag);
+        return new SPacketUpdateTileEntity(pos, 5, tag);
     }
 
     @Override
-    public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity pkt) {
+    public void onDataPacket (NetworkManager net, SPacketUpdateTileEntity pkt) {
         readFromNBT(pkt.getNbtCompound());
         //getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
     }
 
-    private static final AxisAlignedBB ZERO_EXTENT_AABB = AxisAlignedBB.fromBounds(0, 0, 0, 0, 0, 0);
+    private static final AxisAlignedBB ZERO_EXTENT_AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
     @Override
     public AxisAlignedBB getRenderBoundingBox () {
@@ -248,6 +249,6 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
         int xMax = Math.max(pos.getX(), pos.getX() + xOff) + 1;
         int zMin = Math.min(pos.getZ(), pos.getZ() + zOff);
         int zMax = Math.max(pos.getZ(), pos.getZ() + zOff) + 1;
-        return AxisAlignedBB.fromBounds(xMin, pos.getY() + 1, xMax, zMin, pos.getY() + 2, zMax);
+        return new AxisAlignedBB(xMin, pos.getY() + 1, xMax, zMin, pos.getY() + 2, zMax);
     }
 }

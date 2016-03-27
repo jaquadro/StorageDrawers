@@ -26,7 +26,6 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
@@ -101,7 +100,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         //if (brightness > 1)
         //    brightness = 1;
 
-        ChamRender renderer = ChamRenderManager.instance.getRenderer(Tessellator.getInstance().getWorldRenderer());
+        ChamRender renderer = ChamRenderManager.instance.getRenderer(Tessellator.getInstance().getBuffer());
 
         Minecraft mc = Minecraft.getMinecraft();
         boolean cache = mc.gameSettings.fancyGraphics;

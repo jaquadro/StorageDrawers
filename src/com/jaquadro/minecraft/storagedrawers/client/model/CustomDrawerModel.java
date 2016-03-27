@@ -1,12 +1,11 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
+import com.google.common.collect.ImmutableList;
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.model.ChamModel;
-import com.jaquadro.minecraft.chameleon.model.DefaultBlockHandler;
-import com.jaquadro.minecraft.chameleon.model.DefaultItemHandler;
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
 import com.jaquadro.minecraft.chameleon.resources.IconUtil;
-import com.jaquadro.minecraft.chameleon.resources.register.SmartHandlerRegister;
+import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
@@ -15,13 +14,15 @@ import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecora
 import com.jaquadro.minecraft.storagedrawers.client.model.dynamic.CommonDrawerRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.util.Constants;
 
@@ -31,7 +32,7 @@ import java.util.List;
 
 public class CustomDrawerModel extends ChamModel
 {
-    public static class Register extends SmartHandlerRegister<ModelHandler, ItemModelHandler>
+    public static class Register extends DefaultRegister
     {
         public static final ResourceLocation iconDefaultSide = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/drawers_raw_side");
 
@@ -75,6 +76,16 @@ public class CustomDrawerModel extends ChamModel
             }
 
             return states;
+        }
+
+        @Override
+        public IBakedModel getModel (IBlockState state, IBakedModel existingModel) {
+            return new Model();
+        }
+
+        @Override
+        public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
+            return new Model();
         }
 
         @Override
@@ -182,7 +193,87 @@ public class CustomDrawerModel extends ChamModel
         return iconParticle;
     }
 
-    public static class ModelHandler extends DefaultBlockHandler
+    public static class Model implements IBakedModel
+    {
+        private IBakedModel proxy;
+        private IBlockState stateCache;
+
+        private IBakedModel buildProxy (IBlockState state) {
+            IBakedModel mainModel = CustomDrawerModel.fromBlock(state);
+            if (!(state instanceof IExtendedBlockState))
+                return mainModel;
+
+            IExtendedBlockState xstate = (IExtendedBlockState)state;
+            TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
+
+            if (!DrawerDecoratorModel.shouldHandleState(tile))
+                return mainModel;
+
+            EnumBasicDrawer drawer = (EnumBasicDrawer)state.getValue(BlockDrawers.BLOCK);
+            EnumFacing dir = state.getValue(BlockDrawers.FACING);
+
+            return new DrawerDecoratorModel(mainModel, xstate, drawer, dir, tile);
+        }
+
+        private void setProxy (IBlockState state) {
+            stateCache = state;
+            proxy = buildProxy(state);
+        }
+
+        @Override
+        public List<BakedQuad> getQuads (IBlockState state, EnumFacing side, long rand) {
+            if (proxy == null || stateCache != state)
+                setProxy(state);
+
+            return proxy.getQuads(state, side, rand);
+        }
+
+        @Override
+        public boolean isAmbientOcclusion () {
+            return true;
+        }
+
+        @Override
+        public boolean isGui3d () {
+            return true;
+        }
+
+        @Override
+        public boolean isBuiltInRenderer () {
+            return false;
+        }
+
+        @Override
+        public TextureAtlasSprite getParticleTexture () {
+            return Chameleon.instance.iconRegistry.getIcon(Register.iconDefaultSide);
+        }
+
+        @Override
+        public ItemCameraTransforms getItemCameraTransforms () {
+            return ItemCameraTransforms.DEFAULT;
+        }
+
+        @Override
+        public ItemOverrideList getOverrides () {
+            return itemHandler;
+        }
+    }
+
+    private static class ItemHandler extends ItemOverrideList
+    {
+        public ItemHandler () {
+            super(ImmutableList.<ItemOverride>of());
+        }
+
+        @Override
+        public IBakedModel handleItemState (IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
+            return fromItem(stack);
+        }
+    }
+
+    private static final ItemHandler itemHandler = new ItemHandler();
+
+    /*public static class ModelHandler extends DefaultBlockHandler
     {
         public ModelHandler () {
             super(Chameleon.instance.iconRegistry.getIcon(Register.iconDefaultSide));
@@ -217,5 +308,5 @@ public class CustomDrawerModel extends ChamModel
         public IBakedModel handleItemState (ItemStack stack) {
             return CustomDrawerModel.fromItem(stack);
         }
-    }
+    }*/
 }

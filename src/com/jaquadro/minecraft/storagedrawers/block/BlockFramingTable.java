@@ -8,26 +8,29 @@ import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
@@ -46,7 +49,7 @@ public class BlockFramingTable extends BlockContainer
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(2.5f);
-        setStepSound(soundTypeWood);
+        setStepSound(SoundType.WOOD);
         setUnlocalizedName(blockName);
 
         setDefaultState(blockState.getBaseState().withProperty(RIGHT_SIDE, true));
@@ -59,7 +62,7 @@ public class BlockFramingTable extends BlockContainer
     }
 
     @Override
-    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float vx, float vy, float vz) {
+    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float vx, float vy, float vz) {
         int priX = pos.getX() + getXOff(state);
         int priZ = pos.getZ() + getZOff(state);
 
@@ -86,28 +89,28 @@ public class BlockFramingTable extends BlockContainer
     }
 
     @Override
-    public boolean isOpaqueCube () {
+    public boolean isOpaqueCube (IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube () {
+    public boolean isFullCube (IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean shouldSideBeRendered (IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
+    public boolean shouldSideBeRendered (IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
         return true;
     }
 
     @Override
-    public int getRenderType () {
-        return 3;
+    public EnumBlockRenderType getRenderType (IBlockState state) {
+        return EnumBlockRenderType.MODEL;
     }
 
     @Override
-    public boolean canRenderInLayer (EnumWorldBlockLayer layer) {
-        return layer == EnumWorldBlockLayer.SOLID || layer == EnumWorldBlockLayer.TRANSLUCENT;
+    public boolean canRenderInLayer (BlockRenderLayer layer) {
+        return layer == BlockRenderLayer.SOLID || layer == BlockRenderLayer.TRANSLUCENT;
     }
 
     @Override
@@ -140,8 +143,8 @@ public class BlockFramingTable extends BlockContainer
     }
 
     @Override
-    public int getMobilityFlag () {
-        return 1;
+    public EnumPushReaction getMobilityFlag (IBlockState state) {
+        return EnumPushReaction.DESTROY;
     }
 
     @Override
@@ -191,7 +194,7 @@ public class BlockFramingTable extends BlockContainer
     }
 
     @Override
-    protected BlockState createBlockState () {
+    protected BlockStateContainer createBlockState () {
         return new ExtendedBlockState(this, new IProperty[] { RIGHT_SIDE, FACING }, new IUnlistedProperty[] { TILE });
     }
 

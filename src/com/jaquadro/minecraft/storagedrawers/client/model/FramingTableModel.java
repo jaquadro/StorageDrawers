@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
+import com.google.common.collect.ImmutableList;
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.model.ChamModel;
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
@@ -9,14 +10,14 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockFramingTable;
 import com.jaquadro.minecraft.storagedrawers.client.model.dynamic.CommonFramingRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
@@ -120,14 +121,25 @@ public class FramingTableModel extends ChamModel
         return iconParticle;
     }
 
+    ItemTransformVec3f transformGui = new ItemTransformVec3f(new Vector3f(30, 225, 0), new Vector3f(.15f, 0, 0), new Vector3f(.45f, .45f, .45f));
+    ItemTransformVec3f transformFirstRight = new ItemTransformVec3f(new Vector3f(0, -30, 0), new Vector3f(-.15f, .05f, 0), new Vector3f(.3f, .3f, .3f));
+    ItemTransformVec3f transformFirstLeft = new ItemTransformVec3f(new Vector3f(0, 150, 0), new Vector3f(-.15f, .05f, 0), new Vector3f(.3f, .3f, .3f));
+    ItemTransformVec3f transformThirdRight = new ItemTransformVec3f(new Vector3f(75, -30, 0), new Vector3f(-.2f, .2f, -.15f), new Vector3f(.3f, .3f, .3f));
+    ItemTransformVec3f transformThirdLeft = new ItemTransformVec3f(new Vector3f(75, 150, 0), new Vector3f(-.2f, .2f, -.15f), new Vector3f(.3f, .3f, .3f));
+    ItemTransformVec3f transformHead = new ItemTransformVec3f(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(.5f, .5f, .5f));
+    ItemTransformVec3f transformFixed = new ItemTransformVec3f(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(.5f, .5f, .5f));
+    ItemTransformVec3f transformGround = new ItemTransformVec3f(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(.25f, .25f, .25f));
+    ItemCameraTransforms transform = new ItemCameraTransforms(transformThirdLeft, transformThirdRight,
+                                    transformFirstLeft, transformFirstRight, transformHead, transformGui, transformGround, transformFixed);
+
+    @Override
+    public ItemCameraTransforms getItemCameraTransforms () {
+        return transform;
+    }
+
     @SuppressWarnings("deprecation")
     public static class ItemModel extends FramingTableModel
     {
-        private static final ItemTransformVec3f transformDefault = new ItemTransformVec3f(new Vector3f(0, 0, 0), new Vector3f(-.15f, 0, 0), new Vector3f(.65f, .65f, .65f));
-        private static final ItemTransformVec3f transformThirdPerson = new ItemTransformVec3f(new Vector3f(10, 0, 180), new Vector3f(.2f, .1f, -.15f), new Vector3f(.3f, .3f, .3f));
-        private static final ItemCameraTransforms transform = new ItemCameraTransforms(transformThirdPerson,
-            transformDefault, transformDefault, transformDefault, transformDefault, transformDefault);
-
         public ItemModel (ItemStack stack) {
             super(ModBlocks.framingTable.getStateFromMeta(stack.getMetadata()), true);
         }
@@ -142,11 +154,6 @@ public class FramingTableModel extends ChamModel
         protected void renderTransLayer (IBlockState state, CommonFramingRenderer common, TextureAtlasSprite iconLeft, TextureAtlasSprite iconRight) {
             common.renderOverlayRight(null, state, BlockPos.ORIGIN, iconRight);
             common.renderOverlayLeft(null, state, BlockPos.ORIGIN.east(), iconLeft);
-        }
-
-        @Override
-        public ItemCameraTransforms getItemCameraTransforms () {
-            return transform;
         }
     }
 }

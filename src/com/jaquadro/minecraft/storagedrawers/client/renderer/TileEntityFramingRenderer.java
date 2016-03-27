@@ -10,8 +10,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -54,9 +54,6 @@ public class TileEntityFramingRenderer extends TileEntitySpecialRenderer<TileEnt
         IBlockState state = getWorld().getBlockState(tileTable.getPos());
         EnumFacing dir = state.getValue(BlockFramingTable.FACING);
         int side = dir.getIndex();
-
-        itemBlock.setBlockBoundsBasedOnState(tileTable.getWorld(), BlockPos.ORIGIN);
-        itemBlock.setBlockBoundsForItemRender();
 
         GL11.glPushMatrix();
 

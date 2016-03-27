@@ -75,7 +75,7 @@ public class Thaumcraft extends IntegrationModule
     }
 
     private void setDrawerAspect (IDrawer drawer, ItemStack itemStack) {
-        /* Check for labeled jars first */
+        // Check for labeled jars first
         NBTTagCompound compound = itemStack.getTagCompound();
         if (compound != null) {
             if (compound.hasKey("AspectFilter")) {
@@ -87,7 +87,7 @@ public class Thaumcraft extends IntegrationModule
                 }
             }
         }
-        /* Otherwise, see if the item contains essentia */
+        // Otherwise, see if the item contains essentia
         if(itemStack.getItem() instanceof IEssentiaContainerItem) {
             IEssentiaContainerItem container = (IEssentiaContainerItem)itemStack.getItem();
             AspectList aspects = container.getAspects(itemStack);
