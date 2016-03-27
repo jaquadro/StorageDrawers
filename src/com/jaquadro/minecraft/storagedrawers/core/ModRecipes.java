@@ -26,6 +26,10 @@ public class ModRecipes
         return stack;
     }
 
+    public static ItemStack makeCustomDrawerItemStack (EnumBasicDrawer info, int count) {
+        return new ItemStack(ModBlocks.customDrawers, count, info.getMetadata());
+    }
+
     public void init () {
         ConfigManager config = StorageDrawers.config;
 
@@ -139,6 +143,31 @@ public class ModRecipes
         if (config.cache.enableTape) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.tape), " x ", "yyy",
                 'x', "slimeball", 'y', Items.paper));
+        }
+
+        if (config.cache.enableFramedDrawers) {
+            GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.framingTable), "xxx", "x x", 'x', ModBlocks.trim);
+
+            if (config.isBlockEnabled("fulldrawers1")) {
+                ItemStack result = makeCustomDrawerItemStack(EnumBasicDrawer.FULL1, config.getBlockRecipeOutput(EnumBasicDrawer.FULL1.getUnlocalizedName()));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xxx", " y ", "xxx", 'x', "stickWood", 'y', "chestWood"));
+            }
+            if (config.isBlockEnabled("fulldrawers2")) {
+                ItemStack result = makeCustomDrawerItemStack(EnumBasicDrawer.FULL2, config.getBlockRecipeOutput(EnumBasicDrawer.FULL2.getUnlocalizedName()));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xzx", "xyx", 'x', "stickWood", 'y', "chestWood", 'z', "plankWood"));
+            }
+            if (config.isBlockEnabled("halfdrawers2")) {
+                ItemStack result = makeCustomDrawerItemStack(EnumBasicDrawer.HALF2, config.getBlockRecipeOutput(EnumBasicDrawer.HALF2.getUnlocalizedName()));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xzx", "xyx", 'x', "stickWood", 'y', "chestWood", 'z', "slabWood"));
+            }
+            if (config.isBlockEnabled("fulldrawers4")) {
+                ItemStack result = makeCustomDrawerItemStack(EnumBasicDrawer.FULL4, config.getBlockRecipeOutput(EnumBasicDrawer.FULL4.getUnlocalizedName()));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xzx", "yxy", 'x', "stickWood", 'y', "chestWood", 'z', "plankWood"));
+            }
+            if (config.isBlockEnabled("halfdrawers4")) {
+                ItemStack result = makeCustomDrawerItemStack(EnumBasicDrawer.HALF4, config.getBlockRecipeOutput(EnumBasicDrawer.HALF4.getUnlocalizedName()));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xzx", "yxy", 'x', "stickWood", 'y', "chestWood", 'z', "slabWood"));
+            }
         }
     }
 }

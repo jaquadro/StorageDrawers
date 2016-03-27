@@ -12,11 +12,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CommonProxy
 {
-    public final ResourceLocation iconLockResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/lock_icon");
-    public final ResourceLocation iconClaimResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/claim_icon");
-    public final ResourceLocation iconClaimLockResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/claim_lock_icon");
-    public final ResourceLocation iconVoidResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/void_icon");
-
     public final ResourceLocation iconIndicatorCompOnResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_comp_on");
     public final ResourceLocation iconIndicatorCompOffResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_comp_off");
 
@@ -35,13 +30,13 @@ public class CommonProxy
         new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_4_off"),
     };
 
-    public final ResourceLocation iconShroudCover = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/drawers_oak_trim");
-    public final ResourceLocation iconTapeCover = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/tape");
-
     public void initDynamic ()
     { }
 
     public void registerRenderers ()
+    { }
+
+    public void initClient ()
     { }
 
     public void updatePlayerInventory (EntityPlayer player) {

@@ -77,10 +77,12 @@ public class BlockClickMessage implements IMessage
         public IMessage onMessage (BlockClickMessage message, MessageContext ctx) {
             if (!message.failed && ctx.side == Side.SERVER) {
                 World world = ctx.getServerHandler().playerEntity.getEntityWorld();
-                BlockPos pos = new BlockPos(message.x, message.y, message.z);
-                Block block = world.getBlockState(pos).getBlock();
-                if (block instanceof IExtendedBlockClickHandler)
-                    ((IExtendedBlockClickHandler) block).onBlockClicked(world, pos, ctx.getServerHandler().playerEntity, EnumFacing.getFront(message.side), message.hitX, message.hitY, message.hitZ, message.invertShift);
+                if (world != null) {
+                    BlockPos pos = new BlockPos(message.x, message.y, message.z);
+                    Block block = world.getBlockState(pos).getBlock();
+                    if (block instanceof IExtendedBlockClickHandler)
+                        ((IExtendedBlockClickHandler) block).onBlockClicked(world, pos, ctx.getServerHandler().playerEntity, EnumFacing.getFront(message.side), message.hitX, message.hitY, message.hitZ, message.invertShift);
+                }
             }
 
             return null;

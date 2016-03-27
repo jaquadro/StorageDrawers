@@ -60,17 +60,6 @@ import java.util.List;
 
 public class BlockDrawers extends BlockContainer implements IExtendedBlockClickHandler, INetworked
 {
-    public String[] getResourceVariants () {
-        String[] variants = new String[EnumBasicDrawer.values().length * BlockPlanks.EnumType.values().length];
-        int index = 0;
-
-        for (EnumBasicDrawer type : EnumBasicDrawer.values())
-            for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values())
-                variants[index++] = '_' + type.getName() + '_' + material.getName();
-
-        return variants;
-    }
-
     public static final PropertyEnum BLOCK = PropertyEnum.create("block", EnumBasicDrawer.class);
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     public static final PropertyEnum VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
@@ -551,30 +540,35 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public List<ItemStack> getDrops (IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        ItemStack drawerStack = new ItemStack(Item.getItemFromBlock(this), 1, getMetaFromState(state));
+        ItemStack dropStack = getMainDrop(world, pos, state);
 
         List<ItemStack> drops = new ArrayList<ItemStack>();
-        drops.add(drawerStack);
+        drops.add(dropStack);
 
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile == null)
             return drops;
 
-        BlockPlanks.EnumType material = translateMaterial(tile.getMaterialOrDefault());
+        NBTTagCompound data = dropStack.getTagCompound();
+        if (data == null)
+            data = new NBTTagCompound();
 
-        NBTTagCompound data = new NBTTagCompound();
+        BlockPlanks.EnumType material = translateMaterial(tile.getMaterialOrDefault());
         data.setString("material", material.getName());
 
         if (tile.isSealed()) {
             NBTTagCompound tiledata = new NBTTagCompound();
             tile.writeToNBT(tiledata);
-
             data.setTag("tile", tiledata);
         }
 
-        drawerStack.setTagCompound(data);
+        dropStack.setTagCompound(data);
 
         return drops;
+    }
+
+    protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
+        return new ItemStack(Item.getItemFromBlock(this), 1, state.getBlock().getMetaFromState(state));
     }
 
     @Override

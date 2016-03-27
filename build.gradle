@@ -70,7 +70,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     // compile "appeng:appliedenergistics2:rv1-stable-1:api"
-    compile files("../Chameleon/build/libs/Chameleon-${minecraft_version}-${chameleon_version}.jar")
+    compile files("../Chameleon-1.8/build/libs/Chameleon-${minecraft_version}-${chameleon_version}-dev.jar")
 }
 
 processResources

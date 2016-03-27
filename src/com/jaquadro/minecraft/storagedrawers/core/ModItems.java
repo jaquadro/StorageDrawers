@@ -1,10 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
+import com.jaquadro.minecraft.chameleon.Chameleon;
+import com.jaquadro.minecraft.chameleon.resources.ModelRegistry;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModItems
 {
@@ -47,6 +51,21 @@ public class ModItems
             GameRegistry.registerItem(personalKey, "personalKey");
         if (StorageDrawers.config.cache.enableTape)
             GameRegistry.registerItem(tape, "tape");
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void initClient () {
+        ModelRegistry modelRegistry = Chameleon.instance.modelRegistry;
+
+        modelRegistry.registerItemVariants(upgradeTemplate);
+        modelRegistry.registerItemVariants(upgradeVoid);
+        modelRegistry.registerItemVariants(tape);
+        modelRegistry.registerItemVariants(drawerKey);
+        modelRegistry.registerItemVariants(shroudKey);
+        modelRegistry.registerItemVariants(personalKey);
+        modelRegistry.registerItemVariants(upgradeStorage);
+        modelRegistry.registerItemVariants(upgradeStatus);
+        modelRegistry.registerItemVariants(upgradeCreative);
     }
 
     public static String getQualifiedName (Item item) {

@@ -30,16 +30,6 @@ import java.util.List;
 
 public class BlockCompDrawers extends BlockDrawers implements INetworked
 {
-    public String[] getResourceVariants () {
-        String[] variants = new String[EnumCompDrawer.values().length];
-        int index = 0;
-
-        for (EnumCompDrawer slot : EnumCompDrawer.values())
-            variants[index++] = '_' + slot.getName();
-
-        return variants;
-    }
-
     public static final PropertyEnum SLOTS = PropertyEnum.create("slots", EnumCompDrawer.class);
 
     @SideOnly(Side.CLIENT)

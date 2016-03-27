@@ -1,127 +1,101 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
-import com.jaquadro.minecraft.chameleon.model.BlockModel;
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.chameleon.model.DefaultHandler;
+import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
+import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.registry.IRegistry;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 
-public class CompDrawerModel implements IBakedModel
+public final class CompDrawerModel
 {
-    private static final Set<ModelResourceLocation> resourceLocations = new HashSet<ModelResourceLocation>();
-    private static final Set<ModelResourceLocation> itemResourceLocations = new HashSet<ModelResourceLocation>();
-    private static final Map<EnumCompDrawer, Map<EnumFacing, ModelResourceLocation>> stateMap = new HashMap<EnumCompDrawer, Map<EnumFacing, ModelResourceLocation>>();
-    private static final Map<ModelResourceLocation, IBakedModel> modelCache = new HashMap<ModelResourceLocation, IBakedModel>();
-
-    public static void initialize (IRegistry<ModelResourceLocation, IBakedModel> modelRegistry) {
-        initailizeResourceLocations();
-
-        for (ModelResourceLocation loc : resourceLocations) {
-            Object object = modelRegistry.getObject(loc);
-            if (object instanceof IBakedModel) {
-                modelCache.put(loc, (IBakedModel) object);
-                modelRegistry.putObject(loc, new CompDrawerModel((IBakedModel)object));
-            }
+    public static class Register extends DefaultRegister
+    {
+        public Register () {
+            super(ModBlocks.compDrawers);
         }
 
-        /*for (ModelResourceLocation loc : itemResourceLocations) {
-            IBakedModel object = modelRegistry.getObject(loc);
-            if (object != null) {
-                modelRegistry.putObject(loc, new BasicDrawerItemModel(object));
+        @Override
+        public List<IBlockState> getBlockStates () {
+            List<IBlockState> states = new ArrayList<IBlockState>();
+
+            for (EnumCompDrawer drawer : EnumCompDrawer.values()) {
+                for (EnumFacing dir : EnumFacing.HORIZONTALS) {
+                    states.add(ModBlocks.compDrawers.getDefaultState()
+                        .withProperty(BlockCompDrawers.SLOTS, drawer)
+                        .withProperty(BlockCompDrawers.FACING, dir));
+                }
             }
-        }*/
-    }
 
-    public static void initailizeResourceLocations () {
-        for (EnumCompDrawer drawerType : EnumCompDrawer.values()) {
-            Map<EnumFacing, ModelResourceLocation> dirMap = new HashMap<EnumFacing, ModelResourceLocation>();
-            stateMap.put(drawerType, dirMap);
-
-            for (EnumFacing dir : EnumFacing.values()) {
-                if (dir.getAxis() == EnumFacing.Axis.Y)
-                    continue;
-
-                String key = StorageDrawers.MOD_ID + ":compDrawers#facing=" + dir + ",slots=" + drawerType;
-                ModelResourceLocation location = new ModelResourceLocation(key);
-
-                resourceLocations.add(location);
-                dirMap.put(dir, location);
-            }
+            return states;
         }
 
-        for (EnumCompDrawer drawerType : EnumCompDrawer.values()) {
-            String key = StorageDrawers.MOD_ID + ":compDrawers_" + drawerType + "#inventory";
-            ModelResourceLocation location = new ModelResourceLocation(key);
+        @Override
+        public IBakedModel getModel (IBlockState state, IBakedModel existingModel) {
+            return new ModelHandler(existingModel);
+        }
 
-            itemResourceLocations.add(location);
+        @Override
+        public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
+            return new ModelHandler(existingModel);
         }
     }
 
-    private IBakedModel parent;
+    public static class ModelHandler extends DefaultHandler
+    {
+        private IBakedModel parent;
 
-    public CompDrawerModel (IBakedModel parent) {
-        this.parent = parent;
-    }
+        public ModelHandler (IBakedModel parent) {
+            this.parent = parent;
+        }
 
-    @Override
-    public List<BakedQuad> getQuads (IBlockState state, EnumFacing side, long rand) {
-        EnumCompDrawer drawer = (EnumCompDrawer)state.getValue(BlockCompDrawers.SLOTS);
-        EnumFacing dir = state.getValue(BlockDrawers.FACING);
+        @Override
+        public IBakedModel handleBlockState (IBlockState state) {
+            EnumCompDrawer drawer = (EnumCompDrawer)state.getValue(BlockCompDrawers.SLOTS);
+            EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
-        Map<EnumFacing, ModelResourceLocation> dirMap = stateMap.get(drawer);
-        if (dirMap == null)
-            return null;
+            if (!(state instanceof IExtendedBlockState))
+                return parent;
 
-        ModelResourceLocation location = dirMap.get(dir);
-        if (location == null)
-            return null;
+            IExtendedBlockState xstate = (IExtendedBlockState)state;
+            TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
 
-        IExtendedBlockState xstate = (IExtendedBlockState)state;
-        TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
+            if (!DrawerDecoratorModel.shouldHandleState(tile))
+                return parent;
 
-        if (!DrawerDecoratorModel.shouldHandleState(tile))
-            return parent.getQuads(state, side, rand);
+            return new DrawerDecoratorModel(parent, xstate, drawer, dir, tile);
+        }
 
-        return new DrawerDecoratorModel(parent, xstate, drawer, dir, tile).getQuads(state, side, rand);
-    }
+        @Override
+        public IBakedModel handleItemState (ItemStack stack) {
+            if (stack == null)
+                return parent;
 
-    @Override
-    public boolean isAmbientOcclusion () {
-        return parent.isAmbientOcclusion();
-    }
+            if (!stack.hasTagCompound() || !stack.getTagCompound().hasKey("tile", Constants.NBT.TAG_COMPOUND))
+                return parent;
 
-    @Override
-    public boolean isGui3d () {
-        return parent.isGui3d();
-    }
+            Block block = Block.getBlockFromItem(stack.getItem());
+            IBlockState state = block.getStateFromMeta(stack.getMetadata());
 
-    @Override
-    public boolean isBuiltInRenderer () {
-        return parent.isBuiltInRenderer();
-    }
+            return new DrawerSealedModel(parent, state, true);
+        }
 
-    @Override
-    public TextureAtlasSprite getParticleTexture () {
-        return parent.getParticleTexture();
-    }
-
-    @Override
-    public ItemCameraTransforms getItemCameraTransforms () {
-        return parent.getItemCameraTransforms();
-    }
-
-    @Override
-    public ItemOverrideList getOverrides () {
-        return parent.getOverrides();
+        @Override
+        public TextureAtlasSprite getParticleTexture () {
+            return parent.getParticleTexture();
+        }
     }
 }

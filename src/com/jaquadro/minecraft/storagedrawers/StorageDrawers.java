@@ -83,6 +83,7 @@ public class StorageDrawers
 
     @Mod.EventHandler
     public void init (FMLInitializationEvent event) {
+        proxy.initClient();
         proxy.registerRenderers();
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());

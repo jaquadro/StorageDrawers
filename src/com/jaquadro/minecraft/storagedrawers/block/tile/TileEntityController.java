@@ -602,7 +602,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     private IDrawerGroup getGroupForCoord (BlockPos coord) {
-        if (coord == null)
+        if (coord == null || !storage.containsKey(coord))
             return null;
 
         StorageRecord record = storage.get(coord);
