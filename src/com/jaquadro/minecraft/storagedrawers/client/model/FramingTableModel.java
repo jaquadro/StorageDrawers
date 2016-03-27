@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
-import com.google.common.collect.ImmutableList;
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.model.ChamModel;
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
@@ -12,12 +11,10 @@ import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;

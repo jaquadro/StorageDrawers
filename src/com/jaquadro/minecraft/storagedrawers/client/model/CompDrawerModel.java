@@ -1,5 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
+import com.google.common.collect.ImmutableList;
+import com.jaquadro.minecraft.chameleon.model.ProxyBuilderModel;
 import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
@@ -11,9 +13,12 @@ import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.model.ItemOverride;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.util.Constants;
 
@@ -44,25 +49,23 @@ public final class CompDrawerModel
 
         @Override
         public IBakedModel getModel (IBlockState state, IBakedModel existingModel) {
-            return existingModel; // new ModelHandler(existingModel);
+            return new Model(existingModel);
         }
 
         @Override
         public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
-            return existingModel; // new ModelHandler(existingModel);
+            return new Model(existingModel);
         }
     }
 
-    /*public static class ModelHandler extends DefaultHandler
+    public static class Model extends ProxyBuilderModel
     {
-        private IBakedModel parent;
-
-        public ModelHandler (IBakedModel parent) {
-            this.parent = parent;
+        public Model (IBakedModel parent) {
+            super(parent);
         }
 
         @Override
-        public IBakedModel handleBlockState (IBlockState state) {
+        protected IBakedModel buildModel (IBlockState state, IBakedModel parent) {
             EnumCompDrawer drawer = (EnumCompDrawer)state.getValue(BlockCompDrawers.SLOTS);
             EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
@@ -79,7 +82,19 @@ public final class CompDrawerModel
         }
 
         @Override
-        public IBakedModel handleItemState (ItemStack stack) {
+        public ItemOverrideList getOverrides () {
+            return itemHandler;
+        }
+    }
+
+    private static class ItemHandler extends ItemOverrideList
+    {
+        public ItemHandler () {
+            super(ImmutableList.<ItemOverride>of());
+        }
+
+        @Override
+        public IBakedModel handleItemState (IBakedModel parent, ItemStack stack, World world, EntityLivingBase entity) {
             if (stack == null)
                 return parent;
 
@@ -91,10 +106,7 @@ public final class CompDrawerModel
 
             return new DrawerSealedModel(parent, state, true);
         }
+    }
 
-        @Override
-        public TextureAtlasSprite getParticleTexture () {
-            return parent.getParticleTexture();
-        }
-    }*/
+    private static final ItemHandler itemHandler = new ItemHandler();
 }

@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.client.model;
 import com.google.common.collect.ImmutableList;
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.model.ChamModel;
+import com.jaquadro.minecraft.chameleon.model.ProxyBuilderModel;
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
 import com.jaquadro.minecraft.chameleon.resources.IconUtil;
 import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
@@ -11,6 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
+import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.dynamic.CommonDrawerRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.state.IBlockState;
@@ -105,22 +107,23 @@ public class CustomDrawerModel extends ChamModel
 
     private TextureAtlasSprite iconParticle;
 
-    public static CustomDrawerModel fromBlock (IBlockState state) {
-        if (state instanceof IExtendedBlockState) {
-            IExtendedBlockState xstate = (IExtendedBlockState) state;
-            TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
+    public static IBakedModel fromBlock (IBlockState state) {
+        if (!(state instanceof IExtendedBlockState))
+            return new CustomDrawerModel(state, false);
 
-            ItemStack matFront = tile.getEffectiveMaterialFront();
-            ItemStack matSide = tile.getEffectiveMaterialSide();
-            ItemStack matTrim = tile.getEffectiveMaterialTrim();
+        IExtendedBlockState xstate = (IExtendedBlockState) state;
+        TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
+        if (tile == null)
+            return new CustomDrawerModel(state, false);
 
-            return new CustomDrawerModel(state, matFront, matSide, matTrim, false);
-        }
+        ItemStack matFront = tile.getEffectiveMaterialFront();
+        ItemStack matSide = tile.getEffectiveMaterialSide();
+        ItemStack matTrim = tile.getEffectiveMaterialTrim();
 
-        return new CustomDrawerModel(state, false);
+        return new CustomDrawerModel(state, matFront, matSide, matTrim, false);
     }
 
-    public static CustomDrawerModel fromItem (ItemStack stack) {
+    public static IBakedModel fromItem (ItemStack stack) {
         IBlockState state = ModBlocks.customDrawers.getStateFromMeta(stack.getMetadata());
         if (!stack.hasTagCompound())
             return new CustomDrawerModel(state, true);
@@ -137,7 +140,11 @@ public class CustomDrawerModel extends ChamModel
         if (tag.hasKey("MatT", Constants.NBT.TAG_COMPOUND))
             matTrim = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatT"));
 
-        return new CustomDrawerModel(state, matFront, matSide, matTrim, true);
+        IBakedModel model = new CustomDrawerModel(state, matFront, matSide, matTrim, true);
+        if (!stack.getTagCompound().hasKey("tile", Constants.NBT.TAG_COMPOUND))
+            return model;
+
+        return new DrawerSealedModel(model, state, true);
     }
 
     private CustomDrawerModel (IBlockState state, boolean mergeLayers) {
@@ -193,12 +200,14 @@ public class CustomDrawerModel extends ChamModel
         return iconParticle;
     }
 
-    public static class Model implements IBakedModel
+    public static class Model extends ProxyBuilderModel
     {
-        private IBakedModel proxy;
-        private IBlockState stateCache;
+        public Model () {
+            super(Chameleon.instance.iconRegistry.getIcon(Register.iconDefaultSide));
+        }
 
-        private IBakedModel buildProxy (IBlockState state) {
+        @Override
+        protected IBakedModel buildModel (IBlockState state, IBakedModel parent) {
             IBakedModel mainModel = CustomDrawerModel.fromBlock(state);
             if (!(state instanceof IExtendedBlockState))
                 return mainModel;
@@ -213,44 +222,6 @@ public class CustomDrawerModel extends ChamModel
             EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
             return new DrawerDecoratorModel(mainModel, xstate, drawer, dir, tile);
-        }
-
-        private void setProxy (IBlockState state) {
-            stateCache = state;
-            proxy = buildProxy(state);
-        }
-
-        @Override
-        public List<BakedQuad> getQuads (IBlockState state, EnumFacing side, long rand) {
-            if (proxy == null || stateCache != state)
-                setProxy(state);
-
-            return proxy.getQuads(state, side, rand);
-        }
-
-        @Override
-        public boolean isAmbientOcclusion () {
-            return true;
-        }
-
-        @Override
-        public boolean isGui3d () {
-            return true;
-        }
-
-        @Override
-        public boolean isBuiltInRenderer () {
-            return false;
-        }
-
-        @Override
-        public TextureAtlasSprite getParticleTexture () {
-            return Chameleon.instance.iconRegistry.getIcon(Register.iconDefaultSide);
-        }
-
-        @Override
-        public ItemCameraTransforms getItemCameraTransforms () {
-            return ItemCameraTransforms.DEFAULT;
         }
 
         @Override
@@ -272,41 +243,4 @@ public class CustomDrawerModel extends ChamModel
     }
 
     private static final ItemHandler itemHandler = new ItemHandler();
-
-    /*public static class ModelHandler extends DefaultBlockHandler
-    {
-        public ModelHandler () {
-            super(Chameleon.instance.iconRegistry.getIcon(Register.iconDefaultSide));
-        }
-
-        @Override
-        public IBakedModel handleBlockState (IBlockState state) {
-            IBakedModel mainModel = CustomDrawerModel.fromBlock(state);
-            if (!(state instanceof IExtendedBlockState))
-                return mainModel;
-
-            IExtendedBlockState xstate = (IExtendedBlockState)state;
-            TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
-
-            if (!DrawerDecoratorModel.shouldHandleState(tile))
-                return mainModel;
-
-            EnumBasicDrawer drawer = (EnumBasicDrawer)state.getValue(BlockDrawers.BLOCK);
-            EnumFacing dir = state.getValue(BlockDrawers.FACING);
-
-            return new DrawerDecoratorModel(mainModel, xstate, drawer, dir, tile);
-        }
-    }
-
-    public static class ItemModelHandler extends DefaultItemHandler
-    {
-        public ItemModelHandler () {
-            super(Chameleon.instance.iconRegistry.getIcon(Register.iconDefaultSide));
-        }
-
-        @Override
-        public IBakedModel handleItemState (ItemStack stack) {
-            return CustomDrawerModel.fromItem(stack);
-        }
-    }*/
 }

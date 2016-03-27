@@ -1,5 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
+import com.google.common.collect.ImmutableList;
+import com.jaquadro.minecraft.chameleon.model.ProxyBuilderModel;
 import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
@@ -7,17 +9,17 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 
@@ -54,8 +56,7 @@ public final class BasicDrawerModel
 
         @Override
         public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
-            return existingModel;
-            //return new Model(existingModel);
+            return new Model(existingModel);
         }
 
         @Override
@@ -71,17 +72,14 @@ public final class BasicDrawerModel
         }
     }
 
-    public static class Model implements IBakedModel
+    public static class Model extends ProxyBuilderModel
     {
-        private IBakedModel parent;
-        private IBakedModel proxy;
-        private IBlockState stateCache;
-
         public Model (IBakedModel parent) {
-            this.parent = parent;
+            super(parent);
         }
 
-        private IBakedModel buildProxy (IBlockState state) {
+        @Override
+        protected IBakedModel buildModel (IBlockState state, IBakedModel parent) {
             EnumBasicDrawer drawer = (EnumBasicDrawer)state.getValue(BlockDrawers.BLOCK);
             EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
@@ -95,79 +93,22 @@ public final class BasicDrawerModel
                 return parent;
 
             return new DrawerDecoratorModel(parent, xstate, drawer, dir, tile);
-        }
-
-        private void setProxy (IBlockState state) {
-            stateCache = state;
-            proxy = buildProxy(state);
-        }
-
-        @Override
-        public List<BakedQuad> getQuads (IBlockState state, EnumFacing side, long rand) {
-            if (proxy == null || stateCache != state)
-                setProxy(state);
-
-            return proxy.getQuads(state, side, rand);
-        }
-
-        @Override
-        public boolean isAmbientOcclusion () {
-            return parent.isAmbientOcclusion();
-        }
-
-        @Override
-        public boolean isGui3d () {
-            return parent.isGui3d();
-        }
-
-        @Override
-        public boolean isBuiltInRenderer () {
-            return parent.isBuiltInRenderer();
-        }
-
-        @Override
-        public TextureAtlasSprite getParticleTexture () {
-            return parent.getParticleTexture();
-        }
-
-        @Override
-        public ItemCameraTransforms getItemCameraTransforms () {
-            return parent.getItemCameraTransforms();
         }
 
         @Override
         public ItemOverrideList getOverrides () {
-            return ItemOverrideList.NONE;
+            return itemHandler;
         }
     }
 
-    /*public static class ModelHandler extends DefaultHandler
+    private static class ItemHandler extends ItemOverrideList
     {
-        private IBakedModel parent;
-
-        public ModelHandler (IBakedModel parent) {
-            this.parent = parent;
+        public ItemHandler () {
+            super(ImmutableList.<ItemOverride>of());
         }
 
         @Override
-        public IBakedModel handleBlockState (IBlockState state) {
-            EnumBasicDrawer drawer = (EnumBasicDrawer)state.getValue(BlockDrawers.BLOCK);
-            EnumFacing dir = state.getValue(BlockDrawers.FACING);
-
-            if (!(state instanceof IExtendedBlockState))
-                return parent;
-
-            IExtendedBlockState xstate = (IExtendedBlockState)state;
-            TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
-
-            if (!DrawerDecoratorModel.shouldHandleState(tile))
-                return parent;
-
-            return new DrawerDecoratorModel(parent, xstate, drawer, dir, tile);
-        }
-
-        @Override
-        public IBakedModel handleItemState (ItemStack stack) {
+        public IBakedModel handleItemState (IBakedModel parent, ItemStack stack, World world, EntityLivingBase entity) {
             if (stack == null)
                 return parent;
 
@@ -179,10 +120,7 @@ public final class BasicDrawerModel
 
             return new DrawerSealedModel(parent, state, true);
         }
+    }
 
-        @Override
-        public TextureAtlasSprite getParticleTexture () {
-            return parent.getParticleTexture();
-        }
-    }*/
+    private static final ItemHandler itemHandler = new ItemHandler();
 }
