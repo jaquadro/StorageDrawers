@@ -40,7 +40,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
                 return stack;
             }
             else {
-                ItemStack stack = tableItemStacks[slot].splitStack(slot);
+                ItemStack stack = tableItemStacks[slot].splitStack(count);
                 if (tableItemStacks[slot].stackSize == 0)
                     tableItemStacks[slot] = null;
 
