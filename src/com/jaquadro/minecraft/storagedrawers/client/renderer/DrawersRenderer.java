@@ -42,6 +42,9 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
 
         renderBaseBlock(world, tile, x, y, z, block, renderer);
 
+        if (renderer.overrideBlockTexture != null && renderer.overrideBlockTexture.getIconName().startsWith("destroy_stage"))
+            return true;
+
         int side = tile.getDirection();
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
             renderIndicator(block, x, y, z, side, renderer, tile.getEffectiveStatusLevel());
@@ -49,6 +52,9 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
             renderLock(block, x, y, z, side, renderer, tile.isLocked(LockAttribute.LOCK_POPULATED), tile.getOwner() != null);
         if (StorageDrawers.config.cache.enableVoidUpgrades)
             renderVoid(block, x, y, z, side, renderer, tile.isVoid());
+        if (StorageDrawers.config.cache.enableTape)
+            renderTape(block, x, y, z, side, renderer, tile.isSealed());
+
         renderShroud(block, x, y, z, side, renderer, tile.isShrouded());
 
         return true;
@@ -87,20 +93,6 @@ public class DrawersRenderer implements ISimpleBlockRenderingHandler
         boxRenderer.setInteriorIcon(block.getIcon(world, x, y, z, side), ForgeDirection.OPPOSITES[side]);
 
         renderInterior(block, x, y, z, side, renderer);
-
-        if (renderer.overrideBlockTexture != null && renderer.overrideBlockTexture.getIconName().startsWith("destroy_stage"))
-            return;
-
-        if (StorageDrawers.config.cache.enableIndicatorUpgrades)
-            renderIndicator(block, x, y, z, side, renderer, tile.getEffectiveStatusLevel());
-        if (StorageDrawers.config.cache.enableLockUpgrades)
-            renderLock(block, x, y, z, side, renderer, tile.isLocked(LockAttribute.LOCK_POPULATED), tile.getOwner() != null);
-        if (StorageDrawers.config.cache.enableVoidUpgrades)
-            renderVoid(block, x, y, z, side, renderer, tile.isVoid());
-        if (StorageDrawers.config.cache.enableTape)
-            renderTape(block, x, y, z, side, renderer, tile.isSealed());
-
-        renderShroud(block, x, y, z, side, renderer, tile.isShrouded());
     }
 
     private void renderLock (BlockDrawers block, int x, int y, int z, int side, RenderBlocks renderer, boolean locked, boolean owned) {
