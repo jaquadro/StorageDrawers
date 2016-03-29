@@ -5,7 +5,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.integration.ThermalFoundation;
 import com.jaquadro.minecraft.storagedrawers.security.DefaultSecurityProvider;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.server.MinecraftServer;
 
 public class CoFHSecurityProvider implements ISecurityProvider
 {
@@ -31,9 +30,9 @@ public class CoFHSecurityProvider implements ISecurityProvider
         if (target.getOwner() == null)
             return true;
 
-        GameProfile ownerProfile = MinecraftServer.getServer().func_152358_ax().func_152652_a(target.getOwner());
-        if (ownerProfile == null)
-            return false;
+        GameProfile ownerProfile = (profile.getId().equals(target.getOwner()))
+            ? new GameProfile(profile.getId(), profile.getName())
+            : new GameProfile(target.getOwner(), null);
 
         return foundation.playerHasAccess(profile.getName(), ownerProfile);
     }
