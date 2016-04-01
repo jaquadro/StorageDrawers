@@ -16,6 +16,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
@@ -649,6 +650,22 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     protected ItemStack getMainDrop (World world, int x, int y, int z, int metadata) {
         return new ItemStack(Item.getItemFromBlock(this), 1, metadata);
+    }
+
+    @Override
+    public float getExplosionResistance (Entity par1Entity, World world, int x, int y, int z, double explosionX, double explosionY, double explosionZ) {
+        TileEntityDrawers tile = getTileEntity(world, x, y, z);
+        if (tile != null) {
+            for (int slot = 0; slot < 5; slot++) {
+                ItemStack stack = tile.getUpgrade(slot);
+                if (stack == null || !(stack.getItem() instanceof ItemUpgrade) || stack.getItemDamage() != 4)
+                    continue;
+
+                return 1000;
+            }
+        }
+
+        return super.getExplosionResistance(par1Entity, world, x, y, z, explosionX, explosionY, explosionZ);
     }
 
     @Override
