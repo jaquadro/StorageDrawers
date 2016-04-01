@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ClientProxy;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
@@ -53,6 +54,11 @@ public class BlockDrawersCustom extends BlockDrawers
     public boolean canRenderInPass (int pass) {
         ClientProxy.renderPass = pass;
         return true;
+    }
+
+    @Override
+    public BlockType retrimType () {
+        return null;
     }
 
     @Override
