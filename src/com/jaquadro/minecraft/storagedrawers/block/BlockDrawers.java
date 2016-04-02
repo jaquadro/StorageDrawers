@@ -478,8 +478,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item == null) ? "  null item" : "  " + item.toString());
 
         if (item != null && item.stackSize > 0) {
-            dropItemStack(world, x, y, z, player, item);
-            world.markBlockForUpdate(x, y, z);
+            if (!player.inventory.addItemStackToInventory(item)) {
+                ForgeDirection dir = ForgeDirection.getOrientation(side);
+                dropItemStack(world, x + dir.offsetX, y, z + dir.offsetZ, player, item);
+                world.markBlockForUpdate(x, y, z);
+            }
         }
     }
 
@@ -528,7 +531,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     private void dropItemStack (World world, int x, int y, int z, EntityPlayer player, ItemStack stack) {
-        EntityItem entity = new EntityItem(world, player.posX, player.posY, player.posZ, stack);
+        EntityItem entity = new EntityItem(world, x + .5f, y + .1f, z + .5f, stack);
+        entity.addVelocity(-entity.motionX, -entity.motionY, -entity.motionZ);
         world.spawnEntityInWorld(entity);
     }
 
