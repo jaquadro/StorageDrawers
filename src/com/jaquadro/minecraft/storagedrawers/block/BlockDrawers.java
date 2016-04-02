@@ -44,6 +44,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -656,13 +657,13 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
-    public boolean canProvidePower () {
+    public boolean canProvidePower (IBlockState state) {
         return true;
     }
 
     @Override
-    public int getWeakPower (IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side) {
-        if (!canProvidePower())
+    public int getWeakPower (IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
+        if (!canProvidePower(state))
             return 0;
 
         TileEntityDrawers tile = getTileEntity(worldIn, pos);
@@ -673,8 +674,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
-    public int getStrongPower (IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side) {
-        return (side == EnumFacing.UP) ? getWeakPower(worldIn, pos, state, side) : 0;
+    public int getStrongPower (IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
+        return (side == EnumFacing.UP) ? getWeakPower(state, worldIn, pos, side) : 0;
     }
 
     @Override

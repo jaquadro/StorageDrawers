@@ -3,12 +3,12 @@ package com.jaquadro.minecraft.storagedrawers.item;
 import com.jaquadro.minecraft.chameleon.resources.IItemMeshMapper;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,7 +39,7 @@ public class ItemUpgradeRedstone extends Item implements IItemMeshMapper
     @SideOnly(Side.CLIENT)
     public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
         String name = getUnlocalizedName(itemStack);
-        list.add(StatCollector.translateToLocalFormatted(name + ".description"));
+        list.add(I18n.translateToLocalFormatted(name + ".description"));
     }
 
     @Override
