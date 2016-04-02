@@ -70,6 +70,7 @@ public class ModItems
         modelRegistry.registerItemVariants(upgradeStorage);
         modelRegistry.registerItemVariants(upgradeStatus);
         modelRegistry.registerItemVariants(upgradeCreative);
+        modelRegistry.registerItemVariants(upgradeRedstone);
     }
 
     public static String getQualifiedName (Item item) {

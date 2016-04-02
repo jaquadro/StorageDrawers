@@ -1,27 +1,23 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.chameleon.resources.IItemMeshMapper;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ItemUpgradeRedstone extends Item
+public class ItemUpgradeRedstone extends Item implements IItemMeshMapper
 {
-    public static final String[] iconNames = new String[] { "combined", "max", "min" };
-
-    @SideOnly(Side.CLIENT)
-    private IIcon[] icons;
-
     public ItemUpgradeRedstone (String name) {
         setUnlocalizedName(name);
         setHasSubtypes(true);
@@ -30,44 +26,38 @@ public class ItemUpgradeRedstone extends Item
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage (int meta) {
-        return icons[MathHelper.clamp_int(meta, 0, iconNames.length - 1)];
-    }
-
-    @Override
     public String getUnlocalizedName (ItemStack itemStack) {
-        int meta = MathHelper.clamp_int(itemStack.getItemDamage(), 0, iconNames.length - 1);
-        if (iconNames[meta] == null)
-            return super.getUnlocalizedName();
+        return super.getUnlocalizedName() + "." + EnumUpgradeRedstone.byMetadata(itemStack.getMetadata()).getUnlocalizedName();
+    }
 
-        return super.getUnlocalizedName() + "." + iconNames[meta];
+    @Override
+    public int getMetadata (int damage) {
+        return damage;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation (ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+    public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
         String name = getUnlocalizedName(itemStack);
         list.add(StatCollector.translateToLocalFormatted(name + ".description"));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems (Item item, CreativeTabs creativeTabs, List list) {
-        for (int i = 0, n = iconNames.length; i < n; i++) {
-            if (iconNames[i] != null)
-                list.add(new ItemStack(item, 1, i));
-        }
+    public void getSubItems (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
+        for (EnumUpgradeRedstone upgrade : EnumUpgradeRedstone.values())
+            list.add(new ItemStack(item, 1, upgrade.getMetadata()));
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons (IIconRegister register) {
-        icons = new IIcon[iconNames.length];
+    public List<Pair<ItemStack, ModelResourceLocation>> getMeshMappings () {
+        List<Pair<ItemStack, ModelResourceLocation>> mappings = new ArrayList<Pair<ItemStack, ModelResourceLocation>>();
 
-        for (int i = 0, n = iconNames.length; i < n; i++) {
-            if (iconNames[i] != null)
-                icons[i] = register.registerIcon(StorageDrawers.MOD_ID + ":upgrade_redstone_" + iconNames[i]);
+        for (EnumUpgradeRedstone type : EnumUpgradeRedstone.values()) {
+            ModelResourceLocation location = new ModelResourceLocation(ModItems.getQualifiedName(this) + '_' + type.getName(), "inventory");
+            mappings.add(Pair.of(new ItemStack(this, 1, type.getMetadata()), location));
         }
+
+        return mappings;
     }
 }

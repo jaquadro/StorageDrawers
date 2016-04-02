@@ -200,7 +200,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
                 markDirty();
                 worldObj.markBlockForUpdate(getPos());
             }
-            worldObj.notifyBlocksOfNeighborChange(getPos(), getBlockType());
+            worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
         }
     }
 
@@ -468,6 +468,8 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
             IDrawer drawer = getDrawer(i);
             if (drawer.getMaxCapacity() > 0)
                 minRatio = Math.min(minRatio, (float)drawer.getStoredItemCount() / drawer.getMaxCapacity());
+            else
+                minRatio = 0;
         }
 
         if (minRatio > 1)
@@ -548,7 +550,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.stackSize);
 
         if (isRedstone() && worldObj != null)
-            worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType());
+            worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
 
         // TODO: Reset empty drawer in subclasses
 
@@ -808,7 +810,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     public void markDirty () {
         inventory.markDirty();
         if (isRedstone() && worldObj != null)
-            worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType());
+            worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
 
         super.markDirty();
     }

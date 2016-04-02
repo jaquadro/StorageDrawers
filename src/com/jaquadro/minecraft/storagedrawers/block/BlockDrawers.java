@@ -15,9 +15,10 @@ import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
+import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
@@ -38,6 +39,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -295,7 +297,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-            else if (item.getItem() == ModItems.upgrade || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid || 
+            else if (item.getItem() == ModItems.upgradeStorage || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid ||
                item.getItem() == ModItems.upgradeCreative || item.getItem() == ModItems.upgradeRedstone) {
                 if (!tileDrawers.addUpgrade(item) && !world.isRemote) {
                     player.addChatMessage(new ChatComponentTranslation("storagedrawers.msg.maxUpgrades"));
@@ -433,7 +435,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "IExtendedBlockClickHandler.onBlockClicked");
 
         if (!player.capabilities.isCreativeMode) {
-            PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, world, pos, side);
+            PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, world, pos, side, new Vec3(hitX, hitY, hitZ));
             if (event.isCanceled())
                 return;
         }
@@ -460,8 +462,10 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item == null) ? "  null item" : "  " + item.toString());
 
         if (item != null && item.stackSize > 0) {
-            dropItemStack(world, player, item);
-            world.markBlockForUpdate(pos);
+            if (!player.inventory.addItemStackToInventory(item)) {
+                dropItemStack(world, pos.offset(side), player, item);
+                world.markBlockForUpdate(pos);
+            }
         }
     }
 
@@ -492,8 +496,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     }
 
-    private void dropItemStack (World world, EntityPlayer player, ItemStack stack) {
-        EntityItem entity = new EntityItem(world, player.posX, player.posY, player.posZ, stack);
+    private void dropItemStack (World world, BlockPos pos, EntityPlayer player, ItemStack stack) {
+        EntityItem entity = new EntityItem(world, pos.getX() + .5f, pos.getY() + .1f, pos.getZ() + .5f, stack);
+        entity.addVelocity(-entity.motionX, -entity.motionY, -entity.motionZ);
         world.spawnEntityInWorld(entity);
     }
 
@@ -576,19 +581,22 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
-    public float getExplosionResistance (Entity par1Entity, World world, int x, int y, int z, double explosionX, double explosionY, double explosionZ) {
-        TileEntityDrawers tile = getTileEntity(world, x, y, z);
+    public float getExplosionResistance (World world, BlockPos pos, Entity exploder, Explosion explosion) {
+        TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile != null) {
             for (int slot = 0; slot < 5; slot++) {
                 ItemStack stack = tile.getUpgrade(slot);
-                if (stack == null || !(stack.getItem() instanceof ItemUpgrade) || stack.getItemDamage() != 4)
+                if (stack == null || !(stack.getItem() instanceof ItemUpgradeStorage))
+                    continue;
+
+                if (EnumUpgradeStorage.byMetadata(stack.getMetadata()) != EnumUpgradeStorage.OBSIDIAN)
                     continue;
 
                 return 1000;
             }
         }
 
-        return super.getExplosionResistance(par1Entity, world, x, y, z, explosionX, explosionY, explosionZ);
+        return super.getExplosionResistance(world, pos, exploder, explosion);
     }
 
     @Override
@@ -658,11 +666,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
-    public int isProvidingWeakPower (IBlockAccess blockAccess, int x, int y, int z, int dir) {
+    public int getWeakPower (IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side) {
         if (!canProvidePower())
             return 0;
 
-        TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
+        TileEntityDrawers tile = getTileEntity(worldIn, pos);
         if (tile == null || !tile.isRedstone())
             return 0;
 
@@ -670,8 +678,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
-    public int isProvidingStrongPower (IBlockAccess blockAccess, int x, int y, int z, int dir) {
-        return (dir == 1) ? isProvidingWeakPower(blockAccess, x, y, z, dir) : 0;
+    public int getStrongPower (IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side) {
+        return (side == EnumFacing.UP) ? getWeakPower(worldIn, pos, state, side) : 0;
     }
 
     @Override
