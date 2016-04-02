@@ -39,6 +39,11 @@ public class BlockDrawersCustom extends BlockDrawers
     }
 
     @Override
+    public BlockType retrimType () {
+        return null;
+    }
+
+    @Override
     protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile == null)

@@ -17,6 +17,7 @@ import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
@@ -294,7 +295,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-            else if (item.getItem() == ModItems.upgradeStorage || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid || item.getItem() == ModItems.upgradeCreative) {
+            else if (item.getItem() == ModItems.upgrade || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid || 
+               item.getItem() == ModItems.upgradeCreative || item.getItem() == ModItems.upgradeRedstone) {
                 if (!tileDrawers.addUpgrade(item) && !world.isRemote) {
                     player.addChatMessage(new ChatComponentTranslation("storagedrawers.msg.maxUpgrades"));
                     return false;
@@ -574,6 +576,22 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    public float getExplosionResistance (Entity par1Entity, World world, int x, int y, int z, double explosionX, double explosionY, double explosionZ) {
+        TileEntityDrawers tile = getTileEntity(world, x, y, z);
+        if (tile != null) {
+            for (int slot = 0; slot < 5; slot++) {
+                ItemStack stack = tile.getUpgrade(slot);
+                if (stack == null || !(stack.getItem() instanceof ItemUpgrade) || stack.getItemDamage() != 4)
+                    continue;
+
+                return 1000;
+            }
+        }
+
+        return super.getExplosionResistance(par1Entity, world, x, y, z, explosionX, explosionY, explosionZ);
+    }
+
+    @Override
     public TileEntityDrawers createNewTileEntity (World world, int meta) {
         return new TileEntityDrawersStandard();
     }
@@ -632,6 +650,28 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                     list.add(stack);
             }
         }
+    }
+
+    @Override
+    public boolean canProvidePower () {
+        return true;
+    }
+
+    @Override
+    public int isProvidingWeakPower (IBlockAccess blockAccess, int x, int y, int z, int dir) {
+        if (!canProvidePower())
+            return 0;
+
+        TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
+        if (tile == null || !tile.isRedstone())
+            return 0;
+
+        return tile.getRedstoneLevel();
+    }
+
+    @Override
+    public int isProvidingStrongPower (IBlockAccess blockAccess, int x, int y, int z, int dir) {
+        return (dir == 1) ? isProvidingWeakPower(blockAccess, x, y, z, dir) : 0;
     }
 
     @Override
