@@ -438,6 +438,8 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
             IDrawer drawer = getDrawer(i);
             if (drawer.getMaxCapacity() > 0)
                 minRatio = Math.min(minRatio, (float)drawer.getStoredItemCount() / drawer.getMaxCapacity());
+            else
+                minRatio = 0;
         }
 
         if (minRatio > 1)
