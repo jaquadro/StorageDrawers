@@ -112,6 +112,15 @@ public class ModRecipes
                 'x', Blocks.obsidian, 'y', "stickWood", 'z', ModItems.upgradeTemplate));
         }
 
+        if (config.cache.enableRedstoneUpgrades) {
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeRedstone, 1, 0), "xyx", "yzy", "xyx",
+                'x', "dustRedstone", 'y', "stickWood", 'z', ModItems.upgradeTemplate));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeRedstone, 1, 1), "xxx", "yzy", "yyy",
+                'x', "dustRedstone", 'y', "stickWood", 'z', ModItems.upgradeTemplate));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeRedstone, 1, 2), "yyy", "yzy", "xxx",
+                'x', "dustRedstone", 'y', "stickWood", 'z', ModItems.upgradeTemplate));
+        }
+
         if (config.cache.enableShroudUpgrades) {
             GameRegistry.addShapelessRecipe(new ItemStack(ModItems.shroudKey), ModItems.upgradeLock, Items.ender_eye);
         }

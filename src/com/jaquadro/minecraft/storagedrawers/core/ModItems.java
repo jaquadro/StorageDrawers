@@ -13,6 +13,7 @@ public class ModItems
     public static ItemUpgradeLock upgradeLock;
     public static ItemUpgradeVoid upgradeVoid;
     public static ItemUpgradeCreative upgradeCreative;
+    public static ItemUpgradeRedstone upgradeRedstone;
     public static ItemShroudKey shroudKey;
     public static ItemPersonalKey personalKey;
     public static ItemTape tape;
@@ -24,6 +25,7 @@ public class ModItems
         upgradeLock = new ItemUpgradeLock(makeName("upgradeLock"));
         upgradeVoid = new ItemUpgradeVoid(makeName("upgradeVoid"));
         upgradeCreative = new ItemUpgradeCreative(makeName("upgradeCreative"));
+        upgradeRedstone = new ItemUpgradeRedstone(makeName("upgradeRedstone"));
         shroudKey = new ItemShroudKey(makeName("shroudKey"));
         personalKey = new ItemPersonalKey(makeName("personalKey"));
         tape = new ItemTape(makeName("tape"));
@@ -38,6 +40,8 @@ public class ModItems
             GameRegistry.registerItem(upgradeVoid, "upgradeVoid");
         if (StorageDrawers.config.cache.enableCreativeUpgrades)
             GameRegistry.registerItem(upgradeCreative, "upgradeCreative");
+        if (StorageDrawers.config.cache.enableRedstoneUpgrades)
+            GameRegistry.registerItem(upgradeRedstone, "upgradeRedstone");
         if (StorageDrawers.config.cache.enableLockUpgrades)
             GameRegistry.registerItem(upgradeLock, "upgradeLock");
         if (StorageDrawers.config.cache.enableShroudUpgrades)

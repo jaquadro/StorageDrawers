@@ -56,7 +56,7 @@ public class RefinedRelocation extends IntegrationModule
         compDrawers = new BlockSortingCompDrawers("compDrawers");
         trim = new BlockSortingTrim("trim");
 
-        upgradeSorting = new ItemUpgradeSorting("upgradeSorting");
+        upgradeSorting = new ItemUpgradeSorting(ModItems.makeName("upgradeSorting"));
 
         SortingBlockRegistry.register(ModBlocks.fullDrawers1, fullDrawers1);
         SortingBlockRegistry.register(ModBlocks.fullDrawers2, fullDrawers2);

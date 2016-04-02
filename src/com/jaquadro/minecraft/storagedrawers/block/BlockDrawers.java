@@ -325,7 +325,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-            else if (item.getItem() == ModItems.upgrade || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid || item.getItem() == ModItems.upgradeCreative) {
+            else if (item.getItem() == ModItems.upgrade || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid ||
+                item.getItem() == ModItems.upgradeCreative || item.getItem() == ModItems.upgradeRedstone) {
                 if (!tileDrawers.addUpgrade(item)) {
                     player.addChatMessage(new ChatComponentTranslation("storagedrawers.msg.maxUpgrades"));
                     return false;
@@ -716,6 +717,28 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             for (int i = 1; i < BlockWood.field_150096_a.length; i++)
                 list.add(new ItemStack(item, 1, i));
         }
+    }
+
+    @Override
+    public boolean canProvidePower () {
+        return true;
+    }
+
+    @Override
+    public int isProvidingWeakPower (IBlockAccess blockAccess, int x, int y, int z, int dir) {
+        if (!canProvidePower())
+            return 0;
+
+        TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
+        if (tile == null || !tile.isRedstone())
+            return 0;
+
+        return tile.getRedstoneLevel();
+    }
+
+    @Override
+    public int isProvidingStrongPower (IBlockAccess blockAccess, int x, int y, int z, int dir) {
+        return (dir == 1) ? isProvidingWeakPower(blockAccess, x, y, z, dir) : 0;
     }
 
     @SideOnly(Side.CLIENT)
