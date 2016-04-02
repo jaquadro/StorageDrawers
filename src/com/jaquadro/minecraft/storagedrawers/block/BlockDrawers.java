@@ -15,8 +15,10 @@ import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
+import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
@@ -298,7 +300,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 return true;
             }
-            else if (item.getItem() == ModItems.upgradeStorage || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid || item.getItem() == ModItems.upgradeCreative) {
+            else if (item.getItem() == ModItems.upgradeStorage || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid ||
+               item.getItem() == ModItems.upgradeCreative || item.getItem() == ModItems.upgradeRedstone) {
                 if (!tileDrawers.addUpgrade(item) && !world.isRemote) {
                     player.addChatMessage(new TextComponentTranslation("storagedrawers.msg.maxUpgrades"));
                     return false;
@@ -463,8 +466,10 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
         IBlockState state = world.getBlockState(pos);
         if (item != null && item.stackSize > 0) {
-            dropItemStack(world, player, item);
-            world.notifyBlockUpdate(pos, state, state, 3);
+            if (!player.inventory.addItemStackToInventory(item)) {
+                dropItemStack(world, pos.offset(side), player, item);
+                world.notifyBlockUpdate(pos, state, state, 3);
+            }
         }
     }
 
@@ -495,8 +500,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     }
 
-    private void dropItemStack (World world, EntityPlayer player, ItemStack stack) {
-        EntityItem entity = new EntityItem(world, player.posX, player.posY, player.posZ, stack);
+    private void dropItemStack (World world, BlockPos pos, EntityPlayer player, ItemStack stack) {
+        EntityItem entity = new EntityItem(world, pos.getX() + .5f, pos.getY() + .1f, pos.getZ() + .5f, stack);
+        entity.addVelocity(-entity.motionX, -entity.motionY, -entity.motionZ);
         world.spawnEntityInWorld(entity);
     }
 
@@ -578,6 +584,25 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    public float getExplosionResistance (World world, BlockPos pos, Entity exploder, Explosion explosion) {
+        TileEntityDrawers tile = getTileEntity(world, pos);
+        if (tile != null) {
+            for (int slot = 0; slot < 5; slot++) {
+                ItemStack stack = tile.getUpgrade(slot);
+                if (stack == null || !(stack.getItem() instanceof ItemUpgradeStorage))
+                    continue;
+
+                if (EnumUpgradeStorage.byMetadata(stack.getMetadata()) != EnumUpgradeStorage.OBSIDIAN)
+                    continue;
+
+                return 1000;
+            }
+        }
+
+        return super.getExplosionResistance(world, pos, exploder, explosion);
+    }
+
+    @Override
     public TileEntityDrawers createNewTileEntity (World world, int meta) {
         return new TileEntityDrawersStandard();
     }
@@ -628,6 +653,28 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                     list.add(stack);
             }
         }
+    }
+
+    @Override
+    public boolean canProvidePower () {
+        return true;
+    }
+
+    @Override
+    public int getWeakPower (IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side) {
+        if (!canProvidePower())
+            return 0;
+
+        TileEntityDrawers tile = getTileEntity(worldIn, pos);
+        if (tile == null || !tile.isRedstone())
+            return 0;
+
+        return tile.getRedstoneLevel();
+    }
+
+    @Override
+    public int getStrongPower (IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side) {
+        return (side == EnumFacing.UP) ? getWeakPower(worldIn, pos, state, side) : 0;
     }
 
     @Override

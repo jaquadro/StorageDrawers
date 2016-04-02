@@ -195,11 +195,13 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
         upgrades[slot] = upgrade;
 
-        if (worldObj != null && !worldObj.isRemote) {
-            markDirty();
-
-            IBlockState state = worldObj.getBlockState(getPos());
-            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+        if (worldObj != null) {
+            if (!worldObj.isRemote) {
+                markDirty();
+                IBlockState state = worldObj.getBlockState(getPos());
+                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+            }
+            worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
         }
     }
 
@@ -411,6 +413,103 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         return false;
     }
 
+    public boolean isRedstone () {
+        if (!StorageDrawers.config.cache.enableRedstoneUpgrades)
+            return false;
+
+        for (ItemStack stack : upgrades) {
+            if (stack != null && stack.getItem() == ModItems.upgradeRedstone)
+                return true;
+        }
+
+        return false;
+    }
+
+    public int getRedstoneLevel () {
+        int redstoneType = -1;
+        for (ItemStack stack : upgrades) {
+            if (stack != null && stack.getItem() == ModItems.upgradeRedstone) {
+                redstoneType = stack.getItemDamage();
+                break;
+            }
+        }
+
+        switch (redstoneType) {
+            case 0:
+                return getCombinedRedstoneLevel();
+            case 1:
+                return getMaxRedstoneLevel();
+            case 2:
+                return getMinRedstoneLevel();
+            default:
+                return 0;
+        }
+    }
+
+    protected int getCombinedRedstoneLevel () {
+        int active = 0;
+        float fillRatio = 0;
+
+        for (int i = 0; i < getDrawerCount(); i++) {
+            if (!isDrawerEnabled(i))
+                continue;
+
+            IDrawer drawer = getDrawer(i);
+            if (drawer.getMaxCapacity() > 0)
+                fillRatio += ((float)drawer.getStoredItemCount() / drawer.getMaxCapacity());
+
+            active++;
+        }
+
+        if (active == 0)
+            return 0;
+
+        if (fillRatio == active)
+            return 15;
+
+        return (int)Math.ceil((fillRatio / active) * 14);
+    }
+
+    protected int getMinRedstoneLevel () {
+        float minRatio = 2;
+
+        for (int i = 0; i < getDrawerCount(); i++) {
+            if (!isDrawerEnabled(i))
+                continue;
+
+            IDrawer drawer = getDrawer(i);
+            if (drawer.getMaxCapacity() > 0)
+                minRatio = Math.min(minRatio, (float)drawer.getStoredItemCount() / drawer.getMaxCapacity());
+            else
+                minRatio = 0;
+        }
+
+        if (minRatio > 1)
+            return 0;
+        if (minRatio == 1)
+            return 15;
+
+        return (int)Math.ceil(minRatio * 14);
+    }
+
+    protected int getMaxRedstoneLevel () {
+        float maxRatio = 0;
+
+        for (int i = 0; i < getDrawerCount(); i++) {
+            if (!isDrawerEnabled(i))
+                continue;
+
+            IDrawer drawer = getDrawer(i);
+            if (drawer.getMaxCapacity() > 0)
+                maxRatio = Math.max(maxRatio, (float)drawer.getStoredItemCount() / drawer.getMaxCapacity());
+        }
+
+        if (maxRatio == 1)
+            return 15;
+
+        return (int)Math.ceil(maxRatio * 14);
+    }
+
     public boolean isSorting () {
         return false;
     }
@@ -462,6 +561,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         IDrawer drawer = drawers[slot];
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.stackSize);
 
+        if (isRedstone() && worldObj != null)
+            worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
+
         // TODO: Reset empty drawer in subclasses
 
         return stack;
@@ -500,12 +602,13 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     }
 
     public int interactPutCurrentItemIntoSlot (int slot, EntityPlayer player) {
+        int count = 0;
         ItemStack currentStack = player.inventory.getCurrentItem();
         if (currentStack != null)
-            return putItemsIntoSlot(slot, currentStack, currentStack.stackSize);
+            count = putItemsIntoSlot(slot, currentStack, currentStack.stackSize);
 
         markDirty();
-        return 0;
+        return count;
     }
 
     public int interactPutCurrentInventoryIntoSlot (int slot, EntityPlayer player) {
@@ -718,6 +821,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     @Override
     public void markDirty () {
         inventory.markDirty();
+        if (isRedstone() && worldObj != null)
+            worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
+
         super.markDirty();
     }
 

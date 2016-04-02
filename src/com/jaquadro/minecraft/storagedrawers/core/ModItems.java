@@ -18,6 +18,7 @@ public class ModItems
     public static ItemDrawerKey drawerKey;
     public static ItemUpgradeVoid upgradeVoid;
     public static ItemUpgradeCreative upgradeCreative;
+    public static ItemUpgradeRedstone upgradeRedstone;
     public static ItemShroudKey shroudKey;
     public static ItemPersonalKey personalKey;
     public static ItemTape tape;
@@ -29,6 +30,7 @@ public class ModItems
         upgradeVoid = new ItemUpgradeVoid(makeName("upgradeVoid"));
         drawerKey = new ItemDrawerKey(makeName("drawerKey"));
         upgradeCreative = new ItemUpgradeCreative(makeName("upgradeCreative"));
+        upgradeRedstone = new ItemUpgradeRedstone(makeName("upgradeRedstone"));
         shroudKey = new ItemShroudKey(makeName("shroudKey"));
         personalKey = new ItemPersonalKey(makeName("personalKey"));
         tape = new ItemTape(makeName("tape"));
@@ -43,6 +45,8 @@ public class ModItems
             GameRegistry.registerItem(upgradeVoid, "upgradeVoid");
         if (StorageDrawers.config.cache.enableCreativeUpgrades)
             GameRegistry.registerItem(upgradeCreative, "upgradeCreative");
+        if (StorageDrawers.config.cache.enableRedstoneUpgrades)
+            GameRegistry.registerItem(upgradeRedstone, "upgradeRedstone");
         if (StorageDrawers.config.cache.enableLockUpgrades)
             GameRegistry.registerItem(drawerKey, "drawerKey");
         if (StorageDrawers.config.cache.enableShroudUpgrades)
@@ -66,6 +70,7 @@ public class ModItems
         modelRegistry.registerItemVariants(upgradeStorage);
         modelRegistry.registerItemVariants(upgradeStatus);
         modelRegistry.registerItemVariants(upgradeCreative);
+        modelRegistry.registerItemVariants(upgradeRedstone);
     }
 
     public static String getQualifiedName (Item item) {
