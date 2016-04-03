@@ -11,11 +11,11 @@ storagedrawers.msg.maxUpgrades=Ce tiroir ne peuvent pas accepter davantage d'am�
 
 # Items
 item.storagedrawers.upgradeTemplate.name=Modèle d'amélioration
+item.storagedrawers.upgrade.obsidian.name=Amélioration stockage (I)
 item.storagedrawers.upgrade.iron.name=Amélioration stockage (II)
 item.storagedrawers.upgrade.gold.name=Amélioration stockage (III)
-item.storagedrawers.upgrade.obsidian.name=Amélioration stockage (IV)
-item.storagedrawers.upgrade.diamond.name=Amélioration stockage (V)
-item.storagedrawers.upgrade.emerald.name=Amélioration stockage (VI)
+item.storagedrawers.upgrade.diamond.name=Amélioration stockage (IV)
+item.storagedrawers.upgrade.emerald.name=Amélioration stockage (V)
 item.storagedrawers.upgradeStatus.level1.name=Amélioration statut (I)
 item.storagedrawers.upgradeStatus.level1.description=Montre si le stockage est plein
 item.storagedrawers.upgradeStatus.level2.name=Amélioration statut (II)

@@ -2,11 +2,11 @@ itemGroup.storageDrawers=מגירות אכסון
 
 # Items
 item.storagedrawers.upgradeTemplate.name=Upgrade Template
+item.storagedrawers.upgrade.obsidian.name=שדרוג למגירה (1)
 item.storagedrawers.upgrade.iron.name=שדרוג למגירה (2)
 item.storagedrawers.upgrade.gold.name=שדרוג למגירה (3)
-item.storagedrawers.upgrade.obsidian.name=שדרוג למגירה (4)
-item.storagedrawers.upgrade.diamond.name=שדרוג למגירה (5)
-item.storagedrawers.upgrade.emerald.name=שדרוג למגירה (6)
+item.storagedrawers.upgrade.diamond.name=שדרוג למגירה (4)
+item.storagedrawers.upgrade.emerald.name=שדרוג למגירה (5)
 item.storagedrawers.upgradeStatus.level1.name=Status Upgrade (I)
 item.storagedrawers.upgradeStatus.level1.description=Shows full storage
 item.storagedrawers.upgradeStatus.level2.name=Status Upgrade (II)

@@ -2,11 +2,11 @@ itemGroup.storageDrawers=Storage Drawers
 
 # Items
 item.storagedrawers.upgradeTemplate.name=Szablon ulepszenia
+item.storagedrawers.upgrade.obsidian.name=Ulepszenie składowania (I)
 item.storagedrawers.upgrade.iron.name=Ulepszenie składowania (II)
 item.storagedrawers.upgrade.gold.name=Ulepszenie składowania (III)
-item.storagedrawers.upgrade.obsidian.name=Ulepszenie składowania (IV)
-item.storagedrawers.upgrade.diamond.name=Ulepszenie składowania (V)
-item.storagedrawers.upgrade.emerald.name=Ulepszenie składowania (VI)
+item.storagedrawers.upgrade.diamond.name=Ulepszenie składowania (IV)
+item.storagedrawers.upgrade.emerald.name=Ulepszenie składowania (V)
 item.storagedrawers.upgradeStatus.level1.name=Ulepszenie statusu (I)
 item.storagedrawers.upgradeStatus.level1.description=Pokazuje pełny skład
 item.storagedrawers.upgradeStatus.level2.name=Ulepszenie statusu (II)

@@ -3,11 +3,11 @@ itemGroup.storageDrawersSorting=Storage Drawers - Сортировка
 
 # Items
 item.storagedrawers.upgradeTemplate.name=Шаблон улучшения
+item.storagedrawers.upgrade.obsidian.name=Улучшение хранилища (I)
 item.storagedrawers.upgrade.iron.name=Улучшение хранилища (II)
 item.storagedrawers.upgrade.gold.name=Улучшение хранилища (III)
-item.storagedrawers.upgrade.obsidian.name=Улучшение хранилища (IV)
-item.storagedrawers.upgrade.diamond.name=Улучшение хранилища (V)
-item.storagedrawers.upgrade.emerald.name=Улучшение хранилища (VI)
+item.storagedrawers.upgrade.diamond.name=Улучшение хранилища (IV)
+item.storagedrawers.upgrade.emerald.name=Улучшение хранилища (V)
 item.storagedrawers.upgradeStatus.level1.name=Улучшение «Индикатор» (I)
 item.storagedrawers.upgradeStatus.level1.description=Показывает, когда ящик заполнен
 item.storagedrawers.upgradeStatus.level2.name=Улучшение «Индикатор» (II)

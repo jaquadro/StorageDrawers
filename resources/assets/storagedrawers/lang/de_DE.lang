@@ -11,11 +11,11 @@ storagedrawers.msg.maxUpgrades=Dieses Schubfach kann keine Upgrades mehr annehme
 
 # Items
 item.storagedrawers.upgradeTemplate.name=Upgradeschablone
+item.storagedrawers.upgrade.obsidian.name=Speicherupgrade (I)
 item.storagedrawers.upgrade.iron.name=Speicherupgrade (II)
 item.storagedrawers.upgrade.gold.name=Speicherupgrade (III)
-item.storagedrawers.upgrade.obsidian.name=Speicherupgrade (IV)
-item.storagedrawers.upgrade.diamond.name=Speicherupgrade (V)
-item.storagedrawers.upgrade.emerald.name=Speicherupgrade (VI)
+item.storagedrawers.upgrade.diamond.name=Speicherupgrade (IV)
+item.storagedrawers.upgrade.emerald.name=Speicherupgrade (V)
 item.storagedrawers.upgradeStatus.level1.name=Statusupgrade (I)
 item.storagedrawers.upgradeStatus.level1.description=Zeige volle Speicher
 item.storagedrawers.upgradeStatus.level2.name=Statusupgrade (II)

@@ -2,11 +2,11 @@ itemGroup.storageDrawers=Storage Drawers
 
 # Items
 item.storagedrawers.upgradeTemplate.name=Plantilla de Mejora
+item.storagedrawers.upgrade.obsidian.name=Mejora para Cajonera (I)
 item.storagedrawers.upgrade.iron.name=Mejora para Cajonera (II)
 item.storagedrawers.upgrade.gold.name=Mejora para Cajonera (III)
-item.storagedrawers.upgrade.obsidian.name=Mejora para Cajonera (IV)
-item.storagedrawers.upgrade.diamond.name=Mejora para Cajonera (V)
-item.storagedrawers.upgrade.emerald.name=Mejora para Cajonera (VI)
+item.storagedrawers.upgrade.diamond.name=Mejora para Cajonera (IV)
+item.storagedrawers.upgrade.emerald.name=Mejora para Cajonera (V)
 item.storagedrawers.upgradeStatus.level1.name=Status Mejora (I)
 item.storagedrawers.upgradeStatus.level1.description=Muestra que el cajón está lleno
 item.storagedrawers.upgradeStatus.level2.name=Status Mejora (II)

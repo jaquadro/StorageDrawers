@@ -11,11 +11,11 @@ storagedrawers.msg.maxUpgrades=這個抽屜已無法接受更多的升級。
 
 # Item
 item.storagedrawers.upgradeTemplate.name=升級模板
+item.storagedrawers.upgrade.obsidian.name=抽屜容量升級(I)
 item.storagedrawers.upgrade.iron.name=抽屜容量升級(II)
 item.storagedrawers.upgrade.gold.name=抽屜容量升級(III)
-item.storagedrawers.upgrade.obsidian.name=抽屜容量升級(IV)
-item.storagedrawers.upgrade.diamond.name=抽屜容量升級(V)
-item.storagedrawers.upgrade.emerald.name=抽屜容量升級(VI)
+item.storagedrawers.upgrade.diamond.name=抽屜容量升級(IV)
+item.storagedrawers.upgrade.emerald.name=抽屜容量升級(V)
 item.storagedrawers.upgradeStatus.level1.name=狀態顯示升級(I)
 item.storagedrawers.upgradeStatus.level1.description=抽屜裝滿時亮起提示燈。
 item.storagedrawers.upgradeStatus.level2.name=狀態顯示升級(II)

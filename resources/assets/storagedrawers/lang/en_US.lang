@@ -12,11 +12,11 @@ storagedrawers.msg.maxUpgrades=This drawer cannot accept any more upgrades.
 
 # Items
 item.storagedrawers.upgradeTemplate.name=Upgrade Template
+item.storagedrawers.upgradeStorage.obsidian.name=Storage Upgrade (I)
 item.storagedrawers.upgradeStorage.iron.name=Storage Upgrade (II)
 item.storagedrawers.upgradeStorage.gold.name=Storage Upgrade (III)
-item.storagedrawers.upgradeStorage.obsidian.name=Storage Upgrade (IV)
-item.storagedrawers.upgradeStorage.diamond.name=Storage Upgrade (V)
-item.storagedrawers.upgradeStorage.emerald.name=Storage Upgrade (VI)
+item.storagedrawers.upgradeStorage.diamond.name=Storage Upgrade (IV)
+item.storagedrawers.upgradeStorage.emerald.name=Storage Upgrade (V)
 item.storagedrawers.upgradeStatus.level1.name=Status Upgrade (I)
 item.storagedrawers.upgradeStatus.level1.description=Shows full storage
 item.storagedrawers.upgradeStatus.level2.name=Status Upgrade (II)
