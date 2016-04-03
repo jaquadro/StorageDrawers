@@ -13,11 +13,9 @@ import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRe
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityFramingRenderer;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.item.*;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -46,30 +44,37 @@ public class ModBlocks
 
         ConfigManager config = StorageDrawers.config;
 
-        //GameRegistry.register((Block)basicDrawers);
-        GameRegistry.registerBlock(basicDrawers, ItemBasicDrawers.class, "basicDrawers");
-        GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(basicDrawers));
+        GameRegistry.register(basicDrawers);
+        GameRegistry.register(new ItemBasicDrawers(basicDrawers).setRegistryName(basicDrawers.getRegistryName()));
+        GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, basicDrawers.getRegistryName().toString());
 
         if (config.isBlockEnabled("compdrawers")) {
-            GameRegistry.registerBlock(compDrawers, ItemCompDrawers.class, "compDrawers");
-            GameRegistry.registerTileEntity(TileEntityDrawersComp.class, ModBlocks.getQualifiedName(compDrawers));
+            GameRegistry.register(compDrawers);
+            GameRegistry.register(new ItemCompDrawers(compDrawers).setRegistryName(compDrawers.getRegistryName()));
+            GameRegistry.registerTileEntity(TileEntityDrawersComp.class, compDrawers.getRegistryName().toString());
         }
         if (config.isBlockEnabled("controller")) {
-            GameRegistry.registerBlock(controller, ItemController.class, "controller");
-            GameRegistry.registerTileEntity(TileEntityController.class, ModBlocks.getQualifiedName(controller));
+            GameRegistry.register(controller);
+            GameRegistry.register(new ItemController(controller).setRegistryName(controller.getRegistryName()));
+            GameRegistry.registerTileEntity(TileEntityController.class, controller.getRegistryName().toString());
         }
         if (config.isBlockEnabled("controllerSlave")) {
-            GameRegistry.registerBlock(controllerSlave, "controllerSlave");
-            GameRegistry.registerTileEntity(TileEntitySlave.class, ModBlocks.getQualifiedName(controllerSlave));
+            GameRegistry.register(controllerSlave);
+            GameRegistry.register(new ItemBlock(controllerSlave).setRegistryName(controllerSlave.getRegistryName()));
+            GameRegistry.registerTileEntity(TileEntitySlave.class, controllerSlave.getRegistryName().toString());
         }
-        if (config.isBlockEnabled("trim"))
-            GameRegistry.registerBlock(trim, ItemTrim.class, "trim");
+        if (config.isBlockEnabled("trim")) {
+            GameRegistry.register(trim);
+            GameRegistry.register(new ItemTrim(trim).setRegistryName(trim.getRegistryName()));
+        }
 
         if (config.cache.enableFramedDrawers) {
-            GameRegistry.registerBlock(framingTable, ItemFramingTable.class, "framingTable");
-            GameRegistry.registerTileEntity(TileEntityFramingTable.class, ModBlocks.getQualifiedName(framingTable));
+            GameRegistry.register(framingTable);
+            GameRegistry.register(new ItemFramingTable(framingTable).setRegistryName(framingTable.getRegistryName()));
+            GameRegistry.registerTileEntity(TileEntityFramingTable.class, framingTable.getRegistryName().toString());
 
-            GameRegistry.registerBlock(customDrawers, ItemCustomDrawers.class, "customDrawers");
+            GameRegistry.register(customDrawers);
+            GameRegistry.register(new ItemCustomDrawers(customDrawers).setRegistryName(customDrawers.getRegistryName()));
         }
 
         StorageDrawers.proxy.registerDrawer(basicDrawers);
@@ -104,9 +109,5 @@ public class ModBlocks
         modelRegistry.registerItemVariants(trim);
         modelRegistry.registerItemVariants(controller);
         modelRegistry.registerItemVariants(controllerSlave);
-    }
-
-    public static String getQualifiedName (Block block) {
-        return GameData.getBlockRegistry().getNameForObject(block).toString();
     }
 }

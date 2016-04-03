@@ -5,7 +5,6 @@ import com.jaquadro.minecraft.chameleon.resources.ModelRegistry;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,26 +34,26 @@ public class ModItems
         personalKey = new ItemPersonalKey("personalKey", makeName("personalKey"));
         tape = new ItemTape("tape", makeName("tape"));
 
-        GameRegistry.registerItem(upgradeTemplate, "upgradeTemplate");
+        GameRegistry.register(upgradeTemplate);
 
         if (StorageDrawers.config.cache.enableStorageUpgrades)
-            GameRegistry.registerItem(upgradeStorage, "upgradeStorage");
+            GameRegistry.register(upgradeStorage);
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
-            GameRegistry.registerItem(upgradeStatus, "upgradeStatus");
+            GameRegistry.register(upgradeStatus);
         if (StorageDrawers.config.cache.enableVoidUpgrades)
-            GameRegistry.registerItem(upgradeVoid, "upgradeVoid");
+            GameRegistry.register(upgradeVoid);
         if (StorageDrawers.config.cache.enableCreativeUpgrades)
-            GameRegistry.registerItem(upgradeCreative, "upgradeCreative");
+            GameRegistry.register(upgradeCreative);
         if (StorageDrawers.config.cache.enableRedstoneUpgrades)
-            GameRegistry.registerItem(upgradeRedstone, "upgradeRedstone");
+            GameRegistry.register(upgradeRedstone);
         if (StorageDrawers.config.cache.enableLockUpgrades)
-            GameRegistry.registerItem(drawerKey, "drawerKey");
+            GameRegistry.register(drawerKey);
         if (StorageDrawers.config.cache.enableShroudUpgrades)
-            GameRegistry.registerItem(shroudKey, "shroudKey");
+            GameRegistry.register(shroudKey);
         if (StorageDrawers.config.cache.enablePersonalUpgrades)
-            GameRegistry.registerItem(personalKey, "personalKey");
+            GameRegistry.register(personalKey);
         if (StorageDrawers.config.cache.enableTape)
-            GameRegistry.registerItem(tape, "tape");
+            GameRegistry.register(tape);
     }
 
     @SideOnly(Side.CLIENT)
@@ -71,10 +70,6 @@ public class ModItems
         modelRegistry.registerItemVariants(upgradeStatus);
         modelRegistry.registerItemVariants(upgradeCreative);
         modelRegistry.registerItemVariants(upgradeRedstone);
-    }
-
-    public static String getQualifiedName (Item item) {
-        return GameData.getItemRegistry().getNameForObject(item).toString();
     }
 
     public static String makeName (String name) {

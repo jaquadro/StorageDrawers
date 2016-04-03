@@ -68,7 +68,7 @@ public class ItemTrim extends ItemMultiTexture implements IItemMeshMapper, IItem
 
         for (BlockPlanks.EnumType woodType : BlockPlanks.EnumType.values()) {
             IBlockState state = block.getDefaultState().withProperty(BlockTrim.VARIANT, woodType);
-            ModelResourceLocation location = new ModelResourceLocation(ModBlocks.getQualifiedName(ModBlocks.trim) + '_' + woodType.getName(), "inventory");
+            ModelResourceLocation location = new ModelResourceLocation(ModBlocks.trim.getRegistryName().toString() + '_' + woodType.getName(), "inventory");
             mappings.add(Pair.of(new ItemStack(this, 1, block.getMetaFromState(state)), location));
         }
 

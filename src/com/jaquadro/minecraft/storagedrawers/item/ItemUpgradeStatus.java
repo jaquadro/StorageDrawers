@@ -3,7 +3,6 @@ package com.jaquadro.minecraft.storagedrawers.item;
 import com.jaquadro.minecraft.chameleon.resources.IItemMeshMapper;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
-import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -56,7 +55,7 @@ public class ItemUpgradeStatus extends Item implements IItemMeshMapper
         List<Pair<ItemStack, ModelResourceLocation>> mappings = new ArrayList<Pair<ItemStack, ModelResourceLocation>>();
 
         for (EnumUpgradeStatus type : EnumUpgradeStatus.values()) {
-            ModelResourceLocation location = new ModelResourceLocation(ModItems.getQualifiedName(this) + '_' + type.getName(), "inventory");
+            ModelResourceLocation location = new ModelResourceLocation(getRegistryName().toString() + '_' + type.getName(), "inventory");
             mappings.add(Pair.of(new ItemStack(this, 1, type.getMetadata()), location));
         }
 
