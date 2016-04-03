@@ -288,6 +288,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         BlockDrawers block = (BlockDrawers)blockState.getBlock();
         StatusModelData statusInfo = block.getStatusInfo(blockState);
+        if (statusInfo == null)
+            return;
+
         double depth = block.isHalfDepth(blockState) ? .5 : 1;
         int count = (tile instanceof TileEntityDrawersComp) ? 1 : block.getDrawerCount(blockState);
 

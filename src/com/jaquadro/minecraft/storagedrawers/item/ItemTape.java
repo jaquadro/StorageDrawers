@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ISealable;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
@@ -21,8 +22,9 @@ import java.util.List;
 
 public class ItemTape extends Item
 {
-    public ItemTape (String name) {
-        setUnlocalizedName(name);
+    public ItemTape (String registryName, String unlocalizedName) {
+        setRegistryName(StorageDrawers.MOD_ID, registryName);
+        setUnlocalizedName(unlocalizedName);
         setMaxStackSize(1);
         setMaxDamage(8);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);

@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import net.minecraft.block.Block;
@@ -33,6 +34,7 @@ public class BlockTrim extends Block implements INetworked
         super(Material.wood);
 
         setUnlocalizedName(name);
+        setRegistryName(StorageDrawers.MOD_ID, name);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
         setStepSound(SoundType.WOOD);

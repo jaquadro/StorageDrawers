@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.collect.Multimap;
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -16,8 +17,9 @@ import java.util.List;
 
 public class ItemPersonalKey extends Item
 {
-    public ItemPersonalKey (String name) {
-        setUnlocalizedName(name);
+    public ItemPersonalKey (String registryName, String unlocalizedName) {
+        setRegistryName(StorageDrawers.MOD_ID, registryName);
+        setUnlocalizedName(unlocalizedName);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setMaxDamage(0);
     }

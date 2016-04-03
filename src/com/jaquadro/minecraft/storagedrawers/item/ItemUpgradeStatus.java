@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.chameleon.resources.IItemMeshMapper;
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -18,8 +19,9 @@ import java.util.List;
 
 public class ItemUpgradeStatus extends Item implements IItemMeshMapper
 {
-    public ItemUpgradeStatus (String name) {
-        setUnlocalizedName(name);
+    public ItemUpgradeStatus (String registryName, String unlocalizedName) {
+        setRegistryName(StorageDrawers.MOD_ID, registryName);
+        setUnlocalizedName(unlocalizedName);
         setHasSubtypes(true);
         setMaxDamage(0);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);

@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -12,8 +13,9 @@ import java.util.List;
 
 public class ItemUpgradeVoid extends Item
 {
-    public ItemUpgradeVoid (String name) {
-        setUnlocalizedName(name);
+    public ItemUpgradeVoid (String registryName, String unlocalizedName) {
+        setRegistryName(StorageDrawers.MOD_ID, registryName);
+        setUnlocalizedName(unlocalizedName);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setMaxDamage(0);
     }

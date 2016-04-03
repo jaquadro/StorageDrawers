@@ -46,6 +46,7 @@ public class ModBlocks
 
         ConfigManager config = StorageDrawers.config;
 
+        //GameRegistry.register((Block)basicDrawers);
         GameRegistry.registerBlock(basicDrawers, ItemBasicDrawers.class, "basicDrawers");
         GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, ModBlocks.getQualifiedName(basicDrawers));
 

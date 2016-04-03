@@ -4,9 +4,9 @@ import net.minecraft.util.IStringSerializable;
 
 public enum EnumUpgradeStorage implements IStringSerializable
 {
-    IRON(0, 2, "iron", "iron"),
-    GOLD(1, 3, "gold", "gold"),
-    OBSIDIAN(2, 4, "obsidian", "obsidian"),
+    OBSIDIAN(0, 2, "obsidian", "obsidian"),
+    IRON(1, 3, "iron", "iron"),
+    GOLD(2, 4, "gold", "gold"),
     DIAMOND(3, 5, "diamond", "diamond"),
     EMERALD(4, 6, "emerald", "emerald");
 

@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
@@ -21,6 +22,7 @@ public class BlockSlave extends BlockContainer implements INetworked
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
         setUnlocalizedName(blockName);
+        setRegistryName(StorageDrawers.MOD_ID, blockName);
         setStepSound(SoundType.STONE);
     }
 

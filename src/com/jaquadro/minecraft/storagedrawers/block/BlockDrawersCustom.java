@@ -34,7 +34,7 @@ public class BlockDrawersCustom extends BlockDrawers
     }
 
     @Override
-    public boolean canRenderInLayer (BlockRenderLayer layer) {
+    public boolean canRenderInLayer (IBlockState state, BlockRenderLayer layer) {
         return layer == BlockRenderLayer.CUTOUT_MIPPED || layer == BlockRenderLayer.TRANSLUCENT;
     }
 

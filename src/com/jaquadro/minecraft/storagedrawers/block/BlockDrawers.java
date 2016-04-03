@@ -92,6 +92,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         setHardness(5f);
         setStepSound(SoundType.WOOD);
         setUnlocalizedName(blockName);
+        setRegistryName(StorageDrawers.MOD_ID, blockName);
         setLightOpacity(255);
 
         initDefaultState();

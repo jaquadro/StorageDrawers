@@ -19,8 +19,9 @@ import java.util.List;
 
 public class ItemUpgradeStorage extends Item implements IItemMeshMapper
 {
-    public ItemUpgradeStorage (String name) {
-        setUnlocalizedName(name);
+    public ItemUpgradeStorage (String registryName, String unlocalizedName) {
+        setRegistryName(StorageDrawers.MOD_ID, registryName);
+        setUnlocalizedName(unlocalizedName);
         setHasSubtypes(true);
         setMaxDamage(0);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);

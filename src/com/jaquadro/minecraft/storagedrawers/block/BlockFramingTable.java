@@ -51,6 +51,7 @@ public class BlockFramingTable extends BlockContainer
         setHardness(2.5f);
         setStepSound(SoundType.WOOD);
         setUnlocalizedName(blockName);
+        setRegistryName(StorageDrawers.MOD_ID, blockName);
 
         setDefaultState(blockState.getBaseState().withProperty(RIGHT_SIDE, true));
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
@@ -109,7 +110,7 @@ public class BlockFramingTable extends BlockContainer
     }
 
     @Override
-    public boolean canRenderInLayer (BlockRenderLayer layer) {
+    public boolean canRenderInLayer (IBlockState state, BlockRenderLayer layer) {
         return layer == BlockRenderLayer.SOLID || layer == BlockRenderLayer.TRANSLUCENT;
     }
 
