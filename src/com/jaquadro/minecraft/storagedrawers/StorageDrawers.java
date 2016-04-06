@@ -79,13 +79,12 @@ public class StorageDrawers
         items.init();
 
         proxy.initDynamic();
+        proxy.initClient();
+        proxy.registerRenderers();
     }
 
     @Mod.EventHandler
     public void init (FMLInitializationEvent event) {
-        proxy.initClient();
-        proxy.registerRenderers();
-
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
         MinecraftForge.EVENT_BUS.register(proxy);
         MinecraftForge.EVENT_BUS.register(instance);
