@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -45,12 +46,12 @@ public class CommonProxy
     }
 
     @SubscribeEvent
-    public void playerInteracts (PlayerInteractEvent event) {
-        if (event.getAction() == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK && event.getEntityPlayer().capabilities.isCreativeMode) {
+    public void playerInteracts (PlayerInteractEvent.LeftClickBlock event) {
+        if (event.getEntityPlayer().capabilities.isCreativeMode) {
             TileEntity tile = event.getWorld().getTileEntity(event.getPos());
             if (tile instanceof TileEntityDrawers) {
                 int dir = ((TileEntityDrawers) tile).getDirection();
-                if (dir == event.getFace().ordinal()) {
+                if (EnumFacing.getFront(dir) == event.getFace()) {
                     event.setCanceled(true);
                     return;
                 }

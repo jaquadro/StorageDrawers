@@ -48,6 +48,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
@@ -440,7 +441,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "IExtendedBlockClickHandler.onBlockClicked");
 
         if (!player.capabilities.isCreativeMode) {
-            PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, world, pos, side, new Vec3d(hitX, hitY, hitZ));
+            PlayerInteractEvent.LeftClickBlock event = new PlayerInteractEvent.LeftClickBlock(player, pos, side, new Vec3d(hitX, hitY, hitZ));
+            MinecraftForge.EVENT_BUS.post(event);
             if (event.isCanceled())
                 return;
         }
