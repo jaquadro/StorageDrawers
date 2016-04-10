@@ -23,7 +23,7 @@ import java.util.List;
 public class ItemTape extends Item
 {
     public ItemTape (String registryName, String unlocalizedName) {
-        setRegistryName(StorageDrawers.MOD_ID, registryName);
+        setRegistryName(registryName);
         setUnlocalizedName(unlocalizedName);
         setMaxStackSize(1);
         setMaxDamage(8);

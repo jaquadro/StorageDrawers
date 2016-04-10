@@ -18,7 +18,7 @@ import java.util.List;
 public class ItemPersonalKey extends Item
 {
     public ItemPersonalKey (String registryName, String unlocalizedName) {
-        setRegistryName(StorageDrawers.MOD_ID, registryName);
+        setRegistryName(registryName);
         setUnlocalizedName(unlocalizedName);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setMaxDamage(0);

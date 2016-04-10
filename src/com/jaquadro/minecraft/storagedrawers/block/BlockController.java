@@ -38,7 +38,7 @@ public class BlockController extends BlockContainer implements INetworked
         super(Material.rock);
 
         setUnlocalizedName(name);
-        setRegistryName(StorageDrawers.MOD_ID, name);
+        setRegistryName(name);
         this.useNeighborBrightness = true;
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);

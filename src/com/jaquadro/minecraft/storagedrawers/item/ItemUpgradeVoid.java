@@ -14,7 +14,7 @@ import java.util.List;
 public class ItemUpgradeVoid extends Item
 {
     public ItemUpgradeVoid (String registryName, String unlocalizedName) {
-        setRegistryName(StorageDrawers.MOD_ID, registryName);
+        setRegistryName(registryName);
         setUnlocalizedName(unlocalizedName);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setMaxDamage(0);

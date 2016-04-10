@@ -51,7 +51,7 @@ public class BlockFramingTable extends BlockContainer
         setHardness(2.5f);
         setStepSound(SoundType.WOOD);
         setUnlocalizedName(blockName);
-        setRegistryName(StorageDrawers.MOD_ID, blockName);
+        setRegistryName(blockName);
 
         setDefaultState(blockState.getBaseState().withProperty(RIGHT_SIDE, true));
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));

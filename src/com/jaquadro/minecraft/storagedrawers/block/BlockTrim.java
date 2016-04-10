@@ -34,7 +34,7 @@ public class BlockTrim extends Block implements INetworked
         super(Material.wood);
 
         setUnlocalizedName(name);
-        setRegistryName(StorageDrawers.MOD_ID, name);
+        setRegistryName(name);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
         setStepSound(SoundType.WOOD);

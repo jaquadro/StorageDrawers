@@ -19,7 +19,7 @@ import java.util.List;
 public class ItemUpgradeCreative extends Item implements IItemMeshMapper
 {
     public ItemUpgradeCreative (String registryName, String unlocalizedName) {
-        setRegistryName(StorageDrawers.MOD_ID, registryName);
+        setRegistryName(registryName);
         setUnlocalizedName(unlocalizedName);
         setHasSubtypes(true);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);

@@ -19,7 +19,7 @@ import java.util.List;
 public class ItemUpgradeStatus extends Item implements IItemMeshMapper
 {
     public ItemUpgradeStatus (String registryName, String unlocalizedName) {
-        setRegistryName(StorageDrawers.MOD_ID, registryName);
+        setRegistryName(registryName);
         setUnlocalizedName(unlocalizedName);
         setHasSubtypes(true);
         setMaxDamage(0);
