@@ -228,7 +228,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     @Override
     public AxisAlignedBB getRenderBoundingBox () {
         IBlockState state = worldObj.getBlockState(pos);
-        if (!state.getValue(BlockFramingTable.RIGHT_SIDE))
+        if (!(state.getBlock() instanceof BlockFramingTable) || !state.getValue(BlockFramingTable.RIGHT_SIDE))
             return ZERO_EXTENT_AABB;
 
         int side = state.getValue(BlockFramingTable.FACING).getIndex();
