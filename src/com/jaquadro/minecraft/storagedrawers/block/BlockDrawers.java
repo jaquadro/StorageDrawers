@@ -500,8 +500,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 return false;
         }
 
-        return side.ordinal() != getTileEntity(world, pos).getDirection();
+        TileEntityDrawers tile = getTileEntity(world, pos);
+        if (tile == null)
+            return true;
 
+        return side.ordinal() != tile.getDirection();
     }
 
     private void dropItemStack (World world, BlockPos pos, EntityPlayer player, ItemStack stack) {
