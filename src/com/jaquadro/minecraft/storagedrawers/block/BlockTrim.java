@@ -31,13 +31,13 @@ public class BlockTrim extends Block implements INetworked
     public static final PropertyEnum VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
 
     public BlockTrim (String name) {
-        super(Material.wood);
+        super(Material.WOOD);
 
         setUnlocalizedName(name);
         setRegistryName(name);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
-        setStepSound(SoundType.WOOD);
+        setSoundType(SoundType.WOOD);
 
         setDefaultState(blockState.getBaseState().withProperty(VARIANT, BlockPlanks.EnumType.OAK));
     }
