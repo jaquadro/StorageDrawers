@@ -81,7 +81,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     private long ignoreEventTime;
 
     public BlockDrawers (String blockName) {
-        this(Material.wood, blockName);
+        this(Material.WOOD, blockName);
     }
 
     protected BlockDrawers (Material material, String blockName) {
@@ -91,7 +91,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
-        setStepSound(SoundType.WOOD);
+        setSoundType(SoundType.WOOD);
         setUnlocalizedName(blockName);
         setRegistryName(blockName);
         setLightOpacity(255);
