@@ -36,27 +36,27 @@ public class ModRecipes
         for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
             if (config.isBlockEnabled(EnumBasicDrawer.FULL1.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL1, material.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL1.getUnlocalizedName()));
-                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xxx", " y ", "xxx", 'x', new ItemStack(Blocks.planks, 1, material.getMetadata()), 'y', "chestWood"));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xxx", " y ", "xxx", 'x', new ItemStack(Blocks.PLANKS, 1, material.getMetadata()), 'y', "chestWood"));
             }
             if (config.isBlockEnabled(EnumBasicDrawer.FULL2.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL2, material.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL2.getUnlocalizedName()));
-                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', new ItemStack(Blocks.planks, 1, material.getMetadata()), 'y', "chestWood"));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', new ItemStack(Blocks.PLANKS, 1, material.getMetadata()), 'y', "chestWood"));
             }
             if (config.isBlockEnabled(EnumBasicDrawer.FULL4.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL4, material.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL4.getUnlocalizedName()));
-                GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', new ItemStack(Blocks.planks, 1, material.getMetadata()), 'y', "chestWood"));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', new ItemStack(Blocks.PLANKS, 1, material.getMetadata()), 'y', "chestWood"));
             }
             if (config.isBlockEnabled(EnumBasicDrawer.HALF2.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.HALF2, material.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.HALF2.getUnlocalizedName()));
-                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', new ItemStack(Blocks.wooden_slab, 1, material.getMetadata()), 'y', "chestWood"));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', new ItemStack(Blocks.WOODEN_SLAB, 1, material.getMetadata()), 'y', "chestWood"));
             }
             if (config.isBlockEnabled(EnumBasicDrawer.HALF4.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.HALF4, material.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.HALF4.getUnlocalizedName()));
-                GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', new ItemStack(Blocks.wooden_slab, 1, material.getMetadata()), 'y', "chestWood"));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', new ItemStack(Blocks.WOODEN_SLAB, 1, material.getMetadata()), 'y', "chestWood"));
             }
             if (config.isBlockEnabled("trim")) {
                 ItemStack result = new ItemStack(ModBlocks.trim, config.getBlockRecipeOutput("trim"), material.getMetadata());
-                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "yyy", "xyx", 'x', "stickWood", 'y', new ItemStack(Blocks.planks, 1, material.getMetadata())));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "yyy", "xyx", 'x', "stickWood", 'y', new ItemStack(Blocks.PLANKS, 1, material.getMetadata())));
             }
         }
 
@@ -89,15 +89,15 @@ public class ModRecipes
 
         if (config.isBlockEnabled("compdrawers"))
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.compDrawers, config.getBlockRecipeOutput("compdrawers")), "xxx", "zwz", "xyx",
-                'x', new ItemStack(Blocks.stone), 'y', "ingotIron", 'z', new ItemStack(Blocks.piston), 'w', "drawerBasic"));
+                'x', new ItemStack(Blocks.STONE), 'y', "ingotIron", 'z', new ItemStack(Blocks.PISTON), 'w', "drawerBasic"));
 
         if (config.isBlockEnabled("controller"))
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.controller), "xxx", "yzy", "xwx",
-                'x', new ItemStack(Blocks.stone), 'y', Items.comparator, 'z', "drawerBasic", 'w', "gemDiamond"));
+                'x', new ItemStack(Blocks.STONE), 'y', Items.COMPARATOR, 'z', "drawerBasic", 'w', "gemDiamond"));
 
         if (config.isBlockEnabled("controllerSlave"))
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.controllerSlave), "xxx", "yzy", "xwx",
-                'x', new ItemStack(Blocks.stone), 'y', Items.comparator, 'z', "drawerBasic", 'w', "ingotGold"));
+                'x', new ItemStack(Blocks.STONE), 'y', Items.COMPARATOR, 'z', "drawerBasic", 'w', "ingotGold"));
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
             'x', "stickWood", 'y', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE)));
@@ -108,7 +108,7 @@ public class ModRecipes
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.GOLD.getMetadata()), "xyx", "yzy", "xyx",
                 'x', "ingotGold", 'y', "stickWood", 'z', ModItems.upgradeTemplate));
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.OBSIDIAN.getMetadata()), "xyx", "yzy", "xyx",
-                'x', Blocks.obsidian, 'y', "stickWood", 'z', ModItems.upgradeTemplate));
+                'x', Blocks.OBSIDIAN, 'y', "stickWood", 'z', ModItems.upgradeTemplate));
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.DIAMOND.getMetadata()), "xyx", "yzy", "xyx",
                 'x', "gemDiamond", 'y', "stickWood", 'z', ModItems.upgradeTemplate));
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.EMERALD.getMetadata()), "xyx", "yzy", "xyx",
@@ -117,9 +117,9 @@ public class ModRecipes
 
         if (config.cache.enableIndicatorUpgrades) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeStatus, 1, EnumUpgradeStatus.LEVEL1.getMetadata()), "wyw", "yzy", "xyx",
-                'w', new ItemStack(Blocks.redstone_torch), 'x', "dustRedstone", 'y', "stickWood", 'z', ModItems.upgradeTemplate));
+                'w', new ItemStack(Blocks.REDSTONE_TORCH), 'x', "dustRedstone", 'y', "stickWood", 'z', ModItems.upgradeTemplate));
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeStatus, 1, EnumUpgradeStatus.LEVEL2.getMetadata()), "wyw", "yzy", "xyx",
-                'w', Items.comparator, 'x', "dustRedstone", 'y', "stickWood", 'z', ModItems.upgradeTemplate));
+                'w', Items.COMPARATOR, 'x', "dustRedstone", 'y', "stickWood", 'z', ModItems.upgradeTemplate));
         }
 
         if (config.cache.enableLockUpgrades) {
@@ -129,7 +129,7 @@ public class ModRecipes
 
         if (config.cache.enableVoidUpgrades) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeVoid), "yyy", "xzx", "yyy",
-                'x', Blocks.obsidian, 'y', "stickWood", 'z', ModItems.upgradeTemplate));
+                'x', Blocks.OBSIDIAN, 'y', "stickWood", 'z', ModItems.upgradeTemplate));
         }
 
         if (config.cache.enableRedstoneUpgrades) {
@@ -142,16 +142,16 @@ public class ModRecipes
         }
 
         if (config.cache.enableShroudUpgrades) {
-            GameRegistry.addShapelessRecipe(new ItemStack(ModItems.shroudKey), ModItems.drawerKey, Items.ender_eye);
+            GameRegistry.addShapelessRecipe(new ItemStack(ModItems.shroudKey), ModItems.drawerKey, Items.ENDER_EYE);
         }
 
         if (config.cache.enablePersonalUpgrades) {
-            GameRegistry.addShapelessRecipe(new ItemStack(ModItems.personalKey), ModItems.drawerKey, Items.name_tag);
+            GameRegistry.addShapelessRecipe(new ItemStack(ModItems.personalKey), ModItems.drawerKey, Items.NAME_TAG);
         }
 
         if (config.cache.enableTape) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.tape), " x ", "yyy",
-                'x', "slimeball", 'y', Items.paper));
+                'x', "slimeball", 'y', Items.PAPER));
         }
 
         if (config.cache.enableFramedDrawers) {

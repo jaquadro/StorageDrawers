@@ -17,13 +17,13 @@ import net.minecraft.world.World;
 public class BlockSlave extends BlockContainer implements INetworked
 {
     public BlockSlave (String blockName) {
-        super(Material.rock);
+        super(Material.ROCK);
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
         setUnlocalizedName(blockName);
         setRegistryName(blockName);
-        setStepSound(SoundType.STONE);
+        setSoundType(SoundType.STONE);
     }
 
     @Override

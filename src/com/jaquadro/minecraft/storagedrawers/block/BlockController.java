@@ -35,7 +35,7 @@ public class BlockController extends BlockContainer implements INetworked
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
     public BlockController (String name) {
-        super(Material.rock);
+        super(Material.ROCK);
 
         setUnlocalizedName(name);
         setRegistryName(name);
@@ -43,7 +43,7 @@ public class BlockController extends BlockContainer implements INetworked
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
-        setStepSound(SoundType.STONE);
+        setSoundType(SoundType.STONE);
         setLightOpacity(255);
         setTickRandomly(true);
 

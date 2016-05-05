@@ -45,11 +45,11 @@ public class BlockFramingTable extends BlockContainer
     public static final IUnlistedProperty<TileEntityFramingTable> TILE = UnlistedTileEntity.create(TileEntityFramingTable.class);
 
     public BlockFramingTable (String blockName) {
-        super(Material.wood);
+        super(Material.WOOD);
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(2.5f);
-        setStepSound(SoundType.WOOD);
+        setSoundType(SoundType.WOOD);
         setUnlocalizedName(blockName);
         setRegistryName(blockName);
 

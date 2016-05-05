@@ -19,16 +19,16 @@ public class CompTierRegistry
     private List<Record> records = new ArrayList<Record>();
 
     public CompTierRegistry () {
-        register(new ItemStack(Blocks.clay), new ItemStack(Items.clay_ball), 4);
-        register(new ItemStack(Blocks.snow), new ItemStack(Items.snowball), 4);
-        register(new ItemStack(Blocks.glowstone), new ItemStack(Items.glowstone_dust), 4);
-        register(new ItemStack(Blocks.brick_block), new ItemStack(Items.brick), 4);
-        register(new ItemStack(Blocks.nether_brick), new ItemStack(Items.netherbrick), 4);
-        register(new ItemStack(Blocks.quartz_block), new ItemStack(Items.quartz), 4);
-        register(new ItemStack(Blocks.melon_block), new ItemStack(Items.melon), 9);
+        register(new ItemStack(Blocks.CLAY), new ItemStack(Items.CLAY_BALL), 4);
+        register(new ItemStack(Blocks.SNOW), new ItemStack(Items.SNOWBALL), 4);
+        register(new ItemStack(Blocks.GLOWSTONE), new ItemStack(Items.GLOWSTONE_DUST), 4);
+        register(new ItemStack(Blocks.BRICK_BLOCK), new ItemStack(Items.BRICK), 4);
+        register(new ItemStack(Blocks.NETHER_BRICK), new ItemStack(Items.NETHERBRICK), 4);
+        register(new ItemStack(Blocks.QUARTZ_BLOCK), new ItemStack(Items.QUARTZ), 4);
+        register(new ItemStack(Blocks.MELON_BLOCK), new ItemStack(Items.MELON), 9);
 
         if (!Loader.isModLoaded("ExtraUtilities"))
-            register(new ItemStack(Blocks.sandstone), new ItemStack(Blocks.sand), 4);
+            register(new ItemStack(Blocks.SANDSTONE), new ItemStack(Blocks.SAND), 4);
     }
 
     public boolean register (ItemStack upper, ItemStack lower, int convRate) {

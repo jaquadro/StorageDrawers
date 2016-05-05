@@ -272,7 +272,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
     }
 
     private void renderUpgrades (ChamRender renderer, TileEntityDrawers tile) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
         GlStateManager.enableAlpha();
 

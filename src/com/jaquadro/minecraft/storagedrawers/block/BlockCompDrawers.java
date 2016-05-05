@@ -36,9 +36,9 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     private StatusModelData statusInfo;
 
     public BlockCompDrawers (String blockName) {
-        super(Material.rock, blockName);
+        super(Material.ROCK, blockName);
 
-        setStepSound(SoundType.STONE);
+        setSoundType(SoundType.STONE);
     }
 
     @Override
