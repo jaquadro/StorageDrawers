@@ -19,7 +19,7 @@ public class ModRecipes
     public void init () {
         OreDictionary.registerOre("chestWood", new ItemStack(Blocks.chest)); // Remove when porting to 1.8
 
-        RecipeSorter.register("StorageDrawers:FallbackShapedOreRecipe", FallbackShapedOreRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shapedore");
+        RecipeSorter.register("StorageDrawers:FallbackShapedOreRecipe", FallbackShapedOreRecipe.class, RecipeSorter.Category.SHAPED, "after:forge:shapedore");
         
         ConfigManager config = StorageDrawers.config;
 
