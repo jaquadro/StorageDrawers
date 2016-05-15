@@ -483,6 +483,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 dropItemStack(world, x + dir.offsetX, y, z + dir.offsetZ, player, item);
                 world.markBlockForUpdate(x, y, z);
             }
+            else
+                world.playSoundEffect(x + .5f, y + .5f, z + .5f, "random.pop", .2f, ((world.rand.nextFloat() - world.rand.nextFloat()) * .7f + 1) * 2);
         }
     }
 
