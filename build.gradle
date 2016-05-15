@@ -17,12 +17,12 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.9.7"
+version = "1.7.10-1.9.8"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
 
 minecraft {
-    version = "1.7.10-10.13.4.1481-1.7.10"
+    version = "1.7.10-10.13.4.1566-1.7.10"
     assetDir = "runtime/assets"
 
     replace '@VERSION@', project.version
