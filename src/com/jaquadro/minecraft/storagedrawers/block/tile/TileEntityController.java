@@ -17,7 +17,6 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -662,19 +661,26 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     @Override
-    public void writeToNBT (NBTTagCompound tag) {
+    public NBTTagCompound writeToNBT (NBTTagCompound tag) {
         super.writeToNBT(tag);
 
         if (hasCustomName())
             tag.setString("CustomName", customName);
+
+        return tag;
     }
 
     @Override
-    public Packet getDescriptionPacket () {
+    public NBTTagCompound getUpdateTag () {
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
 
-        return new SPacketUpdateTileEntity(getPos(), 5, tag);
+        return tag;
+    }
+
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket () {
+        return new SPacketUpdateTileEntity(getPos(), 5, getUpdateTag());
     }
 
     @Override

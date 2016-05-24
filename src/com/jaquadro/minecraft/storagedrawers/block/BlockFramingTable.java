@@ -115,7 +115,7 @@ public class BlockFramingTable extends BlockContainer
     }
 
     @Override
-    public void onNeighborBlockChange (World world, BlockPos pos, IBlockState state, Block block) {
+    public void neighborChanged (IBlockState state, World world, BlockPos pos, Block block) {
         EnumFacing side = getDirection(state);
         if (isRightBlock(state)) {
             BlockPos otherPos = pos.add(leftOffset[side.getIndex()][0], 0, leftOffset[side.getIndex()][1]);

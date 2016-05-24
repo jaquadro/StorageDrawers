@@ -28,12 +28,12 @@ public class BaseTileEntity extends TileEntity
     }
 
     @Override
-    public void writeToNBT (NBTTagCompound tag) {
+    public NBTTagCompound writeToNBT (NBTTagCompound tag) {
         super.writeToNBT(tag);
 
         if (failureSnapshot != null) {
             restoreLoadFailure(tag);
-            return;
+            return tag;
         }
 
         try {
@@ -43,6 +43,8 @@ public class BaseTileEntity extends TileEntity
         catch (Throwable t) {
             FMLLog.log(StorageDrawers.MOD_ID, Level.ERROR, t, "Tile Save Failure.");
         }
+
+        return tag;
     }
 
     public void readFromPortableNBT (NBTTagCompound tag) { }

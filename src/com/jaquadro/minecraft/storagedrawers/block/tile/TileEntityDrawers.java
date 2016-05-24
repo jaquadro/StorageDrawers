@@ -27,7 +27,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -36,17 +35,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import org.apache.logging.log4j.Level;
 
 import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.UUID;
 
 public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, ILockable, ISealable, IProtectable
@@ -875,13 +870,18 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         return false;
     }
 
-    // TODO: Eventually eliminate these expensive network updates
     @Override
-    public Packet getDescriptionPacket () {
+    public NBTTagCompound getUpdateTag () {
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
 
-        return new SPacketUpdateTileEntity(getPos(), 5, tag);
+        return tag;
+    }
+
+    // TODO: Eventually eliminate these expensive network updates
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket () {
+        return new SPacketUpdateTileEntity(getPos(), 5, getUpdateTag());
     }
 
     @Override

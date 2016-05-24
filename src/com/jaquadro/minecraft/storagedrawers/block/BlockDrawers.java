@@ -28,7 +28,7 @@ import net.minecraft.block.properties.*;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EffectRenderer;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -631,11 +631,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     @SideOnly(Side.CLIENT)
-    public boolean addHitEffects (IBlockState state, World worldObj, RayTraceResult target, EffectRenderer effectRenderer) {
+    public boolean addHitEffects (IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
         if (getDirection(worldObj, target.getBlockPos()) == target.sideHit)
             return true;
 
-        return super.addHitEffects(state, worldObj, target, effectRenderer);
+        return super.addHitEffects(state, worldObj, target, manager);
     }
 
     /*@Override

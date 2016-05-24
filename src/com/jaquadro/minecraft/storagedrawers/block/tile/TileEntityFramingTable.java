@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -191,7 +190,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     }
 
     @Override
-    public void writeToNBT (NBTTagCompound tag) {
+    public NBTTagCompound writeToNBT (NBTTagCompound tag) {
         super.writeToNBT(tag);
 
         NBTTagList itemList = new NBTTagList();
@@ -208,14 +207,21 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
 
         if (hasCustomName())
             tag.setString("CustomName", customName);
+
+        return tag;
     }
 
     @Override
-    public Packet getDescriptionPacket () {
+    public NBTTagCompound getUpdateTag () {
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
 
-        return new SPacketUpdateTileEntity(pos, 5, tag);
+        return tag;
+    }
+
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket () {
+        return new SPacketUpdateTileEntity(pos, 5, getUpdateTag());
     }
 
     @Override
