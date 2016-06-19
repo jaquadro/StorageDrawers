@@ -17,6 +17,7 @@ import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeCreative;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
@@ -560,8 +561,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (tile != null && !tile.isSealed()) {
             for (int i = 0; i < tile.getUpgradeSlotCount(); i++) {
                 ItemStack stack = tile.getUpgrade(i);
-                if (stack != null)
+                if (stack != null) {
+                    if (stack.getItem() instanceof ItemUpgradeCreative)
+                        continue;
                     dropBlockAsItem(world, x, y, z, stack);
+                }
             }
 
             if (!tile.isVending()) {
