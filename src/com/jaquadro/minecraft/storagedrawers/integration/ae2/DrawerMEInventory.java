@@ -13,7 +13,9 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class DrawerMEInventory implements IMEInventory<IAEItemStack>
 {
@@ -28,18 +30,34 @@ public class DrawerMEInventory implements IMEInventory<IAEItemStack>
         long itemsLeft = input.getStackSize();
 
         if (group instanceof ISmartGroup) {
-            for (int slot : ((ISmartGroup) group).enumerateDrawersForInsertion(input.getItemStack(), false)) {
-                IDrawer drawer = group.getDrawer(slot);
-                ItemStack itemProto = drawer.getStoredItemPrototype();
-                if (itemProto == null)
-                    drawer.setStoredItem(input.getItemStack(), 0);
+            List<IDrawer> clearSet = null;
+            if (type == Actionable.SIMULATE)
+                clearSet = new ArrayList<IDrawer>();
 
-                itemsLeft = injectItemsIntoDrawer(drawer, itemsLeft, type);
+            try {
+                for (int slot : ((ISmartGroup) group).enumerateDrawersForInsertion(input.getItemStack(), false)) {
+                    IDrawer drawer = group.getDrawer(slot);
+                    ItemStack itemProto = drawer.getStoredItemPrototype();
+                    if (itemProto == null) {
+                        drawer = drawer.setStoredItemRedir(input.getItemStack(), 0);
+                        if (clearSet != null)
+                            clearSet.add(drawer);
+                    }
 
-                if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
-                    itemsLeft = 0;
-                if (itemsLeft == 0)
-                    return null;
+                    if (drawer.canItemBeStored(input.getItemStack()))
+                        itemsLeft = injectItemsIntoDrawer(drawer, itemsLeft, type);
+
+                    if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
+                        itemsLeft = 0;
+                    if (itemsLeft == 0)
+                        return null;
+                }
+            }
+            finally {
+                if (clearSet != null) {
+                    for (IDrawer drawer : clearSet)
+                        drawer.setStoredItemRedir(null, 0);
+                }
             }
         }
         else {
@@ -83,7 +101,7 @@ public class DrawerMEInventory implements IMEInventory<IAEItemStack>
                 if (itemProto == null) {
                     itemProto = input.getItemStack();
                     if (drawer.canItemBeStored(itemProto)) {
-                        drawer.setStoredItem(itemProto, 0);
+                        drawer = drawer.setStoredItemRedir(itemProto, 0);
                         itemsLeft = injectItemsIntoDrawer(drawer, itemsLeft, type);
                         if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
                             itemsLeft = 0;
