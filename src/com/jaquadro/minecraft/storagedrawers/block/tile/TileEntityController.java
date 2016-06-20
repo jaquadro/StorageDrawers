@@ -42,7 +42,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     private static final int PRI_LOCKED_EMPTY = 4;
     private static final int PRI_DISABLED = 5;
 
-    private static final int DEPTH_LIMIT = 12;
     private static final int[] emptySlots = new int[0];
 
     private static class StorageRecord
@@ -548,7 +547,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         while (!searchQueue.isEmpty()) {
             BlockPos coord = searchQueue.remove();
             int depth = Math.max(Math.max(Math.abs(coord.getX() - root.getX()), Math.abs(coord.getY() - root.getY())), Math.abs(coord.getZ() - root.getZ()));
-            if (depth > DEPTH_LIMIT)
+            if (depth > range)
                 continue;
 
             Block block = worldObj.getBlockState(coord).getBlock();
