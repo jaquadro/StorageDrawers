@@ -528,11 +528,10 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 return target;
             }
             else if (itemPrototype == null) {
-                //setStoredItemCount(slot, 0);
                 pooledCount = 0;
                 clear();
                 if (worldObj != null && !worldObj.isRemote)
-                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                    worldObj.markBlockForUpdate(getPos());
             }
 
             return getDrawer(slot);

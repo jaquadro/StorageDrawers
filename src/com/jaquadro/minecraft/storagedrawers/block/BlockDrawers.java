@@ -15,10 +15,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
-import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
-import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
-import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
+import com.jaquadro.minecraft.storagedrawers.item.*;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
@@ -467,7 +464,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 world.markBlockForUpdate(pos);
             }
             else
-                world.playSoundEffect(x + .5f, y + .5f, z + .5f, "random.pop", .2f, ((world.rand.nextFloat() - world.rand.nextFloat()) * .7f + 1) * 2);
+                world.playSoundEffect(pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, "random.pop", .2f, ((world.rand.nextFloat() - world.rand.nextFloat()) * .7f + 1) * 2);
         }
     }
 
