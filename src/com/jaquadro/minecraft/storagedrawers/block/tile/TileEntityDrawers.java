@@ -201,6 +201,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
                 worldObj.markBlockForUpdate(getPos());
             }
             worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
+            worldObj.notifyNeighborsOfStateChange(getPos().down(), getBlockType());
         }
     }
 
@@ -549,8 +550,10 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         IDrawer drawer = drawers[slot];
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.stackSize);
 
-        if (isRedstone() && worldObj != null)
+        if (isRedstone() && worldObj != null) {
             worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
+            worldObj.notifyNeighborsOfStateChange(getPos().down(), getBlockType());
+        }
 
         // TODO: Reset empty drawer in subclasses
 
@@ -809,8 +812,10 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     @Override
     public void markDirty () {
         inventory.markDirty();
-        if (isRedstone() && worldObj != null)
+        if (isRedstone() && worldObj != null) {
             worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
+            worldObj.notifyNeighborsOfStateChange(getPos().down(), getBlockType());
+        }
 
         super.markDirty();
     }
