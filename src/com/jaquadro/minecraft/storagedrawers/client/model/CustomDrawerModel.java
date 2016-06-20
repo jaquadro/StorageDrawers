@@ -99,11 +99,13 @@ public class CustomDrawerModel extends ChamModel
             IExtendedBlockState xstate = (IExtendedBlockState) state;
             TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
 
-            ItemStack matFront = tile.getEffectiveMaterialFront();
-            ItemStack matSide = tile.getEffectiveMaterialSide();
-            ItemStack matTrim = tile.getEffectiveMaterialTrim();
+            if (tile != null) {
+                ItemStack matFront = tile.getEffectiveMaterialFront();
+                ItemStack matSide = tile.getEffectiveMaterialSide();
+                ItemStack matTrim = tile.getEffectiveMaterialTrim();
 
-            return new CustomDrawerModel(state, matFront, matSide, matTrim, false);
+                return new CustomDrawerModel(state, matFront, matSide, matTrim, false);
+            }
         }
 
         return new CustomDrawerModel(state, false);
