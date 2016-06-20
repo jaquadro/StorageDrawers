@@ -25,6 +25,9 @@ public class TileEntityFramingRenderer extends TileEntitySpecialRenderer<TileEnt
             return;
 
         IBlockState state = getWorld().getBlockState(tile.getPos());
+        if (!(state.getBlock() instanceof BlockFramingTable))
+            return;
+
         if (!state.getValue(BlockFramingTable.RIGHT_SIDE))
             return;
 
