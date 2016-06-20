@@ -14,14 +14,12 @@ public class SlotUpgrade extends Slot
 
     @Override
     public boolean canTakeStack (EntityPlayer player) {
-        return canTakeStack();
-    }
-
-    public boolean canTakeStack () {
         if (inventory instanceof InventoryUpgrade) {
             ItemStack stack = getStack();
             if (stack != null && stack.getItem() == ModItems.upgradeStorage)
                 return ((InventoryUpgrade) inventory).canRemoveStorageUpgrade(stack.getItemDamage());
+            if (stack != null && stack.getItem() == ModItems.upgradeCreative && !player.capabilities.isCreativeMode)
+                return false;
         }
 
         return true;

@@ -466,6 +466,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 dropItemStack(world, pos.offset(side), player, item);
                 world.markBlockForUpdate(pos);
             }
+            else
+                world.playSoundEffect(x + .5f, y + .5f, z + .5f, "random.pop", .2f, ((world.rand.nextFloat() - world.rand.nextFloat()) * .7f + 1) * 2);
         }
     }
 
@@ -530,8 +532,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (tile != null && !tile.isSealed()) {
             for (int i = 0; i < tile.getUpgradeSlotCount(); i++) {
                 ItemStack stack = tile.getUpgrade(i);
-                if (stack != null)
+                if (stack != null) {
+                    if (stack.getItem() instanceof ItemUpgradeCreative)
+                        continue;
                     spawnAsEntity(world, pos, stack);
+                }
             }
 
             if (!tile.isVending())
