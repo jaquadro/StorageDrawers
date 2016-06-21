@@ -505,12 +505,15 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         @Override
-        public void setStoredItem (int slot, ItemStack itemPrototype, int amount) {
+        public IDrawer setStoredItem (int slot, ItemStack itemPrototype, int amount) {
             if (itemPrototype != null && convRate != null && convRate[0] == 0) {
+                IDrawer target = null;
                 populateSlots(itemPrototype);
                 for (int i = 0; i < getDrawerCount(); i++) {
-                    if (BaseDrawerData.areItemsEqual(protoStack[i], itemPrototype))
+                    if (BaseDrawerData.areItemsEqual(protoStack[i], itemPrototype)) {
+                        target = getDrawer(i);
                         pooledCount = (pooledCount % convRate[i]) + convRate[i] * amount;
+                    }
                 }
 
                 for (int i = 0; i < getDrawerCount(); i++) {
@@ -526,10 +529,19 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                     IBlockState state = worldObj.getBlockState(getPos());
                     worldObj.notifyBlockUpdate(getPos(), state, state, 3);
                 }
+
+                return target;
             }
             else if (itemPrototype == null) {
-                setStoredItemCount(slot, 0);
+                pooledCount = 0;
+                clear();
+                if (worldObj != null && !worldObj.isRemote) {
+                    IBlockState state = worldObj.getBlockState(getPos());
+                    worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                }
             }
+
+            return getDrawer(slot);
         }
 
         @Override

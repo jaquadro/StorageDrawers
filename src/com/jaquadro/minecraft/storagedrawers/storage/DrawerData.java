@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
@@ -39,6 +40,12 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     @Override
     public void setStoredItem (ItemStack itemPrototype, int amount) {
         setStoredItem(itemPrototype, amount, true);
+    }
+
+    @Override
+    public IDrawer setStoredItemRedir (ItemStack itemPrototype, int amount) {
+        setStoredItem(itemPrototype, amount, true);
+        return this;
     }
 
     private void setStoredItem (ItemStack itemPrototype, int amount, boolean mark) {

@@ -15,10 +15,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
-import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
-import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
-import com.jaquadro.minecraft.storagedrawers.item.ItemTrim;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
+import com.jaquadro.minecraft.storagedrawers.item.*;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
@@ -34,6 +31,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -474,6 +472,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 dropItemStack(world, pos.offset(side), player, item);
                 world.notifyBlockUpdate(pos, state, state, 3);
             }
+            else if (!world.isRemote)
+                world.playSound(null, pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f, ((world.rand.nextFloat() - world.rand.nextFloat()) * .7f + 1) * 2);
         }
     }
 
@@ -540,8 +540,11 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (tile != null && !tile.isSealed()) {
             for (int i = 0; i < tile.getUpgradeSlotCount(); i++) {
                 ItemStack stack = tile.getUpgrade(i);
-                if (stack != null)
+                if (stack != null) {
+                    if (stack.getItem() instanceof ItemUpgradeCreative)
+                        continue;
                     spawnAsEntity(world, pos, stack);
+                }
             }
 
             if (!tile.isVending())
