@@ -1,15 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.collect.Multimap;
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -28,7 +27,7 @@ public class ItemPersonalKey extends Item
     @SideOnly(Side.CLIENT)
     public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
         String name = getUnlocalizedName(itemStack);
-        list.add(I18n.translateToLocal(name + ".description"));
+        list.add(I18n.format(name + ".description"));
     }
 
     @SideOnly(Side.CLIENT)

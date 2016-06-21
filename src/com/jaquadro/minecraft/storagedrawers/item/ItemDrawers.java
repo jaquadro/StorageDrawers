@@ -9,12 +9,12 @@ import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -67,13 +67,13 @@ public class ItemDrawers extends ItemBlock
     public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
         if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("material")) {
             String key = itemStack.getTagCompound().getString("material");
-            list.add(I18n.translateToLocalFormatted("storageDrawers.material", I18n.translateToLocal("storageDrawers.material." + key)));
+            list.add(I18n.format("storageDrawers.material", I18n.format("storageDrawers.material." + key)));
         }
 
-        list.add(I18n.translateToLocalFormatted("storageDrawers.drawers.description", getCapacityForBlock(itemStack)));
+        list.add(I18n.format("storageDrawers.drawers.description", getCapacityForBlock(itemStack)));
 
         if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("tile"))
-            list.add(ChatFormatting.YELLOW + I18n.translateToLocal("storageDrawers.drawers.sealed"));
+            list.add(ChatFormatting.YELLOW + I18n.format("storageDrawers.drawers.sealed"));
     }
 
     private int getCapacityForBlock (ItemStack itemStack) {
