@@ -1,10 +1,9 @@
-/*package com.jaquadro.minecraft.storagedrawers.integration;
+package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IWailaTooltipHandler;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
@@ -15,12 +14,12 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 
@@ -67,7 +66,7 @@ public class Waila extends IntegrationModule
                     if (!tile.isDrawerEnabled(i))
                         continue;
 
-                    String name = StatCollector.translateToLocal("storageDrawers.waila.empty");
+                    String name = I18n.format("storageDrawers.waila.empty");
 
                     IDrawer drawer = tile.getDrawer(i);
                     ItemStack stack = drawer.getStoredItemPrototype();
@@ -93,26 +92,26 @@ public class Waila extends IntegrationModule
                         } else
                             name = stackName + " [" + drawer.getStoredItemCount() + "]";
                     }
-                    currenttip.add(StatCollector.translateToLocalFormatted("storageDrawers.waila.drawer", i + 1, name));
+                    currenttip.add(I18n.format("storageDrawers.waila.drawer", i + 1, name));
                 }
 
                 if (tile.isUnlimited() || tile.isVending())
-                    currenttip.add(StatCollector.translateToLocalFormatted("storageDrawers.waila.nolimit"));
+                    currenttip.add(I18n.format("storageDrawers.waila.nolimit"));
                 else {
                     int limit = tile.getDrawerCapacity() * tile.getEffectiveStorageMultiplier();
-                    currenttip.add(StatCollector.translateToLocalFormatted("storageDrawers.waila.limit", limit, tile.getEffectiveStorageMultiplier()));
+                    currenttip.add(I18n.format("storageDrawers.waila.limit", limit, tile.getEffectiveStorageMultiplier()));
                 }
             }
 
             String attrib = "";
             if (tile.isLocked(LockAttribute.LOCK_POPULATED))
-                attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.locked");
+                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.locked");
             if (tile.isVoid())
-                attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.void");
+                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.void");
             if (tile.isSorting())
-                attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.sorting");
+                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.sorting");
             if (tile.getOwner() != null)
-                attrib += (attrib.isEmpty() ? "" : ", ") + StatCollector.translateToLocal("storageDrawers.waila.protected");
+                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.protected");
 
             if (!attrib.isEmpty())
                 currenttip.add(attrib);
@@ -126,9 +125,8 @@ public class Waila extends IntegrationModule
         }
 
         @Override
-        public NBTTagCompound getNBTData (EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
+        public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
             return null;
         }
     }
 }
-*/
