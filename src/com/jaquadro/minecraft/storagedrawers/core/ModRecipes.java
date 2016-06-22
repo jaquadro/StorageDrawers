@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.core.recipe.FallbackShapedOreRecipe;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import net.minecraft.block.BlockPlanks;
@@ -12,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class ModRecipes
@@ -32,6 +34,8 @@ public class ModRecipes
 
     public void init () {
         ConfigManager config = StorageDrawers.config;
+
+        RecipeSorter.register("StorageDrawers:FallbackShapedOreRecipe", FallbackShapedOreRecipe.class, RecipeSorter.Category.SHAPED, "after:forge:shapedore");
 
         for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
             if (config.isBlockEnabled(EnumBasicDrawer.FULL1.getUnlocalizedName())) {
@@ -65,27 +69,27 @@ public class ModRecipes
         if (config.cache.enableFallbackRecipes) {
             if (config.isBlockEnabled(EnumBasicDrawer.FULL1.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL1, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL1.getUnlocalizedName()));
-                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xxx", " y ", "xxx", 'x', "plankWood", 'y', "chestWood"));
+                GameRegistry.addRecipe(new FallbackShapedOreRecipe(result, "xxx", " y ", "xxx", 'x', "plankWood", 'y', "chestWood"));
             }
             if (config.isBlockEnabled(EnumBasicDrawer.FULL2.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL2, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL2.getUnlocalizedName()));
-                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', "plankWood", 'y', "chestWood"));
+                GameRegistry.addRecipe(new FallbackShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', "plankWood", 'y', "chestWood"));
             }
             if (config.isBlockEnabled(EnumBasicDrawer.FULL4.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL4, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL4.getUnlocalizedName()));
-                GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', "plankWood", 'y', "chestWood"));
+                GameRegistry.addRecipe(new FallbackShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', "plankWood", 'y', "chestWood"));
             }
             if (config.isBlockEnabled(EnumBasicDrawer.HALF2.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.HALF2, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.HALF2.getUnlocalizedName()));
-                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', "slabWood", 'y', "chestWood"));
+                GameRegistry.addRecipe(new FallbackShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', "slabWood", 'y', "chestWood"));
             }
             if (config.isBlockEnabled(EnumBasicDrawer.HALF4.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.HALF4, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.HALF4.getUnlocalizedName()));
-                GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', "slabWood", 'y', "chestWood"));
+                GameRegistry.addRecipe(new FallbackShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', "slabWood", 'y', "chestWood"));
             }
             if (config.isBlockEnabled("trim")) {
                 ItemStack result = new ItemStack(ModBlocks.trim, config.getBlockRecipeOutput("trim"), BlockPlanks.EnumType.OAK.getMetadata());
-                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "yyy", "xyx", 'x', "stickWood", 'y', "slabWood"));
+                GameRegistry.addRecipe(new FallbackShapedOreRecipe(result, "xyx", "yyy", "xyx", 'x', "stickWood", 'y', "slabWood"));
             }
         }
 
