@@ -62,29 +62,31 @@ public class ModRecipes
 
         // Fallback recipes
 
-        if (config.isBlockEnabled(EnumBasicDrawer.FULL1.getUnlocalizedName())) {
-            ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL1, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL1.getUnlocalizedName()));
-            GameRegistry.addRecipe(new ShapedOreRecipe(result, "xxx", " y ", "xxx", 'x', "plankWood", 'y', "chestWood"));
-        }
-        if (config.isBlockEnabled(EnumBasicDrawer.FULL2.getUnlocalizedName())) {
-            ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL2, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL2.getUnlocalizedName()));
-            GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', "plankWood", 'y', "chestWood"));
-        }
-        if (config.isBlockEnabled(EnumBasicDrawer.FULL4.getUnlocalizedName())) {
-            ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL4, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL4.getUnlocalizedName()));
-            GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', "plankWood", 'y', "chestWood"));
-        }
-        if (config.isBlockEnabled(EnumBasicDrawer.HALF2.getUnlocalizedName())) {
-            ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.HALF2, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.HALF2.getUnlocalizedName()));
-            GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', "slabWood", 'y', "chestWood"));
-        }
-        if (config.isBlockEnabled(EnumBasicDrawer.HALF4.getUnlocalizedName())) {
-            ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.HALF4, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.HALF4.getUnlocalizedName()));
-            GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', "slabWood", 'y', "chestWood"));
-        }
-        if (config.isBlockEnabled("trim")) {
-            ItemStack result = new ItemStack(ModBlocks.trim, config.getBlockRecipeOutput("trim"), BlockPlanks.EnumType.OAK.getMetadata());
-            GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "yyy", "xyx", 'x', "stickWood", 'y', "slabWood"));
+        if (config.cache.enableFallbackRecipes) {
+            if (config.isBlockEnabled(EnumBasicDrawer.FULL1.getUnlocalizedName())) {
+                ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL1, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL1.getUnlocalizedName()));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xxx", " y ", "xxx", 'x', "plankWood", 'y', "chestWood"));
+            }
+            if (config.isBlockEnabled(EnumBasicDrawer.FULL2.getUnlocalizedName())) {
+                ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL2, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL2.getUnlocalizedName()));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', "plankWood", 'y', "chestWood"));
+            }
+            if (config.isBlockEnabled(EnumBasicDrawer.FULL4.getUnlocalizedName())) {
+                ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL4, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL4.getUnlocalizedName()));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', "plankWood", 'y', "chestWood"));
+            }
+            if (config.isBlockEnabled(EnumBasicDrawer.HALF2.getUnlocalizedName())) {
+                ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.HALF2, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.HALF2.getUnlocalizedName()));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "xxx", "xyx", 'x', "slabWood", 'y', "chestWood"));
+            }
+            if (config.isBlockEnabled(EnumBasicDrawer.HALF4.getUnlocalizedName())) {
+                ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.HALF4, BlockPlanks.EnumType.OAK.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.HALF4.getUnlocalizedName()));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xxx", "yxy", 'x', "slabWood", 'y', "chestWood"));
+            }
+            if (config.isBlockEnabled("trim")) {
+                ItemStack result = new ItemStack(ModBlocks.trim, config.getBlockRecipeOutput("trim"), BlockPlanks.EnumType.OAK.getMetadata());
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "xyx", "yyy", "xyx", 'x', "stickWood", 'y', "slabWood"));
+            }
         }
 
         if (config.isBlockEnabled("compdrawers"))
