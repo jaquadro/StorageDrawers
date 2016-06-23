@@ -18,6 +18,7 @@ import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
 
+import com.jaquadro.minecraft.storagedrawers.network.BlockDestroyMessage;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -60,7 +61,7 @@ import org.apache.logging.log4j.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockDrawers extends BlockContainer implements IExtendedBlockClickHandler, INetworked
+public class BlockDrawers extends BlockContainer implements IExtendedBlockClickHandler, IBlockDestroyHandler, INetworked
 {
     public static final PropertyEnum BLOCK = PropertyEnum.create("block", EnumBasicDrawer.class);
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
@@ -405,6 +406,25 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    public void onBlockDestroyed (final World world, final BlockPos pos) {
+        if (world.isRemote)
+            return;
+
+        ((WorldServer)world).addScheduledTask(new Runnable()
+        {
+            @Override
+            public void run () {
+                BlockDrawers.this.onBlockDestroyedAsync(world, pos);
+            }
+        });
+    }
+
+    private void onBlockDestroyedAsync (World world, BlockPos pos) {
+        //this.onBlockHarvested(world, pos, state, player);
+        world.setBlockState(pos, net.minecraft.init.Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
+    }
+
+    @Override
     public void onBlockClicked (World world, BlockPos pos, EntityPlayer player) {
         if (world.isRemote) {
             RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
@@ -520,17 +540,27 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     public boolean removedByPlayer (IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-        if (world.isRemote && player.capabilities.isCreativeMode) {
-            RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
+        if (player.capabilities.isCreativeMode) {
+            if (world.isRemote) {
+                RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
 
-            if (getDirection(world, pos) == ray.sideHit) {
-                onBlockClicked(world, pos, player);
-                return false;
+                if (getDirection(world, pos) == ray.sideHit) {
+                    onBlockClicked(world, pos, player);
+                } else {
+                    StorageDrawers.network.sendToServer(new BlockDestroyMessage(pos));
+                    if (StorageDrawers.config.cache.debugTrace)
+                        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockClicked with " + ray.toString());
+                }
             }
+
+            return false;
         }
 
-        return willHarvest || super.removedByPlayer(state, world, pos, player, false);
+        /*TileEntityDrawers tile = getTileEntity(world, pos);
+        if (tile != null)
+            tile.setWillDestroy(true);*/
 
+        return willHarvest || super.removedByPlayer(state, world, pos, player, false);
     }
 
     @Override
@@ -639,6 +669,15 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             return true;
 
         return super.addHitEffects(state, worldObj, target, manager);
+    }
+
+    @Override
+    public boolean addDestroyEffects (World world, BlockPos pos, ParticleManager manager) {
+        //TileEntityDrawers tile = getTileEntity(world, pos);
+        //if (tile != null && !tile.getWillDestroy())
+        //    return true;
+
+        return super.addDestroyEffects(world, pos, manager);
     }
 
     /*@Override

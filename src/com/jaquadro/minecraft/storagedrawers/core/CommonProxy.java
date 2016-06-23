@@ -48,20 +48,6 @@ public class CommonProxy
     }
 
     @SubscribeEvent
-    public void playerInteracts (PlayerInteractEvent.LeftClickBlock event) {
-        if (event.getEntityPlayer().capabilities.isCreativeMode) {
-            TileEntity tile = event.getWorld().getTileEntity(event.getPos());
-            if (tile instanceof TileEntityDrawers) {
-                int dir = ((TileEntityDrawers) tile).getDirection();
-                if (EnumFacing.getFront(dir) == event.getFace()) {
-                    event.setCanceled(true);
-                    return;
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
     public void playerRightClick (PlayerInteractEvent.RightClickBlock event) {
         if (event.getHand() == EnumHand.MAIN_HAND && event.getItemStack() == null) {
             TileEntity tile = event.getWorld().getTileEntity(event.getPos());

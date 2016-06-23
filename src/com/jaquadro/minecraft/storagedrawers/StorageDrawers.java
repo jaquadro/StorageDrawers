@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
+import com.jaquadro.minecraft.storagedrawers.network.BlockDestroyMessage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityRegistry;
 import net.minecraftforge.common.MinecraftForge;
@@ -59,6 +60,7 @@ public class StorageDrawers
 
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
         network.registerMessage(BlockClickMessage.Handler.class, BlockClickMessage.class, 0, Side.SERVER);
+        network.registerMessage(BlockDestroyMessage.Handler.class, BlockDestroyMessage.class, 2, Side.SERVER);
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             network.registerMessage(CountUpdateMessage.Handler.class, CountUpdateMessage.class, 1, Side.CLIENT);
