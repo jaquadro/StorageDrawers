@@ -7,8 +7,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CommonProxy
@@ -55,6 +57,16 @@ public class CommonProxy
                     event.setCanceled(true);
                     return;
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void playerRightClick (PlayerInteractEvent.RightClickBlock event) {
+        if (event.getHand() == EnumHand.MAIN_HAND && event.getItemStack() == null) {
+            TileEntity tile = event.getWorld().getTileEntity(event.getPos());
+            if (tile instanceof TileEntityDrawers) {
+                event.setUseBlock(Event.Result.ALLOW);
             }
         }
     }
