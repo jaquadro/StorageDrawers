@@ -59,7 +59,6 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     private boolean hideUpgrade = false;
     private UUID owner;
     private String securityKey;
-    private boolean willDestroy;
 
     private EnumSet<LockAttribute> lockAttributes = null;
 
@@ -90,14 +89,6 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
             drawers[i] = createDrawer(i);
 
         inventory = new StorageInventory(this, getSideManager(), this);
-    }
-
-    public void setWillDestroy (boolean state) {
-        willDestroy = state;
-    }
-
-    public boolean getWillDestroy () {
-        return willDestroy;
     }
 
     public int getDirection () {

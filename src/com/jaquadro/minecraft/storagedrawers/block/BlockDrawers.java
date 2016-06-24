@@ -546,19 +546,15 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
                 if (getDirection(world, pos) == ray.sideHit) {
                     onBlockClicked(world, pos, player);
-                } else {
-                    StorageDrawers.network.sendToServer(new BlockDestroyMessage(pos));
                     if (StorageDrawers.config.cache.debugTrace)
                         FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockClicked with " + ray.toString());
+                } else {
+                    StorageDrawers.network.sendToServer(new BlockDestroyMessage(pos));
                 }
             }
 
             return false;
         }
-
-        /*TileEntityDrawers tile = getTileEntity(world, pos);
-        if (tile != null)
-            tile.setWillDestroy(true);*/
 
         return willHarvest || super.removedByPlayer(state, world, pos, player, false);
     }
@@ -679,14 +675,6 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
         return super.addDestroyEffects(world, pos, manager);
     }
-
-    /*@Override
-    @SideOnly(Side.CLIENT)
-    public boolean addDestroyEffects (World world, int x, int y, int z, int meta, EffectRenderer effectRenderer) {
-        TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof TileEntityDrawers)
-        return super.addDestroyEffects(world, x, y, z, meta, effectRenderer);
-    }*/
 
     @Override
     public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
