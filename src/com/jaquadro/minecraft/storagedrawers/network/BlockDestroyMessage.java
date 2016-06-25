@@ -54,7 +54,6 @@ public class BlockDestroyMessage implements IMessage
         buf.writeInt(z);
     }
 
-    @SideOnly(Side.CLIENT)
     public static class Handler implements IMessageHandler<BlockDestroyMessage, IMessage>
     {
         @Override
@@ -69,15 +68,6 @@ public class BlockDestroyMessage implements IMessage
                 }
             }
 
-            return null;
-        }
-    }
-
-    public static class HandlerStub implements IMessageHandler<BlockDestroyMessage, IMessage>
-    {
-        @Override
-        public IMessage onMessage (BlockDestroyMessage message, MessageContext ctx) {
-            FMLLog.log(StorageDrawers.MOD_ID, Level.WARN, "CountUpdateMessage stub handler called.");
             return null;
         }
     }
