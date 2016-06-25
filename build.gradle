@@ -11,6 +11,7 @@ buildscript {
     }
 }
 
+apply plugin: 'idea'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 /*
@@ -23,6 +24,21 @@ plugins {
 version = "${minecraft_version}-${mod_version}"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
+
+idea {
+  /*project.ipr.withXml {
+    def node = it.asNode().component
+      .find { it.@name == "ProjectModuleManager" }
+      .children().get(0)
+    node.appendNode('module', [filepath: '$PROJECT_DIR$/../Chameleon/Chameleon-1.8.iml', fileurl: 'file://$PROJECT_DIR$/../Chameleon/Chameleon-1.8.iml'])
+  }*/
+  module.iml.withXml {
+    def atts = it.asNode().component.content.sourceFolder
+      .find { it.@url == 'file://$MODULE_DIR$/resources' }
+      .attributes()
+    atts.put('type', 'java-resource')
+  }
+}
 
 minecraft {
     version = forge_version
@@ -56,21 +72,7 @@ sourceSets.api {
 }
 
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-      
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-    // compile "appeng:appliedenergistics2:rv1-stable-1:api"
-    compile files("../Chameleon-1.8/build/libs/Chameleon-${minecraft_version}-${chameleon_version}-dev.jar")
+    compile project(":..:Chameleon-${minecraft_base_version}")
 }
 
 processResources
