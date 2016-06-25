@@ -1,1 +1,4 @@
-//include 'packs/BiomesOPlenty', 'packs/Erebus', 'packs/Forestry', 'packs/Misc', 'packs/Natura'
+rootProject.name = "StorageDrawers-${minecraft_base_version}"
+
+include '..:Chameleon'
+project(':..:Chameleon').name = "Chameleon-${minecraft_base_version}"
