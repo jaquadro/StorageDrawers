@@ -26,12 +26,6 @@ group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides
 archivesBaseName = "StorageDrawers"
 
 idea {
-  /*project.ipr.withXml {
-    def node = it.asNode().component
-      .find { it.@name == "ProjectModuleManager" }
-      .children().get(0)
-    node.appendNode('module', [filepath: '$PROJECT_DIR$/../Chameleon/Chameleon-1.8.iml', fileurl: 'file://$PROJECT_DIR$/../Chameleon/Chameleon-1.8.iml'])
-  }*/
   module.iml.withXml {
     def atts = it.asNode().component.content.sourceFolder
       .find { it.@url == 'file://$MODULE_DIR$/resources' }
@@ -42,7 +36,7 @@ idea {
 
 minecraft {
     version = forge_version
-    runDir = "runtime-1.8.8"
+    runDir = "runtime"
 
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
