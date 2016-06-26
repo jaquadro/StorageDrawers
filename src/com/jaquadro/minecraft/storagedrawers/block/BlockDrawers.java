@@ -182,11 +182,13 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isFullCube (IBlockState state) {
         return false;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isOpaqueCube (IBlockState state) {
         return false;
     }
@@ -202,6 +204,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public AxisAlignedBB getBoundingBox (IBlockState state, IBlockAccess blockAccess, BlockPos pos) {
         TileEntityDrawers tile = getTileEntity(blockAccess, pos);
         if (tile != null && isHalfDepth(state)) {
@@ -221,6 +224,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void addCollisionBoxToList (IBlockState state, World world, BlockPos pos, AxisAlignedBB aabb, List<AxisAlignedBB> list, Entity entity) {
         addCollisionBoxToList(pos, aabb, list, getBoundingBox(state, world, pos));
     }
@@ -228,20 +232,20 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @Override
     public void onBlockAdded (World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            Block blockNorth = world.getBlockState(pos.north()).getBlock();
-            Block blockSouth = world.getBlockState(pos.south()).getBlock();
-            Block blockWest = world.getBlockState(pos.west()).getBlock();
-            Block blockEast = world.getBlockState(pos.east()).getBlock();
+            IBlockState blockNorth = world.getBlockState(pos.north());
+            IBlockState blockSouth = world.getBlockState(pos.south());
+            IBlockState blockWest = world.getBlockState(pos.west());
+            IBlockState blockEast = world.getBlockState(pos.east());
 
             EnumFacing facing = state.getValue(FACING);
 
-            if (facing == EnumFacing.NORTH && blockNorth.isFullBlock(state) && !blockSouth.isFullBlock(state))
+            if (facing == EnumFacing.NORTH && blockNorth.isFullBlock() && !blockSouth.isFullBlock())
                 facing = EnumFacing.SOUTH;
-            if (facing == EnumFacing.SOUTH && blockSouth.isFullBlock(state) && !blockNorth.isFullBlock(state))
+            if (facing == EnumFacing.SOUTH && blockSouth.isFullBlock() && !blockNorth.isFullBlock())
                 facing = EnumFacing.NORTH;
-            if (facing == EnumFacing.WEST && blockWest.isFullBlock(state) && !blockEast.isFullBlock(state))
+            if (facing == EnumFacing.WEST && blockWest.isFullBlock() && !blockEast.isFullBlock())
                 facing = EnumFacing.EAST;
-            if (facing == EnumFacing.EAST && blockEast.isFullBlock(state) && !blockWest.isFullBlock(state))
+            if (facing == EnumFacing.EAST && blockEast.isFullBlock() && !blockWest.isFullBlock())
                 facing = EnumFacing.WEST;
 
             TileEntityDrawers tile = getTileEntitySafe(world, pos);
@@ -693,11 +697,13 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean canProvidePower (IBlockState state) {
         return true;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public int getWeakPower (IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
         if (!canProvidePower(state))
             return 0;
@@ -710,11 +716,13 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public int getStrongPower (IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
         return (side == EnumFacing.UP) ? getWeakPower(state, worldIn, pos, side) : 0;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta (int meta) {
         return getDefaultState().withProperty(BLOCK, EnumBasicDrawer.byMetadata(meta));
     }
@@ -730,6 +738,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public IBlockState getActualState (IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         TileEntityDrawers tile = getTileEntity(worldIn, pos);
         if (tile == null)

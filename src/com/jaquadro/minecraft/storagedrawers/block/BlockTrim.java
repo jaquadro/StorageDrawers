@@ -54,6 +54,7 @@ public class BlockTrim extends Block implements INetworked
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta (int meta) {
         return getDefaultState().withProperty(VARIANT, BlockPlanks.EnumType.byMetadata(meta));
     }

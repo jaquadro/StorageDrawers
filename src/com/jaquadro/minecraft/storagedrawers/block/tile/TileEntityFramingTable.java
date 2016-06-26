@@ -167,7 +167,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
             return false;
 
         IBlockState state = block.getStateFromMeta(stack.getMetadata());
-        return block.isOpaqueCube(state);
+        return state.isOpaqueCube();
     }
 
     @Override

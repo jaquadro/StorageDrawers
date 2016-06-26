@@ -51,6 +51,7 @@ public class BlockController extends BlockContainer implements INetworked
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isOpaqueCube (IBlockState state) {
         return false;
     }
@@ -73,20 +74,20 @@ public class BlockController extends BlockContainer implements INetworked
     @Override
     public void onBlockAdded (World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            Block blockNorth = world.getBlockState(pos.north()).getBlock();
-            Block blockSouth = world.getBlockState(pos.south()).getBlock();
-            Block blockWest = world.getBlockState(pos.west()).getBlock();
-            Block blockEast = world.getBlockState(pos.east()).getBlock();
+            IBlockState blockNorth = world.getBlockState(pos.north());
+            IBlockState blockSouth = world.getBlockState(pos.south());
+            IBlockState blockWest = world.getBlockState(pos.west());
+            IBlockState blockEast = world.getBlockState(pos.east());
 
             EnumFacing facing = state.getValue(FACING);
 
-            if (facing == EnumFacing.NORTH && blockNorth.isFullBlock(state) && !blockSouth.isFullBlock(state))
+            if (facing == EnumFacing.NORTH && blockNorth.isFullBlock() && !blockSouth.isFullBlock())
                 facing = EnumFacing.SOUTH;
-            if (facing == EnumFacing.SOUTH && blockSouth.isFullBlock(state) && !blockNorth.isFullBlock(state))
+            if (facing == EnumFacing.SOUTH && blockSouth.isFullBlock() && !blockNorth.isFullBlock())
                 facing = EnumFacing.NORTH;
-            if (facing == EnumFacing.WEST && blockWest.isFullBlock(state) && !blockEast.isFullBlock(state))
+            if (facing == EnumFacing.WEST && blockWest.isFullBlock() && !blockEast.isFullBlock())
                 facing = EnumFacing.EAST;
-            if (facing == EnumFacing.EAST && blockEast.isFullBlock(state) && !blockWest.isFullBlock(state))
+            if (facing == EnumFacing.EAST && blockEast.isFullBlock() && !blockWest.isFullBlock())
                 facing = EnumFacing.WEST;
 
             world.setBlockState(pos, state.withProperty(FACING, facing), 2);
@@ -167,6 +168,7 @@ public class BlockController extends BlockContainer implements INetworked
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta (int meta) {
         EnumFacing facing = EnumFacing.getFront(meta);
         if (facing.getAxis() == EnumFacing.Axis.Y)
