@@ -4,11 +4,21 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
+import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
+import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
 import com.jaquadro.minecraft.storagedrawers.storage.IStorageProvider;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 
 public class TileEntityDrawersStandard extends TileEntityDrawers
 {
+    private static final String[] GUI_IDS = new String[] {
+        null, StorageDrawers.MOD_ID + ":basicDrawers1", StorageDrawers.MOD_ID + ":basicDrawers2", null, StorageDrawers.MOD_ID + ":basicDrawers4"
+    };
+
     private IStorageProvider storageProvider = new StandardStorageProvider();
 
     public TileEntityDrawersStandard () {
@@ -30,6 +40,25 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         return new DrawerData(getStorageProvider(), slot);
     }
 
+    @Override
+    public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
+        switch (getDrawerCount()) {
+            case 1:
+                return new ContainerDrawers1(playerInventory, this);
+            case 2:
+                return new ContainerDrawers2(playerInventory, this);
+            case 4:
+                return new ContainerDrawers4(playerInventory, this);
+            default:
+                return  null;
+        }
+    }
+
+    @Override
+    public String getGuiID () {
+        return GUI_IDS[getDrawerCount()];
+    }
+
     private class StandardStorageProvider extends DefaultStorageProvider
     {
         public StandardStorageProvider () {
@@ -44,7 +73,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
         @Override
         public boolean isLocked (int slot, LockAttribute attr) {
-            return TileEntityDrawersStandard.this.isLocked(attr);
+            return TileEntityDrawersStandard.this.isItemLocked(attr);
         }
 
         @Override

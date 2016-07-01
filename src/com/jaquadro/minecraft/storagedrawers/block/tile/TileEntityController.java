@@ -9,14 +9,11 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.ItemMetaListRegistry;
-import com.jaquadro.minecraft.storagedrawers.util.ItemMetaRegistry;
-import com.jaquadro.minecraft.storagedrawers.util.UniqueMetaIdentifier;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -98,8 +95,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
         IDrawer drawer = group.getDrawer(drawerSlot);
         if (drawer.isEmpty()) {
-            if ((drawer instanceof ILockable && ((ILockable) drawer).isLocked(LockAttribute.LOCK_EMPTY)) ||
-                (group instanceof ILockable && ((ILockable) group).isLocked(LockAttribute.LOCK_EMPTY))) {
+            if ((drawer instanceof IItemLockable && ((IItemLockable) drawer).isItemLocked(LockAttribute.LOCK_EMPTY)) ||
+                (group instanceof IItemLockable && ((IItemLockable) group).isItemLocked(LockAttribute.LOCK_EMPTY))) {
                 return PRI_LOCKED_EMPTY;
             }
             else
@@ -111,8 +108,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             return PRI_VOID;
         }
 
-        if ((drawer instanceof ILockable && ((ILockable) drawer).isLocked(LockAttribute.LOCK_POPULATED)) ||
-            (group instanceof ILockable && ((ILockable) group).isLocked(LockAttribute.LOCK_POPULATED))) {
+        if ((drawer instanceof IItemLockable && ((IItemLockable) drawer).isItemLocked(LockAttribute.LOCK_POPULATED)) ||
+            (group instanceof IItemLockable && ((IItemLockable) group).isItemLocked(LockAttribute.LOCK_POPULATED))) {
             return PRI_LOCKED;
         }
 
@@ -297,7 +294,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     public void toggleLock (EnumSet<LockAttribute> attributes, LockAttribute key, GameProfile profile) {
-        ILockable template = null;
+        IItemLockable template = null;
         boolean state = false;
 
         for (StorageRecord record : storage.values()) {
@@ -309,15 +306,15 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                     continue;
             }
 
-            if (record.storage instanceof ILockable) {
-                ILockable lockableStorage = (ILockable)record.storage;
+            if (record.storage instanceof IItemLockable) {
+                IItemLockable lockableStorage = (IItemLockable)record.storage;
                 if (template == null) {
                     template = lockableStorage;
-                    state = !template.isLocked(key);
+                    state = !template.isItemLocked(key);
                 }
 
                 for (LockAttribute attr : attributes)
-                    lockableStorage.setLocked(attr, state);
+                    lockableStorage.setItemLocked(attr, state);
             }
             else {
                 for (int i = 0, n = record.storage.getDrawerCount(); i < n; i++) {
@@ -328,14 +325,14 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                     if (!(drawer instanceof IShroudable))
                         continue;
 
-                    ILockable lockableStorage = (ILockable)drawer;
+                    IItemLockable lockableStorage = (IItemLockable)drawer;
                     if (template == null) {
                         template = lockableStorage;
-                        state = !template.isLocked(key);
+                        state = !template.isItemLocked(key);
                     }
 
                     for (LockAttribute attr : attributes)
-                        lockableStorage.setLocked(attr, state);
+                        lockableStorage.setItemLocked(attr, state);
                 }
             }
         }

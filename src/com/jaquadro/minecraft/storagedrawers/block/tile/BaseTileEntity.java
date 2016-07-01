@@ -3,12 +3,13 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Level;
 
 import java.util.Iterator;
 
-public class BaseTileEntity extends TileEntity
+public abstract class BaseTileEntity extends TileEntityLockable
 {
     private NBTTagCompound failureSnapshot;
 

@@ -311,9 +311,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
                 return true;
             }
             else if (item.getItem() == ModItems.drawerKey) {
-                boolean locked = tileDrawers.isLocked(LockAttribute.LOCK_POPULATED);
-                tileDrawers.setLocked(LockAttribute.LOCK_POPULATED, !locked);
-                tileDrawers.setLocked(LockAttribute.LOCK_EMPTY, !locked);
+                boolean locked = tileDrawers.isItemLocked(LockAttribute.LOCK_POPULATED);
+                tileDrawers.setItemLocked(LockAttribute.LOCK_POPULATED, !locked);
+                tileDrawers.setItemLocked(LockAttribute.LOCK_EMPTY, !locked);
 
                 return true;
             }

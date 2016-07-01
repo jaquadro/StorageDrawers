@@ -7,8 +7,12 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -65,6 +69,16 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     @Override
     protected IDrawer createDrawer (int slot) {
         return new CompDrawerData(getCentralInventory(), slot);
+    }
+
+    @Override
+    public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
+        return new ContainerDrawersComp(playerInventory, this);
+    }
+
+    @Override
+    public String getGuiID () {
+        return StorageDrawers.MOD_ID + ":compDrawers";
     }
 
     @Override
@@ -564,7 +578,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 pooledCount = poolMax;
 
             if (pooledCount != oldCount) {
-                if (pooledCount != 0 || TileEntityDrawersComp.this.isLocked(LockAttribute.LOCK_POPULATED))
+                if (pooledCount != 0 || TileEntityDrawersComp.this.isItemLocked(LockAttribute.LOCK_POPULATED))
                     markAmountDirty();
                 else {
                     clear();
@@ -672,7 +686,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public boolean isLocked (int slot, LockAttribute attr) {
-            return TileEntityDrawersComp.this.isLocked(attr);
+            return TileEntityDrawersComp.this.isItemLocked(attr);
         }
 
         @Override
