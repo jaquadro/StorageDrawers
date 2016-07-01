@@ -2,7 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.storage;
 
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IItemLockable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 
-public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable, ILockable
+public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable, IItemLockable
 {
     private static final ItemStack nullStack = new ItemStack((Item)null);
 
@@ -154,7 +154,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Override
     public boolean canItemBeStored (ItemStack itemPrototype) {
-        if (protoStack == nullStack && !isLocked(LockAttribute.LOCK_EMPTY))
+        if (protoStack == nullStack && !isItemLocked(LockAttribute.LOCK_EMPTY))
             return true;
 
         return areItemsEqual(itemPrototype);
@@ -229,16 +229,16 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     }
 
     @Override
-    public boolean isLocked (LockAttribute attr) {
+    public boolean isItemLocked (LockAttribute attr) {
         return storageProvider.isLocked(slot, attr);
     }
 
     @Override
-    public boolean canLock (LockAttribute attr) {
+    public boolean canItemLock (LockAttribute attr) {
         return false;
     }
 
     @Override
-    public void setLocked (LockAttribute attr, boolean isLocked) { }
+    public void setItemLocked (LockAttribute attr, boolean isLocked) { }
 }
 

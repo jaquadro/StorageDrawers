@@ -104,7 +104,7 @@ public class Waila extends IntegrationModule
             }
 
             String attrib = "";
-            if (tile.isLocked(LockAttribute.LOCK_POPULATED))
+            if (tile.isItemLocked(LockAttribute.LOCK_POPULATED))
                 attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.locked");
             if (tile.isVoid())
                 attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.void");

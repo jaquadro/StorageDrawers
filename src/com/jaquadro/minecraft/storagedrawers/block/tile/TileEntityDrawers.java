@@ -5,7 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ILockable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IItemLockable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ISealable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
@@ -32,19 +32,23 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.ILockableContainer;
+import net.minecraft.world.LockCode;
+
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import org.apache.logging.log4j.Level;
 
 import java.util.EnumSet;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, ILockable, ISealable, IProtectable
+public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, IItemLockable, ISealable, IProtectable
 {
     private IDrawer[] drawers;
     private IDrawerInventory inventory;
@@ -219,7 +223,23 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     }
 
     @Override
-    public boolean isLocked (LockAttribute attr) {
+    public void setLockCode (LockCode code) {
+        if (getOwner() == null)
+            super.setLockCode(code);
+    }
+
+    @Override
+    public LockCode getLockCode () {
+        return getOwner() == null ? super.getLockCode() : null;
+    }
+
+    @Override
+    public boolean isLocked () {
+        return getOwner() == null ? super.isLocked() : false;
+    }
+
+    @Override
+    public boolean isItemLocked (LockAttribute attr) {
         if (!StorageDrawers.config.cache.enableLockUpgrades || lockAttributes == null)
             return false;
 
@@ -227,7 +247,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     }
 
     @Override
-    public boolean canLock (LockAttribute attr) {
+    public boolean canItemLock (LockAttribute attr) {
         if (!StorageDrawers.config.cache.enableLockUpgrades)
             return false;
 
@@ -235,7 +255,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     }
 
     @Override
-    public void setLocked (LockAttribute attr, boolean isLocked) {
+    public void setItemLocked (LockAttribute attr, boolean isLocked) {
         if (!StorageDrawers.config.cache.enableLockUpgrades)
             return;
 
@@ -311,6 +331,11 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     @Override
     public ISecurityProvider getSecurityProvider () {
         return StorageDrawers.securityRegistry.getProvider(securityKey);
+    }
+
+    @Override
+    public ILockableContainer getLockableContainer () {
+        return this;
     }
 
     @Override
@@ -942,7 +967,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         if (isSealed())
             return false;
 
-        if (isLocked(LockAttribute.LOCK_EMPTY) && inventory instanceof StorageInventory) {
+        if (isItemLocked(LockAttribute.LOCK_EMPTY) && inventory instanceof StorageInventory) {
             IDrawer drawer = getDrawer(inventory.getDrawerSlot(slot));
             if (drawer != null && drawer.isEmpty())
                 return false;
@@ -1049,20 +1074,9 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         inventory.clear();
     }
 
-    private DrawerItemHandler itemHandler = new DrawerItemHandler(this);
-
     @Override
-    public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return true;
-        return super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return (T) itemHandler;
-        return super.getCapability(capability, facing);
+    protected IItemHandler createUnSidedHandler () {
+        return new DrawerItemHandler(this);
     }
 
     private class DefaultSideManager implements ISideManager
