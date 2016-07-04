@@ -1,8 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
+import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
+import com.jaquadro.minecraft.storagedrawers.item.ItemCustomTrim;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -82,6 +84,12 @@ public class ContainerFramingTable extends Container
             if (block instanceof BlockDrawersCustom) {
                 if (matSide != null) {
                     craftResult.setInventorySlotContents(0, ItemCustomDrawers.makeItemStack(block, 1, matSide, matTrim, matFront));
+                    return;
+                }
+            }
+            else if (block instanceof BlockTrimCustom) {
+                if (matSide != null) {
+                    craftResult.setInventorySlotContents(0, ItemCustomTrim.makeItemStack(block, 1, matSide, matTrim));
                     return;
                 }
             }

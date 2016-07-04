@@ -10,10 +10,13 @@ import net.minecraft.block.BlockWood;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BlockTrim extends Block implements INetworked
@@ -33,6 +36,34 @@ public class BlockTrim extends Block implements INetworked
     @Override
     public int damageDropped (int meta) {
         return meta;
+    }
+
+    @Override
+    public boolean removedByPlayer (World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+        if (willHarvest)
+            return true;
+
+        return super.removedByPlayer(world, player, x, y, z, willHarvest);
+    }
+
+    @Override
+    public void harvestBlock (World world, EntityPlayer player, int x, int y, int z, int meta) {
+        super.harvestBlock(world, player, x, y, z, meta);
+        world.setBlockToAir(x, y, z);
+    }
+
+    protected ItemStack getMainDrop (World world, int x, int y, int z, int metadata) {
+        return new ItemStack(Item.getItemFromBlock(this), 1, metadata);
+    }
+
+    @Override
+    public ArrayList<ItemStack> getDrops (World world, int x, int y, int z, int metadata, int fortune) {
+        ItemStack dropStack = getMainDrop(world, x, y, z, metadata);
+
+        ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
+        drops.add(dropStack);
+
+        return drops;
     }
 
     @Override

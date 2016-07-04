@@ -87,6 +87,7 @@ tile.fullCustom2.name=Framed Drawers 1x2
 tile.fullCustom4.name=Framed Drawers 2x2
 tile.halfCustom2.name=Framed Drawers 1x2
 tile.halfCustom4.name=Framed Drawers 2x2
+tile.trimCustom.name=Framed Trim
 
 tile.compDrawers.name=Compacting Drawer
 tile.drawerController.name=Drawer Controller

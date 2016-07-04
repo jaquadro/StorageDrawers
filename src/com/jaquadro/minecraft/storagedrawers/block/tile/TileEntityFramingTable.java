@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
+import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -121,7 +122,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
             return false;
 
         Block block = Block.getBlockFromItem(stack.getItem());
-        return block instanceof BlockDrawersCustom;
+        return block instanceof BlockDrawersCustom || block instanceof BlockTrimCustom;
     }
 
     public static boolean isItemValidMaterial (ItemStack stack) {

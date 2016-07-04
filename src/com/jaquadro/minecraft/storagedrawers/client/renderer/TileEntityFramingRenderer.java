@@ -1,8 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
+import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
+import com.jaquadro.minecraft.storagedrawers.item.ItemCustomTrim;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -51,6 +53,10 @@ public class TileEntityFramingRenderer extends TileEntitySpecialRenderer
             Block block = Block.getBlockFromItem(target.getItem());
             if (block instanceof BlockDrawersCustom) {
                 ItemStack result = ItemCustomDrawers.makeItemStack(block, 1, tileTable.getStackInSlot(1), tileTable.getStackInSlot(2), tileTable.getStackInSlot(3));
+                renderSlot(tileTable, x, y, z, result, 2f, 0f, .25f, 0f);
+            }
+            else if (block instanceof BlockTrimCustom) {
+                ItemStack result = ItemCustomTrim.makeItemStack(block, 1, tileTable.getStackInSlot(1), tileTable.getStackInSlot(2));
                 renderSlot(tileTable, x, y, z, result, 2f, 0f, .25f, 0f);
             }
         }

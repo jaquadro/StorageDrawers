@@ -10,6 +10,7 @@ public class CommonProxy
     public int controllerRenderID = -1;
     public int drawersCustomRenderID = -1;
     public int framingTableRenderID = -1;
+    public int trimCustomRenderID = -1;
 
     public void registerRenderers ()
     { }

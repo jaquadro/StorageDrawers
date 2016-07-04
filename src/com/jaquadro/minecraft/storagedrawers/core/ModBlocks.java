@@ -25,6 +25,7 @@ public class ModBlocks
     public static BlockTrim trim;
     public static BlockSlave controllerSlave;
     public static BlockFramingTable framingTable;
+    public static BlockTrimCustom trimCustom;
 
     public static BlockDrawersCustom fullCustom1;
     public static BlockDrawersCustom fullCustom2;
@@ -45,6 +46,7 @@ public class ModBlocks
         trim = new BlockTrim("trim");
         controllerSlave = new BlockSlave("controllerSlave");
         framingTable = new BlockFramingTable("framingTable");
+        trimCustom = new BlockTrimCustom("trimCustom");
 
         fullCustom1 = new BlockDrawersCustom("fullCustom1", 1, false);
         fullCustom2 = new BlockDrawersCustom("fullCustom2", 2, false);
@@ -92,6 +94,8 @@ public class ModBlocks
                 GameRegistry.registerBlock(halfCustom2, ItemCustomDrawers.class, "halfCustom2");
             if (config.isBlockEnabled("halfdrawers4"))
                 GameRegistry.registerBlock(halfCustom4, ItemCustomDrawers.class, "halfCustom4");
+            if (config.isBlockEnabled("trim"))
+                GameRegistry.registerBlock(trimCustom, ItemCustomTrim.class, "trimCustom");
         }
 
         GameRegistry.registerTileEntityWithAlternatives(TileEntityDrawersStandard.class, getQualifiedName("tileDrawersStandard"),
@@ -108,6 +112,8 @@ public class ModBlocks
             getQualifiedName(controllerSlave));
 
         GameRegistry.registerTileEntity(TileEntityFramingTable.class, getQualifiedName("framingTable"));
+
+        GameRegistry.registerTileEntity(TileEntityTrim.class, getQualifiedName("trim"));
 
         StorageDrawers.proxy.registerDrawer(fullDrawers1);
         StorageDrawers.proxy.registerDrawer(fullDrawers2);

@@ -153,6 +153,9 @@ public class ModRecipes
             if (config.isBlockEnabled("halfdrawers4"))
                 GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.halfCustom4, config.getBlockRecipeOutput("halfdrawers4"), 0), "yxy", "xzx", "yxy",
                     'x', "stickWood", 'y', "chestWood", 'z', "slabWood"));
+            if (config.isBlockEnabled("trim"))
+                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.trimCustom, config.getBlockRecipeOutput("trim"), 0), "yxy", "xyx", "yxy",
+                    'x', "stickWood", 'y', "plankWood"));
         }
     }
 }
