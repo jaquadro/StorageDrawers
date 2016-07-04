@@ -84,11 +84,13 @@ dependencies {
 
     compile name: 'MineTweaker3', version: "Dev-1.7.10-3.0.9B", ext: 'jar'
 
+    /*
     compile project(":BiomesOPlenty")
     compile project(":Erebus")
     compile project(":Forestry")
     compile project(":Misc")
     compile project(":Natura")
+    */
 }
 
 processResources
