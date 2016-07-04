@@ -1,2 +1,8 @@
 include 'packs/BiomesOPlenty', 'packs/Erebus', 'packs/Forestry', 'packs/Misc', 'packs/Natura'
+project(":packs/BiomesOPlenty").name = "BiomesOPlenty"
+project(":packs/Erebus").name = "Erebus"
+project(":packs/Forestry").name = "Forestry"
+project(":packs/Misc").name = "Misc"
+project(":packs/Natura").name = "Natura"
+
 rootProject.name = "StorageDrawers-1.7"

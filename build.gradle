@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.9.10"
+version = "1.7.10-1.10.0"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
 
@@ -80,9 +80,15 @@ dependencies {
     compile "codechicken:CodeChickenCore:1.7.10-1.0.6.44:dev"
     compile "codechicken:NotEnoughItems:1.7.10-1.0.4.107:dev"
 
-    compile "appeng:appliedenergistics2:rv2-stable-3:api"
+    compile "appeng:appliedenergistics2:rv3-beta-5:dev"
 
     compile name: 'MineTweaker3', version: "Dev-1.7.10-3.0.9B", ext: 'jar'
+
+    compile project(":BiomesOPlenty")
+    compile project(":Erebus")
+    compile project(":Forestry")
+    compile project(":Misc")
+    compile project(":Natura")
 }
 
 processResources
