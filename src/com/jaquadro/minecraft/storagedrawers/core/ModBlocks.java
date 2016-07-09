@@ -5,16 +5,12 @@ import com.jaquadro.minecraft.chameleon.resources.ModelRegistry;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.*;
 import com.jaquadro.minecraft.storagedrawers.block.tile.*;
-import com.jaquadro.minecraft.storagedrawers.client.model.BasicDrawerModel;
-import com.jaquadro.minecraft.storagedrawers.client.model.CompDrawerModel;
-import com.jaquadro.minecraft.storagedrawers.client.model.CustomDrawerModel;
-import com.jaquadro.minecraft.storagedrawers.client.model.FramingTableModel;
+import com.jaquadro.minecraft.storagedrawers.client.model.*;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityFramingRenderer;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameData;
@@ -32,6 +28,7 @@ public class ModBlocks
     public static BlockTrim trim;
     public static BlockFramingTable framingTable;
     public static BlockDrawersCustom customDrawers;
+    public static BlockTrimCustom customTrim;
 
     public void init () {
         //resolver = new DataResolver(StorageDrawers.MOD_ID);
@@ -43,6 +40,7 @@ public class ModBlocks
         trim = new BlockTrim("trim");
         framingTable = new BlockFramingTable("framingTable");
         customDrawers = new BlockDrawersCustom("customDrawers");
+        customTrim = new BlockTrimCustom("customTrim");
 
         ConfigManager config = StorageDrawers.config;
 
@@ -69,6 +67,9 @@ public class ModBlocks
             GameRegistry.registerTileEntity(TileEntityFramingTable.class, ModBlocks.getQualifiedName(framingTable));
 
             GameRegistry.registerBlock(customDrawers, ItemCustomDrawers.class, "customDrawers");
+
+            GameRegistry.registerBlock(customTrim, ItemCustomTrim.class, "customTrim");
+            GameRegistry.registerTileEntity(TileEntityTrim.class, ModBlocks.getQualifiedName(trim));
         }
 
         StorageDrawers.proxy.registerDrawer(basicDrawers);
@@ -99,6 +100,7 @@ public class ModBlocks
         modelRegistry.registerModel(new CompDrawerModel.Register());
         modelRegistry.registerModel(new FramingTableModel.Register());
         modelRegistry.registerModel(new CustomDrawerModel.Register());
+        modelRegistry.registerModel(new CustomTrimModel.Register());
 
         modelRegistry.registerItemVariants(trim);
         modelRegistry.registerItemVariants(controller);

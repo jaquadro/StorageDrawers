@@ -519,7 +519,6 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         }
 
         return willHarvest || super.removedByPlayer(world, pos, player, false);
-
     }
 
     @Override

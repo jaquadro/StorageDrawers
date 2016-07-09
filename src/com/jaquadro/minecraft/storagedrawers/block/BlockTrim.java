@@ -9,9 +9,17 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BlockTrim extends Block implements INetworked
@@ -40,14 +48,35 @@ public class BlockTrim extends Block implements INetworked
     }
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
-        for (BlockPlanks.EnumType type : BlockPlanks.EnumType.values())
-            list.add(new ItemStack(item, 1, type.getMetadata()));
+    public boolean removedByPlayer (World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+        return willHarvest || super.removedByPlayer(world, pos, player, true);
     }
 
     @Override
-    public int damageDropped (IBlockState state) {
-        return ((BlockPlanks.EnumType)state.getValue(VARIANT)).getMetadata();
+    public void harvestBlock (World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te) {
+        super.harvestBlock(worldIn, player, pos, state, te);
+        worldIn.setBlockToAir(pos);
+    }
+
+    protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
+        return new ItemStack(Item.getItemFromBlock(this), 1, state.getBlock().getMetaFromState(state));
+    }
+
+    @Override
+    public List<ItemStack> getDrops (IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        ItemStack dropStack = getMainDrop(world, pos, state);
+
+        ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
+        drops.add(dropStack);
+
+        return drops;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
+        for (BlockPlanks.EnumType type : BlockPlanks.EnumType.values())
+            list.add(new ItemStack(item, 1, type.getMetadata()));
     }
 
     @Override
@@ -65,3 +94,5 @@ public class BlockTrim extends Block implements INetworked
         return new BlockState(this, VARIANT);
     }
 }
+
+
