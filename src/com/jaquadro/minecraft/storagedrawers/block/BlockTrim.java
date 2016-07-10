@@ -44,6 +44,10 @@ public class BlockTrim extends Block implements INetworked
         setHardness(5f);
         setStepSound(Block.soundTypeWood);
 
+        setDefaultState();
+    }
+
+    protected void setDefaultState () {
         setDefaultState(blockState.getBaseState().withProperty(VARIANT, BlockPlanks.EnumType.OAK));
     }
 

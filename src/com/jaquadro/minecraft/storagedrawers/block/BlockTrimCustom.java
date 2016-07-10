@@ -31,7 +31,10 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
     public BlockTrimCustom (String name) {
         super(name);
         isBlockContainer = true;
+    }
 
+    @Override
+    protected void setDefaultState () {
         setDefaultState(blockState.getBaseState());
     }
 
