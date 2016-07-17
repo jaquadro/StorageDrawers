@@ -183,6 +183,10 @@ public class ModRecipes
                 ItemStack result = makeCustomDrawerItemStack(EnumBasicDrawer.HALF4, config.getBlockRecipeOutput(EnumBasicDrawer.HALF4.getUnlocalizedName()));
                 GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xzx", "yxy", 'x', "stickWood", 'y', "chestWood", 'z', "slabWood"));
             }
+            if (config.isBlockEnabled("trim")) {
+                ItemStack result = new ItemStack(ModBlocks.customTrim, config.getBlockRecipeOutput("trim"));
+                GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xyx", "yxy", 'x', "stickWood", 'y', "plankWood"));
+            }
         }
     }
 }

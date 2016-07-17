@@ -90,16 +90,19 @@ public class BlockFramingTable extends BlockContainer
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isOpaqueCube (IBlockState state) {
         return false;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isFullCube (IBlockState state) {
         return false;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean shouldSideBeRendered (IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
         return true;
     }
@@ -115,6 +118,7 @@ public class BlockFramingTable extends BlockContainer
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void neighborChanged (IBlockState state, World world, BlockPos pos, Block block) {
         EnumFacing side = getDirection(state);
         if (isRightBlock(state)) {
@@ -144,6 +148,7 @@ public class BlockFramingTable extends BlockContainer
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public EnumPushReaction getMobilityFlag (IBlockState state) {
         return EnumPushReaction.DESTROY;
     }
@@ -181,6 +186,7 @@ public class BlockFramingTable extends BlockContainer
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta (int meta) {
         EnumFacing side = EnumFacing.getFront(meta & 0x7);
         if (side.getAxis() == EnumFacing.Axis.Y)
@@ -201,7 +207,7 @@ public class BlockFramingTable extends BlockContainer
 
     @Override
     public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
-        state = getActualState(state, world, pos);
+        state = state.getActualState(world, pos);
         if (!(state instanceof IExtendedBlockState))
             return state;
 
