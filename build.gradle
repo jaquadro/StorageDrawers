@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.10.0"
+version = "1.7.10-1.10.1"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
 
@@ -84,13 +84,13 @@ dependencies {
 
     compile name: 'MineTweaker3', version: "Dev-1.7.10-3.0.9B", ext: 'jar'
 
-    /*
-    compile project(":BiomesOPlenty")
-    compile project(":Erebus")
-    compile project(":Forestry")
-    compile project(":Misc")
-    compile project(":Natura")
-    */
+    if (gradle.startParameter.taskNames.contains("idea")) {
+        compile project(":BiomesOPlenty")
+        compile project(":Erebus")
+        compile project(":Forestry")
+        compile project(":Misc")
+        compile project(":Natura")
+    }
 }
 
 processResources

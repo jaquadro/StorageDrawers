@@ -564,11 +564,13 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
     public int interactPutCurrentItemIntoSlot (int slot, EntityPlayer player) {
         int count = 0;
-        ItemStack currentStack = player.inventory.getCurrentItem();
-        if (currentStack != null)
-            count = putItemsIntoSlot(slot, currentStack, currentStack.stackSize);
+        ItemStack playerStack = player.inventory.getCurrentItem();
+        if (playerStack != null)
+            count = putItemsIntoSlot(slot, playerStack, playerStack.stackSize);
 
-        markDirty();
+        if (count > 0)
+            markDirty();
+
         return count;
     }
 
@@ -802,7 +804,16 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         IDrawer drawer = getDrawer(slot);
         if (drawer.getStoredItemCount() != count) {
             drawer.setStoredItemCount(count);
-            getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
+
+            switch (getEffectiveStatusLevel()) {
+                case 1:
+                    if (drawer.getStoredItemCount() == 0 || drawer.getRemainingCapacity() == 0)
+                        getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
+                    break;
+                case 2:
+                    getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
+                    break;
+            }
         }
     }
 
