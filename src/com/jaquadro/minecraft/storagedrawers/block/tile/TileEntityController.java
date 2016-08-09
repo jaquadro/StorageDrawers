@@ -57,7 +57,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         }
     }
 
-    private static class SlotRecord
+    protected static class SlotRecord
     {
         public BlockPos coord;
         public int slot;
@@ -117,13 +117,13 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
     private Map<BlockPos, StorageRecord> storage = new HashMap<BlockPos, StorageRecord>();
     private List<SlotRecord> invSlotList = new ArrayList<SlotRecord>();
-    private List<SlotRecord> drawerSlotList = new ArrayList<SlotRecord>();
+    protected List<SlotRecord> drawerSlotList = new ArrayList<SlotRecord>();
 
     private ItemMetaListRegistry<SlotRecord> invPrimaryLookup = new ItemMetaListRegistry<SlotRecord>();
     private ItemMetaListRegistry<SlotRecord> drawerPrimaryLookup = new ItemMetaListRegistry<SlotRecord>();
 
     private int[] inventorySlots = new int[0];
-    private int[] drawerSlots = new int[0];
+    protected int[] drawerSlots = new int[0];
     private int[] autoSides = new int[] { 0, 1, 2, 3, 4, 5 };
 
     private int drawerSize = 0;
@@ -180,7 +180,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         return count;
     }
 
-    private int insertItems (ItemStack stack, GameProfile profile) {
+    protected int insertItems (ItemStack stack, GameProfile profile) {
         int itemsLeft = stack.stackSize;
 
         for (int slot : enumerateDrawersForInsertion(stack, false)) {
@@ -209,7 +209,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         return count;
     }
 
-    private int insertItemsIntoDrawer (IDrawer drawer, int itemCount) {
+    protected int insertItemsIntoDrawer (IDrawer drawer, int itemCount) {
         int capacity = drawer.getMaxCapacity();
         int storedItems = drawer.getStoredItemCount();
 
@@ -337,7 +337,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         }
     }
 
-    private void resetCache () {
+    protected void resetCache () {
         storage.clear();
         invSlotList.clear();
         drawerSlotList.clear();
@@ -588,7 +588,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         return getGroupForCoord(record.coord);
     }
 
-    private IDrawerGroup getGroupForDrawerSlot (int drawerSlot) {
+    protected IDrawerGroup getGroupForDrawerSlot (int drawerSlot) {
         if (drawerSlot >= drawerSlotList.size())
             return null;
 
@@ -599,7 +599,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         return getGroupForCoord(record.coord);
     }
 
-    private IDrawerGroup getGroupForCoord (BlockPos coord) {
+    protected IDrawerGroup getGroupForCoord (BlockPos coord) {
         if (coord == null || !storage.containsKey(coord))
             return null;
 
