@@ -370,9 +370,12 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
             return false;
 
         int slot = getDrawerSlot(getDrawerCount(state), side.ordinal(), hitX, hitY, hitZ);
+        IDrawer drawer = tileDrawers.getDrawer(slot);
+        ItemStack currentStack = drawer.getStoredItemPrototype();
+
         int countAdded = tileDrawers.interactPutItemsIntoSlot(slot, player);
 
-        if (countAdded > 0)
+        if (countAdded > 0 && currentStack != null)
             world.notifyBlockUpdate(pos, state, state, 3);
 
         return true;
