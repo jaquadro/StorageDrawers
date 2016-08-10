@@ -82,7 +82,7 @@ dependencies {
 
     compile "appeng:appliedenergistics2:rv3-beta-5:dev"
 
-    compile name: 'MineTweaker3', version: "Dev-1.7.10-3.0.9B", ext: 'jar'
+    //compile name: 'MineTweaker3', version: "Dev-1.7.10-3.0.9B", ext: 'jar'
 
     if (gradle.startParameter.taskNames.contains("idea")) {
         compile project(":BiomesOPlenty")
