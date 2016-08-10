@@ -79,7 +79,7 @@ public class TileEntityTrim extends TileEntity
 
     @Override
     public SPacketUpdateTileEntity getUpdatePacket () {
-        return new SPacketUpdateTileEntity(getPos(), 5, getUpdateTag());
+        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
     }
 
     @Override

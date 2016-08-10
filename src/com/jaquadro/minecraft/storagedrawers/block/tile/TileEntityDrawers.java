@@ -921,7 +921,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     // TODO: Eventually eliminate these expensive network updates
     @Override
     public SPacketUpdateTileEntity getUpdatePacket () {
-        return new SPacketUpdateTileEntity(getPos(), 5, getUpdateTag());
+        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
     }
 
     @Override
