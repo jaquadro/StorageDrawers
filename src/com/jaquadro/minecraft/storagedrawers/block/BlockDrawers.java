@@ -99,9 +99,9 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     protected void initDefaultState () {
-        setDefaultState(blockState.getBaseState().withProperty(BLOCK, EnumBasicDrawer.FULL2));
-        setDefaultState(blockState.getBaseState().withProperty(VARIANT, BlockPlanks.EnumType.OAK));
-        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+        setDefaultState(blockState.getBaseState().withProperty(BLOCK, EnumBasicDrawer.FULL2)
+            .withProperty(VARIANT, BlockPlanks.EnumType.OAK)
+            .withProperty(FACING, EnumFacing.NORTH));
     }
 
     public boolean retrimBlock (World world, BlockPos pos, ItemStack prototype) {

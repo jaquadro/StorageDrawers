@@ -29,8 +29,8 @@ public class BlockDrawersCustom extends BlockDrawers
     }
 
     protected void initDefaultState () {
-        setDefaultState(blockState.getBaseState().withProperty(BLOCK, EnumBasicDrawer.FULL2));
-        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+        setDefaultState(blockState.getBaseState().withProperty(BLOCK, EnumBasicDrawer.FULL2)
+            .withProperty(FACING, EnumFacing.NORTH));
     }
 
     @Override

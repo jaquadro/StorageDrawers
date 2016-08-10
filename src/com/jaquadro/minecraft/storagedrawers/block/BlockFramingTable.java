@@ -53,8 +53,8 @@ public class BlockFramingTable extends BlockContainer
         setUnlocalizedName(blockName);
         setRegistryName(blockName);
 
-        setDefaultState(blockState.getBaseState().withProperty(RIGHT_SIDE, true));
-        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+        setDefaultState(blockState.getBaseState().withProperty(RIGHT_SIDE, true)
+            .withProperty(FACING, EnumFacing.NORTH));
     }
 
     @Override
