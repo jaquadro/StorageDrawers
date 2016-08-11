@@ -1,5 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
+import com.jaquadro.minecraft.chameleon.block.tiledata.LockableData;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
@@ -48,8 +50,10 @@ import org.apache.logging.log4j.Level;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, IItemLockable, ISealable, IProtectable
+public abstract class TileEntityDrawers extends ChamTileEntity implements ILockableContainer, IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, IItemLockable, ISealable, IProtectable
 {
+    private LockableData lockData = new LockableData();
+
     private IDrawer[] drawers;
     private IDrawerInventory inventory;
 
@@ -78,6 +82,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     private ItemStack materialTrim;
 
     protected TileEntityDrawers (int drawerCount) {
+        injectData(lockData);
         initWithDrawerCount(drawerCount);
     }
 
@@ -225,17 +230,17 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     @Override
     public void setLockCode (LockCode code) {
         if (getOwner() == null)
-            super.setLockCode(code);
+            lockData.setLockCode(code);
     }
 
     @Override
     public LockCode getLockCode () {
-        return getOwner() == null ? super.getLockCode() : null;
+        return getOwner() == null ? lockData.getLockCode() : null;
     }
 
     @Override
     public boolean isLocked () {
-        return getOwner() == null ? super.isLocked() : false;
+        return getOwner() == null ? lockData.isLocked() : false;
     }
 
     @Override
@@ -697,7 +702,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     }
 
     @Override
-    protected void writeToFixedNBT (NBTTagCompound tag) {
+    protected NBTTagCompound writeToFixedNBT (NBTTagCompound tag) {
         super.writeToFixedNBT(tag);
 
         tag.setByte("Dir", (byte) direction);
@@ -707,6 +712,8 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
 
         if (hasCustomName())
             tag.setString("CustomName", customName);
+
+        return tag;
     }
 
     @Override
@@ -779,7 +786,7 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     }
 
     @Override
-    public void writeToPortableNBT (NBTTagCompound tag) {
+    public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
         super.writeToPortableNBT(tag);
 
         tag.setInteger("Cap", drawerCapacity);
@@ -841,6 +848,8 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
             materialTrim.writeToNBT(itag);
             tag.setTag("MatT", itag);
         }
+
+        return tag;
     }
 
     @Override
@@ -911,26 +920,8 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
     }
 
     @Override
-    public NBTTagCompound getUpdateTag () {
-        NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag);
-
-        return tag;
-    }
-
-    // TODO: Eventually eliminate these expensive network updates
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket () {
-        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
-    }
-
-    @Override
-    public void onDataPacket (NetworkManager net, SPacketUpdateTileEntity pkt) {
-        readFromNBT(pkt.getNbtCompound());
-        if (getWorld().isRemote) {
-            IBlockState state = worldObj.getBlockState(getPos());
-            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
-        }
+    public boolean dataPacketRequiresRenderUpdate () {
+        return true;
     }
 
     @Override
@@ -1084,9 +1075,25 @@ public abstract class TileEntityDrawers extends BaseTileEntity implements IDrawe
         inventory.clear();
     }
 
-    @Override
+    private net.minecraftforge.items.IItemHandler itemHandler;
+
     protected IItemHandler createUnSidedHandler () {
         return new DrawerItemHandler(this);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing)
+    {
+        if (capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+            return (T) (itemHandler == null ? (itemHandler = createUnSidedHandler()) : itemHandler);
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing)
+    {
+        return capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 
     private class DefaultSideManager implements ISideManager

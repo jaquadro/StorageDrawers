@@ -147,7 +147,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     }
 
     @Override
-    public void writeToPortableNBT (NBTTagCompound tag) {
+    public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
         super.writeToPortableNBT(tag);
 
         tag.setInteger("Count", pooledCount);
@@ -158,6 +158,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             tag.setByte("Conv1", (byte)convRate[1]);
         if (convRate[2] > 0)
             tag.setByte("Conv2", (byte)convRate[2]);
+
+        return tag;
     }
 
     @Override
