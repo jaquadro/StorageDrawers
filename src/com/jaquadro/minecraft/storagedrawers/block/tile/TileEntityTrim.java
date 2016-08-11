@@ -35,8 +35,6 @@ public class TileEntityTrim extends ChamTileEntity
 
     @Override
     public void readFromPortableNBT (NBTTagCompound tag) {
-        super.readFromNBT(tag);
-
         materialSide = null;
         if (tag.hasKey("MatS"))
             materialSide = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatS"));
@@ -48,8 +46,6 @@ public class TileEntityTrim extends ChamTileEntity
 
     @Override
     public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
-        super.writeToNBT(tag);
-
         if (materialSide != null) {
             NBTTagCompound itag = new NBTTagCompound();
             materialSide.writeToNBT(itag);
