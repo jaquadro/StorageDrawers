@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
+import com.jaquadro.minecraft.chameleon.block.tiledata.CustomNameData;
 import com.jaquadro.minecraft.chameleon.block.tiledata.LockableData;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
@@ -49,6 +50,7 @@ import java.util.UUID;
 public abstract class TileEntityDrawers extends ChamTileEntity implements ILockableContainer, IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, IItemLockable, ISealable, IProtectable
 {
     private LockableData lockData = new LockableData();
+    private CustomNameData customNameData = new CustomNameData("storageDrawers.container.drawers");
 
     private IDrawer[] drawers;
     private IDrawerInventory inventory;
@@ -71,14 +73,13 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
     private long lastClickTime;
     private UUID lastClickUUID;
 
-    private String customName;
-
     private ItemStack materialSide;
     private ItemStack materialFront;
     private ItemStack materialTrim;
 
     protected TileEntityDrawers (int drawerCount) {
         injectData(lockData);
+        injectData(customNameData);
         initWithDrawerCount(drawerCount);
     }
 
@@ -691,31 +692,20 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         taped = false;
         if (tag.hasKey("Tape"))
             taped = tag.getBoolean("Tape");
-
-        customName = null;
-        if (tag.hasKey("CustomName", Constants.NBT.TAG_STRING))
-            customName = tag.getString("CustomName");
     }
 
     @Override
     protected NBTTagCompound writeToFixedNBT (NBTTagCompound tag) {
-        super.writeToFixedNBT(tag);
-
         tag.setByte("Dir", (byte) direction);
 
         if (taped)
             tag.setBoolean("Tape", taped);
-
-        if (hasCustomName())
-            tag.setString("CustomName", customName);
 
         return tag;
     }
 
     @Override
     public void readFromPortableNBT (NBTTagCompound tag) {
-        super.readFromPortableNBT(tag);
-
         upgrades = new ItemStack[upgrades.length];
 
         material = null;
@@ -1007,22 +997,22 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
     }
 
     public void setInventoryName (String name) {
-        customName = name;
+        customNameData.setName(name);
     }
 
     @Override
     public String getName () {
-        return hasCustomName() ? customName : "storageDrawers.container.drawers";
+        return customNameData.getName();
     }
 
     @Override
     public boolean hasCustomName () {
-        return customName != null && customName.length() > 0;
+        return customNameData.hasCustomName();
     }
 
     @Override
     public ITextComponent getDisplayName () {
-        return inventory.getDisplayName();
+        return customNameData.getDisplayName();
     }
 
     @Override
