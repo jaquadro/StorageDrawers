@@ -1,14 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-import net.minecraft.block.state.IBlockState;
+import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityTrim extends TileEntity
+public class TileEntityTrim extends ChamTileEntity
 {
     private ItemStack materialSide;
     private ItemStack materialTrim;
@@ -38,7 +34,7 @@ public class TileEntityTrim extends TileEntity
     }
 
     @Override
-    public void readFromNBT (NBTTagCompound tag) {
+    public void readFromPortableNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
 
         materialSide = null;
@@ -51,7 +47,7 @@ public class TileEntityTrim extends TileEntity
     }
 
     @Override
-    public NBTTagCompound writeToNBT (NBTTagCompound tag) {
+    public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
         super.writeToNBT(tag);
 
         if (materialSide != null) {
@@ -70,24 +66,7 @@ public class TileEntityTrim extends TileEntity
     }
 
     @Override
-    public NBTTagCompound getUpdateTag () {
-        NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag);
-
-        return tag;
-    }
-
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket () {
-        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
-    }
-
-    @Override
-    public void onDataPacket (NetworkManager net, SPacketUpdateTileEntity pkt) {
-        readFromNBT(pkt.getNbtCompound());
-        if (getWorld().isRemote) {
-            IBlockState state = worldObj.getBlockState(getPos());
-            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
-        }
+    public boolean dataPacketRequiresRenderUpdate () {
+        return true;
     }
 }
