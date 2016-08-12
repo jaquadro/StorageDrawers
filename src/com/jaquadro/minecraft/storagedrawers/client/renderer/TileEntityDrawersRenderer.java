@@ -107,7 +107,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         mc.gameSettings.fancyGraphics = true;
 
         if (!tile.isShrouded() && !tile.isSealed())
-            renderFastItemSet(renderer, tile, side, depth, partialTickTime);
+            renderFastItemSet(renderer, tile, state, side, depth, partialTickTime);
 
         mc.gameSettings.fancyGraphics = cache;
 
@@ -115,7 +115,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         //WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         //worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
-        renderUpgrades(renderer, tile);
+        renderUpgrades(renderer, tile, state);
 
         //tessellator.draw();
 
@@ -133,7 +133,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         ChamRenderManager.instance.releaseRenderer(renderer);
     }
 
-    private void renderFastItemSet (ChamRender renderer, TileEntityDrawers tile, EnumFacing side, float depth, float partialTickTime) {
+    private void renderFastItemSet (ChamRender renderer, TileEntityDrawers tile, IBlockState state, EnumFacing side, float depth, float partialTickTime) {
         int drawerCount = tile.getDrawerCount();
         boolean restoreItemState = false;
         boolean restoreBlockState = false;
@@ -164,7 +164,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         for (int i = 0; i < drawerCount; i++) {
             if (renderStacks[i] != null && !renderAsBlock[i])
-                renderFastItem(renderer, renderStacks[i], tile, i, side, depth, partialTickTime);
+                renderFastItem(renderer, renderStacks[i], tile, state, i, side, depth, partialTickTime);
         }
 
         //if (restoreBlockState) {
@@ -174,7 +174,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         for (int i = 0; i < drawerCount; i++) {
             if (renderStacks[i] != null && renderAsBlock[i])
-                renderFastItem(renderer, renderStacks[i], tile, i, side, depth, partialTickTime);
+                renderFastItem(renderer, renderStacks[i], tile, state, i, side, depth, partialTickTime);
         }
 
         //GlStateManager.popAttrib();
@@ -188,15 +188,14 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         //    GLUtil.restoreGLState(savedGLStateItemRender);
     }
 
-    private void renderFastItem (ChamRender renderer, ItemStack itemStack, TileEntityDrawers tile, int slot, EnumFacing side, float depth, float partialTickTime) {
+    private void renderFastItem (ChamRender renderer, ItemStack itemStack, TileEntityDrawers tile, IBlockState state, int slot, EnumFacing side, float depth, float partialTickTime) {
         int drawerCount = tile.getDrawerCount();
         float xunit = getXOffset(drawerCount, slot);
         float yunit = getYOffset(drawerCount, slot);
         float size = (drawerCount == 1) ? .5f : .25f;
 
-        BlockDrawers block = (BlockDrawers)tile.getBlockType();
-        IBlockState blockState = tile.getWorld().getBlockState(tile.getPos());
-        StatusModelData statusInfo = block.getStatusInfo(blockState);
+        BlockDrawers block = (BlockDrawers)state.getBlock();
+        StatusModelData statusInfo = block.getStatusInfo(state);
         float frontDepth = (float)statusInfo.getFrontDepth() * .0625f;
 
         GlStateManager.pushMatrix();
@@ -271,15 +270,13 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         return Math.abs(offsetX[side.ordinal()] - x);
     }
 
-    private void renderUpgrades (ChamRender renderer, TileEntityDrawers tile) {
+    private void renderUpgrades (ChamRender renderer, TileEntityDrawers tile, IBlockState state) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
         GlStateManager.enableAlpha();
 
-        IBlockState blockState = tile.getWorld().getBlockState(tile.getPos());
-
-        renderIndicator(renderer, tile, blockState, tile.getDirection(), tile.getEffectiveStatusLevel());
-        renderTape(renderer, tile, blockState, tile.getDirection(), tile.isSealed());
+        renderIndicator(renderer, tile, state, tile.getDirection(), tile.getEffectiveStatusLevel());
+        renderTape(renderer, tile, state, tile.getDirection(), tile.isSealed());
     }
 
     private void renderIndicator (ChamRender renderer, TileEntityDrawers tile, IBlockState blockState, int side, int level) {
