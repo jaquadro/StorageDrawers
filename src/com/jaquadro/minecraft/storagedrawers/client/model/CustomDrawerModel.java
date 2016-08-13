@@ -10,6 +10,9 @@ import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
+import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
+import com.jaquadro.minecraft.storagedrawers.block.modeldata.MaterialModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
@@ -112,13 +115,14 @@ public class CustomDrawerModel extends ChamModel
             return new CustomDrawerModel(state, false);
 
         IExtendedBlockState xstate = (IExtendedBlockState) state;
-        TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
-        if (tile == null)
+        DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
+        MaterialModelData matModel = xstate.getValue(BlockDrawersCustom.MAT_MODEL);
+        if (stateModel == null || matModel == null)
             return new CustomDrawerModel(state, false);
 
-        ItemStack matFront = tile.getEffectiveMaterialFront();
-        ItemStack matSide = tile.getEffectiveMaterialSide();
-        ItemStack matTrim = tile.getEffectiveMaterialTrim();
+        ItemStack matFront = matModel.getMaterialFront();
+        ItemStack matSide = matModel.getMaterialSide();
+        ItemStack matTrim = matModel.getMaterialTrim();
 
         return new CustomDrawerModel(state, matFront, matSide, matTrim, false);
     }
@@ -213,16 +217,16 @@ public class CustomDrawerModel extends ChamModel
                 return mainModel;
 
             IExtendedBlockState xstate = (IExtendedBlockState)state;
-            TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
+            DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
 
             try {
-                if (!DrawerDecoratorModel.shouldHandleState(tile))
+                if (!DrawerDecoratorModel.shouldHandleState(stateModel))
                     return mainModel;
 
                 EnumBasicDrawer drawer = (EnumBasicDrawer) state.getValue(BlockDrawers.BLOCK);
                 EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
-                return new DrawerDecoratorModel(mainModel, xstate, drawer, dir, tile);
+                return new DrawerDecoratorModel(mainModel, xstate, drawer, dir, stateModel);
             }
             catch (Throwable t) {
                 return mainModel;

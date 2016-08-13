@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
+import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
@@ -73,13 +74,13 @@ public final class CompDrawerModel
                 return parent;
 
             IExtendedBlockState xstate = (IExtendedBlockState)state;
-            TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
+            DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
 
             try {
-                if (!DrawerDecoratorModel.shouldHandleState(tile))
+                if (!DrawerDecoratorModel.shouldHandleState(stateModel))
                     return parent;
 
-                return new DrawerDecoratorModel(parent, xstate, drawer, dir, tile);
+                return new DrawerDecoratorModel(parent, xstate, drawer, dir, stateModel);
             }
             catch (Throwable t) {
                 return parent;

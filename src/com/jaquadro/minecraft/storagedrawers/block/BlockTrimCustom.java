@@ -1,7 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.chameleon.block.properties.UnlistedModelData;
 import com.jaquadro.minecraft.chameleon.block.properties.UnlistedTileEntity;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.modeldata.MaterialModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityTrim;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomTrim;
 import net.minecraft.block.ITileEntityProvider;
@@ -24,7 +26,7 @@ import java.util.List;
 
 public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
 {
-    public static final IUnlistedProperty<TileEntityTrim> TILE = UnlistedTileEntity.create(TileEntityTrim.class);
+    public static final IUnlistedProperty<MaterialModelData> MAT_MODEL = UnlistedModelData.create(MaterialModelData.class);
 
     public BlockTrimCustom (String name) {
         super(name);
@@ -88,7 +90,7 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
 
     @Override
     protected BlockStateContainer createBlockState () {
-        return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[] { TILE });
+        return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[] { MAT_MODEL });
     }
 
     @Override
@@ -102,7 +104,7 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
         if (tile == null)
             return state;
 
-        return ((IExtendedBlockState)state).withProperty(TILE, tile);
+        return ((IExtendedBlockState)state).withProperty(MAT_MODEL, new MaterialModelData(tile));
     }
 
     @Override

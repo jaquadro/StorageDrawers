@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGeometry;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
+import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -35,40 +36,29 @@ public class DrawerDecoratorModel implements IBakedModel
     private IExtendedBlockState blockState;
     private IDrawerGeometry drawer;
     private EnumFacing dir;
-    private boolean shrouded;
-    private boolean locked;
-    private boolean owned;
-    private boolean voiding;
-    private boolean[] enabled;
+    private DrawerStateModelData modelData;
 
-    public DrawerDecoratorModel (IBakedModel baseModel, IExtendedBlockState blockState, IDrawerGeometry drawer, EnumFacing dir, TileEntityDrawers tile) {
+    public DrawerDecoratorModel (IBakedModel baseModel, IExtendedBlockState blockState, IDrawerGeometry drawer, EnumFacing dir, DrawerStateModelData modelData) {
         this.baseModel = baseModel;
         this.blockState = blockState;
         this.drawer = drawer;
         this.dir = dir;
-        this.shrouded = tile.isShrouded();
-        this.locked = tile.isItemLocked(LockAttribute.LOCK_POPULATED);
-        this.owned = tile.getOwner() != null;
-        this.voiding = tile.isVoid();
-
-        enabled = new boolean[drawer.getDrawerCount()];
-        for (int i = 0; i < enabled.length; i++)
-            enabled[i] = !tile.getDrawer(i).isEmpty();
+        this.modelData = modelData;
     }
 
-    public static boolean shouldHandleState (TileEntityDrawers tile) {
-        return tile != null && (tile.isShrouded() || tile.isVoid() || tile.isItemLocked(LockAttribute.LOCK_POPULATED) || tile.getOwner() != null);
+    public static boolean shouldHandleState (DrawerStateModelData stateModel) {
+        return stateModel != null && (stateModel.isShrouded() || stateModel.isVoid() || stateModel.isItemLocked() || stateModel.getOwner() != null);
     }
 
     @Override
     public List<BakedQuad> getQuads (IBlockState state, EnumFacing side, long rand) {
         ChamRender renderer = ChamRenderManager.instance.getRenderer(null);
         renderer.startBaking(DefaultVertexFormats.ITEM);
-        if (shrouded)
+        if (modelData.isShrouded())
             buildShroudGeometry(renderer);
-        if (locked || owned)
+        if (modelData.isItemLocked() || modelData.getOwner() != null)
             buildLockGeometry(renderer);
-        if (voiding)
+        if (modelData.isVoid())
             buildVoidGeometry(renderer);
 
         renderer.stopBaking();
@@ -113,11 +103,11 @@ public class DrawerDecoratorModel implements IBakedModel
         double depth = drawer.isHalfDepth() ? .5 : 1;
 
         TextureAtlasSprite lockIcon;
-        if (locked && owned)
+        if (modelData.isItemLocked() && modelData.getOwner() != null)
             lockIcon = Chameleon.instance.iconRegistry.getIcon(iconClaimLock);
-        else if (locked)
+        else if (modelData.isItemLocked())
             lockIcon = Chameleon.instance.iconRegistry.getIcon(iconLock);
-        else if (owned)
+        else if (modelData.getOwner() != null)
             lockIcon = Chameleon.instance.iconRegistry.getIcon(iconClaim);
         else
             return;
@@ -153,7 +143,7 @@ public class DrawerDecoratorModel implements IBakedModel
         TextureAtlasSprite iconCover = Chameleon.instance.iconRegistry.getIcon(iconShroudCover);
 
         for (int i = 0; i < count; i++) {
-            if (!enabled[i])
+            if (!modelData.isDrawerEmpty(i))
                 continue;
 
             StatusModelData.Slot slot = data.getSlot(i);

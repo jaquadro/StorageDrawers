@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.chameleon.resources.IconUtil;
 import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
+import com.jaquadro.minecraft.storagedrawers.block.modeldata.MaterialModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityTrim;
 import com.jaquadro.minecraft.storagedrawers.client.model.dynamic.CommonTrimRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
@@ -69,11 +70,11 @@ public class CustomTrimModel extends ChamModel
     public static CustomTrimModel fromBlock (IBlockState state) {
         if (state instanceof IExtendedBlockState) {
             IExtendedBlockState xstate = (IExtendedBlockState) state;
-            TileEntityTrim tile = xstate.getValue(BlockTrimCustom.TILE);
+            MaterialModelData matModel = xstate.getValue(BlockTrimCustom.MAT_MODEL);
 
-            if (tile != null) {
-                ItemStack matSide = tile.getEffectiveMaterialSide();
-                ItemStack matTrim = tile.getEffectiveMaterialTrim();
+            if (matModel != null) {
+                ItemStack matSide = matModel.getMaterialSide();
+                ItemStack matTrim = matModel.getMaterialTrim();
 
                 return new CustomTrimModel(state, matSide, matTrim, false);
             }

@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.chameleon.block.properties.UnlistedModelData;
 import com.jaquadro.minecraft.chameleon.block.properties.UnlistedTileEntity;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
@@ -9,6 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
@@ -67,7 +69,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     public static final PropertyEnum VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
 
-    public static final IUnlistedProperty<TileEntityDrawers> TILE = UnlistedTileEntity.create(TileEntityDrawers.class);
+    public static final IUnlistedProperty<DrawerStateModelData> STATE_MODEL = UnlistedModelData.create(DrawerStateModelData.class);
 
     private static final AxisAlignedBB AABB_NORTH_HALF = new AxisAlignedBB(0, 0, .5, 1, 1, 1);
     private static final AxisAlignedBB AABB_SOUTH_HALF = new AxisAlignedBB(0, 0, 0, 1, 1, .5);
@@ -737,7 +739,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
 
     @Override
     protected BlockStateContainer createBlockState () {
-        return new ExtendedBlockState(this, new IProperty[] { BLOCK, VARIANT, FACING }, new IUnlistedProperty[] { TILE });
+        return new ExtendedBlockState(this, new IProperty[] { BLOCK, VARIANT, FACING }, new IUnlistedProperty[] { STATE_MODEL });
     }
 
     @Override
@@ -768,7 +770,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (tile == null)
             return state;
 
-        return ((IExtendedBlockState)state).withProperty(TILE, tile);
+        return ((IExtendedBlockState)state).withProperty(STATE_MODEL, new DrawerStateModelData(tile));
     }
 
     private BlockPlanks.EnumType translateMaterial (String materal) {

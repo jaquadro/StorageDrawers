@@ -111,7 +111,7 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
 
     @Override
     protected BlockStateContainer createBlockState () {
-        return new ExtendedBlockState(this, new IProperty[] { SLOTS, FACING }, new IUnlistedProperty[] { TILE });
+        return new ExtendedBlockState(this, new IProperty[] { SLOTS, FACING }, new IUnlistedProperty[] { STATE_MODEL });
     }
 
     @Override

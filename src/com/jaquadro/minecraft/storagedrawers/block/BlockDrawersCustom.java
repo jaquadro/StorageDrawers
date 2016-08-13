@@ -1,7 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.chameleon.block.properties.UnlistedModelData;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.block.modeldata.MaterialModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
 import net.minecraft.block.properties.IProperty;
@@ -18,12 +20,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 
 import java.util.List;
 
 public class BlockDrawersCustom extends BlockDrawers
 {
+    public static final IUnlistedProperty<MaterialModelData> MAT_MODEL = UnlistedModelData.create(MaterialModelData.class);
+
     public BlockDrawersCustom (String blockName) {
         super(blockName);
     }
@@ -69,7 +74,7 @@ public class BlockDrawersCustom extends BlockDrawers
 
     @Override
     protected BlockStateContainer createBlockState () {
-        return new ExtendedBlockState(this, new IProperty[] { BLOCK, FACING }, new IUnlistedProperty[] { TILE });
+        return new ExtendedBlockState(this, new IProperty[] { BLOCK, FACING }, new IUnlistedProperty[] { STATE_MODEL, MAT_MODEL });
     }
 
     @Override
@@ -84,5 +89,18 @@ public class BlockDrawersCustom extends BlockDrawers
 
         return state.withProperty(BLOCK, state.getValue(BLOCK))
             .withProperty(FACING, facing);
+    }
+
+    @Override
+    public IBlockState getExtendedState (IBlockState state, IBlockAccess world, BlockPos pos) {
+        state = super.getExtendedState(state, world, pos);
+        if (!(state instanceof IExtendedBlockState))
+            return state;
+
+        TileEntityDrawers tile = getTileEntity(world, pos);
+        if (tile == null)
+            return state;
+
+        return ((IExtendedBlockState)state).withProperty(MAT_MODEL, new MaterialModelData(tile));
     }
 }
