@@ -215,13 +215,18 @@ public class CustomDrawerModel extends ChamModel
             IExtendedBlockState xstate = (IExtendedBlockState)state;
             TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
 
-            if (!DrawerDecoratorModel.shouldHandleState(tile))
+            try {
+                if (!DrawerDecoratorModel.shouldHandleState(tile))
+                    return mainModel;
+
+                EnumBasicDrawer drawer = (EnumBasicDrawer) state.getValue(BlockDrawers.BLOCK);
+                EnumFacing dir = state.getValue(BlockDrawers.FACING);
+
+                return new DrawerDecoratorModel(mainModel, xstate, drawer, dir, tile);
+            }
+            catch (Throwable t) {
                 return mainModel;
-
-            EnumBasicDrawer drawer = (EnumBasicDrawer)state.getValue(BlockDrawers.BLOCK);
-            EnumFacing dir = state.getValue(BlockDrawers.FACING);
-
-            return new DrawerDecoratorModel(mainModel, xstate, drawer, dir, tile);
+            }
         }
 
         @Override

@@ -75,10 +75,15 @@ public final class CompDrawerModel
             IExtendedBlockState xstate = (IExtendedBlockState)state;
             TileEntityDrawers tile = xstate.getValue(BlockDrawers.TILE);
 
-            if (!DrawerDecoratorModel.shouldHandleState(tile))
-                return parent;
+            try {
+                if (!DrawerDecoratorModel.shouldHandleState(tile))
+                    return parent;
 
-            return new DrawerDecoratorModel(parent, xstate, drawer, dir, tile);
+                return new DrawerDecoratorModel(parent, xstate, drawer, dir, tile);
+            }
+            catch (Throwable t) {
+                return parent;
+            }
         }
 
         @Override
