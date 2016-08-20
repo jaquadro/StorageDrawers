@@ -60,10 +60,10 @@ public class DrawerItemHandler implements IItemHandler
             prevSlot = (slot >= 1 && slot < order.length) ? order[slot - 1] : -1;
         }
 
-        if (StorageDrawers.config.cache.enableItemConversion && group.isDrawerEnabled(orderedSlot)) {
+        if (StorageDrawers.config.cache.enableItemConversion && orderedSlot > 0 && group.isDrawerEnabled(orderedSlot)) {
             IDrawer drawer = group.getDrawer(orderedSlot);
             if (drawer.isEmpty()) {
-                if (!group.isDrawerEnabled(prevSlot))
+                if (prevSlot == -1 || !group.isDrawerEnabled(prevSlot))
                     return insertItemFullScan(stack, simulate);
                 else {
                     IDrawer prevDrawer = group.getDrawer(prevSlot);

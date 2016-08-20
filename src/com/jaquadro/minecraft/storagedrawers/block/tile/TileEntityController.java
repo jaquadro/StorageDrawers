@@ -589,7 +589,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     protected IDrawerGroup getGroupForDrawerSlot (int drawerSlot) {
-        if (drawerSlot >= drawerSlotList.size())
+        if (drawerSlot < 0 || drawerSlot >= drawerSlotList.size())
             return null;
 
         SlotRecord record = drawerSlotList.get(drawerSlot);

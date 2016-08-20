@@ -85,7 +85,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
     @Override
     public boolean isDrawerEnabled (int slot) {
-        if (slot > 0 && convRate[slot] == 0)
+        if (slot > 0 && slot < convRate.length && convRate[slot] == 0)
             return false;
 
         return super.isDrawerEnabled(slot);
