@@ -427,13 +427,13 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             }
             return item1;
         }
-        else if (item instanceof ArrayList) {
+        else if (item instanceof List) {
             for (int i = 1, n = list.size(); i < n; i++) {
                 if (item != list.get(i))
                     return null;
             }
 
-            ArrayList itemList = (ArrayList)item;
+            List itemList = (List)item;
             if (itemList.size() > 0) {
                 Object item1 = itemList.get(0);
                 if (item1 instanceof ItemStack)
