@@ -782,8 +782,13 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                     continue;
 
                 IDrawerInventory candidateInventory = candidateGroup.getDrawerInventory();
-                if (candidateInventory.canInsertItem(candidate.slot, stack))
-                    return false;
+                if (candidateInventory.canInsertItem(candidate.slot, stack)) {
+                    IDrawer drawer = candidateGroup.getDrawer(candidate.slot);
+                    if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
+                        return false;
+                    if (drawer.getRemainingCapacity() > 0)
+                        return false;
+                }
             }
         }
 
@@ -889,8 +894,13 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                     continue;
 
                 IDrawerInventory candidateInventory = candidateGroup.getDrawerInventory();
-                if (candidateInventory.isItemValidForSlot(candidate.slot, stack))
-                    return false;
+                if (candidateInventory.isItemValidForSlot(candidate.slot, stack)) {
+                    IDrawer drawer = candidateGroup.getDrawer(candidate.slot);
+                    if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
+                        return false;
+                    if (drawer.getRemainingCapacity() > 0)
+                        return false;
+                }
             }
         }
 
