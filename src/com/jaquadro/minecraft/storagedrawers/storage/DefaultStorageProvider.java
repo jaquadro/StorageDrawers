@@ -68,6 +68,11 @@ public class DefaultStorageProvider implements IStorageProvider
     }
 
     @Override
+    public boolean isRedstone (int slot) {
+        return false;
+    }
+
+    @Override
     public void markAmountDirty (int slot) {
         if (tile.getWorldObj().isRemote)
             return;
@@ -78,6 +83,11 @@ public class DefaultStorageProvider implements IStorageProvider
         NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, 500);
 
         StorageDrawers.network.sendToAllAround(message, targetPoint);
+
+        if (isRedstone(slot)) {
+            tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord, tile.yCoord, tile.zCoord, tile.getBlockType());
+            tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord, tile.yCoord - 1, tile.zCoord, tile.getBlockType());
+        }
     }
 
     @Override
