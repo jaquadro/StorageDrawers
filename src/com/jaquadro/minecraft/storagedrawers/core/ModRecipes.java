@@ -4,12 +4,14 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.FallbackShapedOreRecipe;
+import com.jaquadro.minecraft.storagedrawers.core.recipe.TemplateRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import minetweaker.mc1710.recipes.ShapedRecipeOre;
 import net.minecraft.block.BlockWood;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -79,8 +81,8 @@ public class ModRecipes
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.controllerSlave), "xxx", "yzy", "xwx",
                 'x', new ItemStack(Blocks.stone), 'y', Items.comparator, 'z', "drawerBasic", 'w', "ingotGold"));
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-            'x', "stickWood", 'y', "drawerBasic"));
+        //GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
+        //    'x', "stickWood", 'y', "drawerBasic"));
 
         if (config.cache.enableStorageUpgrades) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgrade, 1, 2), "xyx", "yzy", "xyx",
@@ -157,5 +159,9 @@ public class ModRecipes
                 GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.trimCustom, config.getBlockRecipeOutput("trim"), 0), "yxy", "xyx", "yxy",
                     'x', "stickWood", 'y', "plankWood"));
         }
+
+        RecipeSorter.register("StorageDrawers:UpgradeTemplate", TemplateRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
+
+        CraftingManager.getInstance().getRecipeList().add(new TemplateRecipe());
     }
 }
