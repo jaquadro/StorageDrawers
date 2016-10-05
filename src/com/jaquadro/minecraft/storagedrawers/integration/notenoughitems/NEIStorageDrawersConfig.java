@@ -25,6 +25,8 @@ public class NEIStorageDrawersConfig implements IConfigureNEI
         for (ItemStack stack : pendingHide)
             API.hideItem(stack);
 
+        API.registerRecipeHandler(new UpgradeItemRecipeHandler());
+
         pendingHide.clear();
         loaded = true;
     }
