@@ -146,12 +146,10 @@ public class OreDictRegistry
     }
 
     private String getModId (Item item) {
-        String itemId = GameData.getItemRegistry().getNameForObject(item).toString();
-        if (itemId == null)
+        if (item == null)
             return null;
 
-        UniqueMetaIdentifier uid = new UniqueMetaIdentifier(itemId);
-        return uid.getModID();
+        return item.getRegistryName().getResourceDomain();
     }
 
     private boolean isValidForEquiv (String oreName) {
