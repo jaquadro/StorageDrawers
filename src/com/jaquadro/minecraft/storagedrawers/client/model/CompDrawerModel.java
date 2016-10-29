@@ -67,16 +67,16 @@ public final class CompDrawerModel
 
         @Override
         protected IBakedModel buildModel (IBlockState state, IBakedModel parent) {
-            EnumCompDrawer drawer = (EnumCompDrawer)state.getValue(BlockCompDrawers.SLOTS);
-            EnumFacing dir = state.getValue(BlockDrawers.FACING);
-
-            if (!(state instanceof IExtendedBlockState))
-                return parent;
-
-            IExtendedBlockState xstate = (IExtendedBlockState)state;
-            DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
-
             try {
+                EnumCompDrawer drawer = (EnumCompDrawer)state.getValue(BlockCompDrawers.SLOTS);
+                EnumFacing dir = state.getValue(BlockDrawers.FACING);
+
+                if (!(state instanceof IExtendedBlockState))
+                    return parent;
+
+                IExtendedBlockState xstate = (IExtendedBlockState)state;
+                DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
+
                 if (!DrawerDecoratorModel.shouldHandleState(stateModel))
                     return parent;
 

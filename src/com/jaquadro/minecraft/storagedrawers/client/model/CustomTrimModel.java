@@ -140,7 +140,12 @@ public class CustomTrimModel extends ChamModel
 
         @Override
         protected IBakedModel buildModel (IBlockState state, IBakedModel parent) {
-            return CustomTrimModel.fromBlock(state);
+            try {
+                return CustomTrimModel.fromBlock(state);
+            }
+            catch (Throwable t) {
+                return parent;
+            }
         }
 
         @Override

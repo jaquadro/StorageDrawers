@@ -227,24 +227,29 @@ public class CustomDrawerModel extends ChamModel
 
         @Override
         protected IBakedModel buildModel (IBlockState state, IBakedModel parent) {
-            IBakedModel mainModel = CustomDrawerModel.fromBlock(state);
-            if (!(state instanceof IExtendedBlockState))
-                return mainModel;
-
-            IExtendedBlockState xstate = (IExtendedBlockState)state;
-            DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
-
             try {
-                if (!DrawerDecoratorModel.shouldHandleState(stateModel))
+                IBakedModel mainModel = CustomDrawerModel.fromBlock(state);
+                if (!(state instanceof IExtendedBlockState))
                     return mainModel;
 
-                EnumBasicDrawer drawer = (EnumBasicDrawer) state.getValue(BlockDrawers.BLOCK);
-                EnumFacing dir = state.getValue(BlockDrawers.FACING);
+                IExtendedBlockState xstate = (IExtendedBlockState) state;
+                DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
 
-                return new DrawerDecoratorModel(mainModel, xstate, drawer, dir, stateModel);
+                try {
+                    if (!DrawerDecoratorModel.shouldHandleState(stateModel))
+                        return mainModel;
+
+                    EnumBasicDrawer drawer = (EnumBasicDrawer) state.getValue(BlockDrawers.BLOCK);
+                    EnumFacing dir = state.getValue(BlockDrawers.FACING);
+
+                    return new DrawerDecoratorModel(mainModel, xstate, drawer, dir, stateModel);
+                }
+                catch (Throwable t) {
+                    return mainModel;
+                }
             }
             catch (Throwable t) {
-                return mainModel;
+                return parent;
             }
         }
 

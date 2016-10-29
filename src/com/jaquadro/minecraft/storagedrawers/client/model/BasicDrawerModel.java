@@ -81,16 +81,16 @@ public final class BasicDrawerModel
 
         @Override
         protected IBakedModel buildModel (IBlockState state, IBakedModel parent) {
-            EnumBasicDrawer drawer = (EnumBasicDrawer)state.getValue(BlockDrawers.BLOCK);
-            EnumFacing dir = state.getValue(BlockDrawers.FACING);
-
-            if (!(state instanceof IExtendedBlockState))
-                return parent;
-
-            IExtendedBlockState xstate = (IExtendedBlockState)state;
-            DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
-
             try {
+                EnumBasicDrawer drawer = state.getValue(BlockDrawers.BLOCK);
+                EnumFacing dir = state.getValue(BlockDrawers.FACING);
+
+                if (!(state instanceof IExtendedBlockState))
+                    return parent;
+
+                IExtendedBlockState xstate = (IExtendedBlockState)state;
+                DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
+
                 if (!DrawerDecoratorModel.shouldHandleState(stateModel))
                     return parent;
 
