@@ -120,11 +120,15 @@ public class CustomDrawerModel extends ChamModel
         if (stateModel == null || matModel == null)
             return new CustomDrawerModel(state, false);
 
+        ItemStack effMatFront = matModel.getEffectiveMaterialFront();
+        ItemStack effMatSide = matModel.getEffectiveMaterialSide();
+        ItemStack effMatTrim = matModel.getEffectiveMaterialTrim();
+
         ItemStack matFront = matModel.getMaterialFront();
         ItemStack matSide = matModel.getMaterialSide();
         ItemStack matTrim = matModel.getMaterialTrim();
 
-        return new CustomDrawerModel(state, matFront, matSide, matTrim, false);
+        return new CustomDrawerModel(state, effMatFront, effMatSide, effMatTrim, matFront, matSide, matTrim, false);
     }
 
     public static IBakedModel fromItem (ItemStack stack) {
@@ -144,7 +148,11 @@ public class CustomDrawerModel extends ChamModel
         if (tag.hasKey("MatT", Constants.NBT.TAG_COMPOUND))
             matTrim = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatT"));
 
-        IBakedModel model = new CustomDrawerModel(state, matFront, matSide, matTrim, true);
+        ItemStack effMatFront = matFront != null ? matFront : matSide;
+        ItemStack effMatTrim = matTrim != null ? matTrim : matSide;
+        ItemStack effMatSide = matSide;
+
+        IBakedModel model = new CustomDrawerModel(state, effMatFront, effMatSide, effMatTrim, matFront, matSide, matTrim, true);
         if (!stack.getTagCompound().hasKey("tile", Constants.NBT.TAG_COMPOUND))
             return model;
 
@@ -152,16 +160,16 @@ public class CustomDrawerModel extends ChamModel
     }
 
     private CustomDrawerModel (IBlockState state, boolean mergeLayers) {
-        this(state, null, null, null, mergeLayers);
+        this(state, null, null, null, null, null, null, mergeLayers);
     }
 
-    private CustomDrawerModel (IBlockState state, ItemStack matFront, ItemStack matSide, ItemStack matTrim, boolean mergeLayers) {
-        super(state, mergeLayers, matFront, matSide, matTrim);
+    private CustomDrawerModel (IBlockState state, ItemStack effMatFront, ItemStack effMatSide, ItemStack effMatTrim, ItemStack matFront, ItemStack matSide, ItemStack matTrim, boolean mergeLayers) {
+        super(state, mergeLayers, effMatFront, effMatSide, effMatTrim, matFront, matSide, matTrim);
     }
 
     @Override
     protected void renderMippedLayer (ChamRender renderer, IBlockState state, Object... args) {
-        EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BlockDrawers.BLOCK);
+        EnumBasicDrawer info = state.getValue(BlockDrawers.BLOCK);
         int index = iconIndex[info.getDrawerCount()];
 
         TextureAtlasSprite iconFront = IconUtil.getIconFromStack((ItemStack)args[0]);
@@ -188,12 +196,19 @@ public class CustomDrawerModel extends ChamModel
 
     @Override
     protected void renderTransLayer (ChamRender renderer, IBlockState state, Object... args) {
-        EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BlockDrawers.BLOCK);
+        EnumBasicDrawer info = state.getValue(BlockDrawers.BLOCK);
         int index = iconIndex[info.getDrawerCount()];
 
         TextureAtlasSprite iconOverlayFace = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayFace[index]);
         TextureAtlasSprite iconOverlayHandle = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayHandle[index]);
-        TextureAtlasSprite iconOverlayTrim = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayTrim[index]);
+
+        TextureAtlasSprite iconTrim = IconUtil.getIconFromStack((ItemStack)args[5]);
+        TextureAtlasSprite iconOverlayTrim;
+
+        if (iconTrim == null)
+            iconOverlayTrim = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayBoldTrim[index]);
+        else
+            iconOverlayTrim = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayTrim[index]);
 
         CommonDrawerRenderer drawerRenderer = new CommonDrawerRenderer(renderer);
         drawerRenderer.renderOverlayPass(null, state, BlockPos.ORIGIN, state.getValue(BlockDrawers.FACING), iconOverlayTrim, iconOverlayHandle, iconOverlayFace);

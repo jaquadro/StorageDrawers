@@ -10,17 +10,45 @@ public final class MaterialModelData extends ModelData
     private final ItemStack matFront;
     private final ItemStack matSide;
     private final ItemStack matTrim;
+    private final ItemStack effectiveMatFront;
+    private final ItemStack effectiveMatSide;
+    private final ItemStack effectiveMatTrim;
 
     public MaterialModelData (TileEntityDrawers tile) {
-        matFront = tile != null ? tile.getEffectiveMaterialFront() : null;
-        matSide = tile != null ? tile.getEffectiveMaterialSide() : null;
-        matTrim = tile != null ? tile.getEffectiveMaterialTrim() : null;
+        if (tile == null) {
+            matFront = null;
+            matSide = null;
+            matTrim = null;
+            effectiveMatFront = null;
+            effectiveMatSide = null;
+            effectiveMatTrim = null;
+        }
+        else {
+            matFront = tile.getMaterialFront();
+            matSide = tile.getMaterialSide();
+            matTrim = tile.getMaterialTrim();
+            effectiveMatFront = tile.getEffectiveMaterialFront();
+            effectiveMatSide = tile.getEffectiveMaterialSide();
+            effectiveMatTrim = tile.getEffectiveMaterialTrim();
+        }
     }
 
     public MaterialModelData (TileEntityTrim tile) {
         matFront = null;
-        matSide = tile != null ? tile.getEffectiveMaterialSide() : null;
-        matTrim = tile != null ? tile.getEffectiveMaterialTrim() : null;
+        effectiveMatFront = null;
+
+        if (tile == null) {
+            matSide = null;
+            matTrim = null;
+            effectiveMatSide = null;
+            effectiveMatTrim = null;
+        }
+        else {
+            matSide = tile.getMaterialSide();
+            matTrim = tile.getMaterialTrim();
+            effectiveMatSide = tile.getEffectiveMaterialSide();
+            effectiveMatTrim = tile.getEffectiveMaterialTrim();
+        }
     }
 
     public ItemStack getMaterialFront () {
@@ -33,5 +61,17 @@ public final class MaterialModelData extends ModelData
 
     public ItemStack getMaterialTrim() {
         return matTrim;
+    }
+
+    public ItemStack getEffectiveMaterialFront () {
+        return effectiveMatFront;
+    }
+
+    public ItemStack getEffectiveMaterialSide () {
+        return effectiveMatSide;
+    }
+
+    public ItemStack getEffectiveMaterialTrim() {
+        return effectiveMatTrim;
     }
 }

@@ -95,6 +95,7 @@ public class CommonDrawerRenderer
         }
         else if (blockInfo.getDrawerCount() == 4) {
             renderHelper.state.flipTexture = true;
+            renderHelper.state.autoFlipTexture = true;
             renderHelper.setRenderBounds(trimWidth, trimWidth, depth + trimDepth, unit7, unit7, 1);
             renderHelper.renderFace(ChamRender.FACE_ZNEG, world, state, pos, iconFront);
             renderHelper.setRenderBounds(trimWidth, unit9, depth + trimDepth, unit7, 1 - trimWidth, 1);
@@ -114,6 +115,7 @@ public class CommonDrawerRenderer
             renderHelper.renderFace(ChamRender.FACE_ZNEG, world, state, pos, iconTrim);
             renderHelper.setRenderBounds(unit7, unit7, depth + trimDepth, unit9, unit9, 1);
             renderHelper.renderFace(ChamRender.FACE_ZNEG, world, state, pos, iconTrim);
+            renderHelper.state.autoFlipTexture = false;
             renderHelper.state.flipTexture = false;
         }
 

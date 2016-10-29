@@ -73,8 +73,8 @@ public class CustomTrimModel extends ChamModel
             MaterialModelData matModel = xstate.getValue(BlockTrimCustom.MAT_MODEL);
 
             if (matModel != null) {
-                ItemStack matSide = matModel.getMaterialSide();
-                ItemStack matTrim = matModel.getMaterialTrim();
+                ItemStack matSide = matModel.getEffectiveMaterialSide();
+                ItemStack matTrim = matModel.getEffectiveMaterialTrim();
 
                 return new CustomTrimModel(state, matSide, matTrim, false);
             }
