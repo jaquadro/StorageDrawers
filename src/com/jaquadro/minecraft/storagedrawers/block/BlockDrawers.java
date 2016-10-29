@@ -1,7 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.chameleon.block.properties.UnlistedModelData;
-import com.jaquadro.minecraft.chameleon.block.properties.UnlistedTileEntity;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
@@ -13,14 +12,13 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.config.PlayerConfigSetting;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.item.*;
-import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
-
-import com.jaquadro.minecraft.storagedrawers.network.BlockDestroyMessage;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -34,6 +32,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -43,18 +42,13 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -62,12 +56,13 @@ import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class BlockDrawers extends BlockContainer implements IExtendedBlockClickHandler, IBlockDestroyHandler, INetworked
+public class BlockDrawers extends BlockContainer implements INetworked
 {
-    public static final PropertyEnum BLOCK = PropertyEnum.create("block", EnumBasicDrawer.class);
+    public static final PropertyEnum<EnumBasicDrawer> BLOCK = PropertyEnum.create("block", EnumBasicDrawer.class);
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-    public static final PropertyEnum VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
+    public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
 
     public static final IUnlistedProperty<DrawerStateModelData> STATE_MODEL = UnlistedModelData.create(DrawerStateModelData.class);
 
@@ -415,79 +410,44 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     @Override
-    public void onBlockDestroyed (final World world, final BlockPos pos) {
-        if (world.isRemote)
+    public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn) {
+        if (worldIn.isRemote) {
             return;
-
-        ((WorldServer)world).addScheduledTask(new Runnable()
-        {
-            @Override
-            public void run () {
-                BlockDrawers.this.onBlockDestroyedAsync(world, pos);
-            }
-        });
-    }
-
-    private void onBlockDestroyedAsync (World world, BlockPos pos) {
-        //this.onBlockHarvested(world, pos, state, player);
-        world.setBlockState(pos, net.minecraft.init.Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
-    }
-
-    @Override
-    public void onBlockClicked (World world, BlockPos pos, EntityPlayer player) {
-        if (world.isRemote) {
-            RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
-            BlockPos posb = ray.getBlockPos();
-            float hitX = (float)(ray.hitVec.xCoord - posb.getX());
-            float hitY = (float)(ray.hitVec.yCoord - posb.getY());
-            float hitZ = (float)(ray.hitVec.zCoord - posb.getZ());
-
-            StorageDrawers.network.sendToServer(new BlockClickMessage(pos.getX(), pos.getY(), pos.getZ(), ray.sideHit.ordinal(), hitX, hitY, hitZ, StorageDrawers.config.cache.invertShift));
-
-            if (StorageDrawers.config.cache.debugTrace)
-                FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockClicked with " + ray.toString());
         }
-    }
 
-    @Override
-    public void onBlockClicked (final World world, final BlockPos pos, final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ, final boolean invertShift) {
-        if (world.isRemote)
-            return;
-
-        ((WorldServer)world).addScheduledTask(new Runnable()
-        {
-            @Override
-            public void run () {
-                BlockDrawers.this.onBlockClickedAsync(world, pos, player, side, hitX, hitY, hitZ, invertShift);
-            }
-        });
-    }
-
-    private void onBlockClickedAsync (World world, BlockPos pos, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ, boolean invertShift) {
         if (StorageDrawers.config.cache.debugTrace)
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "IExtendedBlockClickHandler.onBlockClicked");
+            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "onBlockClicked");
 
-        if (!player.capabilities.isCreativeMode) {
-            PlayerInteractEvent.LeftClickBlock event = new PlayerInteractEvent.LeftClickBlock(player, pos, side, new Vec3d(hitX, hitY, hitZ));
-            MinecraftForge.EVENT_BUS.post(event);
-            if (event.isCanceled())
-                return;
-        }
-        TileEntityDrawers tileDrawers = getTileEntitySafe(world, pos);
+        RayTraceResult rayResult = net.minecraftforge.common.ForgeHooks.rayTraceEyes(playerIn, ((EntityPlayerMP) playerIn).interactionManager.getBlockReachDistance() + 1);
+        EnumFacing side = rayResult.sideHit;
+        // adjust hitVec for drawers
+        float hitX = (float)(rayResult.hitVec.xCoord - pos.getX());
+        float hitY = (float)(rayResult.hitVec.yCoord - pos.getY());
+        float hitZ = (float)(rayResult.hitVec.zCoord - pos.getZ());
+
+        TileEntityDrawers tileDrawers = getTileEntitySafe(worldIn, pos);
         if (tileDrawers.getDirection() != side.ordinal())
             return;
-
+    
         if (tileDrawers.isSealed())
             return;
-
-        if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
+    
+        if (!SecurityManager.hasAccess(playerIn.getGameProfile(), tileDrawers))
             return;
 
-        int slot = getDrawerSlot(getDrawerCount(world.getBlockState(pos)), side.ordinal(), hitX, hitY, hitZ);
+        int slot = getDrawerSlot(getDrawerCount(worldIn.getBlockState(pos)), side.ordinal(), hitX, hitY, hitZ);
         IDrawer drawer = tileDrawers.getDrawer(slot);
 
         ItemStack item;
-        if (player.isSneaking() != invertShift)
+        Map<String, PlayerConfigSetting<?>> configSettings = ConfigManager.serverPlayerConfigSettings.get(playerIn.getUniqueID());
+        boolean invertShift = false;
+        if (configSettings != null) {
+            PlayerConfigSetting<Boolean> setting = (PlayerConfigSetting<Boolean>) configSettings.get("invertShift");
+            if (setting != null) {
+                invertShift = setting.value;
+            }
+        }
+        if (playerIn.isSneaking() != invertShift)
             item = tileDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
         else
             item = tileDrawers.takeItemsFromSlot(slot, 1);
@@ -495,14 +455,14 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (StorageDrawers.config.cache.debugTrace)
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item == null) ? "  null item" : "  " + item.toString());
 
-        IBlockState state = world.getBlockState(pos);
+        IBlockState state = worldIn.getBlockState(pos);
         if (item != null && item.stackSize > 0) {
-            if (!player.inventory.addItemStackToInventory(item)) {
-                dropItemStack(world, pos.offset(side), player, item);
-                world.notifyBlockUpdate(pos, state, state, 3);
+            if (!playerIn.inventory.addItemStackToInventory(item)) {
+                dropItemStack(worldIn, pos.offset(side), playerIn, item);
+                worldIn.notifyBlockUpdate(pos, state, state, 3);
             }
-            else if (!world.isRemote)
-                world.playSound(null, pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f, ((world.rand.nextFloat() - world.rand.nextFloat()) * .7f + 1) * 2);
+            else if (!worldIn.isRemote)
+                worldIn.playSound(null, pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f, ((worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * .7f + 1) * 2);
         }
     }
 
@@ -550,16 +510,18 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     @Override
     public boolean removedByPlayer (IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
         if (player.capabilities.isCreativeMode) {
+            float blockReachDistance = 0;
             if (world.isRemote) {
-                RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
+                blockReachDistance = Minecraft.getMinecraft().playerController.getBlockReachDistance() + 1;
+            } else {
+                blockReachDistance = (float) ((EntityPlayerMP) player).interactionManager.getBlockReachDistance() + 1;
+            }
 
-                if (getDirection(world, pos) == ray.sideHit) {
-                    onBlockClicked(world, pos, player);
-                    if (StorageDrawers.config.cache.debugTrace)
-                        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockClicked with " + ray.toString());
-                } else {
-                    StorageDrawers.network.sendToServer(new BlockDestroyMessage(pos));
-                }
+            RayTraceResult rayResult = net.minecraftforge.common.ForgeHooks.rayTraceEyes(player, blockReachDistance + 1);
+            if (getDirection(world, pos) == rayResult.sideHit) {
+                onBlockClicked(world, pos, player);
+            } else {
+                world.setBlockState(pos, net.minecraft.init.Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
             }
 
             return false;

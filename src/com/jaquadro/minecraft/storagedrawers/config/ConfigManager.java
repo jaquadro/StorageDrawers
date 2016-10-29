@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
+import com.google.common.collect.Maps;
 import com.jaquadro.minecraft.storagedrawers.api.config.IAddonConfig;
 import com.jaquadro.minecraft.storagedrawers.api.config.IBlockConfig;
 import com.jaquadro.minecraft.storagedrawers.api.config.IIntegrationConfig;
@@ -13,9 +14,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ConfigManager
 {
+    public static final Map<UUID, Map<String, PlayerConfigSetting<?>>> serverPlayerConfigSettings = Maps.newHashMap();
+
     public class ConfigSection {
         public final ConfigSection parent;
         public final String name;

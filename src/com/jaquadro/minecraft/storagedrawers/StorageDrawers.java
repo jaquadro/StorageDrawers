@@ -4,11 +4,11 @@ import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
-import com.jaquadro.minecraft.storagedrawers.network.BlockClickMessage;
-import com.jaquadro.minecraft.storagedrawers.network.BlockDestroyMessage;
+import com.jaquadro.minecraft.storagedrawers.network.BoolConfigUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityRegistry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -62,8 +63,7 @@ public class StorageDrawers
         config = new ConfigManager(new File(event.getModConfigurationDirectory(), MOD_ID + ".cfg"));
 
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
-        network.registerMessage(BlockClickMessage.Handler.class, BlockClickMessage.class, 0, Side.SERVER);
-        network.registerMessage(BlockDestroyMessage.Handler.class, BlockDestroyMessage.class, 2, Side.SERVER);
+        network.registerMessage(BoolConfigUpdateMessage.Handler.class, BoolConfigUpdateMessage.class, 0, Side.SERVER);
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             network.registerMessage(CountUpdateMessage.Handler.class, CountUpdateMessage.class, 1, Side.CLIENT);
@@ -108,7 +108,16 @@ public class StorageDrawers
 
     @SubscribeEvent
     public void onConfigChanged (ConfigChangedEvent.OnConfigChangedEvent event) {
+        boolean preShiftValue = config.cache.invertShift;
         if (event.getModID().equals(MOD_ID))
             config.syncConfig();
+        if (preShiftValue != config.cache.invertShift) {   
+            StorageDrawers.network.sendToServer(new BoolConfigUpdateMessage(FMLClientHandler.instance().getClientPlayerEntity().getUniqueID().toString(), "invertShift", config.cache.invertShift));
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerDisconnect(PlayerLoggedOutEvent event) {
+        ConfigManager.serverPlayerConfigSettings.remove(event.player.getUniqueID());
     }
 }
