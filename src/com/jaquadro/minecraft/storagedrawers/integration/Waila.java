@@ -63,12 +63,12 @@ public class Waila extends IntegrationModule
 
             if (SecurityManager.hasAccess(Minecraft.getMinecraft().thePlayer.getGameProfile(), tile)) {
                 for (int i = 0; i < tile.getDrawerCount(); i++) {
-                    if (!tile.isDrawerEnabled(i))
+                    IDrawer drawer = tile.getDrawerIfEnabled(i);
+                    if (drawer == null)
                         continue;
 
                     String name = I18n.format("storageDrawers.waila.empty");
 
-                    IDrawer drawer = tile.getDrawer(i);
                     ItemStack stack = drawer.getStoredItemPrototype();
                     if (stack != null && stack.getItem() != null) {
                         String stackName = stack.getDisplayName();

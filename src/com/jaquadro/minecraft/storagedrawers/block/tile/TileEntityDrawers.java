@@ -474,10 +474,10 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         float fillRatio = 0;
 
         for (int i = 0; i < getDrawerCount(); i++) {
-            if (!isDrawerEnabled(i))
+            IDrawer drawer = getDrawerIfEnabled(i);
+            if (drawer == null)
                 continue;
 
-            IDrawer drawer = getDrawer(i);
             if (drawer.getMaxCapacity() > 0)
                 fillRatio += ((float)drawer.getStoredItemCount() / drawer.getMaxCapacity());
 
@@ -497,10 +497,10 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         float minRatio = 2;
 
         for (int i = 0; i < getDrawerCount(); i++) {
-            if (!isDrawerEnabled(i))
+            IDrawer drawer = getDrawerIfEnabled(i);
+            if (drawer == null)
                 continue;
 
-            IDrawer drawer = getDrawer(i);
             if (drawer.getMaxCapacity() > 0)
                 minRatio = Math.min(minRatio, (float)drawer.getStoredItemCount() / drawer.getMaxCapacity());
             else
@@ -519,10 +519,10 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         float maxRatio = 0;
 
         for (int i = 0; i < getDrawerCount(); i++) {
-            if (!isDrawerEnabled(i))
+            IDrawer drawer = getDrawerIfEnabled(i);
+            if (drawer == null)
                 continue;
 
-            IDrawer drawer = getDrawer(i);
             if (drawer.getMaxCapacity() > 0)
                 maxRatio = Math.max(maxRatio, (float)drawer.getStoredItemCount() / drawer.getMaxCapacity());
         }
@@ -874,10 +874,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
     @SideOnly(Side.CLIENT)
     private void clientUpdateCountAsync (int slot, int count) {
-        if (!isDrawerEnabled(slot))
-            return;
-
-        IDrawer drawer = getDrawer(slot);
+        IDrawer drawer = getDrawerIfEnabled(slot);
         if (drawer != null && drawer.getStoredItemCount() != count) {
             drawer.setStoredItemCount(count);
             IBlockState state = worldObj.getBlockState(getPos());
@@ -929,19 +926,27 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
     }
 
     @Override
+    public IDrawer getDrawerIfEnabled (int slot) {
+        if (slot < 0 || slot >= drawers.length)
+            return null;
+
+        if (isSealed())
+            return null;
+
+        if (getBlockType() instanceof BlockDrawersCustom && materialSide == null)
+            return null;
+
+        return drawers[slot];
+    }
+
+    @Override
     public IDrawerInventory getDrawerInventory () {
         return inventory;
     }
 
     @Override
     public boolean isDrawerEnabled (int slot) {
-        if (isSealed())
-            return false;
-
-        if (getBlockType() instanceof BlockDrawersCustom && materialSide == null)
-            return false;
-
-        return getDrawer(slot) != null;
+        return getDrawerIfEnabled(slot) != null;
     }
 
     @Override

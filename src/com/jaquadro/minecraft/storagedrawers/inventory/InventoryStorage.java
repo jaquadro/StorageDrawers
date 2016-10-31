@@ -67,10 +67,10 @@ public class InventoryStorage implements IInventory
     @Override
     public ItemStack getStackInSlot (int slot) {
         int drawerSlot = tile.getDrawerInventory().getDrawerSlot(slot);
-        if (!tile.isDrawerEnabled(drawerSlot))
+        IDrawer drawer = tile.getDrawerIfEnabled(drawerSlot);
+        if (drawer == null)
             return null;
 
-        IDrawer drawer = tile.getDrawer(drawerSlot);
         ItemStack stack = drawer.getStoredItemCopy();
         if (stack == null)
             return null;

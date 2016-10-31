@@ -130,11 +130,8 @@ public class InventoryUpgrade implements IInventory
         int addedStackCapacity = storageMult * tile.getDrawerCapacity();
 
         for (int i = 0; i < tile.getDrawerCount(); i++) {
-            if (!tile.isDrawerEnabled(i))
-                continue;
-
-            IDrawer drawer = tile.getDrawer(i);
-            if (drawer.isEmpty())
+            IDrawer drawer = tile.getDrawerIfEnabled(i);
+            if (drawer == null || drawer.isEmpty())
                 continue;
 
             int addedItemCapacity = addedStackCapacity * drawer.getStoredItemStackSize();

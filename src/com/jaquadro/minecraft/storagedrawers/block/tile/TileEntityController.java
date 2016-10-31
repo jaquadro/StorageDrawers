@@ -60,12 +60,14 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     protected static class SlotRecord
     {
         public BlockPos coord;
+        public IDrawerGroup group;
         public int slot;
 
         public int index;
         public int priority;
 
-        public SlotRecord (BlockPos coord, int slot) {
+        public SlotRecord (IDrawerGroup group, BlockPos coord, int slot) {
+            this.group = group;
             this.coord = coord;
             this.slot = slot;
         }
@@ -82,17 +84,17 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     };
 
     private int getSlotPriority (SlotRecord record, boolean invBased) {
-        IDrawerGroup group = getGroupForCoord(record.coord);
+        IDrawerGroup group = getGroupForSlotRecord(record);
         if (group == null) {
             return PRI_DISABLED;
         }
 
         int drawerSlot = (invBased) ? group.getDrawerInventory().getDrawerSlot(record.slot) : record.slot;
-        if (!group.isDrawerEnabled(drawerSlot)) {
+        IDrawer drawer = group.getDrawerIfEnabled(drawerSlot);
+        if (drawer == null) {
             return PRI_DISABLED;
         }
 
-        IDrawer drawer = group.getDrawer(drawerSlot);
         if (drawer.isEmpty()) {
             if ((drawer instanceof IItemLockable && ((IItemLockable) drawer).isItemLocked(LockAttribute.LOCK_EMPTY)) ||
                 (group instanceof IItemLockable && ((IItemLockable) group).isItemLocked(LockAttribute.LOCK_EMPTY))) {
@@ -135,7 +137,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     private String customName;
 
     public TileEntityController () {
-        invSlotList.add(new SlotRecord(null, 0));
+        invSlotList.add(new SlotRecord(null, null, 0));
         inventorySlots = new int[] { 0 };
         range = StorageDrawers.config.getControllerRange();
     }
@@ -274,10 +276,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             }
 
             for (int i = 0, n = record.storage.getDrawerCount(); i < n; i++) {
-                if (!record.storage.isDrawerEnabled(i))
-                    continue;
-
-                IDrawer drawer = record.storage.getDrawer(i);
+                IDrawer drawer = record.storage.getDrawerIfEnabled(i);
                 if (!(drawer instanceof IShroudable))
                     continue;
 
@@ -317,10 +316,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             }
             else {
                 for (int i = 0, n = record.storage.getDrawerCount(); i < n; i++) {
-                    if (!record.storage.isDrawerEnabled(i))
-                        continue;
-
-                    IDrawer drawer = record.storage.getDrawer(i);
+                    IDrawer drawer = record.storage.getDrawerIfEnabled(i);
                     if (!(drawer instanceof IShroudable))
                         continue;
 
@@ -399,15 +395,15 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         lookup.clear();
 
         for (SlotRecord record : records) {
-            IDrawerGroup group = getGroupForCoord(record.coord);
+            IDrawerGroup group = getGroupForSlotRecord(record);
             if (group == null)
                 continue;
 
             int drawerSlot = (invBased) ? group.getDrawerInventory().getDrawerSlot(record.slot) : record.slot;
-            if (!group.isDrawerEnabled(drawerSlot))
+            IDrawer drawer = group.getDrawerIfEnabled(drawerSlot);
+            if (drawer == null)
                 continue;
 
-            IDrawer drawer = group.getDrawer(drawerSlot);
             if (drawer.isEmpty())
                 continue;
 
@@ -486,7 +482,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             record.storage = null;
             record.invStorageSize = 1;
 
-            invSlotList.add(new SlotRecord(null, 0));
+            invSlotList.add(new SlotRecord(null, null, 0));
         }
         else if (te instanceof TileEntitySlave) {
             if (record.storage == null && record.invStorageSize == 0) {
@@ -519,10 +515,10 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             record.drawerStorageSize = group.getDrawerCount();
 
             for (int i = 0, n = record.invStorageSize; i < n; i++)
-                invSlotList.add(new SlotRecord(coord, i));
+                invSlotList.add(new SlotRecord(group, coord, i));
 
             for (int i = 0, n = record.drawerStorageSize; i < n; i++)
-                drawerSlotList.add(new SlotRecord(coord, i));
+                drawerSlotList.add(new SlotRecord(group, coord, i));
 
             drawerSize += record.drawerStorageSize;
         }
@@ -585,7 +581,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         if (record == null)
             return null;
 
-        return getGroupForCoord(record.coord);
+        return getGroupForSlotRecord(record);
     }
 
     protected IDrawerGroup getGroupForDrawerSlot (int drawerSlot) {
@@ -596,26 +592,23 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         if (record == null)
             return null;
 
-        return getGroupForCoord(record.coord);
+        return getGroupForSlotRecord(record);
     }
 
-    protected IDrawerGroup getGroupForCoord (BlockPos coord) {
-        if (coord == null || !storage.containsKey(coord))
+    protected IDrawerGroup getGroupForSlotRecord (SlotRecord record) {
+        IDrawerGroup group = record.group;
+        if (group == null)
             return null;
 
-        StorageRecord record = storage.get(coord);
-        if (record == null)
-            return null;
-
-        if (record.storage instanceof TileEntity) {
-            TileEntity tile = (TileEntity)record.storage;
-            if (tile.isInvalid() && tile != worldObj.getTileEntity(coord)) {
-                storage.remove(coord);
+        if (group instanceof TileEntity) {
+            TileEntity tile = (TileEntity)group;
+            if (tile.isInvalid() || !tile.getPos().equals(record.coord)) {
+                record.group = null;
                 return null;
             }
         }
 
-        return record.storage;
+        return group;
     }
 
     private int getLocalInvSlot (int invSlot) {
@@ -720,6 +713,19 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     @Override
+    public IDrawer getDrawerIfEnabled (int slot) {
+        IDrawerGroup group = getGroupForDrawerSlot(slot);
+        if (group == null)
+            return null;
+
+        int localSlot = getLocalDrawerSlot(slot);
+        if (!group.isDrawerEnabled(localSlot))
+            return null;
+
+        return group.getDrawer(localSlot);
+    }
+
+    @Override
     public int[] getAccessibleDrawerSlots () {
         return drawerSlots;
     }
@@ -774,7 +780,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         List<SlotRecord> primaryRecords = invPrimaryLookup.getEntries(stack.getItem(), stack.getItemDamage());
         if (primaryRecords != null && !primaryRecords.contains(record)) {
             for (SlotRecord candidate : primaryRecords) {
-                IDrawerGroup candidateGroup = getGroupForCoord(candidate.coord);
+                IDrawerGroup candidateGroup = getGroupForSlotRecord(candidate);
                 if (candidateGroup == null)
                     continue;
 
@@ -886,7 +892,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         List<SlotRecord> primaryRecords = invPrimaryLookup.getEntries(stack.getItem(), stack.getItemDamage());
         if (primaryRecords != null && !primaryRecords.contains(record)) {
             for (SlotRecord candidate : primaryRecords) {
-                IDrawerGroup candidateGroup = getGroupForCoord(candidate.coord);
+                IDrawerGroup candidateGroup = getGroupForSlotRecord(candidate);
                 if (candidateGroup == null)
                     continue;
 
@@ -980,7 +986,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                     if (iter1 != null) {
                         while (iter1.hasNext()) {
                             SlotRecord candidate = iter1.next();
-                            IDrawerGroup candidateGroup = getGroupForCoord(candidate.coord);
+                            IDrawerGroup candidateGroup = getGroupForSlotRecord(candidate);
                             if (candidateGroup == null)
                                 continue;
 
@@ -1006,10 +1012,10 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
                     for (; index2 < drawerSlots.length; index2++) {
                         int slot = drawerSlots[index2];
-                        if (!isDrawerEnabled(slot))
+                        IDrawer drawer = getDrawerIfEnabled(slot);
+                        if (drawer == null)
                             continue;
 
-                        IDrawer drawer = getDrawer(slot);
                         if (strict) {
                             ItemStack proto = drawer.getStoredItemPrototype();
                             if (proto != null && !proto.isItemEqual(stack))

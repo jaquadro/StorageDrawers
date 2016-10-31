@@ -278,6 +278,15 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
     }
 
     @Override
+    public IDrawer getDrawerIfEnabled (int slot) {
+        TileEntityController controller = getController();
+        if (controller == null || !controller.isValidSlave(getPos()))
+            return null;
+
+        return controller.getDrawerIfEnabled(slot);
+    }
+
+    @Override
     public boolean isDrawerEnabled (int slot) {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getPos()))

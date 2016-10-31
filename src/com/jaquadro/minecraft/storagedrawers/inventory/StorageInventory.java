@@ -60,14 +60,8 @@ public class StorageInventory implements IDrawerInventory
             return false;
 
         int baseSlot = getDrawerSlot(slot);
-        if (!group.isDrawerEnabled(baseSlot))
-            return false;
-
-        IDrawer drawer = group.getDrawer(baseSlot);
-        if (drawer == null)
-            return false;
-
-        if (drawer.isEmpty() && drawer instanceof IItemLockable && ((IItemLockable) drawer).isItemLocked(LockAttribute.LOCK_EMPTY))
+        IDrawer drawer = group.getDrawerIfEnabled(baseSlot);
+        if (drawer == null || drawer.isEmpty() && drawer instanceof IItemLockable && ((IItemLockable) drawer).isItemLocked(LockAttribute.LOCK_EMPTY))
             return false;
 
         return drawer.canItemBeStored(stack);
@@ -84,14 +78,8 @@ public class StorageInventory implements IDrawerInventory
             return false;
 
         int baseSlot = getDrawerSlot(slot);
-        if (!group.isDrawerEnabled(baseSlot))
-            return false;
-
-        IDrawer drawer = group.getDrawer(baseSlot);
-        if (drawer == null)
-            return false;
-
-        if (drawer.getStoredItemCount() == 0)
+        IDrawer drawer = group.getDrawerIfEnabled(baseSlot);
+        if (drawer == null || drawer.getStoredItemCount() == 0)
             return false;
 
         return drawer.canItemBeExtracted(stack);
@@ -219,10 +207,10 @@ public class StorageInventory implements IDrawerInventory
 
     private IDrawer findDrawer (ItemStack item) {
         for (int i = 0; i < group.getDrawerCount(); i++) {
-            if (!group.isDrawerEnabled(i))
+            IDrawer drawer = group.getDrawerIfEnabled(i);
+            if (drawer == null)
                 continue;
 
-            IDrawer drawer = group.getDrawer(i);
             if (drawer.canItemBeStored(item))
                 return drawer;
         }
@@ -253,10 +241,10 @@ public class StorageInventory implements IDrawerInventory
     @Override
     public void markDirty () {
         for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
-            if (!group.isDrawerEnabled(i))
+            IDrawer drawer = group.getDrawerIfEnabled(i);
+            if (drawer == null)
                 continue;
 
-            IDrawer drawer = group.getDrawer(i);
             if (drawer instanceof IInventoryAdapter)
                 ((IInventoryAdapter) drawer).syncInventory();
         }
@@ -267,10 +255,10 @@ public class StorageInventory implements IDrawerInventory
         boolean synced = false;
 
         for (int i = 0, n = group.getDrawerCount(); i < n; i++) {
-            if (!group.isDrawerEnabled(i))
+            IDrawer drawer = group.getDrawerIfEnabled(i);
+            if (drawer == null)
                 continue;
 
-            IDrawer drawer = group.getDrawer(i);
             if (drawer instanceof IInventoryAdapter)
                 synced |= ((IInventoryAdapter) drawer).syncInventoryIfNeeded();
         }

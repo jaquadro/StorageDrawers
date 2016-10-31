@@ -32,11 +32,8 @@ public class DrawerItemHandler implements IItemHandler
             slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
         }
 
-        if (!group.isDrawerEnabled(slot))
-            return null;
-
-        IDrawer drawer = group.getDrawer(slot);
-        if (drawer.isEmpty())
+        IDrawer drawer = group.getDrawerIfEnabled(slot);
+        if (drawer == null || drawer.isEmpty())
             return null;
 
         return drawer.getStoredItemCopy();
@@ -60,9 +57,9 @@ public class DrawerItemHandler implements IItemHandler
             prevSlot = (slot >= 1 && slot < order.length) ? order[slot - 1] : -1;
         }
 
-        if (StorageDrawers.config.cache.enableItemConversion && orderedSlot > 0 && group.isDrawerEnabled(orderedSlot)) {
-            IDrawer drawer = group.getDrawer(orderedSlot);
-            if (drawer.isEmpty()) {
+        if (StorageDrawers.config.cache.enableItemConversion && orderedSlot > 0) {
+            IDrawer drawer = group.getDrawerIfEnabled(orderedSlot);
+            if (drawer != null && drawer.isEmpty()) {
                 if (prevSlot == -1 || !group.isDrawerEnabled(prevSlot))
                     return insertItemFullScan(stack, simulate);
                 else {
@@ -104,11 +101,8 @@ public class DrawerItemHandler implements IItemHandler
     }
 
     private ItemStack insertItemInternal (int slot, ItemStack stack, boolean simulate) {
-        if (!group.isDrawerEnabled(slot))
-            return stack;
-
-        IDrawer drawer = group.getDrawer(slot);
-        if (!drawer.canItemBeStored(stack))
+        IDrawer drawer = group.getDrawerIfEnabled(slot);
+        if (drawer == null || !drawer.canItemBeStored(stack))
             return stack;
 
         int availableCount = drawer.isEmpty() ? drawer.getMaxCapacity(stack) : drawer.getRemainingCapacity();
@@ -147,11 +141,8 @@ public class DrawerItemHandler implements IItemHandler
             slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
         }
 
-        if (!group.isDrawerEnabled(slot))
-            return null;
-
-        IDrawer drawer = group.getDrawer(slot);
-        if (drawer.isEmpty() || drawer.getStoredItemCount() == 0)
+        IDrawer drawer = group.getDrawerIfEnabled(slot);
+        if (drawer == null || drawer.isEmpty() || drawer.getStoredItemCount() == 0)
             return null;
 
         ItemStack returnStack = drawer.getStoredItemCopy();

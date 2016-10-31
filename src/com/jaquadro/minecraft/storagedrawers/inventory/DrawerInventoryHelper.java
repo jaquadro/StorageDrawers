@@ -16,10 +16,10 @@ public class DrawerInventoryHelper
 
     public static void dropInventoryItems (World world, BlockPos pos, IDrawerGroup group) {
         for (int i = 0; i < group.getDrawerCount(); i++) {
-            if (!group.isDrawerEnabled(i))
+            IDrawer drawer = group.getDrawerIfEnabled(i);
+            if (drawer == null)
                 continue;
 
-            IDrawer drawer = group.getDrawer(i);
             while (drawer.getStoredItemCount() > 0) {
                 ItemStack stack = drawer.getStoredItemCopy();
                 if (stack == null || stack.stackSize == 0)
