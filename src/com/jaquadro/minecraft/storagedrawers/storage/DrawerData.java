@@ -20,12 +20,16 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     private ItemStack protoStack;
     private int count;
-    private int maxCount;
+
+    private boolean isUnlimited;
+    private int stackCapacity;
 
     public DrawerData (IStorageProvider provider, int slot) {
         storageProvider = provider;
         protoStack = nullStack;
         this.slot = slot;
+
+        updateAttributeCache();
 
         postInit();
     }
@@ -53,7 +57,6 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         if (itemPrototype == null) {
             setStoredItemCount(0, false, true);
             protoStack = nullStack;
-            maxCount = 0;
             inventoryStack.reset();
 
             DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
@@ -66,7 +69,6 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
         protoStack = itemPrototype.copy();
         protoStack.stackSize = 1;
-        maxCount = getMaxCapacity(protoStack);
 
         refreshOreDictMatches();
         setStoredItemCount(amount, mark, false);
@@ -114,7 +116,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Override
     public int getMaxCapacity () {
-        return maxCount;
+        return getMaxCapacity(protoStack);
     }
 
     @Override
@@ -122,10 +124,10 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         if (itemPrototype == null || itemPrototype.getItem() == null)
             return 0;
 
-        if (storageProvider.isStorageUnlimited(slot) || storageProvider.isVendingUnlimited(slot))
+        if (isUnlimited)
             return Integer.MAX_VALUE;
 
-        return itemPrototype.getItem().getItemStackLimit(itemPrototype) * storageProvider.getSlotStackCapacity(slot);
+        return itemPrototype.getItem().getItemStackLimit(itemPrototype) * stackCapacity;
     }
 
     @Override
@@ -178,7 +180,12 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Override
     public void attributeChanged () {
-        maxCount = getMaxCapacity(protoStack);
+        updateAttributeCache();
+    }
+
+    private void updateAttributeCache () {
+        isUnlimited = storageProvider.isStorageUnlimited(slot) || storageProvider.isVendingUnlimited(slot);
+        stackCapacity = storageProvider.getSlotStackCapacity(slot);
     }
 
     public void writeToNBT (NBTTagCompound tag) {
@@ -215,7 +222,6 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     @Override
     protected void reset () {
         protoStack = nullStack;
-        maxCount = 0;
         super.reset();
 
         DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
