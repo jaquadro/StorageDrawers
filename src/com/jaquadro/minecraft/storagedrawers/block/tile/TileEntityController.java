@@ -719,10 +719,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             return null;
 
         int localSlot = getLocalDrawerSlot(slot);
-        if (!group.isDrawerEnabled(localSlot))
-            return null;
-
-        return group.getDrawer(localSlot);
+        return group.getDrawerIfEnabled(localSlot);
     }
 
     @Override
