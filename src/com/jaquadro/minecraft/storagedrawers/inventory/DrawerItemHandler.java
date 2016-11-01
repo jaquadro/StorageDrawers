@@ -19,14 +19,15 @@ public class DrawerItemHandler implements IItemHandler
 
     @Override
     public int getSlots () {
-        return group.getDrawerCount() + 1;
+        return group.getDrawerCount() + 2;
     }
 
     @Override
     public ItemStack getStackInSlot (int slot) {
-        if (slot == fallbackInsertSlot())
+        if (slotIsVirtual(slot))
             return null;
 
+        slot -= 1;
         if (group instanceof IPriorityGroup) {
             int[] order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
             slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
@@ -41,13 +42,14 @@ public class DrawerItemHandler implements IItemHandler
 
     @Override
     public ItemStack insertItem (int slot, ItemStack stack, boolean simulate) {
-        if (slot == fallbackInsertSlot()) {
+        if (slotIsVirtual(slot)) {
             if (StorageDrawers.config.cache.enableItemConversion)
                 return insertItemFullScan(stack, simulate);
             else
                 return stack;
         }
 
+        slot -= 1;
         int orderedSlot = slot;
         int prevSlot = slot - 1;
 
@@ -133,9 +135,10 @@ public class DrawerItemHandler implements IItemHandler
 
     @Override
     public ItemStack extractItem (int slot, int amount, boolean simulate) {
-        if (slot == fallbackInsertSlot())
+        if (slotIsVirtual(slot))
             return null;
 
+        slot -= 1;
         if (group instanceof IPriorityGroup) {
             int[] order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
             slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
@@ -155,7 +158,7 @@ public class DrawerItemHandler implements IItemHandler
         return returnStack;
     }
 
-    private int fallbackInsertSlot () {
-        return group.getDrawerCount();
+    private boolean slotIsVirtual (int slot) {
+        return slot == 0 || slot == group.getDrawerCount() + 1;
     }
 }
