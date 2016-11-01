@@ -205,6 +205,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
             worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
             worldObj.notifyNeighborsOfStateChange(getPos().down(), getBlockType());
         }
+
+        attributeChanged();
     }
 
     public int getNextUpgradeSlot () {
@@ -222,6 +224,16 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
     public void setDrawerCapacity (int stackCount) {
         drawerCapacity = stackCount;
+    }
+
+    private void attributeChanged () {
+        for (int i = 0; i < getDrawerCount(); i++) {
+            IDrawer drawer = getDrawer(i);
+            if (drawer == null)
+                continue;
+
+            drawer.attributeChanged();
+        }
     }
 
     @Override
@@ -268,6 +280,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
             else
                 lockAttributes.add(attr);
 
+            attributeChanged();
+
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
                 worldObj.notifyBlockUpdate(getPos(), state, state, 3);
@@ -275,6 +289,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         }
         else if (!isLocked && lockAttributes != null && lockAttributes.contains(attr)) {
             lockAttributes.remove(attr);
+
+            attributeChanged();
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
@@ -293,6 +309,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
     public void setIsShrouded (boolean shrouded) {
         if (this.shrouded != shrouded) {
             this.shrouded = shrouded;
+
+            attributeChanged();
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
@@ -318,6 +336,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
         if ((this.owner != null && !this.owner.equals(owner)) || (owner != null && !owner.equals(this.owner))) {
             this.owner = owner;
+
+            attributeChanged();
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
@@ -348,6 +368,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         String newKey = (provider == null) ? null : provider.getProviderID();
         if ((newKey != null && !newKey.equals(securityKey)) || (securityKey != null && !securityKey.equals(newKey))) {
             securityKey = newKey;
+
+            attributeChanged();
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
@@ -388,6 +410,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
         if (this.taped != sealed) {
             this.taped = sealed;
+
+            attributeChanged();
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();

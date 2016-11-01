@@ -115,6 +115,11 @@ public interface IDrawer
      */
     void setExtendedData (String key, Object data);
 
+    /**
+     * Called when a component attribute of a drawer (such as lock or void) changes state.
+     */
+    void attributeChanged ();
+
     void writeToNBT (NBTTagCompound tag);
 
     void readFromNBT (NBTTagCompound tag);

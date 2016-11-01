@@ -20,6 +20,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     private ItemStack protoStack;
     private int count;
+    private int maxCount;
 
     public DrawerData (IStorageProvider provider, int slot) {
         storageProvider = provider;
@@ -52,6 +53,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         if (itemPrototype == null) {
             setStoredItemCount(0, false, true);
             protoStack = nullStack;
+            maxCount = 0;
             inventoryStack.reset();
 
             DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
@@ -64,6 +66,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
         protoStack = itemPrototype.copy();
         protoStack.stackSize = 1;
+        maxCount = getMaxCapacity(protoStack);
 
         refreshOreDictMatches();
         setStoredItemCount(amount, mark, false);
@@ -111,7 +114,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Override
     public int getMaxCapacity () {
-        return getMaxCapacity(protoStack);
+        return maxCount;
     }
 
     @Override
@@ -173,6 +176,11 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         return protoStack == nullStack;
     }
 
+    @Override
+    public void attributeChanged () {
+        maxCount = getMaxCapacity(protoStack);
+    }
+
     public void writeToNBT (NBTTagCompound tag) {
         if (protoStack.getItem() != null) {
             tag.setShort("Item", (short) Item.getIdFromItem(protoStack.getItem()));
@@ -207,6 +215,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     @Override
     protected void reset () {
         protoStack = nullStack;
+        maxCount = 0;
         super.reset();
 
         DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);

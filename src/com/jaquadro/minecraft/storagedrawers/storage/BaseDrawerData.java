@@ -120,6 +120,9 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
         auxData.put(key, data);
     }
 
+    @Override
+    public void attributeChanged () { }
+
     protected int getItemCapacityForInventoryStack () {
         return getMaxCapacity();
     }
