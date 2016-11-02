@@ -101,5 +101,10 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         public boolean isVendingUnlimited (int slot) {
             return TileEntityDrawersStandard.this.isVending();
         }
+
+        @Override
+        public boolean isRedstone (int slot) {
+            return TileEntityDrawersStandard.this.isRedstone();
+        }
     }
 }

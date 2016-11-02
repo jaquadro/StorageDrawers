@@ -71,6 +71,11 @@ public class DefaultStorageProvider implements IStorageProvider
     }
 
     @Override
+    public boolean isRedstone (int slot) {
+        return false;
+    }
+
+    @Override
     public void markAmountDirty (int slot) {
         if (tile.getWorld().isRemote)
             return;
@@ -90,6 +95,12 @@ public class DefaultStorageProvider implements IStorageProvider
         }
 
         //StorageDrawers.network.sendToAllAround(message, targetPoint);
+
+        if (isRedstone(slot)) {
+            IBlockState state = tile.getWorld().getBlockState(tile.getPos());
+            tile.getWorld().notifyBlockUpdate(tile.getPos(), state, state, 3);
+            tile.getWorld().notifyBlockUpdate(tile.getPos().down(), state, state, 3);
+        }
     }
 
     @Override

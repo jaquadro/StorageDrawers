@@ -25,6 +25,8 @@ public interface IStorageProvider
 
     public boolean isVendingUnlimited (int slot);
 
+    public boolean isRedstone (int slot);
+
     public void markAmountDirty (int slot);
 
     public void markDirty (int slot);
