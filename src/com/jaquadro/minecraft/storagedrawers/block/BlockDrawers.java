@@ -419,7 +419,11 @@ public class BlockDrawers extends BlockContainer implements INetworked
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "onBlockClicked");
 
         RayTraceResult rayResult = net.minecraftforge.common.ForgeHooks.rayTraceEyes(playerIn, ((EntityPlayerMP) playerIn).interactionManager.getBlockReachDistance() + 1);
+        if (rayResult == null)
+            return;
+
         EnumFacing side = rayResult.sideHit;
+
         // adjust hitVec for drawers
         float hitX = (float)(rayResult.hitVec.xCoord - pos.getX());
         float hitY = (float)(rayResult.hitVec.yCoord - pos.getY());
@@ -461,7 +465,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
                 dropItemStack(worldIn, pos.offset(side), playerIn, item);
                 worldIn.notifyBlockUpdate(pos, state, state, 3);
             }
-            else if (!worldIn.isRemote)
+            else
                 worldIn.playSound(null, pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f, ((worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * .7f + 1) * 2);
         }
     }
@@ -518,11 +522,10 @@ public class BlockDrawers extends BlockContainer implements INetworked
             }
 
             RayTraceResult rayResult = net.minecraftforge.common.ForgeHooks.rayTraceEyes(player, blockReachDistance + 1);
-            if (getDirection(world, pos) == rayResult.sideHit) {
-                onBlockClicked(world, pos, player);
-            } else {
+            if (rayResult == null || getDirection(world, pos) != rayResult.sideHit)
                 world.setBlockState(pos, net.minecraft.init.Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
-            }
+            else
+                onBlockClicked(world, pos, player);
 
             return false;
         }
