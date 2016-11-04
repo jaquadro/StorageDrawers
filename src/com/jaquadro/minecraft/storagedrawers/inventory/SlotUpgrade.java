@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -16,8 +17,11 @@ public class SlotUpgrade extends Slot
     public boolean canTakeStack (EntityPlayer player) {
         if (inventory instanceof InventoryUpgrade) {
             ItemStack stack = getStack();
-            if (stack != null && stack.getItem() == ModItems.upgradeStorage)
-                return ((InventoryUpgrade) inventory).canRemoveStorageUpgrade(stack.getItemDamage());
+            if (stack != null && stack.getItem() == ModItems.upgradeStorage) {
+                EnumUpgradeStorage upgrade = EnumUpgradeStorage.byMetadata(stack.getMetadata());
+                return ((InventoryUpgrade) inventory).canRemoveStorageUpgrade(upgrade.getLevel());
+            }
+
             if (player != null) {
                 if (stack != null && stack.getItem() == ModItems.upgradeCreative && !player.capabilities.isCreativeMode)
                     return false;
