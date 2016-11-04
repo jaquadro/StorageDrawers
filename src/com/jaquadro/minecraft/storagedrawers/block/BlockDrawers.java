@@ -375,6 +375,9 @@ public class BlockDrawers extends BlockContainer implements INetworked
         if (countAdded > 0 && currentStack != null)
             world.notifyBlockUpdate(pos, state, state, 3);
 
+        if (item != null && item.stackSize == 0)
+            player.setHeldItem(hand, null);
+
         return true;
     }
 
