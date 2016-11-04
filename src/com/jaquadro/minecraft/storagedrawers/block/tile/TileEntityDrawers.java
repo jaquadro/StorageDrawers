@@ -224,6 +224,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
     public void setDrawerCapacity (int stackCount) {
         drawerCapacity = stackCount;
+        attributeChanged();
     }
 
     private void attributeChanged () {
@@ -793,6 +794,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         materialTrim = null;
         if (tag.hasKey("MatT"))
             materialTrim = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatT"));
+
+        attributeChanged();
     }
 
     @Override
