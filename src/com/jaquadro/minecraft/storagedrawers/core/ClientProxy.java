@@ -45,11 +45,11 @@ public class ClientProxy extends CommonProxy
 
     @SubscribeEvent
     public void onEntityJoinWorldEvent(net.minecraftforge.event.entity.EntityJoinWorldEvent event) {
-        if (this.configSyncDone || !(event.getEntity() instanceof EntityPlayer)) {
+        if (this.configSyncDone || !event.getEntity().worldObj.isRemote || !(event.getEntity() instanceof EntityPlayer)) {
             return;
         }
 
-        if (this.configSyncDone && event.getEntity().getEntityId() == FMLClientHandler.instance().getClientPlayerEntity().getEntityId()) {
+        if (event.getEntity().getEntityId() == FMLClientHandler.instance().getClientPlayerEntity().getEntityId()) {
             StorageDrawers.network.sendToServer(new BoolConfigUpdateMessage(FMLClientHandler.instance().getClientPlayerEntity().getUniqueID().toString(), "invertShift", StorageDrawers.config.cache.invertShift));
             this.configSyncDone = true;
         }

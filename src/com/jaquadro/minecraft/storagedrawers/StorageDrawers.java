@@ -111,7 +111,7 @@ public class StorageDrawers
         boolean preShiftValue = config.cache.invertShift;
         if (event.getModID().equals(MOD_ID))
             config.syncConfig();
-        if (preShiftValue != config.cache.invertShift) {   
+        if (event.isWorldRunning() && preShiftValue != config.cache.invertShift) {
             StorageDrawers.network.sendToServer(new BoolConfigUpdateMessage(FMLClientHandler.instance().getClientPlayerEntity().getUniqueID().toString(), "invertShift", config.cache.invertShift));
         }
     }
