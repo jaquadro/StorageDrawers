@@ -276,6 +276,9 @@ public class BlockDrawers extends BlockContainer implements INetworked
 
     @Override
     public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (hand == EnumHand.OFF_HAND)
+            return false;
+
         if (world.isRemote && Minecraft.getSystemTime() == ignoreEventTime) {
             ignoreEventTime = 0;
             return false;
@@ -305,8 +308,10 @@ public class BlockDrawers extends BlockContainer implements INetworked
             }
             else if (item.getItem() == ModItems.upgradeStorage || item.getItem() == ModItems.upgradeStatus || item.getItem() == ModItems.upgradeVoid ||
                item.getItem() == ModItems.upgradeCreative || item.getItem() == ModItems.upgradeRedstone) {
-                if (!tileDrawers.addUpgrade(item) && !world.isRemote) {
-                    player.addChatMessage(new TextComponentTranslation("storagedrawers.msg.maxUpgrades"));
+                if (!tileDrawers.addUpgrade(item)) {
+                    if (!world.isRemote)
+                        player.addChatMessage(new TextComponentTranslation("storagedrawers.msg.maxUpgrades"));
+
                     return false;
                 }
 
