@@ -4,12 +4,14 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.FallbackShapedOreRecipe;
+import com.jaquadro.minecraft.storagedrawers.core.recipe.TemplateRecipe;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
@@ -105,8 +107,8 @@ public class ModRecipes
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.controllerSlave), "xxx", "yzy", "xwx",
                 'x', new ItemStack(Blocks.STONE), 'y', Items.COMPARATOR, 'z', "drawerBasic", 'w', "ingotGold"));
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
-            'x', "stickWood", 'y', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE)));
+        //GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeTemplate, 2), "xxx", "xyx", "xxx",
+        //    'x', "stickWood", 'y', new ItemStack(ModBlocks.basicDrawers, 1, OreDictionary.WILDCARD_VALUE)));
 
         if (config.cache.enableStorageUpgrades) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.IRON.getMetadata()), "xyx", "yzy", "xyx",
@@ -188,5 +190,9 @@ public class ModRecipes
                 GameRegistry.addRecipe(new ShapedOreRecipe(result, "yxy", "xyx", "yxy", 'x', "stickWood", 'y', "plankWood"));
             }
         }
+
+        RecipeSorter.register("StorageDrawers:UpgradeTemplate", TemplateRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
+
+        CraftingManager.getInstance().getRecipeList().add(new TemplateRecipe());
     }
 }
