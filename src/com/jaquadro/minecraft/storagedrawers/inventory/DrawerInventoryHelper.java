@@ -4,7 +4,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -51,7 +50,7 @@ public class DrawerInventoryHelper
 
             if (stack.hasTagCompound())
             {
-                entityitem.getEntityItem().setTagCompound((NBTTagCompound)stack.getTagCompound().copy());
+                entityitem.getEntityItem().setTagCompound(stack.getTagCompound().copy());
             }
 
             float velocity = 0.05F;

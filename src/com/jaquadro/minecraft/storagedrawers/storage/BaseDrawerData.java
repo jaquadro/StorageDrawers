@@ -1,10 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.inventory.IInventoryAdapter;
-import com.jaquadro.minecraft.storagedrawers.api.inventory.SlotType;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.inventory.InventoryStack;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -70,37 +67,6 @@ public abstract class BaseDrawerData implements IDrawer
                 oreDictMatches = null;
         }
     }
-
-    /*@Override
-    public ItemStack getInventoryStack (SlotType slotType) {
-        switch (slotType) {
-            case INPUT:
-                return inventoryStack.getInStack();
-            case OUTPUT:
-                return inventoryStack.getOutStack();
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public void setInStack (ItemStack stack) {
-        inventoryStack.setInStack(stack);
-    }
-
-    @Override
-    public void setOutStack (ItemStack stack) {
-        inventoryStack.setOutStack(stack);
-    }
-
-    @Override
-    public void syncInventory () {
-        inventoryStack.markDirty();
-    }
-
-    public boolean syncInventoryIfNeeded () {
-        return inventoryStack.markDirtyIfNeeded();
-    }*/
 
     @Override
     public Object getExtendedData (String key) {
@@ -200,34 +166,5 @@ public abstract class BaseDrawerData implements IDrawer
         }
 
         return ItemStack.areItemStackTagsEqual(stack1, stack2);
-    }
-
-    class DrawerInventoryStack extends InventoryStack
-    {
-        @Override
-        protected ItemStack getNewItemStack () {
-            return getStoredItemCopy();
-        }
-
-        @Override
-        protected int getItemStackSize () {
-            return getStoredItemStackSize();
-        }
-
-        @Override
-        protected int getItemCount () {
-            return getStoredItemCount();
-        }
-
-        @Override
-        protected int getItemCapacity () {
-            return getItemCapacityForInventoryStack();
-        }
-
-        @Override
-        protected void applyDiff (int diff) {
-            if (diff != 0)
-                setStoredItemCount(getStoredItemCount() + diff);
-        }
     }
 }

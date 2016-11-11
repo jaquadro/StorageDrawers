@@ -56,7 +56,6 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         if (itemPrototype == null) {
             setStoredItemCount(0, false, true);
             protoStack = nullStack;
-            //inventoryStack.reset();
 
             DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
@@ -71,7 +70,6 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
         refreshOreDictMatches();
         setStoredItemCount(amount, mark, false);
-        //inventoryStack.reset();
 
         DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
         MinecraftForge.EVENT_BUS.post(event);

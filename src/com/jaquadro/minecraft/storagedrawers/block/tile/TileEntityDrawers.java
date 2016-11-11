@@ -48,7 +48,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     private CustomNameData customNameData = new CustomNameData("storageDrawers.container.drawers");
 
     private IDrawer[] drawers;
-    //private IDrawerInventory inventory;
 
     private int[] autoSides = new int[] { 0, 1, 2, 3, 4, 5 };
 
@@ -88,8 +87,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         drawers = new IDrawer[drawerCount];
         for (int i = 0; i < drawerCount; i++)
             drawers[i] = createDrawer(i);
-
-        //inventory = new StorageInventory(this, getSideManager(), this);
     }
 
     public int getDirection () {
@@ -760,8 +757,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
             drawers[i].readFromNBT(slot);
         }
 
-        //inventory = new StorageInventory(this, getSideManager(), this);
-
         materialSide = null;
         if (tag.hasKey("MatS"))
             materialSide = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatS"));
@@ -846,7 +841,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     @Override
     public void markDirty () {
-        //inventory.markDirty();
         if (isRedstone() && worldObj != null) {
             worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
             worldObj.notifyNeighborsOfStateChange(getPos().down(), getBlockType());
@@ -857,12 +851,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     @Override
     public boolean markDirtyIfNeeded () {
-        //if (inventory.syncInventoryIfNeeded()) {
-            super.markDirty();
-            return true;
-        //}
-
-        //return false;
+        super.markDirty();
+        return true;
     }
 
     @SideOnly(Side.CLIENT)
@@ -945,132 +935,10 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return drawers[slot];
     }
 
-    //@Override
-    //public IDrawerInventory getDrawerInventory () {
-    //    return inventory;
-    //}
-
     @Override
     public boolean isDrawerEnabled (int slot) {
         return getDrawerIfEnabled(slot) != null;
     }
-
-    /*@Override
-    public int[] getSlotsForFace (EnumFacing side) {
-        return inventory.getSlotsForFace(side);
-    }
-
-    @Override
-    public boolean canInsertItem (int slot, ItemStack stack, EnumFacing side) {
-        if (isSealed())
-            return false;
-
-        if (isItemLocked(LockAttribute.LOCK_EMPTY) && inventory instanceof StorageInventory) {
-            IDrawer drawer = getDrawer(inventory.getDrawerSlot(slot));
-            if (drawer != null && drawer.isEmpty())
-                return false;
-        }
-
-        return inventory.canInsertItem(slot, stack, side);
-    }
-
-    @Override
-    public boolean canExtractItem (int slot, ItemStack stack, EnumFacing side) {
-        if (isSealed())
-            return false;
-
-        return inventory.canExtractItem(slot, stack, side);
-    }
-
-    @Override
-    public int getSizeInventory () {
-        return inventory.getSizeInventory();
-    }
-
-    @Override
-    public ItemStack getStackInSlot (int slot) {
-        return inventory.getStackInSlot(slot);
-    }
-
-    @Override
-    public ItemStack decrStackSize (int slot, int count) {
-        return inventory.decrStackSize(slot, count);
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot (int slot) {
-        return inventory.removeStackFromSlot(slot);
-    }
-
-    @Override
-    public void setInventorySlotContents (int slot, ItemStack stack) {
-        inventory.setInventorySlotContents(slot, stack);
-    }
-
-    public void setInventoryName (String name) {
-        customNameData.setName(name);
-    }
-
-    @Override
-    public String getName () {
-        return customNameData.getName();
-    }
-
-    @Override
-    public boolean hasCustomName () {
-        return customNameData.hasCustomName();
-    }
-
-    @Override
-    public ITextComponent getDisplayName () {
-        return customNameData.getDisplayName();
-    }
-
-    @Override
-    public int getInventoryStackLimit () {
-        return inventory.getInventoryStackLimit();
-    }
-
-    @Override
-    public boolean isUseableByPlayer (EntityPlayer player) {
-        if (worldObj.getTileEntity(getPos()) != this)
-            return false;
-
-        return player.getDistanceSq(getPos().getX() + .5, getPos().getY() + .5, getPos().getZ() + .5) <= 64;
-    }
-
-    @Override
-    public void openInventory (EntityPlayer player) {
-        inventory.openInventory(player);
-    }
-
-    @Override
-    public void closeInventory (EntityPlayer player) {
-        inventory.closeInventory(player);
-    }
-
-    @Override
-    public boolean isItemValidForSlot (int slot, ItemStack stack) {
-        return inventory.isItemValidForSlot(slot, stack);
-    }
-
-    @Override
-    public int getField (int id) {
-        return 0;
-    }
-
-    @Override
-    public void setField (int id, int value) {}
-
-    @Override
-    public int getFieldCount () {
-        return 0;
-    }
-
-    @Override
-    public void clear () {
-        inventory.clear();
-    }*/
 
     private net.minecraftforge.items.IItemHandler itemHandler;
 

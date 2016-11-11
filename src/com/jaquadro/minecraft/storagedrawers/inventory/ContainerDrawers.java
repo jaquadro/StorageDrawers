@@ -20,7 +20,6 @@ public class ContainerDrawers extends Container
     private static final int UpgradeX = 44;
     private static final int UpgradeY = 86;
 
-    //private IInventory storageInventory;
     private IInventory upgradeInventory;
 
     private List<Slot> storageSlots;
@@ -29,8 +28,6 @@ public class ContainerDrawers extends Container
     private List<Slot> hotbarSlots;
 
     public ContainerDrawers (InventoryPlayer playerInventory, TileEntityDrawers tileEntity) {
-        //storageInventory = new InventoryStorage(tileEntity, this);
-        //storageInventory = new InventoryStorage(tileEntity);
         upgradeInventory = new InventoryUpgrade(tileEntity);
 
         storageSlots = new ArrayList<Slot>();
@@ -51,10 +48,6 @@ public class ContainerDrawers extends Container
         for (int i = 0; i < 9; i++)
             hotbarSlots.add(addSlotToContainer(new Slot(playerInventory, i, InventoryX + i * 18, HotbarY)));
     }
-
-    /*public InventoryStorage getStorageInventory () {
-        return (InventoryStorage)storageInventory;
-    }*/
 
     protected int getStorageSlotX (int slot) {
         return 0;
@@ -80,7 +73,7 @@ public class ContainerDrawers extends Container
     @Override
     public ItemStack transferStackInSlot (EntityPlayer player, int slotIndex) {
         ItemStack itemStack = null;
-        Slot slot = (Slot) inventorySlots.get(slotIndex);
+        Slot slot = inventorySlots.get(slotIndex);
 
         int storageStart = storageSlots.get(0).slotNumber;
         int storageEnd = storageSlots.get(storageSlots.size() - 1).slotNumber + 1;

@@ -7,39 +7,39 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public interface ICentralInventory
 {
-    public ItemStack getStoredItemPrototype (int slot);
+    ItemStack getStoredItemPrototype (int slot);
 
-    public IDrawer setStoredItem (int slot, ItemStack itemPrototype, int amount);
+    IDrawer setStoredItem (int slot, ItemStack itemPrototype, int amount);
 
-    public int getStoredItemCount (int slot);
+    int getStoredItemCount (int slot);
 
-    public void setStoredItemCount (int slot, int amount);
+    void setStoredItemCount (int slot, int amount);
 
-    public int getMaxCapacity (int slot);
+    int getMaxCapacity (int slot);
 
-    public int getMaxCapacity (int slot, ItemStack itemPrototype);
+    int getMaxCapacity (int slot, ItemStack itemPrototype);
 
-    public int getRemainingCapacity (int slot);
+    int getRemainingCapacity (int slot);
 
-    public int getStoredItemStackSize (int slot);
+    int getStoredItemStackSize (int slot);
 
-    public int getItemCapacityForInventoryStack (int slot);
+    int getItemCapacityForInventoryStack (int slot);
 
-    public int getConversionRate (int slot);
+    int getConversionRate (int slot);
 
-    public int getStoredItemRemainder (int slot);
+    int getStoredItemRemainder (int slot);
 
-    public boolean isSmallestUnit (int slot);
+    boolean isSmallestUnit (int slot);
 
-    public boolean isVoidSlot (int slot);
+    boolean isVoidSlot (int slot);
 
-    public boolean isShroudedSlot (int slot);
+    boolean isShroudedSlot (int slot);
 
-    public boolean setIsSlotShrouded (int slot, boolean state);
+    boolean setIsSlotShrouded (int slot, boolean state);
 
-    public boolean isLocked (int slot, LockAttribute attr);
+    boolean isLocked (int slot, LockAttribute attr);
 
-    public void readFromNBT (int slot, NBTTagCompound tag);
+    void readFromNBT (int slot, NBTTagCompound tag);
 
-    public void writeToNBT (int slot, NBTTagCompound tag);
+    void writeToNBT (int slot, NBTTagCompound tag);
 }

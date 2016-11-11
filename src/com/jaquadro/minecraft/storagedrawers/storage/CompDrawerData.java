@@ -6,14 +6,11 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IItemLockable
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer, IVoidable, IShroudable, IItemLockable
 {
-    private static final ItemStack nullStack = new ItemStack((Item)null);
-
     private ICentralInventory central;
     private int slot;
 
