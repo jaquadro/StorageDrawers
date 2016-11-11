@@ -22,6 +22,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
@@ -29,7 +30,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.*;
 
-public class TileEntityController extends TileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup, ISidedInventory
+public class TileEntityController extends TileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup
 {
     private static final int PRI_VOID = 0;
     private static final int PRI_LOCKED = 1;
@@ -89,7 +90,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             return PRI_DISABLED;
         }
 
-        int drawerSlot = (invBased) ? group.getDrawerInventory().getDrawerSlot(record.slot) : record.slot;
+        int drawerSlot = record.slot;
         IDrawer drawer = group.getDrawerIfEnabled(drawerSlot);
         if (drawer == null) {
             return PRI_DISABLED;
@@ -133,8 +134,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
     private long lastClickTime;
     private UUID lastClickUUID;
-
-    private String customName;
 
     public TileEntityController () {
         invSlotList.add(new SlotRecord(null, null, 0));
@@ -399,7 +398,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             if (group == null)
                 continue;
 
-            int drawerSlot = (invBased) ? group.getDrawerInventory().getDrawerSlot(record.slot) : record.slot;
+            int drawerSlot = record.slot;
             IDrawer drawer = group.getDrawerIfEnabled(drawerSlot);
             if (drawer == null)
                 continue;
@@ -480,7 +479,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                 clearRecordInfo(coord, record);
 
             record.storage = null;
-            record.invStorageSize = 1;
 
             invSlotList.add(new SlotRecord(null, null, 0));
         }
@@ -494,7 +492,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                 clearRecordInfo(coord, record);
 
             record.storage = null;
-            record.invStorageSize = 0;
 
             ((TileEntitySlave) te).bindController(getPos());
         }
@@ -506,16 +503,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             if (record.storage != null && record.storage != group)
                 clearRecordInfo(coord, record);
 
-            IDrawerInventory inventory = group.getDrawerInventory();
-            if (inventory == null)
-                return;
-
             record.storage = group;
-            record.invStorageSize = inventory.getSizeInventory();
             record.drawerStorageSize = group.getDrawerCount();
-
-            for (int i = 0, n = record.invStorageSize; i < n; i++)
-                invSlotList.add(new SlotRecord(group, coord, i));
 
             for (int i = 0, n = record.drawerStorageSize; i < n; i++)
                 drawerSlotList.add(new SlotRecord(group, coord, i));
@@ -633,20 +622,17 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         return record.slot;
     }
 
-    private IDrawerInventory getDrawerInventory (int invSlot) {
+    /*private IDrawerInventory getDrawerInventory (int invSlot) {
         IDrawerGroup group = getGroupForInvSlot(invSlot);
         if (group == null)
             return null;
 
         return group.getDrawerInventory();
-    }
+    }*/
 
     @Override
     public void readFromNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
-
-        if (tag.hasKey("CustomName", Constants.NBT.TAG_STRING))
-            customName = tag.getString("CustomName");
 
         if (worldObj != null && !worldObj.isRemote)
             updateCache();
@@ -655,9 +641,6 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     @Override
     public NBTTagCompound writeToNBT (NBTTagCompound tag) {
         super.writeToNBT(tag);
-
-        if (hasCustomName())
-            tag.setString("CustomName", customName);
 
         return tag;
     }
@@ -684,10 +667,10 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         }
     }
 
-    @Override
+    /*@Override
     public IDrawerInventory getDrawerInventory () {
         return null;
-    }
+    }*/
 
     @Override
     public int getDrawerCount () {
@@ -731,7 +714,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     public void markDirty () {
         for (StorageRecord record : storage.values()) {
             IDrawerGroup group = record.storage;
-            if (group != null && group.getDrawerInventory() != null)
+            if (group != null)
                 group.markDirtyIfNeeded();
         }
 
@@ -744,7 +727,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
         for (StorageRecord record : storage.values()) {
             IDrawerGroup group = record.storage;
-            if (group != null && group.getDrawerInventory() != null)
+            if (group != null)
                 synced |= group.markDirtyIfNeeded();
         }
 
@@ -754,7 +737,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         return synced;
     }
 
-    @Override
+    /*@Override
     public int[] getSlotsForFace (EnumFacing side) {
         for (int aside : autoSides) {
             if (side.ordinal() == aside)
@@ -930,7 +913,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     @Override
     public void clear () {
 
-    }
+    }*/
 
     private DrawerItemHandler itemHandler = new DrawerItemHandler(this);
 

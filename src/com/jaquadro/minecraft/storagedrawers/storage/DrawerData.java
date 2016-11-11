@@ -19,7 +19,6 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     private int slot;
 
     private ItemStack protoStack;
-    private int count;
 
     private boolean isUnlimited;
     private int stackCapacity;
@@ -57,7 +56,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         if (itemPrototype == null) {
             setStoredItemCount(0, false, true);
             protoStack = nullStack;
-            inventoryStack.reset();
+            //inventoryStack.reset();
 
             DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
@@ -68,11 +67,11 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         }
 
         protoStack = itemPrototype.copy();
-        protoStack.stackSize = 1;
+        protoStack.stackSize = 0;
 
         refreshOreDictMatches();
         setStoredItemCount(amount, mark, false);
-        inventoryStack.reset();
+        //inventoryStack.reset();
 
         DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
         MinecraftForge.EVENT_BUS.post(event);
@@ -86,7 +85,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         if (protoStack != nullStack && storageProvider.isVendingUnlimited(slot))
             return Integer.MAX_VALUE;
 
-        return count;
+        return protoStack.stackSize;
     }
 
     @Override
@@ -98,9 +97,9 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         if (storageProvider.isVendingUnlimited(slot))
             return;
 
-        count = amount;
-        if (count > getMaxCapacity())
-            count = getMaxCapacity();
+        protoStack.stackSize = amount;
+        if (protoStack.stackSize > getMaxCapacity())
+            protoStack.stackSize = getMaxCapacity();
 
         if (amount == 0) {
             if (clearOnEmpty) {
@@ -192,7 +191,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         if (protoStack.getItem() != null) {
             tag.setShort("Item", (short) Item.getIdFromItem(protoStack.getItem()));
             tag.setShort("Meta", (short) protoStack.getItemDamage());
-            tag.setInteger("Count", count);
+            tag.setInteger("Count", protoStack.stackSize);
 
             if (protoStack.getTagCompound() != null)
                 tag.setTag("Tags", protoStack.getTagCompound());

@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
-
+/*
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
@@ -173,3 +173,4 @@ public class InventoryStorage implements IInventory
 
     }
 }
+*/

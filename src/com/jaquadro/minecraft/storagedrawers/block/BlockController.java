@@ -102,12 +102,6 @@ public class BlockController extends BlockContainer implements INetworked
     @Override
     public void onBlockPlacedBy (World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack itemStack) {
         world.setBlockState(pos, state.withProperty(FACING, entity.getHorizontalFacing().getOpposite()), 2);
-
-        if (itemStack.hasDisplayName()) {
-            TileEntityController tile = getTileEntity(world, pos);
-            if (tile != null)
-                tile.setInventoryName(itemStack.getDisplayName());
-        }
     }
 
     @Override

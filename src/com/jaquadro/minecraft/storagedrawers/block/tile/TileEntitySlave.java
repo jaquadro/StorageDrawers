@@ -21,7 +21,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriorityGroup, ISidedInventory
+public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriorityGroup
 {
     private BlockPos controllerCoord;
 
@@ -111,7 +111,7 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
         return controller.getAccessibleDrawerSlots();
     }
 
-    @Override
+    /*@Override
     public int[] getSlotsForFace (EnumFacing side) {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getPos()))
@@ -257,7 +257,7 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
             return;
 
         controller.clear();
-    }
+    }*/
 
     @Override
     public int getDrawerCount () {
@@ -295,14 +295,14 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
         return controller.isDrawerEnabled(slot);
     }
 
-    @Override
+    /*@Override
     public IDrawerInventory getDrawerInventory () {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getPos()))
             return null;
 
         return controller.getDrawerInventory();
-    }
+    }*/
 
     @Override
     public void markDirty () {

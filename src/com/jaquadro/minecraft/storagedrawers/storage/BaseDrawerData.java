@@ -13,23 +13,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
+public abstract class BaseDrawerData implements IDrawer
 {
-    protected InventoryStack inventoryStack;
     private List<ItemStack> oreDictMatches;
     private Map<String, Object> auxData;
 
     protected BaseDrawerData () {
-        inventoryStack = new DrawerInventoryStack();
+
     }
 
     protected void postInit () {
-        inventoryStack.init();
+
     }
 
     protected void reset () {
         oreDictMatches = null;
-        inventoryStack.reset();
     }
 
     @Override
@@ -73,7 +71,7 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
         }
     }
 
-    @Override
+    /*@Override
     public ItemStack getInventoryStack (SlotType slotType) {
         switch (slotType) {
             case INPUT:
@@ -102,7 +100,7 @@ public abstract class BaseDrawerData implements IDrawer, IInventoryAdapter
 
     public boolean syncInventoryIfNeeded () {
         return inventoryStack.markDirtyIfNeeded();
-    }
+    }*/
 
     @Override
     public Object getExtendedData (String key) {

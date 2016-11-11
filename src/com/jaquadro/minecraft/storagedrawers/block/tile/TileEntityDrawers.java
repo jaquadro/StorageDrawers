@@ -1,10 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
+import com.jaquadro.minecraft.chameleon.block.ChamLockableTileEntity;
 import com.jaquadro.minecraft.chameleon.block.tiledata.CustomNameData;
 import com.jaquadro.minecraft.chameleon.block.tiledata.LockableData;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
@@ -17,7 +16,6 @@ import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
-import com.jaquadro.minecraft.storagedrawers.inventory.StorageInventory;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
@@ -25,17 +23,14 @@ import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.ILockableContainer;
-import net.minecraft.world.LockCode;
 
+import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -47,13 +42,13 @@ import net.minecraftforge.items.IItemHandler;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends ChamTileEntity implements ILockableContainer, IDrawerGroupInteractive, ISidedInventory, IUpgradeProvider, IItemLockable, ISealable, IProtectable
+public abstract class TileEntityDrawers extends ChamLockableTileEntity implements IDrawerGroupInteractive, IUpgradeProvider, IItemLockable, ISealable, IProtectable
 {
     private LockableData lockData = new LockableData();
     private CustomNameData customNameData = new CustomNameData("storageDrawers.container.drawers");
 
     private IDrawer[] drawers;
-    private IDrawerInventory inventory;
+    //private IDrawerInventory inventory;
 
     private int[] autoSides = new int[] { 0, 1, 2, 3, 4, 5 };
 
@@ -94,7 +89,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         for (int i = 0; i < drawerCount; i++)
             drawers[i] = createDrawer(i);
 
-        inventory = new StorageInventory(this, getSideManager(), this);
+        //inventory = new StorageInventory(this, getSideManager(), this);
     }
 
     public int getDirection () {
@@ -235,22 +230,6 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
             drawer.attributeChanged();
         }
-    }
-
-    @Override
-    public void setLockCode (LockCode code) {
-        if (getOwner() == null)
-            lockData.setLockCode(code);
-    }
-
-    @Override
-    public LockCode getLockCode () {
-        return getOwner() == null ? lockData.getLockCode() : null;
-    }
-
-    @Override
-    public boolean isLocked () {
-        return getOwner() == null ? lockData.isLocked() : false;
     }
 
     @Override
@@ -781,7 +760,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
             drawers[i].readFromNBT(slot);
         }
 
-        inventory = new StorageInventory(this, getSideManager(), this);
+        //inventory = new StorageInventory(this, getSideManager(), this);
 
         materialSide = null;
         if (tag.hasKey("MatS"))
@@ -867,7 +846,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
     @Override
     public void markDirty () {
-        inventory.markDirty();
+        //inventory.markDirty();
         if (isRedstone() && worldObj != null) {
             worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
             worldObj.notifyNeighborsOfStateChange(getPos().down(), getBlockType());
@@ -878,12 +857,12 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
     @Override
     public boolean markDirtyIfNeeded () {
-        if (inventory.syncInventoryIfNeeded()) {
+        //if (inventory.syncInventoryIfNeeded()) {
             super.markDirty();
             return true;
-        }
+        //}
 
-        return false;
+        //return false;
     }
 
     @SideOnly(Side.CLIENT)
@@ -966,17 +945,17 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         return drawers[slot];
     }
 
-    @Override
-    public IDrawerInventory getDrawerInventory () {
-        return inventory;
-    }
+    //@Override
+    //public IDrawerInventory getDrawerInventory () {
+    //    return inventory;
+    //}
 
     @Override
     public boolean isDrawerEnabled (int slot) {
         return getDrawerIfEnabled(slot) != null;
     }
 
-    @Override
+    /*@Override
     public int[] getSlotsForFace (EnumFacing side) {
         return inventory.getSlotsForFace(side);
     }
@@ -1091,7 +1070,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
     @Override
     public void clear () {
         inventory.clear();
-    }
+    }*/
 
     private net.minecraftforge.items.IItemHandler itemHandler;
 

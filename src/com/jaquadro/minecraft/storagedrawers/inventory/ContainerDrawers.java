@@ -20,7 +20,7 @@ public class ContainerDrawers extends Container
     private static final int UpgradeX = 44;
     private static final int UpgradeY = 86;
 
-    private IInventory storageInventory;
+    //private IInventory storageInventory;
     private IInventory upgradeInventory;
 
     private List<Slot> storageSlots;
@@ -30,12 +30,12 @@ public class ContainerDrawers extends Container
 
     public ContainerDrawers (InventoryPlayer playerInventory, TileEntityDrawers tileEntity) {
         //storageInventory = new InventoryStorage(tileEntity, this);
-        storageInventory = new InventoryStorage(tileEntity);
+        //storageInventory = new InventoryStorage(tileEntity);
         upgradeInventory = new InventoryUpgrade(tileEntity);
 
         storageSlots = new ArrayList<Slot>();
         for (int i = 0; i < tileEntity.getDrawerCount(); i++)
-            storageSlots.add(addSlotToContainer(new SlotStorage(storageInventory, i, getStorageSlotX(i), getStorageSlotY(i))));
+            storageSlots.add(addSlotToContainer(new SlotDrawer(tileEntity, i, getStorageSlotX(i), getStorageSlotY(i))));
 
         upgradeSlots = new ArrayList<Slot>();
         for (int i = 0; i < 5; i++)
@@ -52,9 +52,9 @@ public class ContainerDrawers extends Container
             hotbarSlots.add(addSlotToContainer(new Slot(playerInventory, i, InventoryX + i * 18, HotbarY)));
     }
 
-    public InventoryStorage getStorageInventory () {
+    /*public InventoryStorage getStorageInventory () {
         return (InventoryStorage)storageInventory;
-    }
+    }*/
 
     protected int getStorageSlotX (int slot) {
         return 0;
@@ -74,7 +74,7 @@ public class ContainerDrawers extends Container
 
     @Override
     public boolean canInteractWith (EntityPlayer player) {
-        return storageInventory.isUseableByPlayer(player) || upgradeInventory.isUseableByPlayer(player);
+        return upgradeInventory.isUseableByPlayer(player);
     }
 
     @Override
