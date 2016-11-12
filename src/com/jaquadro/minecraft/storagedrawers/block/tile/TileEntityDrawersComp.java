@@ -10,7 +10,6 @@ import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
-import com.jaquadro.minecraft.storagedrawers.util.UniqueMetaIdentifier;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -21,10 +20,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.registry.GameData;
 import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
@@ -399,14 +398,12 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     }
 
     private ItemStack findMatchingModCandidate (ItemStack reference, List<ItemStack> candidates) {
-        String referenceName = GameData.getItemRegistry().getNameForObject(reference.getItem()).toString();
+        ResourceLocation referenceName = reference.getItem().getRegistryName();
         if (referenceName != null) {
-           UniqueMetaIdentifier referneceID = new UniqueMetaIdentifier(referenceName);
             for (ItemStack candidate : candidates) {
-                String matchName = GameData.getItemRegistry().getNameForObject(candidate.getItem()).toString();
+                ResourceLocation matchName = candidate.getItem().getRegistryName();
                 if (matchName != null) {
-                    UniqueMetaIdentifier matchID = new UniqueMetaIdentifier(matchName);
-                    if (referneceID.getModID().equals(matchID.getModID()))
+                    if (referenceName.getResourceDomain().equals(matchName.getResourceDomain()))
                         return candidate;
                 }
             }

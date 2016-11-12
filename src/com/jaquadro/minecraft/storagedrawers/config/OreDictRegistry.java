@@ -1,10 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
-import com.jaquadro.minecraft.storagedrawers.util.UniqueMetaIdentifier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameData;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
