@@ -364,7 +364,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             }
 
             if (match != null) {
-                setupLookup(lookup1, stack);
+                setupLookup(lookup1, output);
                 List<ItemStack> compMatches = findAllMatchingRecipes(lookup1);
                 for (ItemStack comp : compMatches) {
                     if (DrawerData.areItemsEqual(match, comp, true) && comp.stackSize == recipe.getRecipeSize()) {
