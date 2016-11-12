@@ -14,18 +14,10 @@ public class LocalIntegrationRegistry
             reg.add(new Waila());
         //if (Loader.isModLoaded("Thaumcraft") && StorageDrawers.config.cache.enableThaumcraftIntegration)
         //    reg.add(new Thaumcraft());
-
-        //if (Loader.isModLoaded("ThermalFoundation") && StorageDrawers.config.cache.enableThermalFoundationIntegration)
-        //    reg.add(new ThermalFoundation());
-
         /*if (Loader.isModLoaded("appliedenergistics2") && StorageDrawers.config.cache.enableAE2Integration)
             reg.add(new AppliedEnergistics());
         if (Loader.isModLoaded("MineTweaker3") && StorageDrawers.config.cache.enableMineTweakerIntegration)
-            reg.add(new MineTweaker());
-        if (Loader.isModLoaded("RefinedRelocation") && StorageDrawers.config.cache.enableRefinedRelocationIntegration)
-            reg.add(new RefinedRelocation());
-        if (Loader.isModLoaded("NotEnoughItems"))
-            reg.add(new NotEnoughItems());*/
+            reg.add(new MineTweaker());*/
     }
 
     private IntegrationRegistry registry;
