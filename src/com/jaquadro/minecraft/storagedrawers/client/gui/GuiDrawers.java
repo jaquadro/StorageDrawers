@@ -67,16 +67,16 @@ public class GuiDrawers extends GuiContainer
     public void drawScreen (int p_73863_1_, int p_73863_2_, float p_73863_3_) {
         RenderItem ri = setItemRender(storageItemRender);
 
-        /*if (inventorySlots instanceof ContainerDrawers) {
-            ((ContainerDrawers) inventorySlots).getStorageInventory().activeRenderItem = storageItemRender;
-        }*/
+        if (inventorySlots instanceof ContainerDrawers) {
+            ((ContainerDrawers) inventorySlots).activeRenderItem = storageItemRender;
+        }
 
         super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
 
-        /*if (inventorySlots instanceof ContainerDrawers) {
-            ((ContainerDrawers) inventorySlots).getStorageInventory().activeRenderItem = null;
+        if (inventorySlots instanceof ContainerDrawers) {
+            ((ContainerDrawers) inventorySlots).activeRenderItem = null;
             storageItemRender.overrideStack = null;
-        }*/
+        }
 
         setItemRender(ri);
     }

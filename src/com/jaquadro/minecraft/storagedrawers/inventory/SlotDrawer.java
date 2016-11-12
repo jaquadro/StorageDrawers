@@ -13,11 +13,13 @@ import javax.annotation.Nullable;
 public class SlotDrawer extends Slot
 {
     private static IInventory emptyInventory = new InventoryBasic("[Null]", true, 0);
+    private ContainerDrawers container;
     private final IDrawerGroup group;
     private final IDrawer drawer;
 
-    public SlotDrawer (IDrawerGroup drawerGroup, int index, int xPosition, int yPosition) {
+    public SlotDrawer (ContainerDrawers container, IDrawerGroup drawerGroup, int index, int xPosition, int yPosition) {
         super(emptyInventory, index, xPosition, yPosition);
+        this.container = container;
         this.group = drawerGroup;
         this.drawer = group.getDrawer(index);
     }
@@ -30,7 +32,9 @@ public class SlotDrawer extends Slot
     @Nullable
     @Override
     public ItemStack getStack () {
-        return drawer.getStoredItemCopy();
+        ItemStack stack = drawer.getStoredItemCopy();
+        container.setLastAccessedItem(stack);
+        return stack;
     }
 
     @Override

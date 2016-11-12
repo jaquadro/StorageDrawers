@@ -1,12 +1,15 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +30,17 @@ public class ContainerDrawers extends Container
     private List<Slot> playerSlots;
     private List<Slot> hotbarSlots;
 
+    @SideOnly(Side.CLIENT)
+    public StorageRenderItem activeRenderItem;
+
+    private boolean isRemote;
+
     public ContainerDrawers (InventoryPlayer playerInventory, TileEntityDrawers tileEntity) {
         upgradeInventory = new InventoryUpgrade(tileEntity);
 
         storageSlots = new ArrayList<Slot>();
         for (int i = 0; i < tileEntity.getDrawerCount(); i++)
-            storageSlots.add(addSlotToContainer(new SlotDrawer(tileEntity, i, getStorageSlotX(i), getStorageSlotY(i))));
+            storageSlots.add(addSlotToContainer(new SlotDrawer(this, tileEntity, i, getStorageSlotX(i), getStorageSlotY(i))));
 
         upgradeSlots = new ArrayList<Slot>();
         for (int i = 0; i < 5; i++)
@@ -47,6 +55,13 @@ public class ContainerDrawers extends Container
         hotbarSlots = new ArrayList<Slot>();
         for (int i = 0; i < 9; i++)
             hotbarSlots.add(addSlotToContainer(new Slot(playerInventory, i, InventoryX + i * 18, HotbarY)));
+
+        isRemote = tileEntity.getWorld().isRemote;
+    }
+
+    public void setLastAccessedItem (ItemStack stack) {
+        if (isRemote && activeRenderItem != null)
+            activeRenderItem.overrideStack = stack;
     }
 
     protected int getStorageSlotX (int slot) {

@@ -16,8 +16,11 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+@SideOnly(Side.CLIENT)
 public class StorageRenderItem extends RenderItem
 {
     private RenderItem parent;
