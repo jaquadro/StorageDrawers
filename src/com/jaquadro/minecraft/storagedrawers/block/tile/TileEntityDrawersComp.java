@@ -212,6 +212,9 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         protoStack[slot] = stack.copy();
         //centralInventory.setStoredItem(slot, stack, 0);
         //getDrawer(slot).setStoredItem(stack, 0);
+
+        if (worldObj != null && worldObj.isRemote)
+            getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
     }
 
     private ItemStack findHigherTier (ItemStack stack) {
@@ -341,7 +344,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             }
 
             if (match != null) {
-                setupLookup(lookup1, stack);
+                setupLookup(lookup1, output);
                 List<ItemStack> compMatches = findAllMatchingRecipes(lookup1);
                 for (ItemStack comp : compMatches) {
                     if (DrawerData.areItemsEqual(match, comp, true) && comp.stackSize == recipe.getRecipeSize()) {
