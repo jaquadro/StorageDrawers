@@ -15,7 +15,6 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
-import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
@@ -78,10 +77,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     }
 
     protected abstract IDrawer createDrawer (int slot);
-
-    protected ISideManager getSideManager () {
-        return new DefaultSideManager();
-    }
 
     protected void initWithDrawerCount (int drawerCount) {
         drawers = new IDrawer[drawerCount];
@@ -959,13 +954,5 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing)
     {
         return capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
-    }
-
-    private class DefaultSideManager implements ISideManager
-    {
-        @Override
-        public int[] getSlotsForSide (EnumFacing side) {
-            return autoSides;
-        }
     }
 }
