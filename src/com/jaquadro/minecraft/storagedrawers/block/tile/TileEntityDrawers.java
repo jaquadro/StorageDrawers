@@ -25,7 +25,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
@@ -47,8 +46,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     private CustomNameData customNameData = new CustomNameData("storageDrawers.container.drawers");
 
     private IDrawer[] drawers;
-
-    private int[] autoSides = new int[] { 0, 1, 2, 3, 4, 5 };
 
     private int direction;
     private String material;
