@@ -6,11 +6,10 @@ import com.jaquadro.minecraft.storagedrawers.api.registry.IRecipeHandler;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
-import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -24,6 +23,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
@@ -113,7 +114,14 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     }
 
     @Override
+    public boolean dataPacketRequiresRenderUpdate () {
+        return true;
+    }
+
+    @Override
     public void readFromPortableNBT (NBTTagCompound tag) {
+        super.readFromPortableNBT(tag);
+
         pooledCount = 0;
 
         for (int i = 0; i < getDrawerCount(); i++) {
@@ -137,16 +145,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (drawer instanceof CompDrawerData)
                 ((CompDrawerData) drawer).refresh();
         }
-
-        if (worldObj != null && !worldObj.isRemote) {
-            IBlockState state = worldObj.getBlockState(getPos());
-            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
-        }
     }
 
     @Override
     public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
-        super.writeToPortableNBT(tag);
+        tag = super.writeToPortableNBT(tag);
 
         tag.setInteger("Count", pooledCount);
 
@@ -161,11 +164,24 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     }
 
     @Override
-    public void clientUpdateCount (int slot, int count) {
+    @SideOnly(Side.CLIENT)
+    public void clientUpdateCount (final int slot, final int count) {
+        if (!worldObj.isRemote)
+            return;
+
+        Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+            @Override
+            public void run () {
+                TileEntityDrawersComp.this.clientUpdateCountAsync(slot, count);
+            }
+        });
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void clientUpdateCountAsync (int slot, int count) {
         if (count != pooledCount) {
             pooledCount = count;
-            IBlockState state = worldObj.getBlockState(getPos());
-            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+            markBlockForUpdateClient();
         }
     }
 
@@ -229,10 +245,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         //centralInventory.setStoredItem(slot, stack, 0);
         //getDrawer(slot).setStoredItem(stack, 0);
 
-        if (worldObj != null && !worldObj.isRemote) {
-            IBlockState state = worldObj.getBlockState(getPos());
-            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
-        }
+        markBlockForUpdate();
     }
 
     private ItemStack findHigherTier (ItemStack stack) {
@@ -362,7 +375,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             }
 
             if (match != null) {
-                setupLookup(lookup1, stack);
+                setupLookup(lookup1, output);
                 List<ItemStack> compMatches = findAllMatchingRecipes(lookup1);
                 for (ItemStack comp : compMatches) {
                     if (DrawerData.areItemsEqual(match, comp, true) && comp.stackSize == recipe.getRecipeSize()) {
@@ -542,20 +555,13 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                         ((CompDrawerData) drawer).refresh();
                 }
 
-                if (worldObj != null && !worldObj.isRemote) {
-                    IBlockState state = worldObj.getBlockState(getPos());
-                    worldObj.notifyBlockUpdate(getPos(), state, state, 3);
-                }
-
+                markBlockForUpdate();
                 return target;
             }
             else if (itemPrototype == null) {
                 pooledCount = 0;
                 clear();
-                if (worldObj != null && !worldObj.isRemote) {
-                    IBlockState state = worldObj.getBlockState(getPos());
-                    worldObj.notifyBlockUpdate(getPos(), state, state, 3);
-                }
+                markBlockForUpdate();
             }
 
             return getDrawer(slot);
@@ -592,10 +598,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                     markAmountDirty();
                 else {
                     clear();
-                    if (worldObj != null && !worldObj.isRemote) {
-                        IBlockState state = worldObj.getBlockState(getPos());
-                        worldObj.notifyBlockUpdate(getPos(), state, state, 3);
-                    }
+                    markBlockForUpdate();
                 }
             }
         }
@@ -757,7 +760,6 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         private int getBaseStackCapacity () {
-            ConfigManager config = StorageDrawers.config;
             return TileEntityDrawersComp.this.getEffectiveStorageMultiplier() * TileEntityDrawersComp.this.getDrawerCapacity();
         }
 
@@ -772,11 +774,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         public void markDirty (int slot) {
-            if (getWorld().isRemote)
-                return;
-
-            IBlockState state = worldObj.getBlockState(getPos());
-            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+            markBlockForUpdate();
         }
     }
 

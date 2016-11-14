@@ -12,12 +12,12 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ISealable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
-import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -31,8 +31,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
@@ -44,6 +42,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 {
     private LockableData lockData = new LockableData();
     private CustomNameData customNameData = new CustomNameData("storageDrawers.container.drawers");
+    public final ControllerData controllerData = new ControllerData();
 
     private IDrawer[] drawers;
 
@@ -70,6 +69,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     protected TileEntityDrawers (int drawerCount) {
         injectData(lockData);
         injectData(customNameData);
+        injectData(controllerData);
         initWithDrawerCount(drawerCount);
     }
 
@@ -183,8 +183,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (worldObj != null) {
             if (!worldObj.isRemote) {
                 markDirty();
-                IBlockState state = worldObj.getBlockState(getPos());
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                markBlockForUpdate();
             }
             worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
             worldObj.notifyNeighborsOfStateChange(getPos().down(), getBlockType());
@@ -242,7 +241,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (!StorageDrawers.config.cache.enableLockUpgrades)
             return;
 
-        IBlockState state = worldObj.getBlockState(getPos());
         if (isLocked && (lockAttributes == null || !lockAttributes.contains(attr))) {
             if (lockAttributes == null)
                 lockAttributes = EnumSet.of(attr);
@@ -253,7 +251,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                markBlockForUpdate();
             }
         }
         else if (!isLocked && lockAttributes != null && lockAttributes.contains(attr)) {
@@ -263,7 +261,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                markBlockForUpdate();
             }
         }
     }
@@ -283,9 +281,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-
-                IBlockState state = worldObj.getBlockState(getPos());
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                markBlockForUpdate();
             }
         }
     }
@@ -310,9 +306,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-
-                IBlockState state = worldObj.getBlockState(getPos());
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                markBlockForUpdate();
             }
         }
 
@@ -342,9 +336,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-
-                IBlockState state = worldObj.getBlockState(getPos());
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                markBlockForUpdate();
             }
         }
 
@@ -360,9 +352,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         if (worldObj != null && !worldObj.isRemote) {
             markDirty();
-
-            IBlockState state = worldObj.getBlockState(getPos());
-            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+            markBlockForUpdate();
         }
     }
 
@@ -384,9 +374,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
             if (worldObj != null && !worldObj.isRemote) {
                 markDirty();
-
-                IBlockState state = worldObj.getBlockState(getPos());
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                markBlockForUpdate();
             }
         }
 
@@ -689,6 +677,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     @Override
     protected NBTTagCompound writeToFixedNBT (NBTTagCompound tag) {
+        tag = super.writeToFixedNBT(tag);
+
         tag.setByte("Dir", (byte) direction);
 
         if (taped)
@@ -699,6 +689,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     @Override
     public void readFromPortableNBT (NBTTagCompound tag) {
+        super.readFromPortableNBT(tag);
+
         upgrades = new ItemStack[upgrades.length];
 
         material = null;
@@ -766,7 +758,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     @Override
     public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
-        super.writeToPortableNBT(tag);
+        tag = super.writeToPortableNBT(tag);
 
         tag.setInteger("Cap", drawerCapacity);
 
@@ -865,29 +857,17 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         IDrawer drawer = getDrawerIfEnabled(slot);
         if (drawer != null && drawer.getStoredItemCount() != count) {
             drawer.setStoredItemCount(count);
-            IBlockState state = worldObj.getBlockState(getPos());
 
             switch (getEffectiveStatusLevel()) {
                 case 1:
                     if (drawer.getStoredItemCount() == 0 || drawer.getRemainingCapacity() == 0)
-                        worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                        markBlockForUpdateClient();
                     break;
                 case 2:
-                    worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                    markBlockForRenderUpdate();
                     break;
             }
         }
-    }
-
-    private void syncClientCount (int slot) {
-        IMessage message = new CountUpdateMessage(getPos(), slot, drawers[slot].getStoredItemCount());
-        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
-
-        StorageDrawers.network.sendToAllAround(message, targetPoint);
-    }
-
-    public boolean canUpdate () {
-        return false;
     }
 
     @Override

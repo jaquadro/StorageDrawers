@@ -3,17 +3,19 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.ISmartGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import net.minecraft.block.state.IBlockState;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IPriorityGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPriorityGroup
+public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup
 {
     private static final int[] drawerSlots = new int[] { 0 };
 
@@ -98,6 +100,24 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
             return controller.markDirtyIfNeeded();
 
         return false;
+    }
+
+    @Override
+    public Iterable<Integer> enumerateDrawersForInsertion (ItemStack stack, boolean strict) {
+        TileEntityController controller = getController();
+        if (controller == null || !controller.isValidSlave(getPos()))
+            return null;
+
+        return controller.enumerateDrawersForInsertion(stack, strict);
+    }
+
+    @Override
+    public Iterable<Integer> enumerateDrawersForExtraction (ItemStack stack, boolean strict) {
+        TileEntityController controller = getController();
+        if (controller == null || !controller.isValidSlave(getPos()))
+            return null;
+
+        return controller.enumerateDrawersForExtraction(stack, strict);
     }
 
     private DrawerItemHandler itemHandler = new DrawerItemHandler(this);
