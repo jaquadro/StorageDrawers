@@ -1,81 +1,31 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import net.minecraft.block.state.IBlockState;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IPriorityGroup;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriorityGroup
+public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPriorityGroup
 {
-    private BlockPos controllerCoord;
+    private static final int[] drawerSlots = new int[] { 0 };
 
-    private int[] inventorySlots = new int[] { 0 };
-    private int[] drawerSlots = new int[] { 0 };
+    public final ControllerData controllerData = new ControllerData();
 
-    @Override
-    public void readFromNBT (NBTTagCompound tag) {
-        super.readFromNBT(tag);
-
-        if (tag.hasKey("Controller", Constants.NBT.TAG_COMPOUND)) {
-            NBTTagCompound ctag = tag.getCompoundTag("Controller");
-            controllerCoord = new BlockPos(ctag.getInteger("x"), ctag.getInteger("y"), ctag.getInteger("z"));
-        }
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT (NBTTagCompound tag) {
-        super.writeToNBT(tag);
-
-        if (controllerCoord != null) {
-            NBTTagCompound ctag = new NBTTagCompound();
-            ctag.setInteger("x", controllerCoord.getX());
-            ctag.setInteger("y", controllerCoord.getY());
-            ctag.setInteger("z", controllerCoord.getZ());
-            tag.setTag("Controller", ctag);
-        }
-
-        return tag;
-    }
-
-    @Override
-    public NBTTagCompound getUpdateTag () {
-        NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag);
-
-        return tag;
-    }
-
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket () {
-        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
-    }
-
-    @Override
-    public void onDataPacket (NetworkManager net, SPacketUpdateTileEntity pkt) {
-        readFromNBT(pkt.getNbtCompound());
-        if (getWorld().isRemote) {
-            IBlockState state = worldObj.getBlockState(getPos());
-            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
-        }
+    public TileEntitySlave () {
+        injectData(controllerData);
     }
 
     public void bindController (BlockPos coord) {
-        if (controllerCoord != null && controllerCoord.equals(getPos()))
-            return;
-
-        controllerCoord = coord;
-        markDirty();
+        if (controllerData.bindCoord(coord))
+            markDirty();
     }
 
     @Override
@@ -84,17 +34,7 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
     }
 
     public TileEntityController getController () {
-        if (controllerCoord == null)
-            return null;
-
-        TileEntity te = worldObj.getTileEntity(controllerCoord);
-        if (!(te instanceof TileEntityController)) {
-            controllerCoord = null;
-            markDirty();
-            return null;
-        }
-
-        return (TileEntityController)te;
+        return controllerData.getController(this);
     }
 
     @Override
