@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.storagedrawers.api.inventory.IDrawerInventory;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.ISmartGroup;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import net.minecraft.block.state.IBlockState;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IPriorityGroup;
@@ -21,7 +22,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriorityGroup, ISidedInventory
+public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup, ISidedInventory
 {
     private BlockPos controllerCoord;
 
@@ -320,6 +321,24 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
             return controller.markDirtyIfNeeded();
 
         return false;
+    }
+
+    @Override
+    public Iterable<Integer> enumerateDrawersForInsertion (ItemStack stack, boolean strict) {
+        TileEntityController controller = getController();
+        if (controller == null || !controller.isValidSlave(getPos()))
+            return null;
+
+        return controller.enumerateDrawersForInsertion(stack, strict);
+    }
+
+    @Override
+    public Iterable<Integer> enumerateDrawersForExtraction (ItemStack stack, boolean strict) {
+        TileEntityController controller = getController();
+        if (controller == null || !controller.isValidSlave(getPos()))
+            return null;
+
+        return controller.enumerateDrawersForExtraction(stack, strict);
     }
 
     private DrawerItemHandler itemHandler = new DrawerItemHandler(this);
