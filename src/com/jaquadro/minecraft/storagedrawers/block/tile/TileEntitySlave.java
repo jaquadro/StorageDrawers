@@ -15,6 +15,8 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 
+import java.util.ArrayList;
+
 public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup, ISidedInventory
 {
     private BlockCoord controllerCoord;
@@ -261,7 +263,7 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
     public Iterable<Integer> enumerateDrawersForInsertion (ItemStack stack, boolean strict) {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(selfCoord))
-            return null;
+            return new ArrayList<Integer>();
 
         return controller.enumerateDrawersForInsertion(stack, strict);
     }
@@ -270,7 +272,7 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
     public Iterable<Integer> enumerateDrawersForExtraction (ItemStack stack, boolean strict) {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(selfCoord))
-            return null;
+            return new ArrayList<Integer>();
 
         return controller.enumerateDrawersForExtraction(stack, strict);
     }
