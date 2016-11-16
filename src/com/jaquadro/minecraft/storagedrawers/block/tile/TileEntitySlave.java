@@ -22,6 +22,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 
+import java.util.ArrayList;
+
 public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup, ISidedInventory
 {
     private BlockPos controllerCoord;
@@ -327,7 +329,7 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
     public Iterable<Integer> enumerateDrawersForInsertion (ItemStack stack, boolean strict) {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getPos()))
-            return null;
+            return new ArrayList<Integer>();
 
         return controller.enumerateDrawersForInsertion(stack, strict);
     }
@@ -336,7 +338,7 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
     public Iterable<Integer> enumerateDrawersForExtraction (ItemStack stack, boolean strict) {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getPos()))
-            return null;
+            return new ArrayList<Integer>();
 
         return controller.enumerateDrawersForExtraction(stack, strict);
     }
