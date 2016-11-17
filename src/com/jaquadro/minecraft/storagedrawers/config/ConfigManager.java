@@ -65,28 +65,25 @@ public class ConfigManager
         public boolean enableCreativeUpgrades;
         public boolean enableShroudUpgrades;
         public boolean enablePersonalUpgrades;
-        //public boolean enableSortingUpgrades;
         public boolean enableRedstoneUpgrades;
         public boolean renderStorageUpgrades;
         public boolean enableDrawerUI;
-        public String itemRenderType;
         public boolean creativeTabVanillaWoods;
         public boolean enableSidedInput;
         public boolean enableSidedOutput;
         public boolean enableItemConversion;
         public boolean enableWailaIntegration;
-        public boolean enableAE2Integration;
-        public boolean enableThaumcraftIntegration;
-        public boolean enableMineTweakerIntegration;
         public boolean enableRefinedRelocationIntegration;
-        public boolean enableThermalExpansionIntegration;
-        public boolean enableThermalFoundationIntegration;
         public boolean enableTape;
         public boolean enableFallbackRecipes;
         public boolean enableFramedDrawers;
         public boolean invertShift;
         public boolean debugTrace;
         public boolean stackRemainderWaila;
+        public boolean registerExtraCompRules;
+        public String[] compRules;
+        public String[] oreWhitelist;
+        public String[] oreBlacklist;
 
         public int level2Mult;
         public int level3Mult;
@@ -189,11 +186,11 @@ public class ConfigManager
     public final ConfigCache cache;
 
     public final List<ConfigSection> sections = new ArrayList<ConfigSection>();
-    public final ConfigSection sectionGeneral = new ConfigSection(sections, "general", "general");
     public final ConfigSection sectionIntegration = new ConfigSection(sections, "integration", "integration");
     public final ConfigSection sectionBlocks = new ConfigSection(sections, "blocks", "blocks");
     public final ConfigSection sectionUpgrades = new ConfigSection(sections, "upgrades", "upgrades");
     public final ConfigSection sectionAddons = new ConfigSection(sections, "addons", "addons");
+    public final ConfigSection sectionRegistries = new ConfigSection(sections, "registries", "registries");
 
     public final List<ConfigSection> blockSections = new ArrayList<ConfigSection>();
     public final ConfigSection sectionBlocksFullDrawers1x1 = new ConfigSection(blockSections, sectionBlocks, "fulldrawers1", "blocks.fullDrawers1");
@@ -212,8 +209,6 @@ public class ConfigManager
     public IBlockConfig blockConfig = new BlockConfig();
     public IIntegrationConfig integrationConfig = new IntegrationConfig();
     public IUserConfig userConfig = new UserConfig();
-
-    //private Property itemRenderType;
 
     public ConfigManager (File file) {
         config = new Configuration(file);
@@ -238,10 +233,8 @@ public class ConfigManager
         cache.enableCreativeUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableCreativeUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableCreativeUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableShroudUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableShroudUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableShroudUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enablePersonalUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enablePersonalUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enablePersonalUpgrades").setRequiresMcRestart(true).getBoolean();
-        //cache.enableSortingUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableSortingUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableSortingUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableRedstoneUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableRedstoneUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableRedstoneUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableTape = config.get(Configuration.CATEGORY_GENERAL, "enableTape", true).setLanguageKey(LANG_PREFIX + "prop.enableTape").setRequiresMcRestart(true).getBoolean();
-        cache.itemRenderType = config.get(Configuration.CATEGORY_GENERAL, "itemRenderType", "fast", null, new String[]{"fancy", "fast"}).setLanguageKey(LANG_PREFIX + "prop.itemRenderType").getString();cache.creativeTabVanillaWoods = config.get(Configuration.CATEGORY_GENERAL, "creativeTabVanillaWoods", true).setLanguageKey(LANG_PREFIX + "prop.creativeTabVanillaWoods").getBoolean();
         cache.enableDrawerUI = config.get(Configuration.CATEGORY_GENERAL, "enableDrawerUI", true).setLanguageKey(LANG_PREFIX + "prop.enableDrawerUI").getBoolean();
         cache.enableSidedInput = config.get(Configuration.CATEGORY_GENERAL, "enableSidedInput", true).setLanguageKey(LANG_PREFIX + "prop.enableSidedInput").getBoolean();
         cache.enableSidedOutput = config.get(Configuration.CATEGORY_GENERAL, "enableSidedOutput", true).setLanguageKey(LANG_PREFIX + "prop.enableSidedOutput").getBoolean();
@@ -258,11 +251,13 @@ public class ConfigManager
 
         //cache.enableAE2Integration = config.get(sectionIntegration.getQualifiedName(), "enableAE2", true).setLanguageKey(LANG_PREFIX + "integration.enableAE2").setRequiresMcRestart(true).getBoolean();
         cache.enableWailaIntegration = config.get(sectionIntegration.getQualifiedName(), "enableWaila", true).setLanguageKey(LANG_PREFIX + "integration.enableWaila").setRequiresMcRestart(true).getBoolean();
-        cache.enableThaumcraftIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThaumcraft", true).setLanguageKey(LANG_PREFIX + "integration.enableThaumcraft").setRequiresMcRestart(true).getBoolean();
+        //cache.enableThaumcraftIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThaumcraft", true).setLanguageKey(LANG_PREFIX + "integration.enableThaumcraft").setRequiresMcRestart(true).getBoolean();
         //cache.enableMineTweakerIntegration = config.get(sectionIntegration.getQualifiedName(), "enableMineTweaker", true).setLanguageKey(LANG_PREFIX + "integration.enableMineTweaker").setRequiresMcRestart(true).getBoolean();
-        //cache.enableRefinedRelocationIntegration = config.get(sectionIntegration.getQualifiedName(), "enableRefinedRelocation", true).setLanguageKey(LANG_PREFIX + "integration.enableRefinedRelocation").setRequiresMcRestart(true).getBoolean();
-        //cache.enableThermalExpansionIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThermalExpansion", true).setLanguageKey(LANG_PREFIX + "integration.enableThermalExpansion").setRequiresMcRestart(true).getBoolean();
-        //cache.enableThermalFoundationIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThermalFoundation", true).setLanguageKey(LANG_PREFIX + "integration.enableThermalFoundation").setRequiresMcRestart(true).getBoolean();
+
+        cache.compRules = config.getStringList("compactingRules", sectionRegistries.getQualifiedName(), new String[] { "minecraft:clay, minecraft:clay_ball, 4" }, "Items should be in form domain:item or domain:item:meta.", null, LANG_PREFIX + "registries.compRules");
+        cache.oreWhitelist = config.getStringList("oreWhitelist", sectionRegistries.getQualifiedName(), new String[0], "List of ore dictionary names to whitelist for substitution.", null, LANG_PREFIX + "registries.oreWhitelist");
+        cache.oreBlacklist = config.getStringList("oreBlacklist", sectionRegistries.getQualifiedName(), new String[0], "List of ore dictionary names to blacklist for substitution.", null, LANG_PREFIX + "registries.oreBlacklist");
+        cache.registerExtraCompRules = config.get(sectionRegistries.getQualifiedName(), "registerExtraCompactingRules", true).setLanguageKey(LANG_PREFIX + "registries.registerExtraCompRules").setRequiresWorldRestart(true).getBoolean();
 
         config.get(sectionBlocksFullDrawers1x1.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksFullDrawers1x1.getQualifiedName(), "baseStorage", 32).setLanguageKey(LANG_PREFIX + "prop.baseStorage").setRequiresWorldRestart(true);
