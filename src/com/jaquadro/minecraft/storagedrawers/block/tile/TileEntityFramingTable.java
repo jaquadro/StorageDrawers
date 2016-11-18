@@ -103,7 +103,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
 
     @Override
     public boolean isUseableByPlayer (EntityPlayer player) {
-        if (worldObj.getTileEntity(pos) != this)
+        if (getWorld().getTileEntity(pos) != this)
             return false;
 
         return player.getDistanceSq(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5) <= 64;
@@ -228,14 +228,14 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     @Override
     public void onDataPacket (NetworkManager net, SPacketUpdateTileEntity pkt) {
         readFromNBT(pkt.getNbtCompound());
-        //getWorldObj().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
+        //getgetWorld()().func_147479_m(xCoord, yCoord, zCoord); // markBlockForRenderUpdate
     }
 
     private static final AxisAlignedBB ZERO_EXTENT_AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
     @Override
     public AxisAlignedBB getRenderBoundingBox () {
-        IBlockState state = worldObj.getBlockState(pos);
+        IBlockState state = getWorld().getBlockState(pos);
         if (!(state.getBlock() instanceof BlockFramingTable) || !state.getValue(BlockFramingTable.RIGHT_SIDE))
             return ZERO_EXTENT_AABB;
 

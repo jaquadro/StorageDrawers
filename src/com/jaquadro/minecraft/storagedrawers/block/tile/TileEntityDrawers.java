@@ -180,13 +180,13 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         upgrades[slot] = upgrade;
 
-        if (worldObj != null) {
-            if (!worldObj.isRemote) {
+        if (getWorld() != null) {
+            if (!getWorld().isRemote) {
                 markDirty();
                 markBlockForUpdate();
             }
-            worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
-            worldObj.notifyNeighborsOfStateChange(getPos().down(), getBlockType());
+            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType());
+            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType());
         }
 
         attributeChanged();
@@ -249,7 +249,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
             attributeChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
                 markBlockForUpdate();
             }
@@ -259,7 +259,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
             attributeChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
                 markBlockForUpdate();
             }
@@ -279,7 +279,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
             attributeChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
                 markBlockForUpdate();
             }
@@ -304,7 +304,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
             attributeChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
                 markBlockForUpdate();
             }
@@ -334,7 +334,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
             attributeChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
                 markBlockForUpdate();
             }
@@ -350,7 +350,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     public void setShouldHideUpgrades (boolean hide) {
         hideUpgrade = hide;
 
-        if (worldObj != null && !worldObj.isRemote) {
+        if (getWorld() != null && !getWorld().isRemote) {
             markDirty();
             markBlockForUpdate();
         }
@@ -372,7 +372,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
             attributeChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
                 markBlockForUpdate();
             }
@@ -565,9 +565,9 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         IDrawer drawer = drawers[slot];
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.stackSize);
 
-        if (isRedstone() && worldObj != null) {
-            worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
-            worldObj.notifyNeighborsOfStateChange(getPos().down(), getBlockType());
+        if (isRedstone() && getWorld() != null) {
+            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType());
+            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType());
         }
 
         // TODO: Reset empty drawer in subclasses
@@ -644,12 +644,12 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     public int interactPutItemsIntoSlot (int slot, EntityPlayer player) {
         int count = 0;
-        if (worldObj.getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID))
+        if (getWorld().getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID))
             count = interactPutCurrentInventoryIntoSlot(slot, player);
         else
             count = interactPutCurrentItemIntoSlot(slot, player);
 
-        lastClickTime = worldObj.getTotalWorldTime();
+        lastClickTime = getWorld().getTotalWorldTime();
         lastClickUUID = player.getPersistentID();
 
         return count;
@@ -825,9 +825,9 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     @Override
     public void markDirty () {
-        if (isRedstone() && worldObj != null) {
-            worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
-            worldObj.notifyNeighborsOfStateChange(getPos().down(), getBlockType());
+        if (isRedstone() && getWorld() != null) {
+            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType());
+            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType());
         }
 
         super.markDirty();
@@ -841,7 +841,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     @SideOnly(Side.CLIENT)
     public void clientUpdateCount (final int slot, final int count) {
-        if (!worldObj.isRemote)
+        if (!getWorld().isRemote)
             return;
 
         Minecraft.getMinecraft().addScheduledTask(new Runnable() {

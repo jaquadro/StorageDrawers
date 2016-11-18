@@ -132,7 +132,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     public int interactPutItemsIntoInventory (EntityPlayer player) {
-        boolean dumpInventory = worldObj.getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID);
+        boolean dumpInventory = getWorld().getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID);
         int count = 0;
 
         if (!dumpInventory) {
@@ -157,7 +157,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                 StorageDrawers.proxy.updatePlayerInventory(player);
         }
 
-        lastClickTime = worldObj.getTotalWorldTime();
+        lastClickTime = getWorld().getTotalWorldTime();
         lastClickUUID = player.getPersistentID();
 
         return count;
@@ -340,7 +340,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         rebuildPrimaryLookup(drawerPrimaryLookup, drawerSlotList);
 
         if (preCount != drawerSlots.length && (preCount == 0 || drawerSlots.length == 0)) {
-            if (!worldObj.isRemote)
+            if (!getWorld().isRemote)
                 markDirty();
         }
     }
@@ -487,7 +487,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             if (depth > range)
                 continue;
 
-            Block block = worldObj.getBlockState(coord).getBlock();
+            Block block = getWorld().getBlockState(coord).getBlock();
             if (!(block instanceof INetworked))
                 continue;
 
@@ -498,10 +498,10 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             }
 
             if (block instanceof BlockSlave) {
-                ((BlockSlave) block).getTileEntitySafe(worldObj, coord);
+                ((BlockSlave) block).getTileEntitySafe(getWorld(), coord);
             }
 
-            updateRecordInfo(coord, record, worldObj.getTileEntity(coord));
+            updateRecordInfo(coord, record, getWorld().getTileEntity(coord));
             record.mark = true;
             record.distance = depth;
 
@@ -560,7 +560,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     public void readFromNBT (NBTTagCompound tag) {
         super.readFromNBT(tag);
 
-        if (worldObj != null && !worldObj.isRemote)
+        if (getWorld() != null && !getWorld().isRemote)
             updateCache();
     }
 
@@ -587,9 +587,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     @Override
     public void onDataPacket (NetworkManager net, SPacketUpdateTileEntity pkt) {
         readFromNBT(pkt.getNbtCompound());
-        if (worldObj.isRemote) {
-            IBlockState state = worldObj.getBlockState(getPos());
-            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+        if (getWorld().isRemote) {
+            IBlockState state = getWorld().getBlockState(getPos());
+            getWorld().notifyBlockUpdate(getPos(), state, state, 3);
         }
     }
 
