@@ -17,13 +17,13 @@ public class SlotUpgrade extends Slot
     public boolean canTakeStack (EntityPlayer player) {
         if (inventory instanceof InventoryUpgrade) {
             ItemStack stack = getStack();
-            if (stack != null && stack.getItem() == ModItems.upgradeStorage) {
+            if (stack.getItem() == ModItems.upgradeStorage) {
                 EnumUpgradeStorage upgrade = EnumUpgradeStorage.byMetadata(stack.getMetadata());
                 return ((InventoryUpgrade) inventory).canRemoveStorageUpgrade(upgrade.getLevel());
             }
 
             if (player != null) {
-                if (stack != null && stack.getItem() == ModItems.upgradeCreative && !player.capabilities.isCreativeMode)
+                if (stack.getItem() == ModItems.upgradeCreative && !player.capabilities.isCreativeMode)
                     return false;
             }
         }

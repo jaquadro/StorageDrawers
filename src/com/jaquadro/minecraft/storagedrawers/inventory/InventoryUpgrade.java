@@ -11,6 +11,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
+import javax.annotation.Nonnull;
+
 public class InventoryUpgrade implements IInventory
 {
     private static final int upgradeCapacity = 5;
@@ -27,11 +29,18 @@ public class InventoryUpgrade implements IInventory
     }
 
     @Override
+    public boolean func_191420_l () {
+        return false;
+    }
+
+    @Override
+    @Nonnull
     public ItemStack getStackInSlot (int slot) {
         return tile.getUpgrade(slot);
     }
 
     @Override
+    @Nonnull
     public ItemStack decrStackSize (int slot, int count) {
         ItemStack stack = tile.getUpgrade(slot);
         if (count > 0)
@@ -41,12 +50,13 @@ public class InventoryUpgrade implements IInventory
     }
 
     @Override
+    @Nonnull
     public ItemStack removeStackFromSlot (int slot) {
-        return null;
+        return ItemStack.field_190927_a;
     }
 
     @Override
-    public void setInventorySlotContents (int slot, ItemStack item) {
+    public void setInventorySlotContents (int slot, @Nonnull ItemStack item) {
         //if (item != null && item.stackSize > getInventoryStackLimit())
         //    item.stackSize = getInventoryStackLimit();
 
@@ -79,7 +89,7 @@ public class InventoryUpgrade implements IInventory
     }
 
     @Override
-    public boolean isUseableByPlayer (EntityPlayer player) {
+    public boolean isUsableByPlayer (EntityPlayer player) {
         return true;
     }
 
@@ -90,7 +100,7 @@ public class InventoryUpgrade implements IInventory
     public void closeInventory (EntityPlayer player) { }
 
     @Override
-    public boolean isItemValidForSlot (int slot, ItemStack item) {
+    public boolean isItemValidForSlot (int slot, @Nonnull ItemStack item) {
         if (item.getItem() instanceof ItemUpgradeStorage || item.getItem() instanceof ItemUpgradeStatus || item.getItem() instanceof ItemUpgradeVoid)
             return true;
 

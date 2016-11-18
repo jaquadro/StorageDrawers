@@ -8,7 +8,7 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 public class SlotDrawer extends Slot
 {
@@ -25,12 +25,12 @@ public class SlotDrawer extends Slot
     }
 
     @Override
-    public boolean isItemValid (@Nullable ItemStack stack) {
-        return stack != null && drawer.canItemBeStored(stack);
+    public boolean isItemValid (@Nonnull ItemStack stack) {
+        return stack.func_190926_b() && drawer.canItemBeStored(stack);
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public ItemStack getStack () {
         ItemStack stack = drawer.getStoredItemCopy();
         container.setLastAccessedItem(stack);
@@ -38,17 +38,17 @@ public class SlotDrawer extends Slot
     }
 
     @Override
-    public void putStack (@Nullable ItemStack stack) {
-        drawer.setStoredItemRedir(stack, stack != null ? stack.stackSize : 0);
+    public void putStack (@Nonnull ItemStack stack) {
+        drawer.setStoredItemRedir(stack, stack.func_190916_E());
     }
 
     @Override
-    public void onSlotChange (ItemStack p_75220_1_, ItemStack p_75220_2_) {
+    public void onSlotChange (@Nonnull ItemStack p_75220_1_, @Nonnull ItemStack p_75220_2_) {
 
     }
 
     @Override
-    public int getItemStackLimit (ItemStack stack) {
+    public int getItemStackLimit (@Nonnull ItemStack stack) {
         return Math.min(stack.getMaxStackSize(), drawer.getRemainingCapacity());
     }
 
@@ -58,12 +58,13 @@ public class SlotDrawer extends Slot
     }
 
     @Override
+    @Nonnull
     public ItemStack decrStackSize (int amount) {
         int withdraw = Math.min(amount, drawer.getStoredItemCount());
         drawer.setStoredItemCount(withdraw);
 
         ItemStack stack = drawer.getStoredItemCopy();
-        stack.stackSize = withdraw;
+        stack.func_190920_e(withdraw);
         return stack;
     }
 

@@ -13,6 +13,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ItemCustomDrawers extends ItemDrawers
@@ -59,11 +60,12 @@ public class ItemCustomDrawers extends ItemDrawers
         return true;
     }
 
+    @Nonnull
     public static ItemStack makeItemStack (IBlockState blockState, int count, ItemStack matSide, ItemStack matTrim, ItemStack matFront) {
         Block block = blockState.getBlock();
         Item item = Item.getItemFromBlock(block);
         if (!(item instanceof ItemCustomDrawers))
-            return null;
+            return ItemStack.field_190927_a;
 
         NBTTagCompound tag = new NBTTagCompound();
 

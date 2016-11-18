@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,21 +39,21 @@ public class ContainerDrawers extends Container
     public ContainerDrawers (InventoryPlayer playerInventory, TileEntityDrawers tileEntity) {
         upgradeInventory = new InventoryUpgrade(tileEntity);
 
-        storageSlots = new ArrayList<Slot>();
+        storageSlots = new ArrayList<>();
         for (int i = 0; i < tileEntity.getDrawerCount(); i++)
             storageSlots.add(addSlotToContainer(new SlotDrawer(this, tileEntity, i, getStorageSlotX(i), getStorageSlotY(i))));
 
-        upgradeSlots = new ArrayList<Slot>();
+        upgradeSlots = new ArrayList<>();
         for (int i = 0; i < 5; i++)
             upgradeSlots.add(addSlotToContainer(new SlotUpgrade(upgradeInventory, i, UpgradeX + i * 18, UpgradeY)));
 
-        playerSlots = new ArrayList<Slot>();
+        playerSlots = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++)
                 playerSlots.add(addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, InventoryX + j * 18, InventoryY + i * 18)));
         }
 
-        hotbarSlots = new ArrayList<Slot>();
+        hotbarSlots = new ArrayList<>();
         for (int i = 0; i < 9; i++)
             hotbarSlots.add(addSlotToContainer(new Slot(playerInventory, i, InventoryX + i * 18, HotbarY)));
 
@@ -82,12 +83,13 @@ public class ContainerDrawers extends Container
 
     @Override
     public boolean canInteractWith (EntityPlayer player) {
-        return upgradeInventory.isUseableByPlayer(player);
+        return upgradeInventory.isUsableByPlayer(player);
     }
 
     @Override
+    @Nonnull
     public ItemStack transferStackInSlot (EntityPlayer player, int slotIndex) {
-        ItemStack itemStack = null;
+        ItemStack itemStack = ItemStack.field_190927_a;
         Slot slot = inventorySlots.get(slotIndex);
 
         int storageStart = storageSlots.get(0).slotNumber;
@@ -107,12 +109,12 @@ public class ContainerDrawers extends Container
             // Try merge upgrades to inventory
             if (slotIndex >= upgradeStart && slotIndex < upgradeEnd) {
                 if (!mergeItemStack(slotStack, inventoryStart, hotbarEnd, true))
-                    return null;
+                    return ItemStack.field_190927_a;
                 slot.onSlotChange(slotStack, itemStack);
             }
 
             // Try merge inventory to upgrades
-            else if (slotIndex >= inventoryStart && slotIndex < hotbarEnd && slotStack != null) {
+            else if (slotIndex >= inventoryStart && slotIndex < hotbarEnd && slotStack.func_190926_b()) {
                 /*if (slotStack.getItem() == ModItems.upgrade || slotStack.getItem() == ModItems.upgradeStatus || slotStack.getItem() == ModItems.upgradeVoid) {
                     ItemStack slotStack1 = slotStack.copy();
                     slotStack1.stackSize = 1;
@@ -120,9 +122,9 @@ public class ContainerDrawers extends Container
                     if (!mergeItemStack(slotStack1, upgradeStart, upgradeEnd, false)) {
                         if (slotIndex >= inventoryStart && slotIndex < hotbarEnd) {
                             if (!mergeItemStack(slotStack, hotbarStart, hotbarEnd, false))
-                                return null;
+                                return ItemStack.field_190927_a;
                         } else if (slotIndex >= hotbarStart && slotIndex < hotbarEnd && !mergeItemStack(slotStack, inventoryStart, hotbarStart, false))
-                            return null;
+                            return ItemStack.field_190927_a;
                     }
                     else {
                         slotStack.stackSize--;
@@ -131,24 +133,25 @@ public class ContainerDrawers extends Container
 
                 if (slotIndex >= inventoryStart && slotIndex < hotbarStart) {
                     if (!mergeItemStack(slotStack, hotbarStart, hotbarEnd, false))
-                        return null;
+                        return ItemStack.field_190927_a;
                 } else if (slotIndex >= hotbarStart && slotIndex < hotbarEnd && !mergeItemStack(slotStack, inventoryStart, hotbarStart, false))
-                    return null;
+                    return ItemStack.field_190927_a;
             }
 
             // Try merge stack into inventory
             else if (!mergeItemStack(slotStack, inventoryStart, hotbarEnd, false))
-                return null;
+                return ItemStack.field_190927_a;
 
-            if (slotStack.stackSize == 0)
-                slot.putStack(null);
+            int slotStackSize = slotStack.func_190916_E();
+            if (slotStackSize == 0)
+                slot.putStack(ItemStack.field_190927_a);
             else
                 slot.onSlotChanged();
 
-            if (slotStack.stackSize == itemStack.stackSize)
-                return null;
+            if (slotStackSize == itemStack.func_190916_E())
+                return ItemStack.field_190927_a;
 
-            slot.onPickupFromSlot(player, slotStack);
+            slot.func_190901_a(player, slotStack);
         }
 
         return itemStack;

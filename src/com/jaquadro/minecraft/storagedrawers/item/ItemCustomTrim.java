@@ -12,6 +12,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class ItemCustomTrim extends ItemBlock
 {
     public ItemCustomTrim (Block block) {
@@ -34,10 +36,11 @@ public class ItemCustomTrim extends ItemBlock
         return true;
     }
 
+    @Nonnull
     public static ItemStack makeItemStack (Block block, int count, ItemStack matSide, ItemStack matTrim) {
         Item item = Item.getItemFromBlock(block);
         if (!(item instanceof ItemCustomTrim))
-            return null;
+            return ItemStack.field_190927_a;
 
         NBTTagCompound tag = new NBTTagCompound();
 

@@ -35,6 +35,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import java.util.EnumSet;
 import java.util.UUID;
 
@@ -156,8 +157,9 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return 5;
     }
 
+    @Nonnull
     public ItemStack getUpgrade (int slot) {
-        slot = MathHelper.clamp_int(slot, 0, 4);
+        slot = MathHelper.clamp(slot, 0, 4);
         return upgrades[slot];
     }
 

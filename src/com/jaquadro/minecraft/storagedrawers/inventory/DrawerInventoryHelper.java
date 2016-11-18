@@ -21,7 +21,7 @@ public class DrawerInventoryHelper
 
             while (drawer.getStoredItemCount() > 0) {
                 ItemStack stack = drawer.getStoredItemCopy();
-                if (stack == null || stack.stackSize == 0)
+                if (stack.func_190916_E() == 0)
                     break;
 
                 spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
@@ -36,22 +36,21 @@ public class DrawerInventoryHelper
         float yOff = RANDOM.nextFloat() * 0.8F + 0.1F;
         float zOff = RANDOM.nextFloat() * 0.8F + 0.1F;
 
-        while (stack.stackSize > 0)
+        int stackSize = stack.func_190916_E();
+        while (stackSize > 0)
         {
             int dropAmt = RANDOM.nextInt(21) + 10;
 
-            if (dropAmt > stack.stackSize)
-            {
-                dropAmt = stack.stackSize;
-            }
+            if (dropAmt > stackSize)
+                dropAmt = stackSize;
 
-            stack.stackSize -= dropAmt;
+            stack.func_190918_g(dropAmt);
+            stackSize = stack.func_190916_E();
+
             EntityItem entityitem = new EntityItem(world, x + (double)xOff, y + (double)yOff, z + (double)zOff, new ItemStack(stack.getItem(), dropAmt, stack.getMetadata()));
 
             if (stack.hasTagCompound())
-            {
                 entityitem.getEntityItem().setTagCompound(stack.getTagCompound().copy());
-            }
 
             float velocity = 0.05F;
             entityitem.motionX = RANDOM.nextGaussian() * (double)velocity;

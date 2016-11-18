@@ -6,6 +6,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
+import javax.annotation.Nonnull;
+
 public class SlotCraftResult extends Slot
 {
     private final IInventory inputInventory;
@@ -22,39 +24,43 @@ public class SlotCraftResult extends Slot
     }
 
     @Override
-    public boolean isItemValid (ItemStack stack) {
+    public boolean isItemValid (@Nonnull ItemStack stack) {
         return false;
     }
 
     @Override
+    @Nonnull
     public ItemStack decrStackSize (int count) {
         if (getHasStack())
-            amountCrafted += Math.min(count, getStack().stackSize);
+            amountCrafted += Math.min(count, getStack().func_190916_E());
 
         return super.decrStackSize(count);
     }
 
     @Override
-    protected void onCrafting (ItemStack stack, int count) {
+    protected void onCrafting (@Nonnull ItemStack stack, int count) {
         amountCrafted += count;
         super.onCrafting(stack, count);
     }
 
     @Override
-    protected void onCrafting (ItemStack stack) {
-        stack.onCrafting(player.worldObj, player, amountCrafted);
+    protected void onCrafting (@Nonnull ItemStack stack) {
+        stack.onCrafting(player.getEntityWorld(), player, amountCrafted);
         amountCrafted = 0;
     }
 
     @Override
-    public void onPickupFromSlot (EntityPlayer player, ItemStack stack) {
+    @Nonnull
+    public ItemStack func_190901_a (EntityPlayer player, @Nonnull ItemStack stack) {
         FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack, inputInventory);
         onCrafting(stack);
 
         for (int slot : inputSlots) {
             ItemStack itemTarget = inputInventory.getStackInSlot(slot);
-            if (itemTarget != null)
+            if (itemTarget.func_190926_b())
                 inputInventory.decrStackSize(slot, 1);
         }
+
+        return stack;
     }
 }
