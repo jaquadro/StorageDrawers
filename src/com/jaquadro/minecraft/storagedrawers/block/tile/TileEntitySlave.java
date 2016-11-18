@@ -106,7 +106,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
     public Iterable<Integer> enumerateDrawersForInsertion (ItemStack stack, boolean strict) {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getPos()))
-            return null;
+            return new ArrayList<Integer>();
 
         return controller.enumerateDrawersForInsertion(stack, strict);
     }
@@ -115,7 +115,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
     public Iterable<Integer> enumerateDrawersForExtraction (ItemStack stack, boolean strict) {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getPos()))
-            return null;
+            return new ArrayList<Integer>();
 
         return controller.enumerateDrawersForExtraction(stack, strict);
     }

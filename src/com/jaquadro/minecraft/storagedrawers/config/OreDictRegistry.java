@@ -60,6 +60,16 @@ public class OreDictRegistry
 
         for (String item : new String[] { "nuggetIron", "nuggetGold", "nuggetAluminum", "nuggetAluminium", "nuggetTin", "nuggetCopper", "nuggetLead", "nuggetSilver", "nuggetPlatinum", "nuggetNickel" })
             addWhitelist(item);
+
+        for (String item : StorageDrawers.config.cache.oreBlacklist) {
+            removeWhitelist(item);
+            addBlacklist(item);
+        }
+
+        for (String item : StorageDrawers.config.cache.oreWhitelist) {
+            removeBlacklist(item);
+            addWhitelist(item);
+        }
     }
 
     public boolean addBlacklist (String entry) {
