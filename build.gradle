@@ -2,7 +2,6 @@ buildscript {
     repositories {
         jcenter()
         maven {
-            name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
     }
@@ -13,13 +12,6 @@ buildscript {
 
 apply plugin: 'idea'
 apply plugin: 'net.minecraftforge.gradle.forge'
-
-/*
-// for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
-plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.2"
-}
-*/
 
 version = "${minecraft_version}-${mod_version}"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -34,6 +26,11 @@ idea {
   }
 }
 
+sourceCompatibility = targetCompatibility = "1.8"
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.8"
+}
+
 minecraft {
     version = forge_version
     runDir = "runtime"
@@ -43,7 +40,7 @@ minecraft {
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not allways work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20161106"
+    mappings = "snapshot_20161116"
 
     replaceIn "StorageDrawers.java"
     replace '@VERSION@', project.version
@@ -75,8 +72,8 @@ repositories {
 dependencies {
     compile project(":..:Chameleon-${minecraft_base_version}")
 
-    compileOnly "mezz.jei:jei_${minecraft_version}:${jei_version}:api"
-    runtime "mezz.jei:jei_${minecraft_version}:${jei_version}"
+    //compileOnly "mezz.jei:jei_${minecraft_version}:${jei_version}:api"
+    //runtime "mezz.jei:jei_${minecraft_version}:${jei_version}"
 }
 
 processResources

@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
-
+/*
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.TemplateRecipe;
 import com.jaquadro.minecraft.storagedrawers.integration.jei.TemplateRecipeHandler;
@@ -80,3 +80,4 @@ public class JustEnoughItems extends IntegrationModule implements IModPlugin
         }
     }
 }
+*/

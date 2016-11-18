@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.integration.jei;
-
+/*
 import com.jaquadro.minecraft.storagedrawers.core.recipe.TemplateRecipe;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -38,3 +38,4 @@ public class TemplateRecipeHandler implements IRecipeHandler<TemplateRecipe>
         return recipe.getRecipeOutput() != null;
     }
 }
+*/
