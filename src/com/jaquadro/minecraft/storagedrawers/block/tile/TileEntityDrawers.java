@@ -196,14 +196,14 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
         upgrades[slot] = upgrade;
 
-        if (worldObj != null) {
-            if (!worldObj.isRemote) {
+        if (getWorld() != null) {
+            if (!getWorld().isRemote) {
                 markDirty();
-                IBlockState state = worldObj.getBlockState(getPos());
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                IBlockState state = getWorld().getBlockState(getPos());
+                getWorld().notifyBlockUpdate(getPos(), state, state, 3);
             }
-            worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
-            worldObj.notifyNeighborsOfStateChange(getPos().down(), getBlockType());
+            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType());
+            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType());
         }
 
         attributeChanged();
@@ -274,7 +274,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         if (!StorageDrawers.config.cache.enableLockUpgrades)
             return;
 
-        IBlockState state = worldObj.getBlockState(getPos());
+        IBlockState state = getWorld().getBlockState(getPos());
         if (isLocked && (lockAttributes == null || !lockAttributes.contains(attr))) {
             if (lockAttributes == null)
                 lockAttributes = EnumSet.of(attr);
@@ -283,9 +283,9 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
             attributeChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                getWorld().notifyBlockUpdate(getPos(), state, state, 3);
             }
         }
         else if (!isLocked && lockAttributes != null && lockAttributes.contains(attr)) {
@@ -293,9 +293,9 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
             attributeChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                getWorld().notifyBlockUpdate(getPos(), state, state, 3);
             }
         }
     }
@@ -313,11 +313,11 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
             attributeChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
 
-                IBlockState state = worldObj.getBlockState(getPos());
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                IBlockState state = getWorld().getBlockState(getPos());
+                getWorld().notifyBlockUpdate(getPos(), state, state, 3);
             }
         }
     }
@@ -340,11 +340,11 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
             attributeChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
 
-                IBlockState state = worldObj.getBlockState(getPos());
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                IBlockState state = getWorld().getBlockState(getPos());
+                getWorld().notifyBlockUpdate(getPos(), state, state, 3);
             }
         }
 
@@ -372,11 +372,11 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
             attributeChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
 
-                IBlockState state = worldObj.getBlockState(getPos());
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                IBlockState state = getWorld().getBlockState(getPos());
+                getWorld().notifyBlockUpdate(getPos(), state, state, 3);
             }
         }
 
@@ -390,11 +390,11 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
     public void setShouldHideUpgrades (boolean hide) {
         hideUpgrade = hide;
 
-        if (worldObj != null && !worldObj.isRemote) {
+        if (getWorld() != null && !getWorld().isRemote) {
             markDirty();
 
-            IBlockState state = worldObj.getBlockState(getPos());
-            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+            IBlockState state = getWorld().getBlockState(getPos());
+            getWorld().notifyBlockUpdate(getPos(), state, state, 3);
         }
     }
 
@@ -414,11 +414,11 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
             attributeChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
 
-                IBlockState state = worldObj.getBlockState(getPos());
-                worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                IBlockState state = getWorld().getBlockState(getPos());
+                getWorld().notifyBlockUpdate(getPos(), state, state, 3);
             }
         }
 
@@ -609,9 +609,9 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         IDrawer drawer = drawers[slot];
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.stackSize);
 
-        if (isRedstone() && worldObj != null) {
-            worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
-            worldObj.notifyNeighborsOfStateChange(getPos().down(), getBlockType());
+        if (isRedstone() && getWorld() != null) {
+            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType());
+            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType());
         }
 
         // TODO: Reset empty drawer in subclasses
@@ -688,12 +688,12 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
     public int interactPutItemsIntoSlot (int slot, EntityPlayer player) {
         int count = 0;
-        if (worldObj.getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID))
+        if (getWorld().getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID))
             count = interactPutCurrentInventoryIntoSlot(slot, player);
         else
             count = interactPutCurrentItemIntoSlot(slot, player);
 
-        lastClickTime = worldObj.getTotalWorldTime();
+        lastClickTime = getWorld().getTotalWorldTime();
         lastClickUUID = player.getPersistentID();
 
         return count;
@@ -868,9 +868,9 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
     @Override
     public void markDirty () {
         inventory.markDirty();
-        if (isRedstone() && worldObj != null) {
-            worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
-            worldObj.notifyNeighborsOfStateChange(getPos().down(), getBlockType());
+        if (isRedstone() && getWorld() != null) {
+            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType());
+            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType());
         }
 
         super.markDirty();
@@ -888,7 +888,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
     @SideOnly(Side.CLIENT)
     public void clientUpdateCount (final int slot, final int count) {
-        if (!worldObj.isRemote)
+        if (!getWorld().isRemote)
             return;
 
         Minecraft.getMinecraft().addScheduledTask(new Runnable() {
@@ -904,15 +904,15 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         IDrawer drawer = getDrawerIfEnabled(slot);
         if (drawer != null && drawer.getStoredItemCount() != count) {
             drawer.setStoredItemCount(count);
-            IBlockState state = worldObj.getBlockState(getPos());
+            IBlockState state = getWorld().getBlockState(getPos());
 
             switch (getEffectiveStatusLevel()) {
                 case 1:
                     if (drawer.getStoredItemCount() == 0 || drawer.getRemainingCapacity() == 0)
-                        worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                        getWorld().notifyBlockUpdate(getPos(), state, state, 3);
                     break;
                 case 2:
-                    worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                    getWorld().notifyBlockUpdate(getPos(), state, state, 3);
                     break;
             }
         }
@@ -920,7 +920,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
     private void syncClientCount (int slot) {
         IMessage message = new CountUpdateMessage(getPos(), slot, drawers[slot].getStoredItemCount());
-        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
+        NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
 
         StorageDrawers.network.sendToAllAround(message, targetPoint);
     }
@@ -1054,7 +1054,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
 
     @Override
     public boolean isUseableByPlayer (EntityPlayer player) {
-        if (worldObj.getTileEntity(getPos()) != this)
+        if (getWorld().getTileEntity(getPos()) != this)
             return false;
 
         return player.getDistanceSq(getPos().getX() + .5, getPos().getY() + .5, getPos().getZ() + .5) <= 64;

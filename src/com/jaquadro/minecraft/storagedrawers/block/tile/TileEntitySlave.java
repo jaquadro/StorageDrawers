@@ -73,8 +73,8 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
     public void onDataPacket (NetworkManager net, SPacketUpdateTileEntity pkt) {
         readFromNBT(pkt.getNbtCompound());
         if (getWorld().isRemote) {
-            IBlockState state = worldObj.getBlockState(getPos());
-            worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+            IBlockState state = getWorld().getBlockState(getPos());
+            getWorld().notifyBlockUpdate(getPos(), state, state, 3);
         }
     }
 
@@ -95,7 +95,7 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
         if (controllerCoord == null)
             return null;
 
-        TileEntity te = worldObj.getTileEntity(controllerCoord);
+        TileEntity te = getWorld().getTileEntity(controllerCoord);
         if (!(te instanceof TileEntityController)) {
             controllerCoord = null;
             markDirty();
