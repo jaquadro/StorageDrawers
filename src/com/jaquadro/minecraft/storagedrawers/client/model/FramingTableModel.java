@@ -17,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +37,7 @@ public class FramingTableModel extends ChamModel
 
         @Override
         public List<IBlockState> getBlockStates () {
-            List<IBlockState> states = new ArrayList<IBlockState>();
+            List<IBlockState> states = new ArrayList<>();
 
             for (EnumFacing dir : EnumFacing.HORIZONTALS) {
                 for (Boolean side : new Boolean[] { false, true })
@@ -137,7 +138,7 @@ public class FramingTableModel extends ChamModel
     @SuppressWarnings("deprecation")
     public static class ItemModel extends FramingTableModel
     {
-        public ItemModel (ItemStack stack) {
+        public ItemModel (@Nonnull ItemStack stack) {
             super(ModBlocks.framingTable.getStateFromMeta(stack.getMetadata()), true);
         }
 

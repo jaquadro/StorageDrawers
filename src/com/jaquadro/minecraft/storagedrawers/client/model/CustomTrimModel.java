@@ -10,7 +10,6 @@ import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.MaterialModelData;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityTrim;
 import com.jaquadro.minecraft.storagedrawers.client.model.dynamic.CommonTrimRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.state.IBlockState;
@@ -27,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class CustomTrimModel extends ChamModel
 
         @Override
         public List<IBlockState> getBlockStates () {
-            List<IBlockState> states = new ArrayList<IBlockState>();
+            List<IBlockState> states = new ArrayList<>();
             states.add(ModBlocks.customTrim.getDefaultState());
             return states;
         }
@@ -59,7 +59,7 @@ public class CustomTrimModel extends ChamModel
 
         @Override
         public List<ResourceLocation> getTextureResources () {
-            List<ResourceLocation> resource = new ArrayList<ResourceLocation>();
+            List<ResourceLocation> resource = new ArrayList<>();
             resource.add(iconDefaultSide);
             return resource;
         }
@@ -83,28 +83,28 @@ public class CustomTrimModel extends ChamModel
         return new CustomTrimModel(state, false);
     }
 
-    public static CustomTrimModel fromItem (ItemStack stack) {
+    public static CustomTrimModel fromItem (@Nonnull ItemStack stack) {
         IBlockState state = ModBlocks.customTrim.getStateFromMeta(stack.getMetadata());
         if (!stack.hasTagCompound())
             return new CustomTrimModel(state, true);
 
         NBTTagCompound tag = stack.getTagCompound();
-        ItemStack matSide = null;
-        ItemStack matTrim = null;
+        ItemStack matSide = ItemStack.field_190927_a;
+        ItemStack matTrim = ItemStack.field_190927_a;
 
         if (tag.hasKey("MatS", Constants.NBT.TAG_COMPOUND))
-            matSide = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatS"));
+            matSide = new ItemStack(tag.getCompoundTag("MatS"));
         if (tag.hasKey("MatT", Constants.NBT.TAG_COMPOUND))
-            matTrim = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatT"));
+            matTrim = new ItemStack(tag.getCompoundTag("MatT"));
 
         return new CustomTrimModel(state, matSide, matTrim, true);
     }
 
     private CustomTrimModel (IBlockState state, boolean mergeLayers) {
-        this(state, null, null, mergeLayers);
+        this(state, ItemStack.field_190927_a, ItemStack.field_190927_a, mergeLayers);
     }
 
-    private CustomTrimModel (IBlockState state, ItemStack matSide, ItemStack matTrim, boolean mergeLayers) {
+    private CustomTrimModel (IBlockState state, @Nonnull ItemStack matSide, @Nonnull ItemStack matTrim, boolean mergeLayers) {
         super(state, mergeLayers, matSide, matTrim);
     }
 
@@ -161,7 +161,7 @@ public class CustomTrimModel extends ChamModel
         }
 
         @Override
-        public IBakedModel handleItemState (IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
+        public IBakedModel handleItemState (IBakedModel originalModel, @Nonnull ItemStack stack, World world, EntityLivingBase entity) {
             return fromItem(stack);
         }
     }

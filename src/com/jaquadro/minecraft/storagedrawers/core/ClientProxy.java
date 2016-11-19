@@ -45,7 +45,7 @@ public class ClientProxy extends CommonProxy
 
     @SubscribeEvent
     public void onEntityJoinWorldEvent(net.minecraftforge.event.entity.EntityJoinWorldEvent event) {
-        if (this.configSyncDone || !event.getEntity().worldObj.isRemote || !(event.getEntity() instanceof EntityPlayer)) {
+        if (this.configSyncDone || !event.getEntity().getEntityWorld().isRemote || !(event.getEntity() instanceof EntityPlayer)) {
             return;
         }
 

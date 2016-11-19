@@ -18,8 +18,11 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
+import javax.annotation.Nonnull;
+
 public class ModRecipes
 {
+    @Nonnull
     public static ItemStack makeBasicDrawerItemStack (EnumBasicDrawer info, String material, int count) {
         ItemStack stack = new ItemStack(ModBlocks.basicDrawers, count, info.getMetadata());
 
@@ -30,6 +33,7 @@ public class ModRecipes
         return stack;
     }
 
+    @Nonnull
     public static ItemStack makeCustomDrawerItemStack (EnumBasicDrawer info, int count) {
         return new ItemStack(ModBlocks.customDrawers, count, info.getMetadata());
     }

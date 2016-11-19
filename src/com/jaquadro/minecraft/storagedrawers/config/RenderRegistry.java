@@ -8,7 +8,7 @@ import java.util.List;
 
 public class RenderRegistry implements IRenderRegistry
 {
-    private List<IRenderLabel> registry = new ArrayList<IRenderLabel>();
+    private List<IRenderLabel> registry = new ArrayList<>();
 
     @Override
     public void registerPreLabelRenderHandler (IRenderLabel renderHandler) {

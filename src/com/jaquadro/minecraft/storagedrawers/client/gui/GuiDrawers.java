@@ -2,7 +2,6 @@ package com.jaquadro.minecraft.storagedrawers.client.gui;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
-import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.inventory.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -109,15 +108,13 @@ public class GuiDrawers extends GuiContainer
         if (inventorySlots instanceof ContainerDrawers) {
             ContainerDrawers container = (ContainerDrawers) inventorySlots;
             List<Slot> storageSlots = container.getStorageSlots();
-            for (int i = 0, n = storageSlots.size(); i < n; i++) {
-                Slot slot = storageSlots.get(i);
+            for (Slot slot : storageSlots) {
                 drawTexturedModalRect(guiX + slot.xDisplayPosition, guiY + slot.yDisplayPosition, smDisabledX, smDisabledY, 16, 16);
             }
 
             List<Slot> upgradeSlots = container.getUpgradeSlots();
-            for (int i = 0, n = upgradeSlots.size(); i < n; i++) {
-                Slot slot = upgradeSlots.get(i);
-                if (slot instanceof SlotUpgrade && !((SlotUpgrade)slot).canTakeStack())
+            for (Slot slot : upgradeSlots) {
+                if (slot instanceof SlotUpgrade && !((SlotUpgrade) slot).canTakeStack())
                     drawTexturedModalRect(guiX + slot.xDisplayPosition, guiY + slot.yDisplayPosition, smDisabledX, smDisabledY, 16, 16);
             }
         }
@@ -128,16 +125,14 @@ public class GuiDrawers extends GuiContainer
         if (inventorySlots instanceof ContainerDrawers) {
             ContainerDrawers container = (ContainerDrawers) inventorySlots;
             List<Slot> storageSlots = container.getStorageSlots();
-            for (int i = 0, n = storageSlots.size(); i < n; i++) {
-                Slot slot = storageSlots.get(i);
+            for (Slot slot : storageSlots) {
                 if (slot instanceof SlotStorage && slot.xDisplayPosition == x && slot.yDisplayPosition == y)
                     return false;
             }
 
             List<Slot> upgradeSlots = container.getUpgradeSlots();
-            for (int i = 0, n = upgradeSlots.size(); i < n; i++) {
-                Slot slot = upgradeSlots.get(i);
-                if (slot instanceof SlotUpgrade && !((SlotUpgrade)slot).canTakeStack() && slot.xDisplayPosition == x && slot.yDisplayPosition == y)
+            for (Slot slot : upgradeSlots) {
+                if (slot instanceof SlotUpgrade && !((SlotUpgrade) slot).canTakeStack() && slot.xDisplayPosition == x && slot.yDisplayPosition == y)
                     return false;
             }
         }
@@ -146,13 +141,9 @@ public class GuiDrawers extends GuiContainer
     }
 
     private RenderItem setItemRender (RenderItem renderItem) {
-        //if (LocalIntegrationRegistry.instance().isModLoaded("NotEnoughItems"))
-        //    return NotEnoughItems.setItemRender(renderItem);
-        //else {
-            RenderItem prev = itemRender;
-            itemRender = renderItem;
+        RenderItem prev = itemRender;
+        itemRender = renderItem;
 
-            return prev;
-        //}
+        return prev;
     }
 }

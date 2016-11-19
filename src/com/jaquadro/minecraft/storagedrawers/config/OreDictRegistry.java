@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -11,12 +12,12 @@ import java.util.Set;
 
 public class OreDictRegistry
 {
-    private Set<String> blacklist = new HashSet<String>();
-    private Set<String> whitelist = new HashSet<String>();
-    private List<String> blacklistPrefix = new ArrayList<String>();
+    private Set<String> blacklist = new HashSet<>();
+    private Set<String> whitelist = new HashSet<>();
+    private List<String> blacklistPrefix = new ArrayList<>();
 
-    private Set<String> blacklistCache = new HashSet<String>();
-    private Set<String> graylistCache = new HashSet<String>();
+    private Set<String> blacklistCache = new HashSet<>();
+    private Set<String> graylistCache = new HashSet<>();
 
     public OreDictRegistry () {
         addBlacklist("logWood");
@@ -119,8 +120,8 @@ public class OreDictRegistry
         if (blacklistCache.contains(entry))
             return true;
 
-        for (int i = 0, n = blacklistPrefix.size(); i < n; i++) {
-            if (entry.startsWith(blacklistPrefix.get(i))) {
+        for (String aBlacklistPrefix : blacklistPrefix) {
+            if (entry.startsWith(aBlacklistPrefix)) {
                 blacklistCache.add(entry);
                 return true;
             }
@@ -166,12 +167,12 @@ public class OreDictRegistry
 
         // Fail entries that have any wildcard items registered to them.
 
-        HashSet<String> modIds = new HashSet<String>();
-        for (int i = 0, n = oreList.size(); i < n; i++) {
-            if (oreList.get(i).getItemDamage() == OreDictionary.WILDCARD_VALUE)
+        HashSet<String> modIds = new HashSet<>();
+        for (ItemStack anOreList : oreList) {
+            if (anOreList.getItemDamage() == OreDictionary.WILDCARD_VALUE)
                 return false;
 
-            String modId = getModId(oreList.get(i).getItem());
+            String modId = getModId(anOreList.getItem());
             if (modId != null)
                 modIds.add(modId);
         }
@@ -185,20 +186,17 @@ public class OreDictRegistry
         // Fail entries where the keys in at least one stack are not the super-set of all other stacks.
         // Can be determined by merging all keys and testing cardinality.
 
-        HashSet<Integer> mergedIds = new HashSet<Integer>();
+        HashSet<Integer> mergedIds = new HashSet<>();
         int maxKeyCount = 0;
 
-        for (int i = 0, n = oreList.size(); i < n; i++) {
-            int[] ids = OreDictionary.getOreIDs(oreList.get(i));
+        for (ItemStack anOreList : oreList) {
+            int[] ids = OreDictionary.getOreIDs(anOreList);
             maxKeyCount = Math.max(maxKeyCount, ids.length);
 
             for (int id : ids)
                 mergedIds.add(id);
         }
 
-        if (maxKeyCount < mergedIds.size())
-            return false;
-
-        return true;
+        return maxKeyCount >= mergedIds.size();
     }
 }

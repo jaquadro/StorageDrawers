@@ -31,6 +31,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -78,7 +79,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         Block block = state.getBlock();
         if (block instanceof BlockDrawers) {
             if (state.getProperties().containsKey(BlockDrawers.BLOCK)) {
-                EnumBasicDrawer info = (EnumBasicDrawer)state.getValue(BlockDrawers.BLOCK);
+                EnumBasicDrawer info = state.getValue(BlockDrawers.BLOCK);
                 depth = info.isHalfDepth() ? .5f : 1;
             }
         }
@@ -139,13 +140,13 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         boolean restoreBlockState = false;
 
         for (int i = 0; i < drawerCount; i++) {
-            renderStacks[i] = null;
+            renderStacks[i] = ItemStack.field_190927_a;
             IDrawer drawer = tile.getDrawerIfEnabled(i);
             if (drawer == null)
                 continue;
 
             ItemStack itemStack = drawer.getStoredItemPrototype();
-            if (itemStack == null)
+            if (itemStack.func_190926_b())
                 continue;
 
             renderStacks[i] = itemStack;
@@ -163,7 +164,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         //GlStateManager.pushAttrib();
 
         for (int i = 0; i < drawerCount; i++) {
-            if (renderStacks[i] != null && !renderAsBlock[i])
+            if (!renderStacks[i].func_190926_b() && !renderAsBlock[i])
                 renderFastItem(renderer, renderStacks[i], tile, state, i, side, depth, partialTickTime);
         }
 
@@ -173,7 +174,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         //}
 
         for (int i = 0; i < drawerCount; i++) {
-            if (renderStacks[i] != null && renderAsBlock[i])
+            if (!renderStacks[i].func_190926_b() && renderAsBlock[i])
                 renderFastItem(renderer, renderStacks[i], tile, state, i, side, depth, partialTickTime);
         }
 
@@ -188,7 +189,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         //    GLUtil.restoreGLState(savedGLStateItemRender);
     }
 
-    private void renderFastItem (ChamRender renderer, ItemStack itemStack, TileEntityDrawers tile, IBlockState state, int slot, EnumFacing side, float depth, float partialTickTime) {
+    private void renderFastItem (ChamRender renderer, @Nonnull ItemStack itemStack, TileEntityDrawers tile, IBlockState state, int slot, EnumFacing side, float depth, float partialTickTime) {
         int drawerCount = tile.getDrawerCount();
         float xunit = getXOffset(drawerCount, slot);
         float yunit = getYOffset(drawerCount, slot);
@@ -204,8 +205,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         moveRendering(size, getOffsetXForSide(side, xunit) * 16 - (8 * size), 12.25f - yunit, 1f - depth + frontDepth - .005f);
 
         List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
-        for (int i = 0, n = renderHandlers.size(); i < n; i++) {
-            renderHandlers.get(i).render(tile, tile, slot, 0, partialTickTime);
+        for (IRenderLabel renderHandler : renderHandlers) {
+            renderHandler.render(tile, tile, slot, 0, partialTickTime);
         }
 
         GlStateManager.disableLighting();
@@ -220,7 +221,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         GlStateManager.popMatrix();
     }
 
-    private boolean isItemBlockType (ItemStack itemStack) {
+    private boolean isItemBlockType (@Nonnull ItemStack itemStack) {
         return itemStack.getItem() instanceof ItemBlock && renderItem.shouldRenderItemIn3D(itemStack);
     }
 

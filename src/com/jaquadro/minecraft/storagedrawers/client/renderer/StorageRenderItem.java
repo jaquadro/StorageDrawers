@@ -20,16 +20,20 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
+
 @SideOnly(Side.CLIENT)
 public class StorageRenderItem extends RenderItem
 {
     private RenderItem parent;
 
+    @Nonnull
     public ItemStack overrideStack;
 
     public StorageRenderItem (TextureManager texManager, ModelManager modelManager, ItemColors colors) {
         super(texManager, modelManager, colors);
         parent = Minecraft.getMinecraft().getRenderItem();
+        overrideStack = ItemStack.field_190927_a;
     }
 
     @Override
@@ -38,54 +42,54 @@ public class StorageRenderItem extends RenderItem
     }
 
     @Override
-    public void renderItem (ItemStack stack, IBakedModel model) {
+    public void renderItem (@Nonnull ItemStack stack, IBakedModel model) {
         parent.renderItem(stack, model);
     }
 
     @Override
-    public boolean shouldRenderItemIn3D (ItemStack stack) {
+    public boolean shouldRenderItemIn3D (@Nonnull ItemStack stack) {
         return parent.shouldRenderItemIn3D(stack);
     }
 
     @Override
-    public void renderItem (ItemStack stack, ItemCameraTransforms.TransformType transformType) {
+    public void renderItem (@Nonnull ItemStack stack, ItemCameraTransforms.TransformType transformType) {
         parent.renderItem(stack, transformType);
     }
 
     @Override
-    public void renderItem (ItemStack stack, EntityLivingBase entity, ItemCameraTransforms.TransformType transform, boolean flag) {
+    public void renderItem (@Nonnull ItemStack stack, EntityLivingBase entity, ItemCameraTransforms.TransformType transform, boolean flag) {
         parent.renderItem(stack, entity, transform, flag);
     }
 
     @Override
-    public IBakedModel getItemModelWithOverrides (ItemStack stack, World world, EntityLivingBase entity) {
+    public IBakedModel getItemModelWithOverrides (@Nonnull ItemStack stack, World world, EntityLivingBase entity) {
         return parent.getItemModelWithOverrides(stack, world, entity);
     }
 
     @Override
-    public void renderItemIntoGUI (ItemStack stack, int x, int y) {
+    public void renderItemIntoGUI (@Nonnull ItemStack stack, int x, int y) {
         parent.renderItemIntoGUI(stack, x, y);
     }
 
     @Override
-    public void renderItemAndEffectIntoGUI (ItemStack stack, int xPosition, int yPosition) {
+    public void renderItemAndEffectIntoGUI (@Nonnull ItemStack stack, int xPosition, int yPosition) {
         parent.renderItemAndEffectIntoGUI(stack, xPosition, yPosition);
     }
 
     @Override
-    public void renderItemOverlays (FontRenderer fr, ItemStack stack, int xPosition, int yPosition) {
+    public void renderItemOverlays (FontRenderer fr, @Nonnull ItemStack stack, int xPosition, int yPosition) {
         parent.renderItemOverlays(fr, stack, xPosition, yPosition);
     }
 
     @Override
-    public void renderItemOverlayIntoGUI (FontRenderer font, ItemStack item, int x, int y, String text)
+    public void renderItemOverlayIntoGUI (FontRenderer font, @Nonnull ItemStack item, int x, int y, String text)
     {
         if (item != overrideStack) {
             super.renderItemOverlayIntoGUI(font, item, x, y, text);
             return;
         }
 
-        if (item != null)
+        if (!item.func_190926_b())
         {
             float scale = .5f;
             float xoff = 0;
@@ -94,18 +98,19 @@ public class StorageRenderItem extends RenderItem
                 xoff = 1;
             }
 
-            if (item.stackSize > 1 || text != null)
+            int stackSize = item.func_190916_E();
+            if (stackSize > 1 || text != null)
             {
-                if (item.stackSize >= 100000000 || (item.stackSize >= 1000000 && font.getUnicodeFlag()))
-                    text = (text == null) ? String.format("%.0fM", item.stackSize / 1000000f) : text;
-                else if (item.stackSize >= 1000000)
-                    text = (text == null) ? String.format("%.1fM", item.stackSize / 1000000f) : text;
-                else if (item.stackSize >= 100000 || (item.stackSize >= 10000 && font.getUnicodeFlag()))
-                    text = (text == null) ? String.format("%.0fK", item.stackSize / 1000f) : text;
-                else if (item.stackSize >= 10000)
-                    text = (text == null) ? String.format("%.1fK", item.stackSize / 1000f) : text;
+                if (stackSize >= 100000000 || (stackSize >= 1000000 && font.getUnicodeFlag()))
+                    text = (text == null) ? String.format("%.0fM", stackSize / 1000000f) : text;
+                else if (stackSize >= 1000000)
+                    text = (text == null) ? String.format("%.1fM", stackSize / 1000000f) : text;
+                else if (stackSize >= 100000 || (stackSize >= 10000 && font.getUnicodeFlag()))
+                    text = (text == null) ? String.format("%.0fK", stackSize / 1000f) : text;
+                else if (stackSize >= 10000)
+                    text = (text == null) ? String.format("%.1fK", stackSize / 1000f) : text;
                 else
-                    text = (text == null) ? String.valueOf(item.stackSize) : text;
+                    text = (text == null) ? String.valueOf(stackSize) : text;
 
                 int textX = (int)((x + 16 + xoff - font.getStringWidth(text) * scale) / scale) - 1;
                 int textY = (int)((y + 16 - 7 * scale) / scale) - 1;

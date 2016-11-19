@@ -8,7 +8,7 @@ import java.util.List;
 
 public class WailaRegistry implements IWailaRegistry
 {
-    private List<IWailaTooltipHandler> registry = new ArrayList<IWailaTooltipHandler>();
+    private List<IWailaTooltipHandler> registry = new ArrayList<>();
 
     @Override
     public void registerTooltipHandler (IWailaTooltipHandler handler) {

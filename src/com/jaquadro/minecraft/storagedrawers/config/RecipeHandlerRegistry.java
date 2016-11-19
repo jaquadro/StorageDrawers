@@ -15,8 +15,8 @@ import java.util.Map;
 
 public class RecipeHandlerRegistry implements IRecipeHandlerRegistry
 {
-    private Map<Class, IRecipeHandler> recipeRegistry = new HashMap<Class, IRecipeHandler>();
-    private Map<Class, IIngredientHandler> ingredientRegistry = new HashMap<Class, IIngredientHandler>();
+    private Map<Class, IRecipeHandler> recipeRegistry = new HashMap<>();
+    private Map<Class, IIngredientHandler> ingredientRegistry = new HashMap<>();
 
     public RecipeHandlerRegistry () {
         registerRecipeHandler(ShapedOreRecipe.class, new ShapedOreRecipeHandler());

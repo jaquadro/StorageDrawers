@@ -34,7 +34,7 @@ public class CommonDrawerRenderer
     private void start (IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing direction) {
         BlockDrawers block = (BlockDrawers) state.getBlock();
         StatusModelData status = block.getStatusInfo(state);
-        blockInfo = (EnumBasicDrawer) state.getValue(BlockDrawers.BLOCK);
+        blockInfo = state.getValue(BlockDrawers.BLOCK);
 
         depth = blockInfo.isHalfDepth() ? .5 : 0;
         trimWidth = .0625;

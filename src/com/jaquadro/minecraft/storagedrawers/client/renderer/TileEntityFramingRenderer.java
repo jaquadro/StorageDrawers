@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -34,7 +33,7 @@ public class TileEntityFramingRenderer extends TileEntitySpecialRenderer<TileEnt
             return;
 
         ItemStack target = tile.getStackInSlot(0);
-        if (target != null) {
+        if (!target.func_190926_b()) {
             Block block = Block.getBlockFromItem(target.getItem());
             IBlockState blockState = block.getStateFromMeta(target.getMetadata());
             if (block instanceof BlockDrawersCustom) {

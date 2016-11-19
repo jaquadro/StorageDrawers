@@ -13,7 +13,6 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.MaterialModelData;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.dynamic.CommonDrawerRenderer;
@@ -31,6 +30,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -73,7 +73,7 @@ public class CustomDrawerModel extends ChamModel
 
         @Override
         public List<IBlockState> getBlockStates () {
-            List<IBlockState> states = new ArrayList<IBlockState>();
+            List<IBlockState> states = new ArrayList<>();
 
             for (EnumBasicDrawer drawer : EnumBasicDrawer.values()) {
                 for (EnumFacing dir : EnumFacing.HORIZONTALS)
@@ -95,7 +95,7 @@ public class CustomDrawerModel extends ChamModel
 
         @Override
         public List<ResourceLocation> getTextureResources () {
-            List<ResourceLocation> resource = new ArrayList<ResourceLocation>();
+            List<ResourceLocation> resource = new ArrayList<>();
             resource.add(iconDefaultSide);
             resource.addAll(Arrays.asList(iconDefaultFront));
             resource.addAll(Arrays.asList(iconOverlayTrim));
@@ -131,25 +131,25 @@ public class CustomDrawerModel extends ChamModel
         return new CustomDrawerModel(state, effMatFront, effMatSide, effMatTrim, matFront, matSide, matTrim, false);
     }
 
-    public static IBakedModel fromItem (ItemStack stack) {
+    public static IBakedModel fromItem (@Nonnull ItemStack stack) {
         IBlockState state = ModBlocks.customDrawers.getStateFromMeta(stack.getMetadata());
         if (!stack.hasTagCompound())
             return new CustomDrawerModel(state, true);
 
         NBTTagCompound tag = stack.getTagCompound();
-        ItemStack matFront = null;
-        ItemStack matSide = null;
-        ItemStack matTrim = null;
+        ItemStack matFront = ItemStack.field_190927_a;
+        ItemStack matSide = ItemStack.field_190927_a;
+        ItemStack matTrim = ItemStack.field_190927_a;
 
         if (tag.hasKey("MatF", Constants.NBT.TAG_COMPOUND))
-            matFront = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatF"));
+            matFront = new ItemStack(tag.getCompoundTag("MatF"));
         if (tag.hasKey("MatS", Constants.NBT.TAG_COMPOUND))
-            matSide = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatS"));
+            matSide = new ItemStack(tag.getCompoundTag("MatS"));
         if (tag.hasKey("MatT", Constants.NBT.TAG_COMPOUND))
-            matTrim = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatT"));
+            matTrim = new ItemStack(tag.getCompoundTag("MatT"));
 
-        ItemStack effMatFront = matFront != null ? matFront : matSide;
-        ItemStack effMatTrim = matTrim != null ? matTrim : matSide;
+        ItemStack effMatFront = !matFront.func_190926_b() ? matFront : matSide;
+        ItemStack effMatTrim = !matTrim.func_190926_b() ? matTrim : matSide;
         ItemStack effMatSide = matSide;
 
         IBakedModel model = new CustomDrawerModel(state, effMatFront, effMatSide, effMatTrim, matFront, matSide, matTrim, true);
@@ -160,10 +160,12 @@ public class CustomDrawerModel extends ChamModel
     }
 
     private CustomDrawerModel (IBlockState state, boolean mergeLayers) {
-        this(state, null, null, null, null, null, null, mergeLayers);
+        this(state, ItemStack.field_190927_a, ItemStack.field_190927_a, ItemStack.field_190927_a,
+            ItemStack.field_190927_a, ItemStack.field_190927_a, ItemStack.field_190927_a, mergeLayers);
     }
 
-    private CustomDrawerModel (IBlockState state, ItemStack effMatFront, ItemStack effMatSide, ItemStack effMatTrim, ItemStack matFront, ItemStack matSide, ItemStack matTrim, boolean mergeLayers) {
+    private CustomDrawerModel (IBlockState state, @Nonnull ItemStack effMatFront, @Nonnull ItemStack effMatSide, @Nonnull ItemStack effMatTrim,
+                               @Nonnull ItemStack matFront, @Nonnull ItemStack matSide, @Nonnull ItemStack matTrim, boolean mergeLayers) {
         super(state, mergeLayers, effMatFront, effMatSide, effMatTrim, matFront, matSide, matTrim);
     }
 
@@ -239,7 +241,7 @@ public class CustomDrawerModel extends ChamModel
                     if (!DrawerDecoratorModel.shouldHandleState(stateModel))
                         return mainModel;
 
-                    EnumBasicDrawer drawer = (EnumBasicDrawer) state.getValue(BlockDrawers.BLOCK);
+                    EnumBasicDrawer drawer = state.getValue(BlockDrawers.BLOCK);
                     EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
                     return new DrawerDecoratorModel(mainModel, xstate, drawer, dir, stateModel);
@@ -266,7 +268,7 @@ public class CustomDrawerModel extends ChamModel
         }
 
         @Override
-        public IBakedModel handleItemState (IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
+        public IBakedModel handleItemState (IBakedModel originalModel, @Nonnull ItemStack stack, World world, EntityLivingBase entity) {
             return fromItem(stack);
         }
     }

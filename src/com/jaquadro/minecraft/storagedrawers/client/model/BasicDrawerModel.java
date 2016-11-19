@@ -6,7 +6,6 @@ import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
@@ -22,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public final class BasicDrawerModel
@@ -34,7 +34,7 @@ public final class BasicDrawerModel
 
         @Override
         public List<IBlockState> getBlockStates () {
-            List<IBlockState> states = new ArrayList<IBlockState>();
+            List<IBlockState> states = new ArrayList<>();
 
             for (EnumBasicDrawer drawer : EnumBasicDrawer.values()) {
                 for (EnumFacing dir : EnumFacing.HORIZONTALS) {
@@ -62,7 +62,7 @@ public final class BasicDrawerModel
 
         @Override
         public List<ResourceLocation> getTextureResources () {
-            List<ResourceLocation> resource = new ArrayList<ResourceLocation>();
+            List<ResourceLocation> resource = new ArrayList<>();
             resource.add(DrawerDecoratorModel.iconClaim);
             resource.add(DrawerDecoratorModel.iconClaimLock);
             resource.add(DrawerDecoratorModel.iconLock);
@@ -114,8 +114,8 @@ public final class BasicDrawerModel
         }
 
         @Override
-        public IBakedModel handleItemState (IBakedModel parent, ItemStack stack, World world, EntityLivingBase entity) {
-            if (stack == null)
+        public IBakedModel handleItemState (IBakedModel parent, @Nonnull ItemStack stack, World world, EntityLivingBase entity) {
+            if (stack.func_190926_b())
                 return parent;
 
             if (!stack.hasTagCompound() || !stack.getTagCompound().hasKey("tile", Constants.NBT.TAG_COMPOUND))

@@ -8,18 +8,27 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompTierRegistry
 {
     public class Record {
-        public ItemStack upper;
-        public ItemStack lower;
-        public int convRate;
+        @Nonnull
+        public final ItemStack upper;
+        @Nonnull
+        public final ItemStack lower;
+        public final int convRate;
+
+        public Record (@Nonnull ItemStack upper, @Nonnull ItemStack lower, int convRate) {
+            this.upper = upper;
+            this.lower = lower;
+            this.convRate = convRate;
+        }
     }
 
-    private List<Record> records = new ArrayList<Record>();
+    private List<Record> records = new ArrayList<>();
 
     public CompTierRegistry () {
         if (StorageDrawers.config.cache.registerExtraCompRules) {
@@ -42,20 +51,16 @@ public class CompTierRegistry
 
     }
 
-    public boolean register (ItemStack upper, ItemStack lower, int convRate) {
-        if (upper == null || lower == null)
+    public boolean register (@Nonnull ItemStack upper, @Nonnull ItemStack lower, int convRate) {
+        if (upper.func_190926_b() || lower.func_190926_b())
             return false;
 
         unregisterUpperTarget(upper);
         unregisterLowerTarget(lower);
 
-        Record r = new Record();
-        r.upper = upper.copy();
-        r.lower = lower.copy();
-        r.convRate = convRate;
-
-        r.upper.stackSize = 1;
-        r.lower.stackSize = 1;
+        Record r = new Record(upper.copy(), lower.copy(), convRate);
+        r.upper.func_190920_e(1);
+        r.lower.func_190920_e(1);
 
         records.add(r);
 
@@ -73,7 +78,7 @@ public class CompTierRegistry
         ItemResourceLocation lowerResource = new ItemResourceLocation(parts[1]);
         ItemStack lowerItem = lowerResource.getItemStack();
 
-        if (upperItem == null || lowerItem == null)
+        if (upperItem.func_190926_b() || lowerItem.func_190926_b())
             return false;
 
         if (upperItem.getMetadata() == OreDictionary.WILDCARD_VALUE)
@@ -90,7 +95,7 @@ public class CompTierRegistry
         }
     }
 
-    public boolean unregisterUpperTarget (ItemStack stack) {
+    public boolean unregisterUpperTarget (@Nonnull ItemStack stack) {
         for (Record r : records) {
             if (ItemStack.areItemStacksEqual(stack, r.upper)) {
                 records.remove(r);
@@ -101,7 +106,7 @@ public class CompTierRegistry
         return false;
     }
 
-    public boolean unregisterLowerTarget (ItemStack stack) {
+    public boolean unregisterLowerTarget (@Nonnull ItemStack stack) {
         for (Record r : records) {
             if (ItemStack.areItemStacksEqual(stack, r.lower)) {
                 records.remove(r);
@@ -112,12 +117,11 @@ public class CompTierRegistry
         return false;
     }
 
-    public Record findHigherTier (ItemStack stack) {
-        if (stack == null || stack.getItem() == null)
+    public Record findHigherTier (@Nonnull ItemStack stack) {
+        if (stack.func_190926_b())
             return null;
 
-        for (int i = 0, n = records.size(); i < n; i++) {
-            Record r = records.get(i);
+        for (Record r : records) {
             if (stack.isItemEqual(r.lower) && ItemStack.areItemStackTagsEqual(stack, r.lower))
                 return r;
         }
@@ -125,12 +129,11 @@ public class CompTierRegistry
         return null;
     }
 
-    public Record findLowerTier (ItemStack stack) {
-        if (stack == null || stack.getItem() == null)
+    public Record findLowerTier (@Nonnull ItemStack stack) {
+        if (stack.func_190926_b())
             return null;
 
-        for (int i = 0, n = records.size(); i < n; i++) {
-            Record r = records.get(i);
+        for (Record r : records) {
             if (stack.isItemEqual(r.upper) && ItemStack.areItemStackTagsEqual(stack, r.upper))
                 return r;
         }
