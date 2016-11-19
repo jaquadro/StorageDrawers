@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemDrawers extends ItemBlock
@@ -34,7 +35,7 @@ public class ItemDrawers extends ItemBlock
     }
 
     @Override
-    public boolean placeBlockAt (ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
+    public boolean placeBlockAt (@Nonnull ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
         if (!super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState))
             return false;
 
@@ -64,7 +65,7 @@ public class ItemDrawers extends ItemBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
+    public void addInformation (@Nonnull ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
         if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("material")) {
             String key = itemStack.getTagCompound().getString("material");
             list.add(I18n.format("storageDrawers.material", I18n.format("storageDrawers.material." + key)));
@@ -76,7 +77,7 @@ public class ItemDrawers extends ItemBlock
             list.add(ChatFormatting.YELLOW + I18n.format("storageDrawers.drawers.sealed"));
     }
 
-    private int getCapacityForBlock (ItemStack itemStack) {
+    private int getCapacityForBlock (@Nonnull ItemStack itemStack) {
         ConfigManager config = StorageDrawers.config;
         Block block = Block.getBlockFromItem(itemStack.getItem());
 

@@ -8,10 +8,12 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class ItemUpgradeStatus extends Item implements IItemMeshMapper
     }
 
     @Override
-    public String getUnlocalizedName (ItemStack itemStack) {
+    public String getUnlocalizedName (@Nonnull ItemStack itemStack) {
         return super.getUnlocalizedName() + "." + EnumUpgradeStatus.byMetadata(itemStack.getMetadata()).getUnlocalizedName();
     }
 
@@ -37,14 +39,14 @@ public class ItemUpgradeStatus extends Item implements IItemMeshMapper
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
+    public void addInformation (@Nonnull ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
         String name = getUnlocalizedName(itemStack);
         list.add(I18n.format(name + ".description"));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
+    public void getSubItems (Item item, CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
         for (EnumUpgradeStatus upgrade : EnumUpgradeStatus.values())
             list.add(new ItemStack(item, 1, upgrade.getMetadata()));
     }

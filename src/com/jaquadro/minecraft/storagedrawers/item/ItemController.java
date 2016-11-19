@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemController extends ItemBlock
@@ -18,7 +19,7 @@ public class ItemController extends ItemBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation (ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+    public void addInformation (@Nonnull ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         list.add(I18n.format("storageDrawers.controller.description"));
     }
 }

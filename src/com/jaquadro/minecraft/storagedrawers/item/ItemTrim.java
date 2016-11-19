@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
-import com.google.common.base.Function;
 import com.jaquadro.minecraft.chameleon.resources.IItemMeshMapper;
 import com.jaquadro.minecraft.chameleon.resources.IItemVariantProvider;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
@@ -19,36 +18,32 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.common.registry.GameData;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemTrim extends ItemMultiTexture implements IItemMeshMapper, IItemVariantProvider
 {
     public ItemTrim (Block block) {
-        super(block, block, new Function() {
-            @Nullable
+        super(block, block, new Mapper() {
             @Override
-            public Object apply (Object input) {
-                ItemStack stack = (ItemStack)input;
-                return BlockPlanks.EnumType.byMetadata(stack.getMetadata()).getUnlocalizedName();
+            @Nonnull
+            public String apply (@Nonnull ItemStack input) {
+                return BlockPlanks.EnumType.byMetadata(input.getMetadata()).getUnlocalizedName();
             }
         });
     }
 
-    protected ItemTrim (Block block, Function function) {
-        super(block, block, function);
+    protected ItemTrim (Block block, Mapper mapper) {
+        super(block, block, mapper);
     }
 
     @Override
-    public boolean doesSneakBypassUse (ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player) {
+    public boolean doesSneakBypassUse (@Nonnull ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player) {
         IBlockState blockState = world.getBlockState(pos);
         Block block = blockState.getBlock();
 
-        if (block instanceof BlockDrawers && ((BlockDrawers) block).retrimType() != null)
-            return true;
-
-        return false;
+        return block instanceof BlockDrawers && ((BlockDrawers) block).retrimType() != null;
     }
 
     @Override

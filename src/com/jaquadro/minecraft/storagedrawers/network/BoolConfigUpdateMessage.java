@@ -47,7 +47,7 @@ public class BoolConfigUpdateMessage implements IMessage {
         @Override
         public IMessage onMessage (BoolConfigUpdateMessage message, MessageContext ctx) {
             if (ctx.side == Side.SERVER) {
-                UUID playerUniqueId = null;
+                UUID playerUniqueId;
                 try {
                     playerUniqueId = UUID.fromString(message.uuid);
                 } catch (IllegalArgumentException e) {
@@ -59,7 +59,7 @@ public class BoolConfigUpdateMessage implements IMessage {
                     clientMap = Maps.newHashMap();
                 }
 
-                clientMap.put(message.key, new PlayerConfigSetting<Boolean>(message.key, message.value, playerUniqueId));
+                clientMap.put(message.key, new PlayerConfigSetting<>(message.key, message.value, playerUniqueId));
                 ConfigManager.serverPlayerConfigSettings.put(playerUniqueId, clientMap);
             }
 

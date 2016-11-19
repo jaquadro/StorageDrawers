@@ -38,23 +38,23 @@ public class ItemCustomDrawers extends ItemDrawers
     }
 
     @Override
-    public String getUnlocalizedName (ItemStack stack) {
+    public String getUnlocalizedName (@Nonnull ItemStack stack) {
         return super.getUnlocalizedName() + "." + nameFunction.apply(stack);
     }
 
     @Override
-    public boolean placeBlockAt (ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
+    public boolean placeBlockAt (@Nonnull ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
         if (!super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState))
             return false;
 
         TileEntityDrawers tile = (TileEntityDrawers) world.getTileEntity(pos);
         if (tile != null && stack.hasTagCompound() && !stack.getTagCompound().hasKey("tile")) {
             if (stack.getTagCompound().hasKey("MatS"))
-                tile.setMaterialSide(ItemStack.loadItemStackFromNBT(stack.getTagCompound().getCompoundTag("MatS")));
+                tile.setMaterialSide(new ItemStack(stack.getTagCompound().getCompoundTag("MatS")));
             if (stack.getTagCompound().hasKey("MatT"))
-                tile.setMaterialTrim(ItemStack.loadItemStackFromNBT(stack.getTagCompound().getCompoundTag("MatT")));
+                tile.setMaterialTrim(new ItemStack(stack.getTagCompound().getCompoundTag("MatT")));
             if (stack.getTagCompound().hasKey("MatF"))
-                tile.setMaterialFront(ItemStack.loadItemStackFromNBT(stack.getTagCompound().getCompoundTag("MatF")));
+                tile.setMaterialFront(new ItemStack(stack.getTagCompound().getCompoundTag("MatF")));
         }
 
         return true;
@@ -85,9 +85,9 @@ public class ItemCustomDrawers extends ItemDrawers
         return stack;
     }
 
-    private static NBTTagCompound getMaterialTag (ItemStack mat) {
+    private static NBTTagCompound getMaterialTag (@Nonnull ItemStack mat) {
         mat = mat.copy();
-        mat.stackSize = 1;
+        mat.func_190920_e(1);
 
         NBTTagCompound itag = new NBTTagCompound();
         mat.writeToNBT(itag);

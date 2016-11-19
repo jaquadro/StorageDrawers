@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class ItemBasicDrawers extends ItemDrawers implements IItemMeshResolver, 
     }
 
     @Override
-    public String getUnlocalizedName (ItemStack stack) {
+    public String getUnlocalizedName (@Nonnull ItemStack stack) {
         return super.getUnlocalizedName() + "." + nameFunction.apply(stack);
     }
 
@@ -76,8 +77,8 @@ public class ItemBasicDrawers extends ItemDrawers implements IItemMeshResolver, 
     @SideOnly(Side.CLIENT)
     private class MeshDefinition implements ItemMeshDefinition {
         @Override
-        public ModelResourceLocation getModelLocation (ItemStack stack) {
-            if (stack == null)
+        public ModelResourceLocation getModelLocation (@Nonnull ItemStack stack) {
+            if (stack.func_190926_b())
                 return null;
 
             EnumBasicDrawer drawer = EnumBasicDrawer.byMetadata(stack.getMetadata());

@@ -8,6 +8,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
@@ -44,7 +45,7 @@ public class ItemUpgradeCreative extends Item implements IItemMeshMapper
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
+    public void getSubItems (Item item, CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
         for (EnumUpgradeCreative upgrade : EnumUpgradeCreative.values())
             list.add(new ItemStack(item, 1, upgrade.getMetadata()));
     }

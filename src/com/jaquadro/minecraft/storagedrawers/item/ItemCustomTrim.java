@@ -21,16 +21,16 @@ public class ItemCustomTrim extends ItemBlock
     }
 
     @Override
-    public boolean placeBlockAt (ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
+    public boolean placeBlockAt (@Nonnull ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
         if (!super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState))
             return false;
 
         TileEntityTrim tile = (TileEntityTrim) world.getTileEntity(pos);
         if (tile != null && stack.hasTagCompound() && !stack.getTagCompound().hasKey("tile")) {
             if (stack.getTagCompound().hasKey("MatS"))
-                tile.setMaterialSide(ItemStack.loadItemStackFromNBT(stack.getTagCompound().getCompoundTag("MatS")));
+                tile.setMaterialSide(new ItemStack(stack.getTagCompound().getCompoundTag("MatS")));
             if (stack.getTagCompound().hasKey("MatT"))
-                tile.setMaterialTrim(ItemStack.loadItemStackFromNBT(stack.getTagCompound().getCompoundTag("MatT")));
+                tile.setMaterialTrim(new ItemStack(stack.getTagCompound().getCompoundTag("MatT")));
         }
 
         return true;
@@ -57,9 +57,9 @@ public class ItemCustomTrim extends ItemBlock
         return stack;
     }
 
-    private static NBTTagCompound getMaterialTag (ItemStack mat) {
+    private static NBTTagCompound getMaterialTag (@Nonnull ItemStack mat) {
         mat = mat.copy();
-        mat.stackSize = 1;
+        mat.func_190920_e(1);
 
         NBTTagCompound itag = new NBTTagCompound();
         mat.writeToNBT(itag);
