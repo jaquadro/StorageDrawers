@@ -3,7 +3,6 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
@@ -67,7 +66,6 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
         @Override
         public int getSlotStackCapacity (int slot) {
-            ConfigManager config = StorageDrawers.config;
             return getEffectiveStorageMultiplier() * getDrawerCapacity();
         }
 

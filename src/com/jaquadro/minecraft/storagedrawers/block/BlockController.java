@@ -8,7 +8,6 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -105,12 +104,12 @@ public class BlockController extends BlockContainer implements INetworked
     }
 
     @Override
-    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         EnumFacing blockDir = state.getValue(FACING);
         TileEntityController te = getTileEntitySafe(world, pos);
 
         ItemStack item = player.inventory.getCurrentItem();
-        if (item != null && item.getItem() != null) {
+        if (!item.func_190926_b()) {
             if (item.getItem() == ModItems.shroudKey) {
                 if (!world.isRemote)
                     te.toggleShroud(player.getGameProfile());

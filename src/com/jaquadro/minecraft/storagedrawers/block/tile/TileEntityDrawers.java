@@ -63,8 +63,11 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     private long lastClickTime;
     private UUID lastClickUUID;
 
+    @Nonnull
     private ItemStack materialSide;
+    @Nonnull
     private ItemStack materialFront;
+    @Nonnull
     private ItemStack materialTrim;
 
     protected TileEntityDrawers (int drawerCount) {
@@ -72,6 +75,13 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         injectData(customNameData);
         injectData(controllerData);
         initWithDrawerCount(drawerCount);
+
+        materialSide = ItemStack.field_190927_a;
+        materialFront = ItemStack.field_190927_a;
+        materialTrim = ItemStack.field_190927_a;
+
+        for (int i = 0; i < upgrades.length; i++)
+            upgrades[i] = ItemStack.field_190927_a;
     }
 
     protected abstract IDrawer createDrawer (int slot);
@@ -116,7 +126,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     public int getEffectiveStorageLevel () {
         int level = 0;
         for (ItemStack upgrade : upgrades) {
-            if (upgrade != null && upgrade.getItem() == ModItems.upgradeStorage)
+            if (upgrade.getItem() == ModItems.upgradeStorage)
                 level += upgrade.getItemDamage();
         }
 
@@ -128,7 +138,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         int multiplier = 0;
         for (ItemStack stack : upgrades) {
-            if (stack != null && stack.getItem() == ModItems.upgradeStorage) {
+            if (stack.getItem() == ModItems.upgradeStorage) {
                 int level = EnumUpgradeStorage.byMetadata(stack.getItemDamage()).getLevel();
                 multiplier += config.getStorageUpgradeMultiplier(level);
             }
@@ -143,7 +153,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     public int getEffectiveStatusLevel () {
         int maxLevel = -1;
         for (ItemStack upgrade : upgrades) {
-            if (upgrade != null && upgrade.getItem() == ModItems.upgradeStatus)
+            if (upgrade.getItem() == ModItems.upgradeStatus)
                 maxLevel = upgrade.getItemDamage();
         }
 
@@ -163,7 +173,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return upgrades[slot];
     }
 
-    public boolean addUpgrade (ItemStack upgrade) {
+    public boolean addUpgrade (@Nonnull ItemStack upgrade) {
         int slot = getNextUpgradeSlot();
         if (slot == -1)
             return false;
@@ -172,12 +182,12 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return true;
     }
 
-    public void setUpgrade (int slot, ItemStack upgrade) {
-        slot = MathHelper.clamp_int(slot, 0, 4);
+    public void setUpgrade (int slot, @Nonnull ItemStack upgrade) {
+        slot = MathHelper.clamp(slot, 0, 4);
 
-        if (upgrade != null) {
+        if (!upgrade.func_190926_b()) {
             upgrade = upgrade.copy();
-            upgrade.stackSize = 1;
+            upgrade.func_190920_e(1);
         }
 
         upgrades[slot] = upgrade;
@@ -187,8 +197,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
                 markDirty();
                 markBlockForUpdate();
             }
-            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType());
-            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType());
+            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
+            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType(), false);
         }
 
         attributeChanged();
@@ -196,7 +206,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     public int getNextUpgradeSlot () {
         for (int i = 0; i < upgrades.length; i++) {
-            if (upgrades[i] == null)
+            if (upgrades[i].func_190926_b())
                 return i;
         }
 
@@ -388,7 +398,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
             return false;
 
         for (ItemStack stack : upgrades) {
-            if (stack != null && stack.getItem() == ModItems.upgradeVoid)
+            if (stack.getItem() == ModItems.upgradeVoid)
                 return true;
         }
 
@@ -400,7 +410,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
             return false;
 
         for (ItemStack stack : upgrades) {
-            if (stack != null && stack.getItem() == ModItems.upgradeCreative)
+            if (stack.getItem() == ModItems.upgradeCreative)
                 return true;
         }
 
@@ -412,7 +422,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
             return false;
 
         for (ItemStack stack : upgrades) {
-            if (stack != null && stack.getItem() == ModItems.upgradeCreative && stack.getItemDamage() == 1)
+            if (stack.getItem() == ModItems.upgradeCreative && stack.getItemDamage() == 1)
                 return true;
         }
 
@@ -424,7 +434,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
             return false;
 
         for (ItemStack stack : upgrades) {
-            if (stack != null && stack.getItem() == ModItems.upgradeRedstone)
+            if (stack.getItem() == ModItems.upgradeRedstone)
                 return true;
         }
 
@@ -434,7 +444,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     public int getRedstoneLevel () {
         int redstoneType = -1;
         for (ItemStack stack : upgrades) {
-            if (stack != null && stack.getItem() == ModItems.upgradeRedstone) {
+            if (stack.getItem() == ModItems.upgradeRedstone) {
                 redstoneType = stack.getItemDamage();
                 break;
             }
@@ -520,56 +530,63 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return false;
     }
 
+    @Nonnull
     public ItemStack getMaterialSide () {
         return materialSide;
     }
 
+    @Nonnull
     public ItemStack getMaterialFront () {
         return materialFront;
     }
 
+    @Nonnull
     public ItemStack getMaterialTrim () {
         return materialTrim;
     }
 
+    @Nonnull
     public ItemStack getEffectiveMaterialSide () {
         return materialSide;
     }
 
+    @Nonnull
     public ItemStack getEffectiveMaterialFront () {
-        return materialFront != null ? materialFront : materialSide;
+        return !materialFront.func_190926_b() ? materialFront : materialSide;
     }
 
+    @Nonnull
     public ItemStack getEffectiveMaterialTrim () {
-        return materialTrim != null ? materialTrim : materialSide;
+        return !materialTrim.func_190926_b() ? materialTrim : materialSide;
     }
 
-    public void setMaterialSide (ItemStack material) {
+    public void setMaterialSide (@Nonnull ItemStack material) {
         materialSide = material;
     }
 
-    public void setMaterialFront (ItemStack material) {
+    public void setMaterialFront (@Nonnull ItemStack material) {
         materialFront = material;
     }
 
-    public void setMaterialTrim (ItemStack material) {
+    public void setMaterialTrim (@Nonnull ItemStack material) {
         materialTrim = material;
     }
 
+    @Nonnull
     public ItemStack takeItemsFromSlot (int slot, int count) {
         if (slot < 0 || slot >= getDrawerCount())
-            return null;
+            return ItemStack.field_190927_a;
 
         ItemStack stack = getItemsFromSlot(slot, count);
-        if (stack == null)
-            return null;
+        if (stack.func_190926_b())
+            return ItemStack.field_190927_a;
 
         IDrawer drawer = drawers[slot];
-        drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.stackSize);
+        drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.func_190916_E());
 
         if (isRedstone() && getWorld() != null) {
-            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType());
-            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType());
+            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
+            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType(), false);
         }
 
         // TODO: Reset empty drawer in subclasses
@@ -577,18 +594,18 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return stack;
     }
 
+    @Nonnull
     protected ItemStack getItemsFromSlot (int slot, int count) {
         if (drawers[slot].isEmpty())
-            return null;
+            return ItemStack.field_190927_a;
 
         ItemStack stack = drawers[slot].getStoredItemCopy();
-        stack.stackSize = Math.min(stack.getMaxStackSize(), count);
-        stack.stackSize = Math.min(stack.stackSize, drawers[slot].getStoredItemCount());
+        stack.func_190920_e(Math.min(Math.min(stack.func_190916_E(), count), drawers[slot].getStoredItemCount()));
 
         return stack;
     }
 
-    public int putItemsIntoSlot (int slot, ItemStack stack, int count) {
+    public int putItemsIntoSlot (int slot, @Nonnull ItemStack stack, int count) {
         if (slot < 0 || slot >= getDrawerCount())
             return 0;
 
@@ -599,12 +616,12 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (!drawer.canItemBeStored(stack))
             return 0;
 
-        int countAdded = Math.min(count, stack.stackSize);
+        int countAdded = Math.min(count, stack.func_190916_E());
         if (!isVoid())
             countAdded = Math.min(countAdded, drawer.getRemainingCapacity());
 
         drawer.setStoredItemCount(drawer.getStoredItemCount() + countAdded);
-        stack.stackSize -= countAdded;
+        stack.func_190918_g(countAdded);
 
         return countAdded;
     }
@@ -612,8 +629,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     public int interactPutCurrentItemIntoSlot (int slot, EntityPlayer player) {
         int count = 0;
         ItemStack playerStack = player.inventory.getCurrentItem();
-        if (playerStack != null)
-            count = putItemsIntoSlot(slot, playerStack, playerStack.stackSize);
+        if (!playerStack.func_190926_b())
+            count = putItemsIntoSlot(slot, playerStack, playerStack.func_190916_E());
 
         if (count > 0)
             markDirty();
@@ -627,10 +644,10 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (!drawers[slot].isEmpty()) {
             for (int i = 0, n = player.inventory.getSizeInventory(); i < n; i++) {
                 ItemStack subStack = player.inventory.getStackInSlot(i);
-                if (subStack != null) {
-                    int subCount = putItemsIntoSlot(slot, subStack, subStack.stackSize);
-                    if (subCount > 0 && subStack.stackSize == 0)
-                        player.inventory.setInventorySlotContents(i, null);
+                if (!subStack.func_190926_b()) {
+                    int subCount = putItemsIntoSlot(slot, subStack, subStack.func_190916_E());
+                    if (subCount > 0 && subStack.func_190916_E() == 0)
+                        player.inventory.setInventorySlotContents(i, ItemStack.field_190927_a);
 
                     count += subCount;
                 }
@@ -645,7 +662,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     }
 
     public int interactPutItemsIntoSlot (int slot, EntityPlayer player) {
-        int count = 0;
+        int count;
         if (getWorld().getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID))
             count = interactPutCurrentInventoryIntoSlot(slot, player);
         else
@@ -655,15 +672,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         lastClickUUID = player.getPersistentID();
 
         return count;
-    }
-
-    private void readLegacyUpgradeNBT (NBTTagCompound tag) {
-        if (tag.hasKey("Lev") && tag.getByte("Lev") > 1)
-            addUpgrade(new ItemStack(ModItems.upgradeStorage, 1, EnumUpgradeStorage.byLevel(tag.getByte("Lev")).getMetadata()));
-        if (tag.hasKey("Stat"))
-            addUpgrade(new ItemStack(ModItems.upgradeStatus, 1, EnumUpgradeStatus.byLevel(tag.getByte("Stat")).getMetadata()));
-        if (tag.hasKey("Void"))
-            addUpgrade(new ItemStack(ModItems.upgradeVoid));
     }
 
     @Override
@@ -684,7 +692,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         tag.setByte("Dir", (byte) direction);
 
         if (taped)
-            tag.setBoolean("Tape", taped);
+            tag.setBoolean("Tape", true);
 
         return tag;
     }
@@ -694,6 +702,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         super.readFromPortableNBT(tag);
 
         upgrades = new ItemStack[upgrades.length];
+        for (int i = 0; i < upgrades.length; i++)
+            upgrades[i] = ItemStack.field_190927_a;
 
         material = null;
         if (tag.hasKey("Mat"))
@@ -701,17 +711,12 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         drawerCapacity = tag.getInteger("Cap");
 
-        if (!tag.hasKey("Upgrades")) {
-            readLegacyUpgradeNBT(tag);
-        }
-        else {
-            NBTTagList upgradeList = tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND);
-            for (int i = 0; i < upgradeList.tagCount(); i++) {
-                NBTTagCompound upgradeTag = upgradeList.getCompoundTagAt(i);
+        NBTTagList upgradeList = tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < upgradeList.tagCount(); i++) {
+            NBTTagCompound upgradeTag = upgradeList.getCompoundTagAt(i);
 
-                int slot = upgradeTag.getByte("Slot");
-                setUpgrade(slot, ItemStack.loadItemStackFromNBT(upgradeTag));
-            }
+            int slot = upgradeTag.getByte("Slot");
+            setUpgrade(slot, new ItemStack(upgradeTag));
         }
 
         lockAttributes = null;
@@ -743,17 +748,17 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
             drawers[i].readFromNBT(slot);
         }
 
-        materialSide = null;
+        materialSide = ItemStack.field_190927_a;
         if (tag.hasKey("MatS"))
-            materialSide = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatS"));
+            materialSide = new ItemStack(tag.getCompoundTag("MatS"));
 
-        materialFront = null;
+        materialFront = ItemStack.field_190927_a;
         if (tag.hasKey("MatF"))
-            materialFront = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatF"));
+            materialFront = new ItemStack(tag.getCompoundTag("MatF"));
 
-        materialTrim = null;
+        materialTrim = ItemStack.field_190927_a;
         if (tag.hasKey("MatT"))
-            materialTrim = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("MatT"));
+            materialTrim = new ItemStack(tag.getCompoundTag("MatT"));
 
         attributeChanged();
     }
@@ -769,7 +774,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         NBTTagList upgradeList = new NBTTagList();
         for (int i = 0; i < upgrades.length; i++) {
-            if (upgrades[i] != null) {
+            if (!upgrades[i].func_190926_b()) {
                 NBTTagCompound upgradeTag = upgrades[i].writeToNBT(new NBTTagCompound());
                 upgradeTag.setByte("Slot", (byte)i);
 
@@ -784,7 +789,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
             tag.setByte("Lock", (byte)LockAttribute.getBitfield(lockAttributes));
 
         if (shrouded)
-            tag.setBoolean("Shr", shrouded);
+            tag.setBoolean("Shr", true);
 
         if (owner != null)
             tag.setString("Own", owner.toString());
@@ -793,7 +798,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
             tag.setString("Sec", securityKey);
 
         if (hideUpgrade)
-            tag.setBoolean("HideUp", hideUpgrade);
+            tag.setBoolean("HideUp", true);
 
         NBTTagList slots = new NBTTagList();
         for (IDrawer drawer : drawers) {
@@ -804,19 +809,19 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         tag.setTag("Slots", slots);
 
-        if (materialSide != null) {
+        if (!materialSide.func_190926_b()) {
             NBTTagCompound itag = new NBTTagCompound();
             materialSide.writeToNBT(itag);
             tag.setTag("MatS", itag);
         }
 
-        if (materialFront != null) {
+        if (!materialFront.func_190926_b()) {
             NBTTagCompound itag = new NBTTagCompound();
             materialFront.writeToNBT(itag);
             tag.setTag("MatF", itag);
         }
 
-        if (materialTrim != null) {
+        if (!materialTrim.func_190926_b()) {
             NBTTagCompound itag = new NBTTagCompound();
             materialTrim.writeToNBT(itag);
             tag.setTag("MatT", itag);
@@ -828,8 +833,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     @Override
     public void markDirty () {
         if (isRedstone() && getWorld() != null) {
-            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType());
-            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType());
+            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
+            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType(), false);
         }
 
         super.markDirty();
@@ -903,7 +908,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (isSealed())
             return null;
 
-        if (getBlockType() instanceof BlockDrawersCustom && materialSide == null)
+        if (getBlockType() instanceof BlockDrawersCustom && materialSide.func_190926_b())
             return null;
 
         return drawers[slot];

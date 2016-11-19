@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;

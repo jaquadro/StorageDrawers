@@ -17,11 +17,18 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nonnull;
+
 public class TileEntityFramingTable extends TileEntity implements IInventory
 {
     private ItemStack[] tableItemStacks = new ItemStack[5];
 
     private String customName;
+
+    public TileEntityFramingTable () {
+        for (int i = 0; i < tableItemStacks.length; i++)
+            tableItemStacks[i] = ItemStack.field_190927_a;
+    }
 
     @Override
     public int getSizeInventory () {
@@ -29,50 +36,58 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     }
 
     @Override
+    public boolean func_191420_l () {
+        return false;
+    }
+
+    @Override
+    @Nonnull
     public ItemStack getStackInSlot (int slot) {
         return tableItemStacks[slot];
     }
 
     @Override
+    @Nonnull
     public ItemStack decrStackSize (int slot, int count) {
-        if (tableItemStacks[slot] != null) {
-            if (tableItemStacks[slot].stackSize <= count) {
+        if (!tableItemStacks[slot].func_190926_b()) {
+            if (tableItemStacks[slot].func_190916_E() <= count) {
                 ItemStack stack = tableItemStacks[slot];
-                tableItemStacks[slot] = null;
+                tableItemStacks[slot] = ItemStack.field_190927_a;
                 markDirty();
                 return stack;
             }
             else {
                 ItemStack stack = tableItemStacks[slot].splitStack(count);
-                if (tableItemStacks[slot].stackSize == 0)
-                    tableItemStacks[slot] = null;
+                if (tableItemStacks[slot].func_190916_E() == 0)
+                    tableItemStacks[slot] = ItemStack.field_190927_a;
 
                 markDirty();
                 return stack;
             }
         }
         else
-            return null;
+            return ItemStack.field_190927_a;
     }
 
     @Override
+    @Nonnull
     public ItemStack removeStackFromSlot (int index) {
-        if (tableItemStacks[index] != null) {
+        if (!tableItemStacks[index].func_190926_b()) {
             ItemStack stack = tableItemStacks[index];
-            tableItemStacks[index] = null;
+            tableItemStacks[index] = ItemStack.field_190927_a;
             markDirty();
             return stack;
         }
 
-        return null;
+        return ItemStack.field_190927_a;
     }
 
     @Override
-    public void setInventorySlotContents (int slot, ItemStack stack) {
+    public void setInventorySlotContents (int slot, @Nonnull ItemStack stack) {
         tableItemStacks[slot] = stack;
 
-        if (stack != null && stack.stackSize > getInventoryStackLimit())
-            stack.stackSize = getInventoryStackLimit();
+        if (!stack.func_190926_b() && stack.func_190916_E() > getInventoryStackLimit())
+            stack.func_190920_e(getInventoryStackLimit());
 
         markDirty();
     }
@@ -102,7 +117,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     }
 
     @Override
-    public boolean isUseableByPlayer (EntityPlayer player) {
+    public boolean isUsableByPlayer (EntityPlayer player) {
         if (getWorld().getTileEntity(pos) != this)
             return false;
 
@@ -120,7 +135,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     }
 
     @Override
-    public boolean isItemValidForSlot (int slot, ItemStack stack) {
+    public boolean isItemValidForSlot (int slot, @Nonnull ItemStack stack) {
         if (slot == 0)
             return isItemValidDrawer(stack);
         if (slot == 4)
@@ -151,16 +166,16 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
 
     }
 
-    public static boolean isItemValidDrawer (ItemStack stack) {
-        if (stack == null)
+    public static boolean isItemValidDrawer (@Nonnull ItemStack stack) {
+        if (stack.func_190926_b())
             return false;
 
         Block block = Block.getBlockFromItem(stack.getItem());
         return block instanceof BlockDrawersCustom || block instanceof BlockTrimCustom;
     }
 
-    public static boolean isItemValidMaterial (ItemStack stack) {
-        if (stack == null)
+    public static boolean isItemValidMaterial (@Nonnull ItemStack stack) {
+        if (stack.func_190926_b())
             return false;
 
         Block block = Block.getBlockFromItem(stack.getItem());
@@ -177,13 +192,15 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
 
         NBTTagList itemList = tag.getTagList("Items", 10);
         tableItemStacks = new ItemStack[getSizeInventory()];
+        for (int i = 0; i < tableItemStacks.length; i++)
+            tableItemStacks[i] = ItemStack.field_190927_a;
 
         for (int i = 0; i < itemList.tagCount(); i++) {
             NBTTagCompound item = itemList.getCompoundTagAt(i);
             byte slot = item.getByte("Slot");
 
             if (slot >= 0 && slot < tableItemStacks.length)
-                tableItemStacks[slot] = ItemStack.loadItemStackFromNBT(item);
+                tableItemStacks[slot] = new ItemStack(item);
         }
 
         if (tag.hasKey("CustomName", Constants.NBT.TAG_STRING))
@@ -196,7 +213,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
 
         NBTTagList itemList = new NBTTagList();
         for (int i = 0; i < tableItemStacks.length; i++) {
-            if (tableItemStacks[i] != null) {
+            if (!tableItemStacks[i].func_190926_b()) {
                 NBTTagCompound item = new NBTTagCompound();
                 item.setByte("Slot", (byte)i);
                 tableItemStacks[i].writeToNBT(item);

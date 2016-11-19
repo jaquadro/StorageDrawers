@@ -19,7 +19,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -63,7 +62,7 @@ public class BlockFramingTable extends BlockContainer
     }
 
     @Override
-    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float vx, float vy, float vz) {
+    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float vx, float vy, float vz) {
         int priX = pos.getX() + getXOff(state);
         int priZ = pos.getZ() + getZOff(state);
 
@@ -119,7 +118,7 @@ public class BlockFramingTable extends BlockContainer
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged (IBlockState state, World world, BlockPos pos, Block block) {
+    public void neighborChanged (IBlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos neighborPos) {
         EnumFacing side = getDirection(state);
         if (isRightBlock(state)) {
             BlockPos otherPos = pos.add(leftOffset[side.getIndex()][0], 0, leftOffset[side.getIndex()][1]);

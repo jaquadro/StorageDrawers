@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -23,7 +24,7 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 
-import java.util.List;
+import javax.annotation.Nonnull;
 
 public class BlockDrawersCustom extends BlockDrawers
 {
@@ -49,27 +50,28 @@ public class BlockDrawersCustom extends BlockDrawers
     }
 
     @Override
+    @Nonnull
     protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile == null)
-            return ItemCustomDrawers.makeItemStack(state, 1, null, null, null);
+            return ItemCustomDrawers.makeItemStack(state, 1, ItemStack.field_190927_a, ItemStack.field_190927_a, ItemStack.field_190927_a);
 
         return ItemCustomDrawers.makeItemStack(state, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront());
     }
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
+    public void getSubBlocks (Item item, CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
         for (EnumBasicDrawer type : EnumBasicDrawer.values())
             list.add(new ItemStack(item, 1, type.getMetadata()));
     }
 
     @Override
-    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileEntityDrawers tile = getTileEntity(world, pos);
-        if (tile != null && tile.getMaterialSide() == null)
+        if (tile != null && tile.getMaterialSide().func_190926_b())
             return false;
 
-        return super.onBlockActivated(world, pos, state, player, hand, item, side, hitX, hitY, hitZ);
+        return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
     }
 
     @Override

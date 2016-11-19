@@ -15,6 +15,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+
 public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup
 {
     private static final int[] drawerSlots = new int[] { 0 };
@@ -103,19 +106,19 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
     }
 
     @Override
-    public Iterable<Integer> enumerateDrawersForInsertion (ItemStack stack, boolean strict) {
+    public Iterable<Integer> enumerateDrawersForInsertion (@Nonnull ItemStack stack, boolean strict) {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getPos()))
-            return new ArrayList<Integer>();
+            return new ArrayList<>();
 
         return controller.enumerateDrawersForInsertion(stack, strict);
     }
 
     @Override
-    public Iterable<Integer> enumerateDrawersForExtraction (ItemStack stack, boolean strict) {
+    public Iterable<Integer> enumerateDrawersForExtraction (@Nonnull ItemStack stack, boolean strict) {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getPos()))
-            return new ArrayList<Integer>();
+            return new ArrayList<>();
 
         return controller.enumerateDrawersForExtraction(stack, strict);
     }

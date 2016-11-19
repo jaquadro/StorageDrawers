@@ -23,6 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class TileEntityController extends TileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup
@@ -137,19 +138,19 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
         if (!dumpInventory) {
             ItemStack currentStack = player.inventory.getCurrentItem();
-            if (currentStack != null) {
+            if (!currentStack.func_190926_b()) {
                 count = insertItems(currentStack, player.getGameProfile());
-                if (currentStack.stackSize == 0)
-                    player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                if (currentStack.func_190916_E() == 0)
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.field_190927_a);
             }
         }
         else {
             for (int i = 0, n = player.inventory.getSizeInventory(); i < n; i++) {
                 ItemStack subStack = player.inventory.getStackInSlot(i);
-                if (subStack != null) {
+                if (!subStack.func_190926_b()) {
                     count += insertItems(subStack, player.getGameProfile());
-                    if (subStack.stackSize == 0)
-                        player.inventory.setInventorySlotContents(i, null);
+                    if (subStack.func_190916_E() == 0)
+                        player.inventory.setInventorySlotContents(i, ItemStack.field_190927_a);
                 }
             }
 
@@ -163,8 +164,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         return count;
     }
 
-    protected int insertItems (ItemStack stack, GameProfile profile) {
-        int itemsLeft = stack.stackSize;
+    protected int insertItems (@Nonnull ItemStack stack, GameProfile profile) {
+        int itemsLeft = stack.func_190916_E();
 
         for (int slot : enumerateDrawersForInsertion(stack, false)) {
             IDrawerGroup group = getGroupForDrawerSlot(slot);
@@ -175,7 +176,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
             IDrawer drawer = getDrawer(slot);
             ItemStack itemProto = drawer.getStoredItemPrototype();
-            if (itemProto == null)
+            if (itemProto.func_190926_b())
                 break;
 
             itemsLeft = insertItemsIntoDrawer(drawer, itemsLeft);
@@ -186,8 +187,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                 break;
         }
 
-        int count = stack.stackSize - itemsLeft;
-        stack.stackSize = itemsLeft;
+        int count = stack.func_190916_E() - itemsLeft;
+        stack.func_190920_e(itemsLeft);
 
         return count;
     }
@@ -358,7 +359,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     private int[] sortSlotRecords (List<SlotRecord> records) {
         indexSlotRecords(records);
 
-        List<SlotRecord> copied = new ArrayList<SlotRecord>(records);
+        List<SlotRecord> copied = new ArrayList<>(records);
         Collections.sort(copied, slotRecordComparator);
 
         int[] slotMap = new int[copied.size()];
@@ -391,8 +392,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
     private boolean containsNullEntries (List<SlotRecord> list) {
         int nullCount = 0;
-        for (int i = 0, n = list.size(); i < n; i++) {
-            if (list.get(i) == null)
+        for (SlotRecord aList : list) {
+            if (aList == null)
                 nullCount++;
         }
 
@@ -401,10 +402,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
     private void flattenLists () {
         if (containsNullEntries(drawerSlotList)) {
-            List<SlotRecord> newDrawerSlotList = new ArrayList<SlotRecord>();
+            List<SlotRecord> newDrawerSlotList = new ArrayList<>();
 
-            for (int i = 0, n = drawerSlotList.size(); i < n; i++) {
-                SlotRecord record = drawerSlotList.get(i);
+            for (SlotRecord record : drawerSlotList) {
                 if (record != null)
                     newDrawerSlotList.add(record);
             }
@@ -676,11 +676,12 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
     private class DrawerStackIterator implements Iterable<Integer>
     {
+        @Nonnull
         private ItemStack stack;
         private boolean strict;
         private boolean insert;
 
-        public DrawerStackIterator (ItemStack stack, boolean strict, boolean insert) {
+        public DrawerStackIterator (@Nonnull ItemStack stack, boolean strict, boolean insert) {
             this.stack = stack;
             this.strict = strict;
             this.insert = insert;
@@ -751,7 +752,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
                         if (strict) {
                             ItemStack proto = drawer.getStoredItemPrototype();
-                            if (proto != null && !proto.isItemEqual(stack))
+                            if (!proto.isItemEqual(stack))
                                 continue;
                         }
 
@@ -778,11 +779,11 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         }
     };
 
-    public Iterable<Integer> enumerateDrawersForInsertion (ItemStack stack, boolean strict) {
+    public Iterable<Integer> enumerateDrawersForInsertion (@Nonnull ItemStack stack, boolean strict) {
         return new DrawerStackIterator(stack, strict, true);
     }
 
-    public Iterable<Integer> enumerateDrawersForExtraction (ItemStack stack, boolean strict) {
+    public Iterable<Integer> enumerateDrawersForExtraction (@Nonnull ItemStack stack, boolean strict) {
         return new DrawerStackIterator(stack, strict, false);
     }
 }

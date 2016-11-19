@@ -54,6 +54,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +102,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
             .withProperty(FACING, EnumFacing.NORTH));
     }
 
-    public boolean retrimBlock (World world, BlockPos pos, ItemStack prototype) {
+    public boolean retrimBlock (World world, BlockPos pos, @Nonnull ItemStack prototype) {
         if (retrimType() == null)
             return false;
 
@@ -116,8 +117,8 @@ public class BlockDrawers extends BlockContainer implements INetworked
         if (newState == null || !(newState.getBlock() instanceof BlockTrim))
             return false;
 
-        BlockPlanks.EnumType curVariant = (BlockPlanks.EnumType)curState.getValue(VARIANT);
-        BlockPlanks.EnumType newVariant = (BlockPlanks.EnumType)newState.getValue(VARIANT);
+        BlockPlanks.EnumType curVariant = curState.getValue(VARIANT);
+        BlockPlanks.EnumType newVariant = newState.getValue(VARIANT);
         if (curVariant == newVariant)
             return false;
 
@@ -135,7 +136,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
 
     public int getDrawerCount (IBlockState state) {
         if (state != null && state.getBlock() instanceof BlockDrawers) {
-            EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
+            EnumBasicDrawer info = state.getValue(BLOCK);
             if (info != null)
                 return info.getDrawerCount();
         }
@@ -145,7 +146,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
 
     public boolean isHalfDepth (IBlockState state) {
         if (state != null && state.getBlock() instanceof BlockDrawers) {
-            EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
+            EnumBasicDrawer info = state.getValue(BLOCK);
             if (info != null)
                 return info.isHalfDepth();
         }
@@ -170,7 +171,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
     @SideOnly(Side.CLIENT)
     public StatusModelData getStatusInfo (IBlockState state) {
         if (state != null) {
-            EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
+            EnumBasicDrawer info = state.getValue(BLOCK);
             if (info != null)
                 return statusInfo[info.getMetadata()];
         }
@@ -275,7 +276,8 @@ public class BlockDrawers extends BlockContainer implements INetworked
     }
 
     @Override
-    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        ItemStack item = player.getHeldItem(hand);
         if (hand == EnumHand.OFF_HAND)
             return false;
 
@@ -291,17 +293,18 @@ public class BlockDrawers extends BlockContainer implements INetworked
 
         if (StorageDrawers.config.cache.debugTrace) {
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockActivated");
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item == null) ? "  null item" : "  " + item.toString());
+            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item.func_190926_b()) ? "  null item" : "  " + item.toString());
         }
 
-        if (item != null && item.getItem() != null) {
+        if (!item.func_190926_b()) {
             if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
                 if (!retrimBlock(world, pos, item))
                     return false;
 
                 if (!player.capabilities.isCreativeMode) {
-                    if (--item.stackSize <= 0)
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                    item.func_190918_g(1);
+                    if (item.func_190916_E() <= 0)
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.field_190927_a);
                 }
 
                 return true;
@@ -318,8 +321,9 @@ public class BlockDrawers extends BlockContainer implements INetworked
                 world.notifyBlockUpdate(pos, state, state, 3);
 
                 if (!player.capabilities.isCreativeMode) {
-                    if (--item.stackSize <= 0)
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                    item.func_190918_g(1);
+                    if (item.func_190916_E() <= 0)
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.field_190927_a);
                 }
 
                 return true;
@@ -354,7 +358,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
             else if (item.getItem() == ModItems.tape)
                 return false;
         }
-        else if (item == null && player.isSneaking()) {
+        else if (item.func_190926_b() && player.isSneaking()) {
             if (tileDrawers.isSealed()) {
                 tileDrawers.setIsSealed(false);
                 return true;
@@ -377,11 +381,11 @@ public class BlockDrawers extends BlockContainer implements INetworked
 
         int countAdded = tileDrawers.interactPutItemsIntoSlot(slot, player);
 
-        if (countAdded > 0 && currentStack != null)
+        if (countAdded > 0 && !currentStack.func_190926_b())
             world.notifyBlockUpdate(pos, state, state, 3);
 
-        if (item != null && item.stackSize == 0)
-            player.setHeldItem(hand, null);
+        if (item.func_190926_b())
+            player.setHeldItem(hand, ItemStack.field_190927_a);
 
         return true;
     }
@@ -465,10 +469,10 @@ public class BlockDrawers extends BlockContainer implements INetworked
             item = tileDrawers.takeItemsFromSlot(slot, 1);
 
         if (StorageDrawers.config.cache.debugTrace)
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item == null) ? "  null item" : "  " + item.toString());
+            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item.func_190926_b()) ? "  null item" : "  " + item.toString());
 
         IBlockState state = worldIn.getBlockState(pos);
-        if (item != null && item.stackSize > 0) {
+        if (!item.func_190926_b()) {
             if (!playerIn.inventory.addItemStackToInventory(item)) {
                 dropItemStack(worldIn, pos.offset(side), playerIn, item);
                 worldIn.notifyBlockUpdate(pos, state, state, 3);
@@ -508,7 +512,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
         return side.ordinal() != tile.getDirection();
     }
 
-    private void dropItemStack (World world, BlockPos pos, EntityPlayer player, ItemStack stack) {
+    private void dropItemStack (World world, BlockPos pos, EntityPlayer player, @Nonnull ItemStack stack) {
         EntityItem entity = new EntityItem(world, pos.getX() + .5f, pos.getY() + .1f, pos.getZ() + .5f, stack);
         entity.addVelocity(-entity.motionX, -entity.motionY, -entity.motionZ);
         world.spawnEntityInWorld(entity);
@@ -548,7 +552,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
         if (tile != null && !tile.isSealed()) {
             for (int i = 0; i < tile.getUpgradeSlotCount(); i++) {
                 ItemStack stack = tile.getUpgrade(i);
-                if (stack != null) {
+                if (!stack.func_190926_b()) {
                     if (stack.getItem() instanceof ItemUpgradeCreative)
                         continue;
                     spawnAsEntity(world, pos, stack);
@@ -566,7 +570,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
     public List<ItemStack> getDrops (IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         ItemStack dropStack = getMainDrop(world, pos, state);
 
-        List<ItemStack> drops = new ArrayList<ItemStack>();
+        List<ItemStack> drops = new ArrayList<>();
         drops.add(dropStack);
 
         TileEntityDrawers tile = getTileEntity(world, pos);
@@ -591,12 +595,13 @@ public class BlockDrawers extends BlockContainer implements INetworked
         return drops;
     }
 
+    @Nonnull
     protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
         return new ItemStack(Item.getItemFromBlock(this), 1, state.getBlock().getMetaFromState(state));
     }
 
     @Override
-    public void harvestBlock (World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack) {
+    public void harvestBlock (World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, @Nonnull ItemStack stack) {
         super.harvestBlock(world, player, pos, state, te, stack);
         world.setBlockToAir(pos);
     }
@@ -607,7 +612,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
         if (tile != null) {
             for (int slot = 0; slot < 5; slot++) {
                 ItemStack stack = tile.getUpgrade(slot);
-                if (stack == null || !(stack.getItem() instanceof ItemUpgradeStorage))
+                if (stack.func_190926_b() || !(stack.getItem() instanceof ItemUpgradeStorage))
                     continue;
 
                 if (EnumUpgradeStorage.byMetadata(stack.getMetadata()) != EnumUpgradeStorage.OBSIDIAN)
@@ -659,7 +664,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
     }
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
+    public void getSubBlocks (Item item, CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
         for (EnumBasicDrawer type : EnumBasicDrawer.values()) {
             for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
                 ItemStack stack = new ItemStack(item, 1, type.getMetadata());
@@ -707,7 +712,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
 
     @Override
     public int getMetaFromState (IBlockState state) {
-        return ((EnumBasicDrawer)state.getValue(BLOCK)).getMetadata();
+        return (state.getValue(BLOCK)).getMetadata();
     }
 
     @Override

@@ -28,15 +28,7 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
     }
 
     @Override
-    public void setStoredItem (@Nonnull ItemStack itemPrototype, int amount) {
-        central.setStoredItem(slot, itemPrototype, amount);
-        refresh();
-
-        // markDirty
-    }
-
-    @Override
-    public IDrawer setStoredItemRedir (@Nonnull ItemStack itemPrototype, int amount) {
+    public IDrawer setStoredItem (@Nonnull ItemStack itemPrototype, int amount) {
         IDrawer target = central.setStoredItem(slot, itemPrototype, amount);
         refresh();
 

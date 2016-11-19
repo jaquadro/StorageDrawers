@@ -37,17 +37,17 @@ public class ItemCustomTrim extends ItemBlock
     }
 
     @Nonnull
-    public static ItemStack makeItemStack (Block block, int count, ItemStack matSide, ItemStack matTrim) {
+    public static ItemStack makeItemStack (Block block, int count, @Nonnull ItemStack matSide, @Nonnull ItemStack matTrim) {
         Item item = Item.getItemFromBlock(block);
         if (!(item instanceof ItemCustomTrim))
             return ItemStack.field_190927_a;
 
         NBTTagCompound tag = new NBTTagCompound();
 
-        if (matSide != null)
+        if (!matSide.func_190926_b())
             tag.setTag("MatS", getMaterialTag(matSide));
 
-        if (matTrim != null)
+        if (!matTrim.func_190926_b())
             tag.setTag("MatT", getMaterialTag(matTrim));
 
         ItemStack stack = new ItemStack(item, count, 0);

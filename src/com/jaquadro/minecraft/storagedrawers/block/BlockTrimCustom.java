@@ -1,7 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.chameleon.block.properties.UnlistedModelData;
-import com.jaquadro.minecraft.chameleon.block.properties.UnlistedTileEntity;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.MaterialModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityTrim;
@@ -15,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -22,6 +22,7 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
@@ -50,16 +51,17 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
     }
 
     @Override
+    @Nonnull
     protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
         TileEntityTrim tile = getTileEntity(world, pos);
         if (tile == null)
-            return ItemCustomTrim.makeItemStack(this, 1, null, null);
+            return ItemCustomTrim.makeItemStack(this, 1, ItemStack.field_190927_a, ItemStack.field_190927_a);
 
         return ItemCustomTrim.makeItemStack(this, 1, tile.getMaterialSide(), tile.getMaterialTrim());
     }
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
+    public void getSubBlocks (Item item, CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
         if (StorageDrawers.config.cache.addonShowVanilla)
             list.add(new ItemStack(item));
     }
