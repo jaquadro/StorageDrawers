@@ -11,13 +11,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 
+import javax.annotation.Nonnull;
+
 public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable, IItemLockable
 {
-    private static final ItemStack nullStack = new ItemStack((Item)null);
-
     private IStorageProvider storageProvider;
     private int slot;
 
+    @Nonnull
     private ItemStack protoStack;
 
     private boolean isUnlimited;
@@ -25,7 +26,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     public DrawerData (IStorageProvider provider, int slot) {
         storageProvider = provider;
-        protoStack = nullStack;
+        protoStack = ItemStack.field_190927_a;
         this.slot = slot;
 
         updateAttributeCache();
@@ -34,28 +35,21 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     }
 
     @Override
+    @Nonnull
     public ItemStack getStoredItemPrototype () {
-        if (protoStack == nullStack)
-            return null;
-
         return protoStack;
     }
 
     @Override
-    public void setStoredItem (ItemStack itemPrototype, int amount) {
-        setStoredItem(itemPrototype, amount, true);
-    }
-
-    @Override
-    public IDrawer setStoredItemRedir (ItemStack itemPrototype, int amount) {
+    public IDrawer setStoredItem (@Nonnull ItemStack itemPrototype, int amount) {
         setStoredItem(itemPrototype, amount, true);
         return this;
     }
 
-    private void setStoredItem (ItemStack itemPrototype, int amount, boolean mark) {
-        if (itemPrototype == null) {
+    private void setStoredItem (@Nonnull ItemStack itemPrototype, int amount, boolean mark) {
+        if (itemPrototype.func_190926_b()) {
             setStoredItemCount(0, false, true);
-            protoStack = nullStack;
+            protoStack = ItemStack.field_190927_a;
 
             DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
@@ -66,7 +60,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         }
 
         protoStack = itemPrototype.copy();
-        protoStack.stackSize = 0;
+        protoStack.func_190920_e(0);
 
         refreshOreDictMatches();
         setStoredItemCount(amount, mark, false);
@@ -80,10 +74,10 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Override
     public int getStoredItemCount () {
-        if (protoStack != nullStack && storageProvider.isVendingUnlimited(slot))
+        if (!protoStack.func_190926_b() && storageProvider.isVendingUnlimited(slot))
             return Integer.MAX_VALUE;
 
-        return protoStack.stackSize;
+        return protoStack.func_190916_E();
     }
 
     @Override
@@ -92,12 +86,10 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     }
 
     public void setStoredItemCount (int amount, boolean mark, boolean clearOnEmpty) {
-        if (storageProvider.isVendingUnlimited(slot))
+        if (protoStack.func_190926_b() || storageProvider.isVendingUnlimited(slot))
             return;
 
-        protoStack.stackSize = amount;
-        if (protoStack.stackSize > getMaxCapacity())
-            protoStack.stackSize = getMaxCapacity();
+        protoStack.func_190920_e(Math.min(amount, getMaxCapacity()));
 
         if (amount == 0) {
             if (clearOnEmpty) {
@@ -117,8 +109,8 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     }
 
     @Override
-    public int getMaxCapacity (ItemStack itemPrototype) {
-        if (itemPrototype == null || itemPrototype.getItem() == null)
+    public int getMaxCapacity (@Nonnull ItemStack itemPrototype) {
+        if (itemPrototype.func_190926_b())
             return 0;
 
         if (isUnlimited)
@@ -129,7 +121,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Override
     public int getRemainingCapacity () {
-        if (protoStack.getItem() == null)
+        if (protoStack.func_190926_b())
             return 0;
 
         if (storageProvider.isVendingUnlimited(slot))
@@ -140,7 +132,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Override
     public int getStoredItemStackSize () {
-        if (protoStack.getItem() == null)
+        if (protoStack.func_190926_b())
             return 0;
 
         return protoStack.getItem().getItemStackLimit(protoStack);
@@ -155,16 +147,16 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     }
 
     @Override
-    public boolean canItemBeStored (ItemStack itemPrototype) {
-        if (protoStack == nullStack && !isItemLocked(LockAttribute.LOCK_EMPTY))
+    public boolean canItemBeStored (@Nonnull ItemStack itemPrototype) {
+        if (protoStack.func_190926_b() && !isItemLocked(LockAttribute.LOCK_EMPTY))
             return true;
 
         return areItemsEqual(itemPrototype);
     }
 
     @Override
-    public boolean canItemBeExtracted (ItemStack itemPrototype) {
-        if (protoStack == nullStack)
+    public boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype) {
+        if (protoStack.func_190926_b())
             return false;
 
         return areItemsEqual(itemPrototype);
@@ -172,7 +164,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Override
     public boolean isEmpty () {
-        return protoStack == nullStack;
+        return protoStack.func_190926_b();
     }
 
     @Override
@@ -186,10 +178,10 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     }
 
     public void writeToNBT (NBTTagCompound tag) {
-        if (protoStack.getItem() != null) {
+        if (!protoStack.func_190926_b()) {
             tag.setShort("Item", (short) Item.getIdFromItem(protoStack.getItem()));
             tag.setShort("Meta", (short) protoStack.getItemDamage());
-            tag.setInteger("Count", protoStack.stackSize);
+            tag.setInteger("Count", protoStack.func_190916_E());
 
             if (protoStack.getTagCompound() != null)
                 tag.setTag("Tags", protoStack.getTagCompound());
@@ -218,7 +210,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Override
     protected void reset () {
-        protoStack = nullStack;
+        protoStack = ItemStack.field_190927_a;
         super.reset();
 
         DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);

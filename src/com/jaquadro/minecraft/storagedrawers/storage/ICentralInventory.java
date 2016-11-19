@@ -5,11 +5,14 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nonnull;
+
 public interface ICentralInventory
 {
+    @Nonnull
     ItemStack getStoredItemPrototype (int slot);
 
-    IDrawer setStoredItem (int slot, ItemStack itemPrototype, int amount);
+    IDrawer setStoredItem (int slot, @Nonnull ItemStack itemPrototype, int amount);
 
     int getStoredItemCount (int slot);
 
@@ -17,7 +20,7 @@ public interface ICentralInventory
 
     int getMaxCapacity (int slot);
 
-    int getMaxCapacity (int slot, ItemStack itemPrototype);
+    int getMaxCapacity (int slot, @Nonnull ItemStack itemPrototype);
 
     int getRemainingCapacity (int slot);
 

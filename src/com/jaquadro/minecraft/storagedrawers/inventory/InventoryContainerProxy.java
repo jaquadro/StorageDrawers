@@ -38,7 +38,7 @@ public class InventoryContainerProxy implements IInventory
     @Nonnull
     public ItemStack decrStackSize (int slot, int count) {
         ItemStack stack = parent.getStackInSlot(slot);
-        if (!stack.func_190926_b())
+        if (stack.func_190926_b())
             return ItemStack.field_190927_a;
 
         int stackCount = stack.func_190916_E();
@@ -55,7 +55,7 @@ public class InventoryContainerProxy implements IInventory
     @Nonnull
     public ItemStack removeStackFromSlot (int index) {
         ItemStack stack = parent.removeStackFromSlot(index);
-        if (!stack.func_190926_b())
+        if (stack.func_190926_b())
             return ItemStack.field_190927_a;
 
         container.onCraftMatrixChanged(this);

@@ -9,6 +9,8 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nonnull;
+
 public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer, IVoidable, IShroudable, IItemLockable
 {
     private ICentralInventory central;
@@ -20,12 +22,13 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
     }
 
     @Override
+    @Nonnull
     public ItemStack getStoredItemPrototype () {
         return central.getStoredItemPrototype(slot);
     }
 
     @Override
-    public void setStoredItem (ItemStack itemPrototype, int amount) {
+    public void setStoredItem (@Nonnull ItemStack itemPrototype, int amount) {
         central.setStoredItem(slot, itemPrototype, amount);
         refresh();
 
@@ -33,7 +36,7 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
     }
 
     @Override
-    public IDrawer setStoredItemRedir (ItemStack itemPrototype, int amount) {
+    public IDrawer setStoredItemRedir (@Nonnull ItemStack itemPrototype, int amount) {
         IDrawer target = central.setStoredItem(slot, itemPrototype, amount);
         refresh();
 
@@ -56,7 +59,7 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
     }
 
     @Override
-    public int getMaxCapacity (ItemStack itemPrototype) {
+    public int getMaxCapacity (@Nonnull ItemStack itemPrototype) {
         return central.getMaxCapacity(slot, itemPrototype);
     }
 
@@ -76,21 +79,21 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
     }
 
     @Override
-    public boolean canItemBeStored (ItemStack itemPrototype) {
-        if (getStoredItemPrototype() == null && !isItemLocked(LockAttribute.LOCK_EMPTY))
+    public boolean canItemBeStored (@Nonnull ItemStack itemPrototype) {
+        if (getStoredItemPrototype().func_190926_b() && !isItemLocked(LockAttribute.LOCK_EMPTY))
             return true;
 
         return areItemsEqual(itemPrototype);
     }
 
     @Override
-    public boolean canItemBeExtracted (ItemStack itemPrototype) {
+    public boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype) {
         return areItemsEqual(itemPrototype);
     }
 
     @Override
     public boolean isEmpty () {
-        return getStoredItemPrototype() == null;
+        return getStoredItemPrototype().func_190926_b();
     }
 
     @Override

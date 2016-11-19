@@ -84,7 +84,7 @@ public class DrawerItemHandler implements IItemHandler
         if (group instanceof ISmartGroup) {
             for (int i : ((ISmartGroup) group).enumerateDrawersForInsertion(stack, false)) {
                 stack = insertItemInternal(i, stack, simulate);
-                if (!stack.func_190926_b())
+                if (stack.func_190926_b())
                     break;
             }
         }
@@ -92,14 +92,14 @@ public class DrawerItemHandler implements IItemHandler
             int[] order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
             for (int i = 0; i < order.length; i++) {
                 stack = insertItemInternal(i, stack, simulate);
-                if (!stack.func_190926_b())
+                if (stack.func_190926_b())
                     break;
             }
         }
         else {
             for (int i = 0; i < group.getDrawerCount(); i++) {
                 stack = insertItemInternal(i, stack, simulate);
-                if (!stack.func_190926_b())
+                if (stack.func_190926_b())
                     break;
             }
         }
@@ -126,7 +126,7 @@ public class DrawerItemHandler implements IItemHandler
 
         if (!simulate) {
             if (drawer.isEmpty())
-                drawer.setStoredItemRedir(stack, insertCount);
+                drawer.setStoredItem(stack, insertCount);
             else
                 drawer.setStoredItemCount(drawer.getStoredItemCount() + insertCount);
         }

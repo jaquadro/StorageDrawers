@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,38 +29,40 @@ public abstract class BaseDrawerData implements IDrawer
     }
 
     @Override
+    @Nonnull
     public ItemStack getStoredItemCopy () {
         ItemStack protoStack = getStoredItemPrototype();
-        if (protoStack == null)
-            return null;
+        if (protoStack.func_190926_b())
+            return ItemStack.field_190927_a;
 
         ItemStack stack = protoStack.copy();
-        stack.stackSize = getStoredItemCount();
+        stack.func_190920_e(getStoredItemCount());
 
         return stack;
     }
 
     protected void refreshOreDictMatches () {
-        if (getStoredItemPrototype() == null) {
+        ItemStack protoStack = getStoredItemPrototype();
+        if (protoStack.func_190926_b()) {
             oreDictMatches = null;
             return;
         }
 
-        int[] oreIDs = OreDictionary.getOreIDs(getStoredItemPrototype());
+        int[] oreIDs = OreDictionary.getOreIDs(protoStack);
         if (oreIDs.length == 0)
             oreDictMatches = null;
         else {
-            oreDictMatches = new ArrayList<ItemStack>();
+            oreDictMatches = new ArrayList<>();
             for (int id : oreIDs) {
                 String oreName = OreDictionary.getOreName(id);
                 if (!StorageDrawers.oreDictRegistry.isEntryValid(oreName))
                     continue;
 
                 List<ItemStack> list = OreDictionary.getOres(oreName);
-                for (int i = 0, n = list.size(); i < n; i++) {
-                    if (list.get(i).getItemDamage() == OreDictionary.WILDCARD_VALUE)
+                for (ItemStack aList : list) {
+                    if (aList.getItemDamage() == OreDictionary.WILDCARD_VALUE)
                         continue;
-                    oreDictMatches.add(list.get(i));
+                    oreDictMatches.add(aList);
                 }
             }
 
@@ -79,7 +82,7 @@ public abstract class BaseDrawerData implements IDrawer
     @Override
     public void setExtendedData (String key, Object data) {
         if (auxData == null)
-            auxData = new HashMap<String, Object>();
+            auxData = new HashMap<>();
 
         auxData.put(key, data);
     }
@@ -91,14 +94,9 @@ public abstract class BaseDrawerData implements IDrawer
         return getMaxCapacity();
     }
 
-    public boolean areItemsEqual (ItemStack item) {
+    public boolean areItemsEqual (@Nonnull ItemStack item) {
         ItemStack protoStack = getStoredItemPrototype();
-        if (protoStack == null || item == null)
-            return false;
-        if (protoStack.getItem() == null || item.getItem() == null)
-            return false;
-
-        if (!protoStack.isItemEqual(item)) {
+        if (!protoStack.func_190926_b() && !protoStack.isItemEqual(item)) {
             if (!StorageDrawers.config.cache.enableItemConversion)
                 return false;
             if (oreDictMatches == null)
@@ -107,8 +105,8 @@ public abstract class BaseDrawerData implements IDrawer
                 return false;
 
             boolean oreMatch = false;
-            for (int i = 0, n = oreDictMatches.size(); i < n; i++) {
-                if (item.isItemEqual(oreDictMatches.get(i))) {
+            for (ItemStack oreDictMatche : oreDictMatches) {
+                if (item.isItemEqual(oreDictMatche)) {
                     oreMatch = true;
                     break;
                 }
@@ -121,17 +119,12 @@ public abstract class BaseDrawerData implements IDrawer
         return ItemStack.areItemStackTagsEqual(protoStack, item);
     }
 
-    public static boolean areItemsEqual (ItemStack stack1, ItemStack stack2) {
+    public static boolean areItemsEqual (@Nonnull ItemStack stack1, @Nonnull ItemStack stack2) {
         return areItemsEqual(stack1, stack2, true);
     }
 
-    public static boolean areItemsEqual (ItemStack stack1, ItemStack stack2, boolean oreDictStrictMode) {
-        if (stack1 == null || stack2 == null)
-            return false;
-        if (stack1.getItem() == null || stack2.getItem() == null)
-            return false;
-
-        if (!stack1.isItemEqual(stack2)) {
+    public static boolean areItemsEqual (@Nonnull ItemStack stack1, @Nonnull ItemStack stack2, boolean oreDictStrictMode) {
+        if (!stack1.func_190926_b() && !stack1.isItemEqual(stack2)) {
             if (!StorageDrawers.config.cache.enableItemConversion)
                 return false;
             if (stack1.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack2.getItemDamage() == OreDictionary.WILDCARD_VALUE)

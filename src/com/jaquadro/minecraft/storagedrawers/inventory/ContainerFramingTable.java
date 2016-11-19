@@ -81,17 +81,17 @@ public class ContainerFramingTable extends Container
         ItemStack matTrim = tableInventory.getStackInSlot(materialTrimSlot.getSlotIndex());
         ItemStack matFront = tableInventory.getStackInSlot(materialFrontSlot.getSlotIndex());
 
-        if (target.func_190926_b()) {
+        if (!target.func_190926_b()) {
             Block block = Block.getBlockFromItem(target.getItem());
             if (block instanceof BlockDrawersCustom) {
                 IBlockState state = block.getStateFromMeta(target.getMetadata());
-                if (matSide.func_190926_b()) {
+                if (!matSide.func_190926_b()) {
                     craftResult.setInventorySlotContents(0, ItemCustomDrawers.makeItemStack(state, 1, matSide, matTrim, matFront));
                     return;
                 }
             }
             else if (block instanceof BlockTrimCustom) {
-                if (matSide.func_190926_b()) {
+                if (!matSide.func_190926_b()) {
                     craftResult.setInventorySlotContents(0, ItemCustomTrim.makeItemStack(block, 1, matSide, matTrim));
                     return;
                 }

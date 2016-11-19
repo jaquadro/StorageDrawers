@@ -57,7 +57,7 @@ public class SlotCraftResult extends Slot
 
         for (int slot : inputSlots) {
             ItemStack itemTarget = inputInventory.getStackInSlot(slot);
-            if (itemTarget.func_190926_b())
+            if (!itemTarget.func_190926_b())
                 inputInventory.decrStackSize(slot, 1);
         }
 

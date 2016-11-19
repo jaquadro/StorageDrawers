@@ -114,7 +114,7 @@ public class ContainerDrawers extends Container
             }
 
             // Try merge inventory to upgrades
-            else if (slotIndex >= inventoryStart && slotIndex < hotbarEnd && slotStack.func_190926_b()) {
+            else if (slotIndex >= inventoryStart && slotIndex < hotbarEnd && !slotStack.func_190926_b()) {
                 /*if (slotStack.getItem() == ModItems.upgrade || slotStack.getItem() == ModItems.upgradeStatus || slotStack.getItem() == ModItems.upgradeVoid) {
                     ItemStack slotStack1 = slotStack.copy();
                     slotStack1.stackSize = 1;

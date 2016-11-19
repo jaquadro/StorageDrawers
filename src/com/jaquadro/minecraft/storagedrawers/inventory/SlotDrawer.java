@@ -26,7 +26,7 @@ public class SlotDrawer extends Slot
 
     @Override
     public boolean isItemValid (@Nonnull ItemStack stack) {
-        return stack.func_190926_b() && drawer.canItemBeStored(stack);
+        return !stack.func_190926_b() && drawer.canItemBeStored(stack);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class SlotDrawer extends Slot
 
     @Override
     public void putStack (@Nonnull ItemStack stack) {
-        drawer.setStoredItemRedir(stack, stack.func_190916_E());
+        drawer.setStoredItem(stack, stack.func_190916_E());
     }
 
     @Override
