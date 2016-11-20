@@ -40,7 +40,10 @@ public class DrawerItemHandler implements IItemHandler
         if (drawer == null || drawer.isEmpty())
             return ItemStack.field_190927_a;
 
-        return drawer.getStoredItemCopy();
+        ItemStack stack = drawer.getStoredItemPrototype().copy();
+        stack.func_190920_e(drawer.getStoredItemCount());
+
+        return stack;
     }
 
     @Override
@@ -156,9 +159,10 @@ public class DrawerItemHandler implements IItemHandler
         if (drawer == null || drawer.isEmpty() || drawer.getStoredItemCount() == 0)
             return ItemStack.field_190927_a;
 
-        ItemStack returnStack = drawer.getStoredItemCopy();
+        ItemStack returnStack = drawer.getStoredItemPrototype().copy();
+        int stackSize = Math.min(drawer.getStoredItemCount(), amount);
+        stackSize = Math.min(stackSize, returnStack.getMaxStackSize());
 
-        int stackSize = Math.min(Math.min(returnStack.func_190916_E(), returnStack.getMaxStackSize()), amount);
         returnStack.func_190920_e(stackSize);
 
         if (!simulate)

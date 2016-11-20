@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IItemLockable
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +21,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Nonnull
     private ItemStack protoStack;
+    private int count;
 
     private boolean isUnlimited;
     private int stackCapacity;
@@ -47,6 +49,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     }
 
     private void setStoredItem (@Nonnull ItemStack itemPrototype, int amount, boolean mark) {
+        itemPrototype = ItemStackHelper.getItemPrototype(itemPrototype);
         if (itemPrototype.func_190926_b()) {
             setStoredItemCount(0, false, true);
             protoStack = ItemStack.field_190927_a;
@@ -59,8 +62,8 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
             return;
         }
 
-        protoStack = itemPrototype.copy();
-        protoStack.func_190920_e(0);
+        protoStack = itemPrototype;
+        protoStack.func_190920_e(1);
 
         refreshOreDictMatches();
         setStoredItemCount(amount, mark, false);
@@ -77,7 +80,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         if (!protoStack.func_190926_b() && storageProvider.isVendingUnlimited(slot))
             return Integer.MAX_VALUE;
 
-        return protoStack.func_190916_E();
+        return count;
     }
 
     @Override
@@ -89,7 +92,9 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         if (protoStack.func_190926_b() || storageProvider.isVendingUnlimited(slot))
             return;
 
-        protoStack.func_190920_e(Math.min(amount, getMaxCapacity()));
+        count = amount;
+        if (count > getMaxCapacity())
+            count = getMaxCapacity();
 
         if (amount == 0) {
             if (clearOnEmpty) {
@@ -180,8 +185,8 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     public void writeToNBT (NBTTagCompound tag) {
         if (!protoStack.func_190926_b()) {
             tag.setShort("Item", (short) Item.getIdFromItem(protoStack.getItem()));
-            tag.setShort("Meta", (short) protoStack.getItemDamage());
-            tag.setInteger("Count", protoStack.func_190916_E());
+            tag.setShort("Meta", (short) protoStack.getMetadata());
+            tag.setInteger("Count", count);
 
             if (protoStack.getTagCompound() != null)
                 tag.setTag("Tags", protoStack.getTagCompound());

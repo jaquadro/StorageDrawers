@@ -28,19 +28,6 @@ public abstract class BaseDrawerData implements IDrawer
         oreDictMatches = null;
     }
 
-    @Override
-    @Nonnull
-    public ItemStack getStoredItemCopy () {
-        ItemStack protoStack = getStoredItemPrototype();
-        if (protoStack.func_190926_b())
-            return ItemStack.field_190927_a;
-
-        ItemStack stack = protoStack.copy();
-        stack.func_190920_e(getStoredItemCount());
-
-        return stack;
-    }
-
     protected void refreshOreDictMatches () {
         ItemStack protoStack = getStoredItemPrototype();
         if (protoStack.func_190926_b()) {

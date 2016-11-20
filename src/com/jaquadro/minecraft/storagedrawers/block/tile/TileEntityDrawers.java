@@ -71,17 +71,17 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     private ItemStack materialTrim;
 
     protected TileEntityDrawers (int drawerCount) {
-        injectData(lockData);
-        injectData(customNameData);
-        injectData(controllerData);
-        initWithDrawerCount(drawerCount);
+        for (int i = 0; i < upgrades.length; i++)
+            upgrades[i] = ItemStack.field_190927_a;
 
         materialSide = ItemStack.field_190927_a;
         materialFront = ItemStack.field_190927_a;
         materialTrim = ItemStack.field_190927_a;
 
-        for (int i = 0; i < upgrades.length; i++)
-            upgrades[i] = ItemStack.field_190927_a;
+        injectData(lockData);
+        injectData(customNameData);
+        injectData(controllerData);
+        initWithDrawerCount(drawerCount);
     }
 
     protected abstract IDrawer createDrawer (int slot);
@@ -577,11 +577,13 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (slot < 0 || slot >= getDrawerCount())
             return ItemStack.field_190927_a;
 
-        ItemStack stack = getItemsFromSlot(slot, count);
-        if (stack.func_190926_b())
+        IDrawer drawer = drawers[slot];
+        if (drawer.isEmpty())
             return ItemStack.field_190927_a;
 
-        IDrawer drawer = drawers[slot];
+        ItemStack stack = drawer.getStoredItemPrototype().copy();
+        stack.func_190920_e(Math.min(count, drawers[slot].getStoredItemCount()));
+
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.func_190916_E());
 
         if (isRedstone() && getWorld() != null) {
@@ -599,8 +601,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (drawers[slot].isEmpty())
             return ItemStack.field_190927_a;
 
-        ItemStack stack = drawers[slot].getStoredItemCopy();
-        stack.func_190920_e(Math.min(Math.min(stack.func_190916_E(), count), drawers[slot].getStoredItemCount()));
+        ItemStack stack = drawers[slot].getStoredItemPrototype().copy();
+        stack.func_190920_e(Math.min(count, drawers[slot].getStoredItemCount()));
 
         return stack;
     }

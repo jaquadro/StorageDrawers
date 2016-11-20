@@ -175,8 +175,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             }
 
             IDrawer drawer = getDrawer(slot);
-            ItemStack itemProto = drawer.getStoredItemPrototype();
-            if (itemProto.func_190926_b())
+            if (drawer.isEmpty())
                 break;
 
             itemsLeft = insertItemsIntoDrawer(drawer, itemsLeft);

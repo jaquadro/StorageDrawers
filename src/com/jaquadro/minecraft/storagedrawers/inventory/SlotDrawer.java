@@ -32,14 +32,17 @@ public class SlotDrawer extends Slot
     @Override
     @Nonnull
     public ItemStack getStack () {
-        ItemStack stack = drawer.getStoredItemCopy();
+        ItemStack stack = ItemStackHelper.encodeItemStack(drawer.getStoredItemPrototype(), drawer.getStoredItemCount());
         container.setLastAccessedItem(stack);
         return stack;
     }
 
     @Override
     public void putStack (@Nonnull ItemStack stack) {
-        drawer.setStoredItem(stack, stack.func_190916_E());
+        if (ItemStackHelper.isStackEncoded(stack))
+            drawer.setStoredItem(stack, 0);
+        else
+            drawer.setStoredItem(stack, stack.func_190916_E());
     }
 
     @Override
@@ -63,8 +66,8 @@ public class SlotDrawer extends Slot
         int withdraw = Math.min(amount, drawer.getStoredItemCount());
         drawer.setStoredItemCount(withdraw);
 
-        ItemStack stack = drawer.getStoredItemCopy();
-        stack.func_190920_e(withdraw);
+        ItemStack stack = drawer.getStoredItemPrototype().copy();
+        stack.func_190920_e(drawer.getStoredItemCount() - withdraw);
         return stack;
     }
 

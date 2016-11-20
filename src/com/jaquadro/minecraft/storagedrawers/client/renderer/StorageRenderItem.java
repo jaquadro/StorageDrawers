@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
+import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -99,7 +100,10 @@ public class StorageRenderItem extends RenderItem
             }
 
             int stackSize = item.func_190916_E();
-            if (stackSize > 1 || text != null)
+            if (ItemStackHelper.isStackEncoded(item))
+                stackSize = 0;
+
+            if (stackSize != 1 || text != null)
             {
                 if (stackSize >= 100000000 || (stackSize >= 1000000 && font.getUnicodeFlag()))
                     text = (text == null) ? String.format("%.0fM", stackSize / 1000000f) : text;
@@ -120,7 +124,12 @@ public class StorageRenderItem extends RenderItem
                 GlStateManager.disableBlend();
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, scale);
-                font.drawStringWithShadow(text, textX, textY, 16777215);
+
+                if (stackSize > 0)
+                    font.drawStringWithShadow(text, textX, textY, 16777215);
+                else
+                    font.drawStringWithShadow(text, textX, textY, (255 << 16) | (96 << 8) | (96));
+
                 GlStateManager.popMatrix();
                 GlStateManager.enableLighting();
                 GlStateManager.enableDepth();

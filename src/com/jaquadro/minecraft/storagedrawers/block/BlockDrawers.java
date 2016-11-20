@@ -377,11 +377,11 @@ public class BlockDrawers extends BlockContainer implements INetworked
 
         int slot = getDrawerSlot(getDrawerCount(state), side.ordinal(), hitX, hitY, hitZ);
         IDrawer drawer = tileDrawers.getDrawer(slot);
-        ItemStack currentStack = drawer.getStoredItemPrototype();
+        boolean isEmpty = drawer.isEmpty();
 
         int countAdded = tileDrawers.interactPutItemsIntoSlot(slot, player);
 
-        if (countAdded > 0 && !currentStack.func_190926_b())
+        if (countAdded > 0 && !isEmpty)
             world.notifyBlockUpdate(pos, state, state, 3);
 
         if (item.func_190926_b())

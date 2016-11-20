@@ -20,8 +20,9 @@ public class DrawerInventoryHelper
                 continue;
 
             while (drawer.getStoredItemCount() > 0) {
-                ItemStack stack = drawer.getStoredItemCopy();
-                if (stack.func_190916_E() == 0)
+                ItemStack stack = drawer.getStoredItemPrototype().copy();
+                stack.func_190920_e(drawer.getStoredItemCount());
+                if (!stack.func_190926_b())
                     break;
 
                 spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);

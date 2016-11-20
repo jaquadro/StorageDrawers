@@ -15,13 +15,6 @@ public interface IDrawer
     ItemStack getStoredItemPrototype ();
 
     /**
-     * Gets an ItemStack initialized to the number of items stored in this drawer.
-     * The returned ItemStack is guaranteed to be a new copy and can be used for any purpose.  Does not affect drawer contents.
-     */
-    @Nonnull
-    ItemStack getStoredItemCopy ();
-
-    /**
      * Sets the type of the stored item and initializes it to the given amount.  Any existing item will be replaced.
      *
      * @param itemPrototype An ItemStack representing the type, metadata, and tags of the item to store.

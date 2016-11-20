@@ -5,8 +5,10 @@ import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -80,6 +82,32 @@ public class ContainerDrawers extends Container
     public List<Slot> getUpgradeSlots () {
         return upgradeSlots;
     }
+
+    /*@Override
+    public void detectAndSendChanges()
+    {
+        for (int i = 0; i < this.inventorySlots.size(); ++i) {
+            ItemStack itemstack = this.inventorySlots.get(i).getStack();
+            ItemStack itemstack1 = this.inventoryItemStacks.get(i);
+            boolean shouldSend;
+
+            if (this.inventorySlots.get(i) instanceof SlotDrawer) {
+                ItemStack proto1 = ItemStackHelper.getItemPrototype(itemstack);
+                ItemStack proto2 = ItemStackHelper.getItemPrototype(itemstack1);
+                shouldSend = !ItemStack.areItemStacksEqual(proto1, proto2) || itemstack.func_190916_E() != itemstack1.func_190916_E();
+            }
+            else
+                shouldSend = !ItemStack.areItemStacksEqual(itemstack, itemstack1);
+
+            if (shouldSend) {
+                itemstack1 = itemstack.copy();
+                this.inventoryItemStacks.set(i, itemstack1);
+
+                for (IContainerListener listener : this.listeners)
+                    listener.sendSlotContents(this, i, itemstack1);
+            }
+        }
+    }*/
 
     @Override
     public boolean canInteractWith (EntityPlayer player) {

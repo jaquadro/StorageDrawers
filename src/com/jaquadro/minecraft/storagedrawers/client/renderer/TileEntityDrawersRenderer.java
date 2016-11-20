@@ -142,13 +142,10 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         for (int i = 0; i < drawerCount; i++) {
             renderStacks[i] = ItemStack.field_190927_a;
             IDrawer drawer = tile.getDrawerIfEnabled(i);
-            if (drawer == null)
+            if (drawer == null || drawer.isEmpty())
                 continue;
 
             ItemStack itemStack = drawer.getStoredItemPrototype();
-            if (itemStack.func_190926_b())
-                continue;
-
             renderStacks[i] = itemStack;
             renderAsBlock[i] = isItemBlockType(itemStack);
 
