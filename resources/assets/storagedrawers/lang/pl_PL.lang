@@ -1,4 +1,4 @@
-itemGroup.storageDrawers=Storage Drawers
+itemGroup.storagedrawers=Storage Drawers
 
 # Items
 item.storagedrawers.upgradeTemplate.name=Szablon ulepszenia
@@ -47,60 +47,60 @@ tile.halfDrawers4.big_oak.name=Kompaktowe czarnodębowe szuflady 2x2
 
 tile.compDrawers.name=Kompaktująca szuflada
 
-storageDrawers.drawers.description=Trzyma %d stowów na szufladę
-storageDrawers.upgrade.description=Zwiększa skład do %d*bazowa wartość
+storagedrawers.drawers.description=Trzyma %d stowów na szufladę
+storagedrawers.upgrade.description=Zwiększa skład do %d*bazowa wartość
 
 # Integration
-storageDrawers.waila.empty=Puste
-storageDrawers.waila.level=Poziom ulepszeń: %s
-storageDrawers.waila.drawer=Szuflada #%s: %s
-storageDrawers.waila.locked=Zablokowane
+storagedrawers.waila.empty=Puste
+storagedrawers.waila.level=Poziom ulepszeń: %s
+storagedrawers.waila.drawer=Szuflada #%s: %s
+storagedrawers.waila.locked=Zablokowane
 
 # Configuration
-storageDrawers.config.title=Konfiguracja Storage Drawers
+storagedrawers.config.title=Konfiguracja Storage Drawers
 
-storageDrawers.config.general=Ustawienia generalne
-storageDrawers.config.general.tooltip=To i tamto.
+storagedrawers.config.general=Ustawienia generalne
+storagedrawers.config.general.tooltip=To i tamto.
 
-storageDrawers.config.blocks=Ustawienia bloków
-storageDrawers.config.blocks.tooltip=Konfiguruj indywidualne bloki składujące.
+storagedrawers.config.blocks=Ustawienia bloków
+storagedrawers.config.blocks.tooltip=Konfiguruj indywidualne bloki składujące.
 
-storageDrawers.config.blocks.fullDrawers2=Szuflady 1x2
-storageDrawers.config.blocks.fullDrawers4=Szuflady 2x2
-storageDrawers.config.blocks.halfDrawers2=Kompaktowe szuflady 1x2
-storageDrawers.config.blocks.halfDrawers4=Kompaktowe szuflady 2x2
-storageDrawers.config.blocks.compDrawers=Szuflada kompaktująca
+storagedrawers.config.blocks.fullDrawers2=Szuflady 1x2
+storagedrawers.config.blocks.fullDrawers4=Szuflady 2x2
+storagedrawers.config.blocks.halfDrawers2=Kompaktowe szuflady 1x2
+storagedrawers.config.blocks.halfDrawers4=Kompaktowe szuflady 2x2
+storagedrawers.config.blocks.compDrawers=Szuflada kompaktująca
 
-storageDrawers.config.upgrades=Ustawienia ulepszeń
-storageDrawers.config.upgrades.tooltip=Konfiguruj indywidualne ulepszenia składowania.
+storagedrawers.config.upgrades=Ustawienia ulepszeń
+storagedrawers.config.upgrades.tooltip=Konfiguruj indywidualne ulepszenia składowania.
 
-storageDrawers.config.upgrades.level2Mult=Mnożnik sładowania (II)
-storageDrawers.config.upgrades.level3Mult=Mnożnik sładowania (III)
-storageDrawers.config.upgrades.level4Mult=Mnożnik sładowania (IV)
-storageDrawers.config.upgrades.level5Mult=Mnożnik sładowania (V)
-storageDrawers.config.upgrades.level6Mult=Mnożnik sładowania (VI)
+storagedrawers.config.upgrades.level2Mult=Mnożnik sładowania (II)
+storagedrawers.config.upgrades.level3Mult=Mnożnik sładowania (III)
+storagedrawers.config.upgrades.level4Mult=Mnożnik sładowania (IV)
+storagedrawers.config.upgrades.level5Mult=Mnożnik sładowania (V)
+storagedrawers.config.upgrades.level6Mult=Mnożnik sładowania (VI)
 
-storageDrawers.config.prop.itemRenderType=Typ renderowania przedmiotu
-storageDrawers.config.prop.itemRenderType.tooltip=Renderuj przedmioty 3D lub płaskie
-storageDrawers.config.prop.enableIndicatorUpgrades=Włącz ulepszenia wskaźnikowe
-storageDrawers.config.prop.enableStorageUpgrades=Włącz ulepszenia składowania
-storageDrawers.config.prop.enableLockUpgrades=Włącz ulepszenie blokady
-storageDrawers.config.prop.renderStorageUpgrades=Pokazuj ulepszenia składowania
-storageDrawers.config.prop.creativeTabVanillaWoods=Minecraft'owe drewna na karcie kreatywnej
-storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Włącz wszystkie Minecraft'owe style drewna na karcie kreatywnej
-storageDrawers.config.prop.enabled=Włączone
-storageDrawers.config.prop.enabled.tooltip=Włącz blok w grze.
-storageDrawers.config.prop.baseStorage=Podstawowe składowanie
-storageDrawers.config.prop.baseStorage.tooltip=Ilość stosów na szufladę.
-storageDrawers.config.prop.recipeOutput=Wyjście recept
-storageDrawers.config.prop.recipeOutput.tooltip=Ilość przemiotów z jednego tworzenia.
-storageDrawers.config.prop.enableSidedInput=Włącz stronowe wejście
-storageDrawers.config.prop.enableSidedInput.tooltip=Inne bloki mogą wkładać do szuflad.
-storageDrawers.config.prop.enableSidedOutput=Włącz stronowe wyjście
-storageDrawers.config.prop.enableSidedOutput.tooltip=Inne bloki mogą wyciągać z szuflad.
+storagedrawers.config.prop.itemRenderType=Typ renderowania przedmiotu
+storagedrawers.config.prop.itemRenderType.tooltip=Renderuj przedmioty 3D lub płaskie
+storagedrawers.config.prop.enableIndicatorUpgrades=Włącz ulepszenia wskaźnikowe
+storagedrawers.config.prop.enableStorageUpgrades=Włącz ulepszenia składowania
+storagedrawers.config.prop.enableLockUpgrades=Włącz ulepszenie blokady
+storagedrawers.config.prop.renderStorageUpgrades=Pokazuj ulepszenia składowania
+storagedrawers.config.prop.creativeTabVanillaWoods=Minecraft'owe drewna na karcie kreatywnej
+storagedrawers.config.prop.creativeTabVanillaWoods.tooltip=Włącz wszystkie Minecraft'owe style drewna na karcie kreatywnej
+storagedrawers.config.prop.enabled=Włączone
+storagedrawers.config.prop.enabled.tooltip=Włącz blok w grze.
+storagedrawers.config.prop.baseStorage=Podstawowe składowanie
+storagedrawers.config.prop.baseStorage.tooltip=Ilość stosów na szufladę.
+storagedrawers.config.prop.recipeOutput=Wyjście recept
+storagedrawers.config.prop.recipeOutput.tooltip=Ilość przemiotów z jednego tworzenia.
+storagedrawers.config.prop.enableSidedInput=Włącz stronowe wejście
+storagedrawers.config.prop.enableSidedInput.tooltip=Inne bloki mogą wkładać do szuflad.
+storagedrawers.config.prop.enableSidedOutput=Włącz stronowe wyjście
+storagedrawers.config.prop.enableSidedOutput.tooltip=Inne bloki mogą wyciągać z szuflad.
 
-storageDrawers.config.integration=Integracja
-storageDrawers.config.integration.tooltip=Konfiguruj integrację z innymi modami.
+storagedrawers.config.integration=Integracja
+storagedrawers.config.integration.tooltip=Konfiguruj integrację z innymi modami.
 
-storageDrawers.config.integration.enableAE2=Włącz integrację z Applied Energistics 2
-storageDrawers.config.integration.enableWaila=Włącz integrację z What Am I Looking At
+storagedrawers.config.integration.enableAE2=Włącz integrację z Applied Energistics 2
+storagedrawers.config.integration.enableWaila=Włącz integrację z What Am I Looking At

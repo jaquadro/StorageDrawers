@@ -42,7 +42,7 @@ import java.util.UUID;
 public abstract class TileEntityDrawers extends ChamLockableTileEntity implements IDrawerGroupInteractive, IUpgradeProvider, IItemLockable, ISealable, IProtectable
 {
     private LockableData lockData = new LockableData();
-    private CustomNameData customNameData = new CustomNameData("storageDrawers.container.drawers");
+    private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
     public final ControllerData controllerData = new ControllerData();
 
     private IDrawer[] drawers;

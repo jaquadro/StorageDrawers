@@ -1,5 +1,5 @@
 {
-    "parent": "StorageDrawers:block/drawer_base",
+    "parent": "storagedrawers:block/drawer_base",
     "textures": {
         "particle": "#front",
         "trim": "#trim",

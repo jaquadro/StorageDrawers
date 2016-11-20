@@ -44,7 +44,7 @@ public class ItemUpgradeStorage extends Item implements IItemMeshMapper
         EnumUpgradeStorage upgrade = EnumUpgradeStorage.byMetadata(itemStack.getMetadata());
         if (upgrade != null) {
             int mult = StorageDrawers.config.getStorageUpgradeMultiplier(upgrade.getLevel());
-            list.add(I18n.format("storageDrawers.upgrade.description", mult));
+            list.add(I18n.format("storagedrawers.upgrade.description", mult));
         }
     }
 

@@ -191,7 +191,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
     @Override
     public String getName () {
-        return hasCustomName() ? super.getName() : "storageDrawers.container.compDrawers";
+        return hasCustomName() ? super.getName() : "storagedrawers.container.compDrawers";
     }
 
     private void populateSlots (@Nonnull ItemStack stack) {

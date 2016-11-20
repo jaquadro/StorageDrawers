@@ -20,6 +20,6 @@ public class ItemController extends ItemBlock
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation (@Nonnull ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
-        list.add(I18n.format("storageDrawers.controller.description"));
+        list.add(I18n.format("storagedrawers.controller.description"));
     }
 }

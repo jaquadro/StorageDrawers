@@ -110,8 +110,11 @@ public class CustomTrimModel extends ChamModel
 
     @Override
     protected void renderMippedLayer (ChamRender renderer, IBlockState state, Object... args) {
-        TextureAtlasSprite iconSide = IconUtil.getIconFromStack((ItemStack)args[0]);
-        TextureAtlasSprite iconTrim = IconUtil.getIconFromStack((ItemStack)args[1]);
+        ItemStack itemSide = (ItemStack)args[0];
+        ItemStack itemTrim = (ItemStack)args[1];
+
+        TextureAtlasSprite iconSide = !itemSide.func_190926_b() ? IconUtil.getIconFromStack(itemSide) : null;
+        TextureAtlasSprite iconTrim = !itemTrim.func_190926_b() ? IconUtil.getIconFromStack(itemTrim) : null;
 
         if (iconTrim == null)
             iconTrim = iconSide;

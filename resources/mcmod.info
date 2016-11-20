@@ -1,6 +1,6 @@
 [
 {
-	"modid": "StorageDrawers",
+	"modid": "storagedrawers",
 	"name": "Storage Drawers",
 	"description": "Multi-drawer storage blocks for quick storage and retrieval.",
 	"version": "$version",
@@ -8,8 +8,8 @@
 	"logoFile": "",
 	"url": "http://www.jaquadro.com/",
 	"authorList": [ "jaquadro" ],
-	"requiredMods": [ "Forge", "Chameleon" ],
-	"dependencies": [ "Chameleon" ],
+	"requiredMods": [ "forge", "chameleon" ],
+	"dependencies": [ "chameleon" ],
 	"useDependencyInformation": true
 }
 ]

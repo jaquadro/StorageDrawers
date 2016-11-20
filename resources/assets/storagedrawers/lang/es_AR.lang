@@ -1,4 +1,4 @@
-itemGroup.storageDrawers=Storage Drawers
+itemGroup.storagedrawers=Storage Drawers
 
 # Items
 item.storagedrawers.upgradeTemplate.name=Plantilla de Mejora
@@ -47,60 +47,60 @@ tile.halfDrawers4.big_oak.name=Cajonera de Roble Oscuro Compacta 2x2
 
 tile.compDrawers.name=Cajonera Compactadora
 
-storageDrawers.drawers.description=Almacena %d stacks por cajón
-storageDrawers.upgrade.description=Multiplica la capacidad por %d
+storagedrawers.drawers.description=Almacena %d stacks por cajón
+storagedrawers.upgrade.description=Multiplica la capacidad por %d
 
 # Integration
-storageDrawers.waila.empty=Vacía
-storageDrawers.waila.level=Nivel de mejora: %s
-storageDrawers.waila.drawer=Cajonera #%s: %s
-storageDrawers.waila.locked=Locked
+storagedrawers.waila.empty=Vacía
+storagedrawers.waila.level=Nivel de mejora: %s
+storagedrawers.waila.drawer=Cajonera #%s: %s
+storagedrawers.waila.locked=Locked
 
 # Configuration
-storageDrawers.config.title=Configuración de Storage Drawers
+storagedrawers.config.title=Configuración de Storage Drawers
 
-storageDrawers.config.general=Configuración General
-storageDrawers.config.general.tooltip=Esto y aquello.
+storagedrawers.config.general=Configuración General
+storagedrawers.config.general.tooltip=Esto y aquello.
 
-storageDrawers.config.blocks=Configuración de Bloques
-storageDrawers.config.blocks.tooltip=Configura los bloques de almacenamiento individuales.
+storagedrawers.config.blocks=Configuración de Bloques
+storagedrawers.config.blocks.tooltip=Configura los bloques de almacenamiento individuales.
 
-storageDrawers.config.blocks.fullDrawers2=Cajoneras 1x2
-storageDrawers.config.blocks.fullDrawers4=Cajoneras 2x2
-storageDrawers.config.blocks.halfDrawers2=Cajoneras Compactas 1x2
-storageDrawers.config.blocks.halfDrawers4=Cajoneras Compactas 2x2
-storageDrawers.config.blocks.compDrawers=Cajonera Compactadora
+storagedrawers.config.blocks.fullDrawers2=Cajoneras 1x2
+storagedrawers.config.blocks.fullDrawers4=Cajoneras 2x2
+storagedrawers.config.blocks.halfDrawers2=Cajoneras Compactas 1x2
+storagedrawers.config.blocks.halfDrawers4=Cajoneras Compactas 2x2
+storagedrawers.config.blocks.compDrawers=Cajonera Compactadora
 
-storageDrawers.config.upgrades=Configuración de las Mejoras
-storageDrawers.config.upgrades.tooltip=Configura las mejoras de capacidad individuales.
+storagedrawers.config.upgrades=Configuración de las Mejoras
+storagedrawers.config.upgrades.tooltip=Configura las mejoras de capacidad individuales.
 
-storageDrawers.config.upgrades.level2Mult=Multiplicador de Capacidad (II)
-storageDrawers.config.upgrades.level3Mult=Multiplicador de Capacidad (III)
-storageDrawers.config.upgrades.level4Mult=Multiplicador de Capacidad (IV)
-storageDrawers.config.upgrades.level5Mult=Mupliplicador de Capacidad (V)
-storageDrawers.config.upgrades.level6Mult=Multiplicador de Capacidad (VI)
+storagedrawers.config.upgrades.level2Mult=Multiplicador de Capacidad (II)
+storagedrawers.config.upgrades.level3Mult=Multiplicador de Capacidad (III)
+storagedrawers.config.upgrades.level4Mult=Multiplicador de Capacidad (IV)
+storagedrawers.config.upgrades.level5Mult=Mupliplicador de Capacidad (V)
+storagedrawers.config.upgrades.level6Mult=Multiplicador de Capacidad (VI)
 
-storageDrawers.config.prop.itemRenderType=Tipo de renderizado de los ítems
-storageDrawers.config.prop.itemRenderType.tooltip=Renderiza los ítems en 3D o plano. 
-storageDrawers.config.prop.enableIndicatorUpgrades=Permitir los indicadores de estado.
-storageDrawers.config.prop.enableStorageUpgrades=Permite las mejoras de capacidad.
-storageDrawers.config.prop.enableLockUpgrades=Enable Lock Upgrade
-storageDrawers.config.prop.renderStorageUpgrades=Renderiza las mejoras de capacidad.
-storageDrawers.config.prop.creativeTabVanillaWoods=Maderas de Minecraft normal en modo creativo
-storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Permite todos los tipos de madera de Minecraft normal en creativo.
-storageDrawers.config.prop.enabled=Permitido
-storageDrawers.config.prop.enabled.tooltip=Permitir el bloque en el juego.
-storageDrawers.config.prop.baseStorage=Capacidad básica. 
-storageDrawers.config.prop.baseStorage.tooltip=Número de stacks permitidos en cada cajón.
-storageDrawers.config.prop.recipeOutput=Resultado de la Receta
-storageDrawers.config.prop.recipeOutput.tooltip=Número de ítems por cada crafteo.
-storageDrawers.config.prop.enableSidedInput=Enable Sided Input
-storageDrawers.config.prop.enableSidedInput.tooltip=Other blocks can insert items into drawers.
-storageDrawers.config.prop.enableSidedOutput=Enable Sided Output
-storageDrawers.config.prop.enableSidedOutput.tooltip=Other blocks can extract items from drawers.
+storagedrawers.config.prop.itemRenderType=Tipo de renderizado de los ítems
+storagedrawers.config.prop.itemRenderType.tooltip=Renderiza los ítems en 3D o plano.
+storagedrawers.config.prop.enableIndicatorUpgrades=Permitir los indicadores de estado.
+storagedrawers.config.prop.enableStorageUpgrades=Permite las mejoras de capacidad.
+storagedrawers.config.prop.enableLockUpgrades=Enable Lock Upgrade
+storagedrawers.config.prop.renderStorageUpgrades=Renderiza las mejoras de capacidad.
+storagedrawers.config.prop.creativeTabVanillaWoods=Maderas de Minecraft normal en modo creativo
+storagedrawers.config.prop.creativeTabVanillaWoods.tooltip=Permite todos los tipos de madera de Minecraft normal en creativo.
+storagedrawers.config.prop.enabled=Permitido
+storagedrawers.config.prop.enabled.tooltip=Permitir el bloque en el juego.
+storagedrawers.config.prop.baseStorage=Capacidad básica.
+storagedrawers.config.prop.baseStorage.tooltip=Número de stacks permitidos en cada cajón.
+storagedrawers.config.prop.recipeOutput=Resultado de la Receta
+storagedrawers.config.prop.recipeOutput.tooltip=Número de ítems por cada crafteo.
+storagedrawers.config.prop.enableSidedInput=Enable Sided Input
+storagedrawers.config.prop.enableSidedInput.tooltip=Other blocks can insert items into drawers.
+storagedrawers.config.prop.enableSidedOutput=Enable Sided Output
+storagedrawers.config.prop.enableSidedOutput.tooltip=Other blocks can extract items from drawers.
 
-storageDrawers.config.integration=Integration
-storageDrawers.config.integration.tooltip=Configure integration with other mods.
+storagedrawers.config.integration=Integration
+storagedrawers.config.integration.tooltip=Configure integration with other mods.
 
-storageDrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integration
-storageDrawers.config.integration.enableWaila=Enable WAILA Integration
+storagedrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integration
+storagedrawers.config.integration.enableWaila=Enable WAILA Integration

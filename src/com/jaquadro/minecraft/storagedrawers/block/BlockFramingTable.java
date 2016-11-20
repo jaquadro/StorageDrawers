@@ -43,14 +43,14 @@ public class BlockFramingTable extends BlockContainer
 
     public static final IUnlistedProperty<TileEntityFramingTable> TILE = UnlistedTileEntity.create(TileEntityFramingTable.class);
 
-    public BlockFramingTable (String blockName) {
+    public BlockFramingTable (String registryName, String blockName) {
         super(Material.WOOD);
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(2.5f);
         setSoundType(SoundType.WOOD);
         setUnlocalizedName(blockName);
-        setRegistryName(blockName);
+        setRegistryName(registryName);
 
         setDefaultState(blockState.getBaseState().withProperty(RIGHT_SIDE, true)
             .withProperty(FACING, EnumFacing.NORTH));

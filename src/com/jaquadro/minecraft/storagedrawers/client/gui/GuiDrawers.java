@@ -84,7 +84,7 @@ public class GuiDrawers extends GuiContainer
     protected void drawGuiContainerForegroundLayer (int p_146979_1_, int p_146979_2_) {
         String name = tileDrawers.hasCustomName() ? tileDrawers.getName() : I18n.format(tileDrawers.getName(), empty);
         fontRendererObj.drawString(name, 8, 6, 4210752);
-        fontRendererObj.drawString(I18n.format("storageDrawers.container.upgrades", empty), 8, 75, 4210752);
+        fontRendererObj.drawString(I18n.format("storagedrawers.container.upgrades", empty), 8, 75, 4210752);
         fontRendererObj.drawString(I18n.format("container.inventory",empty), 8, ySize - 96 + 2, 4210752);
     }
 

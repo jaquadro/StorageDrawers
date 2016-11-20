@@ -1,9 +1,9 @@
 {
-    "parent": "StorageDrawers:block/drawer_orientable",
+    "parent": "storagedrawers:block/drawer_orientable",
     "textures": {
-        "top": "StorageDrawers:blocks/drawers_oak_side",
-        "front": "StorageDrawers:blocks/drawers_oak_front_4",
-        "side": "StorageDrawers:blocks/drawers_oak_side",
-        "trim": "StorageDrawers:blocks/drawers_oak_trim"
+        "top": "storagedrawers:blocks/drawers_oak_side",
+        "front": "storagedrawers:blocks/drawers_oak_front_4",
+        "side": "storagedrawers:blocks/drawers_oak_side",
+        "trim": "storagedrawers:blocks/drawers_oak_trim"
     }
 }

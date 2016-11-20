@@ -41,7 +41,7 @@ public class ModRecipes
     public void init () {
         ConfigManager config = StorageDrawers.config;
 
-        RecipeSorter.register("StorageDrawers:FallbackShapedOreRecipe", FallbackShapedOreRecipe.class, RecipeSorter.Category.SHAPED, "after:forge:shapedore");
+        RecipeSorter.register("storagedrawers:FallbackShapedOreRecipe", FallbackShapedOreRecipe.class, RecipeSorter.Category.SHAPED, "after:forge:shapedore");
 
         for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
             if (config.isBlockEnabled(EnumBasicDrawer.FULL1.getUnlocalizedName())) {
@@ -195,7 +195,7 @@ public class ModRecipes
             }
         }
 
-        RecipeSorter.register("StorageDrawers:UpgradeTemplate", TemplateRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
+        RecipeSorter.register("storagedrawers:UpgradeTemplate", TemplateRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
 
         CraftingManager.getInstance().getRecipeList().add(new TemplateRecipe());
     }

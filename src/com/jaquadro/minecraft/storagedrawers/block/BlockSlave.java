@@ -15,13 +15,13 @@ import net.minecraft.world.World;
 
 public class BlockSlave extends BlockContainer implements INetworked
 {
-    public BlockSlave (String blockName) {
+    public BlockSlave (String registryName, String blockName) {
         super(Material.ROCK);
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
         setUnlocalizedName(blockName);
-        setRegistryName(blockName);
+        setRegistryName(registryName);
         setSoundType(SoundType.STONE);
     }
 

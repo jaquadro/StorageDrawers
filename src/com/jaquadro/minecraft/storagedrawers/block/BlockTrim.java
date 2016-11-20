@@ -39,11 +39,11 @@ public class BlockTrim extends Block implements INetworked
 
     public static final PropertyEnum VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
 
-    public BlockTrim (String name) {
+    public BlockTrim (String registryName, String name) {
         super(Material.WOOD);
 
         setUnlocalizedName(name);
-        setRegistryName(name);
+        setRegistryName(registryName);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
         setSoundType(SoundType.WOOD);

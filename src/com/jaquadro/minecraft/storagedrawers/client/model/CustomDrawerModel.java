@@ -174,9 +174,13 @@ public class CustomDrawerModel extends ChamModel
         EnumBasicDrawer info = state.getValue(BlockDrawers.BLOCK);
         int index = iconIndex[info.getDrawerCount()];
 
-        TextureAtlasSprite iconFront = IconUtil.getIconFromStack((ItemStack)args[0]);
-        TextureAtlasSprite iconSide = IconUtil.getIconFromStack((ItemStack)args[1]);
-        TextureAtlasSprite iconTrim = IconUtil.getIconFromStack((ItemStack)args[2]);
+        ItemStack itemFront = (ItemStack)args[0];
+        ItemStack itemSide = (ItemStack)args[1];
+        ItemStack itemTrim = (ItemStack)args[2];
+
+        TextureAtlasSprite iconFront = !itemFront.func_190926_b() ? IconUtil.getIconFromStack(itemFront) : null;
+        TextureAtlasSprite iconSide = !itemSide.func_190926_b() ? IconUtil.getIconFromStack(itemSide) : null;
+        TextureAtlasSprite iconTrim = !itemTrim.func_190926_b() ? IconUtil.getIconFromStack(itemTrim) : null;
 
         if (iconFront == null)
             iconFront = iconSide;
@@ -204,7 +208,9 @@ public class CustomDrawerModel extends ChamModel
         TextureAtlasSprite iconOverlayFace = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayFace[index]);
         TextureAtlasSprite iconOverlayHandle = Chameleon.instance.iconRegistry.getIcon(Register.iconOverlayHandle[index]);
 
-        TextureAtlasSprite iconTrim = IconUtil.getIconFromStack((ItemStack)args[5]);
+        ItemStack itemTrim = (ItemStack)args[5];
+
+        TextureAtlasSprite iconTrim = !itemTrim.func_190926_b() ? IconUtil.getIconFromStack(itemTrim) : null;
         TextureAtlasSprite iconOverlayTrim;
 
         if (iconTrim == null)

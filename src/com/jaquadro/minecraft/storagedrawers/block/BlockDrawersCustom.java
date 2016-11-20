@@ -30,8 +30,8 @@ public class BlockDrawersCustom extends BlockDrawers
 {
     public static final IUnlistedProperty<MaterialModelData> MAT_MODEL = UnlistedModelData.create(MaterialModelData.class);
 
-    public BlockDrawersCustom (String blockName) {
-        super(blockName);
+    public BlockDrawersCustom (String registryName, String blockName) {
+        super(registryName, blockName);
     }
 
     protected void initDefaultState () {

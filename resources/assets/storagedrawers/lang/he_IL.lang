@@ -1,4 +1,4 @@
-itemGroup.storageDrawers=מגירות אכסון
+itemGroup.storagedrawers=מגירות אכסון
 
 # Items
 item.storagedrawers.upgradeTemplate.name=Upgrade Template
@@ -47,60 +47,60 @@ tile.halfDrawers4.big_oak.name=מגירות אלון כהה קטנות 2x2
 
 tile.compDrawers.name=Compacting Drawer
 
-storageDrawers.drawers.description=מכיל %d ערימות בכל מגירה
-storageDrawers.upgrade.description=מכפיל את כמות האכסון ב־%d
+storagedrawers.drawers.description=מכיל %d ערימות בכל מגירה
+storagedrawers.upgrade.description=מכפיל את כמות האכסון ב־%d
 
 # Integration
-storageDrawers.waila.empty=ריק
-storageDrawers.waila.level=רמת שדרוג: %s
-storageDrawers.waila.drawer=מגירה #%s: %s
-storageDrawers.waila.locked=Locked
+storagedrawers.waila.empty=ריק
+storagedrawers.waila.level=רמת שדרוג: %s
+storagedrawers.waila.drawer=מגירה #%s: %s
+storagedrawers.waila.locked=Locked
 
 # Configuration
-storageDrawers.config.title=Storage Drawers Configuration
+storagedrawers.config.title=Storage Drawers Configuration
 
-storageDrawers.config.general=General Settings
-storageDrawers.config.general.tooltip=This and that.
+storagedrawers.config.general=General Settings
+storagedrawers.config.general.tooltip=This and that.
 
-storageDrawers.config.blocks=Block Settings
-storageDrawers.config.blocks.tooltip=Configure individual storage blocks.
+storagedrawers.config.blocks=Block Settings
+storagedrawers.config.blocks.tooltip=Configure individual storage blocks.
 
-storageDrawers.config.blocks.fullDrawers2=Drawers 1x2
-storageDrawers.config.blocks.fullDrawers4=Drawers 2x2
-storageDrawers.config.blocks.halfDrawers2=Compact Drawers 1x2
-storageDrawers.config.blocks.halfDrawers4=Compact Drawers 2x2
-storageDrawers.config.blocks.compDrawers=Compacting Drawer
+storagedrawers.config.blocks.fullDrawers2=Drawers 1x2
+storagedrawers.config.blocks.fullDrawers4=Drawers 2x2
+storagedrawers.config.blocks.halfDrawers2=Compact Drawers 1x2
+storagedrawers.config.blocks.halfDrawers4=Compact Drawers 2x2
+storagedrawers.config.blocks.compDrawers=Compacting Drawer
 
-storageDrawers.config.upgrades=Upgrade Settings
-storageDrawers.config.upgrades.tooltip=Configure individual storage upgrades.
+storagedrawers.config.upgrades=Upgrade Settings
+storagedrawers.config.upgrades.tooltip=Configure individual storage upgrades.
 
-storageDrawers.config.upgrades.level2Mult=Storage Multiplier (II)
-storageDrawers.config.upgrades.level3Mult=Storage Multiplier (III)
-storageDrawers.config.upgrades.level4Mult=Storage Multiplier (IV)
-storageDrawers.config.upgrades.level5Mult=Storage Multiplier (V)
-storageDrawers.config.upgrades.level6Mult=Storage Multiplier (VI)
+storagedrawers.config.upgrades.level2Mult=Storage Multiplier (II)
+storagedrawers.config.upgrades.level3Mult=Storage Multiplier (III)
+storagedrawers.config.upgrades.level4Mult=Storage Multiplier (IV)
+storagedrawers.config.upgrades.level5Mult=Storage Multiplier (V)
+storagedrawers.config.upgrades.level6Mult=Storage Multiplier (VI)
 
-storageDrawers.config.prop.itemRenderType=Item Render Type
-storageDrawers.config.prop.itemRenderType.tooltip=Render items in 3D or flat.
-storageDrawers.config.prop.enableIndicatorUpgrades=Enable Indicator Upgrades
-storageDrawers.config.prop.enableStorageUpgrades=Enable Storage Upgrades
-storageDrawers.config.prop.enableLockUpgrades=Enable Lock Upgrade
-storageDrawers.config.prop.renderStorageUpgrades=Render Storage Upgrades
-storageDrawers.config.prop.creativeTabVanillaWoods=Creative Tab Vanilla Woods
-storageDrawers.config.prop.creativeTabVanillaWoods.tooltip=Enable all vanilla wood styles on creative tab.
-storageDrawers.config.prop.enabled=Enabled
-storageDrawers.config.prop.enabled.tooltip=Enable block in game.
-storageDrawers.config.prop.baseStorage=Base Storage
-storageDrawers.config.prop.baseStorage.tooltip=Number of stacks held per drawer.
-storageDrawers.config.prop.recipeOutput=Recipe Output
-storageDrawers.config.prop.recipeOutput.tooltip=Number of items from single crafting.
-storageDrawers.config.prop.enableSidedInput=Enable Sided Input
-storageDrawers.config.prop.enableSidedInput.tooltip=Other blocks can insert items into drawers.
-storageDrawers.config.prop.enableSidedOutput=Enable Sided Output
-storageDrawers.config.prop.enableSidedOutput.tooltip=Other blocks can extract items from drawers.
+storagedrawers.config.prop.itemRenderType=Item Render Type
+storagedrawers.config.prop.itemRenderType.tooltip=Render items in 3D or flat.
+storagedrawers.config.prop.enableIndicatorUpgrades=Enable Indicator Upgrades
+storagedrawers.config.prop.enableStorageUpgrades=Enable Storage Upgrades
+storagedrawers.config.prop.enableLockUpgrades=Enable Lock Upgrade
+storagedrawers.config.prop.renderStorageUpgrades=Render Storage Upgrades
+storagedrawers.config.prop.creativeTabVanillaWoods=Creative Tab Vanilla Woods
+storagedrawers.config.prop.creativeTabVanillaWoods.tooltip=Enable all vanilla wood styles on creative tab.
+storagedrawers.config.prop.enabled=Enabled
+storagedrawers.config.prop.enabled.tooltip=Enable block in game.
+storagedrawers.config.prop.baseStorage=Base Storage
+storagedrawers.config.prop.baseStorage.tooltip=Number of stacks held per drawer.
+storagedrawers.config.prop.recipeOutput=Recipe Output
+storagedrawers.config.prop.recipeOutput.tooltip=Number of items from single crafting.
+storagedrawers.config.prop.enableSidedInput=Enable Sided Input
+storagedrawers.config.prop.enableSidedInput.tooltip=Other blocks can insert items into drawers.
+storagedrawers.config.prop.enableSidedOutput=Enable Sided Output
+storagedrawers.config.prop.enableSidedOutput.tooltip=Other blocks can extract items from drawers.
 
-storageDrawers.config.integration=Integration
-storageDrawers.config.integration.tooltip=Configure integration with other mods.
+storagedrawers.config.integration=Integration
+storagedrawers.config.integration.tooltip=Configure integration with other mods.
 
-storageDrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integration
-storageDrawers.config.integration.enableWaila=Enable WAILA Integration
+storagedrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integration
+storagedrawers.config.integration.enableWaila=Enable WAILA Integration

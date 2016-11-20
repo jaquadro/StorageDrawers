@@ -29,8 +29,8 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
 {
     public static final IUnlistedProperty<MaterialModelData> MAT_MODEL = UnlistedModelData.create(MaterialModelData.class);
 
-    public BlockTrimCustom (String name) {
-        super(name);
+    public BlockTrimCustom (String registryName, String name) {
+        super(registryName, name);
         isBlockContainer = true;
     }
 

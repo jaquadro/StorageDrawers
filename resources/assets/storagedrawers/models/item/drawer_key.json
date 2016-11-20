@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "StorageDrawers:items/drawer_key"
+        "layer0": "storagedrawers:items/drawer_key"
     }
 }

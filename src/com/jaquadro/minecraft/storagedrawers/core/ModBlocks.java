@@ -32,14 +32,14 @@ public class ModBlocks
     public void init () {
         //resolver = new DataResolver(StorageDrawers.MOD_ID);
 
-        basicDrawers = new BlockDrawers("basicDrawers");
-        compDrawers = new BlockCompDrawers("compDrawers");
+        basicDrawers = new BlockDrawers("basicdrawers", "basicDrawers");
+        compDrawers = new BlockCompDrawers("compdrawers", "compDrawers");
         controller = new BlockController("controller");
-        controllerSlave = new BlockSlave("controllerSlave");
-        trim = new BlockTrim("trim");
-        framingTable = new BlockFramingTable("framingTable");
-        customDrawers = new BlockDrawersCustom("customDrawers");
-        customTrim = new BlockTrimCustom("customTrim");
+        controllerSlave = new BlockSlave("controllerslave", "controllerSlave");
+        trim = new BlockTrim("trim", "trim");
+        framingTable = new BlockFramingTable("framingtable", "framingTable");
+        customDrawers = new BlockDrawersCustom("customdrawers", "customDrawers");
+        customTrim = new BlockTrimCustom("customtrim", "customTrim");
 
         ConfigManager config = StorageDrawers.config;
 

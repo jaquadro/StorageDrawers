@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "StorageDrawers:items/upgrade_diamond"
+        "layer0": "storagedrawers:items/upgrade_emerald"
     }
 }

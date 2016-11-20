@@ -36,8 +36,8 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     @SideOnly(Side.CLIENT)
     private StatusModelData statusInfo;
 
-    public BlockCompDrawers (String blockName) {
-        super(Material.ROCK, blockName);
+    public BlockCompDrawers (String registryName, String blockName) {
+        super(Material.ROCK, registryName, blockName);
 
         setSoundType(SoundType.STONE);
     }

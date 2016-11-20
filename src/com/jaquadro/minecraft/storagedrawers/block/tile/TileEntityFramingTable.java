@@ -94,7 +94,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
 
     @Override
     public String getName () {
-        return hasCustomName() ? customName : "storageDrawers.container.framingTable";
+        return hasCustomName() ? customName : "storagedrawers.container.framingTable";
     }
 
     @Override

@@ -8,10 +8,10 @@
         "statusActiveSteps": [ 14, 0 ],
         "iconSize": [ 2, 2 ],
         "textures": {
-            "level1Off": "StorageDrawers:blocks/indicator/indicator_2_off",
-            "level1On": "StorageDrawers:blocks/indicator/indicator_2_on",
-            "level2Off": "StorageDrawers:blocks/indicator/indicator_2_off",
-            "level2On": "StorageDrawers:blocks/indicator/indicator_2_on"
+            "level1Off": "storagedrawers:blocks/indicator/indicator_2_off",
+            "level1On": "storagedrawers:blocks/indicator/indicator_2_on",
+            "level2Off": "storagedrawers:blocks/indicator/indicator_2_off",
+            "level2On": "storagedrawers:blocks/indicator/indicator_2_on"
         }
     }, {
         "statusAreaFrom": [ 0, 0 ],
@@ -21,10 +21,10 @@
         "statusActiveSteps": [ 14, 0 ],
         "iconSize": [ 2, 2 ],
         "textures": {
-            "level1Off": "StorageDrawers:blocks/indicator/indicator_2_off",
-            "level1On": "StorageDrawers:blocks/indicator/indicator_2_on",
-            "level2Off": "StorageDrawers:blocks/indicator/indicator_2_off",
-            "level2On": "StorageDrawers:blocks/indicator/indicator_2_on"
+            "level1Off": "storagedrawers:blocks/indicator/indicator_2_off",
+            "level1On": "storagedrawers:blocks/indicator/indicator_2_on",
+            "level2Off": "storagedrawers:blocks/indicator/indicator_2_off",
+            "level2On": "storagedrawers:blocks/indicator/indicator_2_on"
         }
     } ]
 }

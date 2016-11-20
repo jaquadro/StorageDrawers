@@ -25,12 +25,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.io.File;
 
 @Mod(modid = StorageDrawers.MOD_ID, name = StorageDrawers.MOD_NAME, version = StorageDrawers.MOD_VERSION,
-    dependencies = "required-after:Forge@[12.17.0.1908,);required-after:Chameleon;after:waila;",
+    dependencies = "required-after:forge@[13.19.0.2148,);required-after:chameleon;after:waila;",
     guiFactory = StorageDrawers.SOURCE_PATH + "core.ModGuiFactory",
-    acceptedMinecraftVersions = "[1.9,1.11)")
+    acceptedMinecraftVersions = "[1.11,1.12)")
 public class StorageDrawers
 {
-    public static final String MOD_ID = "StorageDrawers";
+    public static final String MOD_ID = "storagedrawers";
     public static final String MOD_NAME = "Storage Drawers";
     public static final String MOD_VERSION = "@VERSION@";
     public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.";

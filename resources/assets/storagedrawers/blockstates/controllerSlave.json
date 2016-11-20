@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "StorageDrawers:controllerSlave" }
+        "normal": { "model": "storagedrawers:controllerSlave" }
     }
 }

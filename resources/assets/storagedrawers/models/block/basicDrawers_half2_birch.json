@@ -1,10 +1,10 @@
 {
-    "parent": "StorageDrawers:block/drawer_half",
+    "parent": "storagedrawers:block/drawer_half",
     "textures": {
-        "top": "StorageDrawers:blocks/drawers_birch_side_h",
-        "front": "StorageDrawers:blocks/drawers_birch_front_2",
-        "back": "StorageDrawers:blocks/drawers_birch_side",
-        "side": "StorageDrawers:blocks/drawers_birch_side_v",
-        "trim": "StorageDrawers:blocks/drawers_birch_trim"
+        "top": "storagedrawers:blocks/drawers_birch_side_h",
+        "front": "storagedrawers:blocks/drawers_birch_front_2",
+        "back": "storagedrawers:blocks/drawers_birch_side",
+        "side": "storagedrawers:blocks/drawers_birch_side_v",
+        "trim": "storagedrawers:blocks/drawers_birch_trim"
     }
 }

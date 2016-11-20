@@ -23,15 +23,15 @@ public class ModItems
     public static ItemTape tape;
 
     public void init () {
-        upgradeTemplate = new Item().setUnlocalizedName(makeName("upgradeTemplate")).setRegistryName("upgradeTemplate").setCreativeTab(ModCreativeTabs.tabStorageDrawers);
-        upgradeStorage = new ItemUpgradeStorage("upgradeStorage", makeName("upgradeStorage"));
-        upgradeStatus = new ItemUpgradeStatus("upgradeStatus", makeName("upgradeStatus"));
-        upgradeVoid = new ItemUpgradeVoid("upgradeVoid", makeName("upgradeVoid"));
-        drawerKey = new ItemDrawerKey("drawerKey", makeName("drawerKey"));
-        upgradeCreative = new ItemUpgradeCreative("upgradeCreative", makeName("upgradeCreative"));
-        upgradeRedstone = new ItemUpgradeRedstone("upgradeRedstone", makeName("upgradeRedstone"));
-        shroudKey = new ItemShroudKey("shroudKey", makeName("shroudKey"));
-        personalKey = new ItemPersonalKey("personalKey", makeName("personalKey"));
+        upgradeTemplate = new Item().setUnlocalizedName(makeName("upgradeTemplate")).setRegistryName("upgrade_template").setCreativeTab(ModCreativeTabs.tabStorageDrawers);
+        upgradeStorage = new ItemUpgradeStorage("upgrade_storage", makeName("upgradeStorage"));
+        upgradeStatus = new ItemUpgradeStatus("upgrade_status", makeName("upgradeStatus"));
+        upgradeVoid = new ItemUpgradeVoid("upgrade_void", makeName("upgradeVoid"));
+        drawerKey = new ItemDrawerKey("drawer_key", makeName("drawerKey"));
+        upgradeCreative = new ItemUpgradeCreative("upgrade_creative", makeName("upgradeCreative"));
+        upgradeRedstone = new ItemUpgradeRedstone("upgrade_redstone", makeName("upgradeRedstone"));
+        shroudKey = new ItemShroudKey("shroud_key", makeName("shroudKey"));
+        personalKey = new ItemPersonalKey("personal_key", makeName("personalKey"));
         tape = new ItemTape("tape", makeName("tape"));
 
         GameRegistry.register(upgradeTemplate);

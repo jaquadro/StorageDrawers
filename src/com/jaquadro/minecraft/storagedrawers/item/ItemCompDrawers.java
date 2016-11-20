@@ -66,10 +66,10 @@ public class ItemCompDrawers extends ItemBlock implements IItemMeshMapper, IItem
         ConfigManager config = StorageDrawers.config;
 
         int count = config.getBlockBaseStorage("compdrawers");
-        list.add(I18n.format("storageDrawers.drawers.description", count));
+        list.add(I18n.format("storagedrawers.drawers.description", count));
 
         if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("tile")) {
-            list.add(ChatFormatting.YELLOW + I18n.format("storageDrawers.drawers.sealed"));
+            list.add(ChatFormatting.YELLOW + I18n.format("storagedrawers.drawers.sealed"));
         }
     }
 

@@ -67,7 +67,7 @@ public class Waila extends IntegrationModule
                     if (drawer == null)
                         continue;
 
-                    String name = I18n.format("storageDrawers.waila.empty");
+                    String name = I18n.format("storagedrawers.waila.empty");
 
                     ItemStack stack = drawer.getStoredItemPrototype();
                     if (stack != null && stack.getItem() != null) {
@@ -92,26 +92,26 @@ public class Waila extends IntegrationModule
                         } else
                             name = stackName + " [" + drawer.getStoredItemCount() + "]";
                     }
-                    currenttip.add(I18n.format("storageDrawers.waila.drawer", i + 1, name));
+                    currenttip.add(I18n.format("storagedrawers.waila.drawer", i + 1, name));
                 }
 
                 if (tile.isUnlimited() || tile.isVending())
-                    currenttip.add(I18n.format("storageDrawers.waila.nolimit"));
+                    currenttip.add(I18n.format("storagedrawers.waila.nolimit"));
                 else {
                     int limit = tile.getDrawerCapacity() * tile.getEffectiveStorageMultiplier();
-                    currenttip.add(I18n.format("storageDrawers.waila.limit", limit, tile.getEffectiveStorageMultiplier()));
+                    currenttip.add(I18n.format("storagedrawers.waila.limit", limit, tile.getEffectiveStorageMultiplier()));
                 }
             }
 
             String attrib = "";
             if (tile.isItemLocked(LockAttribute.LOCK_POPULATED))
-                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.locked");
+                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storagedrawers.waila.locked");
             if (tile.isVoid())
-                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.void");
+                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storagedrawers.waila.void");
             if (tile.isSorting())
-                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.sorting");
+                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storagedrawers.waila.sorting");
             if (tile.getOwner() != null)
-                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.protected");
+                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storagedrawers.waila.protected");
 
             if (!attrib.isEmpty())
                 currenttip.add(attrib);

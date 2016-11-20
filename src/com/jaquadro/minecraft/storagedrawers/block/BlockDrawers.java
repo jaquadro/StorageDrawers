@@ -77,11 +77,11 @@ public class BlockDrawers extends BlockContainer implements INetworked
 
     private long ignoreEventTime;
 
-    public BlockDrawers (String blockName) {
-        this(Material.WOOD, blockName);
+    public BlockDrawers (String registryName, String blockName) {
+        this(Material.WOOD, registryName, blockName);
     }
 
-    protected BlockDrawers (Material material, String blockName) {
+    protected BlockDrawers (Material material, String registryName, String blockName) {
         super(material);
 
         this.useNeighborBrightness = true;
@@ -90,7 +90,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
         setHardness(5f);
         setSoundType(SoundType.WOOD);
         setUnlocalizedName(blockName);
-        setRegistryName(blockName);
+        setRegistryName(registryName);
         setLightOpacity(255);
 
         initDefaultState();

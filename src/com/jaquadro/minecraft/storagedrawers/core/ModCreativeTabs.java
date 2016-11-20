@@ -12,7 +12,7 @@ public final class ModCreativeTabs
 {
     private ModCreativeTabs () { }
 
-    public static final CreativeTabs tabStorageDrawers = new CreativeTabs("storageDrawers") {
+    public static final CreativeTabs tabStorageDrawers = new CreativeTabs("storagedrawers") {
         @Override
         @Nonnull
         @SideOnly(Side.CLIENT)

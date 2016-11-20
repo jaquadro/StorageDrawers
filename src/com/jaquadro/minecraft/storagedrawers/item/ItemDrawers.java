@@ -68,13 +68,13 @@ public class ItemDrawers extends ItemBlock
     public void addInformation (@Nonnull ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
         if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("material")) {
             String key = itemStack.getTagCompound().getString("material");
-            list.add(I18n.format("storageDrawers.material", I18n.format("storageDrawers.material." + key)));
+            list.add(I18n.format("storagedrawers.material", I18n.format("storagedrawers.material." + key)));
         }
 
-        list.add(I18n.format("storageDrawers.drawers.description", getCapacityForBlock(itemStack)));
+        list.add(I18n.format("storagedrawers.drawers.description", getCapacityForBlock(itemStack)));
 
         if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("tile"))
-            list.add(ChatFormatting.YELLOW + I18n.format("storageDrawers.drawers.sealed"));
+            list.add(ChatFormatting.YELLOW + I18n.format("storagedrawers.drawers.sealed"));
     }
 
     private int getCapacityForBlock (@Nonnull ItemStack itemStack) {

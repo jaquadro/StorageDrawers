@@ -1,7 +1,7 @@
 {
     "parent": "builtin/generated",
     "textures": {
-        "layer0": "StorageDrawers:items/upgrade_redstone_combined"
+        "layer0": "storagedrawers:items/upgrade_redstone_combined"
     },
     "display": {
         "thirdperson": {

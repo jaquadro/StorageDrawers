@@ -8,10 +8,10 @@
         "statusActiveSteps": [ 14, 0 ],
         "iconSize": [ 4, 4 ],
         "textures": {
-            "level1Off": "StorageDrawers:blocks/indicator/indicator_1_off",
-            "level1On": "StorageDrawers:blocks/indicator/indicator_1_on",
-            "level2Off": "StorageDrawers:blocks/indicator/indicator_1_off",
-            "level2On": "StorageDrawers:blocks/indicator/indicator_1_on"
+            "level1Off": "storagedrawers:blocks/indicator/indicator_1_off",
+            "level1On": "storagedrawers:blocks/indicator/indicator_1_on",
+            "level2Off": "storagedrawers:blocks/indicator/indicator_1_off",
+            "level2On": "storagedrawers:blocks/indicator/indicator_1_on"
         }
     } ]
 }
