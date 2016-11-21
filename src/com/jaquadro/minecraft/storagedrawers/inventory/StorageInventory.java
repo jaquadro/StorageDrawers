@@ -158,6 +158,8 @@ public class StorageInventory implements IDrawerInventory
         stack.stackSize = Math.min(stack.stackSize, count);
         adapter.getInventoryStack(SlotType.OUTPUT).stackSize -= stack.stackSize;
 
+        adapter.syncInventory();
+
         return stack;
     }
 
