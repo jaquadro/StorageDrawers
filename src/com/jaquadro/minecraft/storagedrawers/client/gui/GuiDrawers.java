@@ -109,13 +109,13 @@ public class GuiDrawers extends GuiContainer
             ContainerDrawers container = (ContainerDrawers) inventorySlots;
             List<Slot> storageSlots = container.getStorageSlots();
             for (Slot slot : storageSlots) {
-                drawTexturedModalRect(guiX + slot.xDisplayPosition, guiY + slot.yDisplayPosition, smDisabledX, smDisabledY, 16, 16);
+                drawTexturedModalRect(guiX + slot.xPos, guiY + slot.yPos, smDisabledX, smDisabledY, 16, 16);
             }
 
             List<Slot> upgradeSlots = container.getUpgradeSlots();
             for (Slot slot : upgradeSlots) {
                 if (slot instanceof SlotUpgrade && !((SlotUpgrade) slot).canTakeStack())
-                    drawTexturedModalRect(guiX + slot.xDisplayPosition, guiY + slot.yDisplayPosition, smDisabledX, smDisabledY, 16, 16);
+                    drawTexturedModalRect(guiX + slot.xPos, guiY + slot.yPos, smDisabledX, smDisabledY, 16, 16);
             }
         }
     }
@@ -126,13 +126,13 @@ public class GuiDrawers extends GuiContainer
             ContainerDrawers container = (ContainerDrawers) inventorySlots;
             List<Slot> storageSlots = container.getStorageSlots();
             for (Slot slot : storageSlots) {
-                if (slot instanceof SlotStorage && slot.xDisplayPosition == x && slot.yDisplayPosition == y)
+                if (slot instanceof SlotStorage && slot.xPos == x && slot.yPos == y)
                     return false;
             }
 
             List<Slot> upgradeSlots = container.getUpgradeSlots();
             for (Slot slot : upgradeSlots) {
-                if (slot instanceof SlotUpgrade && !((SlotUpgrade) slot).canTakeStack() && slot.xDisplayPosition == x && slot.yDisplayPosition == y)
+                if (slot instanceof SlotUpgrade && !((SlotUpgrade) slot).canTakeStack() && slot.xPos == x && slot.yPos == y)
                     return false;
             }
         }

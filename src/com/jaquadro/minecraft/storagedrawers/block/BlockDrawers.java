@@ -257,7 +257,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
     }
 
     @Override
-    public IBlockState onBlockPlaced (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+    public IBlockState getStateForPlacement (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         return getDefaultState().withProperty(BLOCK, EnumBasicDrawer.byMetadata(meta));
     }
 
@@ -293,18 +293,18 @@ public class BlockDrawers extends BlockContainer implements INetworked
 
         if (StorageDrawers.config.cache.debugTrace) {
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockActivated");
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item.func_190926_b()) ? "  null item" : "  " + item.toString());
+            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item.isEmpty()) ? "  null item" : "  " + item.toString());
         }
 
-        if (!item.func_190926_b()) {
+        if (!item.isEmpty()) {
             if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
                 if (!retrimBlock(world, pos, item))
                     return false;
 
                 if (!player.capabilities.isCreativeMode) {
-                    item.func_190918_g(1);
-                    if (item.func_190916_E() <= 0)
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.field_190927_a);
+                    item.shrink(1);
+                    if (item.getCount() <= 0)
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
                 }
 
                 return true;
@@ -313,7 +313,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
                item.getItem() == ModItems.upgradeCreative || item.getItem() == ModItems.upgradeRedstone) {
                 if (!tileDrawers.addUpgrade(item)) {
                     if (!world.isRemote)
-                        player.addChatMessage(new TextComponentTranslation("storagedrawers.msg.maxUpgrades"));
+                        player.sendStatusMessage(new TextComponentTranslation("storagedrawers.msg.maxUpgrades"), true);
 
                     return false;
                 }
@@ -321,9 +321,9 @@ public class BlockDrawers extends BlockContainer implements INetworked
                 world.notifyBlockUpdate(pos, state, state, 3);
 
                 if (!player.capabilities.isCreativeMode) {
-                    item.func_190918_g(1);
-                    if (item.func_190916_E() <= 0)
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.field_190927_a);
+                    item.shrink(1);
+                    if (item.getCount() <= 0)
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
                 }
 
                 return true;
@@ -358,7 +358,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
             else if (item.getItem() == ModItems.tape)
                 return false;
         }
-        else if (item.func_190926_b() && player.isSneaking()) {
+        else if (item.isEmpty() && player.isSneaking()) {
             if (tileDrawers.isSealed()) {
                 tileDrawers.setIsSealed(false);
                 return true;
@@ -384,8 +384,8 @@ public class BlockDrawers extends BlockContainer implements INetworked
         if (countAdded > 0 && !isEmpty)
             world.notifyBlockUpdate(pos, state, state, 3);
 
-        if (item.func_190926_b())
-            player.setHeldItem(hand, ItemStack.field_190927_a);
+        if (item.isEmpty())
+            player.setHeldItem(hand, ItemStack.EMPTY);
 
         return true;
     }
@@ -469,10 +469,10 @@ public class BlockDrawers extends BlockContainer implements INetworked
             item = tileDrawers.takeItemsFromSlot(slot, 1);
 
         if (StorageDrawers.config.cache.debugTrace)
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item.func_190926_b()) ? "  null item" : "  " + item.toString());
+            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item.isEmpty()) ? "  null item" : "  " + item.toString());
 
         IBlockState state = worldIn.getBlockState(pos);
-        if (!item.func_190926_b()) {
+        if (!item.isEmpty()) {
             if (!playerIn.inventory.addItemStackToInventory(item)) {
                 dropItemStack(worldIn, pos.offset(side), playerIn, item);
                 worldIn.notifyBlockUpdate(pos, state, state, 3);
@@ -515,7 +515,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
     private void dropItemStack (World world, BlockPos pos, EntityPlayer player, @Nonnull ItemStack stack) {
         EntityItem entity = new EntityItem(world, pos.getX() + .5f, pos.getY() + .1f, pos.getZ() + .5f, stack);
         entity.addVelocity(-entity.motionX, -entity.motionY, -entity.motionZ);
-        world.spawnEntityInWorld(entity);
+        world.spawnEntity(entity);
     }
 
     @Override
@@ -552,7 +552,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
         if (tile != null && !tile.isSealed()) {
             for (int i = 0; i < tile.getUpgradeSlotCount(); i++) {
                 ItemStack stack = tile.getUpgrade(i);
-                if (!stack.func_190926_b()) {
+                if (!stack.isEmpty()) {
                     if (stack.getItem() instanceof ItemUpgradeCreative)
                         continue;
                     spawnAsEntity(world, pos, stack);
@@ -612,7 +612,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
         if (tile != null) {
             for (int slot = 0; slot < 5; slot++) {
                 ItemStack stack = tile.getUpgrade(slot);
-                if (stack.func_190926_b() || !(stack.getItem() instanceof ItemUpgradeStorage))
+                if (stack.isEmpty() || !(stack.getItem() instanceof ItemUpgradeStorage))
                     continue;
 
                 if (EnumUpgradeStorage.byMetadata(stack.getMetadata()) != EnumUpgradeStorage.OBSIDIAN)

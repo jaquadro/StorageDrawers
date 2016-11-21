@@ -89,8 +89,8 @@ public class CustomTrimModel extends ChamModel
             return new CustomTrimModel(state, true);
 
         NBTTagCompound tag = stack.getTagCompound();
-        ItemStack matSide = ItemStack.field_190927_a;
-        ItemStack matTrim = ItemStack.field_190927_a;
+        ItemStack matSide = ItemStack.EMPTY;
+        ItemStack matTrim = ItemStack.EMPTY;
 
         if (tag.hasKey("MatS", Constants.NBT.TAG_COMPOUND))
             matSide = new ItemStack(tag.getCompoundTag("MatS"));
@@ -101,7 +101,7 @@ public class CustomTrimModel extends ChamModel
     }
 
     private CustomTrimModel (IBlockState state, boolean mergeLayers) {
-        this(state, ItemStack.field_190927_a, ItemStack.field_190927_a, mergeLayers);
+        this(state, ItemStack.EMPTY, ItemStack.EMPTY, mergeLayers);
     }
 
     private CustomTrimModel (IBlockState state, @Nonnull ItemStack matSide, @Nonnull ItemStack matTrim, boolean mergeLayers) {
@@ -113,8 +113,8 @@ public class CustomTrimModel extends ChamModel
         ItemStack itemSide = (ItemStack)args[0];
         ItemStack itemTrim = (ItemStack)args[1];
 
-        TextureAtlasSprite iconSide = !itemSide.func_190926_b() ? IconUtil.getIconFromStack(itemSide) : null;
-        TextureAtlasSprite iconTrim = !itemTrim.func_190926_b() ? IconUtil.getIconFromStack(itemTrim) : null;
+        TextureAtlasSprite iconSide = !itemSide.isEmpty() ? IconUtil.getIconFromStack(itemSide) : null;
+        TextureAtlasSprite iconTrim = !itemTrim.isEmpty() ? IconUtil.getIconFromStack(itemTrim) : null;
 
         if (iconTrim == null)
             iconTrim = iconSide;

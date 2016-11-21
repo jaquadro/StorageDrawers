@@ -30,7 +30,7 @@ public abstract class BaseDrawerData implements IDrawer
 
     protected void refreshOreDictMatches () {
         ItemStack protoStack = getStoredItemPrototype();
-        if (protoStack.func_190926_b()) {
+        if (protoStack.isEmpty()) {
             oreDictMatches = null;
             return;
         }
@@ -83,7 +83,7 @@ public abstract class BaseDrawerData implements IDrawer
 
     public boolean areItemsEqual (@Nonnull ItemStack item) {
         ItemStack protoStack = getStoredItemPrototype();
-        if (!protoStack.func_190926_b() && !protoStack.isItemEqual(item)) {
+        if (!protoStack.isEmpty() && !protoStack.isItemEqual(item)) {
             if (!StorageDrawers.config.cache.enableItemConversion)
                 return false;
             if (oreDictMatches == null)
@@ -111,7 +111,7 @@ public abstract class BaseDrawerData implements IDrawer
     }
 
     public static boolean areItemsEqual (@Nonnull ItemStack stack1, @Nonnull ItemStack stack2, boolean oreDictStrictMode) {
-        if (!stack1.func_190926_b() && !stack2.func_190926_b() && !stack1.isItemEqual(stack2)) {
+        if (!stack1.isEmpty() && !stack2.isEmpty() && !stack1.isItemEqual(stack2)) {
             if (!StorageDrawers.config.cache.enableItemConversion)
                 return false;
             if (stack1.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack2.getItemDamage() == OreDictionary.WILDCARD_VALUE)

@@ -65,17 +65,17 @@ public class ItemCustomDrawers extends ItemDrawers
         Block block = blockState.getBlock();
         Item item = Item.getItemFromBlock(block);
         if (!(item instanceof ItemCustomDrawers))
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         NBTTagCompound tag = new NBTTagCompound();
 
-        if (!matSide.func_190926_b())
+        if (!matSide.isEmpty())
             tag.setTag("MatS", getMaterialTag(matSide));
 
-        if (!matTrim.func_190926_b())
+        if (!matTrim.isEmpty())
             tag.setTag("MatT", getMaterialTag(matTrim));
 
-        if (!matFront.func_190926_b())
+        if (!matFront.isEmpty())
             tag.setTag("MatF", getMaterialTag(matFront));
 
         ItemStack stack = new ItemStack(item, count, block.getMetaFromState(blockState));
@@ -87,7 +87,7 @@ public class ItemCustomDrawers extends ItemDrawers
 
     private static NBTTagCompound getMaterialTag (@Nonnull ItemStack mat) {
         mat = mat.copy();
-        mat.func_190920_e(1);
+        mat.setCount(1);
 
         NBTTagCompound itag = new NBTTagCompound();
         mat.writeToNBT(itag);

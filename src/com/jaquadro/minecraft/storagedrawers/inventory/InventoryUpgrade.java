@@ -29,8 +29,13 @@ public class InventoryUpgrade implements IInventory
     }
 
     @Override
-    public boolean func_191420_l () {
-        return false;
+    public boolean isEmpty () {
+        for (int i = 0; i < upgradeCapacity; i++) {
+            if (!tile.getUpgrade(i).isEmpty())
+                return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -44,7 +49,7 @@ public class InventoryUpgrade implements IInventory
     public ItemStack decrStackSize (int slot, int count) {
         ItemStack stack = tile.getUpgrade(slot);
         if (count > 0)
-            tile.setUpgrade(slot, ItemStack.field_190927_a);
+            tile.setUpgrade(slot, ItemStack.EMPTY);
 
         return stack;
     }
@@ -52,7 +57,7 @@ public class InventoryUpgrade implements IInventory
     @Override
     @Nonnull
     public ItemStack removeStackFromSlot (int slot) {
-        return ItemStack.field_190927_a;
+        return ItemStack.EMPTY;
     }
 
     @Override

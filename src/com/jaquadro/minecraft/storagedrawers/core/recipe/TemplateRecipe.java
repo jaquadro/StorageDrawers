@@ -30,7 +30,7 @@ public class TemplateRecipe implements IRecipe
 
     @Override
     public boolean matches (InventoryCrafting inventory, World world) {
-        return !getCraftingResult(inventory).func_190926_b();
+        return !getCraftingResult(inventory).isEmpty();
     }
 
     @Override
@@ -43,8 +43,8 @@ public class TemplateRecipe implements IRecipe
                     continue;
 
                 ItemStack stack = inventory.getStackInRowAndColumn(col, row);
-                if (stack.func_190926_b())
-                    return ItemStack.field_190927_a;
+                if (stack.isEmpty())
+                    return ItemStack.EMPTY;
 
                 boolean match = false;
                 for (ItemStack comp : sticks) {
@@ -53,16 +53,16 @@ public class TemplateRecipe implements IRecipe
                 }
 
                 if (!match)
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
             }
         }
 
         ItemStack center = inventory.getStackInRowAndColumn(1, 1);
-        if (center.func_190926_b() || !(center.getItem() instanceof ItemDrawers))
-            return ItemStack.field_190927_a;
+        if (center.isEmpty() || !(center.getItem() instanceof ItemDrawers))
+            return ItemStack.EMPTY;
 
         if (center.getTagCompound() != null && center.getTagCompound().hasKey("tile"))
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         return getRecipeOutput();
     }

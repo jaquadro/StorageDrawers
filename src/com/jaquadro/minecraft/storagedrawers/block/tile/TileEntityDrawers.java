@@ -72,11 +72,11 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     protected TileEntityDrawers (int drawerCount) {
         for (int i = 0; i < upgrades.length; i++)
-            upgrades[i] = ItemStack.field_190927_a;
+            upgrades[i] = ItemStack.EMPTY;
 
-        materialSide = ItemStack.field_190927_a;
-        materialFront = ItemStack.field_190927_a;
-        materialTrim = ItemStack.field_190927_a;
+        materialSide = ItemStack.EMPTY;
+        materialFront = ItemStack.EMPTY;
+        materialTrim = ItemStack.EMPTY;
 
         injectData(lockData);
         injectData(customNameData);
@@ -185,9 +185,9 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     public void setUpgrade (int slot, @Nonnull ItemStack upgrade) {
         slot = MathHelper.clamp(slot, 0, 4);
 
-        if (!upgrade.func_190926_b()) {
+        if (!upgrade.isEmpty()) {
             upgrade = upgrade.copy();
-            upgrade.func_190920_e(1);
+            upgrade.setCount(1);
         }
 
         upgrades[slot] = upgrade;
@@ -206,7 +206,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     public int getNextUpgradeSlot () {
         for (int i = 0; i < upgrades.length; i++) {
-            if (upgrades[i].func_190926_b())
+            if (upgrades[i].isEmpty())
                 return i;
         }
 
@@ -552,12 +552,12 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     @Nonnull
     public ItemStack getEffectiveMaterialFront () {
-        return !materialFront.func_190926_b() ? materialFront : materialSide;
+        return !materialFront.isEmpty() ? materialFront : materialSide;
     }
 
     @Nonnull
     public ItemStack getEffectiveMaterialTrim () {
-        return !materialTrim.func_190926_b() ? materialTrim : materialSide;
+        return !materialTrim.isEmpty() ? materialTrim : materialSide;
     }
 
     public void setMaterialSide (@Nonnull ItemStack material) {
@@ -575,16 +575,16 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     @Nonnull
     public ItemStack takeItemsFromSlot (int slot, int count) {
         if (slot < 0 || slot >= getDrawerCount())
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         IDrawer drawer = drawers[slot];
         if (drawer.isEmpty())
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         ItemStack stack = drawer.getStoredItemPrototype().copy();
-        stack.func_190920_e(Math.min(count, drawers[slot].getStoredItemCount()));
+        stack.setCount(Math.min(count, drawers[slot].getStoredItemCount()));
 
-        drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.func_190916_E());
+        drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.getCount());
 
         if (isRedstone() && getWorld() != null) {
             getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
@@ -599,10 +599,10 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     @Nonnull
     protected ItemStack getItemsFromSlot (int slot, int count) {
         if (drawers[slot].isEmpty())
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         ItemStack stack = drawers[slot].getStoredItemPrototype().copy();
-        stack.func_190920_e(Math.min(count, drawers[slot].getStoredItemCount()));
+        stack.setCount(Math.min(count, drawers[slot].getStoredItemCount()));
 
         return stack;
     }
@@ -618,12 +618,12 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (!drawer.canItemBeStored(stack))
             return 0;
 
-        int countAdded = Math.min(count, stack.func_190916_E());
+        int countAdded = Math.min(count, stack.getCount());
         if (!isVoid())
             countAdded = Math.min(countAdded, drawer.getRemainingCapacity());
 
         drawer.setStoredItemCount(drawer.getStoredItemCount() + countAdded);
-        stack.func_190918_g(countAdded);
+        stack.shrink(countAdded);
 
         return countAdded;
     }
@@ -631,8 +631,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     public int interactPutCurrentItemIntoSlot (int slot, EntityPlayer player) {
         int count = 0;
         ItemStack playerStack = player.inventory.getCurrentItem();
-        if (!playerStack.func_190926_b())
-            count = putItemsIntoSlot(slot, playerStack, playerStack.func_190916_E());
+        if (!playerStack.isEmpty())
+            count = putItemsIntoSlot(slot, playerStack, playerStack.getCount());
 
         if (count > 0)
             markDirty();
@@ -646,10 +646,10 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (!drawers[slot].isEmpty()) {
             for (int i = 0, n = player.inventory.getSizeInventory(); i < n; i++) {
                 ItemStack subStack = player.inventory.getStackInSlot(i);
-                if (!subStack.func_190926_b()) {
-                    int subCount = putItemsIntoSlot(slot, subStack, subStack.func_190916_E());
-                    if (subCount > 0 && subStack.func_190916_E() == 0)
-                        player.inventory.setInventorySlotContents(i, ItemStack.field_190927_a);
+                if (!subStack.isEmpty()) {
+                    int subCount = putItemsIntoSlot(slot, subStack, subStack.getCount());
+                    if (subCount > 0 && subStack.getCount() == 0)
+                        player.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
 
                     count += subCount;
                 }
@@ -705,7 +705,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         upgrades = new ItemStack[upgrades.length];
         for (int i = 0; i < upgrades.length; i++)
-            upgrades[i] = ItemStack.field_190927_a;
+            upgrades[i] = ItemStack.EMPTY;
 
         material = null;
         if (tag.hasKey("Mat"))
@@ -750,15 +750,15 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
             drawers[i].readFromNBT(slot);
         }
 
-        materialSide = ItemStack.field_190927_a;
+        materialSide = ItemStack.EMPTY;
         if (tag.hasKey("MatS"))
             materialSide = new ItemStack(tag.getCompoundTag("MatS"));
 
-        materialFront = ItemStack.field_190927_a;
+        materialFront = ItemStack.EMPTY;
         if (tag.hasKey("MatF"))
             materialFront = new ItemStack(tag.getCompoundTag("MatF"));
 
-        materialTrim = ItemStack.field_190927_a;
+        materialTrim = ItemStack.EMPTY;
         if (tag.hasKey("MatT"))
             materialTrim = new ItemStack(tag.getCompoundTag("MatT"));
 
@@ -776,7 +776,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         NBTTagList upgradeList = new NBTTagList();
         for (int i = 0; i < upgrades.length; i++) {
-            if (!upgrades[i].func_190926_b()) {
+            if (!upgrades[i].isEmpty()) {
                 NBTTagCompound upgradeTag = upgrades[i].writeToNBT(new NBTTagCompound());
                 upgradeTag.setByte("Slot", (byte)i);
 
@@ -811,19 +811,19 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         tag.setTag("Slots", slots);
 
-        if (!materialSide.func_190926_b()) {
+        if (!materialSide.isEmpty()) {
             NBTTagCompound itag = new NBTTagCompound();
             materialSide.writeToNBT(itag);
             tag.setTag("MatS", itag);
         }
 
-        if (!materialFront.func_190926_b()) {
+        if (!materialFront.isEmpty()) {
             NBTTagCompound itag = new NBTTagCompound();
             materialFront.writeToNBT(itag);
             tag.setTag("MatF", itag);
         }
 
-        if (!materialTrim.func_190926_b()) {
+        if (!materialTrim.isEmpty()) {
             NBTTagCompound itag = new NBTTagCompound();
             materialTrim.writeToNBT(itag);
             tag.setTag("MatT", itag);
@@ -910,7 +910,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (isSealed())
             return null;
 
-        if (getBlockType() instanceof BlockDrawersCustom && materialSide.func_190926_b())
+        if (getBlockType() instanceof BlockDrawersCustom && materialSide.isEmpty())
             return null;
 
         return drawers[slot];

@@ -28,7 +28,7 @@ public class DrawerItemHandler implements IItemHandler
     @Nonnull
     public ItemStack getStackInSlot (int slot) {
         if (slotIsVirtual(slot))
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         slot -= 1;
         if (group instanceof IPriorityGroup) {
@@ -38,10 +38,10 @@ public class DrawerItemHandler implements IItemHandler
 
         IDrawer drawer = group.getDrawerIfEnabled(slot);
         if (drawer == null || drawer.isEmpty())
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         ItemStack stack = drawer.getStoredItemPrototype().copy();
-        stack.func_190920_e(drawer.getStoredItemCount());
+        stack.setCount(drawer.getStoredItemCount());
 
         return stack;
     }
@@ -87,7 +87,7 @@ public class DrawerItemHandler implements IItemHandler
         if (group instanceof ISmartGroup) {
             for (int i : ((ISmartGroup) group).enumerateDrawersForInsertion(stack, false)) {
                 stack = insertItemInternal(i, stack, simulate);
-                if (stack.func_190926_b())
+                if (stack.isEmpty())
                     break;
             }
         }
@@ -95,14 +95,14 @@ public class DrawerItemHandler implements IItemHandler
             int[] order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
             for (int i = 0; i < order.length; i++) {
                 stack = insertItemInternal(i, stack, simulate);
-                if (stack.func_190926_b())
+                if (stack.isEmpty())
                     break;
             }
         }
         else {
             for (int i = 0; i < group.getDrawerCount(); i++) {
                 stack = insertItemInternal(i, stack, simulate);
-                if (stack.func_190926_b())
+                if (stack.isEmpty())
                     break;
             }
         }
@@ -120,7 +120,7 @@ public class DrawerItemHandler implements IItemHandler
         if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
             availableCount = Integer.MAX_VALUE;
 
-        int stackSize = stack.func_190916_E();
+        int stackSize = stack.getCount();
         int insertCount = Math.min(stackSize, availableCount);
         int remainder = stackSize - insertCount;
 
@@ -135,10 +135,10 @@ public class DrawerItemHandler implements IItemHandler
         }
 
         if (remainder == 0)
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         ItemStack returnStack = stack.copy();
-        returnStack.func_190920_e(remainder);
+        returnStack.setCount(remainder);
 
         return returnStack;
     }
@@ -147,7 +147,7 @@ public class DrawerItemHandler implements IItemHandler
     @Nonnull
     public ItemStack extractItem (int slot, int amount, boolean simulate) {
         if (slotIsVirtual(slot))
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         slot -= 1;
         if (group instanceof IPriorityGroup) {
@@ -157,13 +157,13 @@ public class DrawerItemHandler implements IItemHandler
 
         IDrawer drawer = group.getDrawerIfEnabled(slot);
         if (drawer == null || drawer.isEmpty() || drawer.getStoredItemCount() == 0)
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         ItemStack returnStack = drawer.getStoredItemPrototype().copy();
         int stackSize = Math.min(drawer.getStoredItemCount(), amount);
         stackSize = Math.min(stackSize, returnStack.getMaxStackSize());
 
-        returnStack.func_190920_e(stackSize);
+        returnStack.setCount(stackSize);
 
         if (!simulate)
             drawer.setStoredItemCount(drawer.getStoredItemCount() - stackSize);

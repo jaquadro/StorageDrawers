@@ -91,7 +91,7 @@ public class ContainerDrawers extends Container
     @Override
     @Nonnull
     public ItemStack transferStackInSlot (EntityPlayer player, int slotIndex) {
-        ItemStack itemStack = ItemStack.field_190927_a;
+        ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = inventorySlots.get(slotIndex);
 
         int storageStart = storageSlots.get(0).slotNumber;
@@ -111,12 +111,12 @@ public class ContainerDrawers extends Container
             // Try merge upgrades to inventory
             if (slotIndex >= upgradeStart && slotIndex < upgradeEnd) {
                 if (!mergeItemStack(slotStack, inventoryStart, hotbarEnd, true))
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
                 slot.onSlotChange(slotStack, itemStack);
             }
 
             // Try merge inventory to upgrades
-            else if (slotIndex >= inventoryStart && slotIndex < hotbarEnd && !slotStack.func_190926_b()) {
+            else if (slotIndex >= inventoryStart && slotIndex < hotbarEnd && !slotStack.isEmpty()) {
                 /*if (slotStack.getItem() == ModItems.upgrade || slotStack.getItem() == ModItems.upgradeStatus || slotStack.getItem() == ModItems.upgradeVoid) {
                     ItemStack slotStack1 = slotStack.copy();
                     slotStack1.stackSize = 1;
@@ -124,9 +124,9 @@ public class ContainerDrawers extends Container
                     if (!mergeItemStack(slotStack1, upgradeStart, upgradeEnd, false)) {
                         if (slotIndex >= inventoryStart && slotIndex < hotbarEnd) {
                             if (!mergeItemStack(slotStack, hotbarStart, hotbarEnd, false))
-                                return ItemStack.field_190927_a;
+                                return ItemStack.EMPTY;
                         } else if (slotIndex >= hotbarStart && slotIndex < hotbarEnd && !mergeItemStack(slotStack, inventoryStart, hotbarStart, false))
-                            return ItemStack.field_190927_a;
+                            return ItemStack.EMPTY;
                     }
                     else {
                         slotStack.stackSize--;
@@ -135,25 +135,25 @@ public class ContainerDrawers extends Container
 
                 if (slotIndex >= inventoryStart && slotIndex < hotbarStart) {
                     if (!mergeItemStack(slotStack, hotbarStart, hotbarEnd, false))
-                        return ItemStack.field_190927_a;
+                        return ItemStack.EMPTY;
                 } else if (slotIndex >= hotbarStart && slotIndex < hotbarEnd && !mergeItemStack(slotStack, inventoryStart, hotbarStart, false))
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
             }
 
             // Try merge stack into inventory
             else if (!mergeItemStack(slotStack, inventoryStart, hotbarEnd, false))
-                return ItemStack.field_190927_a;
+                return ItemStack.EMPTY;
 
-            int slotStackSize = slotStack.func_190916_E();
+            int slotStackSize = slotStack.getCount();
             if (slotStackSize == 0)
-                slot.putStack(ItemStack.field_190927_a);
+                slot.putStack(ItemStack.EMPTY);
             else
                 slot.onSlotChanged();
 
-            if (slotStackSize == itemStack.func_190916_E())
-                return ItemStack.field_190927_a;
+            if (slotStackSize == itemStack.getCount())
+                return ItemStack.EMPTY;
 
-            slot.func_190901_a(player, slotStack);
+            slot.onTake(player, slotStack);
         }
 
         return itemStack;

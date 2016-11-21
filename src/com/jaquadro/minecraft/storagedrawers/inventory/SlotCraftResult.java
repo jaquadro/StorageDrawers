@@ -32,7 +32,7 @@ public class SlotCraftResult extends Slot
     @Nonnull
     public ItemStack decrStackSize (int count) {
         if (getHasStack())
-            amountCrafted += Math.min(count, getStack().func_190916_E());
+            amountCrafted += Math.min(count, getStack().getCount());
 
         return super.decrStackSize(count);
     }
@@ -51,13 +51,13 @@ public class SlotCraftResult extends Slot
 
     @Override
     @Nonnull
-    public ItemStack func_190901_a (EntityPlayer player, @Nonnull ItemStack stack) {
+    public ItemStack onTake (EntityPlayer player, @Nonnull ItemStack stack) {
         FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack, inputInventory);
         onCrafting(stack);
 
         for (int slot : inputSlots) {
             ItemStack itemTarget = inputInventory.getStackInSlot(slot);
-            if (!itemTarget.func_190926_b())
+            if (!itemTarget.isEmpty())
                 inputInventory.decrStackSize(slot, 1);
         }
 

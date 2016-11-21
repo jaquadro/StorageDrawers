@@ -78,7 +78,7 @@ public class ItemBasicDrawers extends ItemDrawers implements IItemMeshResolver, 
     private class MeshDefinition implements ItemMeshDefinition {
         @Override
         public ModelResourceLocation getModelLocation (@Nonnull ItemStack stack) {
-            if (stack.func_190926_b())
+            if (stack.isEmpty())
                 return null;
 
             EnumBasicDrawer drawer = EnumBasicDrawer.byMetadata(stack.getMetadata());

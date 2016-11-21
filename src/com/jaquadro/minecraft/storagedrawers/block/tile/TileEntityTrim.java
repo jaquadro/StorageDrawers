@@ -14,8 +14,8 @@ public class TileEntityTrim extends ChamTileEntity
     private ItemStack materialTrim;
 
     public TileEntityTrim () {
-        materialSide = ItemStack.field_190927_a;
-        materialTrim = ItemStack.field_190927_a;
+        materialSide = ItemStack.EMPTY;
+        materialTrim = ItemStack.EMPTY;
     }
 
     @Nonnull
@@ -35,7 +35,7 @@ public class TileEntityTrim extends ChamTileEntity
 
     @Nonnull
     public ItemStack getEffectiveMaterialTrim () {
-        return !materialTrim.func_190926_b() ? materialTrim : materialSide;
+        return !materialTrim.isEmpty() ? materialTrim : materialSide;
     }
 
     public void setMaterialSide (@Nonnull ItemStack material) {
@@ -50,11 +50,11 @@ public class TileEntityTrim extends ChamTileEntity
     public void readFromPortableNBT (NBTTagCompound tag) {
         super.readFromPortableNBT(tag);
 
-        materialSide = ItemStack.field_190927_a;
+        materialSide = ItemStack.EMPTY;
         if (tag.hasKey("MatS"))
             materialSide = new ItemStack(tag.getCompoundTag("MatS"));
 
-        materialTrim = ItemStack.field_190927_a;
+        materialTrim = ItemStack.EMPTY;
         if (tag.hasKey("MatT"))
             materialTrim = new ItemStack(tag.getCompoundTag("MatT"));
     }
@@ -63,13 +63,13 @@ public class TileEntityTrim extends ChamTileEntity
     public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
         tag = super.writeToPortableNBT(tag);
 
-        if (!materialSide.func_190926_b()) {
+        if (!materialSide.isEmpty()) {
             NBTTagCompound itag = new NBTTagCompound();
             materialSide.writeToNBT(itag);
             tag.setTag("MatS", itag);
         }
 
-        if (!materialTrim.func_190926_b()) {
+        if (!materialTrim.isEmpty()) {
             NBTTagCompound itag = new NBTTagCompound();
             materialTrim.writeToNBT(itag);
             tag.setTag("MatT", itag);

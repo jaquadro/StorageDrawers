@@ -94,7 +94,7 @@ public class BlockController extends BlockContainer implements INetworked
     }
 
     @Override
-    public IBlockState onBlockPlaced (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+    public IBlockState getStateForPlacement (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
 
@@ -109,7 +109,7 @@ public class BlockController extends BlockContainer implements INetworked
         TileEntityController te = getTileEntitySafe(world, pos);
 
         ItemStack item = player.inventory.getCurrentItem();
-        if (!item.func_190926_b()) {
+        if (!item.isEmpty()) {
             if (item.getItem() == ModItems.shroudKey) {
                 if (!world.isRemote)
                     te.toggleShroud(player.getGameProfile());

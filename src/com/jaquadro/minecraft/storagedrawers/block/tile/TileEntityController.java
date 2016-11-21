@@ -138,19 +138,19 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
         if (!dumpInventory) {
             ItemStack currentStack = player.inventory.getCurrentItem();
-            if (!currentStack.func_190926_b()) {
+            if (!currentStack.isEmpty()) {
                 count = insertItems(currentStack, player.getGameProfile());
-                if (currentStack.func_190916_E() == 0)
-                    player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.field_190927_a);
+                if (currentStack.getCount() == 0)
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
         }
         else {
             for (int i = 0, n = player.inventory.getSizeInventory(); i < n; i++) {
                 ItemStack subStack = player.inventory.getStackInSlot(i);
-                if (!subStack.func_190926_b()) {
+                if (!subStack.isEmpty()) {
                     count += insertItems(subStack, player.getGameProfile());
-                    if (subStack.func_190916_E() == 0)
-                        player.inventory.setInventorySlotContents(i, ItemStack.field_190927_a);
+                    if (subStack.getCount() == 0)
+                        player.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
                 }
             }
 
@@ -165,7 +165,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     protected int insertItems (@Nonnull ItemStack stack, GameProfile profile) {
-        int itemsLeft = stack.func_190916_E();
+        int itemsLeft = stack.getCount();
 
         for (int slot : enumerateDrawersForInsertion(stack, false)) {
             IDrawerGroup group = getGroupForDrawerSlot(slot);
@@ -186,8 +186,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                 break;
         }
 
-        int count = stack.func_190916_E() - itemsLeft;
-        stack.func_190920_e(itemsLeft);
+        int count = stack.getCount() - itemsLeft;
+        stack.setCount(itemsLeft);
 
         return count;
     }

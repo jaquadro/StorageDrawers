@@ -27,7 +27,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
 
     public TileEntityFramingTable () {
         for (int i = 0; i < tableItemStacks.length; i++)
-            tableItemStacks[i] = ItemStack.field_190927_a;
+            tableItemStacks[i] = ItemStack.EMPTY;
     }
 
     @Override
@@ -36,8 +36,13 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     }
 
     @Override
-    public boolean func_191420_l () {
-        return false;
+    public boolean isEmpty () {
+        for (ItemStack item : tableItemStacks) {
+            if (!item.isEmpty())
+                return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -49,45 +54,45 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     @Override
     @Nonnull
     public ItemStack decrStackSize (int slot, int count) {
-        if (!tableItemStacks[slot].func_190926_b()) {
-            if (tableItemStacks[slot].func_190916_E() <= count) {
+        if (!tableItemStacks[slot].isEmpty()) {
+            if (tableItemStacks[slot].getCount() <= count) {
                 ItemStack stack = tableItemStacks[slot];
-                tableItemStacks[slot] = ItemStack.field_190927_a;
+                tableItemStacks[slot] = ItemStack.EMPTY;
                 markDirty();
                 return stack;
             }
             else {
                 ItemStack stack = tableItemStacks[slot].splitStack(count);
-                if (tableItemStacks[slot].func_190916_E() == 0)
-                    tableItemStacks[slot] = ItemStack.field_190927_a;
+                if (tableItemStacks[slot].getCount() == 0)
+                    tableItemStacks[slot] = ItemStack.EMPTY;
 
                 markDirty();
                 return stack;
             }
         }
         else
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
     }
 
     @Override
     @Nonnull
     public ItemStack removeStackFromSlot (int index) {
-        if (!tableItemStacks[index].func_190926_b()) {
+        if (!tableItemStacks[index].isEmpty()) {
             ItemStack stack = tableItemStacks[index];
-            tableItemStacks[index] = ItemStack.field_190927_a;
+            tableItemStacks[index] = ItemStack.EMPTY;
             markDirty();
             return stack;
         }
 
-        return ItemStack.field_190927_a;
+        return ItemStack.EMPTY;
     }
 
     @Override
     public void setInventorySlotContents (int slot, @Nonnull ItemStack stack) {
         tableItemStacks[slot] = stack;
 
-        if (!stack.func_190926_b() && stack.func_190916_E() > getInventoryStackLimit())
-            stack.func_190920_e(getInventoryStackLimit());
+        if (!stack.isEmpty() && stack.getCount() > getInventoryStackLimit())
+            stack.setCount(getInventoryStackLimit());
 
         markDirty();
     }
@@ -167,7 +172,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     }
 
     public static boolean isItemValidDrawer (@Nonnull ItemStack stack) {
-        if (stack.func_190926_b())
+        if (stack.isEmpty())
             return false;
 
         Block block = Block.getBlockFromItem(stack.getItem());
@@ -175,7 +180,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     }
 
     public static boolean isItemValidMaterial (@Nonnull ItemStack stack) {
-        if (stack.func_190926_b())
+        if (stack.isEmpty())
             return false;
 
         Block block = Block.getBlockFromItem(stack.getItem());
@@ -193,7 +198,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
         NBTTagList itemList = tag.getTagList("Items", 10);
         tableItemStacks = new ItemStack[getSizeInventory()];
         for (int i = 0; i < tableItemStacks.length; i++)
-            tableItemStacks[i] = ItemStack.field_190927_a;
+            tableItemStacks[i] = ItemStack.EMPTY;
 
         for (int i = 0; i < itemList.tagCount(); i++) {
             NBTTagCompound item = itemList.getCompoundTagAt(i);
@@ -213,7 +218,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
 
         NBTTagList itemList = new NBTTagList();
         for (int i = 0; i < tableItemStacks.length; i++) {
-            if (!tableItemStacks[i].func_190926_b()) {
+            if (!tableItemStacks[i].isEmpty()) {
                 NBTTagCompound item = new NBTTagCompound();
                 item.setByte("Slot", (byte)i);
                 tableItemStacks[i].writeToNBT(item);

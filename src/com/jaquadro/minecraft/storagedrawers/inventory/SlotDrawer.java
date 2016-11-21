@@ -26,7 +26,7 @@ public class SlotDrawer extends Slot
 
     @Override
     public boolean isItemValid (@Nonnull ItemStack stack) {
-        return !stack.func_190926_b() && drawer.canItemBeStored(stack);
+        return !stack.isEmpty() && drawer.canItemBeStored(stack);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class SlotDrawer extends Slot
         if (ItemStackHelper.isStackEncoded(stack))
             drawer.setStoredItem(stack, 0);
         else
-            drawer.setStoredItem(stack, stack.func_190916_E());
+            drawer.setStoredItem(stack, stack.getCount());
     }
 
     @Override
@@ -67,7 +67,7 @@ public class SlotDrawer extends Slot
         drawer.setStoredItemCount(withdraw);
 
         ItemStack stack = drawer.getStoredItemPrototype().copy();
-        stack.func_190920_e(drawer.getStoredItemCount() - withdraw);
+        stack.setCount(drawer.getStoredItemCount() - withdraw);
         return stack;
     }
 

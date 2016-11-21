@@ -21,8 +21,8 @@ public class DrawerInventoryHelper
 
             while (drawer.getStoredItemCount() > 0) {
                 ItemStack stack = drawer.getStoredItemPrototype().copy();
-                stack.func_190920_e(drawer.getStoredItemCount());
-                if (!stack.func_190926_b())
+                stack.setCount(drawer.getStoredItemCount());
+                if (!stack.isEmpty())
                     break;
 
                 spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
@@ -37,7 +37,7 @@ public class DrawerInventoryHelper
         float yOff = RANDOM.nextFloat() * 0.8F + 0.1F;
         float zOff = RANDOM.nextFloat() * 0.8F + 0.1F;
 
-        int stackSize = stack.func_190916_E();
+        int stackSize = stack.getCount();
         while (stackSize > 0)
         {
             int dropAmt = RANDOM.nextInt(21) + 10;
@@ -45,8 +45,8 @@ public class DrawerInventoryHelper
             if (dropAmt > stackSize)
                 dropAmt = stackSize;
 
-            stack.func_190918_g(dropAmt);
-            stackSize = stack.func_190916_E();
+            stack.shrink(dropAmt);
+            stackSize = stack.getCount();
 
             EntityItem entityitem = new EntityItem(world, x + (double)xOff, y + (double)yOff, z + (double)zOff, new ItemStack(stack.getItem(), dropAmt, stack.getMetadata()));
 
@@ -58,7 +58,7 @@ public class DrawerInventoryHelper
             entityitem.motionY = RANDOM.nextGaussian() * (double)velocity + 0.20000000298023224D;
             entityitem.motionZ = RANDOM.nextGaussian() * (double)velocity;
 
-            world.spawnEntityInWorld(entityitem);
+            world.spawnEntity(entityitem);
         }
     }
 }

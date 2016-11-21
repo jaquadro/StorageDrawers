@@ -140,7 +140,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         boolean restoreBlockState = false;
 
         for (int i = 0; i < drawerCount; i++) {
-            renderStacks[i] = ItemStack.field_190927_a;
+            renderStacks[i] = ItemStack.EMPTY;
             IDrawer drawer = tile.getDrawerIfEnabled(i);
             if (drawer == null || drawer.isEmpty())
                 continue;
@@ -161,7 +161,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         //GlStateManager.pushAttrib();
 
         for (int i = 0; i < drawerCount; i++) {
-            if (!renderStacks[i].func_190926_b() && !renderAsBlock[i])
+            if (!renderStacks[i].isEmpty() && !renderAsBlock[i])
                 renderFastItem(renderer, renderStacks[i], tile, state, i, side, depth, partialTickTime);
         }
 
@@ -171,7 +171,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         //}
 
         for (int i = 0; i < drawerCount; i++) {
-            if (!renderStacks[i].func_190926_b() && renderAsBlock[i])
+            if (!renderStacks[i].isEmpty() && renderAsBlock[i])
                 renderFastItem(renderer, renderStacks[i], tile, state, i, side, depth, partialTickTime);
         }
 

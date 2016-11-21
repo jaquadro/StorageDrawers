@@ -24,8 +24,8 @@ public class InventoryContainerProxy implements IInventory
     }
 
     @Override
-    public boolean func_191420_l () {
-        return parent.func_191420_l();
+    public boolean isEmpty () {
+        return parent.isEmpty();
     }
 
     @Override
@@ -38,14 +38,14 @@ public class InventoryContainerProxy implements IInventory
     @Nonnull
     public ItemStack decrStackSize (int slot, int count) {
         ItemStack stack = parent.getStackInSlot(slot);
-        if (stack.func_190926_b())
-            return ItemStack.field_190927_a;
+        if (stack.isEmpty())
+            return ItemStack.EMPTY;
 
-        int stackCount = stack.func_190916_E();
+        int stackCount = stack.getCount();
         ItemStack result = parent.decrStackSize(slot, count);
 
         ItemStack stackAfter = parent.getStackInSlot(slot);
-        if (stack != stackAfter || stackCount != stackAfter.func_190916_E())
+        if (stack != stackAfter || stackCount != stackAfter.getCount())
             container.onCraftMatrixChanged(this);
 
         return result;
@@ -55,8 +55,8 @@ public class InventoryContainerProxy implements IInventory
     @Nonnull
     public ItemStack removeStackFromSlot (int index) {
         ItemStack stack = parent.removeStackFromSlot(index);
-        if (stack.func_190926_b())
-            return ItemStack.field_190927_a;
+        if (stack.isEmpty())
+            return ItemStack.EMPTY;
 
         container.onCraftMatrixChanged(this);
         return stack;

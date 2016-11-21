@@ -54,7 +54,7 @@ public class BlockDrawersCustom extends BlockDrawers
     protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile == null)
-            return ItemCustomDrawers.makeItemStack(state, 1, ItemStack.field_190927_a, ItemStack.field_190927_a, ItemStack.field_190927_a);
+            return ItemCustomDrawers.makeItemStack(state, 1, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
 
         return ItemCustomDrawers.makeItemStack(state, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront());
     }
@@ -68,7 +68,7 @@ public class BlockDrawersCustom extends BlockDrawers
     @Override
     public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileEntityDrawers tile = getTileEntity(world, pos);
-        if (tile != null && tile.getMaterialSide().func_190926_b())
+        if (tile != null && tile.getMaterialSide().isEmpty())
             return false;
 
         return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);

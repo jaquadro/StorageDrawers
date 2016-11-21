@@ -33,7 +33,7 @@ public class TileEntityFramingRenderer extends TileEntitySpecialRenderer<TileEnt
             return;
 
         ItemStack target = tile.getStackInSlot(0);
-        if (!target.func_190926_b()) {
+        if (!target.isEmpty()) {
             Block block = Block.getBlockFromItem(target.getItem());
             IBlockState blockState = block.getStateFromMeta(target.getMetadata());
             if (block instanceof BlockDrawersCustom) {

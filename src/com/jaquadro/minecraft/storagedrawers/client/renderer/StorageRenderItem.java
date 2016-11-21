@@ -34,7 +34,7 @@ public class StorageRenderItem extends RenderItem
     public StorageRenderItem (TextureManager texManager, ModelManager modelManager, ItemColors colors) {
         super(texManager, modelManager, colors);
         parent = Minecraft.getMinecraft().getRenderItem();
-        overrideStack = ItemStack.field_190927_a;
+        overrideStack = ItemStack.EMPTY;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class StorageRenderItem extends RenderItem
             return;
         }
 
-        if (!item.func_190926_b())
+        if (!item.isEmpty())
         {
             float scale = .5f;
             float xoff = 0;
@@ -99,7 +99,7 @@ public class StorageRenderItem extends RenderItem
                 xoff = 1;
             }
 
-            int stackSize = item.func_190916_E();
+            int stackSize = item.getCount();
             if (ItemStackHelper.isStackEncoded(item))
                 stackSize = 0;
 

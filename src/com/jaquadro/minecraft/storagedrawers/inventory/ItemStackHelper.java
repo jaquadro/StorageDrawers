@@ -50,11 +50,11 @@ public class ItemStackHelper
 
     @Nonnull
     public static ItemStack encodeItemStack (@Nonnull ItemStack stack) {
-        if (!stack.func_190926_b())
+        if (!stack.isEmpty())
             return stack;
 
         ItemStack proto = getItemPrototype(stack);
-        if (proto.func_190926_b())
+        if (proto.isEmpty())
             return stack;
 
         NBTTagCompound tag = proto.getTagCompound();
@@ -69,9 +69,9 @@ public class ItemStackHelper
     }
 
     public static ItemStack encodeItemStack (@Nonnull ItemStack proto, int count) {
-        if (!proto.func_190926_b() && count > 0) {
+        if (!proto.isEmpty() && count > 0) {
             ItemStack stack = proto.copy();
-            stack.func_190920_e(count);
+            stack.setCount(count);
             return stack;
         }
 

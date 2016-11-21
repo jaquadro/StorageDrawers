@@ -81,24 +81,24 @@ public class ContainerFramingTable extends Container
         ItemStack matTrim = tableInventory.getStackInSlot(materialTrimSlot.getSlotIndex());
         ItemStack matFront = tableInventory.getStackInSlot(materialFrontSlot.getSlotIndex());
 
-        if (!target.func_190926_b()) {
+        if (!target.isEmpty()) {
             Block block = Block.getBlockFromItem(target.getItem());
             if (block instanceof BlockDrawersCustom) {
                 IBlockState state = block.getStateFromMeta(target.getMetadata());
-                if (!matSide.func_190926_b()) {
+                if (!matSide.isEmpty()) {
                     craftResult.setInventorySlotContents(0, ItemCustomDrawers.makeItemStack(state, 1, matSide, matTrim, matFront));
                     return;
                 }
             }
             else if (block instanceof BlockTrimCustom) {
-                if (!matSide.func_190926_b()) {
+                if (!matSide.isEmpty()) {
                     craftResult.setInventorySlotContents(0, ItemCustomTrim.makeItemStack(block, 1, matSide, matTrim));
                     return;
                 }
             }
         }
 
-        craftResult.setInventorySlotContents(0, ItemStack.field_190927_a);
+        craftResult.setInventorySlotContents(0, ItemStack.EMPTY);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class ContainerFramingTable extends Container
             // Try merge output into inventory and signal change
             if (slotIndex == outputSlot.slotNumber) {
                 if (!mergeItemStack(slotStack, inventoryStart, hotbarEnd, true))
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
                 slot.onSlotChange(slotStack, itemStack);
             }
 
@@ -134,26 +134,26 @@ public class ContainerFramingTable extends Container
                 if (!merged) {
                     if (slotIndex >= inventoryStart && slotIndex < hotbarStart) {
                         if (!mergeItemStack(slotStack, hotbarStart, hotbarEnd, false))
-                            return ItemStack.field_190927_a;
+                            return ItemStack.EMPTY;
                     } else if (slotIndex >= hotbarStart && slotIndex < hotbarEnd && !this.mergeItemStack(slotStack, inventoryStart, hotbarStart, false))
-                        return ItemStack.field_190927_a;
+                        return ItemStack.EMPTY;
                 }
             }
 
             // Try merge stack into inventory
             else if (!mergeItemStack(slotStack, inventoryStart, hotbarEnd, false))
-                return ItemStack.field_190927_a;
+                return ItemStack.EMPTY;
 
-            int slotStackSize = slotStack.func_190916_E();
+            int slotStackSize = slotStack.getCount();
             if (slotStackSize == 0)
-                slot.putStack(ItemStack.field_190927_a);
+                slot.putStack(ItemStack.EMPTY);
             else
                 slot.onSlotChanged();
 
-            if (slotStackSize == itemStack.func_190916_E())
-                return ItemStack.field_190927_a;
+            if (slotStackSize == itemStack.getCount())
+                return ItemStack.EMPTY;
 
-            slot.func_190901_a(player, slotStack);
+            slot.onTake(player, slotStack);
         }
 
         return itemStack;

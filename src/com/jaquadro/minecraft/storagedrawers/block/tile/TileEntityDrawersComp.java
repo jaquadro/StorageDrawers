@@ -52,7 +52,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         protoStack = new ItemStack[getDrawerCount()];
         for (int i = 0; i < protoStack.length; i++)
-            protoStack[i] = ItemStack.field_190927_a;
+            protoStack[i] = ItemStack.EMPTY;
 
         convRate = new int[getDrawerCount()];
     }
@@ -97,7 +97,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     @Override
     public int putItemsIntoSlot (int slot, @Nonnull ItemStack stack, int count) {
         int added = 0;
-        if (!stack.func_190926_b() && convRate != null && convRate[0] == 0) {
+        if (!stack.isEmpty() && convRate != null && convRate[0] == 0) {
             populateSlots(stack);
 
             for (int i = 0; i < getDrawerCount(); i++) {
@@ -129,7 +129,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         pooledCount = 0;
 
         for (int i = 0; i < getDrawerCount(); i++) {
-            protoStack[i] = ItemStack.field_190927_a;
+            protoStack[i] = ItemStack.EMPTY;
             convRate[i] = 0;
         }
 
@@ -198,13 +198,13 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         int index = 0;
 
         ItemStack uTier1 = findHigherTier(stack);
-        if (!uTier1.func_190926_b()) {
+        if (!uTier1.isEmpty()) {
             if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
                 FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Picked candidate " + uTier1.toString() + " with conv=" + lookupSizeResult);
 
             int uCount1 = lookupSizeResult;
             ItemStack uTier2 = findHigherTier(uTier1);
-            if (!uTier2.func_190926_b()) {
+            if (!uTier2.isEmpty()) {
                 if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
                     FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Picked candidate " + uTier2.toString() + " with conv=" + lookupSizeResult);
 
@@ -220,7 +220,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             return;
 
         ItemStack lTier1 = findLowerTier(stack);
-        if (!lTier1.func_190926_b()) {
+        if (!lTier1.isEmpty()) {
             if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
                 FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Picked candidate " + lTier1.toString() + " with conv=" + lookupSizeResult);
 
@@ -229,11 +229,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 convRate[i] *= lookupSizeResult;
         }
 
-        if (index == 3 || lTier1.func_190926_b())
+        if (index == 3 || lTier1.isEmpty())
             return;
 
         ItemStack lTier2 = findLowerTier(lTier1);
-        if (!lTier2.func_190926_b()) {
+        if (!lTier2.isEmpty()) {
             if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
                 FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Picked candidate " + lTier2.toString() + " with conv=" + lookupSizeResult);
 
@@ -284,7 +284,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 List<ItemStack> backCandidates = findAllMatchingRecipes(lookup1);
 
                 for (ItemStack comp : backCandidates) {
-                    if (comp.func_190916_E() != size)
+                    if (comp.getCount() != size)
                         continue;
 
                     if (!DrawerData.areItemsEqual(comp, stack, false))
@@ -302,7 +302,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         ItemStack modMatch = findMatchingModCandidate(stack, candidates);
-        if (!modMatch.func_190926_b())
+        if (!modMatch.isEmpty())
             return modMatch;
 
         if (candidates.size() > 0)
@@ -311,7 +311,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "No candidates found");
 
-        return ItemStack.field_190927_a;
+        return ItemStack.EMPTY;
     }
 
     private List<ItemStack> findAllMatchingRecipes (InventoryCrafting crafting) {
@@ -324,7 +324,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             IRecipe recipe = (IRecipe) aRecipeList;
             if (recipe.matches(crafting, getWorld())) {
                 ItemStack result = recipe.getCraftingResult(crafting);
-                if (!result.func_190926_b())
+                if (!result.isEmpty())
                     candidates.add(result);
             }
         }
@@ -354,7 +354,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         for (Object aRecipeList : recipeList) {
             IRecipe recipe = (IRecipe) aRecipeList;
-            ItemStack match = ItemStack.field_190927_a;
+            ItemStack match = ItemStack.EMPTY;
 
             ItemStack output = recipe.getRecipeOutput();
             if (!DrawerData.areItemsEqual(stack, output, false))
@@ -377,11 +377,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 break;
             }
 
-            if (!match.func_190926_b()) {
+            if (!match.isEmpty()) {
                 setupLookup(lookup1, output);
                 List<ItemStack> compMatches = findAllMatchingRecipes(lookup1);
                 for (ItemStack comp : compMatches) {
-                    if (DrawerData.areItemsEqual(match, comp, true) && comp.func_190916_E() == recipe.getRecipeSize()) {
+                    if (DrawerData.areItemsEqual(match, comp, true) && comp.getCount() == recipe.getRecipeSize()) {
                         lookupSizeResult = recipe.getRecipeSize();
                         candidates.add(match);
                         candidatesRate.put(match, lookupSizeResult);
@@ -395,7 +395,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         ItemStack modMatch = findMatchingModCandidate(stack, candidates);
-        if (!modMatch.func_190926_b()) {
+        if (!modMatch.isEmpty()) {
             lookupSizeResult = candidatesRate.get(modMatch);
             return modMatch;
         }
@@ -410,7 +410,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
             FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "No candidates found");
 
-        return ItemStack.field_190927_a;
+        return ItemStack.EMPTY;
     }
 
     @Nonnull
@@ -426,13 +426,13 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             }
         }
 
-        return ItemStack.field_190927_a;
+        return ItemStack.EMPTY;
     }
 
     @Nonnull
     private ItemStack tryMatch (@Nonnull ItemStack stack, List list) {
         if (list.size() != 9 && list.size() != 4)
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         Object item = list.get(0);
         if (item instanceof ItemStack) {
@@ -440,16 +440,16 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             for (int i = 1, n = list.size(); i < n; i++) {
                 Object item2 = list.get(i);
                 if (item2.getClass() != ItemStack.class)
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
                 if (!item1.isItemEqual((ItemStack)item2))
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
             }
             return item1;
         }
         else if (item instanceof List) {
             for (int i = 1, n = list.size(); i < n; i++) {
                 if (item != list.get(i))
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
             }
 
             List itemList = (List)item;
@@ -460,33 +460,33 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             }
         }
 
-        return ItemStack.field_190927_a;
+        return ItemStack.EMPTY;
     }
 
     @Nonnull
     private ItemStack tryMatch (@Nonnull ItemStack stack, Object[] list) {
         if (list.length != 9 && list.length != 4)
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         Object item = list[0];
         if (item == null)
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         if (item instanceof ItemStack) {
             ItemStack item1 = (ItemStack)item;
             for (int i = 1, n = list.length; i < n; i++) {
                 Object item2 = list[i];
                 if (item2 == null || item2.getClass() != ItemStack.class)
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
                 if (!item1.isItemEqual((ItemStack)item2))
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
             }
             return item1;
         }
         else if (item instanceof List) {
             for (int i = 1, n = list.length; i < n; i++) {
                 if (item != list[i])
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
             }
 
             List itemList = (List)item;
@@ -502,28 +502,28 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         else {
             IIngredientHandler handler = StorageDrawers.recipeHandlerRegistry.getIngredientHandler(item.getClass());
             if (handler == null)
-                return ItemStack.field_190927_a;
+                return ItemStack.EMPTY;
 
             ItemStack item1 = handler.getItemStack(item);
-            if (item1.func_190926_b())
-                return ItemStack.field_190927_a;
+            if (item1.isEmpty())
+                return ItemStack.EMPTY;
 
             for (int i = 1, n = list.length; i < n; i++) {
                 Object item2 = list[i];
                 if (item2 == null || item.getClass() != item2.getClass())
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
 
                 item2 = handler.getItemStack(item2);
                 if (item2 == null || item2.getClass() != ItemStack.class)
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
                 if (!item1.isItemEqual((ItemStack)item2))
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
             }
 
             return item1;
         }
 
-        return ItemStack.field_190927_a;
+        return ItemStack.EMPTY;
     }
 
     private void setupLookup (InventoryLookup inv, @Nonnull ItemStack stack) {
@@ -543,7 +543,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public IDrawer setStoredItem (int slot, @Nonnull ItemStack itemPrototype, int amount) {
-            boolean itemValid = !itemPrototype.func_190926_b();
+            boolean itemValid = !itemPrototype.isEmpty();
             if (itemValid && convRate != null && convRate[0] == 0) {
                 IDrawer target = null;
                 populateSlots(itemPrototype);
@@ -613,11 +613,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public int getMaxCapacity (int slot) {
-            if (protoStack[slot].func_190926_b() || convRate == null || convRate[slot] == 0)
+            if (protoStack[slot].isEmpty() || convRate == null || convRate[slot] == 0)
                 return 0;
 
             if (TileEntityDrawersComp.this.isUnlimited() || TileEntityDrawersComp.this.isVending()) {
-                if (convRate == null || protoStack[slot].func_190926_b() || convRate[slot] == 0)
+                if (convRate == null || protoStack[slot].isEmpty() || convRate[slot] == 0)
                     return Integer.MAX_VALUE;
                 return Integer.MAX_VALUE / convRate[slot];
             }
@@ -627,16 +627,16 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public int getMaxCapacity (int slot, @Nonnull ItemStack itemPrototype) {
-            if (itemPrototype.func_190926_b())
+            if (itemPrototype.isEmpty())
                 return 0;
 
             if (TileEntityDrawersComp.this.isUnlimited() || TileEntityDrawersComp.this.isVending()) {
-                if (convRate == null || protoStack[slot].func_190926_b() || convRate[slot] == 0)
+                if (convRate == null || protoStack[slot].isEmpty() || convRate[slot] == 0)
                     return Integer.MAX_VALUE;
                 return Integer.MAX_VALUE / convRate[slot];
             }
 
-            if (convRate == null || protoStack[0].func_190926_b() || convRate[0] == 0)
+            if (convRate == null || protoStack[0].isEmpty() || convRate[0] == 0)
                 return itemPrototype.getItem().getItemStackLimit(itemPrototype) * getBaseStackCapacity();
 
             if (BaseDrawerData.areItemsEqual(protoStack[slot], itemPrototype))
@@ -655,7 +655,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public int getStoredItemStackSize (int slot) {
-            if (protoStack[slot].func_190926_b() || convRate == null || convRate[slot] == 0)
+            if (protoStack[slot].isEmpty() || convRate == null || convRate[slot] == 0)
                 return 0;
 
             return protoStack[slot].getItem().getItemStackLimit(protoStack[slot]);
@@ -671,7 +671,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public int getConversionRate (int slot) {
-            if (protoStack[slot].func_190926_b() || convRate == null || convRate[slot] == 0)
+            if (protoStack[slot].isEmpty() || convRate == null || convRate[slot] == 0)
                 return 0;
 
             return convRate[0] / convRate[slot];
@@ -684,7 +684,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public boolean isSmallestUnit (int slot) {
-            if (protoStack[slot].func_190926_b() || convRate == null || convRate[slot] == 0)
+            if (protoStack[slot].isEmpty() || convRate == null || convRate[slot] == 0)
                 return false;
 
             return convRate[slot] == 1;
@@ -714,7 +714,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         @Override
         public void writeToNBT (int slot, NBTTagCompound tag) {
             ItemStack protoStack = getStoredItemPrototype(slot);
-            if (!protoStack.func_190926_b()) {
+            if (!protoStack.isEmpty()) {
                 tag.setShort("Item", (short) Item.getIdFromItem(protoStack.getItem()));
                 tag.setShort("Meta", (short) protoStack.getItemDamage());
 
@@ -740,7 +740,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         private void clear () {
             for (int i = 0; i < getDrawerCount(); i++) {
-                protoStack[i] = ItemStack.field_190927_a;
+                protoStack[i] = ItemStack.EMPTY;
                 convRate[i] = 0;
             }
 
@@ -794,7 +794,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
             stackList = new ItemStack[width * height];
             for (int i = 0; i < stackList.length; i++)
-                stackList[i] = ItemStack.field_190927_a;
+                stackList[i] = ItemStack.EMPTY;
         }
 
         @Override
@@ -807,19 +807,19 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         @Nonnull
         public ItemStack getStackInSlot (int slot)
         {
-            return slot >= this.getSizeInventory() ? ItemStack.field_190927_a : this.stackList[slot];
+            return slot >= this.getSizeInventory() ? ItemStack.EMPTY : this.stackList[slot];
         }
 
         @Override
         @Nonnull
         public ItemStack removeStackFromSlot (int slot) {
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
         }
 
         @Override
         @Nonnull
         public ItemStack decrStackSize (int slot, int count) {
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
         }
 
         @Override

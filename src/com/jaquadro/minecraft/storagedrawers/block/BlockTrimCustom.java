@@ -55,7 +55,7 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
     protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
         TileEntityTrim tile = getTileEntity(world, pos);
         if (tile == null)
-            return ItemCustomTrim.makeItemStack(this, 1, ItemStack.field_190927_a, ItemStack.field_190927_a);
+            return ItemCustomTrim.makeItemStack(this, 1, ItemStack.EMPTY, ItemStack.EMPTY);
 
         return ItemCustomTrim.makeItemStack(this, 1, tile.getMaterialSide(), tile.getMaterialTrim());
     }

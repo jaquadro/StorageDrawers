@@ -115,7 +115,7 @@ public final class BasicDrawerModel
 
         @Override
         public IBakedModel handleItemState (IBakedModel parent, @Nonnull ItemStack stack, World world, EntityLivingBase entity) {
-            if (stack.func_190926_b())
+            if (stack.isEmpty())
                 return parent;
 
             if (!stack.hasTagCompound() || !stack.getTagCompound().hasKey("tile", Constants.NBT.TAG_COMPOUND))

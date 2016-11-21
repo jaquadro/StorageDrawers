@@ -49,7 +49,7 @@ public class CommonProxy
 
     @SubscribeEvent
     public void playerRightClick (PlayerInteractEvent.RightClickBlock event) {
-        if (event.getHand() == EnumHand.MAIN_HAND && event.getItemStack().func_190926_b()) {
+        if (event.getHand() == EnumHand.MAIN_HAND && event.getItemStack().isEmpty()) {
             TileEntity tile = event.getWorld().getTileEntity(event.getPos());
             if (tile instanceof TileEntityDrawers) {
                 event.setUseBlock(Event.Result.ALLOW);

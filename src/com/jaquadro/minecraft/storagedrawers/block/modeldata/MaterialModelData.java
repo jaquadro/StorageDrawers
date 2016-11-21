@@ -24,12 +24,12 @@ public final class MaterialModelData extends ModelData
 
     public MaterialModelData (TileEntityDrawers tile) {
         if (tile == null) {
-            matFront = ItemStack.field_190927_a;
-            matSide = ItemStack.field_190927_a;
-            matTrim = ItemStack.field_190927_a;
-            effectiveMatFront = ItemStack.field_190927_a;
-            effectiveMatSide = ItemStack.field_190927_a;
-            effectiveMatTrim = ItemStack.field_190927_a;
+            matFront = ItemStack.EMPTY;
+            matSide = ItemStack.EMPTY;
+            matTrim = ItemStack.EMPTY;
+            effectiveMatFront = ItemStack.EMPTY;
+            effectiveMatSide = ItemStack.EMPTY;
+            effectiveMatTrim = ItemStack.EMPTY;
         }
         else {
             matFront = tile.getMaterialFront();
@@ -42,14 +42,14 @@ public final class MaterialModelData extends ModelData
     }
 
     public MaterialModelData (TileEntityTrim tile) {
-        matFront = ItemStack.field_190927_a;
-        effectiveMatFront = ItemStack.field_190927_a;
+        matFront = ItemStack.EMPTY;
+        effectiveMatFront = ItemStack.EMPTY;
 
         if (tile == null) {
-            matSide = ItemStack.field_190927_a;
-            matTrim = ItemStack.field_190927_a;
-            effectiveMatSide = ItemStack.field_190927_a;
-            effectiveMatTrim = ItemStack.field_190927_a;
+            matSide = ItemStack.EMPTY;
+            matTrim = ItemStack.EMPTY;
+            effectiveMatSide = ItemStack.EMPTY;
+            effectiveMatTrim = ItemStack.EMPTY;
         }
         else {
             matSide = tile.getMaterialSide();

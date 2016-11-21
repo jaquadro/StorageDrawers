@@ -40,14 +40,14 @@ public class ItemCustomTrim extends ItemBlock
     public static ItemStack makeItemStack (Block block, int count, @Nonnull ItemStack matSide, @Nonnull ItemStack matTrim) {
         Item item = Item.getItemFromBlock(block);
         if (!(item instanceof ItemCustomTrim))
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
 
         NBTTagCompound tag = new NBTTagCompound();
 
-        if (!matSide.func_190926_b())
+        if (!matSide.isEmpty())
             tag.setTag("MatS", getMaterialTag(matSide));
 
-        if (!matTrim.func_190926_b())
+        if (!matTrim.isEmpty())
             tag.setTag("MatT", getMaterialTag(matTrim));
 
         ItemStack stack = new ItemStack(item, count, 0);
@@ -59,7 +59,7 @@ public class ItemCustomTrim extends ItemBlock
 
     private static NBTTagCompound getMaterialTag (@Nonnull ItemStack mat) {
         mat = mat.copy();
-        mat.func_190920_e(1);
+        mat.setCount(1);
 
         NBTTagCompound itag = new NBTTagCompound();
         mat.writeToNBT(itag);

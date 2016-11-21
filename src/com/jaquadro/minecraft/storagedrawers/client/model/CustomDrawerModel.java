@@ -137,9 +137,9 @@ public class CustomDrawerModel extends ChamModel
             return new CustomDrawerModel(state, true);
 
         NBTTagCompound tag = stack.getTagCompound();
-        ItemStack matFront = ItemStack.field_190927_a;
-        ItemStack matSide = ItemStack.field_190927_a;
-        ItemStack matTrim = ItemStack.field_190927_a;
+        ItemStack matFront = ItemStack.EMPTY;
+        ItemStack matSide = ItemStack.EMPTY;
+        ItemStack matTrim = ItemStack.EMPTY;
 
         if (tag.hasKey("MatF", Constants.NBT.TAG_COMPOUND))
             matFront = new ItemStack(tag.getCompoundTag("MatF"));
@@ -148,8 +148,8 @@ public class CustomDrawerModel extends ChamModel
         if (tag.hasKey("MatT", Constants.NBT.TAG_COMPOUND))
             matTrim = new ItemStack(tag.getCompoundTag("MatT"));
 
-        ItemStack effMatFront = !matFront.func_190926_b() ? matFront : matSide;
-        ItemStack effMatTrim = !matTrim.func_190926_b() ? matTrim : matSide;
+        ItemStack effMatFront = !matFront.isEmpty() ? matFront : matSide;
+        ItemStack effMatTrim = !matTrim.isEmpty() ? matTrim : matSide;
         ItemStack effMatSide = matSide;
 
         IBakedModel model = new CustomDrawerModel(state, effMatFront, effMatSide, effMatTrim, matFront, matSide, matTrim, true);
@@ -160,8 +160,8 @@ public class CustomDrawerModel extends ChamModel
     }
 
     private CustomDrawerModel (IBlockState state, boolean mergeLayers) {
-        this(state, ItemStack.field_190927_a, ItemStack.field_190927_a, ItemStack.field_190927_a,
-            ItemStack.field_190927_a, ItemStack.field_190927_a, ItemStack.field_190927_a, mergeLayers);
+        this(state, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY,
+            ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, mergeLayers);
     }
 
     private CustomDrawerModel (IBlockState state, @Nonnull ItemStack effMatFront, @Nonnull ItemStack effMatSide, @Nonnull ItemStack effMatTrim,
@@ -178,9 +178,9 @@ public class CustomDrawerModel extends ChamModel
         ItemStack itemSide = (ItemStack)args[1];
         ItemStack itemTrim = (ItemStack)args[2];
 
-        TextureAtlasSprite iconFront = !itemFront.func_190926_b() ? IconUtil.getIconFromStack(itemFront) : null;
-        TextureAtlasSprite iconSide = !itemSide.func_190926_b() ? IconUtil.getIconFromStack(itemSide) : null;
-        TextureAtlasSprite iconTrim = !itemTrim.func_190926_b() ? IconUtil.getIconFromStack(itemTrim) : null;
+        TextureAtlasSprite iconFront = !itemFront.isEmpty() ? IconUtil.getIconFromStack(itemFront) : null;
+        TextureAtlasSprite iconSide = !itemSide.isEmpty() ? IconUtil.getIconFromStack(itemSide) : null;
+        TextureAtlasSprite iconTrim = !itemTrim.isEmpty() ? IconUtil.getIconFromStack(itemTrim) : null;
 
         if (iconFront == null)
             iconFront = iconSide;
@@ -210,7 +210,7 @@ public class CustomDrawerModel extends ChamModel
 
         ItemStack itemTrim = (ItemStack)args[5];
 
-        TextureAtlasSprite iconTrim = !itemTrim.func_190926_b() ? IconUtil.getIconFromStack(itemTrim) : null;
+        TextureAtlasSprite iconTrim = !itemTrim.isEmpty() ? IconUtil.getIconFromStack(itemTrim) : null;
         TextureAtlasSprite iconOverlayTrim;
 
         if (iconTrim == null)

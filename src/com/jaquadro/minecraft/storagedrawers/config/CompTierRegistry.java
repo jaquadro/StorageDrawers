@@ -52,15 +52,15 @@ public class CompTierRegistry
     }
 
     public boolean register (@Nonnull ItemStack upper, @Nonnull ItemStack lower, int convRate) {
-        if (upper.func_190926_b() || lower.func_190926_b())
+        if (upper.isEmpty() || lower.isEmpty())
             return false;
 
         unregisterUpperTarget(upper);
         unregisterLowerTarget(lower);
 
         Record r = new Record(upper.copy(), lower.copy(), convRate);
-        r.upper.func_190920_e(1);
-        r.lower.func_190920_e(1);
+        r.upper.setCount(1);
+        r.lower.setCount(1);
 
         records.add(r);
 
@@ -78,7 +78,7 @@ public class CompTierRegistry
         ItemResourceLocation lowerResource = new ItemResourceLocation(parts[1]);
         ItemStack lowerItem = lowerResource.getItemStack();
 
-        if (upperItem.func_190926_b() || lowerItem.func_190926_b())
+        if (upperItem.isEmpty() || lowerItem.isEmpty())
             return false;
 
         if (upperItem.getMetadata() == OreDictionary.WILDCARD_VALUE)
@@ -118,7 +118,7 @@ public class CompTierRegistry
     }
 
     public Record findHigherTier (@Nonnull ItemStack stack) {
-        if (stack.func_190926_b())
+        if (stack.isEmpty())
             return null;
 
         for (Record r : records) {
@@ -130,7 +130,7 @@ public class CompTierRegistry
     }
 
     public Record findLowerTier (@Nonnull ItemStack stack) {
-        if (stack.func_190926_b())
+        if (stack.isEmpty())
             return null;
 
         for (Record r : records) {
