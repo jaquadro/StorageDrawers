@@ -111,7 +111,7 @@ public abstract class BaseDrawerData implements IDrawer
     }
 
     public static boolean areItemsEqual (@Nonnull ItemStack stack1, @Nonnull ItemStack stack2, boolean oreDictStrictMode) {
-        if (!stack1.func_190926_b() && !stack1.isItemEqual(stack2)) {
+        if (!stack1.func_190926_b() && !stack2.func_190926_b() && !stack1.isItemEqual(stack2)) {
             if (!StorageDrawers.config.cache.enableItemConversion)
                 return false;
             if (stack1.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack2.getItemDamage() == OreDictionary.WILDCARD_VALUE)

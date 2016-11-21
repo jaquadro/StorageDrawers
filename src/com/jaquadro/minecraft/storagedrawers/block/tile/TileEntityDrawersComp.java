@@ -101,7 +101,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             populateSlots(stack);
 
             for (int i = 0; i < getDrawerCount(); i++) {
-                if (BaseDrawerData.areItemsEqual(protoStack[i], stack))
+                if (convRate[i] != 0 && BaseDrawerData.areItemsEqual(protoStack[i], stack))
                     added = super.putItemsIntoSlot(i, stack, count);
             }
 
@@ -566,7 +566,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 markBlockForUpdate();
                 return target;
             }
-            else if (!itemValid) {
+            else if (!itemValid && isDrawerEnabled(slot)) {
                 pooledCount = 0;
                 clear();
                 markBlockForUpdate();

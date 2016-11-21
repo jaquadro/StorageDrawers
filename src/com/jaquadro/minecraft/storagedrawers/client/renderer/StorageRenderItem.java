@@ -103,7 +103,7 @@ public class StorageRenderItem extends RenderItem
             if (ItemStackHelper.isStackEncoded(item))
                 stackSize = 0;
 
-            if (stackSize != 1 || text != null)
+            if (stackSize >= 0 || text != null)
             {
                 if (stackSize >= 100000000 || (stackSize >= 1000000 && font.getUnicodeFlag()))
                     text = (text == null) ? String.format("%.0fM", stackSize / 1000000f) : text;

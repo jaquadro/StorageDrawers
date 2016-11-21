@@ -44,7 +44,7 @@ public class InventoryUpgrade implements IInventory
     public ItemStack decrStackSize (int slot, int count) {
         ItemStack stack = tile.getUpgrade(slot);
         if (count > 0)
-            tile.setUpgrade(slot, null);
+            tile.setUpgrade(slot, ItemStack.field_190927_a);
 
         return stack;
     }
