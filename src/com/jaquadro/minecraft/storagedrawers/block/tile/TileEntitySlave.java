@@ -15,6 +15,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
+import java.util.ArrayList;
+
 public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup
 {
     private static final int[] drawerSlots = new int[] { 0 };
