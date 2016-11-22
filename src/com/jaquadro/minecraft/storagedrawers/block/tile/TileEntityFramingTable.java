@@ -256,6 +256,6 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
         int xMax = Math.max(pos.getX(), pos.getX() + xOff) + 1;
         int zMin = Math.min(pos.getZ(), pos.getZ() + zOff);
         int zMax = Math.max(pos.getZ(), pos.getZ() + zOff) + 1;
-        return new AxisAlignedBB(xMin, pos.getY() + 1, xMax, zMin, pos.getY() + 2, zMax);
+        return new AxisAlignedBB(xMin, pos.getY() + 1, zMin, xMax, pos.getY() + 2, zMax);
     }
 }
