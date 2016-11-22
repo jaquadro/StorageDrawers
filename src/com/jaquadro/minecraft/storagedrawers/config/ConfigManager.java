@@ -186,6 +186,7 @@ public class ConfigManager
     public final ConfigCache cache;
 
     public final List<ConfigSection> sections = new ArrayList<ConfigSection>();
+    public final ConfigSection sectionGeneral = new ConfigSection(sections, "general", "general");
     public final ConfigSection sectionIntegration = new ConfigSection(sections, "integration", "integration");
     public final ConfigSection sectionBlocks = new ConfigSection(sections, "blocks", "blocks");
     public final ConfigSection sectionUpgrades = new ConfigSection(sections, "upgrades", "upgrades");
@@ -235,6 +236,7 @@ public class ConfigManager
         cache.enablePersonalUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enablePersonalUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enablePersonalUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableRedstoneUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableRedstoneUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableRedstoneUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableTape = config.get(Configuration.CATEGORY_GENERAL, "enableTape", true).setLanguageKey(LANG_PREFIX + "prop.enableTape").setRequiresMcRestart(true).getBoolean();
+        cache.creativeTabVanillaWoods = config.get(Configuration.CATEGORY_GENERAL, "creativeTabVanillaWoods", true).setLanguageKey(LANG_PREFIX + "prop.creativeTabVanillaWoods").getBoolean();
         cache.enableDrawerUI = config.get(Configuration.CATEGORY_GENERAL, "enableDrawerUI", true).setLanguageKey(LANG_PREFIX + "prop.enableDrawerUI").getBoolean();
         cache.enableSidedInput = config.get(Configuration.CATEGORY_GENERAL, "enableSidedInput", true).setLanguageKey(LANG_PREFIX + "prop.enableSidedInput").getBoolean();
         cache.enableSidedOutput = config.get(Configuration.CATEGORY_GENERAL, "enableSidedOutput", true).setLanguageKey(LANG_PREFIX + "prop.enableSidedOutput").getBoolean();
