@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.integration.jei;
-/*
+
 import com.jaquadro.minecraft.storagedrawers.core.recipe.TemplateRecipe;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -19,11 +19,6 @@ public class TemplateRecipeHandler implements IRecipeHandler<TemplateRecipe>
     }
 
     @Override
-    public String getRecipeCategoryUid () {
-        return VanillaRecipeCategoryUid.CRAFTING;
-    }
-
-    @Override
     public String getRecipeCategoryUid (TemplateRecipe recipe) {
         return VanillaRecipeCategoryUid.CRAFTING;
     }
@@ -38,4 +33,3 @@ public class TemplateRecipeHandler implements IRecipeHandler<TemplateRecipe>
         return recipe.getRecipeOutput() != null;
     }
 }
-*/
