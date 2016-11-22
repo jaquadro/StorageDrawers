@@ -1,13 +1,25 @@
 package com.jaquadro.minecraft.storagedrawers.integration.minetweaker;
 
-/*
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import minetweaker.IUndoableAction;
+import minetweaker.MineTweakerAPI;
+import minetweaker.api.item.IItemStack;
+import net.minecraft.item.ItemStack;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
+
 @ZenClass("mods.storagedrawers.Compaction")
 public class Compaction
 {
     @ZenMethod
     public static void add (IItemStack upper, IItemStack lower, int conversion) {
-        ItemStack upperStack = MineTweakerMC.getItemStack(upper);
-        ItemStack lowerStack = MineTweakerMC.getItemStack(lower);
+        if (upper == null || lower == null) {
+            MineTweakerAPI.logError("Tried to add compacting tier with invalid item stack.");
+            return;
+        }
+
+        ItemStack upperStack = (ItemStack)upper.getInternal();
+        ItemStack lowerStack = (ItemStack)lower.getInternal();
 
         if (upperStack == null || lowerStack == null)
             MineTweakerAPI.logError("Tried to add compacting tier with invalid item stack.");
@@ -66,4 +78,3 @@ public class Compaction
         }
     }
 }
-*/
