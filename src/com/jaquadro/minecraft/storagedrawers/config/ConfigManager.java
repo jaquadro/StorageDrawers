@@ -3,7 +3,6 @@ package com.jaquadro.minecraft.storagedrawers.config;
 import com.google.common.collect.Maps;
 import com.jaquadro.minecraft.storagedrawers.api.config.IAddonConfig;
 import com.jaquadro.minecraft.storagedrawers.api.config.IBlockConfig;
-import com.jaquadro.minecraft.storagedrawers.api.config.IIntegrationConfig;
 import com.jaquadro.minecraft.storagedrawers.api.config.IUserConfig;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
 import net.minecraftforge.common.config.ConfigCategory;
@@ -73,7 +72,7 @@ public class ConfigManager
         public boolean enableSidedOutput;
         public boolean enableItemConversion;
         public boolean enableWailaIntegration;
-        public boolean enableRefinedRelocationIntegration;
+        public boolean enableMineTweakerIntegration;
         public boolean enableTape;
         public boolean enableFallbackRecipes;
         public boolean enableFramedDrawers;
@@ -156,13 +155,6 @@ public class ConfigManager
         }
     }
 
-    private class IntegrationConfig implements IIntegrationConfig {
-        @Override
-        public boolean isRefinedRelocationEnabled () {
-            return cache.enableRefinedRelocationIntegration;
-        }
-    }
-
     private class UserConfig implements IUserConfig {
         @Override
         public IAddonConfig addonConfig () {
@@ -172,11 +164,6 @@ public class ConfigManager
         @Override
         public IBlockConfig blockConfig () {
             return blockConfig;
-        }
-
-        @Override
-        public IIntegrationConfig integrationConfig () {
-            return integrationConfig;
         }
     }
 
@@ -208,7 +195,6 @@ public class ConfigManager
 
     public IAddonConfig addonConfig = new AddonConfig();
     public IBlockConfig blockConfig = new BlockConfig();
-    public IIntegrationConfig integrationConfig = new IntegrationConfig();
     public IUserConfig userConfig = new UserConfig();
 
     public ConfigManager (File file) {
@@ -254,7 +240,7 @@ public class ConfigManager
         //cache.enableAE2Integration = config.get(sectionIntegration.getQualifiedName(), "enableAE2", true).setLanguageKey(LANG_PREFIX + "integration.enableAE2").setRequiresMcRestart(true).getBoolean();
         cache.enableWailaIntegration = config.get(sectionIntegration.getQualifiedName(), "enableWaila", true).setLanguageKey(LANG_PREFIX + "integration.enableWaila").setRequiresMcRestart(true).getBoolean();
         //cache.enableThaumcraftIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThaumcraft", true).setLanguageKey(LANG_PREFIX + "integration.enableThaumcraft").setRequiresMcRestart(true).getBoolean();
-        //cache.enableMineTweakerIntegration = config.get(sectionIntegration.getQualifiedName(), "enableMineTweaker", true).setLanguageKey(LANG_PREFIX + "integration.enableMineTweaker").setRequiresMcRestart(true).getBoolean();
+        cache.enableMineTweakerIntegration = config.get(sectionIntegration.getQualifiedName(), "enableMineTweaker", true).setLanguageKey(LANG_PREFIX + "integration.enableMineTweaker").setRequiresMcRestart(true).getBoolean();
 
         cache.compRules = config.getStringList("compactingRules", sectionRegistries.getQualifiedName(), new String[] { "minecraft:clay, minecraft:clay_ball, 4" }, "Items should be in form domain:item or domain:item:meta.", null, LANG_PREFIX + "registries.compRules");
         cache.oreWhitelist = config.getStringList("oreWhitelist", sectionRegistries.getQualifiedName(), new String[0], "List of ore dictionary names to whitelist for substitution.", null, LANG_PREFIX + "registries.oreWhitelist");

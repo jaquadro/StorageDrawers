@@ -14,9 +14,4 @@ public interface IUserConfig
      * Configuration options related to individual blocks.
      */
     IBlockConfig blockConfig ();
-
-    /**
-     * Configuration options related to third party mod integration.
-     */
-    IIntegrationConfig integrationConfig ();
 }
