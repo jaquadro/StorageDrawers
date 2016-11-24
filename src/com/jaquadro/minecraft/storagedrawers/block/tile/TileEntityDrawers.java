@@ -934,20 +934,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
     @SideOnly(Side.CLIENT)
     private void clientUpdateCountAsync (int slot, int count) {
         IDrawer drawer = getDrawerIfEnabled(slot);
-        if (drawer != null && drawer.getStoredItemCount() != count) {
+        if (drawer != null && drawer.getStoredItemCount() != count)
             drawer.setStoredItemCount(count);
-            IBlockState state = getWorld().getBlockState(getPos());
-
-            switch (getEffectiveStatusLevel()) {
-                case 1:
-                    if (drawer.getStoredItemCount() == 0 || drawer.getRemainingCapacity() == 0)
-                        getWorld().notifyBlockUpdate(getPos(), state, state, 3);
-                    break;
-                case 2:
-                    getWorld().notifyBlockUpdate(getPos(), state, state, 3);
-                    break;
-            }
-        }
     }
 
     private void syncClientCount (int slot) {
