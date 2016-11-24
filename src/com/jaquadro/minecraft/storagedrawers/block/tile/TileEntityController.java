@@ -291,6 +291,35 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         }
     }
 
+    public void toggleQuantified (GameProfile profile) {
+        IQuantifiable template = null;
+        boolean state = false;
+
+        for (StorageRecord record : storage.values()) {
+            if (record.storage == null)
+                continue;
+
+            if (record.storage instanceof IProtectable) {
+                if (!SecurityManager.hasAccess(profile, (IProtectable)record.storage))
+                    continue;
+            }
+
+            for (int i = 0, n = record.storage.getDrawerCount(); i < n; i++) {
+                IDrawer drawer = record.storage.getDrawerIfEnabled(i);
+                if (!(drawer instanceof IQuantifiable))
+                    continue;
+
+                IQuantifiable quantifiableStorage = (IQuantifiable)drawer;
+                if (template == null) {
+                    template = quantifiableStorage;
+                    state = !template.isShowingQuantity();
+                }
+
+                quantifiableStorage.setIsShowingQuantity(state);
+            }
+        }
+    }
+
     public void toggleLock (EnumSet<LockAttribute> attributes, LockAttribute key, GameProfile profile) {
         IItemLockable template = null;
         boolean state = false;

@@ -335,6 +335,10 @@ public class BlockDrawers extends BlockContainer implements INetworked
                 tileDrawers.setIsShrouded(!tileDrawers.isShrouded());
                 return true;
             }
+            else if (item.getItem() == ModItems.quantifyKey) {
+                tileDrawers.setIsShowingQuantity(!tileDrawers.isShowingQuantity());
+                return true;
+            }
             else if (item.getItem() instanceof ItemPersonalKey) {
                 String securityKey = ((ItemPersonalKey) item.getItem()).getSecurityProviderKey(item.getItemDamage());
                 ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);

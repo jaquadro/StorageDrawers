@@ -700,6 +700,16 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         @Override
+        public boolean isSlotShowingQuantity (int slot) {
+            return isShowingQuantity();
+        }
+
+        @Override
+        public boolean setIsSlotShowingQuantity (int slot, boolean state) {
+            return setIsShowingQuantity(state);
+        }
+
+        @Override
         public boolean isLocked (int slot, LockAttribute attr) {
             return TileEntityDrawersComp.this.isItemLocked(attr);
         }

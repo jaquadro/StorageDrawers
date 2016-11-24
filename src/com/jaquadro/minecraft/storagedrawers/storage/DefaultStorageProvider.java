@@ -61,6 +61,16 @@ public class DefaultStorageProvider implements IStorageProvider
     }
 
     @Override
+    public boolean isShowingQuantity (int slot) {
+        return false;
+    }
+
+    @Override
+    public boolean setIsShowingQuantity (int slot, boolean state) {
+        return false;
+    }
+
+    @Override
     public boolean isStorageUnlimited (int slot) {
         return false;
     }

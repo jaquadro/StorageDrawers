@@ -93,6 +93,16 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
 
         @Override
+        public boolean isShowingQuantity (int slot) {
+            return TileEntityDrawersStandard.this.isShowingQuantity();
+        }
+
+        @Override
+        public boolean setIsShowingQuantity (int slot, boolean state) {
+            return TileEntityDrawersStandard.this.setIsShowingQuantity(state);
+        }
+
+        @Override
         public boolean isStorageUnlimited (int slot) {
             return TileEntityDrawersStandard.this.isUnlimited();
         }

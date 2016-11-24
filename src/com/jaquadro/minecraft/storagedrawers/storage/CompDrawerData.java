@@ -2,15 +2,12 @@ package com.jaquadro.minecraft.storagedrawers.storage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IItemLockable;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer, IVoidable, IShroudable, IItemLockable
+public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer, IVoidable, IShroudable, IQuantifiable, IItemLockable
 {
     private static final ItemStack nullStack = new ItemStack((Item)null);
 
@@ -140,6 +137,16 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
     @Override
     public boolean setIsShrouded (boolean state) {
         return central.setIsSlotShrouded(slot, state);
+    }
+
+    @Override
+    public boolean isShowingQuantity () {
+        return central.isSlotShowingQuantity(slot);
+    }
+
+    @Override
+    public boolean setIsShowingQuantity (boolean state) {
+        return central.setIsSlotShowingQuantity(slot, state);
     }
 
     @Override
