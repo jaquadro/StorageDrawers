@@ -9,7 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer, IVoidable, IShroudable, IItemLockable
+public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer, IVoidable, IShroudable, IQuantifiable, IItemLockable
 {
     private ICentralInventory central;
     private int slot;
@@ -137,6 +137,16 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
     @Override
     public boolean setIsShrouded (boolean state) {
         return central.setIsSlotShrouded(slot, state);
+    }
+
+    @Override
+    public boolean isShowingQuantity () {
+        return central.isSlotShowingQuantity(slot);
+    }
+
+    @Override
+    public boolean setIsShowingQuantity (boolean state) {
+        return central.setIsSlotShowingQuantity(slot, state);
     }
 
     @Override

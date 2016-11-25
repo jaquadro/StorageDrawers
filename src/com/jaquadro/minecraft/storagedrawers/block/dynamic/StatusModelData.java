@@ -67,6 +67,7 @@ public class StatusModelData
 
         private Area2D statusArea;
         private Area2D statusActiveArea;
+        private Area2D labelArea;
         private Area2D slotArea;
         private Area2D iconArea;
 
@@ -79,9 +80,15 @@ public class StatusModelData
 
             statusArea = readArea(json, "statusAreaFrom", "statusAreaTo");
             statusActiveArea = readArea(json, "statusActiveFrom", "statusActiveTo");
+
+            labelArea = readArea(json, "labelAreaFrom", "labelAreaTo");
+            if (labelArea.equals(Area2D.EMPTY))
+                labelArea = statusActiveArea;
+
             slotArea = readArea(json, "slotAreaFrom", "slotAreaTo");
             if (slotArea.equals(Area2D.EMPTY))
                 slotArea = statusArea;
+
             iconArea = readIconArea(json, "iconSize", slotArea);
 
             if (json.has("statusActiveSteps")) {
@@ -111,6 +118,10 @@ public class StatusModelData
 
         public Area2D getStatusActiveArea () {
             return statusActiveArea;
+        }
+
+        public Area2D getLabelArea () {
+            return labelArea;
         }
 
         public Area2D getIconArea () {

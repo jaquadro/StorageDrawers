@@ -37,7 +37,7 @@ public interface ICentralInventory
 
     boolean setIsSlotShrouded (int slot, boolean state);
 
-    boolean isLocked (int slot, LockAttribute attr);
+    public boolean isLocked (int slot, LockAttribute attr);
 
     void readFromNBT (int slot, NBTTagCompound tag);
 

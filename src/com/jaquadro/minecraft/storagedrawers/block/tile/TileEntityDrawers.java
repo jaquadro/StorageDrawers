@@ -7,10 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IItemLockable;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ISealable;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
@@ -38,7 +35,7 @@ import net.minecraftforge.items.IItemHandler;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends ChamLockableTileEntity implements IDrawerGroupInteractive, IUpgradeProvider, IItemLockable, ISealable, IProtectable
+public abstract class TileEntityDrawers extends ChamLockableTileEntity implements IDrawerGroupInteractive, IUpgradeProvider, IItemLockable, ISealable, IProtectable, IQuantifiable
 {
     private LockableData lockData = new LockableData();
     private CustomNameData customNameData = new CustomNameData("storageDrawers.container.drawers");
@@ -50,6 +47,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     private String material;
     private int drawerCapacity = 1;
     private boolean shrouded = false;
+    private boolean quantified = false;
     private boolean taped = false;
     private boolean hideUpgrade = false;
     private UUID owner;
@@ -284,6 +282,33 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
                 markBlockForUpdate();
             }
         }
+    }
+
+    public boolean isShowingQuantity () {
+        if (!StorageDrawers.config.cache.enableQuantifiableUpgrades)
+            return false;
+
+        return quantified;
+    }
+
+    public boolean setIsShowingQuantity (boolean quantified) {
+        if (!StorageDrawers.config.cache.enableQuantifiableUpgrades)
+            return false;
+
+        if (this.quantified != quantified) {
+            this.quantified = quantified;
+
+            attributeChanged();
+
+            if (getWorld() != null && !getWorld().isRemote) {
+                markDirty();
+
+                IBlockState state = getWorld().getBlockState(getPos());
+                getWorld().notifyBlockUpdate(getPos(), state, state, 3);
+            }
+        }
+
+        return true;
     }
 
     @Override
@@ -613,9 +638,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (playerStack != null)
             count = putItemsIntoSlot(slot, playerStack, playerStack.stackSize);
 
-        if (count > 0)
-            markDirty();
-
         return count;
     }
 
@@ -638,7 +660,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (count > 0)
             StorageDrawers.proxy.updatePlayerInventory(player);
 
-        markDirty();
         return count;
     }
 
@@ -720,6 +741,10 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (tag.hasKey("Shr"))
             shrouded = tag.getBoolean("Shr");
 
+        quantified = false;
+        if (tag.hasKey("Qua"))
+            quantified = tag.getBoolean("Qua");
+
         owner = null;
         if (tag.hasKey("Own"))
             owner = UUID.fromString(tag.getString("Own"));
@@ -783,6 +808,9 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         if (shrouded)
             tag.setBoolean("Shr", shrouded);
+
+        if (quantified)
+            tag.setBoolean("Qua", true);
 
         if (owner != null)
             tag.setString("Own", owner.toString());
@@ -855,19 +883,9 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     @SideOnly(Side.CLIENT)
     private void clientUpdateCountAsync (int slot, int count) {
         IDrawer drawer = getDrawerIfEnabled(slot);
-        if (drawer != null && drawer.getStoredItemCount() != count) {
+        if (drawer != null && drawer.getStoredItemCount() != count)
             drawer.setStoredItemCount(count);
 
-            switch (getEffectiveStatusLevel()) {
-                case 1:
-                    if (drawer.getStoredItemCount() == 0 || drawer.getRemainingCapacity() == 0)
-                        markBlockForUpdateClient();
-                    break;
-                case 2:
-                    markBlockForRenderUpdate();
-                    break;
-            }
-        }
     }
 
     @Override

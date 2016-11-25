@@ -71,7 +71,7 @@ repositories {
         url "http://dvs1.progwml6.com/files/maven"
     }
     maven { // CraftTweaker
-        name "jared maven"
+        name = "jared maven"
         url "http://blamejared.com/maven"
     }
 }

@@ -63,6 +63,7 @@ public class ConfigManager
         public boolean enableVoidUpgrades;
         public boolean enableCreativeUpgrades;
         public boolean enableShroudUpgrades;
+        public boolean enableQuantifiableUpgrades;
         public boolean enablePersonalUpgrades;
         public boolean enableRedstoneUpgrades;
         public boolean renderStorageUpgrades;
@@ -219,6 +220,7 @@ public class ConfigManager
         cache.enableVoidUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableVoidUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableVoidUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableCreativeUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableCreativeUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableCreativeUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableShroudUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableShroudUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableShroudUpgrades").setRequiresMcRestart(true).getBoolean();
+        cache.enableQuantifiableUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableQuantifiableUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableQuantifiableUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enablePersonalUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enablePersonalUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enablePersonalUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableRedstoneUpgrades = config.get(Configuration.CATEGORY_GENERAL, "enableRedstoneUpgrades", true).setLanguageKey(LANG_PREFIX + "prop.enableRedstoneUpgrades").setRequiresMcRestart(true).getBoolean();
         cache.enableTape = config.get(Configuration.CATEGORY_GENERAL, "enableTape", true).setLanguageKey(LANG_PREFIX + "prop.enableTape").setRequiresMcRestart(true).getBoolean();

@@ -335,6 +335,10 @@ public class BlockDrawers extends BlockContainer implements INetworked
                 tileDrawers.setIsShrouded(!tileDrawers.isShrouded());
                 return true;
             }
+            else if (item.getItem() == ModItems.quantifyKey) {
+                tileDrawers.setIsShowingQuantity(!tileDrawers.isShowingQuantity());
+                return true;
+            }
             else if (item.getItem() instanceof ItemPersonalKey) {
                 String securityKey = ((ItemPersonalKey) item.getItem()).getSecurityProviderKey(item.getItemDamage());
                 ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
@@ -372,13 +376,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
             return false;
 
         int slot = getDrawerSlot(getDrawerCount(state), side.ordinal(), hitX, hitY, hitZ);
-        IDrawer drawer = tileDrawers.getDrawer(slot);
-        ItemStack currentStack = drawer.getStoredItemPrototype();
-
-        int countAdded = tileDrawers.interactPutItemsIntoSlot(slot, player);
-
-        if (countAdded > 0 && currentStack != null)
-            world.notifyBlockUpdate(pos, state, state, 3);
+        tileDrawers.interactPutItemsIntoSlot(slot, player);
 
         if (item != null && item.stackSize == 0)
             player.setHeldItem(hand, null);
