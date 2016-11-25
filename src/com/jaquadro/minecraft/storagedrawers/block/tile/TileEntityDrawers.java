@@ -682,9 +682,6 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         if (playerStack != null)
             count = putItemsIntoSlot(slot, playerStack, playerStack.stackSize);
 
-        if (count > 0)
-            markDirty();
-
         return count;
     }
 
@@ -707,7 +704,6 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         if (count > 0)
             StorageDrawers.proxy.updatePlayerInventory(player);
 
-        markDirty();
         return count;
     }
 
