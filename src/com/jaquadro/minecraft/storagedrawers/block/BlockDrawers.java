@@ -485,7 +485,11 @@ public class BlockDrawers extends BlockContainer implements INetworked
             return true;
         }
 
-        return super.rotateBlock(world, pos, axis);
+        boolean result = super.rotateBlock(world, pos, axis);
+        if (result)
+            tile.setDirection(world.getBlockState(pos).getValue(FACING).getIndex());
+
+        return result;
     }
 
     @Override
