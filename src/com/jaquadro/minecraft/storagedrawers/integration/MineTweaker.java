@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
-
+/*
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.integration.minetweaker.OreDictionaryBlacklist;
 import com.jaquadro.minecraft.storagedrawers.integration.minetweaker.OreDictionaryWhitelist;
@@ -23,3 +23,4 @@ public class MineTweaker extends IntegrationModule
 
     }
 }
+*/

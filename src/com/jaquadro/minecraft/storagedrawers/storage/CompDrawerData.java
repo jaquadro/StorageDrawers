@@ -2,10 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.storage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IItemLockable;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IShroudable;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
