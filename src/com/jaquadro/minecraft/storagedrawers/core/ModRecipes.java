@@ -157,6 +157,10 @@ public class ModRecipes
             GameRegistry.addShapelessRecipe(new ItemStack(ModItems.shroudKey), ModItems.drawerKey, Items.ENDER_EYE);
         }
 
+        if (config.cache.enableQuantifiableUpgrades) {
+            GameRegistry.addShapelessRecipe(new ItemStack(ModItems.quantifyKey), ModItems.drawerKey, Items.WRITABLE_BOOK);
+        }
+
         if (config.cache.enablePersonalUpgrades) {
             GameRegistry.addShapelessRecipe(new ItemStack(ModItems.personalKey), ModItems.drawerKey, Items.NAME_TAG);
         }

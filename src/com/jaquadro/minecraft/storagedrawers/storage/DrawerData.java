@@ -14,7 +14,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nonnull;
 
-public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable, IItemLockable
+public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable, IQuantifiable, IItemLockable
 {
     private IStorageProvider storageProvider;
     private int slot;
@@ -235,6 +235,16 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     @Override
     public boolean setIsShrouded (boolean state) {
         return storageProvider.setIsShrouded(slot, state);
+    }
+
+    @Override
+    public boolean isShowingQuantity () {
+        return storageProvider.isShowingQuantity(slot);
+    }
+
+    @Override
+    public boolean setIsShowingQuantity (boolean state) {
+        return storageProvider.setIsShowingQuantity(slot, state);
     }
 
     @Override

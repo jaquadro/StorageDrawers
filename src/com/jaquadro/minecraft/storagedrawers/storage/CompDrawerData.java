@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nonnull;
 
-public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer, IVoidable, IShroudable, IItemLockable
+public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer, IVoidable, IShroudable, IQuantifiable, IItemLockable
 {
     private ICentralInventory central;
     private int slot;
@@ -132,6 +132,16 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
     @Override
     public boolean setIsShrouded (boolean state) {
         return central.setIsSlotShrouded(slot, state);
+    }
+
+    @Override
+    public boolean isShowingQuantity () {
+        return central.isSlotShowingQuantity(slot);
+    }
+
+    @Override
+    public boolean setIsShowingQuantity (boolean state) {
+        return central.setIsSlotShowingQuantity(slot, state);
     }
 
     @Override

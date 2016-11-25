@@ -20,7 +20,7 @@ public interface IStorageProvider
 
     boolean setIsShrouded (int slot, boolean state);
 
-    boolean isStorageUnlimited (int slot);
+    public boolean isStorageUnlimited (int slot);
 
     boolean isVendingUnlimited (int slot);
 

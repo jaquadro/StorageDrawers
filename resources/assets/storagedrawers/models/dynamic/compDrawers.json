@@ -6,6 +6,8 @@
         "statusActiveFrom": [ 7, 1 ],
         "statusActiveTo": [ 9, 7 ],
         "statusActiveSteps": [ 0, 12 ],
+        "labelAreaFrom": [ 6.25, 8 ],
+        "labelAreaTo": [ 9.75, 9 ],
         "slotAreaFrom": [ 0, 8 ],
         "slotAreaTo": [ 16, 15 ],
         "iconSize": [ 2, 2 ],
@@ -18,10 +20,14 @@
     }, {
         "statusAreaFrom": [ 0, 0 ],
         "statusAreaTo": [ 8, 8 ],
+        "labelAreaFrom": [ 2.25, 1 ],
+        "labelAreaTo": [ 5.75, 2 ],
         "iconSize": [ 2, 2 ]
     }, {
         "statusAreaFrom": [ 8, 0 ],
         "statusAreaTo": [ 16, 8 ],
+        "labelAreaFrom": [ 10.25, 1 ],
+        "labelAreaTo": [ 13.75, 2 ],
         "iconSize": [ 2, 2 ]
     } ]
 }

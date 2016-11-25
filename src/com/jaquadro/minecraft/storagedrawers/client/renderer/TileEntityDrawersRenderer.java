@@ -14,9 +14,11 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
+import com.jaquadro.minecraft.storagedrawers.storage.CountFormatter;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.client.renderer.color.ItemColors;
@@ -106,7 +108,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         Minecraft mc = Minecraft.getMinecraft();
         boolean cache = mc.gameSettings.fancyGraphics;
         mc.gameSettings.fancyGraphics = true;
-
+        renderUpgrades(renderer, tile, state);
         if (!tile.isShrouded() && !tile.isSealed())
             renderFastItemSet(renderer, tile, state, side, depth, partialTickTime);
 
@@ -116,7 +118,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         //WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         //worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
-        renderUpgrades(renderer, tile, state);
+
 
         //tessellator.draw();
 
@@ -175,6 +177,21 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
                 renderFastItem(renderer, renderStacks[i], tile, state, i, side, depth, partialTickTime);
         }
 
+        if (tile.isShowingQuantity()) {
+            EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+            BlockPos blockPos = tile.getPos().add(.5, .5, .5);
+            double distance = Math.sqrt(blockPos.distanceSq(player.getPosition()));
+
+            float alpha = 1;
+            if (distance > 4)
+                alpha = 1f - (float) ((distance - 4) / 6);
+
+            if (distance < 10) {
+                for (int i = 0; i < drawerCount; i++)
+                    renderText(CountFormatter.format(getFontRenderer(), tile.getDrawer(i)), tile, state, i, side, depth, alpha);
+            }
+        }
+
         //GlStateManager.popAttrib();
 
         //if (restoreBlockState) {
@@ -184,6 +201,35 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         //if (restoreItemState || restoreBlockState)
         //    GLUtil.restoreGLState(savedGLStateItemRender);
+    }
+
+    private void renderText (String text, TileEntityDrawers tile, IBlockState state, int slot, EnumFacing side, float depth, float alpha) {
+        if (text == null || text.isEmpty())
+            return;
+
+        BlockDrawers block = (BlockDrawers)state.getBlock();
+        StatusModelData statusInfo = block.getStatusInfo(state);
+        float frontDepth = (float)statusInfo.getFrontDepth() * .0625f;
+        int textWidth = getFontRenderer().getStringWidth(text);
+
+        Area2D statusArea = statusInfo.getSlot(slot).getLabelArea();
+        float x = (float)(statusArea.getX() + statusArea.getWidth() / 2);
+        float y = 16f - (float)statusArea.getY() - (float)statusArea.getHeight();
+
+        GlStateManager.pushMatrix();
+        alignRendering(side);
+        moveRendering(.125f, x, y, 1f - depth + frontDepth - .005f);
+
+        GlStateManager.disableLighting();
+        GlStateManager.enablePolygonOffset();
+        GlStateManager.depthMask(false);
+        GlStateManager.doPolygonOffset(-1, -20);
+
+        getFontRenderer().drawString(text, -textWidth / 2, 0, (int)(255 * alpha) << 24 | 255 << 16 | 255 << 8 | 255);
+
+        GlStateManager.disablePolygonOffset();
+
+        GlStateManager.popMatrix();
     }
 
     private void renderFastItem (ChamRender renderer, @Nonnull ItemStack itemStack, TileEntityDrawers tile, IBlockState state, int slot, EnumFacing side, float depth, float partialTickTime) {

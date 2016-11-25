@@ -115,6 +115,11 @@ public class BlockController extends BlockContainer implements INetworked
                     te.toggleShroud(player.getGameProfile());
                 return true;
             }
+            else if (item.getItem() == ModItems.quantifyKey) {
+                if (!world.isRemote)
+                    te.toggleQuantified(player.getGameProfile());
+                return true;
+            }
             else if (item.getItem() == ModItems.drawerKey) {
                 if (!world.isRemote)
                     te.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());

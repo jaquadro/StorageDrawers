@@ -20,6 +20,7 @@ public class ModItems
     public static ItemUpgradeRedstone upgradeRedstone;
     public static ItemShroudKey shroudKey;
     public static ItemPersonalKey personalKey;
+    public static ItemQuantifyKey quantifyKey;
     public static ItemTape tape;
 
     public void init () {
@@ -32,6 +33,7 @@ public class ModItems
         upgradeRedstone = new ItemUpgradeRedstone("upgrade_redstone", makeName("upgradeRedstone"));
         shroudKey = new ItemShroudKey("shroud_key", makeName("shroudKey"));
         personalKey = new ItemPersonalKey("personal_key", makeName("personalKey"));
+        quantifyKey = new ItemQuantifyKey("quantify_key", makeName("quantifyKey"));
         tape = new ItemTape("tape", makeName("tape"));
 
         GameRegistry.register(upgradeTemplate);
@@ -52,6 +54,8 @@ public class ModItems
             GameRegistry.register(shroudKey);
         if (StorageDrawers.config.cache.enablePersonalUpgrades)
             GameRegistry.register(personalKey);
+        if (StorageDrawers.config.cache.enableQuantifiableUpgrades)
+            GameRegistry.register(quantifyKey);
         if (StorageDrawers.config.cache.enableTape)
             GameRegistry.register(tape);
     }
@@ -66,6 +70,7 @@ public class ModItems
         modelRegistry.registerItemVariants(drawerKey);
         modelRegistry.registerItemVariants(shroudKey);
         modelRegistry.registerItemVariants(personalKey);
+        modelRegistry.registerItemVariants(quantifyKey);
         modelRegistry.registerItemVariants(upgradeStorage);
         modelRegistry.registerItemVariants(upgradeStatus);
         modelRegistry.registerItemVariants(upgradeCreative);
