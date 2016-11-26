@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.jaquadro.minecraft.chameleon.Chameleon;
+import com.jaquadro.minecraft.chameleon.model.CachedChamModel;
 import com.jaquadro.minecraft.chameleon.model.ChamModel;
 import com.jaquadro.minecraft.chameleon.model.ProxyBuilderModel;
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
@@ -85,12 +86,12 @@ public class CustomDrawerModel extends ChamModel
 
         @Override
         public IBakedModel getModel (IBlockState state, IBakedModel existingModel) {
-            return new Model();
+            return new CachedChamModel(new Model());
         }
 
         @Override
         public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
-            return new Model();
+            return new CachedChamModel(new Model());
         }
 
         @Override
@@ -239,7 +240,7 @@ public class CustomDrawerModel extends ChamModel
                     if (!DrawerDecoratorModel.shouldHandleState(stateModel))
                         return mainModel;
 
-                    EnumBasicDrawer drawer = (EnumBasicDrawer) state.getValue(BlockDrawers.BLOCK);
+                    EnumBasicDrawer drawer = state.getValue(BlockDrawers.BLOCK);
                     EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
                     return new DrawerDecoratorModel(mainModel, xstate, drawer, dir, stateModel);
@@ -256,6 +257,21 @@ public class CustomDrawerModel extends ChamModel
         @Override
         public ItemOverrideList getOverrides () {
             return itemHandler;
+        }
+
+        @Override
+        public List<Object> getKey (IBlockState state) {
+            try {
+                List<Object> key = new ArrayList<Object>();
+                IExtendedBlockState xstate = (IExtendedBlockState)state;
+                key.add(xstate.getValue(BlockDrawers.STATE_MODEL));
+                key.add(xstate.getValue(BlockDrawersCustom.MAT_MODEL));
+
+                return key;
+            }
+            catch (Throwable t) {
+                return super.getKey(state);
+            }
         }
     }
 

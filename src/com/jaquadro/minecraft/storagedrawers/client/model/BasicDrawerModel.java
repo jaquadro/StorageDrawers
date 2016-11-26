@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.google.common.collect.ImmutableList;
+import com.jaquadro.minecraft.chameleon.model.CachedChamModel;
 import com.jaquadro.minecraft.chameleon.model.ProxyBuilderModel;
 import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
@@ -52,12 +53,12 @@ public final class BasicDrawerModel
 
         @Override
         public IBakedModel getModel (IBlockState state, IBakedModel existingModel) {
-            return new Model(existingModel);
+            return new CachedChamModel(new Model(existingModel));
         }
 
         @Override
         public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
-            return new Model(existingModel);
+            return new CachedChamModel(new Model(existingModel));
         }
 
         @Override
@@ -104,6 +105,20 @@ public final class BasicDrawerModel
         @Override
         public ItemOverrideList getOverrides () {
             return itemHandler;
+        }
+
+        @Override
+        public List<Object> getKey (IBlockState state) {
+            try {
+                List<Object> key = new ArrayList<Object>();
+                IExtendedBlockState xstate = (IExtendedBlockState)state;
+                key.add(xstate.getValue(BlockDrawers.STATE_MODEL));
+
+                return key;
+            }
+            catch (Throwable t) {
+                return super.getKey(state);
+            }
         }
     }
 
