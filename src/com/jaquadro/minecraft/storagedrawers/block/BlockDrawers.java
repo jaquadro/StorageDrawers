@@ -223,16 +223,21 @@ public class BlockDrawers extends BlockContainer implements INetworked
     @Override
     public boolean shouldSideBeRendered (IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
         if (overridesShouldSideBeRendered()) {
-            switch (blockState.getValue(BLOCK)) {
-                case FULL1:
-                case FULL2:
-                case FULL4:
-                    return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
-                default:
-                    TileEntityDrawers tile = getTileEntity(blockAccess, pos);
-                    if (tile != null && tile.getDirection() == side.getIndex())
-                        return true;
-                    return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
+            try {
+                switch (blockState.getValue(BLOCK)) {
+                    case FULL1:
+                    case FULL2:
+                    case FULL4:
+                        return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
+                    default:
+                        TileEntityDrawers tile = getTileEntity(blockAccess, pos);
+                        if (tile != null && tile.getDirection() == side.getIndex())
+                            return true;
+                        return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
+                }
+            }
+            catch (Exception e) {
+                return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
             }
         }
 
