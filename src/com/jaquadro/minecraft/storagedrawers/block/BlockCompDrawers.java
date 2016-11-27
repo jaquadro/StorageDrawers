@@ -90,7 +90,7 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }
 
     @Override
-    protected boolean overridesShouldSideByRendered () {
+    protected boolean overridesShouldSideBeRendered () {
         return false;
     }
 

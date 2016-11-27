@@ -222,7 +222,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
 
     @Override
     public boolean shouldSideBeRendered (IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-        if (overridesShouldSideByRendered()) {
+        if (overridesShouldSideBeRendered()) {
             switch (blockState.getValue(BLOCK)) {
                 case FULL1:
                 case FULL2:
@@ -239,7 +239,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
         return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
     }
 
-    protected boolean overridesShouldSideByRendered () {
+    protected boolean overridesShouldSideBeRendered () {
         return true;
     }
 
