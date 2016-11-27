@@ -1,13 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.google.common.collect.ImmutableList;
-import com.jaquadro.minecraft.chameleon.model.CachedChamModel;
+import com.jaquadro.minecraft.chameleon.model.CachedBuilderModel;
 import com.jaquadro.minecraft.chameleon.model.ProxyBuilderModel;
 import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
@@ -53,12 +52,12 @@ public final class BasicDrawerModel
 
         @Override
         public IBakedModel getModel (IBlockState state, IBakedModel existingModel) {
-            return new CachedChamModel(new Model(existingModel));
+            return new CachedBuilderModel(new Model(existingModel));
         }
 
         @Override
         public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
-            return new CachedChamModel(new Model(existingModel));
+            return new CachedBuilderModel(new Model(existingModel));
         }
 
         @Override

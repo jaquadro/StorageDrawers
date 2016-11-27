@@ -80,6 +80,21 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }
 
     @Override
+    public boolean isOpaqueCube (IBlockState state) {
+        return true;
+    }
+
+    @Override
+    public boolean doesSideBlockRendering (IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
+        return true;
+    }
+
+    @Override
+    protected boolean overridesShouldSideByRendered () {
+        return false;
+    }
+
+    @Override
     public IBlockState onBlockPlaced (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
         return getDefaultState();
     }
