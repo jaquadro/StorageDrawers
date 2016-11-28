@@ -187,13 +187,18 @@ public class BlockDrawers extends BlockContainer implements INetworked
     @Override
     @SuppressWarnings("deprecation")
     public boolean isOpaqueCube (IBlockState state) {
-        switch (state.getValue(BLOCK)) {
-            case FULL1:
-            case FULL2:
-            case FULL4:
-                return true;
-            default:
-                return false;
+        try {
+            switch (state.getValue(BLOCK)) {
+                case FULL1:
+                case FULL2:
+                case FULL4:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        catch (Exception e) {
+            return true;
         }
     }
 
@@ -209,14 +214,19 @@ public class BlockDrawers extends BlockContainer implements INetworked
 
     @Override
     public boolean doesSideBlockRendering (IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
-        switch (state.getValue(BLOCK)) {
-            case FULL1:
-            case FULL2:
-            case FULL4:
-                return true;
-            default:
-                TileEntityDrawers tile = getTileEntity(world, pos);
-                return (tile != null && tile.getDirection() == face.getOpposite().getIndex());
+        try {
+            switch (state.getValue(BLOCK)) {
+                case FULL1:
+                case FULL2:
+                case FULL4:
+                    return true;
+                default:
+                    TileEntityDrawers tile = getTileEntity(world, pos);
+                    return (tile != null && tile.getDirection() == face.getOpposite().getIndex());
+            }
+        }
+        catch (Exception e) {
+            return super.doesSideBlockRendering(state, world, pos, face);
         }
     }
 
