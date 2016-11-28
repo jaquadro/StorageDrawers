@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.chameleon.model.ProxyBuilderModel;
 import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
@@ -40,9 +41,9 @@ public final class BasicDrawerModel
                 for (EnumFacing dir : EnumFacing.HORIZONTALS) {
                     for (BlockPlanks.EnumType woodType : BlockPlanks.EnumType.values()) {
                         states.add(ModBlocks.basicDrawers.getDefaultState()
-                            .withProperty(BlockDrawers.BLOCK, drawer)
+                            .withProperty(BlockStandardDrawers.BLOCK, drawer)
                             .withProperty(BlockDrawers.FACING, dir)
-                            .withProperty(BlockDrawers.VARIANT, woodType));
+                            .withProperty(BlockStandardDrawers.VARIANT, woodType));
                     }
                 }
             }
@@ -82,7 +83,7 @@ public final class BasicDrawerModel
         @Override
         protected IBakedModel buildModel (IBlockState state, IBakedModel parent) {
             try {
-                EnumBasicDrawer drawer = state.getValue(BlockDrawers.BLOCK);
+                EnumBasicDrawer drawer = state.getValue(BlockStandardDrawers.BLOCK);
                 EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
                 if (!(state instanceof IExtendedBlockState))
