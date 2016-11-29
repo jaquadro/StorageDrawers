@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockVariantDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
@@ -43,7 +44,7 @@ public final class BasicDrawerModel
                         states.add(ModBlocks.basicDrawers.getDefaultState()
                             .withProperty(BlockStandardDrawers.BLOCK, drawer)
                             .withProperty(BlockDrawers.FACING, dir)
-                            .withProperty(BlockStandardDrawers.VARIANT, woodType));
+                            .withProperty(BlockVariantDrawers.VARIANT, woodType));
                     }
                 }
             }

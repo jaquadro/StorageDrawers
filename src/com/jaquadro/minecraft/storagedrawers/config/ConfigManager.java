@@ -118,22 +118,16 @@ public class ConfigManager
         public String getBlockConfigName (BlockConfiguration blockConfig) {
             switch (blockConfig) {
                 case BasicFull1:
-                case SortingFull1:
                     return "fulldrawers1";
                 case BasicFull2:
-                case SortingFull2:
                     return "fulldrawers2";
                 case BasicFull4:
-                case SortingFull4:
                     return "fulldrawers4";
                 case BasicHalf2:
-                case SortingHalf2:
                     return "halfdrawers2";
                 case BasicHalf4:
-                case SortingHalf4:
                     return "halfdrawers4";
                 case Trim:
-                case TrimSorting:
                     return "trim";
                 default:
                     return null;
