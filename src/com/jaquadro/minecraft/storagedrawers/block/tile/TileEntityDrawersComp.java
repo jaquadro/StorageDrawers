@@ -615,7 +615,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 return Integer.MAX_VALUE / convRate[slot];
             }
 
-            return protoStack[slot].getItem().getItemStackLimit(protoStack[slot]) * getStackCapacity(slot);
+            return protoStack[0].getItem().getItemStackLimit(protoStack[0]) * getStackCapacity(0) * getConversionRate(slot);
         }
 
         @Override
