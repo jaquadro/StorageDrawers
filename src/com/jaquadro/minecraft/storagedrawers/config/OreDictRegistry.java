@@ -50,6 +50,10 @@ public class OreDictRegistry
         addBlacklist("resourceTaint");
         addBlacklist("slimeball");
 
+        addBlacklist("blockMetal");
+        addBlacklist("ingotMetal");
+        addBlacklist("nuggetMetal");
+
         addBlacklistPrefix("list");
         addBlacklistPrefix("dye");
 
