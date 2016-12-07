@@ -343,7 +343,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             ItemStack match = null;
 
             ItemStack output = recipe.getRecipeOutput();
-            if (!DrawerData.areItemsEqual(stack, output, false))
+            if (!DrawerData.areItemsEqual(stack, output, true))
                 continue;
 
             IRecipeHandler handler = StorageDrawers.recipeHandlerRegistry.getRecipeHandler(recipe.getClass());

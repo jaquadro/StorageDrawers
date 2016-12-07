@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.config;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.util.UniqueMetaIdentifier;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameData;
@@ -57,17 +58,14 @@ public class OreDictRegistry
         addBlacklistPrefix("list");
         addBlacklistPrefix("dye");
 
-        for (String item : new String[] { "oreIron", "oreGold", "oreAluminum", "oreAluminium", "oreTin", "oreCopper", "oreLead", "oreSilver", "orePlatinum", "oreNickel" })
-            addWhitelist(item);
+        String[] oreTypes = { "ore", "block", "ingot", "nugget" };
+        String[] oreMaterials = { "Iron", "Gold", "Diamond", "Emerald", "Aluminum", "Aluminium", "Tin", "Copper", "Lead",
+            "Silver", "Platinum", "Nickel", "Osmium", "Invar", "Bronze", "Electrum", "Enderium" };
 
-        for (String item : new String[] { "blockIron", "blockGold", "blockAluminum", "blockAluminium", "blockTin", "blockCopper", "blockLead", "blockSilver", "blockPlatinum", "blockNickel" })
-            addWhitelist(item);
-
-        for (String item : new String[] { "ingotIron", "ingotGold", "ingotAluminum", "ingotAluminium", "ingotTin", "ingotCopper", "ingotLead", "ingotSilver", "ingotPlatinum", "ingotNickel" })
-            addWhitelist(item);
-
-        for (String item : new String[] { "nuggetIron", "nuggetGold", "nuggetAluminum", "nuggetAluminium", "nuggetTin", "nuggetCopper", "nuggetLead", "nuggetSilver", "nuggetPlatinum", "nuggetNickel" })
-            addWhitelist(item);
+        for (String ore : oreMaterials) {
+            for (String type : oreTypes)
+                addWhitelist(type + ore);
+        }
 
         for (String item : StorageDrawers.config.cache.oreBlacklist) {
             removeWhitelist(item);
