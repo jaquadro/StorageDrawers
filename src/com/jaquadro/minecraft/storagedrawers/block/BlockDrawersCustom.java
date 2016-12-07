@@ -26,7 +26,7 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 
 import javax.annotation.Nonnull;
 
-public class BlockDrawersCustom extends BlockDrawers
+public class BlockDrawersCustom extends BlockStandardDrawers
 {
     public static final IUnlistedProperty<MaterialModelData> MAT_MODEL = UnlistedModelData.create(MaterialModelData.class);
 

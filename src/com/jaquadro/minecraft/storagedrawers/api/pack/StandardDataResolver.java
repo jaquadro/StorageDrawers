@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.api.pack;
-/*
+
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 
 public class StandardDataResolver implements IPackDataResolver
@@ -7,6 +8,12 @@ public class StandardDataResolver implements IPackDataResolver
     private String modID;
     private String[] unlocalizedNames;
     private CreativeTabs creativeTab;
+
+    private Block[] planks = new Block[16];
+    private int[] planksMeta = new int[16];
+
+    private Block[] slabs = new Block[16];
+    private int[] slabsMeta = new int [16];
 
     public StandardDataResolver (String modID, String[] unlocalizedNames) {
         this.modID = modID;
@@ -31,7 +38,6 @@ public class StandardDataResolver implements IPackDataResolver
     public String getBlockName (BlockConfiguration blockConfig) {
         switch (blockConfig.getBlockType()) {
             case Drawers:
-            case DrawersSorting:
                 if (blockConfig.getDrawerCount() == 1)
                     return makeBlockName("fullDrawers1");
                 if (blockConfig.getDrawerCount() == 2 && !blockConfig.isHalfDepth())
@@ -44,7 +50,6 @@ public class StandardDataResolver implements IPackDataResolver
                     return makeBlockName("halfDrawers4");
                 break;
             case Trim:
-            case TrimSorting:
                 return makeBlockName("trim");
         }
         return null;
@@ -90,8 +95,6 @@ public class StandardDataResolver implements IPackDataResolver
                 return getBaseTexturePath() + "drawers_" + getTextureMetaName(meta) + "_front_4";
             case Side:
                 return getBaseTexturePath() + "drawers_" + getTextureMetaName(meta) + "_side";
-            case SideSort:
-                return getBaseTexturePath() + "drawers_" + getTextureMetaName(meta) + "_sort";
             case SideVSplit:
                 return getBaseTexturePath() + "drawers_" + getTextureMetaName(meta) + "_side_v";
             case SideHSplit:
@@ -104,5 +107,45 @@ public class StandardDataResolver implements IPackDataResolver
                 return "";
         }
     }
+
+    @Override
+    public Block getBlock (BlockConfiguration blockConfig) {
+        return null;
+    }
+
+    @Override
+    public Block getPlankBlock (int meta) {
+        return planks[meta];
+    }
+
+    @Override
+    public Block getSlabBlock (int meta) {
+        return slabs[meta];
+    }
+
+    @Override
+    public int getPlankMeta (int meta) {
+        return planksMeta[meta];
+    }
+
+    @Override
+    public int getSlabMeta (int meta) {
+        return slabsMeta[meta];
+    }
+
+    public void init () {
+
+    }
+
+    protected void setPlankSlab (int meta, Block plank, int plankMeta, Block slab, int slabMeta) {
+        if (plank != null) {
+            planks[meta] = plank;
+            planksMeta[meta] = plankMeta;
+        }
+
+        if (slab != null) {
+            slabs[meta] = slab;
+            slabsMeta[meta] = slabMeta;
+        }
+    }
 }
-*/

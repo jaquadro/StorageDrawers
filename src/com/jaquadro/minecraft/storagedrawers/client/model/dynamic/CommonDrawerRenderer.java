@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.chameleon.render.helpers.ModularBoxRenderer;
 import com.jaquadro.minecraft.chameleon.render.helpers.PanelBoxRenderer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -34,7 +35,7 @@ public class CommonDrawerRenderer
     private void start (IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing direction) {
         BlockDrawers block = (BlockDrawers) state.getBlock();
         StatusModelData status = block.getStatusInfo(state);
-        blockInfo = state.getValue(BlockDrawers.BLOCK);
+        blockInfo = (EnumBasicDrawer) state.getValue(BlockStandardDrawers.BLOCK);
 
         depth = blockInfo.isHalfDepth() ? .5 : 0;
         trimWidth = .0625;

@@ -102,11 +102,6 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }
 
     @Override
-    public IBlockState getStateFromMeta (int meta) {
-        return getDefaultState();
-    }
-
-    @Override
     public int getMetaFromState (IBlockState state) {
         return 0;
     }
@@ -122,16 +117,12 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
         if (tile == null)
             return state;
 
-        EnumFacing facing = EnumFacing.getFront(tile.getDirection());
-        if (facing.getAxis() == EnumFacing.Axis.Y)
-            facing = EnumFacing.NORTH;
-
         EnumCompDrawer slots = EnumCompDrawer.OPEN1;
         if (tile.isDrawerEnabled(1))
             slots = EnumCompDrawer.OPEN2;
         if (tile.isDrawerEnabled(2))
             slots = EnumCompDrawer.OPEN3;
 
-        return state.withProperty(FACING, facing).withProperty(SLOTS, slots);
+        return super.getActualState(state, world, pos).withProperty(SLOTS, slots);
     }
 }

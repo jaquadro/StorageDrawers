@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public final class DrawerStateModelData extends ModelData
@@ -60,5 +61,33 @@ public final class DrawerStateModelData extends ModelData
 
     public boolean isDrawerEmpty (int slot) {
         return slot < 0 || slot >= emptyFlags.length || emptyFlags[slot];
+    }
+
+    @Override
+    public boolean equals (Object obj) {
+        if (obj == null || obj.getClass() != this.getClass())
+            return false;
+
+        DrawerStateModelData other = (DrawerStateModelData)obj;
+        if (shroudedFlag != other.shroudedFlag || lockedFlag != other.lockedFlag || voidFlag != other.voidFlag)
+            return false;
+
+        if (owner != null && !owner.equals(other.owner) || owner == null && other.owner != null)
+            return false;
+
+        return Arrays.equals(emptyFlags, other.emptyFlags);
+    }
+
+    @Override
+    public int hashCode () {
+        int c = shroudedFlag ? 1 : 0;
+        c = 37 * c + (lockedFlag ? 1 : 0);
+        c = 37 * c + (voidFlag ? 1 : 0);
+        c = 37 * c + (owner != null ? owner.hashCode() : 0);
+
+        for (boolean emptyFlag : emptyFlags)
+            c = 37 * c + (emptyFlag ? 1 : 0);
+
+        return c;
     }
 }

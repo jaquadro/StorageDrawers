@@ -92,14 +92,14 @@ public class ConfigManager
         public int level6Mult;
 
         public boolean addonSeparateVanilla;
-        public boolean addonShowNEI;
+        public boolean addonShowJEI;
         public boolean addonShowVanilla;
     }
 
     private class AddonConfig implements IAddonConfig {
         @Override
         public boolean showAddonItemsNEI () {
-            return cache.addonShowNEI;
+            return cache.addonShowJEI;
         }
 
         @Override
@@ -118,22 +118,16 @@ public class ConfigManager
         public String getBlockConfigName (BlockConfiguration blockConfig) {
             switch (blockConfig) {
                 case BasicFull1:
-                case SortingFull1:
                     return "fulldrawers1";
                 case BasicFull2:
-                case SortingFull2:
                     return "fulldrawers2";
                 case BasicFull4:
-                case SortingFull4:
                     return "fulldrawers4";
                 case BasicHalf2:
-                case SortingHalf2:
                     return "halfdrawers2";
                 case BasicHalf4:
-                case SortingHalf4:
                     return "halfdrawers4";
                 case Trim:
-                case TrimSorting:
                     return "trim";
                 default:
                     return null;
@@ -286,10 +280,6 @@ public class ConfigManager
         cache.level4Mult = config.get(sectionUpgrades.getQualifiedName(), "level4Mult", 5).setLanguageKey(LANG_PREFIX + "upgrades.level4Mult").setRequiresWorldRestart(true).getInt();
         cache.level5Mult = config.get(sectionUpgrades.getQualifiedName(), "level5Mult", 8).setLanguageKey(LANG_PREFIX + "upgrades.level5Mult").setRequiresWorldRestart(true).getInt();
         cache.level6Mult = config.get(sectionUpgrades.getQualifiedName(), "level6Mult", 13).setLanguageKey(LANG_PREFIX + "upgrades.level6Mult").setRequiresWorldRestart(true).getInt();
-
-        cache.addonShowNEI = config.get(sectionAddons.getQualifiedName(), "showBlocksInNEI", true).setLanguageKey(LANG_PREFIX + "addons.showNEI").setRequiresWorldRestart(true).getBoolean();
-        cache.addonShowVanilla = config.get(sectionAddons.getQualifiedName(), "showBlocksInCreative", true).setLanguageKey(LANG_PREFIX + "addons.showCreative").setRequiresWorldRestart(true).getBoolean();
-        cache.addonSeparateVanilla = config.get(sectionAddons.getQualifiedName(), "useSeparateCreativeTabs", true).setLanguageKey(LANG_PREFIX + "addons.separateTabs").setRequiresMcRestart(true).getBoolean();
 
         if (config.hasChanged())
             config.save();

@@ -32,7 +32,7 @@ public class ModBlocks
     public void init () {
         //resolver = new DataResolver(StorageDrawers.MOD_ID);
 
-        basicDrawers = new BlockDrawers("basicdrawers", "basicDrawers");
+        basicDrawers = new BlockVariantDrawers("basicdrawers", "basicDrawers");
         compDrawers = new BlockCompDrawers("compdrawers", "compDrawers");
         controller = new BlockController("controller");
         controllerSlave = new BlockSlave("controllerslave", "controllerSlave");

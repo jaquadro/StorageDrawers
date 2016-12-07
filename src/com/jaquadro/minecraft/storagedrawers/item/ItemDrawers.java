@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
@@ -81,7 +82,7 @@ public class ItemDrawers extends ItemBlock
         ConfigManager config = StorageDrawers.config;
         Block block = Block.getBlockFromItem(itemStack.getItem());
 
-        if (block == ModBlocks.basicDrawers || block == ModBlocks.customDrawers) {
+        if (block instanceof BlockStandardDrawers) {
             EnumBasicDrawer info = EnumBasicDrawer.byMetadata(itemStack.getMetadata());
             switch (info) {
                 case FULL1:

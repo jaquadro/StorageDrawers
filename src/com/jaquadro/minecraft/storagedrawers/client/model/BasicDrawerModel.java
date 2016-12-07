@@ -1,10 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.google.common.collect.ImmutableList;
+import com.jaquadro.minecraft.chameleon.model.CachedBuilderModel;
 import com.jaquadro.minecraft.chameleon.model.ProxyBuilderModel;
 import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockVariantDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
@@ -40,9 +43,9 @@ public final class BasicDrawerModel
                 for (EnumFacing dir : EnumFacing.HORIZONTALS) {
                     for (BlockPlanks.EnumType woodType : BlockPlanks.EnumType.values()) {
                         states.add(ModBlocks.basicDrawers.getDefaultState()
-                            .withProperty(BlockDrawers.BLOCK, drawer)
+                            .withProperty(BlockStandardDrawers.BLOCK, drawer)
                             .withProperty(BlockDrawers.FACING, dir)
-                            .withProperty(BlockDrawers.VARIANT, woodType));
+                            .withProperty(BlockVariantDrawers.VARIANT, woodType));
                     }
                 }
             }
@@ -52,12 +55,12 @@ public final class BasicDrawerModel
 
         @Override
         public IBakedModel getModel (IBlockState state, IBakedModel existingModel) {
-            return new Model(existingModel);
+            return new CachedBuilderModel(new Model(existingModel));
         }
 
         @Override
         public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
-            return new Model(existingModel);
+            return new CachedBuilderModel(new Model(existingModel));
         }
 
         @Override
@@ -82,7 +85,7 @@ public final class BasicDrawerModel
         @Override
         protected IBakedModel buildModel (IBlockState state, IBakedModel parent) {
             try {
-                EnumBasicDrawer drawer = state.getValue(BlockDrawers.BLOCK);
+                EnumBasicDrawer drawer = state.getValue(BlockStandardDrawers.BLOCK);
                 EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
                 if (!(state instanceof IExtendedBlockState))
@@ -104,6 +107,20 @@ public final class BasicDrawerModel
         @Override
         public ItemOverrideList getOverrides () {
             return itemHandler;
+        }
+
+        @Override
+        public List<Object> getKey (IBlockState state) {
+            try {
+                List<Object> key = new ArrayList<Object>();
+                IExtendedBlockState xstate = (IExtendedBlockState)state;
+                key.add(xstate.getValue(BlockDrawers.STATE_MODEL));
+
+                return key;
+            }
+            catch (Throwable t) {
+                return super.getKey(state);
+            }
         }
     }
 
