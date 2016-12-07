@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.api.render.IRenderLabel;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
@@ -79,8 +80,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         Block block = state.getBlock();
         if (block instanceof BlockDrawers) {
-            if (state.getProperties().containsKey(BlockDrawers.BLOCK)) {
-                EnumBasicDrawer info = (EnumBasicDrawer)state.getValue(BlockDrawers.BLOCK);
+            if (state.getProperties().containsKey(BlockStandardDrawers.BLOCK)) {
+                EnumBasicDrawer info = (EnumBasicDrawer)state.getValue(BlockStandardDrawers.BLOCK);
                 depth = info.isHalfDepth() ? .5f : 1;
             }
         }

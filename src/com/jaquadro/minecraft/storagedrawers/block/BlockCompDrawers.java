@@ -80,11 +80,6 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }
 
     @Override
-    public IBlockState onBlockPlaced (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return getDefaultState();
-    }
-
-    @Override
     public BlockType retrimType () {
         return null;
     }
@@ -97,11 +92,6 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     @Override
     public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
         list.add(new ItemStack(item, 1, 0));
-    }
-
-    @Override
-    public IBlockState getStateFromMeta (int meta) {
-        return getDefaultState();
     }
 
     @Override
@@ -120,16 +110,12 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
         if (tile == null)
             return state;
 
-        EnumFacing facing = EnumFacing.getFront(tile.getDirection());
-        if (facing.getAxis() == EnumFacing.Axis.Y)
-            facing = EnumFacing.NORTH;
-
         EnumCompDrawer slots = EnumCompDrawer.OPEN1;
         if (tile.isDrawerEnabled(1))
             slots = EnumCompDrawer.OPEN2;
         if (tile.isDrawerEnabled(2))
             slots = EnumCompDrawer.OPEN3;
 
-        return state.withProperty(FACING, facing).withProperty(SLOTS, slots);
+        return super.getActualState(state, world, pos).withProperty(SLOTS, slots);
     }
 }

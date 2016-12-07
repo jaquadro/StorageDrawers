@@ -54,15 +54,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class BlockDrawers extends BlockContainer implements INetworked
+public abstract class BlockDrawers extends BlockContainer implements INetworked
 {
-    public static final PropertyEnum<EnumBasicDrawer> BLOCK = PropertyEnum.create("block", EnumBasicDrawer.class);
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-    public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
+
 
     public static final IUnlistedProperty<DrawerStateModelData> STATE_MODEL = UnlistedModelData.create(DrawerStateModelData.class);
 
@@ -96,60 +96,23 @@ public class BlockDrawers extends BlockContainer implements INetworked
     }
 
     protected void initDefaultState () {
-        setDefaultState(blockState.getBaseState().withProperty(BLOCK, EnumBasicDrawer.FULL2)
-            .withProperty(VARIANT, BlockPlanks.EnumType.OAK)
-            .withProperty(FACING, EnumFacing.NORTH));
+        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
     public boolean retrimBlock (World world, BlockPos pos, ItemStack prototype) {
-        if (retrimType() == null)
-            return false;
-
-        IBlockState curState = getActualState(world.getBlockState(pos), world, pos);
-        if (curState == null || !(curState.getBlock() instanceof BlockDrawers))
-            return false;
-
-        Block protoBlock = Block.getBlockFromItem(prototype.getItem());
-        int protoMeta = prototype.getItemDamage();
-
-        IBlockState newState = protoBlock.getStateFromMeta(protoMeta);
-        if (newState == null || !(newState.getBlock() instanceof BlockTrim))
-            return false;
-
-        BlockPlanks.EnumType curVariant = (BlockPlanks.EnumType)curState.getValue(VARIANT);
-        BlockPlanks.EnumType newVariant = (BlockPlanks.EnumType)newState.getValue(VARIANT);
-        if (curVariant == newVariant)
-            return false;
-
-        TileEntityDrawers tile = getTileEntity(world, pos);
-        tile.setMaterial(newVariant.getName());
-
-        world.setBlockState(pos, curState.withProperty(VARIANT, newVariant));
-
-        return true;
+        return false;
     }
 
     public BlockType retrimType () {
         return BlockType.Drawers;
     }
 
+    // TODO: ABSTRACT?
     public int getDrawerCount (IBlockState state) {
-        if (state != null && state.getBlock() instanceof BlockDrawers) {
-            EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
-            if (info != null)
-                return info.getDrawerCount();
-        }
-
         return 0;
     }
 
     public boolean isHalfDepth (IBlockState state) {
-        if (state != null && state.getBlock() instanceof BlockDrawers) {
-            EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
-            if (info != null)
-                return info.isHalfDepth();
-        }
-
         return false;
     }
 
@@ -159,35 +122,11 @@ public class BlockDrawers extends BlockContainer implements INetworked
     }
 
     @SideOnly(Side.CLIENT)
-    public void initDynamic () {
-        statusInfo = new StatusModelData[EnumBasicDrawer.values().length];
-        for (EnumBasicDrawer type : EnumBasicDrawer.values()) {
-            ResourceLocation location = new ResourceLocation(StorageDrawers.MOD_ID + ":models/dynamic/basicDrawers_" + type.getName() + ".json");
-            statusInfo[type.getMetadata()] = new StatusModelData(type.getDrawerCount(), location);
-        }
-    }
+    public void initDynamic () { }
 
     @SideOnly(Side.CLIENT)
     public StatusModelData getStatusInfo (IBlockState state) {
-        if (state != null) {
-            EnumBasicDrawer info = (EnumBasicDrawer) state.getValue(BLOCK);
-            if (info != null)
-                return statusInfo[info.getMetadata()];
-        }
-
         return null;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean isFullCube (IBlockState state) {
-        return false;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean isOpaqueCube (IBlockState state) {
-        return false;
     }
 
     @Override
@@ -253,11 +192,6 @@ public class BlockDrawers extends BlockContainer implements INetworked
         }
 
         super.onBlockAdded(world, pos, state);
-    }
-
-    @Override
-    public IBlockState onBlockPlaced (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return getDefaultState().withProperty(BLOCK, EnumBasicDrawer.byMetadata(meta));
     }
 
     @Override
@@ -385,15 +319,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
     }
 
     protected int getDrawerSlot (int drawerCount, int side, float hitX, float hitY, float hitZ) {
-        if (drawerCount == 1)
-            return 0;
-        if (drawerCount == 2)
-            return hitTop(hitY) ? 0 : 1;
-
-        if (hitLeft(side, hitX, hitZ))
-            return hitTop(hitY) ? 0 : 1;
-        else
-            return hitTop(hitY) ? 2 : 3;
+        return 0;
     }
 
     protected boolean hitTop (float hitY) {
@@ -493,19 +419,19 @@ public class BlockDrawers extends BlockContainer implements INetworked
     }
 
     @Override
-    public boolean isSideSolid (IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+    public boolean isSideSolid (IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side) {
+        TileEntityDrawers tile = getTileEntity(world, pos);
+        if (tile == null)
+            return true;
+
         if (isHalfDepth(state))
-            return false;
+            return side.getOpposite().ordinal() == tile.getDirection();
 
         if (side == EnumFacing.DOWN) {
             Block blockUnder = world.getBlockState(pos.down()).getBlock();
             if (blockUnder instanceof BlockChest || blockUnder instanceof BlockEnderChest)
                 return false;
         }
-
-        TileEntityDrawers tile = getTileEntity(world, pos);
-        if (tile == null)
-            return true;
 
         return side.ordinal() != tile.getDirection();
     }
@@ -565,22 +491,24 @@ public class BlockDrawers extends BlockContainer implements INetworked
     }
 
     @Override
+    @Nonnull
     public List<ItemStack> getDrops (IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        ItemStack dropStack = getMainDrop(world, pos, state);
-
         List<ItemStack> drops = new ArrayList<ItemStack>();
-        drops.add(dropStack);
+        drops.add(getMainDrop(world, pos, state));
+
+        return drops;
+    }
+
+    protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
+        ItemStack drop = new ItemStack(Item.getItemFromBlock(this), 1, state.getBlock().getMetaFromState(state));
 
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile == null)
-            return drops;
+            return drop;
 
-        NBTTagCompound data = dropStack.getTagCompound();
+        NBTTagCompound data = drop.getTagCompound();
         if (data == null)
             data = new NBTTagCompound();
-
-        BlockPlanks.EnumType material = translateMaterial(tile.getMaterialOrDefault());
-        data.setString("material", material.getName());
 
         if (tile.isSealed()) {
             NBTTagCompound tiledata = new NBTTagCompound();
@@ -588,13 +516,8 @@ public class BlockDrawers extends BlockContainer implements INetworked
             data.setTag("tile", tiledata);
         }
 
-        dropStack.setTagCompound(data);
-
-        return drops;
-    }
-
-    protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
-        return new ItemStack(Item.getItemFromBlock(this), 1, state.getBlock().getMetaFromState(state));
+        drop.setTagCompound(data);
+        return drop;
     }
 
     @Override
@@ -622,11 +545,6 @@ public class BlockDrawers extends BlockContainer implements INetworked
         return super.getExplosionResistance(world, pos, exploder, explosion);
     }
 
-    @Override
-    public TileEntityDrawers createNewTileEntity (World world, int meta) {
-        return new TileEntityDrawersStandard();
-    }
-
     public TileEntityDrawers getTileEntity (IBlockAccess blockAccess, BlockPos pos) {
         TileEntity tile = blockAccess.getTileEntity(pos);
         return (tile instanceof TileEntityDrawers) ? (TileEntityDrawers) tile : null;
@@ -635,7 +553,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
     public TileEntityDrawers getTileEntitySafe (World world, BlockPos pos) {
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile == null) {
-            tile = createNewTileEntity(world, 0);
+            tile = (TileEntityDrawers) createNewTileEntity(world, 0);
             world.setTileEntity(pos, tile);
         }
 
@@ -658,22 +576,6 @@ public class BlockDrawers extends BlockContainer implements INetworked
         //    return true;
 
         return super.addDestroyEffects(world, pos, manager);
-    }
-
-    @Override
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
-        for (EnumBasicDrawer type : EnumBasicDrawer.values()) {
-            for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
-                ItemStack stack = new ItemStack(item, 1, type.getMetadata());
-
-                NBTTagCompound data = new NBTTagCompound();
-                data.setString("material", material.getName());
-                stack.setTagCompound(data);
-
-                if (StorageDrawers.config.cache.creativeTabVanillaWoods || material == BlockPlanks.EnumType.OAK)
-                    list.add(stack);
-            }
-        }
     }
 
     @Override
@@ -703,22 +605,6 @@ public class BlockDrawers extends BlockContainer implements INetworked
 
     @Override
     @SuppressWarnings("deprecation")
-    public IBlockState getStateFromMeta (int meta) {
-        return getDefaultState().withProperty(BLOCK, EnumBasicDrawer.byMetadata(meta));
-    }
-
-    @Override
-    public int getMetaFromState (IBlockState state) {
-        return ((EnumBasicDrawer)state.getValue(BLOCK)).getMetadata();
-    }
-
-    @Override
-    protected BlockStateContainer createBlockState () {
-        return new ExtendedBlockState(this, new IProperty[] { BLOCK, VARIANT, FACING }, new IUnlistedProperty[] { STATE_MODEL });
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
     public IBlockState getActualState (IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         TileEntityDrawers tile = getTileEntity(worldIn, pos);
         if (tile == null)
@@ -728,11 +614,7 @@ public class BlockDrawers extends BlockContainer implements INetworked
         if (facing.getAxis() == EnumFacing.Axis.Y)
             facing = EnumFacing.NORTH;
 
-        BlockPlanks.EnumType woodType = translateMaterial(tile.getMaterialOrDefault());
-
-        return state.withProperty(BLOCK, state.getValue(BLOCK))
-            .withProperty(FACING, facing)
-            .withProperty(VARIANT, woodType);
+        return state.withProperty(FACING, facing);
     }
 
     @Override
@@ -746,14 +628,5 @@ public class BlockDrawers extends BlockContainer implements INetworked
             return state;
 
         return ((IExtendedBlockState)state).withProperty(STATE_MODEL, new DrawerStateModelData(tile));
-    }
-
-    private BlockPlanks.EnumType translateMaterial (String materal) {
-        for (BlockPlanks.EnumType type : BlockPlanks.EnumType.values()) {
-            if (materal.equals(type.getName()))
-                return type;
-        }
-
-        return BlockPlanks.EnumType.OAK;
     }
 }

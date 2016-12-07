@@ -354,7 +354,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             ItemStack match = null;
 
             ItemStack output = recipe.getRecipeOutput();
-            if (!DrawerData.areItemsEqual(stack, output, false))
+            if (!DrawerData.areItemsEqual(stack, output, true))
                 continue;
 
             IRecipeHandler handler = StorageDrawers.recipeHandlerRegistry.getRecipeHandler(recipe.getClass());
@@ -614,7 +614,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 return Integer.MAX_VALUE / convRate[slot];
             }
 
-            return protoStack[slot].getItem().getItemStackLimit(protoStack[slot]) * getStackCapacity(slot);
+            return protoStack[0].getItem().getItemStackLimit(protoStack[0]) * getStackCapacity(0) * getConversionRate(slot);
         }
 
         @Override
