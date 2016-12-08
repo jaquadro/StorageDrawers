@@ -22,6 +22,8 @@ public interface ICentralInventory
 
     int getMaxCapacity (int slot, @Nonnull ItemStack itemPrototype);
 
+    int getDefaultMaxCapacity (int slot);
+
     int getRemainingCapacity (int slot);
 
     int getStoredItemStackSize (int slot);

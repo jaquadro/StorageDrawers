@@ -13,6 +13,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -25,8 +26,8 @@ public class BlockVariantDrawers extends BlockStandardDrawers
 {
     public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
 
-    public BlockVariantDrawers (String blockName) {
-        super(blockName);
+    public BlockVariantDrawers (String registryName, String blockName) {
+        super(registryName, blockName);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class BlockVariantDrawers extends BlockStandardDrawers
     }
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
+    public void getSubBlocks (Item item, CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
         for (EnumBasicDrawer type : EnumBasicDrawer.values()) {
             for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
                 ItemStack stack = new ItemStack(item, 1, type.getMetadata());

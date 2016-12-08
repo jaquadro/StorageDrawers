@@ -53,6 +53,11 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
     }
 
     @Override
+    public int getDefaultMaxCapacity () {
+        return central.getDefaultMaxCapacity(slot);
+    }
+
+    @Override
     public int getRemainingCapacity () {
         return central.getRemainingCapacity(slot);
     }

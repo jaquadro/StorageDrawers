@@ -646,6 +646,17 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         @Override
+        public int getDefaultMaxCapacity (int slot) {
+            if (!isDrawerEnabled(slot))
+                return 0;
+
+            if (TileEntityDrawersComp.this.isUnlimited() || TileEntityDrawersComp.this.isVending())
+                return Integer.MAX_VALUE;
+
+            return 64 * getBaseStackCapacity();
+        }
+
+        @Override
         public int getRemainingCapacity (int slot) {
             if (TileEntityDrawersComp.this.isVending())
                 return Integer.MAX_VALUE;

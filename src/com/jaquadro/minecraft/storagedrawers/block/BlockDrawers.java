@@ -195,11 +195,6 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
     }
 
     @Override
-    public IBlockState getStateForPlacement (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return getDefaultState().withProperty(BLOCK, EnumBasicDrawer.byMetadata(meta));
-    }
-
-    @Override
     public void onBlockPlacedBy (World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack itemStack) {
         EnumFacing facing = entity.getHorizontalFacing().getOpposite();
 

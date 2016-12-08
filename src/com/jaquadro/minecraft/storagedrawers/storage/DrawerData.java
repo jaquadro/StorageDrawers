@@ -122,6 +122,14 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     }
 
     @Override
+    public int getDefaultMaxCapacity () {
+        if (isUnlimited)
+            return Integer.MAX_VALUE;
+
+        return 64 * stackCapacity;
+    }
+
+    @Override
     public int getRemainingCapacity () {
         if (protoStack.isEmpty())
             return 0;

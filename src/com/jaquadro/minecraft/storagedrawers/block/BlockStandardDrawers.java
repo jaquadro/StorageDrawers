@@ -17,6 +17,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -36,8 +38,8 @@ public class BlockStandardDrawers extends BlockDrawers
     @SideOnly(Side.CLIENT)
     private StatusModelData[] statusInfo;
 
-    public BlockStandardDrawers (String blockName) {
-        super(Material.WOOD, blockName);
+    public BlockStandardDrawers (String registryName, String blockName) {
+        super(Material.WOOD, registryName, blockName);
     }
 
     @Override
@@ -144,8 +146,7 @@ public class BlockStandardDrawers extends BlockDrawers
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public IBlockState onBlockPlaced (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+    public IBlockState getStateForPlacement (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         return getDefaultState().withProperty(BLOCK, EnumBasicDrawer.byMetadata(meta));
     }
 
@@ -179,7 +180,7 @@ public class BlockStandardDrawers extends BlockDrawers
     }
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
+    public void getSubBlocks (Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
         for (EnumBasicDrawer type : EnumBasicDrawer.values()) {
             ItemStack stack = new ItemStack(item, 1, type.getMetadata());
 

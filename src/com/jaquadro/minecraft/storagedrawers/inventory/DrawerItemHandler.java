@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IPriorityGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.ISmartGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
@@ -21,7 +22,7 @@ public class DrawerItemHandler implements IItemHandler
 
     @Override
     public int getSlots () {
-        return group.getDrawerCount() + 2;
+        return group.getDrawerCount() + 1;
     }
 
     @Override
@@ -171,7 +172,21 @@ public class DrawerItemHandler implements IItemHandler
         return returnStack;
     }
 
+    @Override
+    public int getSlotLimit (int slot) {
+        if (slotIsVirtual(slot))
+            return Integer.MAX_VALUE;
+
+        IDrawer drawer = group.getDrawerIfEnabled(slot);
+        if (drawer == null)
+            return 0;
+        if (drawer.isEmpty())
+            return drawer.getDefaultMaxCapacity();
+
+        return drawer.getMaxCapacity();
+    }
+
     private boolean slotIsVirtual (int slot) {
-        return slot == 0 || slot == group.getDrawerCount() + 1;
+        return slot == 0;
     }
 }
