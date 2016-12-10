@@ -166,7 +166,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     @Override
     @SideOnly(Side.CLIENT)
     public void clientUpdateCount (final int slot, final int count) {
-        if (!worldObj.isRemote)
+        if (!world.isRemote)
             return;
 
         Minecraft.getMinecraft().addScheduledTask(new Runnable() {

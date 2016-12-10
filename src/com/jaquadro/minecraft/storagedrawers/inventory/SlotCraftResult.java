@@ -42,7 +42,7 @@ public class SlotCraftResult extends Slot
 
     @Override
     protected void onCrafting (ItemStack stack) {
-        stack.onCrafting(player.worldObj, player, amountCrafted);
+        stack.onCrafting(player.world, player, amountCrafted);
         amountCrafted = 0;
     }
 

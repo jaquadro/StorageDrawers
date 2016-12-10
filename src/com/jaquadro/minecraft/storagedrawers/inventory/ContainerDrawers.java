@@ -82,7 +82,7 @@ public class ContainerDrawers extends Container
 
     @Override
     public boolean canInteractWith (EntityPlayer player) {
-        return upgradeInventory.isUseableByPlayer(player);
+        return upgradeInventory.isUsableByPlayer(player);
     }
 
     @Override

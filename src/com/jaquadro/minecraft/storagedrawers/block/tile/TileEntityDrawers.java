@@ -155,7 +155,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     }
 
     public ItemStack getUpgrade (int slot) {
-        slot = MathHelper.clamp_int(slot, 0, 4);
+        slot = MathHelper.clamp(slot, 0, 4);
         return upgrades[slot];
     }
 
@@ -169,7 +169,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     }
 
     public void setUpgrade (int slot, ItemStack upgrade) {
-        slot = MathHelper.clamp_int(slot, 0, 4);
+        slot = MathHelper.clamp(slot, 0, 4);
 
         if (upgrade != null) {
             upgrade = upgrade.copy();
