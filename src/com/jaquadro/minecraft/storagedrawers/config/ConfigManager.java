@@ -282,7 +282,7 @@ public class ConfigManager
         cache.level6Mult = config.get(sectionUpgrades.getQualifiedName(), "level6Mult", 13).setLanguageKey(LANG_PREFIX + "upgrades.level6Mult").setRequiresWorldRestart(true).getInt();
 
         getControllerRange();
-        
+
         if (config.hasChanged())
             config.save();
     }
