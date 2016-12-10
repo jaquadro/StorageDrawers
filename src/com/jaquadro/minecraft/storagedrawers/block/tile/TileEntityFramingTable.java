@@ -102,7 +102,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     }
 
     @Override
-    public boolean isUseableByPlayer (EntityPlayer player) {
+    public boolean isUsableByPlayer (EntityPlayer player) {
         if (getWorld().getTileEntity(pos) != this)
             return false;
 

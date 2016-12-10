@@ -84,8 +84,8 @@ public class InventoryContainerProxy implements IInventory
     }
 
     @Override
-    public boolean isUseableByPlayer (EntityPlayer player) {
-        return parent.isUseableByPlayer(player);
+    public boolean isUsableByPlayer (EntityPlayer player) {
+        return parent.isUsableByPlayer(player);
     }
 
     @Override

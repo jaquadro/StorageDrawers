@@ -215,7 +215,7 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
     }
 
     @Override
-    public boolean isUseableByPlayer (EntityPlayer player) {
+    public boolean isUsableByPlayer (EntityPlayer player) {
         return false;
     }
 

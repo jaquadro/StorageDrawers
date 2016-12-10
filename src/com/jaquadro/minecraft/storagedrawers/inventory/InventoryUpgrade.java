@@ -79,8 +79,8 @@ public class InventoryUpgrade implements IInventory
     }
 
     @Override
-    public boolean isUseableByPlayer (EntityPlayer player) {
-        return tile.isUseableByPlayer(player);
+    public boolean isUsableByPlayer (EntityPlayer player) {
+        return tile.isUsableByPlayer(player);
     }
 
     @Override

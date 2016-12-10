@@ -70,7 +70,7 @@ public class ContainerFramingTable extends Container
 
     @Override
     public boolean canInteractWith (EntityPlayer player) {
-        return tableInventory.isUseableByPlayer(player);
+        return tableInventory.isUsableByPlayer(player);
     }
 
     @Override
