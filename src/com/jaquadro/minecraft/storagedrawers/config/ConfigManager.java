@@ -304,6 +304,8 @@ public class ConfigManager
         cache.addonShowVanilla = config.get(sectionAddons.getQualifiedName(), "showBlocksInCreative", true).setLanguageKey(LANG_PREFIX + "addons.showCreative").setRequiresWorldRestart(true).getBoolean();
         cache.addonSeparateVanilla = config.get(sectionAddons.getQualifiedName(), "useSeparateCreativeTabs", true).setLanguageKey(LANG_PREFIX + "addons.separateTabs").setRequiresMcRestart(true).getBoolean();
 
+        getControllerRange();
+
         if (config.hasChanged())
             config.save();
     }

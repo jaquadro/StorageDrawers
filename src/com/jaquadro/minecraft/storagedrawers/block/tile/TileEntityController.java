@@ -921,6 +921,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
         @Override
         public Iterator<Integer> iterator () {
+            if (this.stack == null)
+                return new ArrayList<Integer>(0).iterator();
+
             return new Iterator<Integer> ()
             {
                 List<SlotRecord> primaryRecords = drawerPrimaryLookup.getEntries(stack.getItem(), stack.getItemDamage());
