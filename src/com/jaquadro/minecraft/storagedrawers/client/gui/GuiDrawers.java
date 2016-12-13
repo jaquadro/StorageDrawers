@@ -111,14 +111,14 @@ public class GuiDrawers extends GuiContainer
             List<Slot> storageSlots = container.getStorageSlots();
             for (int i = 0, n = storageSlots.size(); i < n; i++) {
                 Slot slot = storageSlots.get(i);
-                drawTexturedModalRect(guiX + slot.xDisplayPosition, guiY + slot.yDisplayPosition, smDisabledX, smDisabledY, 16, 16);
+                drawTexturedModalRect(guiX + slot.xPos, guiY + slot.yPos, smDisabledX, smDisabledY, 16, 16);
             }
 
             List<Slot> upgradeSlots = container.getUpgradeSlots();
             for (int i = 0, n = upgradeSlots.size(); i < n; i++) {
                 Slot slot = upgradeSlots.get(i);
                 if (slot instanceof SlotUpgrade && !((SlotUpgrade)slot).canTakeStack())
-                    drawTexturedModalRect(guiX + slot.xDisplayPosition, guiY + slot.yDisplayPosition, smDisabledX, smDisabledY, 16, 16);
+                    drawTexturedModalRect(guiX + slot.xPos, guiY + slot.yPos, smDisabledX, smDisabledY, 16, 16);
             }
         }
     }
@@ -130,14 +130,14 @@ public class GuiDrawers extends GuiContainer
             List<Slot> storageSlots = container.getStorageSlots();
             for (int i = 0, n = storageSlots.size(); i < n; i++) {
                 Slot slot = storageSlots.get(i);
-                if (slot instanceof SlotStorage && slot.xDisplayPosition == x && slot.yDisplayPosition == y)
+                if (slot instanceof SlotStorage && slot.xPos == x && slot.yPos == y)
                     return false;
             }
 
             List<Slot> upgradeSlots = container.getUpgradeSlots();
             for (int i = 0, n = upgradeSlots.size(); i < n; i++) {
                 Slot slot = upgradeSlots.get(i);
-                if (slot instanceof SlotUpgrade && !((SlotUpgrade)slot).canTakeStack() && slot.xDisplayPosition == x && slot.yDisplayPosition == y)
+                if (slot instanceof SlotUpgrade && !((SlotUpgrade)slot).canTakeStack() && slot.xPos == x && slot.yPos == y)
                     return false;
             }
         }
