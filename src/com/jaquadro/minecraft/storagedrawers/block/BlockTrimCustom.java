@@ -60,8 +60,7 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
 
     @Override
     public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
-        if (StorageDrawers.config.cache.addonShowVanilla)
-            list.add(new ItemStack(item));
+        list.add(new ItemStack(item));
     }
 
     public TileEntityTrim getTileEntity (IBlockAccess blockAccess, BlockPos pos) {
