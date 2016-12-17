@@ -600,6 +600,12 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                     clear();
                     markBlockForUpdate();
                 }
+
+                if (!getWorld().isRemote && isRedstone()) {
+                    IBlockState state = getWorld().getBlockState(getPos());
+                    getWorld().notifyNeighborsOfStateChange(getPos(), state.getBlock());
+                    getWorld().notifyNeighborsOfStateChange(getPos().down(), state.getBlock());
+                }
             }
         }
 

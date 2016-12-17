@@ -30,8 +30,6 @@ public class ModBlocks
     public static BlockTrimCustom customTrim;
 
     public void init () {
-        //resolver = new DataResolver(StorageDrawers.MOD_ID);
-
         basicDrawers = new BlockVariantDrawers("basicDrawers");
         compDrawers = new BlockCompDrawers("compDrawers");
         controller = new BlockController("controller");
@@ -85,8 +83,6 @@ public class ModBlocks
 
         for (String key : new String[] { "drawerBasic" })
             OreDictionary.registerOre(key, new ItemStack(basicDrawers, 1, OreDictionary.WILDCARD_VALUE));
-
-        //resolver.init();
     }
 
     @SideOnly(Side.CLIENT)

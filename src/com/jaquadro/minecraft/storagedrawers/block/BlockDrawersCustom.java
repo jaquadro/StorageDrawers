@@ -13,6 +13,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -54,7 +55,22 @@ public class BlockDrawersCustom extends BlockStandardDrawers
         if (tile == null)
             return ItemCustomDrawers.makeItemStack(state, 1, null, null, null);
 
-        return ItemCustomDrawers.makeItemStack(state, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront());
+        ItemStack drop = ItemCustomDrawers.makeItemStack(state, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront());
+        if (drop == null)
+            return null;
+
+        NBTTagCompound data = drop.getTagCompound();
+        if (data == null)
+            data = new NBTTagCompound();
+
+        if (tile.isSealed()) {
+            NBTTagCompound tiledata = new NBTTagCompound();
+            tile.writeToNBT(tiledata);
+            data.setTag("tile", tiledata);
+        }
+
+        drop.setTagCompound(data);
+        return drop;
     }
 
     @Override

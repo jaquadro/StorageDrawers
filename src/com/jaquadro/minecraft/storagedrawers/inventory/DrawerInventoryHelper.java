@@ -58,7 +58,7 @@ public class DrawerInventoryHelper
             entityitem.motionY = RANDOM.nextGaussian() * (double)velocity + 0.20000000298023224D;
             entityitem.motionZ = RANDOM.nextGaussian() * (double)velocity;
 
-            world.spawnEntityInWorld(entityitem);
+            world.spawnEntity(entityitem);
         }
     }
 }

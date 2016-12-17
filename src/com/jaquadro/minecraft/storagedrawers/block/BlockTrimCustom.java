@@ -21,6 +21,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -59,9 +61,9 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void getSubBlocks (Item item, CreativeTabs creativeTabs, List<ItemStack> list) {
-        if (StorageDrawers.config.cache.addonShowVanilla)
-            list.add(new ItemStack(item));
+        list.add(new ItemStack(item));
     }
 
     public TileEntityTrim getTileEntity (IBlockAccess blockAccess, BlockPos pos) {

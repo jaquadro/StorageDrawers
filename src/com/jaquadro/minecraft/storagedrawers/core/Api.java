@@ -11,8 +11,6 @@ public class Api implements IStorageDrawersApi
 {
     public static IStorageDrawersApi instance;
 
-    //private PackFactory packFactory = new PackFactory();
-
     public Api () {
         instance = this;
     }
@@ -32,20 +30,8 @@ public class Api implements IStorageDrawersApi
         return StorageDrawers.wailaRegistry;
     }
 
-    /*@Override
-    public IPackBlockFactory packFactory () {
-        return packFactory;
-    }*/
-
     @Override
     public IUserConfig userConfig () {
         return StorageDrawers.config.userConfig;
     }
-
-    /*@Override
-    public void registerStandardPackRecipes (IExtendedDataResolver resolver) {
-        PackRecipes.registerStandardRecipes(resolver);
-        PackRecipes.registerSortingRecipes(resolver);
-        ThermalExpansion.registerPackBlock(resolver);
-    }*/
 }
