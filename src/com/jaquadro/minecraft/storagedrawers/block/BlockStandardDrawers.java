@@ -144,6 +144,11 @@ public class BlockStandardDrawers extends BlockDrawers
     }
 
     @Override
+    public boolean causesSuffocation () {
+        return false;
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
     public IBlockState getStateForPlacement (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
         return getDefaultState().withProperty(BLOCK, EnumBasicDrawer.byMetadata(meta));
