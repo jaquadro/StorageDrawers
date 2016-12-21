@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -42,6 +43,15 @@ public class BlockDrawersCustom extends BlockStandardDrawers
     @Override
     public boolean canRenderInLayer (IBlockState state, BlockRenderLayer layer) {
         return layer == BlockRenderLayer.CUTOUT_MIPPED || layer == BlockRenderLayer.TRANSLUCENT;
+    }
+
+    @Override
+    public boolean doesSideBlockRendering (IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
+        TileEntityDrawers tile = getTileEntity(world, pos);
+        if (tile != null && tile.getEffectiveMaterialSide() == null)
+            return false;
+
+        return super.doesSideBlockRendering(state, world, pos, face);
     }
 
     @Override
