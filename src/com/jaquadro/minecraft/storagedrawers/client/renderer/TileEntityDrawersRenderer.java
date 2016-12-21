@@ -343,7 +343,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         for (int i = 0; i < count; i++) {
             IDrawer drawer = tile.getDrawer(i);
-            if (drawer == null)
+            if (drawer == null || tile.isShrouded())
                 continue;
 
             TextureAtlasSprite iconOff = Chameleon.instance.iconRegistry.getIcon(statusInfo.getSlot(i).getOffResource(EnumUpgradeStatus.byLevel(level)));

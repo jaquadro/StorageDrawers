@@ -143,7 +143,7 @@ public class DrawerDecoratorModel implements IBakedModel
         TextureAtlasSprite iconCover = Chameleon.instance.iconRegistry.getIcon(iconShroudCover);
 
         for (int i = 0; i < count; i++) {
-            if (!modelData.isDrawerEmpty(i))
+            if (modelData.isDrawerEmpty(i))
                 continue;
 
             StatusModelData.Slot slot = data.getSlot(i);
