@@ -126,7 +126,7 @@ public class ContainerFramingTable extends Container
                 boolean merged = false;
                 if (TileEntityFramingTable.isItemValidDrawer(slotStack))
                     merged = mergeItemStack(slotStack, inputSlot.slotNumber, inputSlot.slotNumber + 1, false);
-                if (TileEntityFramingTable.isItemValidMaterial(slotStack))
+                else if (TileEntityFramingTable.isItemValidMaterial(slotStack))
                     merged = mergeItemStack(slotStack, materialSideSlot.slotNumber, materialFrontSlot.slotNumber + 1, false);
 
                 if (!merged) {
