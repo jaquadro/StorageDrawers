@@ -49,7 +49,7 @@ public class BlockDrawersCustom extends BlockStandardDrawers
     @Override
     public boolean doesSideBlockRendering (IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
         TileEntityDrawers tile = getTileEntity(world, pos);
-        if (tile != null && tile.getEffectiveMaterialSide() == null)
+        if (tile != null && tile.getEffectiveMaterialSide().isEmpty())
             return false;
 
         return super.doesSideBlockRendering(state, world, pos, face);
@@ -68,8 +68,8 @@ public class BlockDrawersCustom extends BlockStandardDrawers
             return ItemCustomDrawers.makeItemStack(state, 1, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
 
         ItemStack drop = ItemCustomDrawers.makeItemStack(state, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront());
-        if (drop == null)
-            return null;
+        if (drop.isEmpty())
+            return ItemStack.EMPTY;
 
         NBTTagCompound data = drop.getTagCompound();
         if (data == null)
