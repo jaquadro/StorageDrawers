@@ -13,6 +13,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -45,6 +47,15 @@ public class BlockDrawersCustom extends BlockStandardDrawers
     }
 
     @Override
+    public boolean doesSideBlockRendering (IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
+        TileEntityDrawers tile = getTileEntity(world, pos);
+        if (tile != null && tile.getEffectiveMaterialSide() == null)
+            return false;
+
+        return super.doesSideBlockRendering(state, world, pos, face);
+    }
+
+    @Override
     public BlockType retrimType () {
         return null;
     }
@@ -56,7 +67,22 @@ public class BlockDrawersCustom extends BlockStandardDrawers
         if (tile == null)
             return ItemCustomDrawers.makeItemStack(state, 1, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
 
-        return ItemCustomDrawers.makeItemStack(state, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront());
+        ItemStack drop = ItemCustomDrawers.makeItemStack(state, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront());
+        if (drop == null)
+            return null;
+
+        NBTTagCompound data = drop.getTagCompound();
+        if (data == null)
+            data = new NBTTagCompound();
+
+        if (tile.isSealed()) {
+            NBTTagCompound tiledata = new NBTTagCompound();
+            tile.writeToNBT(tiledata);
+            data.setTag("tile", tiledata);
+        }
+
+        drop.setTagCompound(data);
+        return drop;
     }
 
     @Override

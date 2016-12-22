@@ -104,8 +104,8 @@ public class DefaultStorageProvider implements IStorageProvider
 
         if (isRedstone(slot)) {
             IBlockState state = tile.getWorld().getBlockState(tile.getPos());
-            tile.getWorld().notifyBlockUpdate(tile.getPos(), state, state, 3);
-            tile.getWorld().notifyBlockUpdate(tile.getPos().down(), state, state, 3);
+            tile.getWorld().notifyNeighborsOfStateChange(tile.getPos(), state.getBlock(), false);
+            tile.getWorld().notifyNeighborsOfStateChange(tile.getPos().down(), state.getBlock(), false);
         }
     }
 

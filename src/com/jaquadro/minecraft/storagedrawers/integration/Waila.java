@@ -61,7 +61,7 @@ public class Waila extends IntegrationModule
         public List<String> getWailaBody (ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
             TileEntityDrawers tile = (TileEntityDrawers) accessor.getTileEntity();
 
-            if (SecurityManager.hasAccess(Minecraft.getMinecraft().thePlayer.getGameProfile(), tile)) {
+            if (SecurityManager.hasAccess(Minecraft.getMinecraft().player.getGameProfile(), tile)) {
                 for (int i = 0; i < tile.getDrawerCount(); i++) {
                     IDrawer drawer = tile.getDrawerIfEnabled(i);
                     if (drawer == null)
