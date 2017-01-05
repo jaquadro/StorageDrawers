@@ -230,7 +230,9 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         getFontRenderer().drawString(text, -textWidth / 2, 0, (int)(255 * alpha) << 24 | 255 << 16 | 255 << 8 | 255);
 
+        GlStateManager.depthMask(true);
         GlStateManager.disablePolygonOffset();
+        GlStateManager.enableLighting();
 
         GlStateManager.popMatrix();
     }
