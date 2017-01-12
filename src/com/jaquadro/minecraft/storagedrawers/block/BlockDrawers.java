@@ -63,7 +63,6 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
 {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
-
     public static final IUnlistedProperty<DrawerStateModelData> STATE_MODEL = UnlistedModelData.create(DrawerStateModelData.class);
 
     private static final AxisAlignedBB AABB_NORTH_HALF = new AxisAlignedBB(0, 0, .5, 1, 1, 1);
@@ -75,6 +74,14 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
     private StatusModelData[] statusInfo;
 
     private long ignoreEventTime;
+
+    private static final ThreadLocal<Boolean> inTileLookup = new ThreadLocal<Boolean>() {
+        @Override
+        protected Boolean initialValue () {
+            return false;
+        }
+    };
+
 
     public BlockDrawers (String blockName) {
         this(Material.WOOD, blockName);
@@ -546,7 +553,13 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
     }
 
     public TileEntityDrawers getTileEntity (IBlockAccess blockAccess, BlockPos pos) {
+        if (inTileLookup.get())
+            return null;
+
+        inTileLookup.set(true);
         TileEntity tile = blockAccess.getTileEntity(pos);
+        inTileLookup.set(false);
+
         return (tile instanceof TileEntityDrawers) ? (TileEntityDrawers) tile : null;
     }
 
