@@ -166,8 +166,6 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     public void clientUpdateCount (int slot, int count) {
         if (count != pooledCount) {
             pooledCount = count;
-            IBlockState state = getWorld().getBlockState(getPos());
-            getWorld().notifyBlockUpdate(getPos(), state, state, 3);
         }
     }
 
