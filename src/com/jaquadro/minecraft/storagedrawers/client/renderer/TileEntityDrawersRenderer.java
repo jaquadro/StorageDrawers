@@ -263,6 +263,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         GlStateManager.doPolygonOffset(-1, -1);
 
         renderItem.renderItemIntoGUI(itemStack, 0, 0);
+        GlStateManager.disableBlend(); // Clean up after RenderItem
 
         GlStateManager.disablePolygonOffset();
 
