@@ -23,10 +23,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 
+import java.lang.reflect.Method;
+
 import java.util.List;
 
 public class Waila extends IntegrationModule
 {
+    private static Class classConfigHandler;
+
+    private static Method methInstance;
+    private static Method methAddConfig;
+
     @Override
     public String getModID () {
         return "Waila";
@@ -34,6 +41,11 @@ public class Waila extends IntegrationModule
 
     @Override
     public void init () throws Throwable {
+        classConfigHandler = Class.forName("mcp.mobius.waila.api.impl.ConfigHandler");
+
+        methInstance = classConfigHandler.getMethod("instance");
+        methAddConfig = classConfigHandler.getMethod("addConfig", String.class, String.class, String.class);
+
         FMLInterModComms.sendMessage("Waila", "register", StorageDrawers.SOURCE_PATH + "integration.Waila.registerProvider");
     }
 
@@ -43,6 +55,17 @@ public class Waila extends IntegrationModule
     @SuppressWarnings("unused")
     public static void registerProvider(IWailaRegistrar registrar) {
         registrar.registerBodyProvider(new WailaDrawer(), BlockDrawers.class);
+
+        try {
+            Object configHandler = methInstance.invoke(null);
+
+            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.content", I18n.format("storageDrawers.waila.config.displayContents"));
+            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.stacklimit", I18n.format("storageDrawers.waila.config.displayStackLimit"));
+            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.status", I18n.format("storageDrawers.waila.config.displayStatus"));
+        }
+        catch (Exception e) {
+            // Oh well, we couldn't hook the waila config
+        }
     }
 
     public static class WailaDrawer implements IWailaDataProvider
@@ -62,59 +85,65 @@ public class Waila extends IntegrationModule
             TileEntityDrawers tile = (TileEntityDrawers) accessor.getTileEntity();
 
             if (SecurityManager.hasAccess(Minecraft.getMinecraft().player.getGameProfile(), tile)) {
-                for (int i = 0; i < tile.getDrawerCount(); i++) {
-                    IDrawer drawer = tile.getDrawerIfEnabled(i);
-                    if (drawer == null)
-                        continue;
+                if (config.getConfig("display.content")) {
+                    for (int i = 0; i < tile.getDrawerCount(); i++) {
+                        IDrawer drawer = tile.getDrawerIfEnabled(i);
+                        if (drawer == null)
+                            continue;
 
-                    String name = I18n.format("storageDrawers.waila.empty");
+                        String name = I18n.format("storageDrawers.waila.empty");
 
-                    ItemStack stack = drawer.getStoredItemPrototype();
-                    if (stack != null && stack.getItem() != null) {
-                        String stackName = stack.getDisplayName();
-                        List<IWailaTooltipHandler> handlers = StorageDrawers.wailaRegistry.getTooltipHandlers();
-                        for (int j = 0, n = handlers.size(); j < n; j++)
-                            stackName = handlers.get(j).transformItemName(drawer, stackName);
+                        ItemStack stack = drawer.getStoredItemPrototype();
+                        if (stack != null && stack.getItem() != null) {
+                            String stackName = stack.getDisplayName();
+                            List<IWailaTooltipHandler> handlers = StorageDrawers.wailaRegistry.getTooltipHandlers();
+                            for (int j = 0, n = handlers.size(); j < n; j++)
+                                stackName = handlers.get(j).transformItemName(drawer, stackName);
 
-                        if (drawer.getStoredItemCount() == Integer.MAX_VALUE)
-                            name = stackName + " [\u221E]";
-                        else if (drawer instanceof IFractionalDrawer && ((IFractionalDrawer) drawer).getConversionRate() > 1)
-                            name = stackName + ((i == 0) ? " [" : " [+") + ((IFractionalDrawer) drawer).getStoredItemRemainder() + "]";
-                        else if (StorageDrawers.config.cache.stackRemainderWaila) {
-                            int stacks = drawer.getStoredItemCount() / drawer.getStoredItemStackSize();
-                            int remainder = drawer.getStoredItemCount() - (stacks * drawer.getStoredItemStackSize());
-                            if (stacks > 0 && remainder > 0)
-                                name = stackName + " [" + stacks + "x" + drawer.getStoredItemStackSize() + " + " + remainder + "]";
-                            else if (stacks > 0)
-                                name = stackName + " [" + stacks + "x" + drawer.getStoredItemStackSize() + "]";
-                            else
-                                name = stackName + " [" + remainder + "]";
-                        } else
-                            name = stackName + " [" + drawer.getStoredItemCount() + "]";
+                            if (drawer.getStoredItemCount() == Integer.MAX_VALUE)
+                                name = stackName + " [\u221E]";
+                            else if (drawer instanceof IFractionalDrawer && ((IFractionalDrawer) drawer).getConversionRate() > 1)
+                                name = stackName + ((i == 0) ? " [" : " [+") + ((IFractionalDrawer) drawer).getStoredItemRemainder() + "]";
+                            else if (StorageDrawers.config.cache.stackRemainderWaila) {
+                                int stacks = drawer.getStoredItemCount() / drawer.getStoredItemStackSize();
+                                int remainder = drawer.getStoredItemCount() - (stacks * drawer.getStoredItemStackSize());
+                                if (stacks > 0 && remainder > 0)
+                                    name = stackName + " [" + stacks + "x" + drawer.getStoredItemStackSize() + " + " + remainder + "]";
+                                else if (stacks > 0)
+                                    name = stackName + " [" + stacks + "x" + drawer.getStoredItemStackSize() + "]";
+                                else
+                                    name = stackName + " [" + remainder + "]";
+                            } else
+                                name = stackName + " [" + drawer.getStoredItemCount() + "]";
+                        }
+                        currenttip.add(I18n.format("storageDrawers.waila.drawer", i + 1, name));
                     }
-                    currenttip.add(I18n.format("storageDrawers.waila.drawer", i + 1, name));
                 }
 
-                if (tile.isUnlimited() || tile.isVending())
-                    currenttip.add(I18n.format("storageDrawers.waila.nolimit"));
-                else {
-                    int limit = tile.getDrawerCapacity() * tile.getEffectiveStorageMultiplier();
-                    currenttip.add(I18n.format("storageDrawers.waila.limit", limit, tile.getEffectiveStorageMultiplier()));
+                if (config.getConfig("display.stacklimit")) {
+                    if (tile.isUnlimited() || tile.isVending())
+                        currenttip.add(I18n.format("storageDrawers.waila.nolimit"));
+                    else {
+                        int limit = tile.getDrawerCapacity() * tile.getEffectiveStorageMultiplier();
+                        currenttip.add(I18n.format("storageDrawers.waila.limit", limit, tile.getEffectiveStorageMultiplier()));
+                    }
                 }
             }
 
-            String attrib = "";
-            if (tile.isItemLocked(LockAttribute.LOCK_POPULATED))
-                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.locked");
-            if (tile.isVoid())
-                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.void");
-            if (tile.isSorting())
-                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.sorting");
-            if (tile.getOwner() != null)
-                attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.protected");
+            if (config.getConfig("display.status")) {
+                String attrib = "";
+                if (tile.isItemLocked(LockAttribute.LOCK_POPULATED))
+                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.locked");
+                if (tile.isVoid())
+                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.void");
+                if (tile.isSorting())
+                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.sorting");
+                if (tile.getOwner() != null)
+                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storageDrawers.waila.protected");
 
-            if (!attrib.isEmpty())
-                currenttip.add(attrib);
+                if (!attrib.isEmpty())
+                    currenttip.add(attrib);
+            }
 
             return currenttip;
         }

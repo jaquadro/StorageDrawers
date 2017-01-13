@@ -181,7 +181,6 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     private void clientUpdateCountAsync (int slot, int count) {
         if (count != pooledCount) {
             pooledCount = count;
-            markBlockForUpdateClient();
         }
     }
 
