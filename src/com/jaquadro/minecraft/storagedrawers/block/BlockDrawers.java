@@ -55,6 +55,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -167,7 +168,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
 
     @Override
     @SuppressWarnings("deprecation")
-    public void addCollisionBoxToList (IBlockState state, World world, BlockPos pos, AxisAlignedBB aabb, List<AxisAlignedBB> list, Entity entity) {
+    public void addCollisionBoxToList (IBlockState state, World world, BlockPos pos, AxisAlignedBB aabb, List<AxisAlignedBB> list, @Nullable Entity entityIn, boolean p_185477_7_) {
         addCollisionBoxToList(pos, aabb, list, getBoundingBox(state, world, pos));
     }
 
