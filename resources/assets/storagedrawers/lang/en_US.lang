@@ -101,6 +101,9 @@ storagedrawers.waila.locked=Locked
 storagedrawers.waila.void=Void
 storagedrawers.waila.sorting=Sorting
 storagedrawers.waila.protected=Protected
+storagedrawers.waila.config.displayContents=Slot Contents
+storagedrawers.waila.config.displayStackLimit=Stack Limit
+storagedrawers.waila.config.displayStatus=Upgrade Status
 
 # Configuration
 storagedrawers.config.title=Storage Drawers Configuration
