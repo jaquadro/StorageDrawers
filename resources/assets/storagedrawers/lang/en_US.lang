@@ -9,6 +9,7 @@ storageDrawers.container.unboundSlave=Unbound Slave
 storageDrawers.container.framingTable=Framing Table
 
 storagedrawers.msg.maxUpgrades=This drawer cannot accept any more upgrades.
+storagedrawers.msg.cannotAddUpgrade=That upgrade cannot be installed in this drawer.
 
 # Items
 item.storagedrawers.upgradeTemplate.name=Upgrade Template
@@ -17,6 +18,8 @@ item.storagedrawers.upgradeStorage.iron.name=Storage Upgrade (II)
 item.storagedrawers.upgradeStorage.gold.name=Storage Upgrade (III)
 item.storagedrawers.upgradeStorage.diamond.name=Storage Upgrade (IV)
 item.storagedrawers.upgradeStorage.emerald.name=Storage Upgrade (V)
+item.storagedrawers.upgradeOneStack.name=Storage Downgrade
+item.storagedrawers.upgradeOneStack.description=Reduces base storage to a single stack
 item.storagedrawers.upgradeStatus.level1.name=Status Upgrade (I)
 item.storagedrawers.upgradeStatus.level1.description=Shows full storage
 item.storagedrawers.upgradeStatus.level2.name=Status Upgrade (II)

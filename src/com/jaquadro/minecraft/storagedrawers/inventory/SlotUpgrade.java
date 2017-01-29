@@ -14,6 +14,16 @@ public class SlotUpgrade extends Slot
     }
 
     @Override
+    public boolean isItemValid(ItemStack stack) {
+        if (inventory instanceof InventoryUpgrade) {
+            if (stack != null && stack.getItem() == ModItems.upgradeOneStack)
+                return ((InventoryUpgrade) inventory).canAddOneStackUpgrade(); 
+        }
+
+        return super.isItemValid(stack);
+    }
+
+    @Override
     public boolean canTakeStack (EntityPlayer player) {
         if (inventory instanceof InventoryUpgrade) {
             ItemStack stack = getStack();

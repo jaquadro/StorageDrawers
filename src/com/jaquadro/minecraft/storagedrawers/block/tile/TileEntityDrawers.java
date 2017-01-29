@@ -225,6 +225,35 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         attributeChanged();
     }
 
+    public boolean canAddOneStackUpgrade () {
+        if (getEffectiveDrawerCapacity() == 1)
+            return false;
+
+        int storageMult = getEffectiveStorageMultiplier();
+        int lostStackCapacity = storageMult * (getEffectiveDrawerCapacity() - 1);
+
+        for (int i = 0; i < getDrawerCount(); i++) {
+            IDrawer drawer = getDrawerIfEnabled(i);
+            if (drawer == null || drawer.isEmpty())
+                continue;
+
+            int lostItemCapacity = lostStackCapacity * drawer.getStoredItemStackSize();
+            if (drawer.getMaxCapacity() - lostItemCapacity < drawer.getStoredItemCount())
+                return false;
+        }
+
+        return true;
+    }
+
+    public int getEffectiveDrawerCapacity () {
+        for (ItemStack upgrade : upgrades) {
+            if (upgrade != null && upgrade.getItem() == ModItems.upgradeOneStack)
+                return 1;
+        }
+
+        return getDrawerCapacity();
+    }
+
     private void attributeChanged () {
         for (int i = 0; i < getDrawerCount(); i++) {
             IDrawer drawer = getDrawer(i);
