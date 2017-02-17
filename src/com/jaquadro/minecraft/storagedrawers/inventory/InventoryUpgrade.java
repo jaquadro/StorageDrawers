@@ -120,6 +120,10 @@ public class InventoryUpgrade implements IInventory
         return tile.canAddOneStackUpgrade();
     }
 
+    public boolean canAddUpgrade (ItemStack item) {
+        return tile.canAddUpgrade(item);
+    }
+
     public boolean canRemoveStorageUpgrade (int storageLevel) {
         return canRemoveStorageUpgrade(tile, storageLevel);
     }

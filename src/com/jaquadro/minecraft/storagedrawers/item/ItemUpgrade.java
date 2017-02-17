@@ -12,6 +12,8 @@ import java.util.List;
 
 public class ItemUpgrade extends Item
 {
+    private boolean allowMultiple;
+
     public ItemUpgrade (String registryName, String unlocalizedName) {
         setRegistryName(registryName);
         setUnlocalizedName(unlocalizedName);
@@ -24,5 +26,13 @@ public class ItemUpgrade extends Item
     public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
         String name = getUnlocalizedName(itemStack);
         list.add(I18n.format(name + ".description"));
+    }
+
+    public void setAllowMultiple (boolean allow) {
+        allowMultiple = allow;
+    }
+
+    public boolean getAllowMultiple () {
+        return allowMultiple;
     }
 }

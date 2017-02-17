@@ -21,6 +21,7 @@ public class ItemUpgradeStorage extends ItemUpgrade implements IItemMeshMapper
     public ItemUpgradeStorage (String registryName, String unlocalizedName) {
         super(registryName, unlocalizedName);
         setHasSubtypes(true);
+        setAllowMultiple(true);
     }
 
     @Override

@@ -17,12 +17,14 @@ import com.jaquadro.minecraft.storagedrawers.inventory.ISideManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.StorageInventory;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -205,6 +207,31 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ILocka
         }
 
         attributeChanged();
+    }
+
+    public boolean canAddUpgrade (ItemStack upgrade) {
+        if (upgrade == null)
+            return false;
+        if (!(upgrade.getItem() instanceof ItemUpgrade))
+            return false;
+
+        ItemUpgrade candidate = (ItemUpgrade)upgrade.getItem();
+        if (candidate.getAllowMultiple())
+            return true;
+
+        for (ItemStack stack : upgrades) {
+            if (stack == null)
+                continue;
+
+            if (!(stack.getItem() instanceof ItemUpgrade))
+                continue;
+
+            ItemUpgrade reference = (ItemUpgrade)stack.getItem();
+            if (candidate == reference)
+                return false;
+        }
+
+        return true;
     }
 
     public int getNextUpgradeSlot () {
