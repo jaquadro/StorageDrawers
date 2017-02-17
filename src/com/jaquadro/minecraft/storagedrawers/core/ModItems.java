@@ -13,10 +13,10 @@ public class ModItems
 {
     public static Item upgradeTemplate;
     public static ItemUpgradeStorage upgradeStorage;
-    public static ItemUpgradeOneStack upgradeOneStack;
+    public static ItemUpgrade upgradeOneStack;
     public static ItemUpgradeStatus upgradeStatus;
     public static ItemDrawerKey drawerKey;
-    public static ItemUpgradeVoid upgradeVoid;
+    public static ItemUpgrade upgradeVoid;
     public static ItemUpgradeCreative upgradeCreative;
     public static ItemUpgradeRedstone upgradeRedstone;
     public static ItemShroudKey shroudKey;
@@ -27,9 +27,9 @@ public class ModItems
     public void init () {
         upgradeTemplate = new Item().setUnlocalizedName(makeName("upgradeTemplate")).setRegistryName("upgradeTemplate").setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         upgradeStorage = new ItemUpgradeStorage("upgradeStorage", makeName("upgradeStorage"));
-        upgradeOneStack = new ItemUpgradeOneStack("upgradeOneStack", makeName("upgradeOneStack"));
+        upgradeOneStack = new ItemUpgrade("upgradeOneStack", makeName("upgradeOneStack"));
         upgradeStatus = new ItemUpgradeStatus("upgradeStatus", makeName("upgradeStatus"));
-        upgradeVoid = new ItemUpgradeVoid("upgradeVoid", makeName("upgradeVoid"));
+        upgradeVoid = new ItemUpgrade("upgradeVoid", makeName("upgradeVoid"));
         drawerKey = new ItemDrawerKey("drawerKey", makeName("drawerKey"));
         upgradeCreative = new ItemUpgradeCreative("upgradeCreative", makeName("upgradeCreative"));
         upgradeRedstone = new ItemUpgradeRedstone("upgradeRedstone", makeName("upgradeRedstone"));
@@ -44,6 +44,7 @@ public class ModItems
             GameRegistry.register(upgradeStorage);
             GameRegistry.register(upgradeOneStack);
         }
+
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
             GameRegistry.register(upgradeStatus);
         if (StorageDrawers.config.cache.enableVoidUpgrades)

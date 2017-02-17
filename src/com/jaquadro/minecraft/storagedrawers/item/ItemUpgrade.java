@@ -10,9 +10,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ItemUpgradeVoid extends Item
+public class ItemUpgrade extends Item
 {
-    public ItemUpgradeVoid (String registryName, String unlocalizedName) {
+    public ItemUpgrade (String registryName, String unlocalizedName) {
         setRegistryName(registryName);
         setUnlocalizedName(unlocalizedName);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
