@@ -28,6 +28,7 @@ public class CompTierRegistry
             register(new ItemStack(Blocks.GLOWSTONE), new ItemStack(Items.GLOWSTONE_DUST), 4);
             register(new ItemStack(Blocks.BRICK_BLOCK), new ItemStack(Items.BRICK), 4);
             register(new ItemStack(Blocks.NETHER_BRICK), new ItemStack(Items.NETHERBRICK), 4);
+            register(new ItemStack(Blocks.NETHER_WART_BLOCK), new ItemStack(Items.NETHER_WART), 9);
             register(new ItemStack(Blocks.QUARTZ_BLOCK), new ItemStack(Items.QUARTZ), 4);
             register(new ItemStack(Blocks.MELON_BLOCK), new ItemStack(Items.MELON), 9);
 
