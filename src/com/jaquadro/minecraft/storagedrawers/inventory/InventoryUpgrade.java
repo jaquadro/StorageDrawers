@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeOneStack;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeVoid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -94,6 +95,9 @@ public class InventoryUpgrade implements IInventory
         if (item.getItem() instanceof ItemUpgradeStorage || item.getItem() instanceof ItemUpgradeStatus || item.getItem() instanceof ItemUpgradeVoid)
             return true;
 
+        if (item.getItem() instanceof ItemUpgradeOneStack)
+            return tile.canAddOneStackUpgrade();
+
         return false;
     }
 
@@ -117,6 +121,10 @@ public class InventoryUpgrade implements IInventory
 
     }
 
+    public boolean canAddOneStackUpgrade () {
+        return tile.canAddOneStackUpgrade();
+    }
+
     public boolean canRemoveStorageUpgrade (int storageLevel) {
         return canRemoveStorageUpgrade(tile, storageLevel);
     }
@@ -127,7 +135,7 @@ public class InventoryUpgrade implements IInventory
         if (effectiveStorageMult == storageMult)
             storageMult--;
 
-        int addedStackCapacity = storageMult * tile.getDrawerCapacity();
+        int addedStackCapacity = storageMult * tile.getEffectiveDrawerCapacity();
 
         for (int i = 0; i < tile.getDrawerCount(); i++) {
             IDrawer drawer = tile.getDrawerIfEnabled(i);
