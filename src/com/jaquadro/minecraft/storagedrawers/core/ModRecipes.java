@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.block.EnumKeyType;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.FallbackShapedOreRecipe;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.TemplateRecipe;
@@ -136,6 +137,8 @@ public class ModRecipes
         if (config.cache.enableLockUpgrades) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.drawerKey), "xy ", " y ", " z ",
                 'x', "nuggetGold", 'y', "ingotGold", 'z', ModItems.upgradeTemplate));
+            GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.keyButton, 1, EnumKeyType.DRAWER.getMetadata()),
+                new ItemStack(Blocks.STONE_BUTTON), ModItems.drawerKey);
         }
 
         if (config.cache.enableVoidUpgrades) {
@@ -154,14 +157,20 @@ public class ModRecipes
 
         if (config.cache.enableShroudUpgrades) {
             GameRegistry.addShapelessRecipe(new ItemStack(ModItems.shroudKey), ModItems.drawerKey, Items.ENDER_EYE);
+            GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.keyButton, 1, EnumKeyType.CONCEALMENT.getMetadata()),
+                new ItemStack(Blocks.STONE_BUTTON), ModItems.shroudKey);
         }
 
         if (config.cache.enableQuantifiableUpgrades) {
             GameRegistry.addShapelessRecipe(new ItemStack(ModItems.quantifyKey), ModItems.drawerKey, Items.WRITABLE_BOOK);
+            GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.keyButton, 1, EnumKeyType.QUANTIFY.getMetadata()),
+                new ItemStack(Blocks.STONE_BUTTON), ModItems.quantifyKey);
         }
 
         if (config.cache.enablePersonalUpgrades) {
             GameRegistry.addShapelessRecipe(new ItemStack(ModItems.personalKey), ModItems.drawerKey, Items.NAME_TAG);
+            GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.keyButton, 1, EnumKeyType.PERSONAL.getMetadata()),
+                new ItemStack(Blocks.STONE_BUTTON), ModItems.personalKey);
         }
 
         if (config.cache.enableTape) {

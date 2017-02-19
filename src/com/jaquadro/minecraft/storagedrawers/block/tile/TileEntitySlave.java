@@ -86,6 +86,10 @@ public class TileEntitySlave extends TileEntity implements IDrawerGroup, IPriori
         markDirty();
     }
 
+    public BlockPos getControllerPos () {
+        return controllerCoord;
+    }
+
     @Override
     public boolean shouldRefresh (World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
         return oldState.getBlock() != newSate.getBlock();
