@@ -266,6 +266,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         renderItem.renderItemIntoGUI(itemStack, 0, 0);
         GlStateManager.disableBlend(); // Clean up after RenderItem
+        GlStateManager.enableAlpha();  // Restore world render state after RenderItem
 
         GlStateManager.disablePolygonOffset();
 
