@@ -33,7 +33,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
     }
 
     public BlockPos getControllerPos () {
-        return controllerCoord;
+        return controllerData.getCoord();
     }
 
     @Override
