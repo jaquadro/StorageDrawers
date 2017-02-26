@@ -186,17 +186,6 @@ public class BlockStandardDrawers extends BlockDrawers
     }
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
-        for (EnumBasicDrawer type : EnumBasicDrawer.values()) {
-            ItemStack stack = new ItemStack(item, 1, type.getMetadata());
-
-            NBTTagCompound data = new NBTTagCompound();
-            data.setString("material", BlockPlanks.EnumType.OAK.getName());
-            stack.setTagCompound(data);
-        }
-    }
-
-    @Override
     protected BlockStateContainer createBlockState () {
         return new ExtendedBlockState(this, new IProperty[] { BLOCK, FACING }, new IUnlistedProperty[] { STATE_MODEL });
     }

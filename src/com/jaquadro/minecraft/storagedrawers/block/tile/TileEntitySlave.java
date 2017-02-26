@@ -33,6 +33,10 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
             markDirty();
     }
 
+    public BlockPos getControllerPos () {
+        return controllerData.getCoord();
+    }
+
     @Override
     public boolean shouldRefresh (World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
         return oldState.getBlock() != newSate.getBlock();

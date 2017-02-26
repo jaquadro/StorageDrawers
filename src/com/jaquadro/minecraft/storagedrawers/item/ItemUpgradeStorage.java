@@ -18,14 +18,12 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemUpgradeStorage extends Item implements IItemMeshMapper
+public class ItemUpgradeStorage extends ItemUpgrade implements IItemMeshMapper
 {
     public ItemUpgradeStorage (String registryName, String unlocalizedName) {
-        setRegistryName(registryName);
-        setUnlocalizedName(unlocalizedName);
+        super(registryName, unlocalizedName);
         setHasSubtypes(true);
-        setMaxDamage(0);
-        setCreativeTab(ModCreativeTabs.tabStorageDrawers);
+        setAllowMultiple(true);
     }
 
     @Override

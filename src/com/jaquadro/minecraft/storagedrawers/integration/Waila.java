@@ -124,7 +124,7 @@ public class Waila extends IntegrationModule
                     if (tile.isUnlimited() || tile.isVending())
                         currenttip.add(I18n.format("storagedrawers.waila.nolimit"));
                     else {
-                        int limit = tile.getDrawerCapacity() * tile.getEffectiveStorageMultiplier();
+                        int limit = tile.getEffectiveDrawerCapacity() * tile.getEffectiveStorageMultiplier();
                         currenttip.add(I18n.format("storagedrawers.waila.limit", limit, tile.getEffectiveStorageMultiplier()));
                     }
                 }

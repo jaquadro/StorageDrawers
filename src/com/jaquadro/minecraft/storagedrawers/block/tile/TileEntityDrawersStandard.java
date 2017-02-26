@@ -66,7 +66,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
         @Override
         public int getSlotStackCapacity (int slot) {
-            return getEffectiveStorageMultiplier() * getDrawerCapacity();
+            return getEffectiveStorageMultiplier() * getEffectiveDrawerCapacity();
         }
 
         @Override

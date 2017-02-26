@@ -17,14 +17,11 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemUpgradeRedstone extends Item implements IItemMeshMapper
+public class ItemUpgradeRedstone extends ItemUpgrade implements IItemMeshMapper
 {
     public ItemUpgradeRedstone (String registryName, String unlocalizedName) {
-        setRegistryName(registryName);
-        setUnlocalizedName(unlocalizedName);
+        super(registryName, unlocalizedName);
         setHasSubtypes(true);
-        setCreativeTab(ModCreativeTabs.tabStorageDrawers);
-        setMaxDamage(0);
     }
 
     @Override
@@ -35,13 +32,6 @@ public class ItemUpgradeRedstone extends Item implements IItemMeshMapper
     @Override
     public int getMetadata (int damage) {
         return damage;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation (@Nonnull ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
-        String name = getUnlocalizedName(itemStack);
-        list.add(I18n.format(name + ".description"));
     }
 
     @Override

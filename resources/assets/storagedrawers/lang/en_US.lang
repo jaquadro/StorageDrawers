@@ -9,6 +9,7 @@ storagedrawers.container.unboundSlave=Unbound Slave
 storagedrawers.container.framingTable=Framing Table
 
 storagedrawers.msg.maxUpgrades=This drawer cannot accept any more upgrades.
+storagedrawers.msg.cannotAddUpgrade=That upgrade cannot be installed in this drawer.
 
 # Items
 item.storagedrawers.upgradeTemplate.name=Upgrade Template
@@ -17,6 +18,8 @@ item.storagedrawers.upgradeStorage.iron.name=Storage Upgrade (II)
 item.storagedrawers.upgradeStorage.gold.name=Storage Upgrade (III)
 item.storagedrawers.upgradeStorage.diamond.name=Storage Upgrade (IV)
 item.storagedrawers.upgradeStorage.emerald.name=Storage Upgrade (V)
+item.storagedrawers.upgradeOneStack.name=Storage Downgrade
+item.storagedrawers.upgradeOneStack.description=Reduces base storage to a single stack
 item.storagedrawers.upgradeStatus.level1.name=Status Upgrade (I)
 item.storagedrawers.upgradeStatus.level1.description=Shows full storage
 item.storagedrawers.upgradeStatus.level2.name=Status Upgrade (II)
@@ -75,6 +78,11 @@ tile.trim.birch.name=Birch Trim
 tile.trim.jungle.name=Jungle Trim
 tile.trim.acacia.name=Acacia Trim
 tile.trim.big_oak.name=Dark Oak Trim
+
+tile.keybutton.drawer.name=Drawer Key Button
+tile.keybutton.concealment.name=Concealment Key Button
+tile.keybutton.personal.name=Personal Key Button
+tile.keybutton.quantify.name=Quantify Key Button
 
 storagedrawers.drawers.description=Holds %d stacks per drawer
 storagedrawers.drawers.sealed=Contents sealed within

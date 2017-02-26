@@ -794,7 +794,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         private int getBaseStackCapacity () {
-            return TileEntityDrawersComp.this.getEffectiveStorageMultiplier() * TileEntityDrawersComp.this.getDrawerCapacity();
+            return TileEntityDrawersComp.this.getEffectiveStorageMultiplier() * TileEntityDrawersComp.this.getEffectiveDrawerCapacity();
         }
 
         public void markAmountDirty () {

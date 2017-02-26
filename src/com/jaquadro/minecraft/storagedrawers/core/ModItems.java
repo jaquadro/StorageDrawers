@@ -13,9 +13,10 @@ public class ModItems
 {
     public static Item upgradeTemplate;
     public static ItemUpgradeStorage upgradeStorage;
+    public static ItemUpgrade upgradeOneStack;
     public static ItemUpgradeStatus upgradeStatus;
     public static ItemDrawerKey drawerKey;
-    public static ItemUpgradeVoid upgradeVoid;
+    public static ItemUpgrade upgradeVoid;
     public static ItemUpgradeCreative upgradeCreative;
     public static ItemUpgradeRedstone upgradeRedstone;
     public static ItemShroudKey shroudKey;
@@ -26,8 +27,9 @@ public class ModItems
     public void init () {
         upgradeTemplate = new Item().setUnlocalizedName(makeName("upgradeTemplate")).setRegistryName("upgrade_template").setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         upgradeStorage = new ItemUpgradeStorage("upgrade_storage", makeName("upgradeStorage"));
+        upgradeOneStack = new ItemUpgrade("upgrade_one_stack", makeName("upgradeOneStack"));
         upgradeStatus = new ItemUpgradeStatus("upgrade_status", makeName("upgradeStatus"));
-        upgradeVoid = new ItemUpgradeVoid("upgrade_void", makeName("upgradeVoid"));
+        upgradeVoid = new ItemUpgrade("upgrade_void", makeName("upgradeVoid"));
         drawerKey = new ItemDrawerKey("drawer_key", makeName("drawerKey"));
         upgradeCreative = new ItemUpgradeCreative("upgrade_creative", makeName("upgradeCreative"));
         upgradeRedstone = new ItemUpgradeRedstone("upgrade_redstone", makeName("upgradeRedstone"));
@@ -38,8 +40,11 @@ public class ModItems
 
         GameRegistry.register(upgradeTemplate);
 
-        if (StorageDrawers.config.cache.enableStorageUpgrades)
+        if (StorageDrawers.config.cache.enableStorageUpgrades) {
             GameRegistry.register(upgradeStorage);
+            GameRegistry.register(upgradeOneStack);
+        }
+
         if (StorageDrawers.config.cache.enableIndicatorUpgrades)
             GameRegistry.register(upgradeStatus);
         if (StorageDrawers.config.cache.enableVoidUpgrades)
@@ -72,6 +77,7 @@ public class ModItems
         modelRegistry.registerItemVariants(personalKey);
         modelRegistry.registerItemVariants(quantifyKey);
         modelRegistry.registerItemVariants(upgradeStorage);
+        modelRegistry.registerItemVariants(upgradeOneStack);
         modelRegistry.registerItemVariants(upgradeStatus);
         modelRegistry.registerItemVariants(upgradeCreative);
         modelRegistry.registerItemVariants(upgradeRedstone);

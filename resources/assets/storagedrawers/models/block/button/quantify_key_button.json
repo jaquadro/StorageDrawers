@@ -1,0 +1,7 @@
+{
+    "parent": "StorageDrawers:block/button/key_button",
+    "textures": {
+        "texture": "StorageDrawers:blocks/key_button",
+        "label": "StorageDrawers:blocks/button_face_quantify_key"
+    }
+}

@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
 import com.google.common.collect.Maps;
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.config.IAddonConfig;
 import com.jaquadro.minecraft.storagedrawers.api.config.IBlockConfig;
 import com.jaquadro.minecraft.storagedrawers.api.config.IUserConfig;
@@ -239,8 +240,27 @@ public class ConfigManager
         cache.enableMineTweakerIntegration = config.get(sectionIntegration.getQualifiedName(), "enableMineTweaker", true).setLanguageKey(LANG_PREFIX + "integration.enableMineTweaker").setRequiresMcRestart(true).getBoolean();
 
         cache.compRules = config.getStringList("compactingRules", sectionRegistries.getQualifiedName(), new String[] { "minecraft:clay, minecraft:clay_ball, 4" }, "Items should be in form domain:item or domain:item:meta.", null, LANG_PREFIX + "registries.compRules");
-        cache.oreWhitelist = config.getStringList("oreWhitelist", sectionRegistries.getQualifiedName(), new String[0], "List of ore dictionary names to whitelist for substitution.", null, LANG_PREFIX + "registries.oreWhitelist");
+        if (StorageDrawers.compRegistry != null) {
+            for (String rule : cache.compRules)
+                StorageDrawers.compRegistry.register(rule);
+        }
+
         cache.oreBlacklist = config.getStringList("oreBlacklist", sectionRegistries.getQualifiedName(), new String[0], "List of ore dictionary names to blacklist for substitution.", null, LANG_PREFIX + "registries.oreBlacklist");
+        if (StorageDrawers.oreDictRegistry != null) {
+            for (String item : cache.oreBlacklist) {
+                StorageDrawers.oreDictRegistry.removeWhitelist(item);
+                StorageDrawers.oreDictRegistry.addBlacklist(item);
+            }
+        }
+
+        cache.oreWhitelist = config.getStringList("oreWhitelist", sectionRegistries.getQualifiedName(), new String[0], "List of ore dictionary names to whitelist for substitution.", null, LANG_PREFIX + "registries.oreWhitelist");
+        if (StorageDrawers.oreDictRegistry != null) {
+            for (String item : cache.oreWhitelist) {
+                StorageDrawers.oreDictRegistry.removeBlacklist(item);
+                StorageDrawers.oreDictRegistry.addWhitelist(item);
+            }
+        }
+
         cache.registerExtraCompRules = config.get(sectionRegistries.getQualifiedName(), "registerExtraCompactingRules", true).setLanguageKey(LANG_PREFIX + "registries.registerExtraCompRules").setRequiresWorldRestart(true).getBoolean();
 
         config.get(sectionBlocksFullDrawers1x1.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);

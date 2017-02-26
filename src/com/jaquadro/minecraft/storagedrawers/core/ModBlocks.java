@@ -28,6 +28,7 @@ public class ModBlocks
     public static BlockFramingTable framingTable;
     public static BlockDrawersCustom customDrawers;
     public static BlockTrimCustom customTrim;
+    public static BlockKeyButton keyButton;
 
     public void init () {
         basicDrawers = new BlockVariantDrawers("basicdrawers", "basicDrawers");
@@ -38,6 +39,7 @@ public class ModBlocks
         framingTable = new BlockFramingTable("framingtable", "framingTable");
         customDrawers = new BlockDrawersCustom("customdrawers", "customDrawers");
         customTrim = new BlockTrimCustom("customtrim", "customTrim");
+        keyButton = new BlockKeyButton("keybutton", "keyButton");
 
         ConfigManager config = StorageDrawers.config;
 
@@ -78,6 +80,10 @@ public class ModBlocks
             GameRegistry.registerTileEntity(TileEntityTrim.class, trim.getRegistryName().toString());
         }
 
+        GameRegistry.register(keyButton);
+        GameRegistry.register(new ItemKeyButton(keyButton).setRegistryName(keyButton.getRegistryName()));
+        GameRegistry.registerTileEntity(TileEntityKeyButton.class, keyButton.getRegistryName().toString());
+
         StorageDrawers.proxy.registerDrawer(basicDrawers);
         StorageDrawers.proxy.registerDrawer(compDrawers);
 
@@ -109,5 +115,6 @@ public class ModBlocks
         modelRegistry.registerItemVariants(trim);
         modelRegistry.registerItemVariants(controller);
         modelRegistry.registerItemVariants(controllerSlave);
+        modelRegistry.registerItemVariants(keyButton);
     }
 }

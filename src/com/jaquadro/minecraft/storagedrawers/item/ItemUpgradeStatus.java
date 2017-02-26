@@ -17,14 +17,11 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemUpgradeStatus extends Item implements IItemMeshMapper
+public class ItemUpgradeStatus extends ItemUpgrade implements IItemMeshMapper
 {
     public ItemUpgradeStatus (String registryName, String unlocalizedName) {
-        setRegistryName(registryName);
-        setUnlocalizedName(unlocalizedName);
+        super(registryName, unlocalizedName);
         setHasSubtypes(true);
-        setMaxDamage(0);
-        setCreativeTab(ModCreativeTabs.tabStorageDrawers);
     }
 
     @Override
@@ -35,13 +32,6 @@ public class ItemUpgradeStatus extends Item implements IItemMeshMapper
     @Override
     public int getMetadata (int damage) {
         return damage;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation (@Nonnull ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
-        String name = getUnlocalizedName(itemStack);
-        list.add(I18n.format(name + ".description"));
     }
 
     @Override

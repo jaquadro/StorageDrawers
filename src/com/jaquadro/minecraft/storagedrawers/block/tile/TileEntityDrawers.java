@@ -15,6 +15,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -202,6 +203,31 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         attributeChanged();
     }
 
+    public boolean canAddUpgrade (ItemStack upgrade) {
+        if (upgrade == null)
+            return false;
+        if (!(upgrade.getItem() instanceof ItemUpgrade))
+            return false;
+
+        ItemUpgrade candidate = (ItemUpgrade)upgrade.getItem();
+        if (candidate.getAllowMultiple())
+            return true;
+
+        for (ItemStack stack : upgrades) {
+            if (stack == null)
+                continue;
+
+            if (!(stack.getItem() instanceof ItemUpgrade))
+                continue;
+
+            ItemUpgrade reference = (ItemUpgrade)stack.getItem();
+            if (candidate == reference)
+                return false;
+        }
+
+        return true;
+    }
+
     public int getNextUpgradeSlot () {
         for (int i = 0; i < upgrades.length; i++) {
             if (upgrades[i].isEmpty())
@@ -218,6 +244,35 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     public void setDrawerCapacity (int stackCount) {
         drawerCapacity = stackCount;
         attributeChanged();
+    }
+
+    public boolean canAddOneStackUpgrade () {
+        if (getEffectiveDrawerCapacity() == 1)
+            return false;
+
+        int storageMult = getEffectiveStorageMultiplier();
+        int lostStackCapacity = storageMult * (getEffectiveDrawerCapacity() - 1);
+
+        for (int i = 0; i < getDrawerCount(); i++) {
+            IDrawer drawer = getDrawerIfEnabled(i);
+            if (drawer == null || drawer.isEmpty())
+                continue;
+
+            int lostItemCapacity = lostStackCapacity * drawer.getStoredItemStackSize();
+            if (drawer.getMaxCapacity() - lostItemCapacity < drawer.getStoredItemCount())
+                return false;
+        }
+
+        return true;
+    }
+
+    public int getEffectiveDrawerCapacity () {
+        for (ItemStack upgrade : upgrades) {
+            if (upgrade != null && upgrade.getItem() == ModItems.upgradeOneStack)
+                return 1;
+        }
+
+        return getDrawerCapacity();
     }
 
     private void attributeChanged () {
