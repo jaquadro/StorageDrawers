@@ -8,6 +8,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class SlotUpgrade extends Slot
 {
     public SlotUpgrade (IInventory inventory, int index, int x, int y) {
@@ -15,8 +17,8 @@ public class SlotUpgrade extends Slot
     }
 
     @Override
-    public boolean isItemValid(ItemStack stack) {
-        if (stack == null)
+    public boolean isItemValid(@Nonnull ItemStack stack) {
+        if (stack.isEmpty())
             return false;
 
         if (inventory instanceof InventoryUpgrade) {

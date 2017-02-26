@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
-import com.google.common.base.Function;
 import com.jaquadro.minecraft.chameleon.resources.IItemMeshMapper;
 import com.jaquadro.minecraft.chameleon.resources.IItemVariantProvider;
 import com.jaquadro.minecraft.storagedrawers.block.BlockKeyButton;
@@ -15,26 +14,25 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameData;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemKeyButton extends ItemMultiTexture implements IItemMeshMapper, IItemVariantProvider
 {
     public ItemKeyButton (Block block) {
-        super(block, block, new Function() {
-            @Nullable
+        super(block, block, new Mapper() {
             @Override
-            public Object apply (@Nullable Object input) {
-                ItemStack stack = (ItemStack)input;
-                return EnumKeyType.byMetadata(stack.getMetadata()).getName();
+            @Nonnull
+            public String apply (@Nonnull ItemStack input) {
+                return EnumKeyType.byMetadata(input.getMetadata()).getName();
             }
         });
         setHasSubtypes(true);
     }
 
     @Override
-    public String getUnlocalizedName (ItemStack itemStack) {
+    public String getUnlocalizedName (@Nonnull ItemStack itemStack) {
         return super.getUnlocalizedName() + "." + EnumKeyType.byMetadata(itemStack.getMetadata()).getName();
     }
 

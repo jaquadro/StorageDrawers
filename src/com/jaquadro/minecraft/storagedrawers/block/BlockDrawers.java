@@ -252,7 +252,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
             else if (item.getItem() instanceof ItemUpgrade) {
                 if (item.getItem() == ModItems.upgradeOneStack && !tileDrawers.canAddOneStackUpgrade()) {
                     if (!world.isRemote)
-                        player.sendStatusMessage(new TextComponentTranslation("storagedrawers.msg.cannotAddUpgrade"));
+                        player.sendStatusMessage(new TextComponentTranslation("storagedrawers.msg.cannotAddUpgrade"), true);
 
                    return false;
                 }

@@ -203,8 +203,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         attributeChanged();
     }
 
-    public boolean canAddUpgrade (ItemStack upgrade) {
-        if (upgrade == null)
+    public boolean canAddUpgrade (@Nonnull ItemStack upgrade) {
+        if (upgrade.isEmpty())
             return false;
         if (!(upgrade.getItem() instanceof ItemUpgrade))
             return false;
@@ -214,7 +214,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
             return true;
 
         for (ItemStack stack : upgrades) {
-            if (stack == null)
+            if (stack.isEmpty())
                 continue;
 
             if (!(stack.getItem() instanceof ItemUpgrade))
@@ -268,7 +268,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     public int getEffectiveDrawerCapacity () {
         for (ItemStack upgrade : upgrades) {
-            if (upgrade != null && upgrade.getItem() == ModItems.upgradeOneStack)
+            if (!upgrade.isEmpty() && upgrade.getItem() == ModItems.upgradeOneStack)
                 return 1;
         }
 

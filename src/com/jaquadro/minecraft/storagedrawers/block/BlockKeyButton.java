@@ -26,7 +26,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Random;
 
 public class BlockKeyButton extends Block implements ITileEntityProvider
@@ -51,12 +50,12 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
     protected static final AxisAlignedBB AABB_WEST_ON = new AxisAlignedBB(0.937D, U3, U3, 1.0D, U13, U13);
     protected static final AxisAlignedBB AABB_EAST_ON = new AxisAlignedBB(0.0D, U3, U3, 0.0625D, U13, U13);
 
-    public BlockKeyButton (String blockName) {
+    public BlockKeyButton (String registryName, String blockName) {
         super(Material.CIRCUITS);
 
         setHardness(5);
         setUnlocalizedName(blockName);
-        setRegistryName(blockName);
+        setRegistryName(registryName);
         setSoundType(SoundType.STONE);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setTickRandomly(true);
@@ -70,7 +69,7 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
     @Nullable
     @Override
     @SuppressWarnings("deprecation")
-    public AxisAlignedBB getCollisionBoundingBox (IBlockState blockState, World worldIn, BlockPos pos) {
+    public AxisAlignedBB getCollisionBoundingBox (IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         return NULL_AABB;
     }
 
@@ -117,7 +116,8 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
     }
 
     @Override
-    public IBlockState getStateForPlacement (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
+    @SuppressWarnings("deprecation")
+    public IBlockState getStateForPlacement (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
         if (canPlaceBlock(world, pos, facing.getOpposite()))
             return getStateFromMeta(meta).withProperty(FACING, facing).withProperty(POWERED, false);
 
@@ -125,7 +125,7 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
     }
 
     @Override
-    public void onBlockPlacedBy (World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+    public void onBlockPlacedBy (World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, @Nonnull ItemStack stack) {
         TileEntityKeyButton tile = getTileEntity(worldIn, pos);
         if (tile != null)
             tile.setDirection(state.getValue(FACING));
@@ -135,7 +135,7 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged (IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
+    public void neighborChanged (IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         state = getActualState(state, worldIn, pos);
         if (checkForDrop(worldIn, pos, state) && !canPlaceBlock(worldIn, pos, state.getValue(FACING).getOpposite())) {
             dropBlockAsItem(worldIn, pos, state, 0);
@@ -178,7 +178,7 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
     }
 
     @Override
-    public boolean onBlockActivated (World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated (World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         state = getActualState(state, worldIn, pos);
         if (state.getValue(POWERED))
             return true;
@@ -204,7 +204,7 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
             slave.toggle(worldIn, targetPos, playerIn, state.getValue(VARIANT));
         }
 
-        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY, hitZ);
+        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, side, hitX, hitY, hitZ);
     }
 
     @Override
@@ -277,8 +277,8 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
 
     private void notifyNeighbors(World worldIn, BlockPos pos, EnumFacing facing)
     {
-        worldIn.notifyNeighborsOfStateChange(pos, this);
-        worldIn.notifyNeighborsOfStateChange(pos.offset(facing.getOpposite()), this);
+        worldIn.notifyNeighborsOfStateChange(pos, this, false);
+        worldIn.notifyNeighborsOfStateChange(pos.offset(facing.getOpposite()), this, false);
     }
 
     @Override
@@ -325,7 +325,7 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
     }
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubBlocks (Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
         for (EnumKeyType type : EnumKeyType.values()) {
             list.add(new ItemStack(item, 1, type.getMetadata()));
         }
