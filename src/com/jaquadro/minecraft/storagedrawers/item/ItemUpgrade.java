@@ -10,9 +10,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ItemUpgradeVoid extends Item
+public class ItemUpgrade extends Item
 {
-    public ItemUpgradeVoid (String registryName, String unlocalizedName) {
+    private boolean allowMultiple;
+
+    public ItemUpgrade (String registryName, String unlocalizedName) {
         setRegistryName(registryName);
         setUnlocalizedName(unlocalizedName);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
@@ -24,5 +26,13 @@ public class ItemUpgradeVoid extends Item
     public void addInformation (ItemStack itemStack, EntityPlayer player, List<String> list, boolean par4) {
         String name = getUnlocalizedName(itemStack);
         list.add(I18n.format(name + ".description"));
+    }
+
+    public void setAllowMultiple (boolean allow) {
+        allowMultiple = allow;
+    }
+
+    public boolean getAllowMultiple () {
+        return allowMultiple;
     }
 }

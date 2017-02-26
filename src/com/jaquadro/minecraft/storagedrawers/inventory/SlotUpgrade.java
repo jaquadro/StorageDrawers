@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -11,6 +12,24 @@ public class SlotUpgrade extends Slot
 {
     public SlotUpgrade (IInventory inventory, int index, int x, int y) {
         super(inventory, index, x, y);
+    }
+
+    @Override
+    public boolean isItemValid(ItemStack stack) {
+        if (stack == null)
+            return false;
+
+        if (inventory instanceof InventoryUpgrade) {
+            if (!((InventoryUpgrade)inventory).canAddUpgrade(stack))
+                return false;
+
+            if (stack.getItem() == ModItems.upgradeOneStack)
+                return ((InventoryUpgrade) inventory).canAddOneStackUpgrade();
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override

@@ -3,9 +3,8 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStatus;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeVoid;
+import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -91,10 +90,10 @@ public class InventoryUpgrade implements IInventory
 
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack item) {
-        if (item.getItem() instanceof ItemUpgradeStorage || item.getItem() instanceof ItemUpgradeStatus || item.getItem() instanceof ItemUpgradeVoid)
-            return true;
+        if (item.getItem() == ModItems.upgradeOneStack)
+            return tile.canAddOneStackUpgrade();
 
-        return false;
+        return item.getItem() instanceof ItemUpgrade;
     }
 
     @Override
@@ -117,6 +116,14 @@ public class InventoryUpgrade implements IInventory
 
     }
 
+    public boolean canAddOneStackUpgrade () {
+        return tile.canAddOneStackUpgrade();
+    }
+
+    public boolean canAddUpgrade (ItemStack item) {
+        return tile.canAddUpgrade(item);
+    }
+
     public boolean canRemoveStorageUpgrade (int storageLevel) {
         return canRemoveStorageUpgrade(tile, storageLevel);
     }
@@ -127,7 +134,7 @@ public class InventoryUpgrade implements IInventory
         if (effectiveStorageMult == storageMult)
             storageMult--;
 
-        int addedStackCapacity = storageMult * tile.getDrawerCapacity();
+        int addedStackCapacity = storageMult * tile.getEffectiveDrawerCapacity();
 
         for (int i = 0; i < tile.getDrawerCount(); i++) {
             IDrawer drawer = tile.getDrawerIfEnabled(i);

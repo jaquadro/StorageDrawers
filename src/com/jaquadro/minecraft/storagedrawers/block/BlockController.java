@@ -110,33 +110,8 @@ public class BlockController extends BlockContainer implements INetworked
         TileEntityController te = getTileEntitySafe(world, pos);
 
         ItemStack item = player.inventory.getCurrentItem();
-        if (item != null && item.getItem() != null) {
-            if (item.getItem() == ModItems.shroudKey) {
-                if (!world.isRemote)
-                    te.toggleShroud(player.getGameProfile());
-                return true;
-            }
-            else if (item.getItem() == ModItems.quantifyKey) {
-                if (!world.isRemote)
-                    te.toggleQuantified(player.getGameProfile());
-                return true;
-            }
-            else if (item.getItem() == ModItems.drawerKey) {
-                if (!world.isRemote)
-                    te.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());
-                return true;
-            }
-            else if (item.getItem() == ModItems.personalKey) {
-                if (!world.isRemote) {
-                    String securityKey = ((ItemPersonalKey) item.getItem()).getSecurityProviderKey(item.getItemDamage());
-                    ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
-
-                    te.toggleProtection(player.getGameProfile(), provider);
-                }
-
-                return true;
-            }
-        }
+        if (item != null && toggle(world, pos, player, item.getItem()))
+            return true;
 
         if (blockDir != side)
             return false;
@@ -145,6 +120,51 @@ public class BlockController extends BlockContainer implements INetworked
             te.interactPutItemsIntoInventory(player);
 
         return true;
+    }
+
+    public boolean toggle (World world, BlockPos pos, EntityPlayer player, Item item) {
+        if (world.isRemote || item == null)
+            return false;
+
+        if (item == ModItems.drawerKey)
+            toggle(world, pos, player, EnumKeyType.DRAWER);
+        else if (item == ModItems.shroudKey)
+            toggle(world, pos, player, EnumKeyType.CONCEALMENT);
+        else if (item == ModItems.quantifyKey)
+            toggle(world, pos, player, EnumKeyType.QUANTIFY);
+        else if (item == ModItems.personalKey)
+            toggle(world, pos, player, EnumKeyType.PERSONAL);
+        else
+            return false;
+
+        return true;
+    }
+
+    public void toggle (World world, BlockPos pos, EntityPlayer player, EnumKeyType keyType) {
+        if (world.isRemote)
+            return;
+
+        TileEntityController te = getTileEntitySafe(world, pos);
+        if (te == null)
+            return;
+
+        switch (keyType) {
+            case DRAWER:
+                te.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());
+                break;
+            case CONCEALMENT:
+                te.toggleShroud(player.getGameProfile());
+                break;
+            case QUANTIFY:
+                te.toggleQuantified(player.getGameProfile());
+                break;
+            case PERSONAL:
+                String securityKey = ModItems.personalKey.getSecurityProviderKey(0);
+                ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
+
+                te.toggleProtection(player.getGameProfile(), provider);
+                break;
+        }
     }
 
     @Override

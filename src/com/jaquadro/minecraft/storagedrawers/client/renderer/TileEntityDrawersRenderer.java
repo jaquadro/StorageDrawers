@@ -226,10 +226,12 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         GlStateManager.disableLighting();
         GlStateManager.enablePolygonOffset();
         GlStateManager.depthMask(false);
+        GlStateManager.enableBlend();
         GlStateManager.doPolygonOffset(-1, -20);
 
         getFontRenderer().drawString(text, -textWidth / 2, 0, (int)(255 * alpha) << 24 | 255 << 16 | 255 << 8 | 255);
 
+        GlStateManager.disableBlend();
         GlStateManager.depthMask(true);
         GlStateManager.disablePolygonOffset();
         GlStateManager.enableLighting();
