@@ -204,7 +204,7 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
             slave.toggle(worldIn, targetPos, playerIn, state.getValue(VARIANT));
         }
 
-        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, side, hitX, hitY, hitZ);
+        return true;
     }
 
     @Override
