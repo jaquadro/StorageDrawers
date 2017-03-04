@@ -14,12 +14,11 @@ buildscript {
 apply plugin: 'idea'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-/*
-// for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
-plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.2"
+evaluationDependsOn(":..:Chameleon-${minecraft_base_version}")
+
+ext {
+    chameleon = project(":..:Chameleon-${minecraft_base_version}")
 }
-*/
 
 version = "${minecraft_version}-${mod_version}"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -35,7 +34,7 @@ idea {
 }
 
 minecraft {
-    version = forge_version
+    version = chameleon.forge_version
     runDir = "runtime"
 
     // the mappings can be changed at any time, and must be in the following format.
@@ -43,7 +42,7 @@ minecraft {
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not allways work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "stable_29"
+    mappings = chameleon.forge_mappings
 
     replaceIn "StorageDrawers.java"
     replace '@VERSION@', project.version
@@ -77,7 +76,7 @@ repositories {
 }
 
 dependencies {
-    compile project(":..:Chameleon-${minecraft_base_version}")
+    compile chameleon
 
     compileOnly "mezz.jei:jei_${minecraft_version}:${jei_version}:api"
     runtime "mezz.jei:jei_${minecraft_version}:${jei_version}"
