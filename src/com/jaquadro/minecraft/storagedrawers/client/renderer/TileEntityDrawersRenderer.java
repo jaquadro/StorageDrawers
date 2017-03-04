@@ -267,8 +267,16 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         // drawers due to the extreme angles caused by flattening the block (as noted below).
 
         GlStateManager.pushMatrix();
-        GlStateManager.rotate(-30F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(190F - size * 12F, 1.0F, 0.0F, 0.0F);
+        if (drawerCount == 1) {
+            GlStateManager.scale(2.6f, 2.6f, 1);
+            GlStateManager.rotate(171.6f, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(84.9f, 1.0F, 0.0F, 0.0F);
+        }
+        else {
+            GlStateManager.scale(1.92f, 1.92f, 1);
+            GlStateManager.rotate(169.2f, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(79.0f, 1.0F, 0.0F, 0.0F);
+        }
         RenderHelper.enableStandardItemLighting();
         GlStateManager.popMatrix();
 
