@@ -57,6 +57,7 @@ public class OreDictRegistry
 
         addBlacklistPrefix("list");
         addBlacklistPrefix("dye");
+        addBlacklistPrefix("paneGlass");
 
         String[] oreTypes = { "ore", "block", "ingot", "nugget" };
         String[] oreMaterials = { "Iron", "Gold", "Diamond", "Emerald", "Aluminum", "Aluminium", "Tin", "Copper", "Lead",
