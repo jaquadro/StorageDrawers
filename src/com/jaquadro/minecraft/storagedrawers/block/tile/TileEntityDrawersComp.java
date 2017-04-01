@@ -787,6 +787,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
 
             StorageDrawers.network.sendToAllAround(message, targetPoint);
+
+            TileEntityDrawersComp.this.markDirty();
         }
 
         public void markDirty (int slot) {

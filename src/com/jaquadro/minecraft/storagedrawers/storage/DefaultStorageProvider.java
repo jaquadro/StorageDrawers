@@ -104,6 +104,8 @@ public class DefaultStorageProvider implements IStorageProvider
                 StorageDrawers.network.sendTo(new CountUpdateMessage(tile.getPos(), slot, count), player);
         }
 
+        tile.markDirty();
+
         //StorageDrawers.network.sendToAllAround(message, targetPoint);
 
         if (isRedstone(slot)) {
@@ -120,5 +122,6 @@ public class DefaultStorageProvider implements IStorageProvider
 
         IBlockState state = tile.getWorld().getBlockState(tile.getPos());
         tile.getWorld().notifyBlockUpdate(tile.getPos(), state, state, 3);
+        tile.markDirty();
     }
 }
