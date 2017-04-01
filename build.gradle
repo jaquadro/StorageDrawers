@@ -13,6 +13,12 @@ buildscript {
 apply plugin: 'idea'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
+evaluationDependsOn(":..:Chameleon-${minecraft_base_version}")
+
+ext {
+    chameleon = project(":..:Chameleon-${minecraft_base_version}")
+}
+
 version = "${minecraft_version}-${mod_version}"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
@@ -32,7 +38,7 @@ compileJava {
 }
 
 minecraft {
-    version = forge_version
+    version = chameleon.forge_version
     runDir = "runtime"
 
     // the mappings can be changed at any time, and must be in the following format.
@@ -40,7 +46,7 @@ minecraft {
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not allways work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = forge_mappings
+    mappings = chameleon.forge_mappings
 
     replaceIn "StorageDrawers.java"
     replace '@VERSION@', project.version
@@ -74,7 +80,7 @@ repositories {
 }
 
 dependencies {
-    compile project(":..:Chameleon-${minecraft_base_version}")
+    compile chameleon
 
     compileOnly "mezz.jei:jei_${minecraft_version}:${jei_version}:api"
     runtime "mezz.jei:jei_${minecraft_version}:${jei_version}"
