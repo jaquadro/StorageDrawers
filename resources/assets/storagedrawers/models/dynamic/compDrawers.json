@@ -1,7 +1,7 @@
 {
     "frontDepth": 1,
     "slots": [ {
-        "statusAreaFrom": [ 0, 0 ],
+        "statusAreaFrom": [ 0, 7 ],
         "statusAreaTo": [ 16, 16 ],
         "statusActiveFrom": [ 7, 1 ],
         "statusActiveTo": [ 9, 7 ],

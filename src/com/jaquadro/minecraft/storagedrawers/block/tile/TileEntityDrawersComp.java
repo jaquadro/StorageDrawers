@@ -611,7 +611,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public int getMaxCapacity (int slot) {
-            if (protoStack[slot] == null || convRate == null || convRate[slot] == 0)
+            if (protoStack[0] == null || protoStack[slot] == null || convRate == null || convRate[slot] == 0)
                 return 0;
 
             if (TileEntityDrawersComp.this.isUnlimited() || TileEntityDrawersComp.this.isVending()) {
@@ -787,6 +787,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
 
             StorageDrawers.network.sendToAllAround(message, targetPoint);
+
+            TileEntityDrawersComp.this.markDirty();
         }
 
         public void markDirty (int slot) {
