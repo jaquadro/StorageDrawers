@@ -8,6 +8,8 @@
         "statusActiveSteps": [ 14, 0 ],
         "labelAreaFrom": [ 6.25, 1 ],
         "labelAreaTo": [ 9.75, 2 ],
+        "slotAreaFrom": [ 0, 0 ],
+        "slotAreaTo": [ 16, 16 ],
         "iconSize": [ 4, 4 ],
         "textures": {
             "level1Off": "storagedrawers:blocks/indicator/indicator_1_off",

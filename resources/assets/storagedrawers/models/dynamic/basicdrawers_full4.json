@@ -8,6 +8,8 @@
         "statusActiveSteps": [ 14, 0 ],
         "labelAreaFrom": [ 2.25, 9 ],
         "labelAreaTo": [ 5.75, 10 ],
+        "slotAreaFrom": [ 0, 8 ],
+        "slotAreaTo": [ 8, 16 ],
         "iconSize": [ 2, 2 ],
         "textures": {
             "level1Off": "storagedrawers:blocks/indicator/indicator_4_off",
@@ -23,6 +25,8 @@
         "statusActiveSteps": [ 14, 0 ],
         "labelAreaFrom": [ 2.25, 1 ],
         "labelAreaTo": [ 5.75, 2 ],
+        "slotAreaFrom": [ 0, 0 ],
+        "slotAreaTo": [ 8, 8 ],
         "iconSize": [ 2, 2 ],
         "textures": {
             "level1Off": "storagedrawers:blocks/indicator/indicator_4_off",
@@ -38,6 +42,8 @@
         "statusActiveSteps": [ 14, 0 ],
         "labelAreaFrom": [ 10.25, 9 ],
         "labelAreaTo": [ 13.75, 10 ],
+        "slotAreaFrom": [ 8, 8 ],
+        "slotAreaTo": [ 16, 16 ],
         "iconSize": [ 2, 2 ],
         "textures": {
             "level1Off": "storagedrawers:blocks/indicator/indicator_4_off",
@@ -53,6 +59,8 @@
         "statusActiveSteps": [ 14, 0 ],
         "labelAreaFrom": [ 10.25, 1 ],
         "labelAreaTo": [ 13.75, 2 ],
+        "slotAreaFrom": [ 8, 0 ],
+        "slotAreaTo": [ 16, 8 ],
         "iconSize": [ 2, 2 ],
         "textures": {
             "level1Off": "storagedrawers:blocks/indicator/indicator_4_off",

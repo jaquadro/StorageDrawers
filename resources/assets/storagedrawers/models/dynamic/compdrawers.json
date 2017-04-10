@@ -1,8 +1,8 @@
 {
     "frontDepth": 1,
     "slots": [ {
-        "statusAreaFrom": [ 0, 7 ],
-        "statusAreaTo": [ 16, 16 ],
+        "statusAreaFrom": [ 6, 0 ],
+        "statusAreaTo": [ 10, 8 ],
         "statusActiveFrom": [ 7, 1 ],
         "statusActiveTo": [ 9, 7 ],
         "statusActiveSteps": [ 0, 12 ],
@@ -10,6 +10,8 @@
         "labelAreaTo": [ 9.75, 9 ],
         "slotAreaFrom": [ 0, 8 ],
         "slotAreaTo": [ 16, 15 ],
+        "iconAreaFrom": [ 0, 7 ],
+        "iconAreaTo": [ 16, 16 ],
         "iconSize": [ 2, 2 ],
         "textures": {
             "level1Off": "storagedrawers:blocks/indicator/indicator_comp_off",

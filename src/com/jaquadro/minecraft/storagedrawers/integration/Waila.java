@@ -59,9 +59,9 @@ public class Waila extends IntegrationModule
         try {
             Object configHandler = methInstance.invoke(null);
 
-            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.content", I18n.format("storageDrawers.waila.config.displayContents"));
-            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.stacklimit", I18n.format("storageDrawers.waila.config.displayStackLimit"));
-            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.status", I18n.format("storageDrawers.waila.config.displayStatus"));
+            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.content", I18n.format("storageDrawers.waila.config.displayContents"), true);
+            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.stacklimit", I18n.format("storageDrawers.waila.config.displayStackLimit"), true);
+            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.status", I18n.format("storageDrawers.waila.config.displayStatus"), true);
         }
         catch (Exception e) {
             // Oh well, we couldn't hook the waila config

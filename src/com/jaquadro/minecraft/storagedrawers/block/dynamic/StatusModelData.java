@@ -124,6 +124,10 @@ public class StatusModelData
             return labelArea;
         }
 
+        public Area2D getSlotArea () {
+            return slotArea;
+        }
+
         public Area2D getIconArea () {
             return iconArea;
         }
