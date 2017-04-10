@@ -58,11 +58,11 @@ sourceSets.main {
     }
 }
 
-sourceSets.api {
+/*sourceSets.api {
     java {
         srcDirs project.projectDir.getPath() + '/api/mcp'
     }
-}
+}*/
 
 repositories {
     maven { // JEI
@@ -73,6 +73,10 @@ repositories {
         name = "jared maven"
         url "http://blamejared.com/maven"
     }
+    maven { // HWYLA
+        name = "HWYLA repo"
+        url "http://tehnut.info/maven"
+    }
 }
 
 dependencies {
@@ -81,7 +85,10 @@ dependencies {
     compileOnly "mezz.jei:jei_${minecraft_version}:${jei_version}:api"
     runtime "mezz.jei:jei_${minecraft_version}:${jei_version}"
 
-    deobfCompile "MineTweaker3:MineTweaker3-API:3.0.14.59"
+    compileOnly "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
+    runtime "mcp.mobius.waila:Hwyla:${hwyla_version}"
+
+    deobfCompile "MineTweaker3:MineTweaker3-API:${mt_version}"
 }
 
 processResources

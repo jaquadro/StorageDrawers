@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
 
 import java.util.List;
 
-public class Waila extends IntegrationModule
+public class Hwyla extends IntegrationModule
 {
     private static Class classConfigHandler;
 

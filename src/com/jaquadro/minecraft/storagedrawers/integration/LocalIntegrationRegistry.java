@@ -11,7 +11,7 @@ public class LocalIntegrationRegistry
     static {
         IntegrationRegistry reg = instance();
         if (Loader.isModLoaded("Waila") && StorageDrawers.config.cache.enableWailaIntegration)
-            reg.add(new Waila());
+            reg.add(new Hwyla());
         //if (Loader.isModLoaded("Thaumcraft") && StorageDrawers.config.cache.enableThaumcraftIntegration)
         //    reg.add(new Thaumcraft());
         //if (Loader.isModLoaded("appliedenergistics2") && StorageDrawers.config.cache.enableAE2Integration)
