@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
-/*
+
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.integration.minetweaker.Compaction;
 import com.jaquadro.minecraft.storagedrawers.integration.minetweaker.OreDictionaryBlacklist;
@@ -10,7 +10,7 @@ public class MineTweaker extends IntegrationModule
 {
     @Override
     public String getModID () {
-        return "MineTweaker3";
+        return "crafttweaker";
     }
 
     @Override
@@ -25,4 +25,3 @@ public class MineTweaker extends IntegrationModule
 
     }
 }
-*/

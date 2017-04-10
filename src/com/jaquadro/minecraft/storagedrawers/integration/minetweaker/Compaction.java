@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.integration.minetweaker;
-/*
+
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
@@ -78,4 +78,3 @@ public class Compaction
         }
     }
 }
-*/

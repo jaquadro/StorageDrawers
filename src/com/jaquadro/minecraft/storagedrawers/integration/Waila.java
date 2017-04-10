@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
-/*
+
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IWailaTooltipHandler;
@@ -23,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class Waila extends IntegrationModule
 
     @Override
     public String getModID () {
-        return "Waila";
+        return "waila";
     }
 
     @Override
@@ -46,7 +47,7 @@ public class Waila extends IntegrationModule
         methInstance = classConfigHandler.getMethod("instance");
         methAddConfig = classConfigHandler.getMethod("addConfig", String.class, String.class, String.class);
 
-        FMLInterModComms.sendMessage("Waila", "register", StorageDrawers.SOURCE_PATH + "integration.Waila.registerProvider");
+        FMLInterModComms.sendMessage("waila", "register", StorageDrawers.SOURCE_PATH + "integration.Waila.registerProvider");
     }
 
     @Override
@@ -71,17 +72,18 @@ public class Waila extends IntegrationModule
     public static class WailaDrawer implements IWailaDataProvider
     {
         @Override
+        @Nonnull
         public ItemStack getWailaStack (IWailaDataAccessor accessor, IWailaConfigHandler config) {
-            return null;
+            return ItemStack.EMPTY;
         }
 
         @Override
-        public List<String> getWailaHead (ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        public List<String> getWailaHead (@Nonnull ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
             return currenttip;
         }
 
         @Override
-        public List<String> getWailaBody (ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        public List<String> getWailaBody (@Nonnull ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
             TileEntityDrawers tile = (TileEntityDrawers) accessor.getTileEntity();
 
             if (SecurityManager.hasAccess(Minecraft.getMinecraft().player.getGameProfile(), tile)) {
@@ -94,7 +96,7 @@ public class Waila extends IntegrationModule
                         String name = I18n.format("storagedrawers.waila.empty");
 
                         ItemStack stack = drawer.getStoredItemPrototype();
-                        if (stack != null && stack.getItem() != null) {
+                        if (!stack.isEmpty()) {
                             String stackName = stack.getDisplayName();
                             List<IWailaTooltipHandler> handlers = StorageDrawers.wailaRegistry.getTooltipHandlers();
                             for (int j = 0, n = handlers.size(); j < n; j++)
@@ -149,7 +151,7 @@ public class Waila extends IntegrationModule
         }
 
         @Override
-        public List<String> getWailaTail (ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        public List<String> getWailaTail (@Nonnull ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
             return currenttip;
         }
 
@@ -159,4 +161,3 @@ public class Waila extends IntegrationModule
         }
     }
 }
-*/
