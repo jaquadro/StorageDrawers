@@ -184,12 +184,12 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         BlockDrawers block = (BlockDrawers)state.getBlock();
         StatusModelData statusInfo = block.getStatusInfo(state);
         float frontDepth = (float)statusInfo.getFrontDepth() * .0625f;
-        Area2D statusArea = statusInfo.getSlot(slot).getStatusArea();
+        Area2D slotArea = statusInfo.getSlot(slot).getSlotArea();
 
         GlStateManager.pushMatrix();
 
-        float xCenter = (float)statusArea.getX() + (float)statusArea.getWidth() / 2 - (8 * size);
-        float yCenter = 16 - (float)statusArea.getY() - (float)statusArea.getHeight() / 2 - (8 * size);
+        float xCenter = (float)slotArea.getX() + (float)slotArea.getWidth() / 2 - (8 * size);
+        float yCenter = 16 - (float)slotArea.getY() - (float)slotArea.getHeight() / 2 - (8 * size);
 
         alignRendering(side);
         moveRendering(size, xCenter, yCenter, 1f - depth + frontDepth - .005f);
