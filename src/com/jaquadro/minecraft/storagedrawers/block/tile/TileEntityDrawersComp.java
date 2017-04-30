@@ -645,10 +645,15 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public int getRemainingCapacity (int slot) {
+            if (protoStack[slot] == null || convRate == null || convRate[slot] == 0)
+                return 0;
             if (TileEntityDrawersComp.this.isVending())
                 return Integer.MAX_VALUE;
 
-            return getMaxCapacity(slot) - getStoredItemCount(slot);
+            int rawMaxCapacity = protoStack[0].getItem().getItemStackLimit(protoStack[0]) * getStackCapacity(0) * convRate[0];
+            int rawRemaining = rawMaxCapacity - pooledCount;
+
+            return rawRemaining / convRate[slot];
         }
 
         @Override
