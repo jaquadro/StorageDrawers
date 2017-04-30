@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -117,23 +118,28 @@ public class ContainerDrawers extends Container
 
             // Try merge inventory to upgrades
             else if (slotIndex >= inventoryStart && slotIndex < hotbarEnd && !slotStack.isEmpty()) {
-                /*if (slotStack.getItem() == ModItems.upgrade || slotStack.getItem() == ModItems.upgradeStatus || slotStack.getItem() == ModItems.upgradeVoid) {
+                if (slotStack.getItem() instanceof ItemUpgrade) {
                     ItemStack slotStack1 = slotStack.copy();
-                    slotStack1.stackSize = 1;
+                    slotStack1.setCount(1);
 
                     if (!mergeItemStack(slotStack1, upgradeStart, upgradeEnd, false)) {
-                        if (slotIndex >= inventoryStart && slotIndex < hotbarEnd) {
+                        if (slotIndex >= inventoryStart && slotIndex < hotbarStart) {
                             if (!mergeItemStack(slotStack, hotbarStart, hotbarEnd, false))
                                 return ItemStack.EMPTY;
                         } else if (slotIndex >= hotbarStart && slotIndex < hotbarEnd && !mergeItemStack(slotStack, inventoryStart, hotbarStart, false))
                             return ItemStack.EMPTY;
                     }
                     else {
-                        slotStack.stackSize--;
-                    }
-                }*/
+                        slotStack.shrink(1);
+                        if (slotStack.getCount() == 0)
+                            slot.putStack(ItemStack.EMPTY);
+                        else
+                            slot.onSlotChanged();
 
-                if (slotIndex >= inventoryStart && slotIndex < hotbarStart) {
+                        slot.onTake(player, slotStack);
+                        return ItemStack.EMPTY;
+                    }
+                } else if (slotIndex >= inventoryStart && slotIndex < hotbarStart) {
                     if (!mergeItemStack(slotStack, hotbarStart, hotbarEnd, false))
                         return ItemStack.EMPTY;
                 } else if (slotIndex >= hotbarStart && slotIndex < hotbarEnd && !mergeItemStack(slotStack, inventoryStart, hotbarStart, false))
