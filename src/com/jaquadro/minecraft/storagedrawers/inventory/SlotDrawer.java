@@ -39,7 +39,7 @@ public class SlotDrawer extends Slot
 
     @Override
     public void putStack (@Nullable ItemStack stack) {
-        drawer.setStoredItemRedir(stack, stack != null ? stack.stackSize : 0);
+        // Read-only slot already initialized
     }
 
     @Override
