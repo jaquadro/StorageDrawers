@@ -180,7 +180,10 @@ public class BlockStandardDrawers extends BlockDrawers
 
     @Override
     public TileEntityDrawers createNewTileEntity (World world, int meta) {
-        return new TileEntityDrawersStandard();
+        IBlockState state = getStateFromMeta(meta);
+        EnumBasicDrawer type = state.getValue(BLOCK);
+
+        return new TileEntityDrawersStandard(type.getDrawerCount());
     }
 
     @Override

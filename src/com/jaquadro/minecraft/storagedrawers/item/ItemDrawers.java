@@ -56,8 +56,6 @@ public class ItemDrawers extends ItemBlock
 
                 tile.setIsSealed(false);
             }
-
-            tile.setDrawerCapacity(getCapacityForBlock(stack));
         }
 
         return true;

@@ -229,6 +229,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return drawerCapacity;
     }
 
+    @Deprecated
     public void setDrawerCapacity (int stackCount) {
         drawerCapacity = stackCount;
         attributeChanged();
@@ -263,7 +264,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return getDrawerCapacity();
     }
 
-    private void attributeChanged () {
+    protected void attributeChanged () {
         for (int i = 0; i < getDrawerCount(); i++) {
             IDrawer drawer = getDrawer(i);
             if (drawer == null)

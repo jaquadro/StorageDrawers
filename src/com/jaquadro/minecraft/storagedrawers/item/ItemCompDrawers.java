@@ -47,9 +47,6 @@ public class ItemCompDrawers extends ItemBlock implements IItemMeshMapper, IItem
             if (side != EnumFacing.UP && side != EnumFacing.DOWN)
                 tile.setDirection(side.ordinal());
 
-            int initCapacity = StorageDrawers.config.getBlockBaseStorage("compdrawers");
-            tile.setDrawerCapacity(initCapacity);
-
             if (stack.hasTagCompound() && stack.getTagCompound().hasKey("tile"))
                 tile.readFromPortableNBT(stack.getTagCompound().getCompoundTag("tile"));
 

@@ -1,14 +1,17 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
 import com.jaquadro.minecraft.storagedrawers.storage.IStorageProvider;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -21,8 +24,14 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
     private IStorageProvider storageProvider = new StandardStorageProvider();
 
+    private int capacity = 0;
+
     public TileEntityDrawersStandard () {
         super(1);
+    }
+
+    public TileEntityDrawersStandard (int count) {
+        super(count);
     }
 
     public void setDrawerCount (int count) {
@@ -57,6 +66,48 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     @Override
     public String getGuiID () {
         return GUI_IDS[getDrawerCount()];
+    }
+
+    @Override
+    public int getDrawerCapacity () {
+        if (capacity == 0) {
+            if (world == null)
+                return 1;
+
+            IBlockState blockState = world.getBlockState(this.pos);
+            if (!blockState.getPropertyKeys().contains(BlockStandardDrawers.BLOCK))
+                return 1;
+
+            EnumBasicDrawer type = blockState.getValue(BlockStandardDrawers.BLOCK);
+            ConfigManager config = StorageDrawers.config;
+
+            switch (type) {
+                case FULL1:
+                    capacity = config.getBlockBaseStorage("fulldrawers1");
+                    break;
+                case FULL2:
+                    capacity = config.getBlockBaseStorage("fulldrawers2");
+                    break;
+                case FULL4:
+                    capacity = config.getBlockBaseStorage("fulldrawers4");
+                    break;
+                case HALF2:
+                    capacity = config.getBlockBaseStorage("halfdrawers2");
+                    break;
+                case HALF4:
+                    capacity = config.getBlockBaseStorage("halfdrawers4");
+                    break;
+                default:
+                    capacity = 1;
+            }
+
+            if (capacity <= 0)
+                capacity = 1;
+
+            attributeChanged();
+        }
+
+        return capacity;
     }
 
     private class StandardStorageProvider extends DefaultStorageProvider
