@@ -841,7 +841,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
         tag = super.writeToPortableNBT(tag);
 
-        tag.setInteger("Cap", drawerCapacity);
+        tag.setInteger("Cap", getDrawerCapacity());
 
         if (material != null)
             tag.setString("Mat", material);

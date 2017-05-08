@@ -87,9 +87,12 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
     @Override
     public int getDrawerCapacity () {
+        if (world == null || world.isRemote)
+            return super.getDrawerCapacity();
+
         if (capacity == 0) {
             ConfigManager config = StorageDrawers.config;
-            capacity = config.getBlockBaseStorage("compDrawers");
+            capacity = config.getBlockBaseStorage("compdrawers");
 
             if (capacity <= 0)
                 capacity = 1;
