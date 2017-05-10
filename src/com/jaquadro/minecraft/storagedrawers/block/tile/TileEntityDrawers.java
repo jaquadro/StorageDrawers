@@ -689,6 +689,9 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     }
 
     public int interactPutCurrentItemIntoSlot (int slot, EntityPlayer player) {
+        if (slot < 0 || slot >= getDrawerCount())
+            return 0;
+
         int count = 0;
         ItemStack playerStack = player.inventory.getCurrentItem();
         if (playerStack != null)
@@ -698,8 +701,10 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     }
 
     public int interactPutCurrentInventoryIntoSlot (int slot, EntityPlayer player) {
-        int count = 0;
+        if (slot < 0 || slot >= getDrawerCount())
+            return 0;
 
+        int count = 0;
         if (!drawers[slot].isEmpty()) {
             for (int i = 0, n = player.inventory.getSizeInventory(); i < n; i++) {
                 ItemStack subStack = player.inventory.getStackInSlot(i);
