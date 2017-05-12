@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.registry.IRecipeHandler;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
+import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
@@ -42,6 +43,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
     private ICentralInventory centralInventory;
 
+    private int capacity = 0;
     private int pooledCount;
     private int lookupSizeResult;
 
@@ -85,6 +87,24 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     @Override
     public String getGuiID () {
         return StorageDrawers.MOD_ID + ":compDrawers";
+    }
+
+    @Override
+    public int getDrawerCapacity () {
+        if (world == null || world.isRemote)
+            return super.getDrawerCapacity();
+
+        if (capacity == 0) {
+            ConfigManager config = StorageDrawers.config;
+            capacity = config.getBlockBaseStorage("compdrawers");
+
+            if (capacity <= 0)
+                capacity = 1;
+
+            attributeChanged();
+        }
+
+        return capacity;
     }
 
     @Override

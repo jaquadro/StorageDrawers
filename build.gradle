@@ -97,6 +97,7 @@ dependencies {
     runtime "mcp.mobius.waila:Hwyla:${hwyla_version}"
 
     deobfCompile "MineTweaker3:MineTweaker3-API:${mt_version}"
+    deobfCompile "org.ow2.asm:asm-debug-all:5.0.3"
 }
 
 processResources
