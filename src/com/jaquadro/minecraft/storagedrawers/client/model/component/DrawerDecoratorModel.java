@@ -18,11 +18,15 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DrawerDecoratorModel implements IBakedModel
 {
@@ -37,6 +41,7 @@ public class DrawerDecoratorModel implements IBakedModel
     private IDrawerGeometry drawer;
     private EnumFacing dir;
     private DrawerStateModelData modelData;
+    private Set<BlockRenderLayer> renderLayers;
 
     public DrawerDecoratorModel (IBakedModel baseModel, IExtendedBlockState blockState, IDrawerGeometry drawer, EnumFacing dir, DrawerStateModelData modelData) {
         this.baseModel = baseModel;
@@ -44,6 +49,13 @@ public class DrawerDecoratorModel implements IBakedModel
         this.drawer = drawer;
         this.dir = dir;
         this.modelData = modelData;
+
+        this.renderLayers = new HashSet<BlockRenderLayer>();
+        this.renderLayers.add(BlockRenderLayer.CUTOUT_MIPPED);
+    }
+
+    public void addBaseRenderLayer(BlockRenderLayer layer) {
+        this.renderLayers.add(layer);
     }
 
     public static boolean shouldHandleState (DrawerStateModelData stateModel) {
@@ -52,18 +64,27 @@ public class DrawerDecoratorModel implements IBakedModel
 
     @Override
     public List<BakedQuad> getQuads (IBlockState state, EnumFacing side, long rand) {
+        BlockRenderLayer renderLayer = MinecraftForgeClient.getRenderLayer();
+
         ChamRender renderer = ChamRenderManager.instance.getRenderer(null);
         renderer.startBaking(DefaultVertexFormats.ITEM);
-        if (modelData.isShrouded())
-            buildShroudGeometry(renderer);
-        if (modelData.isItemLocked() || modelData.getOwner() != null)
-            buildLockGeometry(renderer);
-        if (modelData.isVoid())
-            buildVoidGeometry(renderer);
+        if (renderLayer == BlockRenderLayer.TRANSLUCENT) {
+            if (modelData.isShrouded())
+                buildShroudGeometry(renderer);
+        }
+        else if (renderLayer == BlockRenderLayer.CUTOUT_MIPPED) {
+            if (modelData.isItemLocked() || modelData.getOwner() != null)
+                buildLockGeometry(renderer);
+            if (modelData.isVoid())
+                buildVoidGeometry(renderer);
+        }
 
         renderer.stopBaking();
         List<BakedQuad> quads = renderer.takeBakedQuads(null);
-        quads.addAll(baseModel.getQuads(state, side, rand));
+
+        if (renderLayers.contains(renderLayer))
+            quads.addAll(baseModel.getQuads(state, side, rand));
+
         ChamRenderManager.instance.releaseRenderer(renderer);
 
         return quads;
@@ -140,7 +161,7 @@ public class DrawerDecoratorModel implements IBakedModel
         double unit = 0.0625;
         double frontDepth = data.getFrontDepth() * unit;
 
-        TextureAtlasSprite iconCover = Chameleon.instance.iconRegistry.getIcon(iconShroudCover);
+        TextureAtlasSprite iconCover = Chameleon.instance.iconRegistry.getIcon(StorageDrawers.proxy.iconConcealmentOverlayResource);
 
         for (int i = 0; i < count; i++) {
             if (modelData.isDrawerEmpty(i))
