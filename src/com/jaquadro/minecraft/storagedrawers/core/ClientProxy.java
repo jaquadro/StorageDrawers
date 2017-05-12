@@ -25,6 +25,7 @@ public class ClientProxy extends CommonProxy
     @Override
     public void registerRenderers () {
         IconRegistry iconRegistry = Chameleon.instance.iconRegistry;
+        iconRegistry.registerIcon(iconConcealmentOverlayResource);
         iconRegistry.registerIcon(iconIndicatorCompOnResource);
         iconRegistry.registerIcon(iconIndicatorCompOffResource);
 

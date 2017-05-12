@@ -147,6 +147,11 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
     }
 
     @Override
+    public boolean canRenderInLayer (IBlockState state, BlockRenderLayer layer) {
+        return layer == BlockRenderLayer.CUTOUT_MIPPED || layer == BlockRenderLayer.TRANSLUCENT;
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
     public AxisAlignedBB getBoundingBox (IBlockState state, IBlockAccess blockAccess, BlockPos pos) {
         TileEntityDrawers tile = getTileEntity(blockAccess, pos);

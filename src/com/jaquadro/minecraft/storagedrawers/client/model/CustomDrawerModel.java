@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -252,7 +253,9 @@ public class CustomDrawerModel extends ChamModel
                     EnumBasicDrawer drawer = state.getValue(BlockStandardDrawers.BLOCK);
                     EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
-                    return new DrawerDecoratorModel(mainModel, xstate, drawer, dir, stateModel);
+                    DrawerDecoratorModel decModel = new DrawerDecoratorModel(mainModel, xstate, drawer, dir, stateModel);
+                    decModel.addBaseRenderLayer(BlockRenderLayer.TRANSLUCENT);
+                    return decModel;
                 }
                 catch (Throwable t) {
                     return mainModel;
