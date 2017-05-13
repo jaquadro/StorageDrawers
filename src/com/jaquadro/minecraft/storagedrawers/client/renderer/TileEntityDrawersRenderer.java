@@ -133,7 +133,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
             float alpha = 1;
             if (distance > 4)
-                alpha = 1f - (float) ((distance - 4) / 6);
+                alpha = Math.max(1f - (float) ((distance - 4) / 6), 0.05f);
 
             if (distance < 10) {
                 for (int i = 0; i < drawerCount; i++)

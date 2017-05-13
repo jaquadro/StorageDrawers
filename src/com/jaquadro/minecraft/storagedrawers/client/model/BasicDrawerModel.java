@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.jaquadro.minecraft.chameleon.model.CachedBuilderModel;
+import com.jaquadro.minecraft.chameleon.model.PassLimitedModel;
 import com.jaquadro.minecraft.chameleon.model.ProxyBuilderModel;
 import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
@@ -18,6 +19,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -89,18 +91,18 @@ public final class BasicDrawerModel
                 EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
                 if (!(state instanceof IExtendedBlockState))
-                    return parent;
+                    return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
 
                 IExtendedBlockState xstate = (IExtendedBlockState)state;
                 DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
 
                 if (!DrawerDecoratorModel.shouldHandleState(stateModel))
-                    return parent;
+                    return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
 
                 return new DrawerDecoratorModel(parent, xstate, drawer, dir, stateModel);
             }
             catch (Throwable t) {
-                return parent;
+                return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
             }
         }
 

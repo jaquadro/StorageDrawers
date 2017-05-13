@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.google.common.collect.ImmutableList;
+import com.jaquadro.minecraft.chameleon.model.PassLimitedModel;
 import com.jaquadro.minecraft.chameleon.model.ProxyBuilderModel;
 import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
@@ -17,6 +18,7 @@ import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -72,18 +74,18 @@ public final class CompDrawerModel
                 EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
                 if (!(state instanceof IExtendedBlockState))
-                    return parent;
+                    return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
 
                 IExtendedBlockState xstate = (IExtendedBlockState)state;
                 DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
 
                 if (!DrawerDecoratorModel.shouldHandleState(stateModel))
-                    return parent;
+                    return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
 
                 return new DrawerDecoratorModel(parent, xstate, drawer, dir, stateModel);
             }
             catch (Throwable t) {
-                return parent;
+                return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
             }
         }
 
