@@ -244,7 +244,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     public void toggleShroud (GameProfile profile) {
-        IShroudable template = null;
+        Boolean template = null;
         boolean state = false;
 
         for (StorageRecord record : storage.values()) {
@@ -263,8 +263,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
                 IShroudable shroudableStorage = (IShroudable)drawer;
                 if (template == null) {
-                    template = shroudableStorage;
-                    state = !template.isShrouded();
+                    template = shroudableStorage.isShrouded();
+                    state = !template;
                 }
 
                 shroudableStorage.setIsShrouded(state);
@@ -273,7 +273,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     public void toggleQuantified (GameProfile profile) {
-        IQuantifiable template = null;
+        Boolean template = null;
         boolean state = false;
 
         for (StorageRecord record : storage.values()) {
@@ -292,8 +292,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
                 IQuantifiable quantifiableStorage = (IQuantifiable)drawer;
                 if (template == null) {
-                    template = quantifiableStorage;
-                    state = !template.isShowingQuantity();
+                    template = quantifiableStorage.isShowingQuantity();
+                    state = !template;
                 }
 
                 quantifiableStorage.setIsShowingQuantity(state);
@@ -302,7 +302,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     public void toggleLock (EnumSet<LockAttribute> attributes, LockAttribute key, GameProfile profile) {
-        IItemLockable template = null;
+        Boolean template = null;
         boolean state = false;
 
         for (StorageRecord record : storage.values()) {
@@ -317,8 +317,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             if (record.storage instanceof IItemLockable) {
                 IItemLockable lockableStorage = (IItemLockable)record.storage;
                 if (template == null) {
-                    template = lockableStorage;
-                    state = !template.isItemLocked(key);
+                    template = lockableStorage.isItemLocked(key);
+                    state = !template;
                 }
 
                 for (LockAttribute attr : attributes)
@@ -332,8 +332,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
                     IItemLockable lockableStorage = (IItemLockable)drawer;
                     if (template == null) {
-                        template = lockableStorage;
-                        state = !template.isItemLocked(key);
+                        template = lockableStorage.isItemLocked(key);
+                        state = !template;
                     }
 
                     for (LockAttribute attr : attributes)
