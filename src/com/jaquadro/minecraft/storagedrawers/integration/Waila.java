@@ -55,7 +55,10 @@ public class Waila extends IntegrationModule
 
     @SuppressWarnings("unused")
     public static void registerProvider(IWailaRegistrar registrar) {
-        registrar.registerBodyProvider(new WailaDrawer(), BlockDrawers.class);
+        WailaDrawer provider = new WailaDrawer();
+
+        registrar.registerBodyProvider(provider, BlockDrawers.class);
+        registrar.registerStackProvider(provider, BlockDrawers.class);
 
         try {
             Object configHandler = methInstance.invoke(null);
@@ -74,7 +77,11 @@ public class Waila extends IntegrationModule
         @Override
         @Nonnull
         public ItemStack getWailaStack (IWailaDataAccessor accessor, IWailaConfigHandler config) {
-            return ItemStack.EMPTY;
+            List<ItemStack> drops = accessor.getBlock().getDrops(accessor.getWorld(), accessor.getPosition(), accessor.getBlockState(), 0);
+            if (drops.size() == 0)
+                return ItemStack.EMPTY;
+
+            return drops.get(0);
         }
 
         @Override
