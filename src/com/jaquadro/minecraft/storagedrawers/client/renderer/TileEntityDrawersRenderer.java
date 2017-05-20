@@ -240,6 +240,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         // directly away from the face, which is visible as the block faces having identical
         // (dark) shading.
 
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.disableRescaleNormal();
         GlStateManager.pushAttrib();
         GlStateManager.enableRescaleNormal();
         GlStateManager.popAttrib();
