@@ -549,6 +549,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
     private class CompCentralInventory implements ICentralInventory
     {
+        // TODO: More consistent handling of index 0/slot and some once-only logging
+        
         @Override
         public ItemStack getStoredItemPrototype (int slot) {
             return protoStack[slot];
@@ -665,7 +667,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public int getRemainingCapacity (int slot) {
-            if (protoStack[slot] == null || convRate == null || convRate[slot] == 0)
+            if (protoStack[0] == null || protoStack[slot] == null || convRate == null || convRate[slot] == 0)
                 return 0;
             if (TileEntityDrawersComp.this.isVending())
                 return Integer.MAX_VALUE;
@@ -694,7 +696,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public int getConversionRate (int slot) {
-            if (protoStack[slot] == null || convRate == null || convRate[slot] == 0)
+            if (protoStack[0] == null || protoStack[slot] == null || convRate == null || convRate[slot] == 0)
                 return 0;
 
             return convRate[0] / convRate[slot];
