@@ -31,19 +31,19 @@ item.storagedrawers.upgradeCreative.store.description=Nahezu endloser Speicher
 item.storagedrawers.upgradeCreative.vend.name=Kreativ-Automatenupgrade
 item.storagedrawers.upgradeCreative.vend.description=Uneingeschränkte Itementnahme
 item.storagedrawers.upgradeRedstone.combined.name=Redstone-Upgrade
-item.storagedrawers.upgradeRedstone.combined.description=Sendet ein Signal wenn der Speicher voll ist.
+item.storagedrawers.upgradeRedstone.combined.description=Sendet ein Signal für die Gesamtkapazität
 item.storagedrawers.upgradeRedstone.max.name=Redstone-Upgrade (Max)
-item.storagedrawers.upgradeRedstone.max.description=Sendet ein Signal wenn ein Slot fast voll ist.
+item.storagedrawers.upgradeRedstone.max.description=Sendet ein Signal für den am meisten befüllten Slot
 item.storagedrawers.upgradeRedstone.min.name=Redstone-Upgrade (Min)
-item.storagedrawers.upgradeRedstone.min.description=Sendet ein Signal wenn ein Slot fast leer ist.
+item.storagedrawers.upgradeRedstone.min.description=Sendet ein Signal für den am wenigsten befüllten Slot
 item.storagedrawers.drawerKey.name=Schubfachschlüssel
 item.storagedrawers.drawerKey.description=Öffnet und verschließt Schubfächer
 item.storagedrawers.shroudKey.name=Verbergungsschlüssel
-item.storagedrawers.shroudKey.description=Zeige oder verstecke Itembeschriftungen
+item.storagedrawers.shroudKey.description=Zeigt oder versteckt Itembeschriftungen
 item.storagedrawers.quantifyKey.name=Füllstandschlüssel
 item.storagedrawers.quantifyKey.description=Zeige oder verstecke Füllstandbeschriftungen
 item.storagedrawers.personalKey.name=Persönlicher Schlüssel
-item.storagedrawers.personalKey.description=Verhindert den Zugriff für andere Spieler
+item.storagedrawers.personalKey.description=Verhindert den Zugriff durch andere Spieler
 item.storagedrawers.tape.name=Packband
 item.storagedrawers.tape.description=Versiegelt Schubfächer damit sie bewegt werden können
 
@@ -79,16 +79,16 @@ tile.trim.jungle.name=Tropenholzverkleidung
 tile.trim.acacia.name=Akazienverkleidung
 tile.trim.big_oak.name=Schwarzeichenverkleidung
 
-tile.keybutton.drawer.name=Schubfachschlüssel-Knopf
-tile.keybutton.concealment.name=Verbergungsschlüssel-Knopf
-tile.keybutton.personal.name=Persönlicher Schlüssel-Knopf
-tile.keybutton.quantify.name=Füllstandschlüssel-Knopf
+tile.keyButton.drawer.name=Schubfachschlüssel-Knopf
+tile.keyButton.concealment.name=Verbergungsschlüssel-Knopf
+tile.keyButton.personal.name=Persönlicher Schlüssel-Knopf
+tile.keyButton.quantify.name=Füllstandschlüssel-Knopf
 
 storagedrawers.drawers.description=Hält %d Stapel pro Schubfach
-storagedrawers.drawers.sealed=Inhalt ist versiegelt
+storagedrawers.drawers.sealed=Inhalt versiegelt
 storagedrawers.upgrade.description=Erhöht den Speicher zu %d mal dem Grundwert
-storagedrawers.controller.description=Interagiere mit einer Bank an verbundenen Schubfächern
-storagedrawers.controllerSlave.description=Zusätzlich Anhangspunkte für Controller
+storagedrawers.controller.description=Interagiert mit einer Gruppe von verbundenen Schubfächern
+storagedrawers.controllerSlave.description=Zusätzliche Anbindung an Controller
 
 # Material
 storagedrawers.material=Material: %s
