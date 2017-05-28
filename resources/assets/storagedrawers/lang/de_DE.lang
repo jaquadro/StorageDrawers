@@ -201,7 +201,7 @@ storagedrawers.config.integration.enableThaumcraft=Erlaube Thaumcraft Integratio
 storagedrawers.config.integration.enableMineTweaker=Erlaube MineTweaker Integration
 
 storagedrawers.config.registries=Register
-storagedrawers.config.registries.tooltip=Konfiguriere Verdichtungsregeln und OreDict-Platzhalter.
+storagedrawers.config.registries.tooltip=Konfiguriere Verdichtungsregeln und OreDict-Austausch.
 
 storagedrawers.config.registries.compRules=Verdichtungsregeln
 storagedrawers.config.registries.registerExtraCompRules=Erstelle zusätzliche Verdichtungsregeln
