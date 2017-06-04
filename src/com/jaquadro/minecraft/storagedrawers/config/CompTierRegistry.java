@@ -21,7 +21,9 @@ public class CompTierRegistry
 
     private List<Record> records = new ArrayList<Record>();
 
-    public CompTierRegistry () {
+    public CompTierRegistry () { }
+
+    public void initialize () {
         if (StorageDrawers.config.cache.registerExtraCompRules) {
             register(new ItemStack(Blocks.CLAY), new ItemStack(Items.CLAY_BALL), 4);
             register(new ItemStack(Blocks.SNOW), new ItemStack(Items.SNOWBALL), 4);
@@ -42,7 +44,6 @@ public class CompTierRegistry
             for (String rule : StorageDrawers.config.cache.compRules)
                 register(rule);
         }
-
     }
 
     public boolean register (ItemStack upper, ItemStack lower, int convRate) {

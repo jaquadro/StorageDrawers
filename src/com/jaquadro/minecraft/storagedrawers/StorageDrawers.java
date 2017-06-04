@@ -96,6 +96,7 @@ public class StorageDrawers
         //MinecraftForge.EVENT_BUS.register(DrawerModelBakeEventHandler.instance);
 
         LocalIntegrationRegistry.instance().init();
+        compRegistry.initialize();
     }
 
     @Mod.EventHandler
