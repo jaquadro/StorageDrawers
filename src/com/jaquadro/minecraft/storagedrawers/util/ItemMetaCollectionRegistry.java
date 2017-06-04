@@ -2,36 +2,33 @@ package com.jaquadro.minecraft.storagedrawers.util;
 
 import net.minecraft.item.Item;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class ItemMetaListRegistry<E>
+public class ItemMetaCollectionRegistry<E>
 {
-    private ItemMetaRegistry<List<E>> registry;
+    private ItemMetaRegistry<Collection<E>> registry;
     private boolean compactTopLevel;
 
-    public ItemMetaListRegistry () {
+    public ItemMetaCollectionRegistry () {
         this(false);
     }
 
-    public ItemMetaListRegistry (boolean compactTopLevel) {
-        this.registry = new ItemMetaRegistry<List<E>>(compactTopLevel);
+    public ItemMetaCollectionRegistry (boolean compactTopLevel) {
+        this.registry = new ItemMetaRegistry<Collection<E>>(compactTopLevel);
         this.compactTopLevel = compactTopLevel;
     }
 
     public void register (Item item, int meta, E entry) {
-        List<E> list = registry.getEntry(item, meta);
+        Collection<E> list = registry.getEntry(item, meta);
         if (list == null) {
-            list = new ArrayList<E>();
+            list = new TreeSet<E>();
             registry.register(item, meta, list);
         }
 
         list.add(entry);
     }
 
-    public List<E> getEntries (Item item, int meta) {
+    public Collection<E> getEntries (Item item, int meta) {
         return registry.getEntry(item, meta);
     }
 
@@ -40,24 +37,24 @@ public class ItemMetaListRegistry<E>
     }
 
     public void clear (Item item, int meta) {
-        List<E> list = registry.getEntry(item, meta);
+        Collection<E> list = registry.getEntry(item, meta);
         if (list != null)
             list.clear();
     }
 
     public void clear (Item item) {
-        for (Map.Entry<Integer, List<E>> map : registry.entrySet(item))
+        for (Map.Entry<Integer, Collection<E>> map : registry.entrySet(item))
             map.getValue().clear();
     }
 
     public void clear () {
-        for (Map.Entry<Item, Map<Integer, List<E>>> map : registry.entrySet()) {
-            for (List<E> list : map.getValue().values())
+        for (Map.Entry<Item, Map<Integer, Collection<E>>> map : registry.entrySet()) {
+            for (Collection<E> list : map.getValue().values())
                 list.clear();
         }
     }
 
-    public Set<Map.Entry<Item, Map<Integer, List<E>>>> entrySet () {
+    public Set<Map.Entry<Item, Map<Integer, Collection<E>>>> entrySet () {
         return registry.entrySet();
     }
 }
