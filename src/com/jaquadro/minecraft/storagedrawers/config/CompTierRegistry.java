@@ -21,10 +21,13 @@ public class CompTierRegistry
 
     private List<Record> records = new ArrayList<Record>();
     private List<String> pendingRules = new ArrayList<String>();
+    private boolean initialized;
 
     public CompTierRegistry () { }
 
     public void initialize () {
+        initialized = true;
+
         if (StorageDrawers.config.cache.registerExtraCompRules) {
             register(new ItemStack(Blocks.CLAY), new ItemStack(Items.CLAY_BALL), 4);
             register(new ItemStack(Blocks.SNOW), new ItemStack(Items.SNOWBALL), 4);
@@ -74,7 +77,7 @@ public class CompTierRegistry
     }
 
     public boolean register (String rule) {
-        if (pendingRules != null) {
+        if (!initialized) {
             pendingRules.add(rule);
             return true;
         }
