@@ -20,6 +20,7 @@ public class CompTierRegistry
     }
 
     private List<Record> records = new ArrayList<Record>();
+    private List<String> pendingRules = new ArrayList<String>();
 
     public CompTierRegistry () { }
 
@@ -44,6 +45,12 @@ public class CompTierRegistry
             for (String rule : StorageDrawers.config.cache.compRules)
                 register(rule);
         }
+
+        for (String rule : pendingRules) {
+            register(rule);
+        }
+
+        pendingRules = null;
     }
 
     public boolean register (ItemStack upper, ItemStack lower, int convRate) {
@@ -67,6 +74,11 @@ public class CompTierRegistry
     }
 
     public boolean register (String rule) {
+        if (pendingRules != null) {
+            pendingRules.add(rule);
+            return true;
+        }
+
         String[] parts = rule.split("\\s*,\\s*");
         if (parts.length != 3)
             return false;
