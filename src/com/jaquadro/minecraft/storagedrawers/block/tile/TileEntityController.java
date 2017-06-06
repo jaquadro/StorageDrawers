@@ -7,7 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
-import com.jaquadro.minecraft.storagedrawers.util.ItemMetaListRegistry;
+import com.jaquadro.minecraft.storagedrawers.util.ItemMetaCollectionRegistry;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -28,12 +28,13 @@ import java.util.*;
 
 public class TileEntityController extends TileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup
 {
-    private static final int PRI_VOID = 0;
-    private static final int PRI_LOCKED = 1;
+    private static final int PRI_LOCKED = 0;
+    private static final int PRI_LOCKED_VOID = 1;
     private static final int PRI_NORMAL = 2;
-    private static final int PRI_EMPTY = 3;
-    private static final int PRI_LOCKED_EMPTY = 4;
-    private static final int PRI_DISABLED = 5;
+    private static final int PRI_VOID = 3;
+    private static final int PRI_EMPTY = 4;
+    private static final int PRI_LOCKED_EMPTY = 5;
+    private static final int PRI_DISABLED = 6;
 
     private static class StorageRecord
     {
@@ -52,7 +53,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         }
     }
 
-    protected static class SlotRecord
+    protected static class SlotRecord implements Comparable<SlotRecord>
     {
         public BlockPos coord;
         public IDrawerGroup group;
@@ -65,6 +66,20 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             this.group = group;
             this.coord = coord;
             this.slot = slot;
+        }
+
+        @Override
+        public int compareTo (SlotRecord other) {
+            int diff = priority - other.priority;
+            if (diff == 0) {
+                diff = coord.compareTo(other.coord);
+                if (diff == 0)
+                    return index - other.index;
+
+                return diff;
+            }
+
+            return diff;
         }
     }
 
@@ -101,6 +116,10 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
         if ((drawer instanceof IVoidable && ((IVoidable) drawer).isVoid()) ||
             (group instanceof IVoidable && ((IVoidable) group).isVoid())) {
+            if ((drawer instanceof IItemLockable && ((IItemLockable) drawer).isItemLocked(LockAttribute.LOCK_POPULATED)) ||
+                (group instanceof IItemLockable && ((IItemLockable) group).isItemLocked(LockAttribute.LOCK_POPULATED))) {
+                return PRI_LOCKED_VOID;
+            }
             return PRI_VOID;
         }
 
@@ -115,7 +134,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     private Map<BlockPos, StorageRecord> storage = new HashMap<BlockPos, StorageRecord>();
     protected List<SlotRecord> drawerSlotList = new ArrayList<SlotRecord>();
 
-    private ItemMetaListRegistry<SlotRecord> drawerPrimaryLookup = new ItemMetaListRegistry<SlotRecord>();
+    private ItemMetaCollectionRegistry<SlotRecord> drawerPrimaryLookup = new ItemMetaCollectionRegistry<SlotRecord>();
 
     protected int[] drawerSlots = new int[0];
     private int range;
@@ -397,7 +416,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         return slotMap;
     }
 
-    private void rebuildPrimaryLookup (ItemMetaListRegistry<SlotRecord> lookup, List<SlotRecord> records) {
+    private void rebuildPrimaryLookup (ItemMetaCollectionRegistry<SlotRecord> lookup, List<SlotRecord> records) {
         lookup.clear();
 
         for (SlotRecord record : records) {
@@ -722,7 +741,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
             return new Iterator<Integer> ()
             {
-                List<SlotRecord> primaryRecords = drawerPrimaryLookup.getEntries(stack.getItem(), stack.getItemDamage());
+                Collection<SlotRecord> primaryRecords = drawerPrimaryLookup.getEntries(stack.getItem(), stack.getItemDamage());
                 Iterator<SlotRecord> iter1;
                 int index2;
                 Integer nextSlot = null;

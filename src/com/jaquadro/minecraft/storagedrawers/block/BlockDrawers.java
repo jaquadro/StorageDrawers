@@ -461,7 +461,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
     }
 
     private void dropItemStack (World world, BlockPos pos, EntityPlayer player, @Nonnull ItemStack stack) {
-        EntityItem entity = new EntityItem(world, pos.getX() + .5f, pos.getY() + .1f, pos.getZ() + .5f, stack);
+        EntityItem entity = new EntityItem(world, pos.getX() + .5f, pos.getY() + .3f, pos.getZ() + .5f, stack);
         entity.addVelocity(-entity.motionX, -entity.motionY, -entity.motionZ);
         world.spawnEntity(entity);
     }

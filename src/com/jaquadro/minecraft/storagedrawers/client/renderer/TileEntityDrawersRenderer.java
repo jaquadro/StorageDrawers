@@ -244,7 +244,13 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         GlStateManager.enableRescaleNormal();
         GlStateManager.popAttrib();
 
-        renderItem.renderItemIntoGUI(itemStack, 0, 0);
+        try {
+            renderItem.renderItemIntoGUI(itemStack, 0, 0);
+        }
+        catch (Exception e) {
+            // Shrug
+        }
+        
         GlStateManager.disableBlend(); // Clean up after RenderItem
         GlStateManager.enableAlpha();  // Restore world render state after RenderItem
 
