@@ -1,12 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.chameleon.resources.IItemMeshMapper;
-import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,9 +31,9 @@ public class ItemUpgradeCreative extends ItemUpgrade implements IItemMeshMapper
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems (Item item, CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
+    public void getSubItems (CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
         for (EnumUpgradeCreative upgrade : EnumUpgradeCreative.values())
-            list.add(new ItemStack(item, 1, upgrade.getMetadata()));
+            list.add(new ItemStack(this, 1, upgrade.getMetadata()));
     }
 
     @Override

@@ -21,7 +21,7 @@ import org.lwjgl.opengl.GL11;
 public class TileEntityFramingRenderer extends TileEntitySpecialRenderer<TileEntityFramingTable>
 {
     @Override
-    public void renderTileEntityAt (TileEntityFramingTable tile, double x, double y, double z, float partialTickTime, int destroyStage) {
+    public void func_192841_a (TileEntityFramingTable tile, double x, double y, double z, float partialTickTime, int destroyStage, float par7) {
         if (tile == null)
             return;
 

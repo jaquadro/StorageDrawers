@@ -70,7 +70,7 @@ public class RecipeHandlerRegistry implements IRecipeHandlerRegistry
     {
         @Override
         public Object[] getInputAsArray (IRecipe recipe) {
-            return ((ShapedOreRecipe) recipe).getInput();
+            return recipe.func_192400_c().toArray();
         }
 
         @Override
@@ -83,7 +83,7 @@ public class RecipeHandlerRegistry implements IRecipeHandlerRegistry
     {
         @Override
         public Object[] getInputAsArray (IRecipe recipe) {
-            return ((ShapedRecipes) recipe).recipeItems;
+            return ((ShapedRecipes) recipe).recipeItems.toArray();
         }
 
         @Override
@@ -101,7 +101,7 @@ public class RecipeHandlerRegistry implements IRecipeHandlerRegistry
 
         @Override
         public List getInputAsList (IRecipe recipe) {
-            return ((ShapelessOreRecipe) recipe).getInput();
+            return recipe.func_192400_c();
         }
     }
 

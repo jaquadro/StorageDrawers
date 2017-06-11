@@ -1,7 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.chameleon.block.properties.UnlistedModelData;
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.MaterialModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityTrim;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomTrim;
@@ -10,7 +9,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -64,8 +62,8 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
-        list.add(new ItemStack(item));
+    public void getSubBlocks (CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
+        list.add(new ItemStack(this));
     }
 
     public TileEntityTrim getTileEntity (IBlockAccess blockAccess, BlockPos pos) {

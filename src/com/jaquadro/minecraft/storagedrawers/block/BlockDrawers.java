@@ -381,9 +381,9 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         EnumFacing side = rayResult.sideHit;
 
         // adjust hitVec for drawers
-        float hitX = (float)(rayResult.hitVec.xCoord - pos.getX());
-        float hitY = (float)(rayResult.hitVec.yCoord - pos.getY());
-        float hitZ = (float)(rayResult.hitVec.zCoord - pos.getZ());
+        float hitX = (float)(rayResult.hitVec.x - pos.getX());
+        float hitY = (float)(rayResult.hitVec.y - pos.getY());
+        float hitZ = (float)(rayResult.hitVec.z - pos.getZ());
 
         TileEntityDrawers tileDrawers = getTileEntitySafe(worldIn, pos);
         if (tileDrawers.getDirection() != side.ordinal())

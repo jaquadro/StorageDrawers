@@ -46,7 +46,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
     private RenderItem renderItem;
 
     @Override
-    public void renderTileEntityAt (TileEntityDrawers tile, double x, double y, double z, float partialTickTime, int destroyStage) {
+    public void func_192841_a (TileEntityDrawers tile, double x, double y, double z, float partialTickTime, int destroyStage, float par7) {
         if (tile == null)
             return;
 

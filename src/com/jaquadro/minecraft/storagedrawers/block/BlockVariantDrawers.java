@@ -10,7 +10,6 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
@@ -56,10 +55,10 @@ public class BlockVariantDrawers extends BlockStandardDrawers
     }
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
+    public void getSubBlocks (CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
         for (EnumBasicDrawer type : EnumBasicDrawer.values()) {
             for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
-                ItemStack stack = new ItemStack(item, 1, type.getMetadata());
+                ItemStack stack = new ItemStack(this, 1, type.getMetadata());
 
                 NBTTagCompound data = new NBTTagCompound();
                 data.setString("material", material.getName());
