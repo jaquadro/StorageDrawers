@@ -116,7 +116,7 @@ public class BlockController extends BlockContainer implements INetworked
             return false;
 
         if (!world.isRemote) {
-            if (StorageDrawers.config.cache.debugTrace && item == null)
+            if (StorageDrawers.config.cache.debugTrace && item.isEmpty())
                 te.printDebugInfo();
 
             te.interactPutItemsIntoInventory(player);
