@@ -21,7 +21,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.items.CapabilityItemHandler;
+import org.apache.logging.log4j.Level;
 
 import java.util.*;
 
@@ -138,11 +140,19 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     protected int[] drawerSlots = new int[0];
     private int range;
 
+    private long lastUpdateTime;
     private long lastClickTime;
     private UUID lastClickUUID;
 
     public TileEntityController () {
         range = StorageDrawers.config.getControllerRange();
+    }
+
+    public void printDebugInfo () {
+        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Controller at " + pos.toString());
+        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "  Range: " + range + " blocks");
+        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "  Stored records: " + storage.size() + ", slot list: " + drawerSlots.length);
+        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "  Ticks since last update: " + (getWorld().getTotalWorldTime() - lastUpdateTime));
     }
 
     @Override
@@ -376,6 +386,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     public void updateCache () {
+        lastUpdateTime = getWorld().getTotalWorldTime();
         int preCount = drawerSlots.length;
 
         resetCache();
