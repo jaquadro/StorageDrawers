@@ -83,9 +83,9 @@ public class BlockTrim extends Block implements INetworked
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
+    public void getSubBlocks (CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
         for (BlockPlanks.EnumType type : BlockPlanks.EnumType.values())
-            list.add(new ItemStack(item, 1, type.getMetadata()));
+            list.add(new ItemStack(this, 1, type.getMetadata()));
     }
 
     @Override

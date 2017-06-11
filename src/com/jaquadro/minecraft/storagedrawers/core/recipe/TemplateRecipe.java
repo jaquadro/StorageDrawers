@@ -68,8 +68,8 @@ public class TemplateRecipe implements IRecipe
     }
 
     @Override
-    public int getRecipeSize () {
-        return 9;
+    public boolean func_194133_a (int p_194133_1_, int p_194133_2_) {
+        return p_194133_1_ >= 3 && p_194133_2_ >= 3;
     }
 
     @Override

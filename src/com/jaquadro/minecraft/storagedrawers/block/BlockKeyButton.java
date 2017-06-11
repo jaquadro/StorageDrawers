@@ -15,7 +15,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -325,9 +324,9 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
     }
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubBlocks (CreativeTabs tab, NonNullList<ItemStack> list) {
         for (EnumKeyType type : EnumKeyType.values()) {
-            list.add(new ItemStack(item, 1, type.getMetadata()));
+            list.add(new ItemStack(this, 1, type.getMetadata()));
         }
     }
 }

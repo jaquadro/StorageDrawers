@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -146,7 +146,7 @@ public class StorageRenderItem extends RenderItem
                 GlStateManager.disableAlpha();
                 GlStateManager.disableBlend();
                 Tessellator tessellator = Tessellator.getInstance();
-                VertexBuffer worldrenderer = tessellator.getBuffer();
+                BufferBuilder worldrenderer = tessellator.getBuffer();
                 int l = 255 - k << 16 | k << 8;
                 int i1 = (255 - k) / 4 << 16 | 16128;
                 this.renderQuad(worldrenderer, x + 2, y + 13, 13, 2, 0, 0, 0, 255);
@@ -161,7 +161,7 @@ public class StorageRenderItem extends RenderItem
         }
     }
 
-    private void renderQuad (VertexBuffer tessellator, int x, int y, int w, int h, int r, int g, int b, int a)
+    private void renderQuad (BufferBuilder tessellator, int x, int y, int w, int h, int r, int g, int b, int a)
     {
         tessellator.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
         tessellator.pos(x + 0, y + 0, 0).color(r, g, b, a).endVertex();

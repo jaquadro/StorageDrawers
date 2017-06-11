@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration;
+/*package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.integration.minetweaker.Compaction;
@@ -25,3 +25,4 @@ public class MineTweaker extends IntegrationModule
 
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration.minetweaker;
+/*package com.jaquadro.minecraft.storagedrawers.integration.minetweaker;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import minetweaker.IUndoableAction;
@@ -64,3 +64,4 @@ public class OreDictionaryWhitelist
         }
     }
 }
+*/

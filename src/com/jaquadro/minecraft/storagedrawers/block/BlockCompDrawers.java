@@ -14,7 +14,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -27,8 +26,6 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public class BlockCompDrawers extends BlockDrawers implements INetworked
 {
@@ -97,8 +94,8 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }
 
     @Override
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
-        list.add(new ItemStack(item, 1, 0));
+    public void getSubBlocks (CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
+        list.add(new ItemStack(this, 1, 0));
     }
 
     @Override

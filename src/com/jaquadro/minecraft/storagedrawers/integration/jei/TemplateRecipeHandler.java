@@ -5,6 +5,7 @@ import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 
+// TODO: Deprecated API
 public class TemplateRecipeHandler implements IRecipeHandler<TemplateRecipe>
 {
     private final TemplateRecipeWrapper wrapper;
