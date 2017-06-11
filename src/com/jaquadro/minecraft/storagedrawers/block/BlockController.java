@@ -115,8 +115,12 @@ public class BlockController extends BlockContainer implements INetworked
         if (blockDir != side)
             return false;
 
-        if (!world.isRemote)
+        if (!world.isRemote) {
+            if (StorageDrawers.config.cache.debugTrace && item == null)
+                te.printDebugInfo();
+
             te.interactPutItemsIntoInventory(player);
+        }
 
         return true;
     }
