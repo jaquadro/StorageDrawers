@@ -23,3 +23,8 @@ git clone https://github.com/jaquadro/StorageDrawers
 cd StorageDrawers
 ./gradle build
 ```
+
+Reporting Bugs
+--------------
+
+When reporting bugs, always include the version number of the mod.  If you're reporting a crash, include your client or server log depending on where the crash ocurred.
