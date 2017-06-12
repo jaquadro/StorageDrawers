@@ -79,10 +79,10 @@ tile.trim.jungle.name=Jungle Trim
 tile.trim.acacia.name=Acacia Trim
 tile.trim.big_oak.name=Dark Oak Trim
 
-tile.keybutton.drawer.name=Drawer Key Button
-tile.keybutton.concealment.name=Concealment Key Button
-tile.keybutton.personal.name=Personal Key Button
-tile.keybutton.quantify.name=Quantify Key Button
+tile.keyButton.drawer.name=Drawer Key Button
+tile.keyButton.concealment.name=Concealment Key Button
+tile.keyButton.personal.name=Personal Key Button
+tile.keyButton.quantify.name=Quantify Key Button
 
 storagedrawers.drawers.description=Holds %d stacks per drawer
 storagedrawers.drawers.sealed=Contents sealed within

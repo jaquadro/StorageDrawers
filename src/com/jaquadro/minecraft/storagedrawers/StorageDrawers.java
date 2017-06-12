@@ -25,9 +25,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.io.File;
 
 @Mod(modid = StorageDrawers.MOD_ID, name = StorageDrawers.MOD_NAME, version = StorageDrawers.MOD_VERSION,
-    dependencies = "required-after:forge@[13.19.1.2188,);required-after:chameleon;after:waila;",
+    dependencies = "required-after:forge@[14.21.0.2321,);required-after:chameleon;after:waila;",
     guiFactory = StorageDrawers.SOURCE_PATH + "core.ModGuiFactory",
-    acceptedMinecraftVersions = "[1.11,1.12)")
+    acceptedMinecraftVersions = "[1.12,1.13)")
 public class StorageDrawers
 {
     public static final String MOD_ID = "storagedrawers";
