@@ -6,81 +6,112 @@ storagedrawers.container.compDrawers=Verdichtende Schubfächer
 storagedrawers.container.upgrades=Upgrades
 storagedrawers.container.controller=Schubfach-Controller
 storagedrawers.container.unboundSlave=Uneingebundener Slave
+storagedrawers.container.framingTable=Rahmen-Werkbank
 
-storagedrawers.msg.maxUpgrades=Dieses Schubfach kann keine Upgrades mehr annehmen.
-
+storagedrawers.msg.maxUpgrades=Dieses Schubfach kann keine Upgrades mehr aufnehmen.
+storagedrawers.msg.cannotAddUpgrade=Dieses Update kann in dem Schubfach nicht installiert werden.
+ 
 # Items
 item.storagedrawers.upgradeTemplate.name=Upgradeschablone
-item.storagedrawers.upgrade.obsidian.name=Speicherupgrade (I)
-item.storagedrawers.upgrade.iron.name=Speicherupgrade (II)
-item.storagedrawers.upgrade.gold.name=Speicherupgrade (III)
-item.storagedrawers.upgrade.diamond.name=Speicherupgrade (IV)
-item.storagedrawers.upgrade.emerald.name=Speicherupgrade (V)
-item.storagedrawers.upgradeStatus.level1.name=Statusupgrade (I)
-item.storagedrawers.upgradeStatus.level1.description=Zeige volle Speicher
-item.storagedrawers.upgradeStatus.level2.name=Statusupgrade (II)
-item.storagedrawers.upgradeStatus.level2.description=Zeige Füllstand
-item.storagedrawers.upgradeVoid.name=Void Upgrade
+item.storagedrawers.upgradeStorage.obsidian.name=Speicher-Upgrade (I)
+item.storagedrawers.upgradeStorage.iron.name=Speicher-Upgrade (II)
+item.storagedrawers.upgradeStorage.gold.name=Speicher-Upgrade (III)
+item.storagedrawers.upgradeStorage.diamond.name=Speicher-Upgrade (IV)
+item.storagedrawers.upgradeStorage.emerald.name=Speicher-Upgrade (V)
+item.storagedrawers.upgradeOneStack.name=Speicher-Downgrade
+item.storagedrawers.upgradeOneStack.description=Reduziert die Standardkapazität auf ein Stack
+item.storagedrawers.upgradeStatus.level1.name=Status-Upgrade (I)
+item.storagedrawers.upgradeStatus.level1.description=Zeigt vollen Speicher an
+item.storagedrawers.upgradeStatus.level2.name=Status-Upgrade (II)
+item.storagedrawers.upgradeStatus.level2.description=Zeigt Füllstand an
+item.storagedrawers.upgradeVoid.name=Void-Upgrade
 item.storagedrawers.upgradeVoid.description=Zerstört überschüssige Items
-item.storagedrawers.upgradeCreative.store.name=Kreativspeicherupgrade
-item.storagedrawers.upgradeCreative.store.description=Fast unendlicher Speicher
-item.storagedrawers.upgradeCreative.vend.name=Kreativautomatenupgrade
+item.storagedrawers.upgradeCreative.store.name=Kreativ-Speicherupgrade
+item.storagedrawers.upgradeCreative.store.description=Nahezu endloser Speicher
+item.storagedrawers.upgradeCreative.vend.name=Kreativ-Automatenupgrade
 item.storagedrawers.upgradeCreative.vend.description=Uneingeschränkte Itementnahme
-item.storagedrawers.upgradeRedstone.combined.name=Redstone Upgrade
-item.storagedrawers.upgradeRedstone.combined.description=Emits signal for total storage.
-item.storagedrawers.upgradeRedstone.max.name=Redstone Max Upgrade
-item.storagedrawers.upgradeRedstone.max.description=Emits signal for most full slot.
-item.storagedrawers.upgradeRedstone.min.name=Redstone Min Upgrade
-item.storagedrawers.upgradeRedstone.min.description=Emits signal for least full slot.
-item.storagedrawers.upgradeSorting.name=Sortierungsupgrade
-item.storagedrawers.upgradeSorting.description=Für Refined Relocation
+item.storagedrawers.upgradeRedstone.combined.name=Redstone-Upgrade
+item.storagedrawers.upgradeRedstone.combined.description=Sendet ein Signal für die Gesamtkapazität
+item.storagedrawers.upgradeRedstone.max.name=Redstone-Upgrade (Max)
+item.storagedrawers.upgradeRedstone.max.description=Sendet ein Signal für den am meisten befüllten Slot
+item.storagedrawers.upgradeRedstone.min.name=Redstone-Upgrade (Min)
+item.storagedrawers.upgradeRedstone.min.description=Sendet ein Signal für den am wenigsten befüllten Slot
 item.storagedrawers.drawerKey.name=Schubfachschlüssel
-item.storagedrawers.drawerKey.description=Schließt und öffnet Schubfach
+item.storagedrawers.drawerKey.description=Öffnet und verschließt Schubfächer
 item.storagedrawers.shroudKey.name=Verbergungsschlüssel
-item.storagedrawers.shroudKey.description=Zeige oder verstecke Itemlabels
+item.storagedrawers.shroudKey.description=Zeigt oder versteckt Itembeschriftungen
+item.storagedrawers.quantifyKey.name=Füllstandschlüssel
+item.storagedrawers.quantifyKey.description=Zeige oder verstecke Füllstandbeschriftungen
+item.storagedrawers.personalKey.name=Persönlicher Schlüssel
+item.storagedrawers.personalKey.description=Verhindert den Zugriff durch andere Spieler
 item.storagedrawers.tape.name=Packband
-item.storagedrawers.tape.description=Dichte Schubfächer ab für den Umzug
+item.storagedrawers.tape.description=Versiegelt Schubfächer damit sie bewegt werden können
 
 # Blocks
-tile.basicDrawers.fulldrawers1.name=Basic Drawer
-tile.basicDrawers.fulldrawers2.name=Basic Drawers 1x2
-tile.basicDrawers.fulldrawers4.name=Basic Drawers 2x2
-tile.basicDrawers.halfdrawers2.name=Half Drawers 1x2
-tile.basicDrawers.halfdrawers4.name=Half Drawers 2x2
+tile.basicDrawers.fulldrawers1.name=Standard-Schubfach
+tile.basicDrawers.fulldrawers2.name=Standard-Schubfächer 1x2
+tile.basicDrawers.fulldrawers4.name=Standard-Schubfächer 2x2
+tile.basicDrawers.halfdrawers2.name=Kompakte Schubfächer 1x2
+tile.basicDrawers.halfdrawers4.name=Kompakte Schubfächer 2x2
+
+tile.customDrawers.fulldrawers1.name=Umrahmtes Schubfach
+tile.customDrawers.fulldrawers2.name=Umrahmte Schubfächer 1x2
+tile.customDrawers.fulldrawers4.name=Umrahmte Schubfächer 2x2
+tile.customDrawers.halfdrawers2.name=Umrahmte Kompakte Schubfächer 1x2
+tile.customDrawers.halfdrawers4.name=Umrahmte Kompakte Schubfächer 2x2
+
+tile.fullCustom1.name=Umrahmtes Schubfach
+tile.fullCustom2.name=Umrahmte Schubfächer 1x2
+tile.fullCustom4.name=Umrahmte Schubfächer 2x2
+tile.halfCustom2.name=Umrahmte Schubfächer 1x2
+tile.halfCustom4.name=Umrahmte Schubfächer 2x2
+tile.customTrim.name=Umrahmte Verkleidung
 
 tile.compDrawers.name=Verdichtendes Schubfach
-tile.drawerController.name=Schubfach-Controller
+tile.controller.name=Schubfach-Controller
 tile.controllerSlave.name=Controller Slave
+tile.framingTable.name=Rahmen-Werkbank
 
 tile.trim.oak.name=Eichenverkleidung
 tile.trim.spruce.name=Fichtenverkleidung
 tile.trim.birch.name=Birkenverkleidung
-tile.trim.jungle.name=Tropenverkleidung
+tile.trim.jungle.name=Tropenholzverkleidung
 tile.trim.acacia.name=Akazienverkleidung
-tile.trim.big_oak.name=Dunkle Eichenverkleidung
+tile.trim.big_oak.name=Schwarzeichenverkleidung
+
+tile.keyButton.drawer.name=Schubfachschlüssel-Knopf
+tile.keyButton.concealment.name=Verbergungsschlüssel-Knopf
+tile.keyButton.personal.name=Persönlicher Schlüssel-Knopf
+tile.keyButton.quantify.name=Füllstandschlüssel-Knopf
 
 storagedrawers.drawers.description=Hält %d Stapel pro Schubfach
-storagedrawers.drawers.sealed=Inhalt abgedichtet
+storagedrawers.drawers.sealed=Inhalt versiegelt
 storagedrawers.upgrade.description=Erhöht den Speicher zu %d mal dem Grundwert
-storagedrawers.controller.description=Interagiere mit einer Bank an verbundenen Schubfächern
-storagedrawers.controllerSlave.description=Zusätzlich Anhangspunkte für Controller
+storagedrawers.controller.description=Interagiert mit einer Gruppe von verbundenen Schubfächern
+storagedrawers.controllerSlave.description=Zusätzliche Anbindung an Controller
 
 # Material
 storagedrawers.material=Material: %s
-storagedrawers.material.oak=Oak
-storagedrawers.material.spruce=Spruce
-storagedrawers.material.birch=Birch
-storagedrawers.material.jungle=Jungle
-storagedrawers.material.acacia=Acacia
-storagedrawers.material.dark_oak=Dark Oak
+storagedrawers.material.oak=Eiche
+storagedrawers.material.spruce=Fichte
+storagedrawers.material.birch=Birke
+storagedrawers.material.jungle=Tropenholz
+storagedrawers.material.acacia=Akazie
+storagedrawers.material.dark_oak=Schwarzeiche
 
 # Integration
 storagedrawers.waila.empty=<Leer>
-storagedrawers.waila.level=Upgrade Level: %s
+storagedrawers.waila.level=Upgrade-Level: %s
 storagedrawers.waila.drawer=#%s: %s
-storagedrawers.waila.locked=Gelockt
-storagedrawers.waila.void=Void
+storagedrawers.waila.limit=Stacklimit: %s (x%s)
+storagedrawers.waila.nolimit=Stacklimit: ∞
+storagedrawers.waila.locked=Verschlossen
+storagedrawers.waila.void=Frei
 storagedrawers.waila.sorting=Sortieren
+storagedrawers.waila.protected=Gesichert
+storagedrawers.waila.config.displayContents=Slot beinhaltet
+storagedrawers.waila.config.displayStackLimit=Stacklimit
+storagedrawers.waila.config.displayStatus=Upgrade-Status
 
 # Configuration
 storagedrawers.config.title=Storage Drawers Konfiguration
@@ -89,7 +120,7 @@ storagedrawers.config.general=Allgemeine Einstellungen
 storagedrawers.config.general.tooltip=Dies und Jenes.
 
 storagedrawers.config.blocks=Blockeinstellungen
-storagedrawers.config.blocks.tooltip=Konfiguriere individuelle Speicherblocks.
+storagedrawers.config.blocks.tooltip=Konfiguriere individuelle Speicherblöcke.
 
 storagedrawers.config.blocks.fullDrawers1=Schubfächer 1x1
 storagedrawers.config.blocks.fullDrawers2=Schubfächer 1x2
@@ -111,48 +142,50 @@ storagedrawers.config.upgrades.level5Mult=Speichermultiplikator (V)
 storagedrawers.config.upgrades.level6Mult=Speichermultiplikator (VI)
 
 storagedrawers.config.prop.itemRenderType=Itemrendertyp
-storagedrawers.config.prop.itemRenderType.tooltip=Rendere Items in 3D oder flach (2D).
+storagedrawers.config.prop.itemRenderType.tooltip=Wechsele zwischen 2D oder 3D Darstellung.
 storagedrawers.config.prop.enableIndicatorUpgrades=Erlaube Indikatorupgrades
-storagedrawers.config.prop.enableStorageUpgrades=Erlaube Storageupgrades
+storagedrawers.config.prop.enableStorageUpgrades=Erlaube Speicherupgrades
 storagedrawers.config.prop.enableLockUpgrades=Erlaube Schubfachverschließung
 storagedrawers.config.prop.enableShroudUpgrades=Erlaube Verbergen
-storagedrawers.config.prop.enableVoidUpgrades=Erlaube Voidupgrade
-storagedrawers.config.prop.enableCreativeUpgrades=Erlaube Kreativupgrade
-storagedrawers.config.prop.enableRedstoneUpgrades=Enable Redstone Upgrade
-storagedrawers.config.prop.enableSortingUpgrades=Erlaube Sortierungsupgrade
-storagedrawers.config.prop.enableSortingUpgrades.tooltip=Refined Relocation muss geladen seien.
+storagedrawers.config.prop.enableVoidUpgrades=Erlaube Void-Upgrade
+storagedrawers.config.prop.enableCreativeUpgrades=Erlaube Kreativ-Upgrade
+storagedrawers.config.prop.enableRedstoneUpgrades=Enable Redstone-Upgrade
+storagedrawers.config.prop.enableSortingUpgrades=Erlaube Sortierungs-Upgrade
+storagedrawers.config.prop.enableSortingUpgrades.tooltip=Refined Relocation muss geladen sein.
 storagedrawers.config.prop.renderStorageUpgrades=Zeige Speicherupgrades
 storagedrawers.config.prop.creativeTabVanillaWoods=Kreativ-Tab Vanillaholz
 storagedrawers.config.prop.creativeTabVanillaWoods.tooltip=Erlaube alle Vanillaholzarten in Kreativemenütab.
 storagedrawers.config.prop.enabled=Erlaubt
-storagedrawers.config.prop.enabled.tooltip=Erlaube Block im Spiel.
+storagedrawers.config.prop.enabled.tooltip=Block im Spiel erlauben.
 storagedrawers.config.prop.baseStorage=Basisspeicher
-storagedrawers.config.prop.baseStorage.tooltip=Anzahl an Stapeln gehalten in einem Schubfach
+storagedrawers.config.prop.baseStorage.tooltip=Anzahl an Stapeln die in ein Schubfach passen.
 storagedrawers.config.prop.recipeOutput=Rezeptausgabe
-storagedrawers.config.prop.recipeOutput.tooltip=Anzahl an Items von Einzelcrafting
+storagedrawers.config.prop.recipeOutput.tooltip=Anzahl an Items die beim Crafting hinzugefügt werden
 storagedrawers.config.prop.enableDrawerUI=Erlaube Schubfach UI
-storagedrawers.config.prop.enableDrawerUI.tooltip=Zeigt Itemzahlen und erlaubt Upgrades
+storagedrawers.config.prop.enableDrawerUI.tooltip=Zeigt Itemmengen und stellt eine Upgradeverwaltungsoberfläche bereit
 storagedrawers.config.prop.enableSidedInput=Erlaube seitliche Itemeingabe
 storagedrawers.config.prop.enableSidedInput.tooltip=Andere Blöcke können Items in Schubfächer einfügen
 storagedrawers.config.prop.enableSidedOutput=Erlaube seitliche Itemausgabe
-storagedrawers.config.prop.enableSidedOutput.tooltip=Andere Blöcke können Items auf Schubfächern entnehmen
+storagedrawers.config.prop.enableSidedOutput.tooltip=Andere Blöcke können Items aus Schubfächern entnehmen
 storagedrawers.config.prop.enableItemConversion=Erlaube Itemumwandlung
-storagedrawers.config.prop.enableItemConversion.tooltip=Schubfächer konvertieren automatich OreDict-kompatible Items
+storagedrawers.config.prop.enableItemConversion.tooltip=Schubfächer konvertieren automatisch OreDict-kompatible Items
 storagedrawers.config.prop.enableFallbackRecipes=Erlaube Fallback-Rezepte
-storagedrawers.config.prop.enableFallbackRecipes.tooltip=Jedes valide Brettholz kann zu Eichenschubfächern gefertigt werden
-storagedrawers.config.prop.invertShift=Invertiere Shift
+storagedrawers.config.prop.enableFallbackRecipes.tooltip=Passende Holzbretter können zu Eichenschubfächern gefertigt werden
+storagedrawers.config.prop.invertShift=Shift invertieren
 storagedrawers.config.prop.invertShift.tooltip=Invertiert Klick- und Shift-Klick-Verhalten
-storagedrawers.config.prop.enableDebugLogging=Enable Debug Logging
-storagedrawers.config.prop.enableDebugLogging.tooltip=Gibt zusätzliche Informationen in das Log
+storagedrawers.config.prop.enableDebugLogging=Debug Logging aktivieren
+storagedrawers.config.prop.enableDebugLogging.tooltip=Zeigt zusätzliche Informationen im Log
 storagedrawers.config.prop.enableTape=Erlaube Packband
 storagedrawers.config.prop.enableTape.tooltip=Zum Verschieben der Schubfächer mit Iteminhalten
 storagedrawers.config.prop.wailaStackRemainder=WAILA Anzahl-Darstellung
 storagedrawers.config.prop.wailaStackRemainder.tooltip=Bestimme wie Anzahlen in WAILA dargestellt werden
 storagedrawers.config.prop.controllerRange=Controllerreichweite
-storagedrawers.config.prop.controllerRange.tooltip=Reichweite zur Erkennung von Netzwerkblöcken
+storagedrawers.config.prop.controllerRange.tooltip=Reichweite bei der Erkennung von Netzwerkblöcken
+storagedrawers.config.prop.enableFramedDrawers=Erlaube umrahmte Schubfächer
+storagedrawers.config.prop.enableFramedDrawers.tooltip=Schubfächer aus benutzerdefinierten Materialien
 
 storagedrawers.config.addons=Addons
-storagedrawers.config.addons.tooltip=Konfiguriere globale Addons-Einstellungen
+storagedrawers.config.addons.tooltip=Konfiguriere globale Addon-Einstellungen
 
 storagedrawers.config.addons.showNEI=Zeige Blöcke in NEI
 storagedrawers.config.addons.showCreative=Zeige Blöcke in Kreativtabs
@@ -166,5 +199,11 @@ storagedrawers.config.integration.enableAE2=Erlaube Applied Energistics 2 Integr
 storagedrawers.config.integration.enableWaila=Erlaube WAILA Integration
 storagedrawers.config.integration.enableThaumcraft=Erlaube Thaumcraft Integration
 storagedrawers.config.integration.enableMineTweaker=Erlaube MineTweaker Integration
-storagedrawers.config.integration.enableRefinedRelocation=Erlaube Refined Relocation Integration
-storagedrawers.config.integration.enableThermalExpansion=Elaube Thermal Expansion Integration
+
+storagedrawers.config.registries=Register
+storagedrawers.config.registries.tooltip=Konfiguriere Verdichtungsregeln und OreDict-Austausch.
+
+storagedrawers.config.registries.compRules=Verdichtungsregeln
+storagedrawers.config.registries.registerExtraCompRules=Erstelle zusätzliche Verdichtungsregeln
+storagedrawers.config.registries.oreWhitelist=Ore Dictionary Whitelist
+storagedrawers.config.registries.oreBlacklist=Ore Dictionary Blacklist
