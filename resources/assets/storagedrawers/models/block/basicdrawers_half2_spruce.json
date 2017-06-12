@@ -1,0 +1,10 @@
+{
+    "parent": "storagedrawers:block/drawer_half",
+    "textures": {
+        "top": "storagedrawers:blocks/drawers_spruce_side_h",
+        "front": "storagedrawers:blocks/drawers_spruce_front_2",
+        "back": "storagedrawers:blocks/drawers_spruce_side",
+        "side": "storagedrawers:blocks/drawers_spruce_side_v",
+        "trim": "storagedrawers:blocks/drawers_spruce_trim"
+    }
+}
