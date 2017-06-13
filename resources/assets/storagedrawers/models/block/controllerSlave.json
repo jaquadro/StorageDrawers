@@ -1,7 +1,0 @@
-{
-    "parent": "block/cube_column",
-    "textures": {
-        "end": "storagedrawers:blocks/drawers_comp_side",
-        "side": "storagedrawers:blocks/drawers_comp_side_2"
-    }
-}
