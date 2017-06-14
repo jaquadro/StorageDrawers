@@ -33,8 +33,10 @@ public class ItemUpgradeStatus extends ItemUpgrade implements IItemMeshMapper
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems (CreativeTabs creativeTabs, NonNullList<ItemStack> list) {
-        for (EnumUpgradeStatus upgrade : EnumUpgradeStatus.values())
-            list.add(new ItemStack(this, 1, upgrade.getMetadata()));
+        if (func_194125_a(creativeTabs)) {
+            for (EnumUpgradeStatus upgrade : EnumUpgradeStatus.values())
+                list.add(new ItemStack(this, 1, upgrade.getMetadata()));
+        }
     }
 
     @Override
