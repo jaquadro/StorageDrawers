@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.oredict.OreIngredient;
 
 public class RecipeHelper
@@ -14,18 +15,18 @@ public class RecipeHelper
     private static int index = 0;
 
     public static void addShapedRecipe (ItemStack output, int w, int h, Object... input) {
-        addRecipe(buildShapedRecipe(output, w, h, input));
+        //addRecipe(buildShapedRecipe(output, w, h, input));
     }
 
     public static void addShapelessRecipe (ItemStack output, Object... input) {
-        addRecipe(new ShapelessRecipes(String.valueOf(index), output, buildInput(input)));
+        //addRecipe(new ShapelessRecipes(String.valueOf(index), output, buildInput(input)));
     }
 
     private static void addRecipe (IRecipe recipe) {
-        CraftingManager.func_193372_a(new ResourceLocation(StorageDrawers.MOD_ID, "recipe" + index++), recipe);
+        //CraftingManager.func_193372_a(new ResourceLocation(StorageDrawers.MOD_ID, "recipe" + index++), recipe);
     }
 
-    private static ShapedRecipes buildShapedRecipe (ItemStack output, int w, int h, Object[] input) {
+    /*private static ShapedRecipes buildShapedRecipe (ItemStack output, int w, int h, Object[] input) {
         if (w * h != input.length)
             throw new UnsupportedOperationException("Recipe input does not match dimensions");
 
@@ -49,5 +50,5 @@ public class RecipeHelper
         }
 
         return list;
-    }
+    }*/
 }

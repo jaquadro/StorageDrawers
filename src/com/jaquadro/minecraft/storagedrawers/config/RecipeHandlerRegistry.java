@@ -70,7 +70,7 @@ public class RecipeHandlerRegistry implements IRecipeHandlerRegistry
     {
         @Override
         public Object[] getInputAsArray (IRecipe recipe) {
-            return recipe.func_192400_c().toArray();
+            return recipe.getIngredients().toArray();
         }
 
         @Override
@@ -101,7 +101,7 @@ public class RecipeHandlerRegistry implements IRecipeHandlerRegistry
 
         @Override
         public List getInputAsList (IRecipe recipe) {
-            return recipe.func_192400_c();
+            return recipe.getIngredients();
         }
     }
 

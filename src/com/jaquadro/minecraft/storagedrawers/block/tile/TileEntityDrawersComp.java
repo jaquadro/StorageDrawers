@@ -337,7 +337,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     private List<ItemStack> findAllMatchingRecipes (InventoryCrafting crafting) {
         List<ItemStack> candidates = new ArrayList<>();
 
-        for (Object aRecipeList : CraftingManager.field_193380_a) {
+        for (Object aRecipeList : CraftingManager.REGISTRY) {
             IRecipe recipe = (IRecipe) aRecipeList;
             if (recipe.matches(crafting, getWorld())) {
                 ItemStack result = recipe.getCraftingResult(crafting);
@@ -366,7 +366,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         List<ItemStack> candidates = new ArrayList<>();
         Map<ItemStack, Integer> candidatesRate = new HashMap<>();
 
-        for (Object aRecipeList : CraftingManager.field_193380_a) {
+        for (Object aRecipeList : CraftingManager.REGISTRY) {
             IRecipe recipe = (IRecipe) aRecipeList;
             ItemStack match = ItemStack.EMPTY;
 
@@ -395,7 +395,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 setupLookup(lookup1, output);
                 List<ItemStack> compMatches = findAllMatchingRecipes(lookup1);
                 for (ItemStack comp : compMatches) {
-                    int recipeSize = recipe.func_192400_c().size();
+                    int recipeSize = recipe.getIngredients().size();
                     if (DrawerData.areItemsEqual(match, comp, true) && comp.getCount() == recipeSize) {
                         lookupSizeResult = recipeSize;
                         candidates.add(match);

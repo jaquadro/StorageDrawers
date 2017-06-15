@@ -6,11 +6,13 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class TemplateRecipe implements IRecipe
@@ -68,8 +70,8 @@ public class TemplateRecipe implements IRecipe
     }
 
     @Override
-    public boolean func_194133_a (int p_194133_1_, int p_194133_2_) {
-        return p_194133_1_ >= 3 && p_194133_2_ >= 3;
+    public boolean canFit (int width, int height) {
+        return width >= 3 && height >= 3;
     }
 
     @Override
@@ -86,5 +88,22 @@ public class TemplateRecipe implements IRecipe
 
     public Object[] getInput () {
         return input;
+    }
+
+    // TODO: What to do with this
+    @Override
+    public IRecipe setRegistryName (ResourceLocation name) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public ResourceLocation getRegistryName () {
+        return null;
+    }
+
+    @Override
+    public Class<IRecipe> getRegistryType () {
+        return null;
     }
 }
