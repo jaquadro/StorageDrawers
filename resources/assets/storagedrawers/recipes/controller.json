@@ -1,0 +1,15 @@
+{
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "###",
+        "CXC",
+        "#D#"
+    ],
+    "key": {
+        "#": { "item": "minecraft:stone", "data": 0 },
+        "C": { "item": "minecraft:comparator" },
+        "X": { "ore": "drawerBasic", "type": "forge:ore_dict" },
+        "D": { "ore": "gemDiamond", "type": "forge:ore_dict" }
+    },
+    "result": { "item": "storagedrawers:controller" }
+}

@@ -1,0 +1,14 @@
+{
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "/X/",
+        "/S/",
+        "/X/"
+    ],
+    "key": {
+        "/": { "ore": "stickWood", "type": "forge:ore_dict" },
+        "S": { "ore": "slabWood", "type": "forge:ore_dict" },
+        "X": { "ore": "chestWood", "type": "forge:ore_dict" }
+    },
+    "result": { "item": "storagedrawers:customdrawers", "data": 3, "count": 2 }
+}

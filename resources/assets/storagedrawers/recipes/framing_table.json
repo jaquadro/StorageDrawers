@@ -1,0 +1,11 @@
+{
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "XXX",
+        "X X"
+    ],
+    "key": {
+        "X": { "ore": "drawerTrim", "type": "forge:ore_dict" }
+    },
+    "result": { "item": "storagedrawers:framingtable" }
+}

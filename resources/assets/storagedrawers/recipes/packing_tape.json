@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " O ",
+        "PPP"
+    ],
+    "key": {
+        "O": { "item": "minecraft:slime_ball" },
+        "P": { "item": "minecraft:paper" }
+    },
+    "result": { "item": "storagedrawers:tape" }
+}

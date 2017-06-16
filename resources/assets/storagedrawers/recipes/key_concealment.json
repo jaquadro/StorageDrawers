@@ -1,0 +1,8 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        { "item": "storagedrawers:drawer_key" },
+        { "item": "minecraft:ender_eye" }
+    ],
+    "result": { "item": "storagedrawers:shroud_key" }
+}

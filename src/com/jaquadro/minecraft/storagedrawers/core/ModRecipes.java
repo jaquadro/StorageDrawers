@@ -2,24 +2,21 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
-import com.jaquadro.minecraft.storagedrawers.block.EnumKeyType;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
-import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
-import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
-import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
-import com.jaquadro.minecraft.storagedrawers.util.RecipeHelper;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import javax.annotation.Nonnull;
 
 public class ModRecipes
 {
+    private static final ResourceLocation EMPTY_GROUP = new ResourceLocation("", "");
+
     @Nonnull
     public static ItemStack makeBasicDrawerItemStack (EnumBasicDrawer info, String material, int count) {
         ItemStack stack = new ItemStack(ModBlocks.basicDrawers, count, info.getMetadata());
@@ -41,36 +38,39 @@ public class ModRecipes
 
         //RecipeSorter.register("storagedrawers:FallbackShapedOreRecipe", FallbackShapedOreRecipe.class, RecipeSorter.Category.SHAPED, "after:forge:shapedore");
 
-        String ch = "chestWood";
-        String st = "stickWood";
-
         for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values()) {
             ItemStack pl = new ItemStack(Blocks.PLANKS, 1, material.getMetadata());
             ItemStack sl = new ItemStack(Blocks.WOODEN_SLAB, 1, material.getMetadata());
 
             if (config.isBlockEnabled(EnumBasicDrawer.FULL1.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL1, material.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL1.getUnlocalizedName()));
-                RecipeHelper.addShapedRecipe(result, 3, 3, pl, pl, pl, null, ch, null, pl, pl, pl);
+                GameRegistry.register(new ShapedOreRecipe(EMPTY_GROUP, result, "xxx", " y ", "xxx", 'x', new ItemStack(Blocks.PLANKS, 1, material.getMetadata()), 'y', "chestWood")
+                    .setRegistryName(result.getItem().getRegistryName() + "_" + EnumBasicDrawer.FULL1.getUnlocalizedName() + "_" + material.toString()));
             }
             if (config.isBlockEnabled(EnumBasicDrawer.FULL2.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL2, material.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL2.getUnlocalizedName()));
-                RecipeHelper.addShapedRecipe(result, 3, 3, pl, ch, pl, pl, pl, pl, pl, ch, pl);
+                GameRegistry.register(new ShapedOreRecipe(EMPTY_GROUP, result, "xyx", "xxx", "xyx", 'x', new ItemStack(Blocks.PLANKS, 1, material.getMetadata()), 'y', "chestWood")
+                    .setRegistryName(result.getItem().getRegistryName() + "_" + EnumBasicDrawer.FULL2.getUnlocalizedName() + "_" + material.toString()));
             }
             if (config.isBlockEnabled(EnumBasicDrawer.FULL4.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.FULL4, material.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.FULL4.getUnlocalizedName()));
-                RecipeHelper.addShapedRecipe(result, 3, 3, ch, pl, ch, pl, pl, pl, ch, pl, ch);
+                GameRegistry.register(new ShapedOreRecipe(EMPTY_GROUP, result, "yxy", "xxx", "yxy", 'x', new ItemStack(Blocks.PLANKS, 1, material.getMetadata()), 'y', "chestWood")
+                    .setRegistryName(result.getItem().getRegistryName() + "_" + EnumBasicDrawer.FULL4.getUnlocalizedName() + "_" + material.toString()));
             }
             if (config.isBlockEnabled(EnumBasicDrawer.HALF2.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.HALF2, material.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.HALF2.getUnlocalizedName()));
-                RecipeHelper.addShapedRecipe(result, 3, 3, sl, ch, sl, sl, sl, sl, sl, ch, sl);
+                GameRegistry.register(new ShapedOreRecipe(EMPTY_GROUP, result, "xyx", "xxx", "xyx", 'x', new ItemStack(Blocks.WOODEN_SLAB, 1, material.getMetadata()), 'y', "chestWood")
+                    .setRegistryName(result.getItem().getRegistryName() + "_" + EnumBasicDrawer.HALF2.getUnlocalizedName() + "_" + material.toString()));
             }
             if (config.isBlockEnabled(EnumBasicDrawer.HALF4.getUnlocalizedName())) {
                 ItemStack result = makeBasicDrawerItemStack(EnumBasicDrawer.HALF4, material.getName(), config.getBlockRecipeOutput(EnumBasicDrawer.HALF4.getUnlocalizedName()));
-                RecipeHelper.addShapedRecipe(result, 3, 3, ch, sl, ch, sl, sl, sl, ch, sl, ch);
+                GameRegistry.register(new ShapedOreRecipe(EMPTY_GROUP, result, "yxy", "xxx", "yxy", 'x', new ItemStack(Blocks.WOODEN_SLAB, 1, material.getMetadata()), 'y', "chestWood")
+                    .setRegistryName(result.getItem().getRegistryName() + "_" + EnumBasicDrawer.HALF4.getUnlocalizedName() + "_" + material.toString()));
             }
             if (config.isBlockEnabled("trim")) {
                 ItemStack result = new ItemStack(ModBlocks.trim, config.getBlockRecipeOutput("trim"), material.getMetadata());
-                RecipeHelper.addShapedRecipe(result, 3, 3, st, pl, st, pl, pl, pl, st, pl, st);
+                GameRegistry.register(new ShapedOreRecipe(EMPTY_GROUP, result, "xyx", "yyy", "xyx", 'x', "stickWood", 'y', new ItemStack(Blocks.PLANKS, 1, material.getMetadata()))
+                    .setRegistryName(result.getItem().getRegistryName() + "_" + material.toString()));
             }
         }
 
@@ -106,7 +106,7 @@ public class ModRecipes
             }
         }*/
 
-        Block obs = Blocks.OBSIDIAN;
+        /*Block obs = Blocks.OBSIDIAN;
         Block stone = Blocks.STONE;
         Block pist = Blocks.PISTON;
         Item comp = Items.COMPARATOR;
@@ -241,7 +241,7 @@ public class ModRecipes
         }
 
         RecipeHelper.addShapedRecipe(new ItemStack(ModItems.upgradeTemplate, 2), 3, 3,
-            st, st, st, st, dw, st, st, st, st);
+            st, st, st, st, dw, st, st, st, st);*/
 
         //RecipeSorter.register("storagedrawers:UpgradeTemplate", TemplateRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
 

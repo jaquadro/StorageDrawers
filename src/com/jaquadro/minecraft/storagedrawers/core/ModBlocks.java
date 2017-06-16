@@ -89,6 +89,8 @@ public class ModBlocks
 
         for (String key : new String[] { "drawerBasic" })
             OreDictionary.registerOre(key, new ItemStack(basicDrawers, 1, OreDictionary.WILDCARD_VALUE));
+        for (String key : new String[] { "drawerTrim" })
+            OreDictionary.registerOre(key, new ItemStack(trim, 1, OreDictionary.WILDCARD_VALUE));
     }
 
     @SideOnly(Side.CLIENT)
