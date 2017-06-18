@@ -91,7 +91,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
     @Override
     public int getDrawerCapacity () {
-        if (world == null || world.isRemote)
+        if (getWorld() == null || getWorld().isRemote)
             return super.getDrawerCapacity();
 
         if (capacity == 0) {

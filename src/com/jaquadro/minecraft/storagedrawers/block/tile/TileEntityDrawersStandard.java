@@ -70,11 +70,11 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
     @Override
     public int getDrawerCapacity () {
-        if (world == null || world.isRemote)
+        if (getWorld() == null || getWorld().isRemote)
             return super.getDrawerCapacity();
 
         if (capacity == 0) {
-            IBlockState blockState = world.getBlockState(this.pos);
+            IBlockState blockState = getWorld().getBlockState(this.pos);
             if (!blockState.getPropertyKeys().contains(BlockStandardDrawers.BLOCK))
                 return 1;
 
