@@ -1,4 +1,8 @@
 {
+    "conditions": [{
+        "type": "minecraft:item_exists",
+        "item": "storagedrawers:tape"
+    }],
     "type": "minecraft:crafting_shaped",
     "pattern": [
         " O ",

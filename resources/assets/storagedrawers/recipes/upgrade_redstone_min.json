@@ -1,4 +1,8 @@
 {
+    "conditions": [{
+        "type": "minecraft:item_exists",
+        "item": "storagedrawers:upgrade_redstone"
+    }],
     "type": "forge:ore_shaped",
     "pattern": [
         "///",

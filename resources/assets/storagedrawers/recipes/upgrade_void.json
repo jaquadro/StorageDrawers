@@ -1,4 +1,8 @@
 {
+    "conditions": [{
+        "type": "minecraft:item_exists",
+        "item": "storagedrawers:upgrade_void"
+    }],
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "###",

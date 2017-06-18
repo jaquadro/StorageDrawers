@@ -1,4 +1,8 @@
 {
+    "conditions": [{
+        "type": "minecraft:item_exists",
+        "item": "storagedrawers:upgrade_one_stack"
+    }],
     "type": "forge:ore_shaped",
     "pattern": [
         "///",
