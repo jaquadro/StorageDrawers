@@ -8,6 +8,7 @@
 	"logoFile": "",
 	"url": "http://www.jaquadro.com/",
 	"authorList": [ "jaquadro" ],
+	"logoFile": "assets/storagedrawers/textures/logo.png",
 	"requiredMods": [ "forge", "chameleon" ],
 	"dependencies": [ "chameleon" ],
 	"useDependencyInformation": true
