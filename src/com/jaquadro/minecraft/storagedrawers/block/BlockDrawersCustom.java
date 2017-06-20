@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.chameleon.block.properties.UnlistedModelData;
-import com.jaquadro.minecraft.storagedrawers.api.pack.BlockType;
+import com.jaquadro.minecraft.storagedrawers.api.storage.BlockType;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.MaterialModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
