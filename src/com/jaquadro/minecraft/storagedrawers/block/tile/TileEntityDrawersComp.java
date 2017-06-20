@@ -1,8 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.registry.IIngredientHandler;
-import com.jaquadro.minecraft.storagedrawers.api.registry.IRecipeHandler;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
@@ -22,13 +20,13 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreIngredient;
 import org.apache.logging.log4j.Level;
 import scala.actors.threadpool.Arrays;
 
@@ -369,31 +367,12 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         List<ItemStack> candidates = new ArrayList<>();
         Map<ItemStack, Integer> candidatesRate = new HashMap<>();
 
-        for (Object aRecipeList : CraftingManager.REGISTRY) {
-            IRecipe recipe = (IRecipe) aRecipeList;
-            ItemStack match = ItemStack.EMPTY;
-
+        for (IRecipe recipe : CraftingManager.REGISTRY) {
             ItemStack output = recipe.getRecipeOutput();
             if (!DrawerData.areItemsEqual(stack, output, true))
                 continue;
 
-            IRecipeHandler handler = StorageDrawers.recipeHandlerRegistry.getRecipeHandler(recipe.getClass());
-            while (handler != null) {
-                Object[] itemArr = handler.getInputAsArray(recipe);
-                if (itemArr != null) {
-                    match = tryMatch(stack, itemArr);
-                    break;
-                }
-
-                List itemList = handler.getInputAsList(recipe);
-                if (itemList != null) {
-                    match = tryMatch(stack, itemList);
-                    break;
-                }
-
-                break;
-            }
-
+            @Nonnull ItemStack match = tryMatch(stack, recipe.getIngredients());
             if (!match.isEmpty()) {
                 setupLookup(lookup1, output);
                 List<ItemStack> compMatches = findAllMatchingRecipes(lookup1);
@@ -448,129 +427,35 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     }
 
     @Nonnull
-    private ItemStack tryMatch (@Nonnull ItemStack stack, List list) {
-        if (list.size() != 9 && list.size() != 4)
+    private ItemStack tryMatch (@Nonnull ItemStack stack, NonNullList<Ingredient> ingredients) {
+        if (ingredients.size() != 9 && ingredients.size() != 4)
             return ItemStack.EMPTY;
 
-        Object item = list.get(0);
-        if (item instanceof ItemStack) {
-            ItemStack item1 = (ItemStack)item;
-            for (int i = 1, n = list.size(); i < n; i++) {
-                Object item2 = list.get(i);
-                if (item2.getClass() != ItemStack.class)
-                    return ItemStack.EMPTY;
-                if (!item1.isItemEqual((ItemStack)item2))
-                    return ItemStack.EMPTY;
-            }
-            return item1;
-        }
-        else if (item instanceof List) {
-            for (int i = 1, n = list.size(); i < n; i++) {
-                if (item != list.get(i))
-                    return ItemStack.EMPTY;
-            }
-
-            List itemList = (List)item;
-            if (itemList.size() > 0) {
-                Object item1 = itemList.get(0);
-                if (item1 instanceof ItemStack)
-                    return (ItemStack)item1;
-            }
-        }
-
-        return ItemStack.EMPTY;
-    }
-
-    @Nonnull
-    private ItemStack tryMatch (@Nonnull ItemStack stack, Object[] list) {
-        if (list.length != 9 && list.length != 4)
+        Ingredient refIngredient = ingredients.get(0);
+        ItemStack[] refMatchingStacks = refIngredient.getMatchingStacks();
+        if (refMatchingStacks.length == 0)
             return ItemStack.EMPTY;
 
-        Object item = list[0];
-        if (item == null)
-            return ItemStack.EMPTY;
+        for (int i = 1, n = ingredients.size(); i < n; i++) {
+            Ingredient ingredient = ingredients.get(i);
+            @Nonnull ItemStack match = ItemStack.EMPTY;
 
-        if (item instanceof ItemStack) {
-            ItemStack item1 = (ItemStack)item;
-            for (int i = 1, n = list.length; i < n; i++) {
-                Object item2 = list[i];
-                if (item2 == null || item2.getClass() != ItemStack.class)
-                    return ItemStack.EMPTY;
-                if (!item1.isItemEqual((ItemStack)item2))
-                    return ItemStack.EMPTY;
-            }
-            return item1;
-        }
-        else if (item instanceof Ingredient) {
-            Ingredient ingItem = (Ingredient)item;
-            ItemStack[] ingItemMatchingStacks = ingItem.getMatchingStacks();
-            if (ingItemMatchingStacks.length == 0)
-                return ItemStack.EMPTY;
-
-            for (int i = 1, n = list.length; i < n; i++) {
-                if (item.getClass() != list[i].getClass())
-                    return ItemStack.EMPTY;
-
-                Ingredient ingredient = (Ingredient)list[i];
-                ItemStack match = ItemStack.EMPTY;
-                for (ItemStack ingItemMatch : ingItemMatchingStacks) {
-                    if (ingredient.apply(ingItemMatch)) {
-                        match = ingItemMatch;
-                        break;
-                    }
+            for (ItemStack ingItemMatch : refMatchingStacks) {
+                if (ingredient.apply(ingItemMatch)) {
+                    match = ingItemMatch;
+                    break;
                 }
-
-                if (match.isEmpty())
-                    return ItemStack.EMPTY;
             }
 
-            ItemStack match = findMatchingModCandidate(stack, Arrays.asList(ingItemMatchingStacks));
             if (match.isEmpty())
-                match = ingItemMatchingStacks[0];
-
-            return match;
-        }
-        else if (item instanceof List) {
-            for (int i = 1, n = list.length; i < n; i++) {
-                if (item != list[i])
-                    return ItemStack.EMPTY;
-            }
-
-            List itemList = (List)item;
-            if (itemList.size() > 0) {
-                Object item1 = findMatchingModCandidate(stack, itemList);
-                if (item1 == null)
-                    item1 = itemList.get(0);
-
-                if (item1 instanceof ItemStack)
-                    return (ItemStack)item1;
-            }
-        }
-        else {
-            IIngredientHandler handler = StorageDrawers.recipeHandlerRegistry.getIngredientHandler(item.getClass());
-            if (handler == null)
                 return ItemStack.EMPTY;
-
-            ItemStack item1 = handler.getItemStack(item);
-            if (item1.isEmpty())
-                return ItemStack.EMPTY;
-
-            for (int i = 1, n = list.length; i < n; i++) {
-                Object item2 = list[i];
-                if (item2 == null || item.getClass() != item2.getClass())
-                    return ItemStack.EMPTY;
-
-                item2 = handler.getItemStack(item2);
-                if (item2 == null || item2.getClass() != ItemStack.class)
-                    return ItemStack.EMPTY;
-                if (!item1.isItemEqual((ItemStack)item2))
-                    return ItemStack.EMPTY;
-            }
-
-            return item1;
         }
 
-        return ItemStack.EMPTY;
+        ItemStack match = findMatchingModCandidate(stack, Arrays.asList(refMatchingStacks));
+        if (match.isEmpty())
+            match = refMatchingStacks[0];
+
+        return match;
     }
 
     private void setupLookup (InventoryLookup inv, @Nonnull ItemStack stack) {

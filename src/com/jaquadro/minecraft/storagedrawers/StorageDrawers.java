@@ -46,7 +46,6 @@ public class StorageDrawers
     public static CompTierRegistry compRegistry;
     public static OreDictRegistry oreDictRegistry;
 
-    public static RecipeHandlerRegistry recipeHandlerRegistry;
     public static RenderRegistry renderRegistry;
     public static WailaRegistry wailaRegistry;
     //public static BlockRegistry blockRegistry;
@@ -74,7 +73,6 @@ public class StorageDrawers
 
         compRegistry = new CompTierRegistry();
         oreDictRegistry = new OreDictRegistry();
-        recipeHandlerRegistry = new RecipeHandlerRegistry();
         renderRegistry = new RenderRegistry();
         wailaRegistry = new WailaRegistry();
         //blockRegistry = new BlockRegistry();
