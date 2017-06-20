@@ -2,10 +2,6 @@ package com.jaquadro.minecraft.storagedrawers.config;
 
 import com.google.common.collect.Maps;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.config.IAddonConfig;
-import com.jaquadro.minecraft.storagedrawers.api.config.IBlockConfig;
-import com.jaquadro.minecraft.storagedrawers.api.config.IUserConfig;
-import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 
@@ -91,76 +87,6 @@ public class ConfigManager
         public int level4Mult;
         public int level5Mult;
         public int level6Mult;
-
-        public boolean addonSeparateVanilla;
-        public boolean addonShowJEI;
-        public boolean addonShowVanilla;
-    }
-
-    private class AddonConfig implements IAddonConfig {
-        @Override
-        public boolean showAddonItemsNEI () {
-            return cache.addonShowJEI;
-        }
-
-        @Override
-        public boolean showAddonItemsVanilla () {
-            return cache.addonShowVanilla;
-        }
-
-        @Override
-        public boolean addonItemsUseSeparateTab () {
-            return cache.addonSeparateVanilla;
-        }
-    }
-
-    private class BlockConfig implements IBlockConfig {
-        @Override
-        public String getBlockConfigName (BlockConfiguration blockConfig) {
-            switch (blockConfig) {
-                case BasicFull1:
-                    return "fulldrawers1";
-                case BasicFull2:
-                    return "fulldrawers2";
-                case BasicFull4:
-                    return "fulldrawers4";
-                case BasicHalf2:
-                    return "halfdrawers2";
-                case BasicHalf4:
-                    return "halfdrawers4";
-                case Trim:
-                    return "trim";
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public boolean isBlockEnabled (String blockConfigName) {
-            return ConfigManager.this.isBlockEnabled(blockConfigName);
-        }
-
-        @Override
-        public int getBlockRecipeOutput (String blockConfigName) {
-            return ConfigManager.this.getBlockRecipeOutput(blockConfigName);
-        }
-
-        @Override
-        public int getBaseCapacity (String blockConfigName) {
-            return ConfigManager.this.getBlockBaseStorage(blockConfigName);
-        }
-    }
-
-    private class UserConfig implements IUserConfig {
-        @Override
-        public IAddonConfig addonConfig () {
-            return addonConfig;
-        }
-
-        @Override
-        public IBlockConfig blockConfig () {
-            return blockConfig;
-        }
     }
 
     private static final String LANG_PREFIX = "storagedrawers.config.";
@@ -173,7 +99,6 @@ public class ConfigManager
     public final ConfigSection sectionIntegration = new ConfigSection(sections, "integration", "integration");
     public final ConfigSection sectionBlocks = new ConfigSection(sections, "blocks", "blocks");
     public final ConfigSection sectionUpgrades = new ConfigSection(sections, "upgrades", "upgrades");
-    public final ConfigSection sectionAddons = new ConfigSection(sections, "addons", "addons");
     public final ConfigSection sectionRegistries = new ConfigSection(sections, "registries", "registries");
 
     public final List<ConfigSection> blockSections = new ArrayList<ConfigSection>();
@@ -188,10 +113,6 @@ public class ConfigManager
     public final ConfigSection sectionBlocksSlave = new ConfigSection(blockSections, sectionBlocks, "controllerslave", "blocks.controllerSlave");
 
     public Map<String, ConfigSection> blockSectionsMap = new HashMap<String, ConfigSection>();
-
-    public IAddonConfig addonConfig = new AddonConfig();
-    public IBlockConfig blockConfig = new BlockConfig();
-    public IUserConfig userConfig = new UserConfig();
 
     public ConfigManager (File file) {
         config = new Configuration(file);
