@@ -20,6 +20,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLLog;
@@ -27,7 +28,9 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreIngredient;
 import org.apache.logging.log4j.Level;
+import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -497,6 +500,35 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                     return ItemStack.EMPTY;
             }
             return item1;
+        }
+        else if (item instanceof Ingredient) {
+            Ingredient ingItem = (Ingredient)item;
+            ItemStack[] ingItemMatchingStacks = ingItem.getMatchingStacks();
+            if (ingItemMatchingStacks.length == 0)
+                return ItemStack.EMPTY;
+
+            for (int i = 1, n = list.length; i < n; i++) {
+                if (item.getClass() != list[i].getClass())
+                    return ItemStack.EMPTY;
+
+                Ingredient ingredient = (Ingredient)list[i];
+                ItemStack match = ItemStack.EMPTY;
+                for (ItemStack ingItemMatch : ingItemMatchingStacks) {
+                    if (ingredient.apply(ingItemMatch)) {
+                        match = ingItemMatch;
+                        break;
+                    }
+                }
+
+                if (match.isEmpty())
+                    return ItemStack.EMPTY;
+            }
+
+            ItemStack match = findMatchingModCandidate(stack, Arrays.asList(ingItemMatchingStacks));
+            if (match.isEmpty())
+                match = ingItemMatchingStacks[0];
+
+            return match;
         }
         else if (item instanceof List) {
             for (int i = 1, n = list.length; i < n; i++) {
