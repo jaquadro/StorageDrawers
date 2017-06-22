@@ -73,7 +73,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
     @Override
     protected IDrawer createDrawer (int slot) {
-        return new CompDrawerData(getCentralInventory(), slot);
+        return new CompDrawerData(getCentralInventory(), this, slot);
     }
 
     @Override
@@ -642,7 +642,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             return convRate[slot] == 1;
         }
 
-        @Override
+        /*@Override
         public boolean isVoidSlot (int slot) {
             return isVoid();
         }
@@ -671,7 +671,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         @Override
         public boolean isLocked (int slot, LockAttribute attr) {
             return TileEntityDrawersComp.this.isItemLocked(attr);
-        }
+        }*/
 
         @Override
         public void writeToNBT (int slot, NBTTagCompound tag) {

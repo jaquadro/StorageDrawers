@@ -3,7 +3,9 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
+
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
@@ -21,6 +23,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.apache.logging.log4j.Level;
@@ -30,6 +34,11 @@ import java.util.*;
 
 public class TileEntityController extends TileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup
 {
+    @CapabilityInject(IDrawerAttributes.class)
+    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+
+    private static final IDrawerAttributes EMPTY_ATTRIBUTES = new EmptyDrawerAttributes();
+
     private static final int PRI_LOCKED = 0;
     private static final int PRI_LOCKED_VOID = 1;
     private static final int PRI_NORMAL = 2;
@@ -95,6 +104,17 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         }
     };
 
+    private IDrawerAttributes getAttributes (Object obj) {
+        IDrawerAttributes attrs = null;
+        if (obj instanceof ICapabilityProvider)
+            attrs = ((ICapabilityProvider) obj).getCapability(DRAWER_ATTRIBUTES_CAPABILITY, null);
+
+        if (attrs == null)
+            attrs = EMPTY_ATTRIBUTES;
+
+        return attrs;
+    }
+
     private int getSlotPriority (SlotRecord record) {
         IDrawerGroup group = getGroupForSlotRecord(record);
         if (group == null) {
@@ -107,28 +127,23 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
             return PRI_DISABLED;
         }
 
+        IDrawerAttributes attrs = getAttributes(group);
+
         if (drawer.isEmpty()) {
-            if ((drawer instanceof IItemLockable && ((IItemLockable) drawer).isItemLocked(LockAttribute.LOCK_EMPTY)) ||
-                (group instanceof IItemLockable && ((IItemLockable) group).isItemLocked(LockAttribute.LOCK_EMPTY))) {
+            if (attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
                 return PRI_LOCKED_EMPTY;
-            }
             else
                 return PRI_EMPTY;
         }
 
-        if ((drawer instanceof IVoidable && ((IVoidable) drawer).isVoid()) ||
-            (group instanceof IVoidable && ((IVoidable) group).isVoid())) {
-            if ((drawer instanceof IItemLockable && ((IItemLockable) drawer).isItemLocked(LockAttribute.LOCK_POPULATED)) ||
-                (group instanceof IItemLockable && ((IItemLockable) group).isItemLocked(LockAttribute.LOCK_POPULATED))) {
+        if (attrs.isVoid()) {
+            if (attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
                 return PRI_LOCKED_VOID;
-            }
             return PRI_VOID;
         }
 
-        if ((drawer instanceof IItemLockable && ((IItemLockable) drawer).isItemLocked(LockAttribute.LOCK_POPULATED)) ||
-            (group instanceof IItemLockable && ((IItemLockable) group).isItemLocked(LockAttribute.LOCK_POPULATED))) {
+        if (attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
             return PRI_LOCKED;
-        }
 
         return PRI_NORMAL;
     }
@@ -209,7 +224,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
             itemsLeft = insertItemsIntoDrawer(drawer, itemsLeft);
 
-            if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
+            IDrawerAttributes attrs = getAttributes(group);
+            if (attrs.isVoid())
                 itemsLeft = 0;
             if (itemsLeft == 0)
                 break;
@@ -285,19 +301,16 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                     continue;
             }
 
-            for (int i = 0, n = record.storage.getDrawerCount(); i < n; i++) {
-                IDrawer drawer = record.storage.getDrawerIfEnabled(i);
-                if (!(drawer instanceof IShroudable))
-                    continue;
+            IDrawerAttributes attrs = getAttributes(record.storage);
+            if (!(attrs instanceof IDrawerAttributesModifiable))
+                continue;
 
-                IShroudable shroudableStorage = (IShroudable)drawer;
-                if (template == null) {
-                    template = shroudableStorage.isShrouded();
-                    state = !template;
-                }
-
-                shroudableStorage.setIsShrouded(state);
+            IDrawerAttributesModifiable mattrs = (IDrawerAttributesModifiable)attrs;
+            if (template == null) {
+                template = mattrs.isConcealed();
+                state = !template;
             }
+            mattrs.setIsConcealed(state);
         }
     }
 
@@ -314,19 +327,16 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                     continue;
             }
 
-            for (int i = 0, n = record.storage.getDrawerCount(); i < n; i++) {
-                IDrawer drawer = record.storage.getDrawerIfEnabled(i);
-                if (!(drawer instanceof IQuantifiable))
-                    continue;
+            IDrawerAttributes attrs = getAttributes(record.storage);
+            if (!(attrs instanceof IDrawerAttributesModifiable))
+                continue;
 
-                IQuantifiable quantifiableStorage = (IQuantifiable)drawer;
-                if (template == null) {
-                    template = quantifiableStorage.isShowingQuantity();
-                    state = !template;
-                }
-
-                quantifiableStorage.setIsShowingQuantity(state);
+            IDrawerAttributesModifiable mattrs = (IDrawerAttributesModifiable)attrs;
+            if (template == null) {
+                template = mattrs.isShowingQuantity();
+                state = !template;
             }
+            mattrs.setIsShowingQuantity(state);
         }
     }
 
@@ -343,32 +353,18 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                     continue;
             }
 
-            if (record.storage instanceof IItemLockable) {
-                IItemLockable lockableStorage = (IItemLockable)record.storage;
-                if (template == null) {
-                    template = lockableStorage.isItemLocked(key);
-                    state = !template;
-                }
+            IDrawerAttributes attrs = getAttributes(record.storage);
+            if (!(attrs instanceof IDrawerAttributesModifiable))
+                continue;
 
-                for (LockAttribute attr : attributes)
-                    lockableStorage.setItemLocked(attr, state);
+            IDrawerAttributesModifiable mattrs = (IDrawerAttributesModifiable)attrs;
+            if (template == null) {
+                template = mattrs.isItemLocked(key);
+                state = !template;
             }
-            else {
-                for (int i = 0, n = record.storage.getDrawerCount(); i < n; i++) {
-                    IDrawer drawer = record.storage.getDrawerIfEnabled(i);
-                    if (!(drawer instanceof IShroudable))
-                        continue;
 
-                    IItemLockable lockableStorage = (IItemLockable)drawer;
-                    if (template == null) {
-                        template = lockableStorage.isItemLocked(key);
-                        state = !template;
-                    }
-
-                    for (LockAttribute attr : attributes)
-                        lockableStorage.setItemLocked(attr, state);
-                }
-            }
+            for (LockAttribute attr : attributes)
+                mattrs.setItemLocked(attr, state);
         }
     }
 
@@ -788,8 +784,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                             IDrawer drawer = candidateGroup.getDrawer(candidate.slot);
 
                             if (insert) {
-                                boolean voiding = (drawer instanceof IVoidable) ? ((IVoidable) drawer).isVoid() : false;
-                                if (!(drawer.canItemBeStored(stack) && (drawer.isEmpty() || drawer.getRemainingCapacity() > 0 || voiding)))
+                                IDrawerAttributes attrs = getAttributes(candidateGroup);
+                                if (!(drawer.canItemBeStored(stack) && (drawer.isEmpty() || drawer.getRemainingCapacity() > 0 || attrs.isVoid())))
                                     continue;
                             }
                             else {
@@ -818,8 +814,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                         }
 
                         if (insert) {
-                            boolean voiding = (drawer instanceof IVoidable) ? ((IVoidable) drawer).isVoid() : false;
-                            if (!(drawer.canItemBeStored(stack) && (drawer.isEmpty() || drawer.getRemainingCapacity() > 0 || voiding)))
+                            IDrawerGroup group = getGroupForDrawerSlot(slot);
+                            IDrawerAttributes attrs = getAttributes(group);
+                            if (!(drawer.canItemBeStored(stack) && (drawer.isEmpty() || drawer.getRemainingCapacity() > 0 || attrs.isVoid())))
                                 continue;
                         }
                         else {

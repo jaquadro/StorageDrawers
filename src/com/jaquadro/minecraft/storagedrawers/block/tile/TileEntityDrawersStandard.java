@@ -46,7 +46,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
     @Override
     protected IDrawer createDrawer (int slot) {
-        return new DrawerData(getStorageProvider(), slot);
+        return new DrawerData(getStorageProvider(), this, slot);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
             return getEffectiveStorageMultiplier() * getEffectiveDrawerCapacity();
         }
 
-        @Override
+        /*@Override
         public boolean isLocked (int slot, LockAttribute attr) {
             return TileEntityDrawersStandard.this.isItemLocked(attr);
         }
@@ -150,7 +150,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         @Override
         public boolean setIsShowingQuantity (int slot, boolean state) {
             return TileEntityDrawersStandard.this.setIsShowingQuantity(state);
-        }
+        }*/
 
         @Override
         public boolean isStorageUnlimited (int slot) {

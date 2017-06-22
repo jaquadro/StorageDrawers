@@ -1,20 +1,31 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
+import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
 
-public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable, IQuantifiable, IItemLockable
+public class DrawerData extends BaseDrawerData
 {
+    @CapabilityInject(IDrawerAttributes.class)
+    static Capability<IDrawerAttributes> ATTR_CAPABILITY = null;
+
     private IStorageProvider storageProvider;
+    private ICapabilityProvider capProvider;
     private int slot;
+
+    IDrawerAttributes attrs;
 
     @Nonnull
     private ItemStack protoStack;
@@ -23,8 +34,14 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
     private boolean isUnlimited;
     private int stackCapacity;
 
-    public DrawerData (IStorageProvider provider, int slot) {
+    public DrawerData (IStorageProvider provider, ICapabilityProvider capProvider, int slot) {
         storageProvider = provider;
+        this.capProvider = capProvider;
+
+        attrs = capProvider.getCapability(ATTR_CAPABILITY, null);
+        if (attrs == null)
+            attrs = new EmptyDrawerAttributes();
+
         protoStack = ItemStack.EMPTY;
         this.slot = slot;
 
@@ -95,7 +112,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
         if (amount == 0) {
             if (clearOnEmpty) {
-                if (!storageProvider.isLocked(slot, LockAttribute.LOCK_POPULATED))
+                if (!attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
                     reset();
                 if (mark)
                     storageProvider.markDirty(slot);
@@ -150,7 +167,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Override
     protected int getItemCapacityForInventoryStack () {
-        if (storageProvider.isVoid(slot))
+        if (attrs.isVoid())
             return Integer.MAX_VALUE;
         else
             return getMaxCapacity();
@@ -158,7 +175,7 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     @Override
     public boolean canItemBeStored (@Nonnull ItemStack itemPrototype) {
-        if (protoStack.isEmpty() && !isItemLocked(LockAttribute.LOCK_EMPTY))
+        if (protoStack.isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
             return true;
 
         return areItemsEqual(itemPrototype);
@@ -226,43 +243,5 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
         DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
         MinecraftForge.EVENT_BUS.post(event);
     }
-
-    @Override
-    public boolean isVoid () {
-        return storageProvider.isVoid(slot);
-    }
-
-    @Override
-    public boolean isShrouded () {
-        return storageProvider.isShrouded(slot);
-    }
-
-    @Override
-    public boolean setIsShrouded (boolean state) {
-        return storageProvider.setIsShrouded(slot, state);
-    }
-
-    @Override
-    public boolean isShowingQuantity () {
-        return storageProvider.isShowingQuantity(slot);
-    }
-
-    @Override
-    public boolean setIsShowingQuantity (boolean state) {
-        return storageProvider.setIsShowingQuantity(slot, state);
-    }
-
-    @Override
-    public boolean isItemLocked (LockAttribute attr) {
-        return storageProvider.isLocked(slot, attr);
-    }
-
-    @Override
-    public boolean canItemLock (LockAttribute attr) {
-        return false;
-    }
-
-    @Override
-    public void setItemLocked (LockAttribute attr, boolean isLocked) { }
 }
 

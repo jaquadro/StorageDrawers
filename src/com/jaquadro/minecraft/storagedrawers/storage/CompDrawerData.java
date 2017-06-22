@@ -1,21 +1,35 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
 
-public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer, IVoidable, IShroudable, IQuantifiable, IItemLockable
+public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer
 {
+    @CapabilityInject(IDrawerAttributes.class)
+    static Capability<IDrawerAttributes> ATTR_CAPABILITY = null;
+
     private ICentralInventory central;
     private int slot;
 
-    public CompDrawerData (ICentralInventory centralInventory, int slot) {
+    IDrawerAttributes attrs;
+
+    public CompDrawerData (ICentralInventory centralInventory, ICapabilityProvider capProvider, int slot) {
         this.slot = slot;
         this.central = centralInventory;
+
+        attrs = capProvider.getCapability(ATTR_CAPABILITY, null);
+        if (attrs == null)
+            attrs = new EmptyDrawerAttributes();
     }
 
     @Override
@@ -74,7 +88,7 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
 
     @Override
     public boolean canItemBeStored (@Nonnull ItemStack itemPrototype) {
-        if (getStoredItemPrototype().isEmpty() && !isItemLocked(LockAttribute.LOCK_EMPTY))
+        if (getStoredItemPrototype().isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
             return true;
 
         return areItemsEqual(itemPrototype);
@@ -121,7 +135,7 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
         refreshOreDictMatches();
     }
 
-    @Override
+    /*@Override
     public boolean isVoid () {
         return central.isVoidSlot(slot);
     }
@@ -157,5 +171,5 @@ public class CompDrawerData extends BaseDrawerData implements IFractionalDrawer,
     }
 
     @Override
-    public void setItemLocked (LockAttribute attr, boolean isLocked) { }
+    public void setItemLocked (LockAttribute attr, boolean isLocked) { }*/
 }

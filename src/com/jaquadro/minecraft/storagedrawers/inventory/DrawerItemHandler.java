@@ -1,23 +1,30 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IPriorityGroup;
-import com.jaquadro.minecraft.storagedrawers.api.storage.ISmartGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 
 public class DrawerItemHandler implements IItemHandler
 {
+    @CapabilityInject(IDrawerAttributes.class)
+    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+
     private IDrawerGroup group;
+    private ICapabilityProvider capProvider;
 
     public DrawerItemHandler (IDrawerGroup group) {
         this.group = group;
+
+        if (group instanceof ICapabilityProvider)
+            capProvider = (ICapabilityProvider)group;
     }
 
     @Override
@@ -118,7 +125,10 @@ public class DrawerItemHandler implements IItemHandler
             return stack;
 
         int availableCount = drawer.isEmpty() ? drawer.getMaxCapacity(stack) : drawer.getRemainingCapacity();
-        if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
+
+        // TODO: May not need void check here with updated storage implementation
+        IDrawerAttributes attrs = capProvider.getCapability(DRAWER_ATTRIBUTES_CAPABILITY, null);
+        if (attrs != null && attrs.isVoid())
             availableCount = Integer.MAX_VALUE;
 
         int stackSize = stack.getCount();

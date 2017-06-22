@@ -7,7 +7,6 @@ import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
@@ -237,6 +236,9 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         }
 
         if (!item.isEmpty()) {
+            if (item.getItem() instanceof ItemKey)
+                return false;
+
             if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
                 if (!retrimBlock(world, pos, item))
                     return false;
@@ -277,7 +279,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
 
                 return true;
             }
-            else if (item.getItem() == ModItems.drawerKey) {
+            /*else if (item.getItem() == ModItems.drawerKey) {
                 boolean locked = tileDrawers.isItemLocked(LockAttribute.LOCK_POPULATED);
                 tileDrawers.setItemLocked(LockAttribute.LOCK_POPULATED, !locked);
                 tileDrawers.setItemLocked(LockAttribute.LOCK_EMPTY, !locked);
@@ -291,7 +293,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
             else if (item.getItem() == ModItems.quantifyKey) {
                 tileDrawers.setIsShowingQuantity(!tileDrawers.isShowingQuantity());
                 return true;
-            }
+            }*/
             else if (item.getItem() instanceof ItemPersonalKey) {
                 String securityKey = ((ItemPersonalKey) item.getItem()).getSecurityProviderKey(item.getItemDamage());
                 ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);

@@ -12,17 +12,17 @@ public interface IStorageProvider
 
     int getSlotStackCapacity (int slot);
 
-    boolean isLocked (int slot, LockAttribute attr);
+    //boolean isLocked (int slot, LockAttribute attr);
 
-    boolean isVoid (int slot);
+    //boolean isVoid (int slot);
 
-    boolean isShrouded (int slot);
+    //boolean isShrouded (int slot);
 
-    boolean setIsShrouded (int slot, boolean state);
+    //boolean setIsShrouded (int slot, boolean state);
 
-    boolean isShowingQuantity (int slot);
+    //boolean isShowingQuantity (int slot);
 
-    boolean setIsShowingQuantity (int slot, boolean state);
+    //boolean setIsShowingQuantity (int slot, boolean state);
 
     boolean isStorageUnlimited (int slot);
 

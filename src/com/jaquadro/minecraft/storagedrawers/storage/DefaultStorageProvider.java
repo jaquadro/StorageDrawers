@@ -36,7 +36,7 @@ public class DefaultStorageProvider implements IStorageProvider
         return 0;
     }
 
-    @Override
+    /*@Override
     public boolean isLocked ( int slot, LockAttribute attr) {
         return false;
     }
@@ -64,7 +64,7 @@ public class DefaultStorageProvider implements IStorageProvider
     @Override
     public boolean setIsShowingQuantity (int slot, boolean state) {
         return false;
-    }
+    }*/
 
     @Override
     public boolean isStorageUnlimited (int slot) {
