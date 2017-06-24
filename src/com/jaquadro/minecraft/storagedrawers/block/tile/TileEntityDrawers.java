@@ -12,6 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.core.capabilities.BasicDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.core.capabilities.CapabilityDrawerAttributes;
@@ -40,6 +41,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 {
     private LockableData lockData = new LockableData();
     private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
+    private MaterialData materialData = new MaterialData();
     public final ControllerData controllerData = new ControllerData();
 
     private IDrawer[] drawers;
@@ -56,13 +58,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     private long lastClickTime;
     private UUID lastClickUUID;
-
-    @Nonnull
-    private ItemStack materialSide;
-    @Nonnull
-    private ItemStack materialFront;
-    @Nonnull
-    private ItemStack materialTrim;
 
     private class DrawerAttributes extends BasicDrawerAttributes
     {
@@ -83,13 +78,11 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         upgradeData = new UpgradeData(7);
         upgradeData.setDrawerAttributes(drawerAttributes);
 
-        materialSide = ItemStack.EMPTY;
-        materialFront = ItemStack.EMPTY;
-        materialTrim = ItemStack.EMPTY;
-
         injectData(lockData);
-        injectData(customNameData);
+        injectPortableData(customNameData);
+        injectPortableData(materialData);
         injectData(controllerData);
+
         initWithDrawerCount(drawerCount);
     }
 
@@ -107,6 +100,10 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     public UpgradeData upgrades () {
         return upgradeData;
+    }
+
+    public MaterialData material () {
+        return materialData;
     }
 
     public int getDirection () {
@@ -369,52 +366,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return (int)Math.ceil(maxRatio * 14);
     }
 
-    public boolean isSorting () {
-        return false;
-    }
-
-    @Nonnull
-    public ItemStack getMaterialSide () {
-        return materialSide;
-    }
-
-    @Nonnull
-    public ItemStack getMaterialFront () {
-        return materialFront;
-    }
-
-    @Nonnull
-    public ItemStack getMaterialTrim () {
-        return materialTrim;
-    }
-
-    @Nonnull
-    public ItemStack getEffectiveMaterialSide () {
-        return materialSide;
-    }
-
-    @Nonnull
-    public ItemStack getEffectiveMaterialFront () {
-        return !materialFront.isEmpty() ? materialFront : materialSide;
-    }
-
-    @Nonnull
-    public ItemStack getEffectiveMaterialTrim () {
-        return !materialTrim.isEmpty() ? materialTrim : materialSide;
-    }
-
-    public void setMaterialSide (@Nonnull ItemStack material) {
-        materialSide = material;
-    }
-
-    public void setMaterialFront (@Nonnull ItemStack material) {
-        materialFront = material;
-    }
-
-    public void setMaterialTrim (@Nonnull ItemStack material) {
-        materialTrim = material;
-    }
-
     @Nonnull
     public ItemStack takeItemsFromSlot (int slot, int count) {
         if (slot < 0 || slot >= getDrawerCount())
@@ -596,18 +547,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
             drawers[i].readFromNBT(slot);
         }
 
-        materialSide = ItemStack.EMPTY;
-        if (tag.hasKey("MatS"))
-            materialSide = new ItemStack(tag.getCompoundTag("MatS"));
-
-        materialFront = ItemStack.EMPTY;
-        if (tag.hasKey("MatF"))
-            materialFront = new ItemStack(tag.getCompoundTag("MatF"));
-
-        materialTrim = ItemStack.EMPTY;
-        if (tag.hasKey("MatT"))
-            materialTrim = new ItemStack(tag.getCompoundTag("MatT"));
-
         attributeChanged();
     }
 
@@ -657,24 +596,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         }
 
         tag.setTag("Slots", slots);
-
-        if (!materialSide.isEmpty()) {
-            NBTTagCompound itag = new NBTTagCompound();
-            materialSide.writeToNBT(itag);
-            tag.setTag("MatS", itag);
-        }
-
-        if (!materialFront.isEmpty()) {
-            NBTTagCompound itag = new NBTTagCompound();
-            materialFront.writeToNBT(itag);
-            tag.setTag("MatF", itag);
-        }
-
-        if (!materialTrim.isEmpty()) {
-            NBTTagCompound itag = new NBTTagCompound();
-            materialTrim.writeToNBT(itag);
-            tag.setTag("MatT", itag);
-        }
 
         return tag;
     }
@@ -910,7 +831,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (isSealed())
             return null;
 
-        if (getBlockType() instanceof BlockDrawersCustom && materialSide.isEmpty())
+        if (getBlockType() instanceof BlockDrawersCustom && material().getSide().isEmpty())
             return null;
 
         return drawers[slot];

@@ -32,12 +32,12 @@ public final class MaterialModelData extends ModelData
             effectiveMatTrim = ItemStack.EMPTY;
         }
         else {
-            matFront = tile.getMaterialFront();
-            matSide = tile.getMaterialSide();
-            matTrim = tile.getMaterialTrim();
-            effectiveMatFront = tile.getEffectiveMaterialFront();
-            effectiveMatSide = tile.getEffectiveMaterialSide();
-            effectiveMatTrim = tile.getEffectiveMaterialTrim();
+            matFront = tile.material().getFront();
+            matSide = tile.material().getSide();
+            matTrim = tile.material().getTrim();
+            effectiveMatFront = tile.material().getEffectiveFront();
+            effectiveMatSide = tile.material().getEffectiveSide();
+            effectiveMatTrim = tile.material().getEffectiveTrim();
         }
     }
 
@@ -52,10 +52,10 @@ public final class MaterialModelData extends ModelData
             effectiveMatTrim = ItemStack.EMPTY;
         }
         else {
-            matSide = tile.getMaterialSide();
-            matTrim = tile.getMaterialTrim();
-            effectiveMatSide = tile.getEffectiveMaterialSide();
-            effectiveMatTrim = tile.getEffectiveMaterialTrim();
+            matSide = tile.material().getSide();
+            matTrim = tile.material().getTrim();
+            effectiveMatSide = tile.material().getEffectiveSide();
+            effectiveMatTrim = tile.material().getEffectiveTrim();
         }
     }
 

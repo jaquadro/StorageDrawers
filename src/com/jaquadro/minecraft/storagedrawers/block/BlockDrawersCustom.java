@@ -47,7 +47,7 @@ public class BlockDrawersCustom extends BlockStandardDrawers
     @Override
     public boolean doesSideBlockRendering (IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
         TileEntityDrawers tile = getTileEntity(world, pos);
-        if (tile != null && tile.getEffectiveMaterialSide().isEmpty())
+        if (tile != null && tile.material().getEffectiveSide().isEmpty())
             return false;
 
         return super.doesSideBlockRendering(state, world, pos, face);
@@ -65,7 +65,7 @@ public class BlockDrawersCustom extends BlockStandardDrawers
         if (tile == null)
             return ItemCustomDrawers.makeItemStack(state, 1, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
 
-        ItemStack drop = ItemCustomDrawers.makeItemStack(state, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront());
+        ItemStack drop = ItemCustomDrawers.makeItemStack(state, 1, tile.material().getSide(), tile.material().getTrim(), tile.material().getFront());
         if (drop.isEmpty())
             return ItemStack.EMPTY;
 
@@ -92,7 +92,7 @@ public class BlockDrawersCustom extends BlockStandardDrawers
     @Override
     public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileEntityDrawers tile = getTileEntity(world, pos);
-        if (tile != null && tile.getMaterialSide().isEmpty())
+        if (tile != null && tile.material().getSide().isEmpty())
             return false;
 
         return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
