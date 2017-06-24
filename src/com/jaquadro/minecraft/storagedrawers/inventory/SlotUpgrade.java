@@ -21,15 +21,8 @@ public class SlotUpgrade extends Slot
         if (stack.isEmpty())
             return false;
 
-        if (inventory instanceof InventoryUpgrade) {
-            if (!((InventoryUpgrade)inventory).canAddUpgrade(stack))
-                return false;
-
-            if (stack.getItem() == ModItems.upgradeOneStack)
-                return ((InventoryUpgrade) inventory).canAddOneStackUpgrade();
-
-            return true;
-        }
+        if (inventory instanceof InventoryUpgrade)
+            return ((InventoryUpgrade) inventory).canAddUpgrade(stack);
 
         return false;
     }

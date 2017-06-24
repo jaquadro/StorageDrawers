@@ -123,7 +123,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
                 renderFastItem(renderer, renderStacks[i], tile, state, i, side, depth, partialTickTime);
         }
 
-        if (tile.isShowingQuantity()) {
+        if (tile.getDrawerAttributes().isShowingQuantity()) {
             EntityPlayerSP player = Minecraft.getMinecraft().player;
             BlockPos blockPos = tile.getPos().add(.5, .5, .5);
             double distance = Math.sqrt(blockPos.distanceSq(player.getPosition()));

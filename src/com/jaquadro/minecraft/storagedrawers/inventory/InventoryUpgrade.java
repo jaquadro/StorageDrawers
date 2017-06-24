@@ -105,10 +105,7 @@ public class InventoryUpgrade implements IInventory
 
     @Override
     public boolean isItemValidForSlot (int slot, @Nonnull ItemStack item) {
-        if (item.getItem() == ModItems.upgradeOneStack)
-            return tile.canAddOneStackUpgrade();
-
-        return item.getItem() instanceof ItemUpgrade;
+        return tile.upgrades().canAddUpgrade(item);
     }
 
     @Override
@@ -129,10 +126,6 @@ public class InventoryUpgrade implements IInventory
     @Override
     public void clear () {
 
-    }
-
-    public boolean canAddOneStackUpgrade () {
-        return tile.canAddOneStackUpgrade();
     }
 
     public boolean canAddUpgrade (@Nonnull ItemStack item) {

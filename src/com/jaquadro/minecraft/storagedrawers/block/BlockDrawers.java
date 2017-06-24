@@ -252,15 +252,12 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
                 return true;
             }
             else if (item.getItem() instanceof ItemUpgrade) {
-                if (item.getItem() == ModItems.upgradeOneStack && !tileDrawers.canAddOneStackUpgrade()) {
+                if (!tileDrawers.upgrades().canAddUpgrade(item)) {
                     if (!world.isRemote)
                         player.sendStatusMessage(new TextComponentTranslation("storagedrawers.msg.cannotAddUpgrade"), true);
 
-                   return false;
-                }
-
-                if (!tileDrawers.upgrades().canAddUpgrade(item))
                     return false;
+                }
 
                 if (!tileDrawers.upgrades().addUpgrade(item)) {
                     if (!world.isRemote)
@@ -279,21 +276,6 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
 
                 return true;
             }
-            /*else if (item.getItem() == ModItems.drawerKey) {
-                boolean locked = tileDrawers.isItemLocked(LockAttribute.LOCK_POPULATED);
-                tileDrawers.setItemLocked(LockAttribute.LOCK_POPULATED, !locked);
-                tileDrawers.setItemLocked(LockAttribute.LOCK_EMPTY, !locked);
-
-                return true;
-            }
-            else if (item.getItem() == ModItems.shroudKey) {
-                tileDrawers.setIsShrouded(!tileDrawers.isShrouded());
-                return true;
-            }
-            else if (item.getItem() == ModItems.quantifyKey) {
-                tileDrawers.setIsShowingQuantity(!tileDrawers.isShowingQuantity());
-                return true;
-            }*/
             else if (item.getItem() instanceof ItemPersonalKey) {
                 String securityKey = ((ItemPersonalKey) item.getItem()).getSecurityProviderKey(item.getItemDamage());
                 ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);

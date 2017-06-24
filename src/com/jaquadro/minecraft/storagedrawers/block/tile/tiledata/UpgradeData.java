@@ -61,7 +61,7 @@ public class UpgradeData implements INBTSerializable<NBTTagList>
         return true;
     }
 
-    public void setUpgrade (int slot, @Nonnull ItemStack upgrade) {
+    public boolean setUpgrade (int slot, @Nonnull ItemStack upgrade) {
         slot = MathHelper.clamp(slot, 0, upgrades.length - 1);
 
         if (!upgrade.isEmpty()) {
@@ -70,10 +70,24 @@ public class UpgradeData implements INBTSerializable<NBTTagList>
         }
 
         ItemStack prevUpgrade = upgrades[slot];
+        if (!prevUpgrade.isEmpty() && !canRemoveUpgrade(slot))
+            return false;
+
+        upgrades[slot] = ItemStack.EMPTY;
+        syncStorageMultiplier();
+
+        if (!canAddUpgrade(upgrade)) {
+            upgrades[slot] = prevUpgrade;
+            syncStorageMultiplier();
+            return false;
+        }
+
         upgrades[slot] = upgrade;
 
         syncUpgrades();
         onUpgradeChanged(prevUpgrade, upgrade);
+
+        return true;
     }
 
     public boolean canAddUpgrade (@Nonnull ItemStack upgrade) {
@@ -99,6 +113,11 @@ public class UpgradeData implements INBTSerializable<NBTTagList>
         }
 
         return true;
+    }
+
+    public boolean canRemoveUpgrade (int slot) {
+        slot = MathHelper.clamp(slot, 0, upgrades.length - 1);
+        return !upgrades[slot].isEmpty();
     }
 
     public int getStorageMultiplier () {
