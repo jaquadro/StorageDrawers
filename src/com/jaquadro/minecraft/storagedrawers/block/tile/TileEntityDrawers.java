@@ -811,12 +811,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (!getWorld().isRemote)
             return;
 
-        Minecraft.getMinecraft().addScheduledTask(new Runnable() {
-            @Override
-            public void run () {
-                TileEntityDrawers.this.clientUpdateCountAsync(slot, count);
-            }
-        });
+        Minecraft.getMinecraft().addScheduledTask(() -> TileEntityDrawers.this.clientUpdateCountAsync(slot, count));
     }
 
     @SideOnly(Side.CLIENT)
