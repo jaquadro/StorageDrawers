@@ -532,7 +532,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 pooledCount = poolMax;
 
             if (pooledCount != oldCount) {
-                if (pooledCount != 0 || TileEntityDrawersComp.this.isItemLocked(LockAttribute.LOCK_POPULATED))
+                if (pooledCount != 0 || TileEntityDrawersComp.this.getDrawerAttributes().isItemLocked(LockAttribute.LOCK_POPULATED))
                     markAmountDirty();
                 else {
                     clear();
@@ -615,7 +615,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public int getItemCapacityForInventoryStack (int slot) {
-            if (isVoid())
+            if (getDrawerAttributes().isVoid())
                 return Integer.MAX_VALUE;
             else
                 return getMaxCapacity(slot);
@@ -729,7 +729,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         private int getBaseStackCapacity () {
-            return TileEntityDrawersComp.this.getEffectiveStorageMultiplier() * TileEntityDrawersComp.this.getEffectiveDrawerCapacity();
+            return TileEntityDrawersComp.this.upgrades().getStorageMultiplier() * TileEntityDrawersComp.this.getEffectiveDrawerCapacity();
         }
 
         public void markAmountDirty () {

@@ -259,10 +259,10 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
                    return false;
                 }
 
-                if (!tileDrawers.canAddUpgrade(item))
+                if (!tileDrawers.upgrades().canAddUpgrade(item))
                     return false;
 
-                if (!tileDrawers.addUpgrade(item)) {
+                if (!tileDrawers.upgrades().addUpgrade(item)) {
                     if (!world.isRemote)
                         player.sendStatusMessage(new TextComponentTranslation("storagedrawers.msg.maxUpgrades"), true);
 
@@ -495,8 +495,8 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         TileEntityDrawers tile = getTileEntity(world, pos);
 
         if (tile != null && !tile.isSealed()) {
-            for (int i = 0; i < tile.getUpgradeSlotCount(); i++) {
-                ItemStack stack = tile.getUpgrade(i);
+            for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {
+                ItemStack stack = tile.upgrades().getUpgrade(i);
                 if (!stack.isEmpty()) {
                     if (stack.getItem() instanceof ItemUpgradeCreative)
                         continue;
@@ -552,7 +552,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile != null) {
             for (int slot = 0; slot < 5; slot++) {
-                ItemStack stack = tile.getUpgrade(slot);
+                ItemStack stack = tile.upgrades().getUpgrade(slot);
                 if (stack.isEmpty() || !(stack.getItem() instanceof ItemUpgradeStorage))
                     continue;
 

@@ -12,15 +12,11 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroupInteractive
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
-import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
-import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.core.capabilities.BasicDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.core.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
-import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
-import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
-import com.jaquadro.minecraft.storagedrawers.storage.IUpgradeProvider;
+import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +24,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
@@ -41,7 +36,7 @@ import javax.annotation.Nonnull;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends ChamLockableTileEntity implements IDrawerGroupInteractive, IUpgradeProvider, IItemLockable, ISealable, IProtectable, IQuantifiable
+public abstract class TileEntityDrawers extends ChamLockableTileEntity implements IDrawerGroupInteractive, ISealable, IProtectable
 {
     private LockableData lockData = new LockableData();
     private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
@@ -52,16 +47,12 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     private int direction;
     private String material;
     private int drawerCapacity = 1;
-    //private boolean shrouded = false;
-    //private boolean quantified = false;
     private boolean taped = false;
     private boolean hideUpgrade = false;
     private UUID owner;
     private String securityKey;
 
-    //private EnumSet<LockAttribute> lockAttributes = null;
-
-    private ItemStack[] upgrades = new ItemStack[5];
+    private UpgradeData upgradeData;
 
     private long lastClickTime;
     private UUID lastClickUUID;
@@ -89,8 +80,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     protected TileEntityDrawers (int drawerCount) {
         drawerAttributes = new DrawerAttributes();
 
-        for (int i = 0; i < upgrades.length; i++)
-            upgrades[i] = ItemStack.EMPTY;
+        upgradeData = new UpgradeData(7);
+        upgradeData.setDrawerAttributes(drawerAttributes);
 
         materialSide = ItemStack.EMPTY;
         materialFront = ItemStack.EMPTY;
@@ -108,6 +99,14 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         drawers = new IDrawer[drawerCount];
         for (int i = 0; i < drawerCount; i++)
             drawers[i] = createDrawer(i);
+    }
+
+    public IDrawerAttributes getDrawerAttributes () {
+        return drawerAttributes;
+    }
+
+    public UpgradeData upgrades () {
+        return upgradeData;
     }
 
     public int getDirection () {
@@ -131,146 +130,15 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         this.material = material;
     }
 
-    public int getMaxStorageLevel () {
-        int maxLevel = 1;
-        for (ItemStack upgrade : upgrades) {
-            if (upgrade != null && upgrade.getItem() == ModItems.upgradeStorage)
-                maxLevel = Math.max(maxLevel, upgrade.getItemDamage());
-        }
-
-        return maxLevel;
-    }
-
-    public int getEffectiveStorageLevel () {
-        int level = 0;
-        for (ItemStack upgrade : upgrades) {
-            if (upgrade.getItem() == ModItems.upgradeStorage)
-                level += upgrade.getItemDamage();
-        }
-
-        return Math.max(level, 1);
-    }
-
-    public int getEffectiveStorageMultiplier () {
-        ConfigManager config = StorageDrawers.config;
-
-        int multiplier = 0;
-        for (ItemStack stack : upgrades) {
-            if (stack.getItem() == ModItems.upgradeStorage) {
-                int level = EnumUpgradeStorage.byMetadata(stack.getItemDamage()).getLevel();
-                multiplier += config.getStorageUpgradeMultiplier(level);
-            }
-        }
-
-        if (multiplier == 0)
-            multiplier = config.getStorageUpgradeMultiplier(1);
-
-        return multiplier;
-    }
-
-    public int getEffectiveStatusLevel () {
-        int maxLevel = -1;
-        for (ItemStack upgrade : upgrades) {
-            if (upgrade.getItem() == ModItems.upgradeStatus)
-                maxLevel = upgrade.getItemDamage();
-        }
-
-        if (maxLevel == -1)
-            return 0;
-
-        return EnumUpgradeStatus.byMetadata(maxLevel).getLevel();
-    }
-
-    public int getUpgradeSlotCount () {
-        return 5;
-    }
-
-    @Nonnull
-    public ItemStack getUpgrade (int slot) {
-        slot = MathHelper.clamp(slot, 0, 4);
-        return upgrades[slot];
-    }
-
-    public boolean addUpgrade (@Nonnull ItemStack upgrade) {
-        int slot = getNextUpgradeSlot();
-        if (slot == -1)
-            return false;
-
-        setUpgrade(slot, upgrade);
-        return true;
-    }
-
-    public void setUpgrade (int slot, @Nonnull ItemStack upgrade) {
-        slot = MathHelper.clamp(slot, 0, 4);
-
-        if (!upgrade.isEmpty()) {
-            upgrade = upgrade.copy();
-            upgrade.setCount(1);
-        }
-
-        upgrades[slot] = upgrade;
-
-        if (getWorld() != null) {
-            if (!getWorld().isRemote) {
-                markDirty();
-                markBlockForUpdate();
-            }
-            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
-            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType(), false);
-        }
-
-        attributeChanged();
-    }
-
-    public boolean canAddUpgrade (@Nonnull ItemStack upgrade) {
-        if (upgrade.isEmpty())
-            return false;
-        if (!(upgrade.getItem() instanceof ItemUpgrade))
-            return false;
-
-        ItemUpgrade candidate = (ItemUpgrade)upgrade.getItem();
-        if (candidate.getAllowMultiple())
-            return true;
-
-        for (ItemStack stack : upgrades) {
-            if (stack.isEmpty())
-                continue;
-
-            if (!(stack.getItem() instanceof ItemUpgrade))
-                continue;
-
-            ItemUpgrade reference = (ItemUpgrade)stack.getItem();
-            if (candidate == reference)
-                return false;
-        }
-
-        return true;
-    }
-
-    public int getNextUpgradeSlot () {
-        for (int i = 0; i < upgrades.length; i++) {
-            if (upgrades[i].isEmpty())
-                return i;
-        }
-
-        return -1;
-    }
-
     public int getDrawerCapacity () {
         return drawerCapacity;
-    }
-
-    @Deprecated
-    public void setDrawerCapacity (int stackCount) {
-        drawerCapacity = stackCount;
-        attributeChanged();
     }
 
     public boolean canAddOneStackUpgrade () {
         if (getEffectiveDrawerCapacity() == 1)
             return false;
 
-        int storageMult = getEffectiveStorageMultiplier();
+        int storageMult = upgradeData.getStorageMultiplier();
         int lostStackCapacity = storageMult * (getEffectiveDrawerCapacity() - 1);
 
         for (int i = 0; i < getDrawerCount(); i++) {
@@ -287,10 +155,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     }
 
     public int getEffectiveDrawerCapacity () {
-        for (ItemStack upgrade : upgrades) {
-            if (!upgrade.isEmpty() && upgrade.getItem() == ModItems.upgradeOneStack)
-                return 1;
-        }
+        if (upgradeData.hasOneStackUpgrade())
+            return 1;
 
         return getDrawerCapacity();
     }
@@ -305,30 +171,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         }
     }
 
-    @Override
-    public boolean isItemLocked (LockAttribute attr) {
-        if (!StorageDrawers.config.cache.enableLockUpgrades)
-            return false;
-
-        return drawerAttributes.isItemLocked(attr);
-    }
-
-    @Override
-    public boolean canItemLock (LockAttribute attr) {
-        if (!StorageDrawers.config.cache.enableLockUpgrades)
-            return false;
-
-        return true;
-    }
-
-    @Override
-    public void setItemLocked (LockAttribute attr, boolean isLocked) {
-        if (!StorageDrawers.config.cache.enableLockUpgrades)
-            return;
-
-        drawerAttributes.setItemLocked(attr, isLocked);
-    }
-
     public boolean isShrouded () {
         if (!StorageDrawers.config.cache.enableShroudUpgrades)
             return false;
@@ -336,23 +178,11 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return drawerAttributes.isConcealed();
     }
 
-    public void setIsShrouded (boolean shrouded) {
-        drawerAttributes.setIsConcealed(shrouded);
-    }
-
     public boolean isShowingQuantity () {
         if (!StorageDrawers.config.cache.enableQuantifiableUpgrades)
             return false;
 
         return drawerAttributes.isShowingQuantity();
-    }
-
-    public boolean setIsShowingQuantity (boolean quantified) {
-        if (!StorageDrawers.config.cache.enableQuantifiableUpgrades)
-            return false;
-
-        drawerAttributes.setIsShowingQuantity(quantified);
-        return true;
     }
 
     @Override
@@ -412,19 +242,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return true;
     }
 
-    public boolean shouldHideUpgrades () {
-        return hideUpgrade;
-    }
-
-    public void setShouldHideUpgrades (boolean hide) {
-        hideUpgrade = hide;
-
-        if (getWorld() != null && !getWorld().isRemote) {
-            markDirty();
-            markBlockForUpdate();
-        }
-    }
-
     public boolean isSealed () {
         if (!StorageDrawers.config.cache.enableTape)
             return false;
@@ -450,69 +267,38 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return true;
     }
 
-    public boolean isVoid () {
-        if (!StorageDrawers.config.cache.enableVoidUpgrades)
-            return false;
-
-        for (ItemStack stack : upgrades) {
-            if (stack.getItem() == ModItems.upgradeVoid)
-                return true;
-        }
-
-        return false;
-    }
-
     public boolean isUnlimited () {
         if (!StorageDrawers.config.cache.enableCreativeUpgrades)
             return false;
 
-        for (ItemStack stack : upgrades) {
-            if (stack.getItem() == ModItems.upgradeCreative)
-                return true;
-        }
-
-        return false;
+        return upgradeData.hasUnlimitedUpgrade();
     }
 
     public boolean isVending () {
         if (!StorageDrawers.config.cache.enableCreativeUpgrades)
             return false;
 
-        for (ItemStack stack : upgrades) {
-            if (stack.getItem() == ModItems.upgradeCreative && stack.getItemDamage() == 1)
-                return true;
-        }
-
-        return false;
+        return upgradeData.hasVendingUpgrade();
     }
 
     public boolean isRedstone () {
         if (!StorageDrawers.config.cache.enableRedstoneUpgrades)
             return false;
 
-        for (ItemStack stack : upgrades) {
-            if (stack.getItem() == ModItems.upgradeRedstone)
-                return true;
-        }
-
-        return false;
+        return upgradeData.getRedstoneType() != null;
     }
 
     public int getRedstoneLevel () {
-        int redstoneType = -1;
-        for (ItemStack stack : upgrades) {
-            if (stack.getItem() == ModItems.upgradeRedstone) {
-                redstoneType = stack.getItemDamage();
-                break;
-            }
-        }
+        EnumUpgradeRedstone type = upgradeData.getRedstoneType();
+        if (type == null)
+            return 0;
 
-        switch (redstoneType) {
-            case 0:
+        switch (type) {
+            case COMBINED:
                 return getCombinedRedstoneLevel();
-            case 1:
+            case MAX:
                 return getMaxRedstoneLevel();
-            case 2:
+            case MIN:
                 return getMinRedstoneLevel();
             default:
                 return 0;
@@ -676,7 +462,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
             return 0;
 
         int countAdded = Math.min(count, stack.getCount());
-        if (!isVoid())
+        if (!drawerAttributes.isVoid())
             countAdded = Math.min(countAdded, drawer.getRemainingCapacity());
 
         drawer.setStoredItemCount(drawer.getStoredItemCount() + countAdded);
@@ -761,25 +547,14 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     public void readFromPortableNBT (NBTTagCompound tag) {
         super.readFromPortableNBT(tag);
 
-        upgrades = new ItemStack[upgrades.length];
-        for (int i = 0; i < upgrades.length; i++)
-            upgrades[i] = ItemStack.EMPTY;
-
         material = null;
         if (tag.hasKey("Mat"))
             material = tag.getString("Mat");
 
         drawerCapacity = tag.getInteger("Cap");
 
-        NBTTagList upgradeList = tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < upgradeList.tagCount(); i++) {
-            NBTTagCompound upgradeTag = upgradeList.getCompoundTagAt(i);
-
-            int slot = upgradeTag.getByte("Slot");
-            setUpgrade(slot, new ItemStack(upgradeTag));
-        }
-
-        drawerAttributes.setIsVoid(isVoid());
+        if (tag.hasKey("Upgrades"))
+            upgradeData.deserializeNBT(tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND));
 
         drawerAttributes.setItemLocked(LockAttribute.LOCK_EMPTY, false);
         drawerAttributes.setItemLocked(LockAttribute.LOCK_POPULATED, false);
@@ -845,16 +620,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (material != null)
             tag.setString("Mat", material);
 
-        NBTTagList upgradeList = new NBTTagList();
-        for (int i = 0; i < upgrades.length; i++) {
-            if (!upgrades[i].isEmpty()) {
-                NBTTagCompound upgradeTag = upgrades[i].writeToNBT(new NBTTagCompound());
-                upgradeTag.setByte("Slot", (byte)i);
-
-                upgradeList.appendTag(upgradeTag);
-            }
-        }
-
+        NBTTagList upgradeList = upgradeData.serializeNBT();
         if (upgradeList.tagCount() > 0)
             tag.setTag("Upgrades", upgradeList);
 

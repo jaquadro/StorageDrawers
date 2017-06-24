@@ -30,7 +30,7 @@ public class InventoryUpgrade implements IInventory
     @Override
     public boolean isEmpty () {
         for (int i = 0; i < upgradeCapacity; i++) {
-            if (!tile.getUpgrade(i).isEmpty())
+            if (!tile.upgrades().getUpgrade(i).isEmpty())
                 return false;
         }
 
@@ -40,15 +40,15 @@ public class InventoryUpgrade implements IInventory
     @Override
     @Nonnull
     public ItemStack getStackInSlot (int slot) {
-        return tile.getUpgrade(slot);
+        return tile.upgrades().getUpgrade(slot);
     }
 
     @Override
     @Nonnull
     public ItemStack decrStackSize (int slot, int count) {
-        ItemStack stack = tile.getUpgrade(slot);
+        ItemStack stack = tile.upgrades().getUpgrade(slot);
         if (count > 0)
-            tile.setUpgrade(slot, ItemStack.EMPTY);
+            tile.upgrades().setUpgrade(slot, ItemStack.EMPTY);
 
         return stack;
     }
@@ -64,7 +64,7 @@ public class InventoryUpgrade implements IInventory
         //if (item != null && item.stackSize > getInventoryStackLimit())
         //    item.stackSize = getInventoryStackLimit();
 
-        tile.setUpgrade(slot, item);
+        tile.upgrades().setUpgrade(slot, item);
     }
 
     @Override
@@ -136,7 +136,7 @@ public class InventoryUpgrade implements IInventory
     }
 
     public boolean canAddUpgrade (@Nonnull ItemStack item) {
-        return tile.canAddUpgrade(item);
+        return tile.upgrades().canAddUpgrade(item);
     }
 
     public boolean canRemoveStorageUpgrade (int storageLevel) {
@@ -145,7 +145,7 @@ public class InventoryUpgrade implements IInventory
 
     private boolean canRemoveStorageUpgrade (TileEntityDrawers tile, int storageLevel) {
         int storageMult = StorageDrawers.config.getStorageUpgradeMultiplier(storageLevel);
-        int effectiveStorageMult = tile.getEffectiveStorageMultiplier();
+        int effectiveStorageMult = tile.upgrades().getStorageMultiplier();
         if (effectiveStorageMult == storageMult)
             storageMult--;
 
