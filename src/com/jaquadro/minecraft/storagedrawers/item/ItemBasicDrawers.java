@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameData;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -64,7 +64,7 @@ public class ItemBasicDrawers extends ItemDrawers implements IItemMeshResolver, 
 
     @Override
     public List<ResourceLocation> getItemVariants () {
-        ResourceLocation location = GameData.getItemRegistry().getNameForObject(this);
+        ResourceLocation location = ForgeRegistries.ITEMS.getKey(this);
         List<ResourceLocation> variants = new ArrayList<ResourceLocation>();
 
         for (EnumBasicDrawer type : EnumBasicDrawer.values())

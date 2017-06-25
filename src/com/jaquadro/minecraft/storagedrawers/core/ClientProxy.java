@@ -12,17 +12,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ClientProxy extends CommonProxy
 {
     @Override
-    public void initDynamic () {
-        StorageDrawers.blocks.initDynamic();
-    }
-
-    @Override
-    public void initClient () {
-        StorageDrawers.blocks.initClient();
-        StorageDrawers.items.initClient();
-    }
-
-    @Override
     public void registerRenderers () {
         IconRegistry iconRegistry = Chameleon.instance.iconRegistry;
         iconRegistry.registerIcon(iconConcealmentOverlayResource);
@@ -35,11 +24,6 @@ public class ClientProxy extends CommonProxy
             if (iconIndicatorOnResource[i] != null)
                 iconRegistry.registerIcon(iconIndicatorOnResource[i]);
         }
-    }
-
-    @Override
-    public void registerDrawer (Block block) {
-        //MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), itemRenderer);
     }
 
     @SubscribeEvent

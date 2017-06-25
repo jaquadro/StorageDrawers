@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.common.registry.GameData;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -48,7 +48,7 @@ public class ItemTrim extends ItemMultiTexture implements IItemMeshMapper, IItem
 
     @Override
     public List<ResourceLocation> getItemVariants () {
-        ResourceLocation location = GameData.getItemRegistry().getNameForObject(this);
+        ResourceLocation location = ForgeRegistries.ITEMS.getKey(this);
         List<ResourceLocation> variants = new ArrayList<ResourceLocation>();
 
         for (BlockPlanks.EnumType woodType : BlockPlanks.EnumType.values())

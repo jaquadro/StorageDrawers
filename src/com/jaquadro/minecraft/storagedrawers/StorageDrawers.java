@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.io.File;
 
 @Mod(modid = StorageDrawers.MOD_ID, name = StorageDrawers.MOD_NAME, version = StorageDrawers.MOD_VERSION,
-    dependencies = "required-after:forge@[14.21.0.2321,);required-after:chameleon;after:waila;",
+    dependencies = "required-after:forge@[14.21.0.2362,);required-after:chameleon;after:waila;",
     guiFactory = StorageDrawers.SOURCE_PATH + "core.ModGuiFactory",
     acceptedMinecraftVersions = "[1.12,1.13)")
 public class StorageDrawers
@@ -37,10 +37,6 @@ public class StorageDrawers
 
     public static final Api api = new Api();
 
-    public static final ModBlocks blocks = new ModBlocks();
-    public static final ModItems items = new ModItems();
-    public static final ModRecipes recipes = new ModRecipes();
-
     public static SimpleNetworkWrapper network;
     public static ConfigManager config;
     public static CompTierRegistry compRegistry;
@@ -48,7 +44,6 @@ public class StorageDrawers
 
     public static RenderRegistry renderRegistry;
     public static WailaRegistry wailaRegistry;
-    //public static BlockRegistry blockRegistry;
     public static SecurityRegistry securityRegistry;
 
     @Mod.Instance(MOD_ID)
@@ -75,14 +70,8 @@ public class StorageDrawers
         oreDictRegistry = new OreDictRegistry();
         renderRegistry = new RenderRegistry();
         wailaRegistry = new WailaRegistry();
-        //blockRegistry = new BlockRegistry();
         securityRegistry = new SecurityRegistry();
 
-        blocks.init();
-        items.init();
-
-        proxy.initDynamic();
-        proxy.initClient();
         proxy.registerRenderers();
     }
 
@@ -91,7 +80,6 @@ public class StorageDrawers
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
         MinecraftForge.EVENT_BUS.register(proxy);
         MinecraftForge.EVENT_BUS.register(instance);
-        //MinecraftForge.EVENT_BUS.register(DrawerModelBakeEventHandler.instance);
 
         LocalIntegrationRegistry.instance().init();
         compRegistry.initialize();
@@ -99,10 +87,7 @@ public class StorageDrawers
 
     @Mod.EventHandler
     public void postInit (FMLPostInitializationEvent event) {
-        recipes.init();
-
         LocalIntegrationRegistry.instance().postInit();
-        //StorageDrawersApi.instance().packFactory().registerResolver(ModBlocks.resolver);
     }
 
     @SubscribeEvent

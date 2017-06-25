@@ -34,13 +34,7 @@ public class CommonProxy
         new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_4_off"),
     };
 
-    public void initDynamic ()
-    { }
-
     public void registerRenderers ()
-    { }
-
-    public void initClient ()
     { }
 
     public void updatePlayerInventory (EntityPlayer player) {
@@ -57,6 +51,4 @@ public class CommonProxy
             }
         }
     }
-
-    public void registerDrawer (Block block) { }
 }
