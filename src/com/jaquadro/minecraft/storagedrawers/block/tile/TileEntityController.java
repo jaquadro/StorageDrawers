@@ -165,10 +165,10 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     public void printDebugInfo () {
-        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Controller at " + pos.toString());
-        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "  Range: " + range + " blocks");
-        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "  Stored records: " + storage.size() + ", slot list: " + drawerSlots.length);
-        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "  Ticks since last update: " + (getWorld().getTotalWorldTime() - lastUpdateTime));
+        StorageDrawers.log.info("Controller at " + pos.toString());
+        StorageDrawers.log.info("  Range: " + range + " blocks");
+        StorageDrawers.log.info("  Stored records: " + storage.size() + ", slot list: " + drawerSlots.length);
+        StorageDrawers.log.info("  Ticks since last update: " + (getWorld().getTotalWorldTime() - lastUpdateTime));
     }
 
     @Override

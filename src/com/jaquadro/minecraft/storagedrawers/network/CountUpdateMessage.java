@@ -47,7 +47,7 @@ public class CountUpdateMessage implements IMessage
         }
         catch (IndexOutOfBoundsException e) {
             failed = true;
-            FMLLog.log(StorageDrawers.MOD_ID, Level.ERROR, e, "CountUpdateMessage: Unexpected end of packet.\nMessage: %s", ByteBufUtil.hexDump(buf, 0, buf.writerIndex()));
+            StorageDrawers.log.error("CountUpdateMessage: Unexpected end of packet.\nMessage: " + ByteBufUtil.hexDump(buf, 0, buf.writerIndex()), e);
         }
     }
 
