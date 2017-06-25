@@ -19,7 +19,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameData;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
@@ -74,7 +74,7 @@ public class ItemCompDrawers extends ItemBlock implements IItemMeshMapper, IItem
 
     @Override
     public List<ResourceLocation> getItemVariants () {
-        ResourceLocation location = GameData.getItemRegistry().getNameForObject(this);
+        ResourceLocation location = ForgeRegistries.ITEMS.getKey(this);
         List<ResourceLocation> variants = new ArrayList<ResourceLocation>();
 
         for (EnumCompDrawer type : EnumCompDrawer.values())
