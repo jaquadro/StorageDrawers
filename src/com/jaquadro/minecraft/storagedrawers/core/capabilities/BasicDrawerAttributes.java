@@ -14,6 +14,8 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
     private boolean isConcealed;
     private boolean isShowingQuantity;
     private boolean isVoid;
+    private boolean isUnlimitedStorage;
+    private boolean isUnlimitedVending;
 
     @Override
     public boolean canItemLock (LockAttribute attr) {
@@ -85,6 +87,36 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
     }
 
     @Override
+    public boolean isUnlimitedStorage () {
+        return isUnlimitedStorage;
+    }
+
+    @Override
+    public boolean setIsUnlimitedStorage (boolean state) {
+        if (isUnlimitedStorage != state) {
+            isUnlimitedStorage = state;
+            onAttributeChanged();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean isUnlimitedVending () {
+        return isUnlimitedVending;
+    }
+
+    @Override
+    public boolean setIsUnlimitedVending (boolean state) {
+        if (isUnlimitedVending != state) {
+            isUnlimitedVending = state;
+            onAttributeChanged();
+        }
+
+        return true;
+    }
+
+    @Override
     public NBTTagCompound serializeNBT () {
         NBTTagCompound tag = new NBTTagCompound();
 
@@ -92,6 +124,8 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
         tag.setBoolean("concealed", isConcealed);
         tag.setBoolean("void", isVoid);
         tag.setBoolean("quant", isShowingQuantity);
+        tag.setBoolean("unlimited", isUnlimitedStorage);
+        tag.setBoolean("vending", isUnlimitedVending);
 
         return tag;
     }
@@ -102,6 +136,8 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
         isConcealed = nbt.getBoolean("concealed");
         isVoid = nbt.getBoolean("void");
         isShowingQuantity = nbt.getBoolean("quant");
+        isUnlimitedStorage = nbt.getBoolean("unlimited");
+        isUnlimitedVending = nbt.getBoolean("vending");
     }
 
     protected void onAttributeChanged () { }

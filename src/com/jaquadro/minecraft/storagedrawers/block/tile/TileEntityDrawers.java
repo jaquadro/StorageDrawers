@@ -44,6 +44,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     private LockableData lockData = new LockableData();
     private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
     private MaterialData materialData = new MaterialData();
+    private UpgradeData upgradeData = new DrawerUpgradeData();
+
     public final ControllerData controllerData = new ControllerData();
 
     private IDrawer[] drawers;
@@ -56,7 +58,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     private String securityKey;
 
     private IDrawerAttributesModifiable drawerAttributes;
-    private UpgradeData upgradeData;
 
     private long lastClickTime;
     private UUID lastClickUUID;
@@ -143,11 +144,11 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     protected TileEntityDrawers (int drawerCount) {
         drawerAttributes = new DrawerAttributes();
 
-        upgradeData = new DrawerUpgradeData();
         upgradeData.setDrawerAttributes(drawerAttributes);
 
         injectData(lockData);
         injectPortableData(customNameData);
+        injectPortableData(upgradeData);
         injectPortableData(materialData);
         injectData(controllerData);
 
@@ -296,20 +297,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         }
 
         return true;
-    }
-
-    public boolean isUnlimited () {
-        if (!StorageDrawers.config.cache.enableCreativeUpgrades)
-            return false;
-
-        return upgradeData.hasUnlimitedUpgrade();
-    }
-
-    public boolean isVending () {
-        if (!StorageDrawers.config.cache.enableCreativeUpgrades)
-            return false;
-
-        return upgradeData.hasVendingUpgrade();
     }
 
     public boolean isRedstone () {
@@ -538,9 +525,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         drawerCapacity = tag.getInteger("Cap");
 
-        if (tag.hasKey("Upgrades"))
-            upgradeData.deserializeNBT(tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND));
-
         drawerAttributes.setItemLocked(LockAttribute.LOCK_EMPTY, false);
         drawerAttributes.setItemLocked(LockAttribute.LOCK_POPULATED, false);
         if (tag.hasKey("Lock")) {
@@ -588,10 +572,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         if (material != null)
             tag.setString("Mat", material);
-
-        NBTTagList upgradeList = upgradeData.serializeNBT();
-        if (upgradeList.tagCount() > 0)
-            tag.setTag("Upgrades", upgradeList);
 
         EnumSet<LockAttribute> attrs = EnumSet.noneOf(LockAttribute.class);
         if (drawerAttributes.isItemLocked(LockAttribute.LOCK_EMPTY))

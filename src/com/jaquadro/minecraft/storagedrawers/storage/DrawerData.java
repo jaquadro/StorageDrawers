@@ -31,7 +31,6 @@ public class DrawerData extends BaseDrawerData
     private ItemStack protoStack;
     private int count;
 
-    private boolean isUnlimited;
     private int stackCapacity;
 
     public DrawerData (IStorageProvider provider, ICapabilityProvider capProvider, int slot) {
@@ -91,7 +90,7 @@ public class DrawerData extends BaseDrawerData
 
     @Override
     public int getStoredItemCount () {
-        if (!protoStack.isEmpty() && storageProvider.isVendingUnlimited(slot))
+        if (!protoStack.isEmpty() && attrs.isUnlimitedVending())
             return Integer.MAX_VALUE;
 
         return count;
@@ -103,7 +102,7 @@ public class DrawerData extends BaseDrawerData
     }
 
     public void setStoredItemCount (int amount, boolean mark, boolean clearOnEmpty) {
-        if (protoStack.isEmpty() || storageProvider.isVendingUnlimited(slot))
+        if (protoStack.isEmpty() || attrs.isUnlimitedVending())
             return;
 
         count = amount;
@@ -132,7 +131,7 @@ public class DrawerData extends BaseDrawerData
         if (itemPrototype.isEmpty())
             return 0;
 
-        if (isUnlimited)
+        if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
             return Integer.MAX_VALUE;
 
         return itemPrototype.getItem().getItemStackLimit(itemPrototype) * stackCapacity;
@@ -140,7 +139,7 @@ public class DrawerData extends BaseDrawerData
 
     @Override
     public int getDefaultMaxCapacity () {
-        if (isUnlimited)
+        if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
             return Integer.MAX_VALUE;
 
         return 64 * stackCapacity;
@@ -151,7 +150,7 @@ public class DrawerData extends BaseDrawerData
         if (protoStack.isEmpty())
             return 0;
 
-        if (storageProvider.isVendingUnlimited(slot))
+        if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
             return Integer.MAX_VALUE;
 
         return getMaxCapacity() - getStoredItemCount();
@@ -200,7 +199,6 @@ public class DrawerData extends BaseDrawerData
     }
 
     private void updateAttributeCache () {
-        isUnlimited = storageProvider.isStorageUnlimited(slot) || storageProvider.isVendingUnlimited(slot);
         stackCapacity = storageProvider.getSlotStackCapacity(slot);
     }
 

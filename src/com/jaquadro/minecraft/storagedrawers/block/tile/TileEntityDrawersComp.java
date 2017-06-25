@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
@@ -510,7 +511,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (convRate == null || convRate[slot] == 0)
                 return 0;
 
-            if (TileEntityDrawersComp.this.isVending())
+            if (TileEntityDrawersComp.this.getDrawerAttributes().isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
             return pooledCount / convRate[slot];
@@ -521,7 +522,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (convRate == null || convRate[slot] == 0)
                 return;
 
-            if (TileEntityDrawersComp.this.isVending())
+            if (TileEntityDrawersComp.this.getDrawerAttributes().isUnlimitedVending())
                 return;
 
             int oldCount = pooledCount;
@@ -552,7 +553,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (protoStack[0].isEmpty() || protoStack[slot].isEmpty() || convRate == null || convRate[slot] == 0)
                 return 0;
 
-            if (TileEntityDrawersComp.this.isUnlimited() || TileEntityDrawersComp.this.isVending()) {
+            IDrawerAttributes attrs = TileEntityDrawersComp.this.getDrawerAttributes();
+            if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending()) {
                 if (convRate == null || protoStack[slot].isEmpty() || convRate[slot] == 0)
                     return Integer.MAX_VALUE;
                 return Integer.MAX_VALUE / convRate[slot];
@@ -566,7 +568,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (itemPrototype.isEmpty())
                 return 0;
 
-            if (TileEntityDrawersComp.this.isUnlimited() || TileEntityDrawersComp.this.isVending()) {
+            IDrawerAttributes attrs = TileEntityDrawersComp.this.getDrawerAttributes();
+            if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending()) {
                 if (convRate == null || protoStack[slot].isEmpty() || convRate[slot] == 0)
                     return Integer.MAX_VALUE;
                 return Integer.MAX_VALUE / convRate[slot];
@@ -586,7 +589,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             if (!isDrawerEnabled(slot))
                 return 0;
 
-            if (TileEntityDrawersComp.this.isUnlimited() || TileEntityDrawersComp.this.isVending())
+            IDrawerAttributes attrs = TileEntityDrawersComp.this.getDrawerAttributes();
+            if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
             return 64 * getBaseStackCapacity();
@@ -596,7 +600,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         public int getRemainingCapacity (int slot) {
             if (protoStack[0].isEmpty() || protoStack[slot].isEmpty() || convRate == null || convRate[slot] == 0)
                 return 0;
-            if (TileEntityDrawersComp.this.isVending())
+            if (TileEntityDrawersComp.this.getDrawerAttributes().isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
             int rawMaxCapacity = protoStack[0].getItem().getItemStackLimit(protoStack[0]) * getStackCapacity(0) * convRate[0];

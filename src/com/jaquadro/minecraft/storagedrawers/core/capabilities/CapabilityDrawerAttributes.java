@@ -36,6 +36,8 @@ public class CapabilityDrawerAttributes
             tag.setBoolean("concealed", instance.isConcealed());
             tag.setBoolean("void", instance.isVoid());
             tag.setBoolean("quant", instance.isShowingQuantity());
+            tag.setBoolean("unlimited", instance.isUnlimitedStorage());
+            tag.setBoolean("vending", instance.isUnlimitedVending());
 
             return tag;
         }
@@ -59,6 +61,8 @@ public class CapabilityDrawerAttributes
             modifiable.setIsConcealed(tag.getBoolean("concealed"));
             modifiable.setIsVoid(tag.getBoolean("void"));
             modifiable.setIsShowingQuantity(tag.getBoolean("quant"));
+            modifiable.setIsUnlimitedStorage(tag.getBoolean("unlimited"));
+            modifiable.setIsUnlimitedVending(tag.getBoolean("vending"));
         }
     }
 }

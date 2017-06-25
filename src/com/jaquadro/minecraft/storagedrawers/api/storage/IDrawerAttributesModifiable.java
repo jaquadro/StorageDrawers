@@ -40,4 +40,12 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
     default boolean setIsVoid (boolean state) {
         return false;
     }
+
+    default boolean setIsUnlimitedStorage (boolean state) {
+        return false;
+    }
+
+    default boolean setIsUnlimitedVending (boolean state) {
+        return false;
+    }
 }

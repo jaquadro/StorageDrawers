@@ -24,9 +24,9 @@ public interface IStorageProvider
 
     //boolean setIsShowingQuantity (int slot, boolean state);
 
-    boolean isStorageUnlimited (int slot);
+    //boolean isStorageUnlimited (int slot);
 
-    boolean isVendingUnlimited (int slot);
+    //boolean isVendingUnlimited (int slot);
 
     boolean isRedstone (int slot);
 

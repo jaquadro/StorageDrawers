@@ -49,4 +49,12 @@ public interface IDrawerAttributes
     default boolean isVoid () {
         return false;
     }
+
+    default boolean isUnlimitedStorage () {
+        return false;
+    }
+
+    default boolean isUnlimitedVending () {
+        return false;
+    }
 }

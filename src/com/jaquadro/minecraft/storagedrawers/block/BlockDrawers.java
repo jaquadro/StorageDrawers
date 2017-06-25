@@ -486,7 +486,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
                 }
             }
 
-            if (!tile.isVending())
+            if (!tile.getDrawerAttributes().isUnlimitedVending())
                 DrawerInventoryHelper.dropInventoryItems(world, pos, tile);
         }
 

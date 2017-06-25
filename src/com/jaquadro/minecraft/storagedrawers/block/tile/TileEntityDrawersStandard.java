@@ -149,7 +149,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         @Override
         public boolean setIsShowingQuantity (int slot, boolean state) {
             return TileEntityDrawersStandard.this.setIsShowingQuantity(state);
-        }*/
+        }
 
         @Override
         public boolean isStorageUnlimited (int slot) {
@@ -159,7 +159,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         @Override
         public boolean isVendingUnlimited (int slot) {
             return TileEntityDrawersStandard.this.isVending();
-        }
+        }*/
 
         @Override
         public boolean isRedstone (int slot) {

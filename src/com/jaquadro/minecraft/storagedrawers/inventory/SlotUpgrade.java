@@ -33,7 +33,7 @@ public class SlotUpgrade extends Slot
             ItemStack stack = getStack();
             if (stack.getItem() == ModItems.upgradeStorage) {
                 EnumUpgradeStorage upgrade = EnumUpgradeStorage.byMetadata(stack.getMetadata());
-                return ((InventoryUpgrade) inventory).canRemoveStorageUpgrade(upgrade.getLevel());
+                return ((InventoryUpgrade) inventory).canRemoveStorageUpgrade(getSlotIndex());
             }
 
             if (player != null) {

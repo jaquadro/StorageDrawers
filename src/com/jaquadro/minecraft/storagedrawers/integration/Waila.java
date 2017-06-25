@@ -140,7 +140,7 @@ public class Waila extends IntegrationModule
                 }
 
                 if (config.getConfig("display.stacklimit")) {
-                    if (tile.isUnlimited() || tile.isVending())
+                    if (tile.getDrawerAttributes().isUnlimitedStorage() || tile.getDrawerAttributes().isUnlimitedVending())
                         currenttip.add(I18n.format("storagedrawers.waila.nolimit"));
                     else {
                         int multiplier = tile.upgrades().getStorageMultiplier();

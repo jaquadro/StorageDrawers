@@ -64,7 +64,7 @@ public class DefaultStorageProvider implements IStorageProvider
     @Override
     public boolean setIsShowingQuantity (int slot, boolean state) {
         return false;
-    }*/
+    }
 
     @Override
     public boolean isStorageUnlimited (int slot) {
@@ -74,7 +74,7 @@ public class DefaultStorageProvider implements IStorageProvider
     @Override
     public boolean isVendingUnlimited (int slot) {
         return false;
-    }
+    }*/
 
     @Override
     public boolean isRedstone (int slot) {

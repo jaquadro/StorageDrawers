@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
+import com.jaquadro.minecraft.chameleon.block.tiledata.TileDataShim;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
@@ -10,11 +11,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 
-public class UpgradeData implements INBTSerializable<NBTTagList>
+public class UpgradeData extends TileDataShim implements INBTSerializable<NBTTagList>
 {
     private final ItemStack[] upgrades;
     private int storageMultiplier;
@@ -182,6 +184,8 @@ public class UpgradeData implements INBTSerializable<NBTTagList>
         }
 
         attrs.setIsVoid(hasVoid);
+        attrs.setIsUnlimitedStorage(hasUnlimited);
+        attrs.setIsUnlimitedVending(hasVending);
     }
 
     private void syncStorageMultiplier () {
@@ -244,6 +248,21 @@ public class UpgradeData implements INBTSerializable<NBTTagList>
             int slot = upgradeTag.getByte("Slot");
             setUpgrade(slot, new ItemStack(upgradeTag));
         }
+    }
+
+    @Override
+    public void readFromNBT (NBTTagCompound tag) {
+        if (tag.hasKey("Upgrades"))
+            deserializeNBT(tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND));
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT (NBTTagCompound tag) {
+        NBTTagList upgradeList = serializeNBT();
+        if (upgradeList.tagCount() > 0)
+            tag.setTag("Upgrades", upgradeList);
+
+        return tag;
     }
 
     protected void onUpgradeChanged (ItemStack oldUpgrade, ItemStack newUpgrade) { }
