@@ -218,13 +218,13 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         ItemStack uTier1 = findHigherTier(stack);
         if (!uTier1.isEmpty()) {
             if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
-                FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Picked candidate " + uTier1.toString() + " with conv=" + lookupSizeResult);
+                StorageDrawers.log.info("Picked candidate " + uTier1.toString() + " with conv=" + lookupSizeResult);
 
             int uCount1 = lookupSizeResult;
             ItemStack uTier2 = findHigherTier(uTier1);
             if (!uTier2.isEmpty()) {
                 if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
-                    FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Picked candidate " + uTier2.toString() + " with conv=" + lookupSizeResult);
+                    StorageDrawers.log.info("Picked candidate " + uTier2.toString() + " with conv=" + lookupSizeResult);
 
                 populateSlot(index++, uTier2, lookupSizeResult * uCount1);
             }
@@ -240,7 +240,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         ItemStack lTier1 = findLowerTier(stack);
         if (!lTier1.isEmpty()) {
             if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
-                FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Picked candidate " + lTier1.toString() + " with conv=" + lookupSizeResult);
+                StorageDrawers.log.info("Picked candidate " + lTier1.toString() + " with conv=" + lookupSizeResult);
 
             populateSlot(index++, lTier1, 1);
             for (int i = 0; i < index - 1; i++)
@@ -253,7 +253,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         ItemStack lTier2 = findLowerTier(lTier1);
         if (!lTier2.isEmpty()) {
             if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
-                FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Picked candidate " + lTier2.toString() + " with conv=" + lookupSizeResult);
+                StorageDrawers.log.info("Picked candidate " + lTier2.toString() + " with conv=" + lookupSizeResult);
 
             populateSlot(index++, lTier2, 1);
             for (int i = 0; i < index - 1; i++)
@@ -273,12 +273,12 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     @Nonnull
     private ItemStack findHigherTier (@Nonnull ItemStack stack) {
         if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Finding ascending candidates for " + stack.toString());
+            StorageDrawers.log.info("Finding ascending candidates for " + stack.toString());
 
         CompTierRegistry.Record record = StorageDrawers.compRegistry.findHigherTier(stack);
         if (record != null) {
             if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
-                FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Found " + record.upper.toString() + " in registry with conv=" + record.convRate);
+                StorageDrawers.log.info("Found " + record.upper.toString() + " in registry with conv=" + record.convRate);
 
             lookupSizeResult = record.convRate;
             return record.upper;
@@ -310,7 +310,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
                     candidates.add(match);
                     if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
-                        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Found ascending candidate for " + stack.toString() + ": " + match.toString() + " size=" + lookupSizeResult + ", inverse=" + comp.toString());
+                        StorageDrawers.log.info("Found ascending candidate for " + stack.toString() + ": " + match.toString() + " size=" + lookupSizeResult + ", inverse=" + comp.toString());
 
                     break;
                 }
@@ -327,7 +327,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             return candidates.get(0);
 
         if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "No candidates found");
+            StorageDrawers.log.info("No candidates found");
 
         return ItemStack.EMPTY;
     }
@@ -350,12 +350,12 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     @Nonnull
     private ItemStack findLowerTier (@Nonnull ItemStack stack) {
         if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Finding descending candidates for " + stack.toString());
+            StorageDrawers.log.info("Finding descending candidates for " + stack.toString());
 
         CompTierRegistry.Record record = StorageDrawers.compRegistry.findLowerTier(stack);
         if (record != null) {
             if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
-                FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Found " + record.lower.toString() + " in registry with conv=" + record.convRate);
+                StorageDrawers.log.info("Found " + record.lower.toString() + " in registry with conv=" + record.convRate);
 
             lookupSizeResult = record.convRate;
             return record.lower;
@@ -381,9 +381,9 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                         candidatesRate.put(match, lookupSizeResult);
 
                         if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
-                            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Found descending candidate for " + stack.toString() + ": " + match.toString() + " size=" + lookupSizeResult + ", inverse=" + comp.toString());
+                            StorageDrawers.log.info("Found descending candidate for " + stack.toString() + ": " + match.toString() + " size=" + lookupSizeResult + ", inverse=" + comp.toString());
                     } else if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
-                        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Back-check failed for " + match.toString() + " size=" + lookupSizeResult + ", inverse=" + comp.toString());
+                        StorageDrawers.log.info("Back-check failed for " + match.toString() + " size=" + lookupSizeResult + ", inverse=" + comp.toString());
                 }
             }
         }
@@ -402,7 +402,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "No candidates found");
+            StorageDrawers.log.info("No candidates found");
 
         return ItemStack.EMPTY;
     }

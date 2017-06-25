@@ -20,6 +20,7 @@ import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.*;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleManager;
@@ -231,8 +232,8 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
             return false;
 
         if (StorageDrawers.config.cache.debugTrace) {
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockActivated");
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item.isEmpty()) ? "  null item" : "  " + item.toString());
+            StorageDrawers.log.info("BlockDrawers.onBlockActivated");
+            StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item.toString());
         }
 
         if (!item.isEmpty()) {
@@ -351,7 +352,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         }
 
         if (StorageDrawers.config.cache.debugTrace)
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "onBlockClicked");
+            StorageDrawers.log.info("onBlockClicked");
 
         RayTraceResult rayResult = net.minecraftforge.common.ForgeHooks.rayTraceEyes(playerIn, ((EntityPlayerMP) playerIn).interactionManager.getBlockReachDistance() + 1);
         if (rayResult == null)
@@ -392,7 +393,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
             item = tileDrawers.takeItemsFromSlot(slot, 1);
 
         if (StorageDrawers.config.cache.debugTrace)
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item.isEmpty()) ? "  null item" : "  " + item.toString());
+            StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item.toString());
 
         IBlockState state = worldIn.getBlockState(pos);
         if (!item.isEmpty()) {
@@ -422,21 +423,28 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
     }
 
     @Override
-    public boolean isSideSolid (IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side) {
+    @SuppressWarnings("deprecation")
+    public BlockFaceShape getBlockFaceShape (IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing side) {
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile == null)
-            return true;
+            return BlockFaceShape.SOLID;
 
         if (isHalfDepth(state))
-            return side.getOpposite().ordinal() == tile.getDirection();
+            return side.getOpposite().ordinal() == tile.getDirection() ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
 
         if (side == EnumFacing.DOWN) {
             Block blockUnder = world.getBlockState(pos.down()).getBlock();
             if (blockUnder instanceof BlockChest || blockUnder instanceof BlockEnderChest)
-                return false;
+                return BlockFaceShape.UNDEFINED;
         }
 
-        return side.ordinal() != tile.getDirection();
+        return side.ordinal() != tile.getDirection() ? BlockFaceShape.SOLID : BlockFaceShape.BOWL;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean isSideSolid (IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side) {
+        return getBlockFaceShape(world, state, pos, side) == BlockFaceShape.SOLID;
     }
 
     private void dropItemStack (World world, BlockPos pos, EntityPlayer player, @Nonnull ItemStack stack) {
@@ -494,12 +502,8 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
     }
 
     @Override
-    @Nonnull
-    public List<ItemStack> getDrops (IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        List<ItemStack> drops = new ArrayList<ItemStack>();
+    public void getDrops (NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         drops.add(getMainDrop(world, pos, state));
-
-        return drops;
     }
 
     protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {

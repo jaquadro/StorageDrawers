@@ -98,6 +98,7 @@ public class BlockVariantDrawers extends BlockStandardDrawers
         Block protoBlock = Block.getBlockFromItem(prototype.getItem());
         int protoMeta = prototype.getItemDamage();
 
+        @SuppressWarnings("deprecation")
         IBlockState newState = protoBlock.getStateFromMeta(protoMeta);
         if (newState == null || !(newState.getBlock() instanceof BlockTrim))
             return false;

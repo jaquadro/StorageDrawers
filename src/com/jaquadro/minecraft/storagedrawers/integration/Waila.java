@@ -21,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -84,7 +85,8 @@ public class Waila extends IntegrationModule
         @Override
         @Nonnull
         public ItemStack getWailaStack (IWailaDataAccessor accessor, IWailaConfigHandler config) {
-            List<ItemStack> drops = accessor.getBlock().getDrops(accessor.getWorld(), accessor.getPosition(), accessor.getBlockState(), 0);
+            NonNullList<ItemStack> drops = NonNullList.create();
+            accessor.getBlock().getDrops(drops, accessor.getWorld(), accessor.getPosition(), accessor.getBlockState(), 0);
             if (drops.size() == 0)
                 return ItemStack.EMPTY;
 

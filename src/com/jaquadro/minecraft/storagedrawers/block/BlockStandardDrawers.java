@@ -146,6 +146,7 @@ public class BlockStandardDrawers extends BlockDrawers
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean causesSuffocation (IBlockState state) {
         return false;
     }

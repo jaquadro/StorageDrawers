@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
@@ -37,6 +38,7 @@ public class StorageDrawers
 
     public static final Api api = new Api();
 
+    public static Logger log;
     public static SimpleNetworkWrapper network;
     public static ConfigManager config;
     public static CompTierRegistry compRegistry;
@@ -54,6 +56,7 @@ public class StorageDrawers
 
     @Mod.EventHandler
     public void preInit (FMLPreInitializationEvent event) {
+        log = event.getModLog();
         config = new ConfigManager(new File(event.getModConfigurationDirectory(), MOD_ID + ".cfg"));
 
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
