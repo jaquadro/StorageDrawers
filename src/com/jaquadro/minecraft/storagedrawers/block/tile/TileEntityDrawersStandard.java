@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
@@ -9,19 +10,18 @@ import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import com.jaquadro.minecraft.storagedrawers.storage.*;
-import com.jaquadro.minecraft.storagedrawers.storage.IStorageProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class TileEntityDrawersStandard extends TileEntityDrawers
 {
     private static final String[] GUI_IDS = new String[] {
         null, StorageDrawers.MOD_ID + ":basicDrawers1", StorageDrawers.MOD_ID + ":basicDrawers2", null, StorageDrawers.MOD_ID + ":basicDrawers4"
     };
-
-    private IStorageProvider storageProvider = new StandardStorageProvider();
 
     private int capacity = 0;
 
@@ -37,15 +37,9 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         initWithDrawerCount(count);
     }
 
-    protected IStorageProvider getStorageProvider () {
-        if (storageProvider == null)
-            storageProvider = new StandardStorageProvider();
-        return storageProvider;
-    }
-
     @Override
     protected IDrawer createDrawer (int slot) {
-        return new DrawerData(getStorageProvider(), this, slot);
+        return new StandardDrawerData(this, slot);
     }
 
     @Override
@@ -102,68 +96,44 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
             if (capacity <= 0)
                 capacity = 1;
-
-            attributeChanged();
         }
 
         return capacity;
     }
 
-    private class StandardStorageProvider extends DefaultStorageProvider
+    private class StandardDrawerData extends DrawerData
     {
-        public StandardStorageProvider () {
-            super(TileEntityDrawersStandard.this, TileEntityDrawersStandard.this);
+        private int slot;
+
+        public StandardDrawerData (ICapabilityProvider capProvider, int slot) {
+            super(capProvider);
+            this.slot = slot;
         }
 
         @Override
-        public int getSlotStackCapacity (int slot) {
+        protected int getStackCapacity () {
             return upgrades().getStorageMultiplier() * getEffectiveDrawerCapacity();
         }
 
-        /*@Override
-        public boolean isLocked (int slot, LockAttribute attr) {
-            return TileEntityDrawersStandard.this.isItemLocked(attr);
+        @Override
+        protected void onItemChanged () {
+            DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
+            MinecraftForge.EVENT_BUS.post(event);
+
+            if (getWorld() != null && !getWorld().isRemote) {
+                markDirty();
+                markBlockForUpdate();
+            }
         }
 
         @Override
-        public boolean isVoid (int slot) {
-            return TileEntityDrawersStandard.this.isVoid();
-        }
+        protected void onAmountChanged () {
+            syncClientCount(slot, getStoredItemCount());
 
-        @Override
-        public boolean isShrouded (int slot) {
-            return TileEntityDrawersStandard.this.isShrouded();
-        }
-
-        @Override
-        public boolean setIsShrouded (int slot, boolean state) {
-            TileEntityDrawersStandard.this.setIsShrouded(state);
-            return true;
-        }
-
-        @Override
-        public boolean isShowingQuantity (int slot) {
-            return TileEntityDrawersStandard.this.isShowingQuantity();
-        }
-
-        @Override
-        public boolean setIsShowingQuantity (int slot, boolean state) {
-            return TileEntityDrawersStandard.this.setIsShowingQuantity(state);
-        }
-
-        @Override
-        public boolean isStorageUnlimited (int slot) {
-            return TileEntityDrawersStandard.this.isUnlimited();
-        }
-
-        @Override
-        public boolean isVendingUnlimited (int slot) {
-            return TileEntityDrawersStandard.this.isVending();
-        }*/
-
-        @Override
-        public boolean isRedstone (int slot) {
-            return TileEntityDrawersStandard.this.isRedstone();
+            if (getWorld() != null && !getWorld().isRemote) {
+                markDirty();
+                markBlockForUpdate();
+            }
         }
     }
 }

@@ -3,6 +3,8 @@ package com.jaquadro.minecraft.storagedrawers.storage;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
@@ -11,16 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseDrawerData implements IDrawer
+public abstract class BaseDrawerData implements IDrawer, INBTSerializable<NBTTagCompound>
 {
     private List<ItemStack> oreDictMatches;
-    private Map<String, Object> auxData;
+    //private Map<String, Object> auxData;
 
     protected BaseDrawerData () {
-
-    }
-
-    protected void postInit () {
 
     }
 
@@ -58,7 +56,7 @@ public abstract class BaseDrawerData implements IDrawer
         }
     }
 
-    @Override
+    /*@Override
     public Object getExtendedData (String key) {
         if (auxData == null || !auxData.containsKey(key))
             return null;
@@ -75,11 +73,7 @@ public abstract class BaseDrawerData implements IDrawer
     }
 
     @Override
-    public void attributeChanged () { }
-
-    protected int getItemCapacityForInventoryStack () {
-        return getMaxCapacity();
-    }
+    public void attributeChanged () { }*/
 
     public boolean areItemsEqual (@Nonnull ItemStack item) {
         ItemStack protoStack = getStoredItemPrototype();

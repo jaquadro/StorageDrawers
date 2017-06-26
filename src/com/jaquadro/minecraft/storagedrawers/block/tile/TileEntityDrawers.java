@@ -20,9 +20,11 @@ import com.jaquadro.minecraft.storagedrawers.core.capabilities.CapabilityDrawerA
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
+import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -31,6 +33,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
@@ -66,8 +70,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     {
         @Override
         protected void onAttributeChanged () {
-            attributeChanged();
-
             if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
                 markBlockForUpdate();
@@ -118,8 +120,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         @Override
         protected void onUpgradeChanged (ItemStack oldUpgrade, ItemStack newUpgrade) {
-            attributeChanged();
-
             if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
                 markBlockForUpdate();
@@ -207,16 +207,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return getDrawerCapacity();
     }
 
-    protected void attributeChanged () {
-        for (int i = 0; i < getDrawerCount(); i++) {
-            IDrawer drawer = getDrawer(i);
-            if (drawer == null)
-                continue;
-
-            drawer.attributeChanged();
-        }
-    }
-
     @Override
     public UUID getOwner () {
         if (!StorageDrawers.config.cache.enablePersonalUpgrades)
@@ -232,8 +222,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         if ((this.owner != null && !this.owner.equals(owner)) || (owner != null && !owner.equals(this.owner))) {
             this.owner = owner;
-
-            attributeChanged();
 
             if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
@@ -263,8 +251,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if ((newKey != null && !newKey.equals(securityKey)) || (securityKey != null && !securityKey.equals(newKey))) {
             securityKey = newKey;
 
-            attributeChanged();
-
             if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
                 markBlockForUpdate();
@@ -287,8 +273,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         if (this.taped != sealed) {
             this.taped = sealed;
-
-            attributeChanged();
 
             if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
@@ -428,7 +412,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         IDrawer drawer = drawers[slot];
         if (drawer.isEmpty())
-            drawer.setStoredItem(stack, 0);
+            drawer.setStoredItem(stack);
 
         if (!drawer.canItemBeStored(stack))
             return 0;
@@ -558,10 +542,9 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         for (int i = 0, n = drawers.length; i < n; i++) {
             NBTTagCompound slot = slots.getCompoundTagAt(i);
             drawers[i] = createDrawer(i);
-            drawers[i].readFromNBT(slot);
+            if (drawers[i] instanceof INBTSerializable)
+                ((INBTSerializable)drawers[i]).deserializeNBT(slot);
         }
-
-        attributeChanged();
     }
 
     @Override
@@ -597,9 +580,10 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         NBTTagList slots = new NBTTagList();
         for (IDrawer drawer : drawers) {
-            NBTTagCompound slot = new NBTTagCompound();
-            drawer.writeToNBT(slot);
-            slots.appendTag(slot);
+            if (drawer instanceof INBTSerializable)
+                slots.appendTag(((INBTSerializable)drawer).serializeNBT());
+            else
+                slots.appendTag(new NBTTagCompound());
         }
 
         tag.setTag("Slots", slots);
@@ -784,6 +768,15 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     public boolean markDirtyIfNeeded () {
         super.markDirty();
         return true;
+    }
+
+    protected void syncClientCount (int slot, int count) {
+        if (getWorld() != null && getWorld().isRemote)
+            return;
+
+        TargetPoint point = new TargetPoint(getWorld().provider.getDimension(),
+            getPos().getX(), getPos().getY(), getPos().getZ(), 500);
+        StorageDrawers.network.sendToAllAround(new CountUpdateMessage(getPos(), slot, count), point);
     }
 
     @SideOnly(Side.CLIENT)

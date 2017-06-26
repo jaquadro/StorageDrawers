@@ -21,9 +21,9 @@ public class DrawerData extends BaseDrawerData
     @CapabilityInject(IDrawerAttributes.class)
     static Capability<IDrawerAttributes> ATTR_CAPABILITY = null;
 
-    private IStorageProvider storageProvider;
-    private ICapabilityProvider capProvider;
-    private int slot;
+    //private IStorageProvider storageProvider;
+    //private ICapabilityProvider capProvider;
+    //private int slot;
 
     IDrawerAttributes attrs;
 
@@ -33,20 +33,18 @@ public class DrawerData extends BaseDrawerData
 
     private int stackCapacity;
 
-    public DrawerData (IStorageProvider provider, ICapabilityProvider capProvider, int slot) {
-        storageProvider = provider;
-        this.capProvider = capProvider;
+    public DrawerData (ICapabilityProvider capProvider) {
+        //this.capProvider = capProvider;
 
         attrs = capProvider.getCapability(ATTR_CAPABILITY, null);
         if (attrs == null)
             attrs = new EmptyDrawerAttributes();
 
         protoStack = ItemStack.EMPTY;
-        this.slot = slot;
 
-        updateAttributeCache();
+        //updateAttributeCache();
 
-        postInit();
+        //postInit();
     }
 
     @Override
@@ -56,41 +54,34 @@ public class DrawerData extends BaseDrawerData
     }
 
     @Override
-    public IDrawer setStoredItem (@Nonnull ItemStack itemPrototype, int amount) {
-        setStoredItem(itemPrototype, amount, true);
-        return this;
-    }
+    public IDrawer setStoredItem (@Nonnull ItemStack itemPrototype) {
+        if (areItemsEqual(itemPrototype)) {
+            return this;
+        }
 
-    private void setStoredItem (@Nonnull ItemStack itemPrototype, int amount, boolean mark) {
         itemPrototype = ItemStackHelper.getItemPrototype(itemPrototype);
         if (itemPrototype.isEmpty()) {
-            setStoredItemCount(0, false, true);
-            protoStack = ItemStack.EMPTY;
-
-            DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
-            MinecraftForge.EVENT_BUS.post(event);
-
-            if (mark)
-                storageProvider.markDirty(slot);
-            return;
+            reset();
+            return this;
         }
 
         protoStack = itemPrototype;
         protoStack.setCount(1);
+        count = 0;
 
-        refreshOreDictMatches();
-        setStoredItemCount(amount, mark, false);
+        // TODO: Oredict blah blah
+        // refreshOreDictMatches();
 
-        DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
-        MinecraftForge.EVENT_BUS.post(event);
-
-        if (mark)
-            storageProvider.markDirty(slot);
+        onItemChanged();
+        return this;
     }
 
     @Override
     public int getStoredItemCount () {
-        if (!protoStack.isEmpty() && attrs.isUnlimitedVending())
+        if (protoStack.isEmpty())
+            return 0;
+
+        if (attrs.isUnlimitedVending())
             return Integer.MAX_VALUE;
 
         return count;
@@ -98,52 +89,65 @@ public class DrawerData extends BaseDrawerData
 
     @Override
     public void setStoredItemCount (int amount) {
-        setStoredItemCount(amount, true, true);
-    }
-
-    public void setStoredItemCount (int amount, boolean mark, boolean clearOnEmpty) {
-        if (protoStack.isEmpty() || attrs.isUnlimitedVending())
+        if (protoStack.isEmpty() || count == amount)
             return;
 
-        count = amount;
-        if (count > getMaxCapacity())
-            count = getMaxCapacity();
+        if (attrs.isUnlimitedVending())
+            return;
+
+        count = Math.min(amount, getMaxCapacity());
+        count = Math.max(count, 0);
 
         if (amount == 0) {
-            if (clearOnEmpty) {
-                if (!attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
-                    reset();
-                if (mark)
-                    storageProvider.markDirty(slot);
-            }
-        }
-        else if (mark)
-            storageProvider.markAmountDirty(slot);
+            if (!attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
+                reset();
+        } else
+            onAmountChanged();
     }
 
     @Override
-    public int getMaxCapacity () {
-        return getMaxCapacity(protoStack);
+    public int adjustStoredItemCount (int amount) {
+        if (protoStack.isEmpty() || amount == 0)
+            return amount;
+
+        if (amount > 0) {
+            if (attrs.isUnlimitedVending())
+                return 0;
+
+            int originalCount = count;
+            count = Math.min(amount, getMaxCapacity());
+            onAmountChanged();
+
+            if (attrs.isVoid())
+                return 0;
+
+            return amount - (count - originalCount);
+        } else {
+            int originalCount = count;
+            setStoredItemCount(originalCount + amount);
+
+            return amount - (count - originalCount);
+        }
     }
 
     @Override
     public int getMaxCapacity (@Nonnull ItemStack itemPrototype) {
-        if (itemPrototype.isEmpty())
-            return 0;
-
         if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
             return Integer.MAX_VALUE;
 
-        return itemPrototype.getItem().getItemStackLimit(itemPrototype) * stackCapacity;
+        if (itemPrototype.isEmpty())
+            return 64 * getStackCapacity();
+
+        return itemPrototype.getItem().getItemStackLimit(itemPrototype) * getStackCapacity();
     }
 
-    @Override
+    /*@Override
     public int getDefaultMaxCapacity () {
         if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
             return Integer.MAX_VALUE;
 
         return 64 * stackCapacity;
-    }
+    }*/
 
     @Override
     public int getRemainingCapacity () {
@@ -156,21 +160,13 @@ public class DrawerData extends BaseDrawerData
         return getMaxCapacity() - getStoredItemCount();
     }
 
-    @Override
-    public int getStoredItemStackSize () {
-        if (protoStack.isEmpty())
-            return 0;
-
-        return protoStack.getItem().getItemStackLimit(protoStack);
-    }
-
-    @Override
+    /*@Override
     protected int getItemCapacityForInventoryStack () {
         if (attrs.isVoid())
             return Integer.MAX_VALUE;
         else
             return getMaxCapacity();
-    }
+    }*/
 
     @Override
     public boolean canItemBeStored (@Nonnull ItemStack itemPrototype) {
@@ -193,53 +189,60 @@ public class DrawerData extends BaseDrawerData
         return protoStack.isEmpty();
     }
 
-    @Override
+    /*@Override
     public void attributeChanged () {
         updateAttributeCache();
-    }
+    }*/
 
-    private void updateAttributeCache () {
+    /*private void updateAttributeCache () {
         stackCapacity = storageProvider.getSlotStackCapacity(slot);
-    }
-
-    public void writeToNBT (NBTTagCompound tag) {
-        if (!protoStack.isEmpty()) {
-            tag.setShort("Item", (short) Item.getIdFromItem(protoStack.getItem()));
-            tag.setShort("Meta", (short) protoStack.getMetadata());
-            tag.setInteger("Count", count);
-
-            if (protoStack.getTagCompound() != null)
-                tag.setTag("Tags", protoStack.getTagCompound());
-        }
-    }
-
-    public void readFromNBT (NBTTagCompound tag) {
-        if (tag.hasKey("Item") && tag.hasKey("Count")) {
-            Item item = Item.getItemById(tag.getShort("Item"));
-            if (item != null) {
-                ItemStack stack = new ItemStack(item);
-                stack.setItemDamage(tag.getShort("Meta"));
-                if (tag.hasKey("Tags"))
-                    stack.setTagCompound(tag.getCompoundTag("Tags"));
-
-                setStoredItem(stack, tag.getInteger("Count"), false);
-            }
-            else {
-                reset();
-            }
-        }
-        else {
-            reset();
-        }
-    }
+    }*/
 
     @Override
     protected void reset () {
         protoStack = ItemStack.EMPTY;
+        count = 0;
+
         super.reset();
 
-        DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
-        MinecraftForge.EVENT_BUS.post(event);
+        onItemChanged();
     }
+
+    @Override
+    public NBTTagCompound serializeNBT () {
+        NBTTagCompound tag = new NBTTagCompound();
+        NBTTagCompound item = new NBTTagCompound();
+        protoStack.writeToNBT(item);
+
+        tag.setTag("Item", item);
+        tag.setInteger("Count", count);
+
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT (NBTTagCompound nbt) {
+        ItemStack tagItem = ItemStack.EMPTY;
+        int tagCount = 0;
+
+        if (nbt.hasKey("Item"))
+            tagItem = new ItemStack(nbt.getCompoundTag("Item"));
+        if (nbt.hasKey("Count"))
+            tagCount = nbt.getInteger("Count");
+
+        setStoredItem(tagItem);
+        setStoredItemCount(tagCount);
+    }
+
+    protected int getStackCapacity() {
+        return stackCapacity;
+    }
+
+    // TODO: Handler should also take care of DrawerPopulatedEvent
+    // DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
+    // MinecraftForge.EVENT_BUS.post(event);
+    protected void onItemChanged() { }
+
+    protected void onAmountChanged() { }
 }
 

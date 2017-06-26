@@ -98,8 +98,6 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
             if (capacity <= 0)
                 capacity = 1;
-
-            attributeChanged();
         }
 
         return capacity;
