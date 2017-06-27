@@ -27,6 +27,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -186,6 +188,7 @@ public class ModBlocks
         }
 
         @SubscribeEvent
+        @SideOnly(Side.CLIENT)
         public static void registerModels (ModelRegistryEvent event) {
             basicDrawers.initDynamic();
             compDrawers.initDynamic();
