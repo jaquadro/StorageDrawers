@@ -146,6 +146,7 @@ public class ModBlocks
             return stack;
         }
 
+        @SubscribeEvent
         public static void registerRecipes (RegistryEvent.Register<IRecipe> event) {
             IForgeRegistry<IRecipe> registry = event.getRegistry();
             ConfigManager config = StorageDrawers.config;
