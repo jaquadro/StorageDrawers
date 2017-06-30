@@ -19,6 +19,7 @@ public interface IDrawer
      * @param itemPrototype An ItemStack representing the type, metadata, and tags of the item to store.
      * @return The IDrawer actually set with the prototype.  Some drawer groups can redirect a set operation to another member.
      */
+    @Nonnull
     IDrawer setStoredItem (@Nonnull ItemStack itemPrototype);
 
     /**

@@ -15,12 +15,12 @@ public interface IDrawerGroup
     /**
      * Gets the drawer at the given slot within this group only if it is enabled.
      */
-    IDrawer getDrawerIfEnabled (int slot);
+    //IDrawer getDrawerIfEnabled (int slot);
 
     /**
      * Gets whether the drawer in the given slot is usable.
      */
-    boolean isDrawerEnabled (int slot);
+    //boolean isDrawerEnabled (int slot);
 
-    boolean markDirtyIfNeeded ();
+    //boolean markDirtyIfNeeded ();
 }
