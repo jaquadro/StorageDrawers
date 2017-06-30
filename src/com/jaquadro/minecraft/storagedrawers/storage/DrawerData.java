@@ -98,10 +98,9 @@ public class DrawerData extends BaseDrawerData
         count = Math.min(amount, getMaxCapacity());
         count = Math.max(count, 0);
 
-        if (amount == 0) {
-            if (!attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
-                reset();
-        } else
+        if (amount == 0 && !attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
+            reset();
+        else
             onAmountChanged();
     }
 
@@ -116,13 +115,16 @@ public class DrawerData extends BaseDrawerData
 
             int originalCount = count;
             count = Math.min(amount, getMaxCapacity());
-            onAmountChanged();
+
+            if (count != originalCount)
+                onAmountChanged();
 
             if (attrs.isVoid())
                 return 0;
 
             return amount - (count - originalCount);
-        } else {
+        }
+        else {
             int originalCount = count;
             setStoredItemCount(originalCount + amount);
 
@@ -154,7 +156,7 @@ public class DrawerData extends BaseDrawerData
         if (protoStack.isEmpty())
             return 0;
 
-        if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
+        if (attrs.isUnlimitedVending())
             return Integer.MAX_VALUE;
 
         return getMaxCapacity() - getStoredItemCount();
@@ -238,9 +240,6 @@ public class DrawerData extends BaseDrawerData
         return stackCapacity;
     }
 
-    // TODO: Handler should also take care of DrawerPopulatedEvent
-    // DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
-    // MinecraftForge.EVENT_BUS.post(event);
     protected void onItemChanged() { }
 
     protected void onAmountChanged() { }
