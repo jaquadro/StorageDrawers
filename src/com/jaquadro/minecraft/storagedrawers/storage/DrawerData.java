@@ -1,15 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.storage;
 
-import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -31,20 +28,16 @@ public class DrawerData extends BaseDrawerData
     private ItemStack protoStack;
     private int count;
 
-    private int stackCapacity;
 
-    public DrawerData (ICapabilityProvider capProvider) {
-        //this.capProvider = capProvider;
-
-        attrs = capProvider.getCapability(ATTR_CAPABILITY, null);
-        if (attrs == null)
-            attrs = new EmptyDrawerAttributes();
-
+    public DrawerData () {
+        attrs = new EmptyDrawerAttributes();
         protoStack = ItemStack.EMPTY;
+    }
 
-        //updateAttributeCache();
-
-        //postInit();
+    public void setCapabilityProvider (ICapabilityProvider capProvider) {
+        IDrawerAttributes capAttrs = capProvider.getCapability(ATTR_CAPABILITY, null);
+        if (capAttrs != null)
+            attrs = capAttrs;
     }
 
     @Override
@@ -54,14 +47,19 @@ public class DrawerData extends BaseDrawerData
     }
 
     @Override
+    @Nonnull
     public IDrawer setStoredItem (@Nonnull ItemStack itemPrototype) {
+        return setStoredItem(itemPrototype, true);
+    }
+
+    protected IDrawer setStoredItem (@Nonnull ItemStack itemPrototype, boolean notify) {
         if (areItemsEqual(itemPrototype)) {
             return this;
         }
 
         itemPrototype = ItemStackHelper.getItemPrototype(itemPrototype);
         if (itemPrototype.isEmpty()) {
-            reset();
+            reset(notify);
             return this;
         }
 
@@ -72,7 +70,9 @@ public class DrawerData extends BaseDrawerData
         // TODO: Oredict blah blah
         // refreshOreDictMatches();
 
-        onItemChanged();
+        if (notify)
+            onItemChanged();
+
         return this;
     }
 
@@ -89,6 +89,10 @@ public class DrawerData extends BaseDrawerData
 
     @Override
     public void setStoredItemCount (int amount) {
+        setStoredItemCount(amount, true);
+    }
+
+    protected void setStoredItemCount (int amount, boolean notify) {
         if (protoStack.isEmpty() || count == amount)
             return;
 
@@ -99,13 +103,19 @@ public class DrawerData extends BaseDrawerData
         count = Math.max(count, 0);
 
         if (amount == 0 && !attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
-            reset();
-        else
-            onAmountChanged();
+            reset(notify);
+        else {
+            if (notify)
+                onAmountChanged();
+        }
     }
 
     @Override
     public int adjustStoredItemCount (int amount) {
+        return adjustStoredItemCount(amount, true);
+    }
+
+    protected int adjustStoredItemCount (int amount, boolean notify) {
         if (protoStack.isEmpty() || amount == 0)
             return amount;
 
@@ -116,7 +126,7 @@ public class DrawerData extends BaseDrawerData
             int originalCount = count;
             count = Math.min(amount, getMaxCapacity());
 
-            if (count != originalCount)
+            if (count != originalCount && notify)
                 onAmountChanged();
 
             if (attrs.isVoid())
@@ -126,7 +136,7 @@ public class DrawerData extends BaseDrawerData
         }
         else {
             int originalCount = count;
-            setStoredItemCount(originalCount + amount);
+            setStoredItemCount(originalCount + amount, notify);
 
             return amount - (count - originalCount);
         }
@@ -201,13 +211,14 @@ public class DrawerData extends BaseDrawerData
     }*/
 
     @Override
-    protected void reset () {
+    protected void reset (boolean notify) {
         protoStack = ItemStack.EMPTY;
         count = 0;
 
-        super.reset();
+        super.reset(notify);
 
-        onItemChanged();
+        if (notify)
+            onItemChanged();
     }
 
     @Override
@@ -232,12 +243,12 @@ public class DrawerData extends BaseDrawerData
         if (nbt.hasKey("Count"))
             tagCount = nbt.getInteger("Count");
 
-        setStoredItem(tagItem);
-        setStoredItemCount(tagCount);
+        setStoredItem(tagItem, false);
+        setStoredItemCount(tagCount, false);
     }
 
     protected int getStackCapacity() {
-        return stackCapacity;
+        return 0;
     }
 
     protected void onItemChanged() { }

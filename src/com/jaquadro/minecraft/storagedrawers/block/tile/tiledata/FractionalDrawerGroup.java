@@ -1,16 +1,15 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
 import com.jaquadro.minecraft.chameleon.block.tiledata.TileDataShim;
-import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.storage.BaseDrawerData;
+import com.jaquadro.minecraft.storagedrawers.util.CompactingHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -18,19 +17,23 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
+import java.util.Stack;
 
 public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 {
     private FractionalStorage storage;
     private FractionalDrawer[] slots;
 
-    public FractionalDrawerGroup (ICapabilityProvider capProvider, int slotCount) {
-        storage = new FractionalStorage(capProvider, this, slotCount);
+    public FractionalDrawerGroup (int slotCount) {
+        storage = new FractionalStorage(this, slotCount);
 
         slots = new FractionalDrawer[slotCount];
-        for (int i = 0; i < slotCount; i++) {
+        for (int i = 0; i < slotCount; i++)
             slots[i] = new FractionalDrawer(storage, i);
-        }
+    }
+
+    public void setCapabilityProvider (ICapabilityProvider capProvider) {
+        storage.setCapabilityProvider(capProvider);
     }
 
     @Override
@@ -39,8 +42,19 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
     }
 
     @Override
-    public FractionalDrawer getDrawer (int slot) {
+    public IFractionalDrawer getDrawer (int slot) {
+        if (slot < 0 || slot >= slots.length)
+            return Drawers.DISABLED_FRACTIONAL;
+
         return slots[slot];
+    }
+
+    public int getPooledCount () {
+        return storage.getPooledCount();
+    }
+
+    public void setPooledCount (int count) {
+        storage.setPooledCount(count);
     }
 
     @Override
@@ -55,6 +69,18 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         return tag;
     }
 
+    protected World getWorld () { return null; }
+
+    protected void log (String message) { }
+
+    protected int getStackCapacity () {
+        return 0;
+    }
+
+    protected void onItemChanged () { }
+
+    protected void onAmountChanged () { }
+
     private static class FractionalStorage implements INBTSerializable<NBTTagCompound>
     {
         @CapabilityInject(IDrawerAttributes.class)
@@ -68,7 +94,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
         IDrawerAttributes attrs;
 
-        public FractionalStorage (ICapabilityProvider capProvider, FractionalDrawerGroup group, int slotCount) {
+        public FractionalStorage (FractionalDrawerGroup group, int slotCount) {
             this.group = group;
             this.slotCount = slotCount;
 
@@ -78,9 +104,24 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
             convRate = new int[slotCount];
 
-            attrs = capProvider.getCapability(ATTR_CAPABILITY, null);
-            if (attrs == null)
-                attrs = new EmptyDrawerAttributes();
+            attrs = new EmptyDrawerAttributes();
+        }
+
+        public void setCapabilityProvider (ICapabilityProvider capProvider) {
+            IDrawerAttributes capAttrs = capProvider.getCapability(ATTR_CAPABILITY, null);
+            if (capAttrs != null)
+                attrs = capAttrs;
+        }
+
+        public int getPooledCount () {
+            return pooledCount;
+        }
+
+        public void setPooledCount (int count) {
+            if (pooledCount != count) {
+                pooledCount = count;
+                group.onAmountChanged();
+            }
         }
 
         @Nonnull
@@ -97,7 +138,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             return convRate[0];
         }
 
-        public FractionalDrawer setStoredItem (int slot, @Nonnull ItemStack itemPrototype) {
+        public IFractionalDrawer setStoredItem (int slot, @Nonnull ItemStack itemPrototype) {
             itemPrototype = ItemStackHelper.getItemPrototype(itemPrototype);
             if (itemPrototype.isEmpty()) {
                 reset();
@@ -113,10 +154,8 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                     }
                 }
 
-                for (int i = 0; i < slotCount; i++)
-                    group.getDrawer(i).reset();
-
-                onItemChanged();
+                resetDrawers();
+                group.onItemChanged();
             }
 
             return group.getDrawer(slot);
@@ -151,7 +190,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             if (pooledCount == 0 && !attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
                 reset();
             else
-                onAmountChanged();
+                group.onAmountChanged();
         }
 
         public int adjustStoredItemCount (int slot, int amount) {
@@ -173,7 +212,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
                 pooledCount += convRate[slot] * willAdd;
 
-                onAmountChanged();
+                group.onAmountChanged();
 
                 if (attrs.isVoid())
                     return 0;
@@ -193,7 +232,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 if (pooledCount == 0 && !attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
                     reset();
                 else
-                    onAmountChanged();
+                    group.onAmountChanged();
 
                 return amount - willRemove;
             }
@@ -206,7 +245,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE / convRate[slot];
 
-            return baseStack().getItem().getItemStackLimit(baseStack()) * getStackCapacity() * (baseRate() / convRate[slot]);
+            return baseStack().getItem().getItemStackLimit(baseStack()) * group.getStackCapacity() * (baseRate() / convRate[slot]);
         }
 
         public int getMaxCapacity (int slot, @Nonnull ItemStack itemPrototype) {
@@ -220,7 +259,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 int itemStackLimit = 64;
                 if (!itemPrototype.isEmpty())
                     itemStackLimit = itemPrototype.getItem().getItemStackLimit(itemPrototype);
-                return itemStackLimit * getStackCapacity();
+                return itemStackLimit * group.getStackCapacity();
             }
 
             if (BaseDrawerData.areItemsEqual(protoStack[slot], itemPrototype))
@@ -236,7 +275,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             if (attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
-            int rawMaxCapacity = baseStack().getItem().getItemStackLimit(baseStack()) * getStackCapacity() * baseRate();
+            int rawMaxCapacity = baseStack().getItem().getItemStackLimit(baseStack()) * group.getStackCapacity() * baseRate();
             int rawRemaining = rawMaxCapacity - pooledCount;
 
             return rawRemaining / convRate[slot];
@@ -253,6 +292,30 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             return !protoStack[slot].isEmpty();
         }
 
+        public int getConversionRate (int slot) {
+            if (baseStack().isEmpty() || convRate[slot] == 0)
+                return 0;
+
+            return convRate[0] / convRate[slot];
+        }
+
+        public int getStoredItemRemainder (int slot) {
+            if (convRate[slot] == 0)
+                return 0;
+
+            if (slot == 0)
+                return pooledCount / baseRate();
+
+            return pooledCount % (convRate[slot - 1] / convRate[slot]);
+        }
+
+        public boolean isSmallestUnit (int slot) {
+            if (baseStack().isEmpty() || convRate[slot] == 0)
+                return false;
+
+            return convRate[slot] == 1;
+        }
+
         private void reset () {
             pooledCount = 0;
 
@@ -261,10 +324,65 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 convRate[i] = 0;
             }
 
-            for (int i = 0; i < slotCount; i++)
-                group.getDrawer(i).reset();
+            resetDrawers();
+            group.onItemChanged();
+        }
 
-            onItemChanged();
+        private void populateSlots (@Nonnull ItemStack itemPrototype) {
+            World world = group.getWorld();
+            if (world == null) {
+                protoStack[0] = itemPrototype;
+                convRate[0] = 1;
+                return;
+            }
+
+            CompactingHelper compacting = new CompactingHelper(world);
+            Stack<CompactingHelper.Result> resultStack = new Stack<>();
+
+            @Nonnull ItemStack lookupTarget = itemPrototype;
+            for (int i = 0; i < slotCount; i++) {
+                CompactingHelper.Result lookup = compacting.findHigherTier(lookupTarget);
+                if (lookup.getStack().isEmpty())
+                    break;
+
+                resultStack.push(lookup);
+                lookupTarget = lookup.getStack();
+            }
+
+            int index = 0;
+            for (int n = resultStack.size(); index < n; index++) {
+                CompactingHelper.Result result = resultStack.pop();
+                populateRawSlot(index, result.getStack(), result.getSize());
+                group.log("Picked candidate " + result.getStack().toString() + " with conv=" + result.getSize());
+
+                for (int i = 0; i < index - 1; i++)
+                    convRate[i] *= result.getSize();
+            }
+
+            if (index == slotCount)
+                return;
+
+            populateRawSlot(index, itemPrototype, 1);
+
+            lookupTarget = itemPrototype;
+            for (; index < slotCount; index++) {
+                CompactingHelper.Result lookup = compacting.findLowerTier(lookupTarget);
+                if (lookup.getStack().isEmpty())
+                    break;
+
+                populateRawSlot(index, lookup.getStack(), lookup.getSize());
+                group.log("Picked candidate " + lookup.getStack().toString() + " with conv=" + lookup.getSize());
+
+                for (int i = 0; i < index - 1; i++)
+                    convRate[i] *= lookup.getSize();
+
+                lookupTarget = lookup.getStack();
+            }
+        }
+
+        private void populateRawSlot (int slot, @Nonnull ItemStack itemPrototype, int rate) {
+            protoStack[slot] = itemPrototype;
+            convRate[slot] = rate;
         }
 
         @Override
@@ -310,26 +428,20 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 convRate[slot] = slotTag.getByte("Conv");
             }
 
-            for (int i = 0; i < slotCount; i++)
-                group.getDrawer(i).reset();
-
-            onItemChanged();
+            resetDrawers();
+            group.onItemChanged();
         }
 
-        private void populateSlots(@Nonnull ItemStack stack) {
-            
+        private void resetDrawers () {
+            for (int i = 0; i < slotCount; i++) {
+                IFractionalDrawer drawer = group.getDrawer(i);
+                if (drawer instanceof FractionalDrawer)
+                    ((FractionalDrawer) drawer).reset(false);
+            }
         }
-
-        protected int getStackCapacity() {
-            return 0;
-        }
-
-        protected void onItemChanged() { }
-
-        protected void onAmountChanged() { }
     }
 
-    private static class FractionalDrawer extends BaseDrawerData
+    private static class FractionalDrawer extends BaseDrawerData implements IFractionalDrawer
     {
         private FractionalStorage storage;
         private int slot;
@@ -407,8 +519,8 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         }
 
         @Override
-        protected void reset () {
-            super.reset();
+        protected void reset (boolean notify) {
+            super.reset(notify);
             refreshOreDictMatches();
         }
 
@@ -421,6 +533,21 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         @Override
         public void deserializeNBT (NBTTagCompound nbt) {
             // Handled by group
+        }
+
+        @Override
+        public int getConversionRate () {
+            return storage.getConversionRate(slot);
+        }
+
+        @Override
+        public int getStoredItemRemainder () {
+            return storage.getStoredItemRemainder(slot);
+        }
+
+        @Override
+        public boolean isSmallestUnit () {
+            return storage.isSmallestUnit(slot);
         }
     }
 }

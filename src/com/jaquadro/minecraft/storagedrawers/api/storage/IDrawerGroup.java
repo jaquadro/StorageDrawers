@@ -1,5 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage;
 
+import javax.annotation.Nonnull;
+
 public interface IDrawerGroup
 {
     /**
@@ -10,6 +12,7 @@ public interface IDrawerGroup
     /**
      * Gets the drawer at the given slot within this group.
      */
+    @Nonnull
     IDrawer getDrawer (int slot);
 
     /**

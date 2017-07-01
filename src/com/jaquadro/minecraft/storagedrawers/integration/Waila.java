@@ -108,8 +108,8 @@ public class Waila extends IntegrationModule
             if (SecurityManager.hasAccess(Minecraft.getMinecraft().player.getGameProfile(), tile)) {
                 if (config.getConfig("display.content")) {
                     for (int i = 0; i < tile.getDrawerCount(); i++) {
-                        IDrawer drawer = tile.getDrawerIfEnabled(i);
-                        if (drawer == null)
+                        IDrawer drawer = tile.getDrawer(i);
+                        if (!drawer.isEnabled())
                             continue;
 
                         String name = I18n.format("storagedrawers.waila.empty");

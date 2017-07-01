@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 
-public class UpgradeData extends TileDataShim implements INBTSerializable<NBTTagList>
+public class UpgradeData extends TileDataShim
 {
     private final ItemStack[] upgrades;
     private int storageMultiplier;
@@ -226,7 +226,7 @@ public class UpgradeData extends TileDataShim implements INBTSerializable<NBTTag
     }
 
     @Override
-    public NBTTagList serializeNBT () {
+    public NBTTagCompound serializeNBT () {
         NBTTagList tagList = new NBTTagList();
         for (int i = 0; i < upgrades.length; i++) {
             if (!upgrades[i].isEmpty()) {
@@ -237,30 +237,40 @@ public class UpgradeData extends TileDataShim implements INBTSerializable<NBTTag
             }
         }
 
-        return tagList;
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setTag("Upgrades", tag);
+
+        return tag;
     }
 
     @Override
-    public void deserializeNBT (NBTTagList tagList) {
+    public void deserializeNBT (NBTTagCompound tag) {
+        for (int i = 0; i < upgrades.length; i++)
+            upgrades[i] = ItemStack.EMPTY;
+
+        if (!tag.hasKey("Upgrades"))
+            return;
+
+        NBTTagList tagList = tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < tagList.tagCount(); i++) {
             NBTTagCompound upgradeTag = tagList.getCompoundTagAt(i);
 
             int slot = upgradeTag.getByte("Slot");
-            setUpgrade(slot, new ItemStack(upgradeTag));
+            upgrades[slot] = new ItemStack(upgradeTag);
         }
+
+        syncUpgrades();
     }
 
     @Override
     public void readFromNBT (NBTTagCompound tag) {
-        if (tag.hasKey("Upgrades"))
-            deserializeNBT(tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND));
+        deserializeNBT(tag);
     }
 
     @Override
     public NBTTagCompound writeToNBT (NBTTagCompound tag) {
-        NBTTagList upgradeList = serializeNBT();
-        if (upgradeList.tagCount() > 0)
-            tag.setTag("Upgrades", upgradeList);
+        NBTTagCompound stag = serializeNBT();
+        tag.setTag("Upgrades", stag.getCompoundTag("Upgrades"));
 
         return tag;
     }

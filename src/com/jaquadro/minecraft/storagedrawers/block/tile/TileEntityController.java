@@ -25,9 +25,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.items.CapabilityItemHandler;
-import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -122,8 +120,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         }
 
         int drawerSlot = record.slot;
-        IDrawer drawer = group.getDrawerIfEnabled(drawerSlot);
-        if (drawer == null) {
+        IDrawer drawer = group.getDrawer(drawerSlot);
+        if (!drawer.isEnabled()) {
             return PRI_DISABLED;
         }
 
@@ -432,11 +430,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                 continue;
 
             int drawerSlot = record.slot;
-            IDrawer drawer = group.getDrawerIfEnabled(drawerSlot);
-            if (drawer == null)
-                continue;
-
-            if (drawer.isEmpty())
+            IDrawer drawer = group.getDrawer(drawerSlot);
+            if (!drawer.isEnabled() || drawer.isEmpty())
                 continue;
 
             ItemStack item = drawer.getStoredItemPrototype();
@@ -662,57 +657,11 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     @Override
-    public boolean isDrawerEnabled (int slot) {
-        IDrawerGroup group = getGroupForDrawerSlot(slot);
-        if (group == null)
-            return false;
-
-        return group.isDrawerEnabled(getLocalDrawerSlot(slot));
-    }
-
-    @Override
-    public IDrawer getDrawerIfEnabled (int slot) {
-        IDrawerGroup group = getGroupForDrawerSlot(slot);
-        if (group == null)
-            return null;
-
-        int localSlot = getLocalDrawerSlot(slot);
-        return group.getDrawerIfEnabled(localSlot);
-    }
-
-    @Override
     public int[] getAccessibleDrawerSlots () {
         return drawerSlots;
     }
 
-    @Override
-    public void markDirty () {
-        for (StorageRecord record : storage.values()) {
-            IDrawerGroup group = record.storage;
-            if (group != null)
-                group.markDirtyIfNeeded();
-        }
-
-        super.markDirty();
-    }
-
-    @Override
-    public boolean markDirtyIfNeeded () {
-        boolean synced = false;
-
-        for (StorageRecord record : storage.values()) {
-            IDrawerGroup group = record.storage;
-            if (group != null)
-                synced |= group.markDirtyIfNeeded();
-        }
-
-        if (synced)
-            super.markDirty();
-
-        return synced;
-    }
-
-    private DrawerItemHandler itemHandler = new DrawerItemHandler(this);
+    private DrawerItemHandler itemHandler = new DrawerItemHandler(this, this);
 
     @Override
     public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
@@ -803,8 +752,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
                     for (; index2 < drawerSlots.length; index2++) {
                         int slot = drawerSlots[index2];
-                        IDrawer drawer = getDrawerIfEnabled(slot);
-                        if (drawer == null)
+                        IDrawer drawer = getDrawer(slot);
+                        if (!drawer.isEnabled())
                             continue;
 
                         if (strict) {

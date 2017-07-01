@@ -2,7 +2,6 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -19,11 +18,9 @@ public class DrawerItemHandler implements IItemHandler
     private IDrawerGroup group;
     private ICapabilityProvider capProvider;
 
-    public DrawerItemHandler (IDrawerGroup group) {
+    public DrawerItemHandler (IDrawerGroup group, ICapabilityProvider capProvider) {
         this.group = group;
-
-        if (group instanceof ICapabilityProvider)
-            capProvider = (ICapabilityProvider)group;
+        this.capProvider = capProvider;
     }
 
     @Override
@@ -43,8 +40,8 @@ public class DrawerItemHandler implements IItemHandler
             slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
         }
 
-        IDrawer drawer = group.getDrawerIfEnabled(slot);
-        if (drawer == null || drawer.isEmpty())
+        IDrawer drawer = group.getDrawer(slot);
+        if (!drawer.isEnabled() || drawer.isEmpty())
             return ItemStack.EMPTY;
 
         ItemStack stack = drawer.getStoredItemPrototype().copy();
@@ -74,15 +71,13 @@ public class DrawerItemHandler implements IItemHandler
         }
 
         if (StorageDrawers.config.cache.enableItemConversion && orderedSlot > 0) {
-            IDrawer drawer = group.getDrawerIfEnabled(orderedSlot);
-            if (drawer != null && drawer.isEmpty()) {
-                if (prevSlot == -1 || !group.isDrawerEnabled(prevSlot))
+            IDrawer drawer = group.getDrawer(orderedSlot);
+            if (!drawer.isEnabled() && drawer.isEmpty()) {
+                IDrawer prevDrawer = group.getDrawer(prevSlot);
+                if (!prevDrawer.isEnabled())
                     return insertItemFullScan(stack, simulate);
-                else {
-                    IDrawer prevDrawer = group.getDrawer(prevSlot);
-                    if (!prevDrawer.isEmpty())
-                        return insertItemFullScan(stack, simulate);
-                }
+                else if (!prevDrawer.isEmpty())
+                    return insertItemFullScan(stack, simulate);
             }
         }
 
@@ -119,8 +114,8 @@ public class DrawerItemHandler implements IItemHandler
 
     @Nonnull
     private ItemStack insertItemInternal (int slot, @Nonnull ItemStack stack, boolean simulate) {
-        IDrawer drawer = group.getDrawerIfEnabled(slot);
-        if (drawer == null || !drawer.canItemBeStored(stack))
+        IDrawer drawer = group.getDrawer(slot);
+        if (!drawer.isEnabled() || !drawer.canItemBeStored(stack))
             return stack;
 
         int availableCount = drawer.isEmpty() ? drawer.getMaxCapacity(stack) : drawer.getRemainingCapacity();
@@ -139,9 +134,8 @@ public class DrawerItemHandler implements IItemHandler
 
         if (!simulate) {
             if (drawer.isEmpty())
-                drawer.setStoredItem(stack, insertCount);
-            else
-                drawer.setStoredItemCount(drawer.getStoredItemCount() + insertCount);
+                drawer.setStoredItem(stack);
+            drawer.setStoredItemCount(drawer.getStoredItemCount() + insertCount);
         }
 
         if (remainder == 0)
@@ -165,8 +159,8 @@ public class DrawerItemHandler implements IItemHandler
             slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
         }
 
-        IDrawer drawer = group.getDrawerIfEnabled(slot);
-        if (drawer == null || drawer.isEmpty() || drawer.getStoredItemCount() == 0)
+        IDrawer drawer = group.getDrawer(slot);
+        if (!drawer.isEnabled() || drawer.isEmpty() || drawer.getStoredItemCount() == 0)
             return ItemStack.EMPTY;
 
         ItemStack returnStack = drawer.getStoredItemPrototype().copy();
@@ -186,11 +180,11 @@ public class DrawerItemHandler implements IItemHandler
         if (slotIsVirtual(slot))
             return Integer.MAX_VALUE;
 
-        IDrawer drawer = group.getDrawerIfEnabled(slot);
-        if (drawer == null)
+        IDrawer drawer = group.getDrawer(slot);
+        if (!drawer.isEnabled())
             return 0;
         if (drawer.isEmpty())
-            return drawer.getDefaultMaxCapacity();
+            return drawer.getMaxCapacity(ItemStack.EMPTY);
 
         return drawer.getMaxCapacity();
     }

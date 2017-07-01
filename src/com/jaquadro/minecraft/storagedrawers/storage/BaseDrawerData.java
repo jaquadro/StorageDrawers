@@ -22,7 +22,7 @@ public abstract class BaseDrawerData implements IDrawer, INBTSerializable<NBTTag
 
     }
 
-    protected void reset () {
+    protected void reset (boolean notify) {
         oreDictMatches = null;
     }
 

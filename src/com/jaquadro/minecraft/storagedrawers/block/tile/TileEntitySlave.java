@@ -74,39 +74,12 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
     }
 
     @Override
-    public IDrawer getDrawerIfEnabled (int slot) {
-        TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getPos()))
-            return null;
-
-        return controller.getDrawerIfEnabled(slot);
-    }
-
-    @Override
-    public boolean isDrawerEnabled (int slot) {
-        TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getPos()))
-            return false;
-
-        return controller.isDrawerEnabled(slot);
-    }
-
-    @Override
     public void markDirty () {
         TileEntityController controller = getController();
         if (controller != null && controller.isValidSlave(getPos()))
             controller.markDirty();
 
         super.markDirty();
-    }
-
-    @Override
-    public boolean markDirtyIfNeeded () {
-        TileEntityController controller = getController();
-        if (controller != null && controller.isValidSlave(getPos()))
-            return controller.markDirtyIfNeeded();
-
-        return false;
     }
 
     @Override
@@ -127,7 +100,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
         return controller.enumerateDrawersForExtraction(stack, strict);
     }
 
-    private DrawerItemHandler itemHandler = new DrawerItemHandler(this);
+    private DrawerItemHandler itemHandler = new DrawerItemHandler(this, this);
 
     @Override
     public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
