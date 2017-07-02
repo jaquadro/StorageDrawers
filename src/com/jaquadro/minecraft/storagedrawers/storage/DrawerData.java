@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.capabilities.Capability;
@@ -17,10 +18,6 @@ public class DrawerData extends BaseDrawerData
 {
     @CapabilityInject(IDrawerAttributes.class)
     static Capability<IDrawerAttributes> ATTR_CAPABILITY = null;
-
-    //private IStorageProvider storageProvider;
-    //private ICapabilityProvider capProvider;
-    //private int slot;
 
     IDrawerAttributes attrs;
 
@@ -76,6 +73,15 @@ public class DrawerData extends BaseDrawerData
         return this;
     }
 
+    protected IDrawer setStoredItemRaw (@Nonnull ItemStack itemPrototype) {
+        itemPrototype = ItemStackHelper.getItemPrototype(itemPrototype);
+        protoStack = itemPrototype;
+        protoStack.setCount(1);
+        count = 0;
+
+        return this;
+    }
+
     @Override
     public int getStoredItemCount () {
         if (protoStack.isEmpty())
@@ -108,6 +114,10 @@ public class DrawerData extends BaseDrawerData
             if (notify)
                 onAmountChanged();
         }
+    }
+
+    protected void setStoredItemCountRaw (int amount) {
+        count = amount;
     }
 
     @Override
@@ -153,14 +163,6 @@ public class DrawerData extends BaseDrawerData
         return itemPrototype.getItem().getItemStackLimit(itemPrototype) * getStackCapacity();
     }
 
-    /*@Override
-    public int getDefaultMaxCapacity () {
-        if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
-            return Integer.MAX_VALUE;
-
-        return 64 * stackCapacity;
-    }*/
-
     @Override
     public int getRemainingCapacity () {
         if (protoStack.isEmpty())
@@ -171,14 +173,6 @@ public class DrawerData extends BaseDrawerData
 
         return getMaxCapacity() - getStoredItemCount();
     }
-
-    /*@Override
-    protected int getItemCapacityForInventoryStack () {
-        if (attrs.isVoid())
-            return Integer.MAX_VALUE;
-        else
-            return getMaxCapacity();
-    }*/
 
     @Override
     public boolean canItemBeStored (@Nonnull ItemStack itemPrototype) {
@@ -200,15 +194,6 @@ public class DrawerData extends BaseDrawerData
     public boolean isEmpty () {
         return protoStack.isEmpty();
     }
-
-    /*@Override
-    public void attributeChanged () {
-        updateAttributeCache();
-    }*/
-
-    /*private void updateAttributeCache () {
-        stackCapacity = storageProvider.getSlotStackCapacity(slot);
-    }*/
 
     @Override
     protected void reset (boolean notify) {
@@ -243,8 +228,28 @@ public class DrawerData extends BaseDrawerData
         if (nbt.hasKey("Count"))
             tagCount = nbt.getInteger("Count");
 
-        setStoredItem(tagItem, false);
-        setStoredItemCount(tagCount, false);
+        setStoredItemRaw(tagItem);
+        setStoredItemCountRaw(tagCount);
+    }
+
+    public void deserializeLegacyNBT (NBTTagCompound nbt) {
+        ItemStack tagItem = ItemStack.EMPTY;
+        int tagCount = 0;
+
+        if (nbt.hasKey("Count"))
+            tagCount = nbt.getInteger("Count");
+        if (nbt.hasKey("Item")) {
+            Item item = Item.getItemById(nbt.getShort("Item"));
+            if (item != null) {
+                tagItem = new ItemStack(item);
+                tagItem.setItemDamage(nbt.getShort("Meta"));
+                if (nbt.hasKey("Tags"))
+                    tagItem.setTagCompound(nbt.getCompoundTag("Tags"));
+            }
+        }
+
+        setStoredItemRaw(tagItem);
+        setStoredItemCountRaw(tagCount);
     }
 
     protected int getStackCapacity() {

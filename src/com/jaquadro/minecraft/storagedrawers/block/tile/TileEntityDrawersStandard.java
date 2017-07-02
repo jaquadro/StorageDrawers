@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
@@ -15,6 +16,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nonnull;
@@ -69,6 +71,42 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         @Override
         protected IDrawerGroup getGroup () {
             return groupData;
+        }
+    }
+
+    public static class Legacy extends TileEntityDrawersStandard
+    {
+        private GroupData groupData = new GroupData(4);
+        private static boolean processed;
+
+        public Legacy () {
+            groupData.setCapabilityProvider(this);
+            injectPortableData(groupData);
+        }
+
+        @Override
+        protected IDrawerGroup getGroup () {
+            return groupData;
+        }
+
+        public void replaceWithCurrent () {
+            TileEntityDrawersStandard replacement = createEntity(groupData.getDrawerCount());
+            if (replacement != null) {
+                replacement.deserializeNBT(serializeNBT());
+                getWorld().setTileEntity(getPos(), replacement);
+                replacement.markDirty();
+            }
+        }
+
+        @Override
+        public void validate () {
+            super.validate();
+            getWorld().scheduleBlockUpdate(getPos(), ModBlocks.basicDrawers, 1, 0);
+        }
+
+        @Override
+        public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
+            return super.writeToPortableNBT(tag);
         }
     }
 

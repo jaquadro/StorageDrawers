@@ -45,14 +45,30 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
 
     @Override
     public void readFromNBT (NBTTagCompound tag) {
-        if (!tag.hasKey("Drawers"))
+        if (!tag.hasKey("Drawers")) {
+            if (tag.hasKey("Slots"))
+                readFromLegacyNBT(tag);
             return;
+        }
 
         NBTTagList itemList = tag.getTagList("Drawers", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < itemList.tagCount(); i++) {
             if (i >= 0 && i < slots.length)
                 slots[i].deserializeNBT(itemList.getCompoundTagAt(i));
         }
+    }
+
+    public void readFromLegacyNBT (NBTTagCompound tag) {
+        NBTTagList slotTags = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
+
+        DrawerData[] realSlots = new DrawerData[slotTags.tagCount()];
+        for (int i = 0; i < realSlots.length && i < slots.length; i++)
+            realSlots[i] = slots[i];
+
+        slots = realSlots;
+
+        for (int i = 0; i < slots.length; i++)
+            slots[i].deserializeLegacyNBT(slotTags.getCompoundTagAt(i));
     }
 
     @Override
