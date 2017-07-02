@@ -335,7 +335,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
             GlStateManager.doPolygonOffset(-1, -10);
 
-            if (level == EnumUpgradeStatus.LEVEL1 && drawer.getMaxCapacity() > 0 && drawer.getRemainingCapacity() == 0) {
+            if (level == EnumUpgradeStatus.LEVEL1 && !drawer.isEmpty() && drawer.getRemainingCapacity() == 0) {
                 renderer.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
                     (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth);
                 renderer.state.setRotateTransform(ChamRender.ZPOS, side);

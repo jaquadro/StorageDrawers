@@ -1,7 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.FractionalDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
@@ -78,17 +77,6 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
     }
 
-    // TODO
-    /*
-    public int getStoredItemRemainder (int slot) {
-        groupData.getDrawer(slot)
-        int count = centralInventory.getStoredItemCount(slot);
-        if (slot > 0 && convRate[slot] > 0)
-            count -= centralInventory.getStoredItemCount(slot - 1) * (convRate[slot - 1] / convRate[slot]);
-
-        return count;
-    }*/
-
     @Override
     public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
         return new ContainerDrawersComp(playerInventory, this);
@@ -115,79 +103,10 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         return capacity;
     }
 
-    /*
-    @Override
-    public int putItemsIntoSlot (int slot, @Nonnull ItemStack stack, int count) {
-        int added = 0;
-        if (!stack.isEmpty() && convRate != null && convRate[0] == 0) {
-            populateSlots(stack);
-
-            for (int i = 0; i < getDrawerCount(); i++) {
-                if (convRate[i] != 0 && BaseDrawerData.areItemsEqual(protoStack[i], stack))
-                    added = super.putItemsIntoSlot(i, stack, count);
-            }
-
-            for (int i = 0; i < getDrawerCount(); i++) {
-                IDrawer drawer = getDrawer(i);
-                if (drawer instanceof CompDrawerData)
-                    ((CompDrawerData) drawer).refresh();
-            }
-
-
-        }
-
-        return added + super.putItemsIntoSlot(slot, stack, count);
-    }*/
-
     @Override
     public boolean dataPacketRequiresRenderUpdate () {
         return true;
     }
-
-    /*@Override
-    public void readFromPortableNBT (NBTTagCompound tag) {
-        super.readFromPortableNBT(tag);
-
-        pooledCount = 0;
-
-        for (int i = 0; i < getDrawerCount(); i++) {
-            protoStack[i] = ItemStack.EMPTY;
-            convRate[i] = 0;
-        }
-
-        super.readFromPortableNBT(tag);
-
-        pooledCount = tag.getInteger("Count");
-
-        if (tag.hasKey("Conv0"))
-            convRate[0] = tag.getByte("Conv0");
-        if (tag.hasKey("Conv1"))
-            convRate[1] = tag.getByte("Conv1");
-        if (tag.hasKey("Conv2"))
-            convRate[2] = tag.getByte("Conv2");
-
-        for (int i = 0; i < getDrawerCount(); i++) {
-            IDrawer drawer = getDrawer(i);
-            if (drawer instanceof CompDrawerData)
-                ((CompDrawerData) drawer).refresh();
-        }
-    }
-
-    @Override
-    public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
-        tag = super.writeToPortableNBT(tag);
-
-        tag.setInteger("Count", pooledCount);
-
-        if (convRate[0] > 0)
-            tag.setByte("Conv0", (byte)convRate[0]);
-        if (convRate[1] > 0)
-            tag.setByte("Conv1", (byte)convRate[1]);
-        if (convRate[2] > 0)
-            tag.setByte("Conv2", (byte)convRate[2]);
-
-        return tag;
-    }*/
 
     @Override
     @SideOnly(Side.CLIENT)

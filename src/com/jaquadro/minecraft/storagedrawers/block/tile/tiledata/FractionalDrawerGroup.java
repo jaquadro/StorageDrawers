@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.storage.BaseDrawerData;
 import com.jaquadro.minecraft.storagedrawers.util.CompactingHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -34,6 +35,8 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
     public void setCapabilityProvider (ICapabilityProvider capProvider) {
         storage.setCapabilityProvider(capProvider);
+        for (FractionalDrawer slot : slots)
+            slot.setCapabilityProvider(capProvider);
     }
 
     @Override
@@ -61,6 +64,8 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
     public void readFromNBT (NBTTagCompound tag) {
         if (tag.hasKey("Drawers"))
             storage.deserializeNBT(tag.getCompoundTag("Drawers"));
+        else if (tag.hasKey("Slots"))
+            storage.deserializeLegacyNBT(tag);
     }
 
     @Override
@@ -429,7 +434,42 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             }
 
             resetDrawers();
-            group.onItemChanged();
+        }
+
+        public void deserializeLegacyNBT (NBTTagCompound tag) {
+            for (int i = 0; i < slotCount; i++) {
+                protoStack[i] = ItemStack.EMPTY;
+                convRate[i] = 0;
+            }
+
+            pooledCount = tag.getInteger("Count");
+
+            if (tag.hasKey("Conv0"))
+                convRate[0] = tag.getByte("Conv0");
+            if (tag.hasKey("Conv1"))
+                convRate[1] = tag.getByte("Conv1");
+            if (tag.hasKey("Conv2"))
+                convRate[2] = tag.getByte("Conv2");
+
+            NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < slotCount; i++) {
+                NBTTagCompound slot = slots.getCompoundTagAt(i);
+                if (!slot.hasKey("Item"))
+                    continue;
+
+                Item item = Item.getItemById(slot.getShort("Item"));
+                if (item == null)
+                    continue;
+
+                ItemStack stack = new ItemStack(item);
+                stack.setItemDamage(slot.getShort("Meta"));
+                if (slot.hasKey("Tags"))
+                    stack.setTagCompound(slot.getCompoundTag("Tags"));
+
+                protoStack[i] = stack;
+            }
+
+            resetDrawers();
         }
 
         private void resetDrawers () {
@@ -443,6 +483,9 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
     private static class FractionalDrawer extends BaseDrawerData implements IFractionalDrawer
     {
+        @CapabilityInject(IDrawerAttributes.class)
+        static Capability<IDrawerAttributes> ATTR_CAPABILITY = null;
+
         private FractionalStorage storage;
         private int slot;
 
@@ -451,6 +494,14 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         public FractionalDrawer (FractionalStorage storage, int slot) {
             this.storage = storage;
             this.slot = slot;
+
+            attrs = new EmptyDrawerAttributes();
+        }
+
+        public void setCapabilityProvider (ICapabilityProvider capProvider) {
+            IDrawerAttributes capAttrs = capProvider.getCapability(ATTR_CAPABILITY, null);
+            if (capAttrs != null)
+                attrs = capAttrs;
         }
 
         @Nonnull
