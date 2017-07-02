@@ -226,25 +226,7 @@ public class UpgradeData extends TileDataShim
     }
 
     @Override
-    public NBTTagCompound serializeNBT () {
-        NBTTagList tagList = new NBTTagList();
-        for (int i = 0; i < upgrades.length; i++) {
-            if (!upgrades[i].isEmpty()) {
-                NBTTagCompound upgradeTag = upgrades[i].writeToNBT(new NBTTagCompound());
-                upgradeTag.setByte("Slot", (byte)i);
-
-                tagList.appendTag(upgradeTag);
-            }
-        }
-
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setTag("Upgrades", tag);
-
-        return tag;
-    }
-
-    @Override
-    public void deserializeNBT (NBTTagCompound tag) {
+    public void readFromNBT (NBTTagCompound tag) {
         for (int i = 0; i < upgrades.length; i++)
             upgrades[i] = ItemStack.EMPTY;
 
@@ -263,15 +245,18 @@ public class UpgradeData extends TileDataShim
     }
 
     @Override
-    public void readFromNBT (NBTTagCompound tag) {
-        deserializeNBT(tag);
-    }
-
-    @Override
     public NBTTagCompound writeToNBT (NBTTagCompound tag) {
-        NBTTagCompound stag = serializeNBT();
-        tag.setTag("Upgrades", stag.getCompoundTag("Upgrades"));
+        NBTTagList tagList = new NBTTagList();
+        for (int i = 0; i < upgrades.length; i++) {
+            if (!upgrades[i].isEmpty()) {
+                NBTTagCompound upgradeTag = upgrades[i].writeToNBT(new NBTTagCompound());
+                upgradeTag.setByte("Slot", (byte)i);
 
+                tagList.appendTag(upgradeTag);
+            }
+        }
+
+        tag.setTag("Upgrades", tagList);
         return tag;
     }
 

@@ -16,6 +16,8 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
 {
     private DrawerData[] slots;
 
+    public StandardDrawerGroup () { }
+
     public StandardDrawerGroup (int slotCount) {
         slots = new DrawerData[slotCount];
         for (int i = 0; i < slotCount; i++)
@@ -46,7 +48,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         if (!tag.hasKey("Drawers"))
             return;
 
-        NBTTagList itemList = tag.getTagList("Items", Constants.NBT.TAG_COMPOUND);
+        NBTTagList itemList = tag.getTagList("Drawers", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < itemList.tagCount(); i++) {
             if (i >= 0 && i < slots.length)
                 slots[i].deserializeNBT(itemList.getCompoundTagAt(i));
@@ -55,6 +57,9 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
 
     @Override
     public NBTTagCompound writeToNBT (NBTTagCompound tag) {
+        if (slots == null)
+            return tag;
+
         NBTTagList itemList = new NBTTagList();
         for (DrawerData slot : slots)
             itemList.appendTag(slot.serializeNBT());

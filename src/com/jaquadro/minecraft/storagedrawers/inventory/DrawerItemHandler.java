@@ -134,7 +134,7 @@ public class DrawerItemHandler implements IItemHandler
 
         if (!simulate) {
             if (drawer.isEmpty())
-                drawer.setStoredItem(stack);
+                drawer = drawer.setStoredItem(stack);
             drawer.setStoredItemCount(drawer.getStoredItemCount() + insertCount);
         }
 

@@ -70,6 +70,10 @@ public class ModBlocks
             );
 
             GameRegistry.registerTileEntity(TileEntityDrawersStandard.class, StorageDrawers.MOD_ID + ":basicdrawers");
+            GameRegistry.registerTileEntity(TileEntityDrawersStandard.Slot1.class, StorageDrawers.MOD_ID + ":basicdrawers.1");
+            GameRegistry.registerTileEntity(TileEntityDrawersStandard.Slot2.class, StorageDrawers.MOD_ID + ":basicdrawers.2");
+            GameRegistry.registerTileEntity(TileEntityDrawersStandard.Slot4.class, StorageDrawers.MOD_ID + ":basicdrawers.4");
+
             GameRegistry.registerTileEntity(TileEntityKeyButton.class, StorageDrawers.MOD_ID + ":keybutton");
 
             if (config.isBlockEnabled("compdrawers")) {

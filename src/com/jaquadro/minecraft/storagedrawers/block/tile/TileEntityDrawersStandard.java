@@ -3,7 +3,6 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
@@ -17,7 +16,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
 
@@ -27,24 +25,69 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         null, StorageDrawers.MOD_ID + ":basicDrawers1", StorageDrawers.MOD_ID + ":basicDrawers2", null, StorageDrawers.MOD_ID + ":basicDrawers4"
     };
 
-    private GroupData groupData;
-
     private int capacity = 0;
 
-    public TileEntityDrawersStandard () {
-        this(1);
+    public static class Slot1 extends TileEntityDrawersStandard
+    {
+        private GroupData groupData = new GroupData(1);
+
+        public Slot1 () {
+            groupData.setCapabilityProvider(this);
+            injectPortableData(groupData);
+        }
+
+        @Override
+        protected IDrawerGroup getGroup () {
+            return groupData;
+        }
     }
 
-    public TileEntityDrawersStandard (int count) {
-        groupData = new GroupData(count);
-        groupData.setCapabilityProvider(this);
+    public static class Slot2 extends TileEntityDrawersStandard
+    {
+        private GroupData groupData = new GroupData(2);
 
-        injectPortableData(groupData);
+        public Slot2 () {
+            groupData.setCapabilityProvider(this);
+            injectPortableData(groupData);
+        }
+
+        @Override
+        protected IDrawerGroup getGroup () {
+            return groupData;
+        }
+    }
+
+    public static class Slot4 extends TileEntityDrawersStandard
+    {
+        private GroupData groupData = new GroupData(4);
+
+        public Slot4 () {
+            groupData.setCapabilityProvider(this);
+            injectPortableData(groupData);
+        }
+
+        @Override
+        protected IDrawerGroup getGroup () {
+            return groupData;
+        }
+    }
+
+    public static TileEntityDrawersStandard createEntity (int slotCount) {
+        switch (slotCount) {
+            case 1:
+                return new Slot1();
+            case 2:
+                return new Slot2();
+            case 4:
+                return new Slot4();
+            default:
+                return null;
+        }
     }
 
     @Override
     protected IDrawerGroup getGroup () {
-        return groupData;
+        return null;
     }
 
     @Override
@@ -108,6 +151,8 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
     private class GroupData extends StandardDrawerGroup
     {
+        public GroupData () { }
+
         public GroupData (int slotCount) {
             super(slotCount);
         }

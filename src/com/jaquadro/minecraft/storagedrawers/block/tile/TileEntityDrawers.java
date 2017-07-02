@@ -393,7 +393,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
             return 0;
 
         if (drawer.isEmpty())
-            drawer.setStoredItem(stack);
+            drawer = drawer.setStoredItem(stack);
 
         if (!drawer.canItemBeStored(stack))
             return 0;
@@ -768,7 +768,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     @SideOnly(Side.CLIENT)
     private void clientUpdateCountAsync (int slot, int count) {
         IDrawer drawer = getDrawer(slot);
-        if (!drawer.isEnabled() && drawer.getStoredItemCount() != count)
+        if (drawer.isEnabled() && drawer.getStoredItemCount() != count)
             drawer.setStoredItemCount(count);
 
     }

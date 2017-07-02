@@ -306,7 +306,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             if (slot == 0)
                 return pooledCount / baseRate();
 
-            return pooledCount % (convRate[slot - 1] / convRate[slot]);
+            return (pooledCount / convRate[slot]) % (convRate[slot - 1] / convRate[slot]);
         }
 
         public boolean isSmallestUnit (int slot) {
@@ -362,7 +362,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             if (index == slotCount)
                 return;
 
-            populateRawSlot(index, itemPrototype, 1);
+            populateRawSlot(index++, itemPrototype, 1);
 
             lookupTarget = itemPrototype;
             for (; index < slotCount; index++) {
@@ -370,10 +370,10 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 if (lookup.getStack().isEmpty())
                     break;
 
-                populateRawSlot(index, lookup.getStack(), lookup.getSize());
+                populateRawSlot(index, lookup.getStack(), 1);
                 group.log("Picked candidate " + lookup.getStack().toString() + " with conv=" + lookup.getSize());
 
-                for (int i = 0; i < index - 1; i++)
+                for (int i = 0; i < index; i++)
                     convRate[i] *= lookup.getSize();
 
                 lookupTarget = lookup.getStack();

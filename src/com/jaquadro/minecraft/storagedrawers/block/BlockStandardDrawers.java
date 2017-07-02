@@ -186,7 +186,7 @@ public class BlockStandardDrawers extends BlockDrawers
         IBlockState state = getStateFromMeta(meta);
         EnumBasicDrawer type = state.getValue(BLOCK);
 
-        return new TileEntityDrawersStandard(type.getDrawerCount());
+        return TileEntityDrawersStandard.createEntity(type.getDrawerCount());
     }
 
     @Override
