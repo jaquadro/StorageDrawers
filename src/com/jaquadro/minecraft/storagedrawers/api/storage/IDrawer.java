@@ -14,13 +14,27 @@ public interface IDrawer
     ItemStack getStoredItemPrototype ();
 
     /**
-     * Sets the type of the stored item and initializes it to the given amount.  Any existing item will be replaced.
+     * Sets the type of the stored item and initializes it to 0.  Any existing item will be replaced.
      *
      * @param itemPrototype An ItemStack representing the type, metadata, and tags of the item to store.
      * @return The IDrawer actually set with the prototype.  Some drawer groups can redirect a set operation to another member.
      */
     @Nonnull
     IDrawer setStoredItem (@Nonnull ItemStack itemPrototype);
+
+    /**
+     * Sets the type of the stored item and initializes it to the given amount.  Any existing item will be replaced.
+     *
+     * @param itemPrototype An ItemStack representing the type, metadata, and tags of the item to store.
+     * @param amount The amount of items stored in this drawer.
+     * @return The IDrawer actually set with the prototype.  Some drawer groups can redirect a set operation to another member.
+     */
+    @Nonnull
+    default IDrawer setStoredItem (@Nonnull ItemStack itemPrototype, int amount) {
+        IDrawer drawer = setStoredItem(itemPrototype);
+        drawer.setStoredItemCount(amount);
+        return drawer;
+    }
 
     /**
      * Gets the number of items stored in this drawer.
