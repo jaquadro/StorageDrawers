@@ -44,6 +44,11 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         public IDrawerGroup getGroup () {
             return groupData;
         }
+
+        @Override
+        protected void onAttributeChanged () {
+            groupData.syncAttributes();
+        }
     }
 
     public static class Slot2 extends TileEntityDrawersStandard
@@ -58,6 +63,11 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         @Override
         public IDrawerGroup getGroup () {
             return groupData;
+        }
+
+        @Override
+        protected void onAttributeChanged () {
+            groupData.syncAttributes();
         }
     }
 
@@ -74,6 +84,11 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         public IDrawerGroup getGroup () {
             return groupData;
         }
+
+        @Override
+        protected void onAttributeChanged () {
+            groupData.syncAttributes();
+        }
     }
 
     public static class Legacy extends TileEntityDrawersStandard
@@ -88,6 +103,11 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         @Override
         public IDrawerGroup getGroup () {
             return groupData;
+        }
+
+        @Override
+        protected void onAttributeChanged () {
+            groupData.syncAttributes();
         }
 
         public void replaceWithCurrent () {

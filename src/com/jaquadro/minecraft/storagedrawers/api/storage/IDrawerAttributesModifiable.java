@@ -48,4 +48,8 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
     default boolean setIsUnlimitedVending (boolean state) {
         return false;
     }
+
+    default boolean setIsDictConvertible (boolean state) {
+        return false;
+    }
 }

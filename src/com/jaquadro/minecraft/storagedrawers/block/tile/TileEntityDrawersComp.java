@@ -39,6 +39,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         return groupData;
     }
 
+    @Override
+    protected void onAttributeChanged () {
+        groupData.syncAttributes();
+    }
+
     private class GroupData extends FractionalDrawerGroup
     {
         public GroupData (int slotCount) {

@@ -16,6 +16,7 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
     private boolean isVoid;
     private boolean isUnlimitedStorage;
     private boolean isUnlimitedVending;
+    private boolean isConversion;
 
     @Override
     public boolean canItemLock (LockAttribute attr) {
@@ -117,6 +118,21 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
     }
 
     @Override
+    public boolean isDictConvertible () {
+        return isConversion;
+    }
+
+    @Override
+    public boolean setIsDictConvertible (boolean state) {
+        if (isConversion != state) {
+            isConversion = state;
+            onAttributeChanged();
+        }
+
+        return true;
+    }
+
+    @Override
     public NBTTagCompound serializeNBT () {
         NBTTagCompound tag = new NBTTagCompound();
 
@@ -126,6 +142,7 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
         tag.setBoolean("quant", isShowingQuantity);
         tag.setBoolean("unlimited", isUnlimitedStorage);
         tag.setBoolean("vending", isUnlimitedVending);
+        tag.setBoolean("conv", isConversion);
 
         return tag;
     }
@@ -138,6 +155,7 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
         isShowingQuantity = nbt.getBoolean("quant");
         isUnlimitedStorage = nbt.getBoolean("unlimited");
         isUnlimitedVending = nbt.getBoolean("vending");
+        isConversion = nbt.getBoolean("conv");
     }
 
     protected void onAttributeChanged () { }

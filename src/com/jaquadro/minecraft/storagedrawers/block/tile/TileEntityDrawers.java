@@ -66,6 +66,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     {
         @Override
         protected void onAttributeChanged () {
+            TileEntityDrawers.this.onAttributeChanged();
             if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
                 markBlockForUpdate();
@@ -116,6 +117,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         @Override
         protected void onUpgradeChanged (ItemStack oldUpgrade, ItemStack newUpgrade) {
+
             if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
                 markBlockForUpdate();
@@ -247,6 +249,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         return true;
     }
+
+    protected void onAttributeChanged () { }
 
     public boolean isSealed () {
         if (!StorageDrawers.config.cache.enableTape)

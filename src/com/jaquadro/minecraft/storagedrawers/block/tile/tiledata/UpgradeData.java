@@ -28,6 +28,7 @@ public class UpgradeData extends TileDataShim
     private boolean hasVoid;
     private boolean hasUnlimited;
     private boolean hasVending;
+    private boolean hasConversion;
 
     private IDrawerAttributesModifiable attrs;
 
@@ -146,6 +147,10 @@ public class UpgradeData extends TileDataShim
         return hasVending;
     }
 
+    public boolean hasConversionUpgrade () {
+        return hasConversion;
+    }
+
     private int getNextUpgradeSlot () {
         for (int i = 0; i < upgrades.length; i++) {
             if (upgrades[i].isEmpty())
@@ -167,6 +172,7 @@ public class UpgradeData extends TileDataShim
         hasVoid = false;
         hasUnlimited = false;
         hasVending = false;
+        hasConversion = false;
 
         for (ItemStack stack : upgrades) {
             Item item = stack.getItem();
@@ -174,6 +180,8 @@ public class UpgradeData extends TileDataShim
                 hasOneStack = true;
             else if (item == ModItems.upgradeVoid)
                 hasVoid = true;
+            else if (item == ModItems.upgradeConversion)
+                hasConversion = true;
             else if (item == ModItems.upgradeCreative) {
                 EnumUpgradeCreative type = EnumUpgradeCreative.byMetadata(stack.getMetadata());
                 if (type == EnumUpgradeCreative.STORAGE)
@@ -184,6 +192,7 @@ public class UpgradeData extends TileDataShim
         }
 
         attrs.setIsVoid(hasVoid);
+        attrs.setIsDictConvertible(hasConversion);
         attrs.setIsUnlimitedStorage(hasUnlimited);
         attrs.setIsUnlimitedVending(hasVending);
     }

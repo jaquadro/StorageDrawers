@@ -4,7 +4,8 @@ import com.jaquadro.minecraft.chameleon.block.tiledata.TileDataShim;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
-import com.jaquadro.minecraft.storagedrawers.storage.BaseDrawerData;
+import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
+import com.jaquadro.minecraft.storagedrawers.util.ItemStackOreMatcher;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +14,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 
@@ -102,6 +104,12 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
     @Nonnull
     protected abstract DrawerData createDrawer (int slot);
 
+    public void syncAttributes () {
+        for (DrawerData drawer : slots)
+            drawer.syncAttributes();
+
+    }
+
     public void syncSlots () {
         int index = 0;
         for (int i = 0; i < slots.length; i++) {
@@ -127,7 +135,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
     }
 
-    public static class DrawerData extends BaseDrawerData
+    public static class DrawerData implements IDrawer, INBTSerializable<NBTTagCompound>
     {
         @CapabilityInject(IDrawerAttributes.class)
         static Capability<IDrawerAttributes> ATTR_CAPABILITY = null;
@@ -138,12 +146,13 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         @Nonnull
         private ItemStack protoStack;
         private int count;
-
+        private ItemStackMatcher matcher;
 
         public DrawerData (StandardDrawerGroup group) {
             this.group = group;
             attrs = new EmptyDrawerAttributes();
             protoStack = ItemStack.EMPTY;
+            matcher = ItemStackMatcher.EMPTY;
         }
 
         public void setCapabilityProvider (ICapabilityProvider capProvider) {
@@ -165,7 +174,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
 
         protected IDrawer setStoredItem (@Nonnull ItemStack itemPrototype, boolean notify) {
-            if (areItemsEqual(itemPrototype)) {
+            if (matcher.matches(itemPrototype)) {
                 return this;
             }
 
@@ -179,8 +188,10 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
             protoStack.setCount(1);
             count = 0;
 
-            // TODO: Oredict blah blah
-            // refreshOreDictMatches();
+            if (attrs.isDictConvertible())
+                matcher = new ItemStackOreMatcher(protoStack);
+            else
+                matcher = new ItemStackMatcher(protoStack);
 
             group.syncSlots();
             if (notify)
@@ -194,6 +205,11 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
             protoStack = itemPrototype;
             protoStack.setCount(1);
             count = 0;
+
+            if (attrs.isDictConvertible())
+                matcher = new ItemStackOreMatcher(protoStack);
+            else
+                matcher = new ItemStackMatcher(protoStack);
 
             return this;
         }
@@ -306,7 +322,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
             if (protoStack.isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
                 return true;
 
-            return areItemsEqual(itemPrototype);
+            return matcher.matches(itemPrototype);
         }
 
         @Override
@@ -314,7 +330,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
             if (protoStack.isEmpty())
                 return false;
 
-            return areItemsEqual(itemPrototype);
+            return matcher.matches(itemPrototype);
         }
 
         @Override
@@ -322,12 +338,10 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
             return protoStack.isEmpty();
         }
 
-        @Override
         protected void reset (boolean notify) {
             protoStack = ItemStack.EMPTY;
             count = 0;
-
-            super.reset(notify);
+            matcher = ItemStackMatcher.EMPTY;
 
             group.syncSlots();
             if (notify)
@@ -381,6 +395,15 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
 
             setStoredItemRaw(tagItem);
             setStoredItemCountRaw(tagCount);
+        }
+
+        public void syncAttributes () {
+            if (!protoStack.isEmpty()) {
+                if (attrs.isDictConvertible())
+                    matcher = new ItemStackOreMatcher(protoStack);
+                else
+                    matcher = new ItemStackMatcher(protoStack);
+            }
         }
 
         protected int getStackCapacity() {

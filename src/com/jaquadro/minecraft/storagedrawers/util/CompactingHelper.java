@@ -2,7 +2,6 @@ package com.jaquadro.minecraft.storagedrawers.util;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
-import com.jaquadro.minecraft.storagedrawers.storage.BaseDrawerData;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -80,7 +79,7 @@ public class CompactingHelper
                     if (comp.getCount() != lookupSize)
                         continue;
 
-                    if (!BaseDrawerData.areItemsEqual(comp, stack, false))
+                    if (!ItemStackOreMatcher.areItemsEqual(comp, stack, false))
                         continue;
 
                     candidates.add(match);
@@ -123,7 +122,7 @@ public class CompactingHelper
 
         for (IRecipe recipe : CraftingManager.REGISTRY) {
             ItemStack output = recipe.getRecipeOutput();
-            if (!BaseDrawerData.areItemsEqual(stack, output, true))
+            if (!ItemStackOreMatcher.areItemsEqual(stack, output, true))
                 continue;
 
             @Nonnull ItemStack match = tryMatch(stack, recipe.getIngredients());
@@ -132,7 +131,7 @@ public class CompactingHelper
                 List<ItemStack> compMatches = findAllMatchingRecipes(lookup1);
                 for (ItemStack comp : compMatches) {
                     int recipeSize = recipe.getIngredients().size();
-                    if (BaseDrawerData.areItemsEqual(match, comp, true) && comp.getCount() == recipeSize) {
+                    if (ItemStackOreMatcher.areItemsEqual(match, comp, true) && comp.getCount() == recipeSize) {
                         candidates.add(match);
                         candidatesRate.put(match, recipeSize);
 

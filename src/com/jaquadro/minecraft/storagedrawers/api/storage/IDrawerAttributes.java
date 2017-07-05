@@ -57,4 +57,8 @@ public interface IDrawerAttributes
     default boolean isUnlimitedVending () {
         return false;
     }
+
+    default boolean isDictConvertible () {
+        return false;
+    }
 }
