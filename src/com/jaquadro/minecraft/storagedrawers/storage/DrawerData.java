@@ -134,7 +134,7 @@ public class DrawerData extends BaseDrawerData
                 return 0;
 
             int originalCount = count;
-            count = Math.min(amount, getMaxCapacity());
+            count = Math.min(count + amount, getMaxCapacity());
 
             if (count != originalCount && notify)
                 onAmountChanged();
@@ -175,6 +175,17 @@ public class DrawerData extends BaseDrawerData
     }
 
     @Override
+    public int getAcceptingRemainingCapacity () {
+        if (protoStack.isEmpty())
+            return 0;
+
+        if (attrs.isUnlimitedVending() || attrs.isVoid())
+            return Integer.MAX_VALUE;
+
+        return getMaxCapacity() - getStoredItemCount();
+    }
+
+    @Override
     public boolean canItemBeStored (@Nonnull ItemStack itemPrototype) {
         if (protoStack.isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
             return true;
@@ -209,6 +220,9 @@ public class DrawerData extends BaseDrawerData
     @Override
     public NBTTagCompound serializeNBT () {
         NBTTagCompound tag = new NBTTagCompound();
+        if (protoStack.isEmpty())
+            return tag;
+
         NBTTagCompound item = new NBTTagCompound();
         protoStack.writeToNBT(item);
 

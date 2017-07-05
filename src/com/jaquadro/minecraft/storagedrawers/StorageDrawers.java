@@ -1,7 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers;
 
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityItemRepository;
 import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
+import com.jaquadro.minecraft.storagedrawers.core.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BoolConfigUpdateMessage;
@@ -58,6 +60,9 @@ public class StorageDrawers
     public void preInit (FMLPreInitializationEvent event) {
         log = event.getModLog();
         config = new ConfigManager(new File(event.getModConfigurationDirectory(), MOD_ID + ".cfg"));
+
+        CapabilityItemRepository.register();
+        CapabilityDrawerAttributes.register();
 
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
         network.registerMessage(BoolConfigUpdateMessage.Handler.class, BoolConfigUpdateMessage.class, 0, Side.SERVER);

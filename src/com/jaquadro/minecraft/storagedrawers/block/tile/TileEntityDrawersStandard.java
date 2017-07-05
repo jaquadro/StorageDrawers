@@ -17,9 +17,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TileEntityDrawersStandard extends TileEntityDrawers
 {
@@ -199,6 +202,17 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         @Override
         protected DrawerData createDrawer (int slot) {
             return new StandardDrawerData(slot);
+        }
+
+        @Override
+        public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            return TileEntityDrawersStandard.this.hasCapability(capability, facing);
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            return TileEntityDrawersStandard.this.getCapability(capability, facing);
         }
     }
 

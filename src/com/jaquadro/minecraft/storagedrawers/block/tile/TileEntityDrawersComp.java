@@ -10,11 +10,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TileEntityDrawersComp extends TileEntityDrawers
 {
@@ -74,6 +79,17 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
                 markDirty();
             }
+        }
+
+        @Override
+        public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            return TileEntityDrawersComp.this.hasCapability(capability, facing);
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            return TileEntityDrawersComp.this.getCapability(capability, facing);
         }
     }
 

@@ -78,6 +78,16 @@ public interface IDrawer
     int getRemainingCapacity ();
 
     /**
+     * Gets the number of additional items that would be accepted by this drawer.
+     *
+     * Because a drawer may be able to handle items in excess of its full capacity, this value may be larger than
+     * the result of getRemainingCapacity().
+     */
+    default int getAcceptingRemainingCapacity () {
+        return getRemainingCapacity();
+    }
+
+    /**
      * Gets the max stack size of the item type stored in this drawer.
      */
     default int getStoredItemStackSize () {
@@ -119,28 +129,4 @@ public interface IDrawer
     default boolean isEnabled () {
         return true;
     }
-
-    /**
-     * Gets auxiliary data that has been associated with this drawer.
-     *
-     * @param key The key used to identify the data.
-     * @return An opaque object that was previously stored.
-     */
-    // Object getExtendedData (String key);
-
-    /**
-     * Stores auxiliary data with this drawer, mainly for use in integration.
-     * @param key The key to identify the data with.
-     * @param data The data to store.
-     */
-    // void setExtendedData (String key, Object data);
-
-    /**
-     * Called when a component attribute of a drawer (such as lock or void) changes state.
-     */
-    // void attributeChanged ();
-
-    // void writeToNBT (NBTTagCompound tag);
-
-    // void readFromNBT (NBTTagCompound tag);
 }

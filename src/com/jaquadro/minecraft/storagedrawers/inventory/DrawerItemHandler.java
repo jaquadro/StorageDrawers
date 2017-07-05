@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -12,15 +13,13 @@ import javax.annotation.Nonnull;
 
 public class DrawerItemHandler implements IItemHandler
 {
-    @CapabilityInject(IDrawerAttributes.class)
-    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+    @CapabilityInject(IItemRepository.class)
+    public static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
 
     private IDrawerGroup group;
-    private ICapabilityProvider capProvider;
 
-    public DrawerItemHandler (IDrawerGroup group, ICapabilityProvider capProvider) {
+    public DrawerItemHandler (IDrawerGroup group) {
         this.group = group;
-        this.capProvider = capProvider;
     }
 
     @Override
@@ -86,27 +85,14 @@ public class DrawerItemHandler implements IItemHandler
 
     @Nonnull
     private ItemStack insertItemFullScan (@Nonnull ItemStack stack, boolean simulate) {
-        if (group instanceof ISmartGroup) {
-            for (int i : ((ISmartGroup) group).enumerateDrawersForInsertion(stack, false)) {
-                stack = insertItemInternal(i, stack, simulate);
-                if (stack.isEmpty())
-                    break;
-            }
-        }
-        else if (group instanceof IPriorityGroup) {
-            int[] order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
-            for (int i = 0; i < order.length; i++) {
-                stack = insertItemInternal(i, stack, simulate);
-                if (stack.isEmpty())
-                    break;
-            }
-        }
-        else {
-            for (int i = 0; i < group.getDrawerCount(); i++) {
-                stack = insertItemInternal(i, stack, simulate);
-                if (stack.isEmpty())
-                    break;
-            }
+        IItemRepository itemRepo = group.getCapability(ITEM_REPOSITORY_CAPABILITY, null);
+        if (itemRepo != null)
+            return itemRepo.insertItem(stack, simulate);
+
+        for (int i = 0; i < group.getDrawerCount(); i++) {
+            stack = insertItemInternal(i, stack, simulate);
+            if (stack.isEmpty())
+                break;
         }
 
         return stack;
@@ -115,36 +101,22 @@ public class DrawerItemHandler implements IItemHandler
     @Nonnull
     private ItemStack insertItemInternal (int slot, @Nonnull ItemStack stack, boolean simulate) {
         IDrawer drawer = group.getDrawer(slot);
-        if (!drawer.isEnabled() || !drawer.canItemBeStored(stack))
+        if (!drawer.canItemBeStored(stack))
             return stack;
 
-        int availableCount = drawer.isEmpty() ? drawer.getMaxCapacity(stack) : drawer.getRemainingCapacity();
+        if (drawer.isEmpty() && !simulate)
+            drawer.setStoredItem(stack);
 
-        // TODO: May not need void check here with updated storage implementation
-        IDrawerAttributes attrs = capProvider.getCapability(DRAWER_ATTRIBUTES_CAPABILITY, null);
-        if (attrs != null && attrs.isVoid())
-            availableCount = Integer.MAX_VALUE;
+        int remainder = (simulate)
+            ? Math.max(stack.getCount() - drawer.getAcceptingRemainingCapacity(), 0)
+            : drawer.adjustStoredItemCount(stack.getCount());
 
-        int stackSize = stack.getCount();
-        int insertCount = Math.min(stackSize, availableCount);
-        int remainder = stackSize - insertCount;
-
-        if (remainder == stackSize)
+        if (remainder == stack.getCount())
             return stack;
-
-        if (!simulate) {
-            if (drawer.isEmpty())
-                drawer = drawer.setStoredItem(stack);
-            drawer.setStoredItemCount(drawer.getStoredItemCount() + insertCount);
-        }
-
         if (remainder == 0)
             return ItemStack.EMPTY;
 
-        ItemStack returnStack = stack.copy();
-        returnStack.setCount(remainder);
-
-        return returnStack;
+        return stackResult(stack, remainder);
     }
 
     @Override
@@ -163,16 +135,11 @@ public class DrawerItemHandler implements IItemHandler
         if (!drawer.isEnabled() || drawer.isEmpty() || drawer.getStoredItemCount() == 0)
             return ItemStack.EMPTY;
 
-        ItemStack returnStack = drawer.getStoredItemPrototype().copy();
-        int stackSize = Math.min(drawer.getStoredItemCount(), amount);
-        stackSize = Math.min(stackSize, returnStack.getMaxStackSize());
+        int remaining = (simulate)
+            ? Math.max(amount - drawer.getStoredItemCount(), 0)
+            : drawer.adjustStoredItemCount(-amount);
 
-        returnStack.setCount(stackSize);
-
-        if (!simulate)
-            drawer.setStoredItemCount(drawer.getStoredItemCount() - stackSize);
-
-        return returnStack;
+        return stackResult(drawer.getStoredItemPrototype(), amount - remaining);
     }
 
     @Override
@@ -191,5 +158,11 @@ public class DrawerItemHandler implements IItemHandler
 
     private boolean slotIsVirtual (int slot) {
         return slot == 0;
+    }
+
+    private ItemStack stackResult (@Nonnull ItemStack stack, int amount) {
+        ItemStack result = stack.copy();
+        result.setCount(amount);
+        return result;
     }
 }

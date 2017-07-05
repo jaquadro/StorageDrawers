@@ -1,9 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
+import com.jaquadro.minecraft.storagedrawers.api.storage.Drawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.api.storage.ISmartGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import net.minecraft.block.state.IBlockState;
@@ -16,9 +16,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup
+public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPriorityGroup
 {
     private static final int[] drawerSlots = new int[] { 0 };
 
@@ -65,10 +66,11 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
     }
 
     @Override
+    @Nonnull
     public IDrawer getDrawer (int slot) {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getPos()))
-            return null;
+            return Drawers.DISABLED;
 
         return controller.getDrawer(slot);
     }
@@ -82,35 +84,17 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
         super.markDirty();
     }
 
-    @Override
-    public Iterable<Integer> enumerateDrawersForInsertion (@Nonnull ItemStack stack, boolean strict) {
-        TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getPos()))
-            return new ArrayList<>();
-
-        return controller.enumerateDrawersForInsertion(stack, strict);
-    }
+    private DrawerItemHandler itemHandler = new DrawerItemHandler(this);
 
     @Override
-    public Iterable<Integer> enumerateDrawersForExtraction (@Nonnull ItemStack stack, boolean strict) {
-        TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getPos()))
-            return new ArrayList<>();
-
-        return controller.enumerateDrawersForExtraction(stack, strict);
-    }
-
-    private DrawerItemHandler itemHandler = new DrawerItemHandler(this, this);
-
-    @Override
-    public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return true;
         return super.hasCapability(capability, facing);
     }
 
     @Override
-    public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return (T) itemHandler;
         return super.getCapability(capability, facing);

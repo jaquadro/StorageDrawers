@@ -45,6 +45,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
     }
 
     @Override
+    @Nonnull
     public IFractionalDrawer getDrawer (int slot) {
         if (slot < 0 || slot >= slots.length)
             return Drawers.DISABLED_FRACTIONAL;
@@ -278,6 +279,19 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 return 0;
 
             if (attrs.isUnlimitedVending())
+                return Integer.MAX_VALUE;
+
+            int rawMaxCapacity = baseStack().getItem().getItemStackLimit(baseStack()) * group.getStackCapacity() * baseRate();
+            int rawRemaining = rawMaxCapacity - pooledCount;
+
+            return rawRemaining / convRate[slot];
+        }
+
+        public int getAcceptingRemainingCapacity (int slot) {
+            if (baseStack().isEmpty() || convRate[slot] == 0)
+                return 0;
+
+            if (attrs.isUnlimitedVending() || attrs.isVoid())
                 return Integer.MAX_VALUE;
 
             int rawMaxCapacity = baseStack().getItem().getItemStackLimit(baseStack()) * group.getStackCapacity() * baseRate();
