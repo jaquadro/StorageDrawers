@@ -210,8 +210,6 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
     private class GroupData extends StandardDrawerGroup
     {
-        public GroupData () { }
-
         public GroupData (int slotCount) {
             super(slotCount);
         }

@@ -1,9 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers;
 
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityItemRepository;
 import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
-import com.jaquadro.minecraft.storagedrawers.core.capabilities.CapabilityDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BoolConfigUpdateMessage;
@@ -61,6 +62,7 @@ public class StorageDrawers
         log = event.getModLog();
         config = new ConfigManager(new File(event.getModConfigurationDirectory(), MOD_ID + ".cfg"));
 
+        CapabilityDrawerGroup.register();
         CapabilityItemRepository.register();
         CapabilityDrawerAttributes.register();
 

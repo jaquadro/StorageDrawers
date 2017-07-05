@@ -23,8 +23,6 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
     private DrawerData[] slots;
     private int[] order;
 
-    public StandardDrawerGroup () { }
-
     public StandardDrawerGroup (int slotCount) {
         slots = new DrawerData[slotCount];
         for (int i = 0; i < slotCount; i++)

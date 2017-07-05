@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -46,6 +47,12 @@ public class CapabilityItemRepository
 
     private static class DefaultImplementation implements IItemRepository
     {
+        @Nonnull
+        @Override
+        public NonNullList<ItemRecord> getAllItems () {
+            return NonNullList.create();
+        }
+
         @Nonnull
         @Override
         public ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate) {

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.core.capabilities;
+package com.jaquadro.minecraft.storagedrawers.capabilities;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;

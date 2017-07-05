@@ -16,12 +16,14 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -480,8 +482,20 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
                 drawerSlotList.add(new SlotRecord(group, coord, i));
         }
         else {
+            IDrawerGroup group = te.getCapability(DRAWER_GROUP_CAPABILITY, null);
+            if (record.storage == group)
+                return;
+
             if (record.storage != null)
                 clearRecordInfo(coord, record);
+            if (group == null)
+                return;
+
+            record.storage = group;
+            record.drawerStorageSize = group.getDrawerCount();
+
+            for (int i = 0, n = record.drawerStorageSize; i < n; i++)
+                drawerSlotList.add(new SlotRecord(group, coord, i));
         }
     }
 
@@ -626,22 +640,26 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
         return drawerSlots;
     }
 
+    public IItemRepository getItemRepository () {
+        return itemRepository;
+    }
+
     @CapabilityInject(IItemHandler.class)
     static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
     @CapabilityInject(IItemRepository.class)
     static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
+    @CapabilityInject(IDrawerGroup.class)
+    static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
 
     private DrawerItemHandler itemHandler = new DrawerItemHandler(this);
     private ItemRepository itemRepository = new ItemRepository();
 
     @Override
     public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == ITEM_HANDLER_CAPABILITY)
-            return true;
-        if (capability == ITEM_REPOSITORY_CAPABILITY)
-            return true;
-
-        return super.hasCapability(capability, facing);
+        return capability == ITEM_HANDLER_CAPABILITY
+            || capability == ITEM_REPOSITORY_CAPABILITY
+            || capability == DRAWER_GROUP_CAPABILITY
+            || super.hasCapability(capability, facing);
     }
 
     @Override
@@ -651,12 +669,31 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
             return (T) itemHandler;
         if (capability == ITEM_REPOSITORY_CAPABILITY)
             return (T) itemRepository;
+        if (capability == DRAWER_GROUP_CAPABILITY)
+            return (T) this;
 
         return super.getCapability(capability, facing);
     }
 
     private class ItemRepository implements IItemRepository
     {
+        @Nonnull
+        @Override
+        public NonNullList<ItemRecord> getAllItems () {
+            NonNullList<ItemRecord> records = NonNullList.create();
+
+            for (int slot : drawerSlots) {
+                IDrawer drawer = getDrawer(slot);
+                if (drawer.isEmpty())
+                    continue;
+
+                ItemStack stack = drawer.getStoredItemPrototype();
+                records.add(new ItemRecord(stack, drawer.getStoredItemCount()));
+            }
+
+            return records;
+        }
+
         @Nonnull
         @Override
         public ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate) {

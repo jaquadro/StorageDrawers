@@ -1,11 +1,20 @@
 package com.jaquadro.minecraft.storagedrawers.api.capabilities;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
 
 public interface IItemRepository
 {
+    /**
+     * Gets a list of all items in the inventory.  The same item may appear multiple times with varying counts.
+     *
+     * @return A list of zero or more items in the inventory.
+     */
+    @Nonnull
+    NonNullList<ItemRecord> getAllItems ();
+
     /**
      * Inserts an ItemStack into the inventory and returns the remainder.
      *
@@ -29,4 +38,22 @@ public interface IItemRepository
      */
     @Nonnull
     ItemStack extractItem (@Nonnull ItemStack stack, int amount, boolean simulate);
+
+    /**
+     * An item record representing an item and the amount stored.
+     *
+     * The ItemStack held by itemPrototype always reports a stack size of 1.
+     * IT IS IMPORTANT THAT YOU NEVER MODIFY itemPrototype.
+     */
+    class ItemRecord
+    {
+        @Nonnull
+        public final ItemStack itemPrototype;
+        public final int count;
+
+        public ItemRecord (@Nonnull ItemStack itemPrototype, int count) {
+            this.itemPrototype = itemPrototype;
+            this.count = count;
+        }
+    }
 }

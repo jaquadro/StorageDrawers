@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.chameleon.block.ChamLockableTileEntity;
 import com.jaquadro.minecraft.chameleon.block.tiledata.CustomNameData;
 import com.jaquadro.minecraft.chameleon.block.tiledata.LockableData;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
@@ -11,8 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import com.jaquadro.minecraft.storagedrawers.core.capabilities.BasicDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.core.capabilities.CapabilityDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
@@ -22,15 +22,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,7 +39,7 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends ChamLockableTileEntity implements ISealable, IProtectable
+public abstract class TileEntityDrawers extends ChamLockableTileEntity implements ISealable, IProtectable, IDrawerGroup
 {
     private LockableData lockData = new LockableData();
     private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
@@ -596,14 +594,34 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return oldState.getBlock() != newSate.getBlock();
     }
 
+    @Override
+    @Deprecated
     public int getDrawerCount () {
         return getGroup().getDrawerCount();
     }
 
     @Nonnull
+    @Override
+    @Deprecated
     public IDrawer getDrawer (int slot) {
         return getGroup().getDrawer(slot);
     }
+
+    @Nonnull
+    @Override
+    @Deprecated
+    public int[] getAccessibleDrawerSlots () {
+        return getGroup().getAccessibleDrawerSlots();
+    }
+
+    @CapabilityInject(IDrawerGroup.class)
+    public static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
+    @CapabilityInject(IItemRepository.class)
+    public static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
+    @CapabilityInject(IDrawerAttributes.class)
+    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+    @CapabilityInject(IItemHandler.class)
+    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
 
     private net.minecraftforge.items.IItemHandler itemHandler;
 
@@ -615,10 +633,12 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
-        if (capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if (capability == ITEM_HANDLER_CAPABILITY)
             return (T) (itemHandler == null ? (itemHandler = createUnSidedHandler()) : itemHandler);
-        if (capability == CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY)
+        if (capability == DRAWER_ATTRIBUTES_CAPABILITY)
             return (T) drawerAttributes;
+        if (capability == DRAWER_GROUP_CAPABILITY)
+            return (T) getGroup();
 
         return super.getCapability(capability, facing);
     }
@@ -626,8 +646,9 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
     {
-        return capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
-            || capability == CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY
+        return capability == ITEM_HANDLER_CAPABILITY
+            || capability == DRAWER_ATTRIBUTES_CAPABILITY
+            || capability == DRAWER_GROUP_CAPABILITY
             || super.hasCapability(capability, facing);
     }
 }
