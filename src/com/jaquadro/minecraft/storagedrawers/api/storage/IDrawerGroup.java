@@ -20,6 +20,12 @@ public interface IDrawerGroup extends ICapabilityProvider
     @Nonnull
     IDrawer getDrawer (int slot);
 
+    /**
+     * Gets the list of available drawer slots in priority order.
+     */
+    @Nonnull
+    int[] getAccessibleDrawerSlots ();
+
     @Override
     default boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
         return false;

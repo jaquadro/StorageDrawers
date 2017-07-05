@@ -6,7 +6,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -34,10 +33,8 @@ public class DrawerItemHandler implements IItemHandler
             return ItemStack.EMPTY;
 
         slot -= 1;
-        if (group instanceof IPriorityGroup) {
-            int[] order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
-            slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
-        }
+        int[] order = group.getAccessibleDrawerSlots();
+        slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
 
         IDrawer drawer = group.getDrawer(slot);
         if (!drawer.isEnabled() || drawer.isEmpty())
@@ -60,14 +57,9 @@ public class DrawerItemHandler implements IItemHandler
         }
 
         slot -= 1;
-        int orderedSlot = slot;
-        int prevSlot = slot - 1;
-
-        if (group instanceof IPriorityGroup) {
-            int[] order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
-            orderedSlot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
-            prevSlot = (slot >= 1 && slot < order.length) ? order[slot - 1] : -1;
-        }
+        int[] order = group.getAccessibleDrawerSlots();
+        int orderedSlot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
+        int prevSlot = (slot >= 1 && slot < order.length) ? order[slot - 1] : -1;
 
         if (StorageDrawers.config.cache.enableItemConversion && orderedSlot > 0) {
             IDrawer drawer = group.getDrawer(orderedSlot);
@@ -126,10 +118,8 @@ public class DrawerItemHandler implements IItemHandler
             return ItemStack.EMPTY;
 
         slot -= 1;
-        if (group instanceof IPriorityGroup) {
-            int[] order = ((IPriorityGroup) group).getAccessibleDrawerSlots();
-            slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
-        }
+        int[] order = group.getAccessibleDrawerSlots();
+        slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
 
         IDrawer drawer = group.getDrawer(slot);
         if (!drawer.isEnabled() || drawer.isEmpty() || drawer.getStoredItemCount() == 0)

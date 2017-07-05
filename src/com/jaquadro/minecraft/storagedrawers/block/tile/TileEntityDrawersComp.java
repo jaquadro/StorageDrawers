@@ -35,7 +35,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     }
 
     @Override
-    protected IDrawerGroup getGroup () {
+    public IDrawerGroup getGroup () {
         return groupData;
     }
 

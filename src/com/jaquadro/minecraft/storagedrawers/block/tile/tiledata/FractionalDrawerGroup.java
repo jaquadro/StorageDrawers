@@ -24,13 +24,18 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 {
     private FractionalStorage storage;
     private FractionalDrawer[] slots;
+    private int[] order;
 
     public FractionalDrawerGroup (int slotCount) {
         storage = new FractionalStorage(this, slotCount);
 
         slots = new FractionalDrawer[slotCount];
-        for (int i = 0; i < slotCount; i++)
+        order = new int[slotCount];
+
+        for (int i = 0; i < slotCount; i++) {
             slots[i] = new FractionalDrawer(storage, i);
+            order[i] = i;
+        }
     }
 
     public void setCapabilityProvider (ICapabilityProvider capProvider) {
@@ -44,13 +49,19 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         return slots.length;
     }
 
-    @Override
     @Nonnull
+    @Override
     public IFractionalDrawer getDrawer (int slot) {
         if (slot < 0 || slot >= slots.length)
             return Drawers.DISABLED_FRACTIONAL;
 
         return slots[slot];
+    }
+
+    @Nonnull
+    @Override
+    public int[] getAccessibleDrawerSlots () {
+        return order;
     }
 
     public int getPooledCount () {

@@ -44,7 +44,7 @@ public class ContainerDrawers extends Container
 
         storageSlots = new ArrayList<>();
         for (int i = 0; i < tileEntity.getDrawerCount(); i++)
-            storageSlots.add(addSlotToContainer(new SlotDrawer(this, tileEntity, i, getStorageSlotX(i), getStorageSlotY(i))));
+            storageSlots.add(addSlotToContainer(new SlotDrawer(this, tileEntity.getGroup(), i, getStorageSlotX(i), getStorageSlotY(i))));
 
         upgradeSlots = new ArrayList<>();
         for (int i = 0; i < 5; i++)

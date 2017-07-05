@@ -8,6 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.ItemMetaCollectionRegistry;
@@ -32,7 +33,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class TileEntityController extends TileEntity implements IDrawerGroup, IPriorityGroup
+public class TileEntityController extends TileEntity implements IDrawerGroup
 {
     @CapabilityInject(IDrawerAttributes.class)
     public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
@@ -163,6 +164,14 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         StorageDrawers.log.info("  Range: " + range + " blocks");
         StorageDrawers.log.info("  Stored records: " + storage.size() + ", slot list: " + drawerSlots.length);
         StorageDrawers.log.info("  Ticks since last update: " + (getWorld().getTotalWorldTime() - lastUpdateTime));
+    }
+
+    @Override
+    public void validate () {
+        super.validate();
+
+        if (!getWorld().isUpdateScheduled(getPos(), ModBlocks.controller))
+            getWorld().scheduleUpdate(getPos(), ModBlocks.controller, 1);
     }
 
     @Override
@@ -456,8 +465,8 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
             ((TileEntitySlave) te).bindController(getPos());
         }
-        else if (te instanceof IDrawerGroup) {
-            IDrawerGroup group = (IDrawerGroup)te;
+        else if (te instanceof TileEntityDrawers) {
+            IDrawerGroup group = ((TileEntityDrawers) te).getGroup();
             if (record.storage == group)
                 return;
 
@@ -611,6 +620,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         return group.getDrawer(getLocalDrawerSlot(slot));
     }
 
+    @Nonnull
     @Override
     public int[] getAccessibleDrawerSlots () {
         return drawerSlots;

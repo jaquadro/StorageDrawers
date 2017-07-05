@@ -1,9 +1,10 @@
-package com.jaquadro.minecraft.storagedrawers.storage;
+/*package com.jaquadro.minecraft.storagedrawers.storage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,13 +21,15 @@ public class DrawerData extends BaseDrawerData
     static Capability<IDrawerAttributes> ATTR_CAPABILITY = null;
 
     IDrawerAttributes attrs;
+    StandardDrawerGroup group;
 
     @Nonnull
     private ItemStack protoStack;
     private int count;
 
 
-    public DrawerData () {
+    public DrawerData (StandardDrawerGroup group) {
+        this.group = group;
         attrs = new EmptyDrawerAttributes();
         protoStack = ItemStack.EMPTY;
     }
@@ -67,6 +70,7 @@ public class DrawerData extends BaseDrawerData
         // TODO: Oredict blah blah
         // refreshOreDictMatches();
 
+        group.syncSlots();
         if (notify)
             onItemChanged();
 
@@ -213,6 +217,7 @@ public class DrawerData extends BaseDrawerData
 
         super.reset(notify);
 
+        group.syncSlots();
         if (notify)
             onItemChanged();
     }
@@ -275,3 +280,4 @@ public class DrawerData extends BaseDrawerData
     protected void onAmountChanged() { }
 }
 
+*/

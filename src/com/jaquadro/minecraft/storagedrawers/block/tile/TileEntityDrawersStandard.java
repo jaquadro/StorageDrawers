@@ -11,7 +11,6 @@ import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
-import com.jaquadro.minecraft.storagedrawers.storage.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -42,7 +41,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
 
         @Override
-        protected IDrawerGroup getGroup () {
+        public IDrawerGroup getGroup () {
             return groupData;
         }
     }
@@ -57,7 +56,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
 
         @Override
-        protected IDrawerGroup getGroup () {
+        public IDrawerGroup getGroup () {
             return groupData;
         }
     }
@@ -72,7 +71,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
 
         @Override
-        protected IDrawerGroup getGroup () {
+        public IDrawerGroup getGroup () {
             return groupData;
         }
     }
@@ -80,7 +79,6 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     public static class Legacy extends TileEntityDrawersStandard
     {
         private GroupData groupData = new GroupData(4);
-        private static boolean processed;
 
         public Legacy () {
             groupData.setCapabilityProvider(this);
@@ -88,7 +86,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
 
         @Override
-        protected IDrawerGroup getGroup () {
+        public IDrawerGroup getGroup () {
             return groupData;
         }
 
@@ -127,7 +125,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     }
 
     @Override
-    protected IDrawerGroup getGroup () {
+    public IDrawerGroup getGroup () {
         return null;
     }
 
@@ -201,7 +199,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         @Nonnull
         @Override
         protected DrawerData createDrawer (int slot) {
-            return new StandardDrawerData(slot);
+            return new StandardDrawerData(this, slot);
         }
 
         @Override
@@ -216,12 +214,12 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
     }
 
-    private class StandardDrawerData extends DrawerData
+    private class StandardDrawerData extends StandardDrawerGroup.DrawerData
     {
         private int slot;
 
-        public StandardDrawerData (int slot) {
-            super();
+        public StandardDrawerData (StandardDrawerGroup group, int slot) {
+            super(group);
             this.slot = slot;
         }
 

@@ -7,8 +7,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import net.minecraft.block.state.IBlockState;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IPriorityGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -17,9 +15,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 
-public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPriorityGroup
+public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
 {
     private static final int[] drawerSlots = new int[] { 0 };
 
@@ -47,6 +44,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
         return controllerData.getController(this);
     }
 
+    @Nonnull
     @Override
     public int[] getAccessibleDrawerSlots () {
         TileEntityController controller = getController();

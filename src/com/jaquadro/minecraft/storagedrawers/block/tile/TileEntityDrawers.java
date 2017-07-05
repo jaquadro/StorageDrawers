@@ -41,7 +41,7 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends ChamLockableTileEntity implements IDrawerGroupInteractive, ISealable, IProtectable
+public abstract class TileEntityDrawers extends ChamLockableTileEntity implements ISealable, IProtectable
 {
     private LockableData lockData = new LockableData();
     private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
@@ -147,19 +147,9 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         injectPortableData(upgradeData);
         injectPortableData(materialData);
         injectData(controllerData);
-
-        //initWithDrawerCount(drawerCount);
     }
 
-    //protected abstract IDrawer createDrawer (int slot);
-
-    /*protected void initWithDrawerCount (int drawerCount) {
-        drawers = new IDrawer[drawerCount];
-        for (int i = 0; i < drawerCount; i++)
-            drawers[i] = createDrawer(i);
-    }*/
-
-    protected abstract IDrawerGroup getGroup ();
+    public abstract IDrawerGroup getGroup ();
 
     public IDrawerAttributes getDrawerAttributes () {
         return drawerAttributes;
@@ -521,17 +511,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         securityKey = null;
         if (tag.hasKey("Sec"))
             securityKey = tag.getString("Sec");
-
-        /*
-        NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
-
-        drawers = new IDrawer[slots.tagCount()];
-        for (int i = 0, n = drawers.length; i < n; i++) {
-            NBTTagCompound slot = slots.getCompoundTagAt(i);
-            drawers[i] = createDrawer(i);
-            if (drawers[i] instanceof INBTSerializable)
-                ((INBTSerializable)drawers[i]).deserializeNBT(slot);
-        }*/
     }
 
     @Override
@@ -565,181 +544,8 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         if (securityKey != null)
             tag.setString("Sec", securityKey);
 
-        /*NBTTagList slots = new NBTTagList();
-        for (IDrawer drawer : drawers) {
-            if (drawer instanceof INBTSerializable)
-                slots.appendTag(((INBTSerializable)drawer).serializeNBT());
-            else
-                slots.appendTag(new NBTTagCompound());
-        }
-
-        tag.setTag("Slots", slots);*/
-
         return tag;
     }
-
-    /*@Override
-    protected void readFromFixedNBT (NBTTagCompound tag) {
-        super.readFromFixedNBT(tag);
-
-        setDirection(tag.getByte("Dir"));
-
-        taped = false;
-        if (tag.hasKey("Tape"))
-            taped = tag.getBoolean("Tape");
-    }
-
-    @Override
-    protected NBTTagCompound writeToFixedNBT (NBTTagCompound tag) {
-        tag = super.writeToFixedNBT(tag);
-
-        tag.setByte("Dir", (byte) direction);
-
-        if (taped)
-            tag.setBoolean("Tape", true);
-
-        return tag;
-    }
-
-    @Override
-    public void readFromPortableNBT (NBTTagCompound tag) {
-        super.readFromPortableNBT(tag);
-
-        upgrades = new ItemStack[upgrades.length];
-        for (int i = 0; i < upgrades.length; i++)
-            upgrades[i] = ItemStack.EMPTY;
-
-        material = null;
-        if (tag.hasKey("Mat"))
-            material = tag.getString("Mat");
-
-        drawerCapacity = tag.getInteger("Cap");
-
-        NBTTagList upgradeList = tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < upgradeList.tagCount(); i++) {
-            NBTTagCompound upgradeTag = upgradeList.getCompoundTagAt(i);
-
-            int slot = upgradeTag.getByte("Slot");
-            setUpgrade(slot, new ItemStack(upgradeTag));
-        }
-
-        lockAttributes = null;
-        if (tag.hasKey("Lock"))
-            lockAttributes = LockAttribute.getEnumSet(tag.getByte("Lock"));
-
-        shrouded = false;
-        if (tag.hasKey("Shr"))
-            shrouded = tag.getBoolean("Shr");
-
-        quantified = false;
-        if (tag.hasKey("Qua"))
-            quantified = tag.getBoolean("Qua");
-
-        owner = null;
-        if (tag.hasKey("Own"))
-            owner = UUID.fromString(tag.getString("Own"));
-
-        securityKey = null;
-        if (tag.hasKey("Sec"))
-            securityKey = tag.getString("Sec");
-
-        hideUpgrade = false;
-        if (tag.hasKey("HideUp"))
-            hideUpgrade = tag.getBoolean("HideUp");
-
-        NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
-
-        drawers = new IDrawer[slots.tagCount()];
-        for (int i = 0, n = drawers.length; i < n; i++) {
-            NBTTagCompound slot = slots.getCompoundTagAt(i);
-            drawers[i] = createDrawer(i);
-            drawers[i].readFromNBT(slot);
-        }
-
-        materialSide = ItemStack.EMPTY;
-        if (tag.hasKey("MatS"))
-            materialSide = new ItemStack(tag.getCompoundTag("MatS"));
-
-        materialFront = ItemStack.EMPTY;
-        if (tag.hasKey("MatF"))
-            materialFront = new ItemStack(tag.getCompoundTag("MatF"));
-
-        materialTrim = ItemStack.EMPTY;
-        if (tag.hasKey("MatT"))
-            materialTrim = new ItemStack(tag.getCompoundTag("MatT"));
-
-        attributeChanged();
-    }
-
-    @Override
-    public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
-        tag = super.writeToPortableNBT(tag);
-
-        tag.setInteger("Cap", getDrawerCapacity());
-
-        if (material != null)
-            tag.setString("Mat", material);
-
-        NBTTagList upgradeList = new NBTTagList();
-        for (int i = 0; i < upgrades.length; i++) {
-            if (!upgrades[i].isEmpty()) {
-                NBTTagCompound upgradeTag = upgrades[i].writeToNBT(new NBTTagCompound());
-                upgradeTag.setByte("Slot", (byte)i);
-
-                upgradeList.appendTag(upgradeTag);
-            }
-        }
-
-        if (upgradeList.tagCount() > 0)
-            tag.setTag("Upgrades", upgradeList);
-
-        if (lockAttributes != null)
-            tag.setByte("Lock", (byte)LockAttribute.getBitfield(lockAttributes));
-
-        if (shrouded)
-            tag.setBoolean("Shr", true);
-
-        if (quantified)
-            tag.setBoolean("Qua", true);
-
-        if (owner != null)
-            tag.setString("Own", owner.toString());
-
-        if (securityKey != null)
-            tag.setString("Sec", securityKey);
-
-        if (hideUpgrade)
-            tag.setBoolean("HideUp", true);
-
-        NBTTagList slots = new NBTTagList();
-        for (IDrawer drawer : drawers) {
-            NBTTagCompound slot = new NBTTagCompound();
-            drawer.writeToNBT(slot);
-            slots.appendTag(slot);
-        }
-
-        tag.setTag("Slots", slots);
-
-        if (!materialSide.isEmpty()) {
-            NBTTagCompound itag = new NBTTagCompound();
-            materialSide.writeToNBT(itag);
-            tag.setTag("MatS", itag);
-        }
-
-        if (!materialFront.isEmpty()) {
-            NBTTagCompound itag = new NBTTagCompound();
-            materialFront.writeToNBT(itag);
-            tag.setTag("MatF", itag);
-        }
-
-        if (!materialTrim.isEmpty()) {
-            NBTTagCompound itag = new NBTTagCompound();
-            materialTrim.writeToNBT(itag);
-            tag.setTag("MatT", itag);
-        }
-
-        return tag;
-    }*/
 
     @Override
     public void markDirty () {
@@ -786,12 +592,10 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
         return oldState.getBlock() != newSate.getBlock();
     }
 
-    @Override
     public int getDrawerCount () {
         return getGroup().getDrawerCount();
     }
 
-    @Override
     @Nonnull
     public IDrawer getDrawer (int slot) {
         return getGroup().getDrawer(slot);

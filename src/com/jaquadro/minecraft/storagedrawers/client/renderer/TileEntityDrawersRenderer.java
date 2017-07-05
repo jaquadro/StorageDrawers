@@ -15,7 +15,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
-import com.jaquadro.minecraft.storagedrawers.storage.CountFormatter;
+import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -191,7 +191,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
         for (IRenderLabel renderHandler : renderHandlers) {
-            renderHandler.render(tile, tile, slot, 0, partialTickTime);
+            renderHandler.render(tile, tile.getGroup(), slot, 0, partialTickTime);
         }
 
         // At the time GL_LIGHT* are configured, the coordinates are transformed by the modelview

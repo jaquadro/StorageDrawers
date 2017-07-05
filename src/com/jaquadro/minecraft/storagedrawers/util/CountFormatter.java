@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.storage;
+package com.jaquadro.minecraft.storagedrawers.util;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import net.minecraft.client.gui.FontRenderer;
