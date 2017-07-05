@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.ItemMetaCollectionRegistry;
@@ -153,6 +154,14 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "  Range: " + range + " blocks");
         FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "  Stored records: " + storage.size() + ", slot list: " + drawerSlots.length);
         FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "  Ticks since last update: " + (getWorld().getTotalWorldTime() - lastUpdateTime));
+    }
+
+    @Override
+    public void validate () {
+        super.validate();
+
+        if (!getWorld().isUpdateScheduled(getPos(), ModBlocks.controller))
+            getWorld().scheduleUpdate(getPos(), ModBlocks.controller, 1);
     }
 
     @Override
