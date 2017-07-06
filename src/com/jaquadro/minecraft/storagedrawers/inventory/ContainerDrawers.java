@@ -6,10 +6,8 @@ import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -24,7 +22,7 @@ public class ContainerDrawers extends Container
     private static final int InventoryY = 117;
     private static final int HotbarY = 175;
 
-    private static final int UpgradeX = 44;
+    private static final int UpgradeX = 26;
     private static final int UpgradeY = 86;
 
     private IInventory upgradeInventory;
@@ -44,10 +42,10 @@ public class ContainerDrawers extends Container
 
         storageSlots = new ArrayList<>();
         for (int i = 0; i < tileEntity.getDrawerCount(); i++)
-            storageSlots.add(addSlotToContainer(new SlotDrawer(this, tileEntity, i, getStorageSlotX(i), getStorageSlotY(i))));
+            storageSlots.add(addSlotToContainer(new SlotDrawer(this, tileEntity.getGroup(), i, getStorageSlotX(i), getStorageSlotY(i))));
 
         upgradeSlots = new ArrayList<>();
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 7; i++)
             upgradeSlots.add(addSlotToContainer(new SlotUpgrade(upgradeInventory, i, UpgradeX + i * 18, UpgradeY)));
 
         playerSlots = new ArrayList<>();

@@ -30,7 +30,7 @@ public class InventoryUpgrade implements IInventory
     @Override
     public boolean isEmpty () {
         for (int i = 0; i < upgradeCapacity; i++) {
-            if (!tile.getUpgrade(i).isEmpty())
+            if (!tile.upgrades().getUpgrade(i).isEmpty())
                 return false;
         }
 
@@ -40,15 +40,15 @@ public class InventoryUpgrade implements IInventory
     @Override
     @Nonnull
     public ItemStack getStackInSlot (int slot) {
-        return tile.getUpgrade(slot);
+        return tile.upgrades().getUpgrade(slot);
     }
 
     @Override
     @Nonnull
     public ItemStack decrStackSize (int slot, int count) {
-        ItemStack stack = tile.getUpgrade(slot);
+        ItemStack stack = tile.upgrades().getUpgrade(slot);
         if (count > 0)
-            tile.setUpgrade(slot, ItemStack.EMPTY);
+            tile.upgrades().setUpgrade(slot, ItemStack.EMPTY);
 
         return stack;
     }
@@ -61,10 +61,7 @@ public class InventoryUpgrade implements IInventory
 
     @Override
     public void setInventorySlotContents (int slot, @Nonnull ItemStack item) {
-        //if (item != null && item.stackSize > getInventoryStackLimit())
-        //    item.stackSize = getInventoryStackLimit();
-
-        tile.setUpgrade(slot, item);
+        tile.upgrades().setUpgrade(slot, item);
     }
 
     @Override
@@ -105,10 +102,7 @@ public class InventoryUpgrade implements IInventory
 
     @Override
     public boolean isItemValidForSlot (int slot, @Nonnull ItemStack item) {
-        if (item.getItem() == ModItems.upgradeOneStack)
-            return tile.canAddOneStackUpgrade();
-
-        return item.getItem() instanceof ItemUpgrade;
+        return tile.upgrades().canAddUpgrade(item);
     }
 
     @Override
@@ -131,36 +125,11 @@ public class InventoryUpgrade implements IInventory
 
     }
 
-    public boolean canAddOneStackUpgrade () {
-        return tile.canAddOneStackUpgrade();
-    }
-
     public boolean canAddUpgrade (@Nonnull ItemStack item) {
-        return tile.canAddUpgrade(item);
+        return tile.upgrades().canAddUpgrade(item);
     }
 
-    public boolean canRemoveStorageUpgrade (int storageLevel) {
-        return canRemoveStorageUpgrade(tile, storageLevel);
-    }
-
-    private boolean canRemoveStorageUpgrade (TileEntityDrawers tile, int storageLevel) {
-        int storageMult = StorageDrawers.config.getStorageUpgradeMultiplier(storageLevel);
-        int effectiveStorageMult = tile.getEffectiveStorageMultiplier();
-        if (effectiveStorageMult == storageMult)
-            storageMult--;
-
-        int addedStackCapacity = storageMult * tile.getEffectiveDrawerCapacity();
-
-        for (int i = 0; i < tile.getDrawerCount(); i++) {
-            IDrawer drawer = tile.getDrawerIfEnabled(i);
-            if (drawer == null || drawer.isEmpty())
-                continue;
-
-            int addedItemCapacity = addedStackCapacity * drawer.getStoredItemStackSize();
-            if (drawer.getMaxCapacity() - addedItemCapacity < drawer.getStoredItemCount())
-                return false;
-        }
-
-        return true;
+    public boolean canRemoveStorageUpgrade (int slot) {
+        return tile.upgrades().canRemoveUpgrade(slot);
     }
 }

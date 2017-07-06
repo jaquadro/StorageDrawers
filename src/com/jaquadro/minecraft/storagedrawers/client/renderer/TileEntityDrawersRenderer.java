@@ -15,16 +15,13 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
-import com.jaquadro.minecraft.storagedrawers.storage.CountFormatter;
+import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.ModelManager;
-import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemBlock;
@@ -83,7 +80,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         boolean cache = mc.gameSettings.fancyGraphics;
         mc.gameSettings.fancyGraphics = true;
         renderUpgrades(renderer, tile, state);
-        if (!tile.isShrouded() && !tile.isSealed())
+        if (!tile.getDrawerAttributes().isConcealed() && !tile.isSealed())
             renderFastItemSet(renderer, tile, state, side, depth, partialTickTime);
 
         mc.gameSettings.fancyGraphics = cache;
@@ -107,8 +104,8 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         for (int i = 0; i < drawerCount; i++) {
             renderStacks[i] = ItemStack.EMPTY;
-            IDrawer drawer = tile.getDrawerIfEnabled(i);
-            if (drawer == null || drawer.isEmpty())
+            IDrawer drawer = tile.getDrawer(i);
+            if (!drawer.isEnabled() || drawer.isEmpty())
                 continue;
 
             ItemStack itemStack = drawer.getStoredItemPrototype();
@@ -126,7 +123,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
                 renderFastItem(renderer, renderStacks[i], tile, state, i, side, depth, partialTickTime);
         }
 
-        if (tile.isShowingQuantity()) {
+        if (tile.getDrawerAttributes().isShowingQuantity()) {
             EntityPlayerSP player = Minecraft.getMinecraft().player;
             BlockPos blockPos = tile.getPos().add(.5, .5, .5);
             double distance = Math.sqrt(blockPos.distanceSq(player.getPosition()));
@@ -194,7 +191,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
         for (IRenderLabel renderHandler : renderHandlers) {
-            renderHandler.render(tile, tile, slot, 0, partialTickTime);
+            renderHandler.render(tile, tile.getGroup(), slot, 0, partialTickTime);
         }
 
         // At the time GL_LIGHT* are configured, the coordinates are transformed by the modelview
@@ -297,12 +294,12 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         GlStateManager.enableAlpha();
 
-        renderIndicator(renderer, tile, state, tile.getDirection(), tile.getEffectiveStatusLevel());
+        renderIndicator(renderer, tile, state, tile.getDirection(), tile.upgrades().getStatusType());
         renderTape(renderer, tile, state, tile.getDirection(), tile.isSealed());
     }
 
-    private void renderIndicator (ChamRender renderer, TileEntityDrawers tile, IBlockState blockState, int side, int level) {
-        if (level <= 0 || side < 2 || side > 5)
+    private void renderIndicator (ChamRender renderer, TileEntityDrawers tile, IBlockState blockState, int side, EnumUpgradeStatus level) {
+        if (level == null || side < 2 || side > 5)
             return;
 
         BlockDrawers block = (BlockDrawers)blockState.getBlock();
@@ -318,11 +315,11 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         for (int i = 0; i < count; i++) {
             IDrawer drawer = tile.getDrawer(i);
-            if (drawer == null || tile.isShrouded())
+            if (drawer == null || tile.getDrawerAttributes().isConcealed())
                 continue;
 
-            TextureAtlasSprite iconOff = Chameleon.instance.iconRegistry.getIcon(statusInfo.getSlot(i).getOffResource(EnumUpgradeStatus.byLevel(level)));
-            TextureAtlasSprite iconOn = Chameleon.instance.iconRegistry.getIcon(statusInfo.getSlot(i).getOnResource(EnumUpgradeStatus.byLevel(level)));
+            TextureAtlasSprite iconOff = Chameleon.instance.iconRegistry.getIcon(statusInfo.getSlot(i).getOffResource(level));
+            TextureAtlasSprite iconOn = Chameleon.instance.iconRegistry.getIcon(statusInfo.getSlot(i).getOnResource(level));
 
             Area2D statusArea = statusInfo.getSlot(i).getStatusArea();
             Area2D activeArea = statusInfo.getSlot(i).getStatusActiveArea();
@@ -338,14 +335,14 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
             GlStateManager.doPolygonOffset(-1, -10);
 
-            if (level == 1 && drawer.getMaxCapacity() > 0 && drawer.getRemainingCapacity() == 0) {
+            if (level == EnumUpgradeStatus.LEVEL1 && !drawer.isEmpty() && drawer.getRemainingCapacity() == 0) {
                 renderer.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
                     (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth);
                 renderer.state.setRotateTransform(ChamRender.ZPOS, side);
                 renderer.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
                 renderer.state.clearRotateTransform();
             }
-            else if (level >= 2) {
+            else if (level == EnumUpgradeStatus.LEVEL2) {
                 int stepX = statusInfo.getSlot(i).getActiveStepsX();
                 int stepY = statusInfo.getSlot(i).getActiveStepsY();
 

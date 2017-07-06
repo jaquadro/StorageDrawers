@@ -21,15 +21,8 @@ public class SlotUpgrade extends Slot
         if (stack.isEmpty())
             return false;
 
-        if (inventory instanceof InventoryUpgrade) {
-            if (!((InventoryUpgrade)inventory).canAddUpgrade(stack))
-                return false;
-
-            if (stack.getItem() == ModItems.upgradeOneStack)
-                return ((InventoryUpgrade) inventory).canAddOneStackUpgrade();
-
-            return true;
-        }
+        if (inventory instanceof InventoryUpgrade)
+            return ((InventoryUpgrade) inventory).canAddUpgrade(stack);
 
         return false;
     }
@@ -40,7 +33,7 @@ public class SlotUpgrade extends Slot
             ItemStack stack = getStack();
             if (stack.getItem() == ModItems.upgradeStorage) {
                 EnumUpgradeStorage upgrade = EnumUpgradeStorage.byMetadata(stack.getMetadata());
-                return ((InventoryUpgrade) inventory).canRemoveStorageUpgrade(upgrade.getLevel());
+                return ((InventoryUpgrade) inventory).canRemoveStorageUpgrade(getSlotIndex());
             }
 
             if (player != null) {

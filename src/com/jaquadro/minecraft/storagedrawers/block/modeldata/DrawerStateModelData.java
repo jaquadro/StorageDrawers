@@ -2,14 +2,20 @@ package com.jaquadro.minecraft.storagedrawers.block.modeldata;
 
 import com.jaquadro.minecraft.chameleon.model.ModelData;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 
 import java.util.Arrays;
 import java.util.UUID;
 
 public final class DrawerStateModelData extends ModelData
 {
+    @CapabilityInject(IDrawerAttributes.class)
+    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+
     private final boolean shroudedFlag;
     private final boolean lockedFlag;
     private final boolean voidFlag;
@@ -18,10 +24,15 @@ public final class DrawerStateModelData extends ModelData
     private final boolean[] emptyFlags;
 
     public DrawerStateModelData (TileEntityDrawers tile) {
-        if (tile != null) {
-            shroudedFlag = tile.isShrouded();
-            lockedFlag = tile.isItemLocked(LockAttribute.LOCK_POPULATED);
-            voidFlag = tile.isVoid();
+        IDrawerAttributes attr = null;
+        if (tile != null)
+            attr = tile.getCapability(DRAWER_ATTRIBUTES_CAPABILITY, null);
+
+        if (tile != null && attr != null) {
+            shroudedFlag = attr.isConcealed();
+            lockedFlag = attr.isItemLocked(LockAttribute.LOCK_POPULATED);
+            voidFlag = attr.isVoid();
+
             owner = tile.getOwner();
 
             emptyFlags = new boolean[tile.getDrawerCount()];

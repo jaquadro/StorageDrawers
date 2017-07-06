@@ -44,7 +44,6 @@ public class BlockController extends BlockContainer implements INetworked
         setHardness(5f);
         setSoundType(SoundType.STONE);
         setLightOpacity(255);
-        setTickRandomly(true);
 
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }

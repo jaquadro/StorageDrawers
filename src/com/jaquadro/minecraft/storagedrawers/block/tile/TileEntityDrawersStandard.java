@@ -1,20 +1,27 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
-import com.jaquadro.minecraft.storagedrawers.storage.*;
-import com.jaquadro.minecraft.storagedrawers.storage.IStorageProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TileEntityDrawersStandard extends TileEntityDrawers
 {
@@ -22,31 +29,124 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         null, StorageDrawers.MOD_ID + ":basicDrawers1", StorageDrawers.MOD_ID + ":basicDrawers2", null, StorageDrawers.MOD_ID + ":basicDrawers4"
     };
 
-    private IStorageProvider storageProvider = new StandardStorageProvider();
-
     private int capacity = 0;
 
-    public TileEntityDrawersStandard () {
-        super(1);
+    public static class Slot1 extends TileEntityDrawersStandard
+    {
+        private GroupData groupData = new GroupData(1);
+
+        public Slot1 () {
+            groupData.setCapabilityProvider(this);
+            injectPortableData(groupData);
+        }
+
+        @Override
+        public IDrawerGroup getGroup () {
+            return groupData;
+        }
+
+        @Override
+        protected void onAttributeChanged () {
+            groupData.syncAttributes();
+        }
     }
 
-    public TileEntityDrawersStandard (int count) {
-        super(count);
+    public static class Slot2 extends TileEntityDrawersStandard
+    {
+        private GroupData groupData = new GroupData(2);
+
+        public Slot2 () {
+            groupData.setCapabilityProvider(this);
+            injectPortableData(groupData);
+        }
+
+        @Override
+        public IDrawerGroup getGroup () {
+            return groupData;
+        }
+
+        @Override
+        protected void onAttributeChanged () {
+            groupData.syncAttributes();
+        }
     }
 
-    public void setDrawerCount (int count) {
-        initWithDrawerCount(count);
+    public static class Slot4 extends TileEntityDrawersStandard
+    {
+        private GroupData groupData = new GroupData(4);
+
+        public Slot4 () {
+            groupData.setCapabilityProvider(this);
+            injectPortableData(groupData);
+        }
+
+        @Override
+        public IDrawerGroup getGroup () {
+            return groupData;
+        }
+
+        @Override
+        protected void onAttributeChanged () {
+            groupData.syncAttributes();
+        }
     }
 
-    protected IStorageProvider getStorageProvider () {
-        if (storageProvider == null)
-            storageProvider = new StandardStorageProvider();
-        return storageProvider;
+    public static class Legacy extends TileEntityDrawersStandard
+    {
+        private GroupData groupData = new GroupData(4);
+
+        public Legacy () {
+            groupData.setCapabilityProvider(this);
+            injectPortableData(groupData);
+        }
+
+        @Override
+        public IDrawerGroup getGroup () {
+            return groupData;
+        }
+
+        @Override
+        protected void onAttributeChanged () {
+            groupData.syncAttributes();
+        }
+
+        public void replaceWithCurrent () {
+            TileEntityDrawersStandard replacement = createEntity(groupData.getDrawerCount());
+            if (replacement != null) {
+                replacement.deserializeNBT(serializeNBT());
+                getWorld().setTileEntity(getPos(), replacement);
+                replacement.markDirty();
+            }
+        }
+
+        @Override
+        public void validate () {
+            super.validate();
+            getWorld().scheduleBlockUpdate(getPos(), ModBlocks.basicDrawers, 1, 0);
+        }
+
+        @Override
+        public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
+            return super.writeToPortableNBT(tag);
+        }
+    }
+
+    public static TileEntityDrawersStandard createEntity (int slotCount) {
+        switch (slotCount) {
+            case 1:
+                return new Slot1();
+            case 2:
+                return new Slot2();
+            case 4:
+                return new Slot4();
+            default:
+                return null;
+        }
     }
 
     @Override
-    protected IDrawer createDrawer (int slot) {
-        return new DrawerData(getStorageProvider(), slot);
+    public IDrawerGroup getGroup () {
+        return null;
     }
 
     @Override
@@ -103,68 +203,66 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
             if (capacity <= 0)
                 capacity = 1;
-
-            attributeChanged();
         }
 
         return capacity;
     }
 
-    private class StandardStorageProvider extends DefaultStorageProvider
+    private class GroupData extends StandardDrawerGroup
     {
-        public StandardStorageProvider () {
-            super(TileEntityDrawersStandard.this, TileEntityDrawersStandard.this);
+        public GroupData (int slotCount) {
+            super(slotCount);
+        }
+
+        @Nonnull
+        @Override
+        protected DrawerData createDrawer (int slot) {
+            return new StandardDrawerData(this, slot);
         }
 
         @Override
-        public int getSlotStackCapacity (int slot) {
-            return getEffectiveStorageMultiplier() * getEffectiveDrawerCapacity();
+        public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            return TileEntityDrawersStandard.this.hasCapability(capability, facing);
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            return TileEntityDrawersStandard.this.getCapability(capability, facing);
+        }
+    }
+
+    private class StandardDrawerData extends StandardDrawerGroup.DrawerData
+    {
+        private int slot;
+
+        public StandardDrawerData (StandardDrawerGroup group, int slot) {
+            super(group);
+            this.slot = slot;
         }
 
         @Override
-        public boolean isLocked (int slot, LockAttribute attr) {
-            return TileEntityDrawersStandard.this.isItemLocked(attr);
+        protected int getStackCapacity () {
+            return upgrades().getStorageMultiplier() * getEffectiveDrawerCapacity();
         }
 
         @Override
-        public boolean isVoid (int slot) {
-            return TileEntityDrawersStandard.this.isVoid();
+        protected void onItemChanged () {
+            DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
+            MinecraftForge.EVENT_BUS.post(event);
+
+            if (getWorld() != null && !getWorld().isRemote) {
+                markDirty();
+                markBlockForUpdate();
+            }
         }
 
         @Override
-        public boolean isShrouded (int slot) {
-            return TileEntityDrawersStandard.this.isShrouded();
-        }
-
-        @Override
-        public boolean setIsShrouded (int slot, boolean state) {
-            TileEntityDrawersStandard.this.setIsShrouded(state);
-            return true;
-        }
-
-        @Override
-        public boolean isShowingQuantity (int slot) {
-            return TileEntityDrawersStandard.this.isShowingQuantity();
-        }
-
-        @Override
-        public boolean setIsShowingQuantity (int slot, boolean state) {
-            return TileEntityDrawersStandard.this.setIsShowingQuantity(state);
-        }
-
-        @Override
-        public boolean isStorageUnlimited (int slot) {
-            return TileEntityDrawersStandard.this.isUnlimited();
-        }
-
-        @Override
-        public boolean isVendingUnlimited (int slot) {
-            return TileEntityDrawersStandard.this.isVending();
-        }
-
-        @Override
-        public boolean isRedstone (int slot) {
-            return TileEntityDrawersStandard.this.isRedstone();
+        protected void onAmountChanged () {
+            if (getWorld() != null && !getWorld().isRemote) {
+                syncClientCount(slot, getStoredItemCount());
+                markDirty();
+            }
         }
     }
 }

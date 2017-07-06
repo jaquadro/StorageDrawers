@@ -28,9 +28,9 @@ public class ItemCustomTrim extends ItemBlock
         TileEntityTrim tile = (TileEntityTrim) world.getTileEntity(pos);
         if (tile != null && stack.hasTagCompound() && !stack.getTagCompound().hasKey("tile")) {
             if (stack.getTagCompound().hasKey("MatS"))
-                tile.setMaterialSide(new ItemStack(stack.getTagCompound().getCompoundTag("MatS")));
+                tile.material().setSide(new ItemStack(stack.getTagCompound().getCompoundTag("MatS")));
             if (stack.getTagCompound().hasKey("MatT"))
-                tile.setMaterialTrim(new ItemStack(stack.getTagCompound().getCompoundTag("MatT")));
+                tile.material().setTrim(new ItemStack(stack.getTagCompound().getCompoundTag("MatT")));
         }
 
         return true;

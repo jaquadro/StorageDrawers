@@ -7,7 +7,7 @@ public class StorageDrawersApi
 {
     private static IStorageDrawersApi instance;
 
-    public static final String VERSION = "1.10.2-1.3.0";
+    public static final String VERSION = "2.0.0";
 
     /**
      * API entry point.

@@ -115,9 +115,9 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
             return state;
 
         EnumCompDrawer slots = EnumCompDrawer.OPEN1;
-        if (tile.isDrawerEnabled(1))
+        if (tile.getDrawer(1).isEnabled())
             slots = EnumCompDrawer.OPEN2;
-        if (tile.isDrawerEnabled(2))
+        if (tile.getDrawer(2).isEnabled())
             slots = EnumCompDrawer.OPEN3;
 
         return super.getActualState(state, world, pos).withProperty(SLOTS, slots);

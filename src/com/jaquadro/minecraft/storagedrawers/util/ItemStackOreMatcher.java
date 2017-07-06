@@ -1,41 +1,52 @@
-package com.jaquadro.minecraft.storagedrawers.storage;
+package com.jaquadro.minecraft.storagedrawers.util;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public abstract class BaseDrawerData implements IDrawer
+public class ItemStackOreMatcher extends ItemStackMatcher
 {
     private List<ItemStack> oreDictMatches;
-    private Map<String, Object> auxData;
 
-    protected BaseDrawerData () {
-
+    public ItemStackOreMatcher (@Nonnull ItemStack stack) {
+        super(stack);
+        refreshOreDictMatches();
     }
 
-    protected void postInit () {
+    @Override
+    public boolean matches (@Nonnull ItemStack stack) {
+        if (!this.stack.isItemEqual(stack)) {
+            if (oreDictMatches == null)
+                return false;
+            if (this.stack.getItem() == stack.getItem())
+                return false;
 
+            boolean oreMatch = false;
+            for (ItemStack oreDictMatch : oreDictMatches) {
+                if (stack.isItemEqual(oreDictMatch)) {
+                    oreMatch = true;
+                    break;
+                }
+            }
+
+            if (!oreMatch)
+                return false;
+        }
+
+        return ItemStack.areItemStackTagsEqual(this.stack, stack);
     }
 
-    protected void reset () {
-        oreDictMatches = null;
-    }
-
-    protected void refreshOreDictMatches () {
-        ItemStack protoStack = getStoredItemPrototype();
-        if (protoStack.isEmpty()) {
+    public void refreshOreDictMatches () {
+        if (stack.isEmpty()) {
             oreDictMatches = null;
             return;
         }
 
-        int[] oreIDs = OreDictionary.getOreIDs(protoStack);
+        int[] oreIDs = OreDictionary.getOreIDs(stack);
         if (oreIDs.length == 0)
             oreDictMatches = null;
         else {
@@ -58,62 +69,12 @@ public abstract class BaseDrawerData implements IDrawer
         }
     }
 
-    @Override
-    public Object getExtendedData (String key) {
-        if (auxData == null || !auxData.containsKey(key))
-            return null;
-
-        return auxData.get(key);
-    }
-
-    @Override
-    public void setExtendedData (String key, Object data) {
-        if (auxData == null)
-            auxData = new HashMap<>();
-
-        auxData.put(key, data);
-    }
-
-    @Override
-    public void attributeChanged () { }
-
-    protected int getItemCapacityForInventoryStack () {
-        return getMaxCapacity();
-    }
-
-    public boolean areItemsEqual (@Nonnull ItemStack item) {
-        ItemStack protoStack = getStoredItemPrototype();
-        if (!protoStack.isEmpty() && !protoStack.isItemEqual(item)) {
-            if (!StorageDrawers.config.cache.enableItemConversion)
-                return false;
-            if (oreDictMatches == null)
-                return false;
-            if (protoStack.getItem() == item.getItem())
-                return false;
-
-            boolean oreMatch = false;
-            for (ItemStack oreDictMatche : oreDictMatches) {
-                if (item.isItemEqual(oreDictMatche)) {
-                    oreMatch = true;
-                    break;
-                }
-            }
-
-            if (!oreMatch)
-                return false;
-        }
-
-        return ItemStack.areItemStackTagsEqual(protoStack, item);
-    }
-
     public static boolean areItemsEqual (@Nonnull ItemStack stack1, @Nonnull ItemStack stack2) {
         return areItemsEqual(stack1, stack2, true);
     }
 
     public static boolean areItemsEqual (@Nonnull ItemStack stack1, @Nonnull ItemStack stack2, boolean oreDictStrictMode) {
         if (!stack1.isEmpty() && !stack2.isEmpty() && !stack1.isItemEqual(stack2)) {
-            if (!StorageDrawers.config.cache.enableItemConversion)
-                return false;
             if (stack1.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack2.getItemDamage() == OreDictionary.WILDCARD_VALUE)
                 return false;
             if (stack1.getItem() == stack2.getItem())

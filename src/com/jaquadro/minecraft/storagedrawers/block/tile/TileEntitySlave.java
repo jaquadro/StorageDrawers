@@ -1,24 +1,27 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
+import com.jaquadro.minecraft.storagedrawers.api.storage.Drawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.api.storage.ISmartGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import net.minecraft.block.state.IBlockState;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IPriorityGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 
-public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup
+public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
 {
     private static final int[] drawerSlots = new int[] { 0 };
 
@@ -46,6 +49,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
         return controllerData.getController(this);
     }
 
+    @Nonnull
     @Override
     public int[] getAccessibleDrawerSlots () {
         TileEntityController controller = getController();
@@ -65,30 +69,13 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
     }
 
     @Override
+    @Nonnull
     public IDrawer getDrawer (int slot) {
         TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getPos()))
-            return null;
+            return Drawers.DISABLED;
 
         return controller.getDrawer(slot);
-    }
-
-    @Override
-    public IDrawer getDrawerIfEnabled (int slot) {
-        TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getPos()))
-            return null;
-
-        return controller.getDrawerIfEnabled(slot);
-    }
-
-    @Override
-    public boolean isDrawerEnabled (int slot) {
-        TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getPos()))
-            return false;
-
-        return controller.isDrawerEnabled(slot);
     }
 
     @Override
@@ -100,46 +87,67 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup, IPr
         super.markDirty();
     }
 
-    @Override
-    public boolean markDirtyIfNeeded () {
-        TileEntityController controller = getController();
-        if (controller != null && controller.isValidSlave(getPos()))
-            return controller.markDirtyIfNeeded();
-
-        return false;
-    }
-
-    @Override
-    public Iterable<Integer> enumerateDrawersForInsertion (@Nonnull ItemStack stack, boolean strict) {
-        TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getPos()))
-            return new ArrayList<>();
-
-        return controller.enumerateDrawersForInsertion(stack, strict);
-    }
-
-    @Override
-    public Iterable<Integer> enumerateDrawersForExtraction (@Nonnull ItemStack stack, boolean strict) {
-        TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getPos()))
-            return new ArrayList<>();
-
-        return controller.enumerateDrawersForExtraction(stack, strict);
-    }
+    @CapabilityInject(IItemHandler.class)
+    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
+    @CapabilityInject(IItemRepository.class)
+    static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
+    @CapabilityInject(IDrawerGroup.class)
+    static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
 
     private DrawerItemHandler itemHandler = new DrawerItemHandler(this);
+    private ItemRepositoryProxy itemRepository = new ItemRepositoryProxy();
 
     @Override
-    public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return true;
-        return super.hasCapability(capability, facing);
+    public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == ITEM_HANDLER_CAPABILITY
+            || capability == ITEM_REPOSITORY_CAPABILITY
+            || capability == DRAWER_GROUP_CAPABILITY
+            || super.hasCapability(capability, facing);
     }
 
     @Override
-    public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == ITEM_HANDLER_CAPABILITY)
             return (T) itemHandler;
+        if (capability == ITEM_REPOSITORY_CAPABILITY)
+            return (T) itemRepository;
+        if (capability == DRAWER_GROUP_CAPABILITY)
+            return (T) this;
+
         return super.getCapability(capability, facing);
+    }
+
+    private class ItemRepositoryProxy implements IItemRepository
+    {
+        @Nonnull
+        @Override
+        public NonNullList<ItemRecord> getAllItems () {
+            TileEntityController controller = getController();
+            if (controller == null || !controller.isValidSlave(getPos()))
+                return NonNullList.create();
+
+            return controller.getItemRepository().getAllItems();
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate) {
+            TileEntityController controller = getController();
+            if (controller == null || !controller.isValidSlave(getPos()))
+                return stack;
+
+            return controller.getItemRepository().insertItem(stack, simulate);
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack extractItem (@Nonnull ItemStack stack, int amount, boolean simulate) {
+            TileEntityController controller = getController();
+            if (controller == null || !controller.isValidSlave(getPos()))
+                return ItemStack.EMPTY;
+
+            return controller.getItemRepository().extractItem(stack, amount, simulate);
+        }
     }
 }

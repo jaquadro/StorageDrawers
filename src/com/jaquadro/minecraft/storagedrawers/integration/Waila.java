@@ -3,7 +3,9 @@ package com.jaquadro.minecraft.storagedrawers.integration;
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.registry.IWailaTooltipHandler;
+import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
@@ -19,8 +21,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 import javax.annotation.Nonnull;
@@ -74,10 +79,14 @@ public class Waila extends IntegrationModule
 
     public static class WailaDrawer implements IWailaDataProvider
     {
+        @CapabilityInject(IDrawerAttributes.class)
+        public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+
         @Override
         @Nonnull
         public ItemStack getWailaStack (IWailaDataAccessor accessor, IWailaConfigHandler config) {
-            List<ItemStack> drops = accessor.getBlock().getDrops(accessor.getWorld(), accessor.getPosition(), accessor.getBlockState(), 0);
+            NonNullList<ItemStack> drops = NonNullList.create();
+            accessor.getBlock().getDrops(drops, accessor.getWorld(), accessor.getPosition(), accessor.getBlockState(), 0);
             if (drops.size() == 0)
                 return ItemStack.EMPTY;
 
@@ -92,12 +101,15 @@ public class Waila extends IntegrationModule
         @Override
         public List<String> getWailaBody (@Nonnull ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
             TileEntityDrawers tile = (TileEntityDrawers) accessor.getTileEntity();
+            IDrawerAttributes attr = tile.getCapability(DRAWER_ATTRIBUTES_CAPABILITY, null);
+            if (attr == null)
+                attr = new EmptyDrawerAttributes();
 
             if (SecurityManager.hasAccess(Minecraft.getMinecraft().player.getGameProfile(), tile)) {
                 if (config.getConfig("display.content")) {
                     for (int i = 0; i < tile.getDrawerCount(); i++) {
-                        IDrawer drawer = tile.getDrawerIfEnabled(i);
-                        if (drawer == null)
+                        IDrawer drawer = tile.getDrawer(i);
+                        if (!drawer.isEnabled())
                             continue;
 
                         String name = I18n.format("storagedrawers.waila.empty");
@@ -130,23 +142,22 @@ public class Waila extends IntegrationModule
                 }
 
                 if (config.getConfig("display.stacklimit")) {
-                    if (tile.isUnlimited() || tile.isVending())
+                    if (tile.getDrawerAttributes().isUnlimitedStorage() || tile.getDrawerAttributes().isUnlimitedVending())
                         currenttip.add(I18n.format("storagedrawers.waila.nolimit"));
                     else {
-                        int limit = tile.getEffectiveDrawerCapacity() * tile.getEffectiveStorageMultiplier();
-                        currenttip.add(I18n.format("storagedrawers.waila.limit", limit, tile.getEffectiveStorageMultiplier()));
+                        int multiplier = tile.upgrades().getStorageMultiplier();
+                        int limit = tile.getEffectiveDrawerCapacity() * multiplier;
+                        currenttip.add(I18n.format("storagedrawers.waila.limit", limit, multiplier));
                     }
                 }
             }
 
             if (config.getConfig("display.status")) {
                 String attrib = "";
-                if (tile.isItemLocked(LockAttribute.LOCK_POPULATED))
+                if (attr.isItemLocked(LockAttribute.LOCK_POPULATED))
                     attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storagedrawers.waila.locked");
-                if (tile.isVoid())
+                if (attr.isVoid())
                     attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storagedrawers.waila.void");
-                if (tile.isSorting())
-                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storagedrawers.waila.sorting");
                 if (tile.getOwner() != null)
                     attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storagedrawers.waila.protected");
 

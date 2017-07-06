@@ -7,7 +7,6 @@ import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
@@ -21,6 +20,7 @@ import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.*;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleManager;
@@ -232,11 +232,14 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
             return false;
 
         if (StorageDrawers.config.cache.debugTrace) {
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "BlockDrawers.onBlockActivated");
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item.isEmpty()) ? "  null item" : "  " + item.toString());
+            StorageDrawers.log.info("BlockDrawers.onBlockActivated");
+            StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item.toString());
         }
 
         if (!item.isEmpty()) {
+            if (item.getItem() instanceof ItemKey)
+                return false;
+
             if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
                 if (!retrimBlock(world, pos, item))
                     return false;
@@ -250,17 +253,14 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
                 return true;
             }
             else if (item.getItem() instanceof ItemUpgrade) {
-                if (item.getItem() == ModItems.upgradeOneStack && !tileDrawers.canAddOneStackUpgrade()) {
+                if (!tileDrawers.upgrades().canAddUpgrade(item)) {
                     if (!world.isRemote)
                         player.sendStatusMessage(new TextComponentTranslation("storagedrawers.msg.cannotAddUpgrade"), true);
 
-                   return false;
+                    return false;
                 }
 
-                if (!tileDrawers.canAddUpgrade(item))
-                    return false;
-
-                if (!tileDrawers.addUpgrade(item)) {
+                if (!tileDrawers.upgrades().addUpgrade(item)) {
                     if (!world.isRemote)
                         player.sendStatusMessage(new TextComponentTranslation("storagedrawers.msg.maxUpgrades"), true);
 
@@ -275,21 +275,6 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
                         player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
                 }
 
-                return true;
-            }
-            else if (item.getItem() == ModItems.drawerKey) {
-                boolean locked = tileDrawers.isItemLocked(LockAttribute.LOCK_POPULATED);
-                tileDrawers.setItemLocked(LockAttribute.LOCK_POPULATED, !locked);
-                tileDrawers.setItemLocked(LockAttribute.LOCK_EMPTY, !locked);
-
-                return true;
-            }
-            else if (item.getItem() == ModItems.shroudKey) {
-                tileDrawers.setIsShrouded(!tileDrawers.isShrouded());
-                return true;
-            }
-            else if (item.getItem() == ModItems.quantifyKey) {
-                tileDrawers.setIsShowingQuantity(!tileDrawers.isShowingQuantity());
                 return true;
             }
             else if (item.getItem() instanceof ItemPersonalKey) {
@@ -367,7 +352,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         }
 
         if (StorageDrawers.config.cache.debugTrace)
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "onBlockClicked");
+            StorageDrawers.log.info("onBlockClicked");
 
         RayTraceResult rayResult = net.minecraftforge.common.ForgeHooks.rayTraceEyes(playerIn, ((EntityPlayerMP) playerIn).interactionManager.getBlockReachDistance() + 1);
         if (rayResult == null)
@@ -408,7 +393,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
             item = tileDrawers.takeItemsFromSlot(slot, 1);
 
         if (StorageDrawers.config.cache.debugTrace)
-            FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, (item.isEmpty()) ? "  null item" : "  " + item.toString());
+            StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item.toString());
 
         IBlockState state = worldIn.getBlockState(pos);
         if (!item.isEmpty()) {
@@ -438,21 +423,28 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
     }
 
     @Override
-    public boolean isSideSolid (IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side) {
+    @SuppressWarnings("deprecation")
+    public BlockFaceShape getBlockFaceShape (IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing side) {
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile == null)
-            return true;
+            return BlockFaceShape.SOLID;
 
         if (isHalfDepth(state))
-            return side.getOpposite().ordinal() == tile.getDirection();
+            return side.getOpposite().ordinal() == tile.getDirection() ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
 
         if (side == EnumFacing.DOWN) {
             Block blockUnder = world.getBlockState(pos.down()).getBlock();
             if (blockUnder instanceof BlockChest || blockUnder instanceof BlockEnderChest)
-                return false;
+                return BlockFaceShape.UNDEFINED;
         }
 
-        return side.ordinal() != tile.getDirection();
+        return side.ordinal() != tile.getDirection() ? BlockFaceShape.SOLID : BlockFaceShape.BOWL;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean isSideSolid (IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side) {
+        return getBlockFaceShape(world, state, pos, side) == BlockFaceShape.SOLID;
     }
 
     private void dropItemStack (World world, BlockPos pos, EntityPlayer player, @Nonnull ItemStack stack) {
@@ -493,8 +485,8 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         TileEntityDrawers tile = getTileEntity(world, pos);
 
         if (tile != null && !tile.isSealed()) {
-            for (int i = 0; i < tile.getUpgradeSlotCount(); i++) {
-                ItemStack stack = tile.getUpgrade(i);
+            for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {
+                ItemStack stack = tile.upgrades().getUpgrade(i);
                 if (!stack.isEmpty()) {
                     if (stack.getItem() instanceof ItemUpgradeCreative)
                         continue;
@@ -502,20 +494,16 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
                 }
             }
 
-            if (!tile.isVending())
-                DrawerInventoryHelper.dropInventoryItems(world, pos, tile);
+            if (!tile.getDrawerAttributes().isUnlimitedVending())
+                DrawerInventoryHelper.dropInventoryItems(world, pos, tile.getGroup());
         }
 
         super.breakBlock(world, pos, state);
     }
 
     @Override
-    @Nonnull
-    public List<ItemStack> getDrops (IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        List<ItemStack> drops = new ArrayList<ItemStack>();
+    public void getDrops (NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         drops.add(getMainDrop(world, pos, state));
-
-        return drops;
     }
 
     protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
@@ -550,7 +538,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile != null) {
             for (int slot = 0; slot < 5; slot++) {
-                ItemStack stack = tile.getUpgrade(slot);
+                ItemStack stack = tile.upgrades().getUpgrade(slot);
                 if (stack.isEmpty() || !(stack.getItem() instanceof ItemUpgradeStorage))
                     continue;
 

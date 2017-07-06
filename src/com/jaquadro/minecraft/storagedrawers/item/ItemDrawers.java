@@ -48,9 +48,6 @@ public class ItemDrawers extends ItemBlock
                 tile.setDirection(side.ordinal());
 
             if (tile instanceof TileEntityDrawersStandard) {
-                EnumBasicDrawer info = EnumBasicDrawer.byMetadata(stack.getMetadata());
-                ((TileEntityDrawersStandard) tile).setDrawerCount(info.getDrawerCount());
-
                 if (stack.hasTagCompound() && stack.getTagCompound().hasKey("tile"))
                     tile.readFromPortableNBT(stack.getTagCompound().getCompoundTag("tile"));
 

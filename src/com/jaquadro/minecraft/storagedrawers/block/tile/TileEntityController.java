@@ -1,10 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
+
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.ItemMetaCollectionRegistry;
@@ -12,24 +16,32 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.FMLLog;
-import net.minecraftforge.items.CapabilityItemHandler;
-import org.apache.logging.log4j.Level;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
-public class TileEntityController extends TileEntity implements IDrawerGroup, IPriorityGroup, ISmartGroup
+public class TileEntityController extends TileEntity implements IDrawerGroup
 {
+    @CapabilityInject(IDrawerAttributes.class)
+    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+
+    private static final IDrawerAttributes EMPTY_ATTRIBUTES = new EmptyDrawerAttributes();
+
     private static final int PRI_LOCKED = 0;
     private static final int PRI_LOCKED_VOID = 1;
     private static final int PRI_NORMAL = 2;
@@ -85,15 +97,20 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         }
     }
 
-    private Queue<BlockPos> searchQueue = new LinkedList<BlockPos>();
-    private Set<BlockPos> searchDiscovered = new HashSet<BlockPos>();
-    private Comparator<SlotRecord> slotRecordComparator = new Comparator<SlotRecord>()
-    {
-        @Override
-        public int compare (SlotRecord o1, SlotRecord o2) {
-            return o1.priority - o2.priority;
-        }
-    };
+    private Queue<BlockPos> searchQueue = new LinkedList<>();
+    private Set<BlockPos> searchDiscovered = new HashSet<>();
+    private Comparator<SlotRecord> slotRecordComparator = (o1, o2) -> o1.priority - o2.priority;
+
+    private IDrawerAttributes getAttributes (Object obj) {
+        IDrawerAttributes attrs = null;
+        if (obj instanceof ICapabilityProvider)
+            attrs = ((ICapabilityProvider) obj).getCapability(DRAWER_ATTRIBUTES_CAPABILITY, null);
+
+        if (attrs == null)
+            attrs = EMPTY_ATTRIBUTES;
+
+        return attrs;
+    }
 
     private int getSlotPriority (SlotRecord record) {
         IDrawerGroup group = getGroupForSlotRecord(record);
@@ -102,41 +119,36 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
         }
 
         int drawerSlot = record.slot;
-        IDrawer drawer = group.getDrawerIfEnabled(drawerSlot);
-        if (drawer == null) {
+        IDrawer drawer = group.getDrawer(drawerSlot);
+        if (!drawer.isEnabled()) {
             return PRI_DISABLED;
         }
 
+        IDrawerAttributes attrs = getAttributes(group);
+
         if (drawer.isEmpty()) {
-            if ((drawer instanceof IItemLockable && ((IItemLockable) drawer).isItemLocked(LockAttribute.LOCK_EMPTY)) ||
-                (group instanceof IItemLockable && ((IItemLockable) group).isItemLocked(LockAttribute.LOCK_EMPTY))) {
+            if (attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
                 return PRI_LOCKED_EMPTY;
-            }
             else
                 return PRI_EMPTY;
         }
 
-        if ((drawer instanceof IVoidable && ((IVoidable) drawer).isVoid()) ||
-            (group instanceof IVoidable && ((IVoidable) group).isVoid())) {
-            if ((drawer instanceof IItemLockable && ((IItemLockable) drawer).isItemLocked(LockAttribute.LOCK_POPULATED)) ||
-                (group instanceof IItemLockable && ((IItemLockable) group).isItemLocked(LockAttribute.LOCK_POPULATED))) {
+        if (attrs.isVoid()) {
+            if (attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
                 return PRI_LOCKED_VOID;
-            }
             return PRI_VOID;
         }
 
-        if ((drawer instanceof IItemLockable && ((IItemLockable) drawer).isItemLocked(LockAttribute.LOCK_POPULATED)) ||
-            (group instanceof IItemLockable && ((IItemLockable) group).isItemLocked(LockAttribute.LOCK_POPULATED))) {
+        if (attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
             return PRI_LOCKED;
-        }
 
         return PRI_NORMAL;
     }
 
-    private Map<BlockPos, StorageRecord> storage = new HashMap<BlockPos, StorageRecord>();
-    protected List<SlotRecord> drawerSlotList = new ArrayList<SlotRecord>();
+    private Map<BlockPos, StorageRecord> storage = new HashMap<>();
+    protected List<SlotRecord> drawerSlotList = new ArrayList<>();
 
-    private ItemMetaCollectionRegistry<SlotRecord> drawerPrimaryLookup = new ItemMetaCollectionRegistry<SlotRecord>();
+    private ItemMetaCollectionRegistry<SlotRecord> drawerPrimaryLookup = new ItemMetaCollectionRegistry<>();
 
     protected int[] drawerSlots = new int[0];
     private int range;
@@ -150,10 +162,18 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     public void printDebugInfo () {
-        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "Controller at " + pos.toString());
-        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "  Range: " + range + " blocks");
-        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "  Stored records: " + storage.size() + ", slot list: " + drawerSlots.length);
-        FMLLog.log(StorageDrawers.MOD_ID, Level.INFO, "  Ticks since last update: " + (getWorld().getTotalWorldTime() - lastUpdateTime));
+        StorageDrawers.log.info("Controller at " + pos.toString());
+        StorageDrawers.log.info("  Range: " + range + " blocks");
+        StorageDrawers.log.info("  Stored records: " + storage.size() + ", slot list: " + drawerSlots.length);
+        StorageDrawers.log.info("  Ticks since last update: " + (getWorld().getTotalWorldTime() - lastUpdateTime));
+    }
+
+    @Override
+    public void validate () {
+        super.validate();
+
+        if (!getWorld().isUpdateScheduled(getPos(), ModBlocks.controller))
+            getWorld().scheduleUpdate(getPos(), ModBlocks.controller, 1);
     }
 
     @Override
@@ -194,52 +214,11 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     protected int insertItems (@Nonnull ItemStack stack, GameProfile profile) {
-        int itemsLeft = stack.getCount();
+        int remainder = new ProtectedItemRepository(profile).insertItem(stack, false).getCount();
+        int added = stack.getCount() - remainder;
 
-        for (int slot : enumerateDrawersForInsertion(stack, false)) {
-            IDrawerGroup group = getGroupForDrawerSlot(slot);
-            if (group instanceof IProtectable) {
-                if (!SecurityManager.hasAccess(profile, (IProtectable)group))
-                    continue;
-            }
-
-            IDrawer drawer = getDrawer(slot);
-            if (drawer.isEmpty())
-                break;
-
-            itemsLeft = insertItemsIntoDrawer(drawer, itemsLeft);
-
-            if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid())
-                itemsLeft = 0;
-            if (itemsLeft == 0)
-                break;
-        }
-
-        int count = stack.getCount() - itemsLeft;
-        stack.setCount(itemsLeft);
-
-        return count;
-    }
-
-    protected int insertItemsIntoDrawer (IDrawer drawer, int itemCount) {
-        int capacity = drawer.getMaxCapacity();
-        int storedItems = drawer.getStoredItemCount();
-
-        int storableItems = capacity - storedItems;
-        if (drawer instanceof IFractionalDrawer) {
-            IFractionalDrawer fracDrawer = (IFractionalDrawer)drawer;
-            if (!fracDrawer.isSmallestUnit() && fracDrawer.getStoredItemRemainder() > 0)
-                storableItems--;
-        }
-
-        if (storableItems == 0)
-            return itemCount;
-
-        int remainder = Math.max(itemCount - storableItems, 0);
-        storedItems += Math.min(itemCount, storableItems);
-        drawer.setStoredItemCount(storedItems);
-
-        return remainder;
+        stack.setCount(remainder);
+        return added;
     }
 
     public void toggleProtection (GameProfile profile, ISecurityProvider provider) {
@@ -285,19 +264,16 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                     continue;
             }
 
-            for (int i = 0, n = record.storage.getDrawerCount(); i < n; i++) {
-                IDrawer drawer = record.storage.getDrawerIfEnabled(i);
-                if (!(drawer instanceof IShroudable))
-                    continue;
+            IDrawerAttributes attrs = getAttributes(record.storage);
+            if (!(attrs instanceof IDrawerAttributesModifiable))
+                continue;
 
-                IShroudable shroudableStorage = (IShroudable)drawer;
-                if (template == null) {
-                    template = shroudableStorage.isShrouded();
-                    state = !template;
-                }
-
-                shroudableStorage.setIsShrouded(state);
+            IDrawerAttributesModifiable mattrs = (IDrawerAttributesModifiable)attrs;
+            if (template == null) {
+                template = mattrs.isConcealed();
+                state = !template;
             }
+            mattrs.setIsConcealed(state);
         }
     }
 
@@ -314,19 +290,16 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                     continue;
             }
 
-            for (int i = 0, n = record.storage.getDrawerCount(); i < n; i++) {
-                IDrawer drawer = record.storage.getDrawerIfEnabled(i);
-                if (!(drawer instanceof IQuantifiable))
-                    continue;
+            IDrawerAttributes attrs = getAttributes(record.storage);
+            if (!(attrs instanceof IDrawerAttributesModifiable))
+                continue;
 
-                IQuantifiable quantifiableStorage = (IQuantifiable)drawer;
-                if (template == null) {
-                    template = quantifiableStorage.isShowingQuantity();
-                    state = !template;
-                }
-
-                quantifiableStorage.setIsShowingQuantity(state);
+            IDrawerAttributesModifiable mattrs = (IDrawerAttributesModifiable)attrs;
+            if (template == null) {
+                template = mattrs.isShowingQuantity();
+                state = !template;
             }
+            mattrs.setIsShowingQuantity(state);
         }
     }
 
@@ -343,32 +316,18 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                     continue;
             }
 
-            if (record.storage instanceof IItemLockable) {
-                IItemLockable lockableStorage = (IItemLockable)record.storage;
-                if (template == null) {
-                    template = lockableStorage.isItemLocked(key);
-                    state = !template;
-                }
+            IDrawerAttributes attrs = getAttributes(record.storage);
+            if (!(attrs instanceof IDrawerAttributesModifiable))
+                continue;
 
-                for (LockAttribute attr : attributes)
-                    lockableStorage.setItemLocked(attr, state);
+            IDrawerAttributesModifiable mattrs = (IDrawerAttributesModifiable)attrs;
+            if (template == null) {
+                template = mattrs.isItemLocked(key);
+                state = !template;
             }
-            else {
-                for (int i = 0, n = record.storage.getDrawerCount(); i < n; i++) {
-                    IDrawer drawer = record.storage.getDrawerIfEnabled(i);
-                    if (!(drawer instanceof IShroudable))
-                        continue;
 
-                    IItemLockable lockableStorage = (IItemLockable)drawer;
-                    if (template == null) {
-                        template = lockableStorage.isItemLocked(key);
-                        state = !template;
-                    }
-
-                    for (LockAttribute attr : attributes)
-                        lockableStorage.setItemLocked(attr, state);
-                }
-            }
+            for (LockAttribute attr : attributes)
+                mattrs.setItemLocked(attr, state);
         }
     }
 
@@ -436,15 +395,12 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                 continue;
 
             int drawerSlot = record.slot;
-            IDrawer drawer = group.getDrawerIfEnabled(drawerSlot);
-            if (drawer == null)
-                continue;
-
-            if (drawer.isEmpty())
+            IDrawer drawer = group.getDrawer(drawerSlot);
+            if (!drawer.isEnabled() || drawer.isEmpty())
                 continue;
 
             ItemStack item = drawer.getStoredItemPrototype();
-            lookup.register(item.getItem(), item.getItemDamage(), record);
+            lookup.register(item.getItem(), item.getMetadata(), record);
         }
     }
 
@@ -511,12 +467,12 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
 
             ((TileEntitySlave) te).bindController(getPos());
         }
-        else if (te instanceof IDrawerGroup) {
-            IDrawerGroup group = (IDrawerGroup)te;
+        else if (te instanceof TileEntityDrawers) {
+            IDrawerGroup group = ((TileEntityDrawers) te).getGroup();
             if (record.storage == group)
                 return;
 
-            if (record.storage != null && record.storage != group)
+            if (record.storage != null)
                 clearRecordInfo(coord, record);
 
             record.storage = group;
@@ -526,8 +482,20 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
                 drawerSlotList.add(new SlotRecord(group, coord, i));
         }
         else {
+            IDrawerGroup group = te.getCapability(DRAWER_GROUP_CAPABILITY, null);
+            if (record.storage == group)
+                return;
+
             if (record.storage != null)
                 clearRecordInfo(coord, record);
+            if (group == null)
+                return;
+
+            record.storage = group;
+            record.drawerStorageSize = group.getDrawerCount();
+
+            for (int i = 0, n = record.drawerStorageSize; i < n; i++)
+                drawerSlotList.add(new SlotRecord(group, coord, i));
         }
     }
 
@@ -657,194 +625,195 @@ public class TileEntityController extends TileEntity implements IDrawerGroup, IP
     }
 
     @Override
+    @Nonnull
     public IDrawer getDrawer (int slot) {
         IDrawerGroup group = getGroupForDrawerSlot(slot);
         if (group == null)
-            return null;
+            return Drawers.DISABLED;
 
         return group.getDrawer(getLocalDrawerSlot(slot));
     }
 
-    @Override
-    public boolean isDrawerEnabled (int slot) {
-        IDrawerGroup group = getGroupForDrawerSlot(slot);
-        if (group == null)
-            return false;
-
-        return group.isDrawerEnabled(getLocalDrawerSlot(slot));
-    }
-
-    @Override
-    public IDrawer getDrawerIfEnabled (int slot) {
-        IDrawerGroup group = getGroupForDrawerSlot(slot);
-        if (group == null)
-            return null;
-
-        int localSlot = getLocalDrawerSlot(slot);
-        return group.getDrawerIfEnabled(localSlot);
-    }
-
+    @Nonnull
     @Override
     public int[] getAccessibleDrawerSlots () {
         return drawerSlots;
     }
 
-    @Override
-    public void markDirty () {
-        for (StorageRecord record : storage.values()) {
-            IDrawerGroup group = record.storage;
-            if (group != null)
-                group.markDirtyIfNeeded();
-        }
-
-        super.markDirty();
+    public IItemRepository getItemRepository () {
+        return itemRepository;
     }
 
-    @Override
-    public boolean markDirtyIfNeeded () {
-        boolean synced = false;
-
-        for (StorageRecord record : storage.values()) {
-            IDrawerGroup group = record.storage;
-            if (group != null)
-                synced |= group.markDirtyIfNeeded();
-        }
-
-        if (synced)
-            super.markDirty();
-
-        return synced;
-    }
+    @CapabilityInject(IItemHandler.class)
+    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
+    @CapabilityInject(IItemRepository.class)
+    static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
+    @CapabilityInject(IDrawerGroup.class)
+    static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
 
     private DrawerItemHandler itemHandler = new DrawerItemHandler(this);
+    private ItemRepository itemRepository = new ItemRepository();
 
     @Override
-    public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return true;
-        return super.hasCapability(capability, facing);
+    public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == ITEM_HANDLER_CAPABILITY
+            || capability == ITEM_REPOSITORY_CAPABILITY
+            || capability == DRAWER_GROUP_CAPABILITY
+            || super.hasCapability(capability, facing);
     }
 
     @Override
-    public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == ITEM_HANDLER_CAPABILITY)
             return (T) itemHandler;
+        if (capability == ITEM_REPOSITORY_CAPABILITY)
+            return (T) itemRepository;
+        if (capability == DRAWER_GROUP_CAPABILITY)
+            return (T) this;
+
         return super.getCapability(capability, facing);
     }
 
-    private class DrawerStackIterator implements Iterable<Integer>
+    private class ItemRepository implements IItemRepository
     {
         @Nonnull
-        private ItemStack stack;
-        private boolean strict;
-        private boolean insert;
+        @Override
+        public NonNullList<ItemRecord> getAllItems () {
+            NonNullList<ItemRecord> records = NonNullList.create();
 
-        public DrawerStackIterator (@Nonnull ItemStack stack, boolean strict, boolean insert) {
-            this.stack = stack;
-            this.strict = strict;
-            this.insert = insert;
+            for (int slot : drawerSlots) {
+                IDrawer drawer = getDrawer(slot);
+                if (drawer.isEmpty())
+                    continue;
+
+                ItemStack stack = drawer.getStoredItemPrototype();
+                records.add(new ItemRecord(stack, drawer.getStoredItemCount()));
+            }
+
+            return records;
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate) {
+            Collection<SlotRecord> primaryRecords = drawerPrimaryLookup.getEntries(stack.getItem(), stack.getMetadata());
+            Set<Integer> checkedSlots = (simulate) ? new HashSet<>() : null;
+
+            int amount = stack.getCount();
+            if (primaryRecords != null) {
+                for (SlotRecord record : primaryRecords) {
+                    IDrawerGroup candidateGroup = getGroupForSlotRecord(record);
+                    if (candidateGroup == null)
+                        continue;
+
+                    IDrawer drawer = candidateGroup.getDrawer(record.slot);
+                    if (drawer.isEmpty() || !drawer.canItemBeStored(stack) || !hasAccess(candidateGroup, drawer))
+                        continue;
+
+                    amount = (simulate)
+                        ? Math.max(amount - drawer.getAcceptingRemainingCapacity(), 0)
+                        : drawer.adjustStoredItemCount(amount);
+
+                    if (amount == 0)
+                        return ItemStack.EMPTY;
+
+                    if (simulate)
+                        checkedSlots.add(record.index);
+                }
+            }
+
+            for (int slot : drawerSlots) {
+                IDrawer drawer = getDrawer(slot);
+                if (!drawer.isEnabled() || !drawer.canItemBeStored(stack) || !hasAccess(getGroupForDrawerSlot(slot), drawer))
+                    continue;
+                if (simulate && checkedSlots.contains(slot))
+                    continue;
+
+                if (drawer.isEmpty())
+                    drawer = drawer.setStoredItem(stack);
+
+                amount = (simulate)
+                    ? Math.max(amount - drawer.getAcceptingRemainingCapacity(), 0)
+                    : drawer.adjustStoredItemCount(amount);
+
+                if (amount == 0)
+                    return ItemStack.EMPTY;
+            }
+
+            return stackResult(stack, amount);
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack extractItem (@Nonnull ItemStack stack, int amount, boolean simulate) {
+            Collection<SlotRecord> primaryRecords = drawerPrimaryLookup.getEntries(stack.getItem(), stack.getMetadata());
+            Set<Integer> checkedSlots = (simulate) ? new HashSet<>() : null;
+
+            int remaining = amount;
+            for (SlotRecord record : primaryRecords) {
+                IDrawerGroup candidateGroup = getGroupForSlotRecord(record);
+                if (candidateGroup == null)
+                    continue;
+
+                IDrawer drawer = candidateGroup.getDrawer(record.slot);
+                if (!drawer.canItemBeExtracted(stack) || !hasAccess(candidateGroup, drawer))
+                    continue;
+
+                remaining = (simulate)
+                    ? Math.max(remaining - drawer.getStoredItemCount(), 0)
+                    : drawer.adjustStoredItemCount(-remaining);
+
+                if (remaining == 0)
+                    return stackResult(stack, amount);
+
+                if (simulate)
+                    checkedSlots.add(record.index);
+            }
+
+            for (int slot : drawerSlots) {
+                IDrawer drawer = getDrawer(slot);
+                if (!drawer.canItemBeExtracted(stack) || !hasAccess(getGroupForDrawerSlot(slot), drawer))
+                    continue;
+                if (simulate && checkedSlots.contains(slot))
+                    continue;
+
+                if (remaining == 0)
+                    return stackResult(stack, amount);
+            }
+
+            return (amount == remaining)
+                ? ItemStack.EMPTY
+                : stackResult(stack, amount - remaining);
+        }
+
+        protected boolean hasAccess (IDrawerGroup group, IDrawer drawer) {
+            return true;
+        }
+
+        private ItemStack stackResult (@Nonnull ItemStack stack, int amount) {
+            ItemStack result = stack.copy();
+            result.setCount(amount);
+            return result;
+        }
+    }
+
+    private class ProtectedItemRepository extends ItemRepository
+    {
+        private GameProfile profile;
+
+        public ProtectedItemRepository (GameProfile profile) {
+            this.profile = profile;
         }
 
         @Override
-        public Iterator<Integer> iterator () {
-            if (this.stack == null)
-                return new ArrayList<Integer>(0).iterator();
+        protected boolean hasAccess (IDrawerGroup group, IDrawer drawer) {
+            if (drawer.isEmpty())
+                return false;
+            if (group instanceof IProtectable)
+                return SecurityManager.hasAccess(profile, (IProtectable)group);
 
-            return new Iterator<Integer> ()
-            {
-                Collection<SlotRecord> primaryRecords = drawerPrimaryLookup.getEntries(stack.getItem(), stack.getItemDamage());
-                Iterator<SlotRecord> iter1;
-                int index2;
-                Integer nextSlot = null;
-
-                @Override
-                public boolean hasNext () {
-                    if (nextSlot == null)
-                        advance();
-                    return nextSlot != null;
-                }
-
-                @Override
-                public Integer next () {
-                    if (nextSlot == null)
-                        advance();
-
-                    Integer slot = nextSlot;
-                    nextSlot = null;
-                    return slot;
-                }
-
-                private void advance () {
-                    if (iter1 == null && primaryRecords != null && primaryRecords.size() > 0)
-                        iter1 = primaryRecords.iterator();
-
-                    if (iter1 != null) {
-                        while (iter1.hasNext()) {
-                            SlotRecord candidate = iter1.next();
-                            IDrawerGroup candidateGroup = getGroupForSlotRecord(candidate);
-                            if (candidateGroup == null)
-                                continue;
-
-                            IDrawer drawer = candidateGroup.getDrawer(candidate.slot);
-
-                            if (insert) {
-                                boolean voiding = (drawer instanceof IVoidable) ? ((IVoidable) drawer).isVoid() : false;
-                                if (!(drawer.canItemBeStored(stack) && (drawer.isEmpty() || drawer.getRemainingCapacity() > 0 || voiding)))
-                                    continue;
-                            }
-                            else {
-                                if (!(drawer.canItemBeExtracted(stack) && drawer.getStoredItemCount() > 0))
-                                    continue;
-                            }
-
-                            int slot = drawerSlotList.indexOf(candidate);
-                            if (slot > -1) {
-                                nextSlot = slot;
-                                return;
-                            }
-                        }
-                    }
-
-                    for (; index2 < drawerSlots.length; index2++) {
-                        int slot = drawerSlots[index2];
-                        IDrawer drawer = getDrawerIfEnabled(slot);
-                        if (drawer == null)
-                            continue;
-
-                        if (strict) {
-                            ItemStack proto = drawer.getStoredItemPrototype();
-                            if (!proto.isItemEqual(stack))
-                                continue;
-                        }
-
-                        if (insert) {
-                            boolean voiding = (drawer instanceof IVoidable) ? ((IVoidable) drawer).isVoid() : false;
-                            if (!(drawer.canItemBeStored(stack) && (drawer.isEmpty() || drawer.getRemainingCapacity() > 0 || voiding)))
-                                continue;
-                        }
-                        else {
-                            if (!(drawer.canItemBeExtracted(stack) && drawer.getStoredItemCount() > 0))
-                                continue;
-                        }
-
-                        SlotRecord record = drawerSlotList.get(slot);
-                        if (primaryRecords != null && primaryRecords.contains(record))
-                            continue;
-
-                        nextSlot = slot;
-                        index2++;
-                        return;
-                    }
-                }
-            };
+            return true;
         }
-    };
-
-    public Iterable<Integer> enumerateDrawersForInsertion (@Nonnull ItemStack stack, boolean strict) {
-        return new DrawerStackIterator(stack, strict, true);
-    }
-
-    public Iterable<Integer> enumerateDrawersForExtraction (@Nonnull ItemStack stack, boolean strict) {
-        return new DrawerStackIterator(stack, strict, false);
     }
 }

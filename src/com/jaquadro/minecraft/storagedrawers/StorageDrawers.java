@@ -1,7 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers;
 
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityItemRepository;
 import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BoolConfigUpdateMessage;
@@ -21,6 +24,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
@@ -37,6 +41,7 @@ public class StorageDrawers
 
     public static final Api api = new Api();
 
+    public static Logger log;
     public static SimpleNetworkWrapper network;
     public static ConfigManager config;
     public static CompTierRegistry compRegistry;
@@ -54,7 +59,12 @@ public class StorageDrawers
 
     @Mod.EventHandler
     public void preInit (FMLPreInitializationEvent event) {
+        log = event.getModLog();
         config = new ConfigManager(new File(event.getModConfigurationDirectory(), MOD_ID + ".cfg"));
+
+        CapabilityDrawerGroup.register();
+        CapabilityItemRepository.register();
+        CapabilityDrawerAttributes.register();
 
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
         network.registerMessage(BoolConfigUpdateMessage.Handler.class, BoolConfigUpdateMessage.class, 0, Side.SERVER);

@@ -27,6 +27,8 @@ public class ModItems
     public static ItemDrawerKey drawerKey;
     @ObjectHolder(StorageDrawers.MOD_ID + ":upgrade_void")
     public static ItemUpgrade upgradeVoid;
+    @ObjectHolder(StorageDrawers.MOD_ID + ":upgrade_conversion")
+    public static ItemUpgrade upgradeConversion;
     @ObjectHolder(StorageDrawers.MOD_ID + ":upgrade_creative")
     public static ItemUpgradeCreative upgradeCreative;
     @ObjectHolder(StorageDrawers.MOD_ID + ":upgrade_redstone")
@@ -59,6 +61,8 @@ public class ModItems
                 itemRegistry.register(new ItemUpgradeStatus("upgrade_status", makeName("upgradeStatus")));
             if (StorageDrawers.config.cache.enableVoidUpgrades)
                 itemRegistry.register(new ItemUpgrade("upgrade_void", makeName("upgradeVoid")));
+            if (StorageDrawers.config.cache.enableItemConversion)
+                itemRegistry.register(new ItemUpgrade("upgrade_conversion", makeName("upgradeConversion")));
             if (StorageDrawers.config.cache.enableCreativeUpgrades)
                 itemRegistry.register(new ItemUpgradeCreative("upgrade_creative", makeName("upgradeCreative")));
             if (StorageDrawers.config.cache.enableRedstoneUpgrades)
@@ -81,6 +85,7 @@ public class ModItems
 
             modelRegistry.registerItemVariants(upgradeTemplate);
             modelRegistry.registerItemVariants(upgradeVoid);
+            modelRegistry.registerItemVariants(upgradeConversion);
             modelRegistry.registerItemVariants(tape);
             modelRegistry.registerItemVariants(drawerKey);
             modelRegistry.registerItemVariants(shroudKey);

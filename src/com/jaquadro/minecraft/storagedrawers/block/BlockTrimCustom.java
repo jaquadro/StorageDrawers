@@ -57,7 +57,7 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
         if (tile == null)
             return ItemCustomTrim.makeItemStack(this, 1, ItemStack.EMPTY, ItemStack.EMPTY);
 
-        return ItemCustomTrim.makeItemStack(this, 1, tile.getMaterialSide(), tile.getMaterialTrim());
+        return ItemCustomTrim.makeItemStack(this, 1, tile.material().getSide(), tile.material().getTrim());
     }
 
     @Override

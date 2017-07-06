@@ -15,8 +15,8 @@ public class DrawerInventoryHelper
 
     public static void dropInventoryItems (World world, BlockPos pos, IDrawerGroup group) {
         for (int i = 0; i < group.getDrawerCount(); i++) {
-            IDrawer drawer = group.getDrawerIfEnabled(i);
-            if (drawer == null)
+            IDrawer drawer = group.getDrawer(i);
+            if (!drawer.isEnabled())
                 continue;
 
             while (drawer.getStoredItemCount() > 0) {

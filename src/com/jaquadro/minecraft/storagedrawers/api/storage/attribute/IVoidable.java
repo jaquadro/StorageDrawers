@@ -1,9 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage.attribute;
 
+@Deprecated
 public interface IVoidable
 {
-    /**
-     * Gets whether or not the drawer has a voiding attribute.
-     */
+    @Deprecated
     boolean isVoid ();
 }
