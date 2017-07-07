@@ -50,7 +50,7 @@ minecraft {
 
     replaceIn "StorageDrawers.java"
     replace '@VERSION@', project.version
-    replace 'required-after:Chameleon', "required-after:Chameleon@[${chameleon_version},${chameleon_max_version})"
+    replace 'required-after:chameleon', "required-after:chameleon@[${chameleon_version},${chameleon_max_version})"
 }
 
 sourceSets.main {
