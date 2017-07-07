@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.api.storage;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
+import java.util.function.Predicate;
 
 public interface IDrawer
 {
@@ -113,26 +114,36 @@ public interface IDrawer
     }
 
     /**
-     * Gets whether or not an item of the given type and data can be stored in this drawer.
+     * Gets whether or not an item of the given type and data can be stored in this drawer using a custom matching
+     * predicate.  If matchPredicate is null, the drawer's default item matching rules are applied instead.
      *
-     * Stack size and available capacity are not considered.  For drawers that are not empty, this
-     * method can allow ore-dictionary compatible items to be accepted into the drawer, as defined by what
-     * the drawer considers to be an equivalent item.
-     * For drawers that are empty, locking status is considered.
+     * Some attributes, like locking status, are considered regardless of the predicate.
      *
-     * @param itemPrototype An ItemStack representing the type, metadata, and tags of an item.
+     * @param itemPrototype     An ItemStack representing the type, metadata, and tags of an item.
+     * @param matchPredicate    A custom predicate for testing the stored ItemStack for equivalence.
+     * @return
      */
-    boolean canItemBeStored (@Nonnull ItemStack itemPrototype);
+    boolean canItemBeStored (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate);
+
+    default boolean canItemBeStored (@Nonnull ItemStack itemPrototype) {
+        return canItemBeStored(itemPrototype, null);
+    }
 
     /**
-     * Gets whether or not an item of the given type and data can be extracted from this drawer.
+     * Gets whether or not an item of the given type and data can be extracted from this drawer using a custom matching
+     * predicate.  If matchPredicate is null, the drawer's default item matching rules are applied instead.
      *
-     * This is intended to allow outbound ore-dictionary conversions of compatible items, as defined by what
-     * the drawer considers to be an equivalent item.
+     * This is intended to allow outbound conversions of compatible items, as defined by what the drawer or predicate
+     * considers to be an equivalent item.
      *
-     * @param itemPrototype An ItemStack representing the type, metadata, and tags of an item.
+     * @param itemPrototype     An ItemStack representing the type, metadata, and tags of an item.
+     * @param matchPredicate    A custom predicate for testing the stored ItemStack for equivalence.
      */
-    boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype);
+    boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate);
+
+    default boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype) {
+        return canItemBeExtracted(itemPrototype, null);
+    }
 
     /**
      * Gets whether or not the drawer has items.

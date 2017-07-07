@@ -20,6 +20,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
 {
@@ -132,22 +133,49 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
 
         @Nonnull
         @Override
-        public ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate) {
+        public ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate, Predicate<ItemStack> predicate) {
             TileEntityController controller = getController();
             if (controller == null || !controller.isValidSlave(getPos()))
                 return stack;
 
-            return controller.getItemRepository().insertItem(stack, simulate);
+            return controller.getItemRepository().insertItem(stack, simulate, predicate);
         }
 
         @Nonnull
         @Override
-        public ItemStack extractItem (@Nonnull ItemStack stack, int amount, boolean simulate) {
+        public ItemStack extractItem (@Nonnull ItemStack stack, int amount, boolean simulate, Predicate<ItemStack> predicate) {
             TileEntityController controller = getController();
             if (controller == null || !controller.isValidSlave(getPos()))
                 return ItemStack.EMPTY;
 
-            return controller.getItemRepository().extractItem(stack, amount, simulate);
+            return controller.getItemRepository().extractItem(stack, amount, simulate, predicate);
+        }
+
+        @Override
+        public int getStoredItemCount (@Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
+            TileEntityController controller = getController();
+            if (controller == null || !controller.isValidSlave(getPos()))
+                return 0;
+
+            return controller.getItemRepository().getStoredItemCount(stack, predicate);
+        }
+
+        @Override
+        public int getRemainingItemCapacity (@Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
+            TileEntityController controller = getController();
+            if (controller == null || !controller.isValidSlave(getPos()))
+                return 0;
+
+            return controller.getItemRepository().getRemainingItemCapacity(stack, predicate);
+        }
+
+        @Override
+        public int getItemCapacity (@Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
+            TileEntityController controller = getController();
+            if (controller == null || !controller.isValidSlave(getPos()))
+                return 0;
+
+            return controller.getItemRepository().getItemCapacity(stack, predicate);
         }
     }
 }

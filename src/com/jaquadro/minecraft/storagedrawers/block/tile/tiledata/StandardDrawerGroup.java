@@ -17,6 +17,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
+import java.util.function.Predicate;
 
 public abstract class StandardDrawerGroup extends TileDataShim implements IDrawerGroup
 {
@@ -316,19 +317,23 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
 
         @Override
-        public boolean canItemBeStored (@Nonnull ItemStack itemPrototype) {
+        public boolean canItemBeStored (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
             if (protoStack.isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
                 return true;
 
-            return matcher.matches(itemPrototype);
+            if (matchPredicate == null)
+                return matcher.matches(itemPrototype);
+            return matchPredicate.test(protoStack);
         }
 
         @Override
-        public boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype) {
+        public boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
             if (protoStack.isEmpty())
                 return false;
 
-            return matcher.matches(itemPrototype);
+            if (matchPredicate == null)
+                return matcher.matches(itemPrototype);
+            return matchPredicate.test(protoStack);
         }
 
         @Override

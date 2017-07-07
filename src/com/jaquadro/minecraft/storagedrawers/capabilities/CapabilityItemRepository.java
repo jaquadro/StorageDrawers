@@ -13,6 +13,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 public class CapabilityItemRepository
 {
@@ -55,13 +56,13 @@ public class CapabilityItemRepository
 
         @Nonnull
         @Override
-        public ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate) {
+        public ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate, Predicate<ItemStack> predicate) {
             return stack;
         }
 
         @Nonnull
         @Override
-        public ItemStack extractItem (@Nonnull ItemStack stack, int amount, boolean simulate) {
+        public ItemStack extractItem (@Nonnull ItemStack stack, int amount, boolean simulate, Predicate<ItemStack> predicate) {
             return ItemStack.EMPTY;
         }
     }

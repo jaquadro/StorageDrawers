@@ -8,6 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
+import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerGroupItemRepository;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
@@ -34,6 +35,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class TileEntityController extends TileEntity implements IDrawerGroup
 {
@@ -214,7 +216,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
     }
 
     protected int insertItems (@Nonnull ItemStack stack, GameProfile profile) {
-        int remainder = new ProtectedItemRepository(profile).insertItem(stack, false).getCount();
+        int remainder = new ProtectedItemRepository(this, profile).insertItem(stack, false).getCount();
         int added = stack.getCount() - remainder;
 
         stack.setCount(remainder);
@@ -652,7 +654,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
     static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
 
     private DrawerItemHandler itemHandler = new DrawerItemHandler(this);
-    private ItemRepository itemRepository = new ItemRepository();
+    private ItemRepository itemRepository = new ItemRepository(this);
 
     @Override
     public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
@@ -675,28 +677,15 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
         return super.getCapability(capability, facing);
     }
 
-    private class ItemRepository implements IItemRepository
+    private class ItemRepository extends DrawerGroupItemRepository
     {
-        @Nonnull
-        @Override
-        public NonNullList<ItemRecord> getAllItems () {
-            NonNullList<ItemRecord> records = NonNullList.create();
-
-            for (int slot : drawerSlots) {
-                IDrawer drawer = getDrawer(slot);
-                if (drawer.isEmpty())
-                    continue;
-
-                ItemStack stack = drawer.getStoredItemPrototype();
-                records.add(new ItemRecord(stack, drawer.getStoredItemCount()));
-            }
-
-            return records;
+        public ItemRepository (IDrawerGroup group) {
+            super(group);
         }
 
         @Nonnull
         @Override
-        public ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate) {
+        public ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate, Predicate<ItemStack> predicate) {
             Collection<SlotRecord> primaryRecords = drawerPrimaryLookup.getEntries(stack.getItem(), stack.getMetadata());
             Set<Integer> checkedSlots = (simulate) ? new HashSet<>() : null;
 
@@ -708,7 +697,11 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
                         continue;
 
                     IDrawer drawer = candidateGroup.getDrawer(record.slot);
-                    if (drawer.isEmpty() || !drawer.canItemBeStored(stack) || !hasAccess(candidateGroup, drawer))
+                    if (drawer.isEmpty())
+                        continue;
+                    if (!testPredicateInsert(drawer, stack, predicate))
+                        continue;
+                    if (!hasAccess(candidateGroup, drawer))
                         continue;
 
                     amount = (simulate)
@@ -725,7 +718,11 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
 
             for (int slot : drawerSlots) {
                 IDrawer drawer = getDrawer(slot);
-                if (!drawer.isEnabled() || !drawer.canItemBeStored(stack) || !hasAccess(getGroupForDrawerSlot(slot), drawer))
+                if (!drawer.isEnabled())
+                    continue;
+                if (!testPredicateInsert(drawer, stack, predicate))
+                    continue;
+                if (!hasAccess(getGroupForDrawerSlot(slot), drawer))
                     continue;
                 if (simulate && checkedSlots.contains(slot))
                     continue;
@@ -746,7 +743,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
 
         @Nonnull
         @Override
-        public ItemStack extractItem (@Nonnull ItemStack stack, int amount, boolean simulate) {
+        public ItemStack extractItem (@Nonnull ItemStack stack, int amount, boolean simulate, Predicate<ItemStack> predicate) {
             Collection<SlotRecord> primaryRecords = drawerPrimaryLookup.getEntries(stack.getItem(), stack.getMetadata());
             Set<Integer> checkedSlots = (simulate) ? new HashSet<>() : null;
 
@@ -757,7 +754,11 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
                     continue;
 
                 IDrawer drawer = candidateGroup.getDrawer(record.slot);
-                if (!drawer.canItemBeExtracted(stack) || !hasAccess(candidateGroup, drawer))
+                if (!drawer.isEnabled())
+                    continue;
+                if (!testPredicateExtract(drawer, stack, predicate))
+                    continue;
+                if (!hasAccess(candidateGroup, drawer))
                     continue;
 
                 remaining = (simulate)
@@ -773,10 +774,16 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
 
             for (int slot : drawerSlots) {
                 IDrawer drawer = getDrawer(slot);
-                if (!drawer.canItemBeExtracted(stack) || !hasAccess(getGroupForDrawerSlot(slot), drawer))
+                if (!drawer.isEnabled())
+                    continue;
+                if (!testPredicateExtract(drawer, stack, predicate))
                     continue;
                 if (simulate && checkedSlots.contains(slot))
                     continue;
+
+                remaining = (simulate)
+                    ? Math.max(remaining - drawer.getStoredItemCount(), 0)
+                    : drawer.adjustStoredItemCount(-remaining);
 
                 if (remaining == 0)
                     return stackResult(stack, amount);
@@ -790,19 +797,14 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
         protected boolean hasAccess (IDrawerGroup group, IDrawer drawer) {
             return true;
         }
-
-        private ItemStack stackResult (@Nonnull ItemStack stack, int amount) {
-            ItemStack result = stack.copy();
-            result.setCount(amount);
-            return result;
-        }
     }
 
     private class ProtectedItemRepository extends ItemRepository
     {
         private GameProfile profile;
 
-        public ProtectedItemRepository (GameProfile profile) {
+        public ProtectedItemRepository (IDrawerGroup group, GameProfile profile) {
+            super(group);
             this.profile = profile;
         }
 

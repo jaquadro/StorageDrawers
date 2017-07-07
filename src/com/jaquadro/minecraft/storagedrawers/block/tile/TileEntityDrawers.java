@@ -11,6 +11,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
+import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerGroupItemRepository;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
@@ -623,18 +624,17 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     @CapabilityInject(IItemHandler.class)
     static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
 
-    private net.minecraftforge.items.IItemHandler itemHandler;
-
-    protected IItemHandler createUnSidedHandler () {
-        return new DrawerItemHandler(getGroup());
-    }
+    private IItemHandler itemHandler = new DrawerItemHandler(this);
+    private IItemRepository itemRepository = new DrawerGroupItemRepository(this);
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
         if (capability == ITEM_HANDLER_CAPABILITY)
-            return (T) (itemHandler == null ? (itemHandler = createUnSidedHandler()) : itemHandler);
+            return (T) itemHandler;
+        if (capability == ITEM_REPOSITORY_CAPABILITY)
+            return (T) itemRepository;
         if (capability == DRAWER_ATTRIBUTES_CAPABILITY)
             return (T) drawerAttributes;
         if (capability == DRAWER_GROUP_CAPABILITY)
@@ -647,6 +647,7 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
     {
         return capability == ITEM_HANDLER_CAPABILITY
+            || capability == ITEM_REPOSITORY_CAPABILITY
             || capability == DRAWER_ATTRIBUTES_CAPABILITY
             || capability == DRAWER_GROUP_CAPABILITY
             || super.hasCapability(capability, facing);

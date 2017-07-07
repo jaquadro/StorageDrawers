@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.api.storage;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
+import java.util.function.Predicate;
 
 public class Drawers
 {
@@ -44,12 +45,12 @@ public class Drawers
         }
 
         @Override
-        public boolean canItemBeStored (@Nonnull ItemStack itemPrototype) {
+        public boolean canItemBeStored (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
             return false;
         }
 
         @Override
-        public boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype) {
+        public boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
             return false;
         }
 

@@ -20,6 +20,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.Stack;
+import java.util.function.Predicate;
 
 public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 {
@@ -329,15 +330,22 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             return !protoStack[slot].isEmpty();
         }
 
-        public boolean canItemBeStored (int slot, @Nonnull ItemStack itemPrototype) {
+        public boolean canItemBeStored (int slot, @Nonnull ItemStack itemPrototype, Predicate<ItemStack> predicate) {
             if (protoStack[slot].isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
                 return true;
 
-            return matchers[slot].matches(itemPrototype);
+            if (predicate == null)
+                return matchers[slot].matches(itemPrototype);
+            return predicate.test(protoStack[slot]);
         }
 
-        public boolean canItemBeExtracted (int slot, @Nonnull ItemStack itemPrototype) {
-            return matchers[slot].matches(itemPrototype);
+        public boolean canItemBeExtracted (int slot, @Nonnull ItemStack itemPrototype, Predicate<ItemStack> predicate) {
+            if (protoStack[slot].isEmpty())
+                return false;
+
+            if (predicate == null)
+                return matchers[slot].matches(itemPrototype);
+            return predicate.test(protoStack[slot]);
         }
 
         public int getConversionRate (int slot) {
@@ -595,13 +603,13 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         }
 
         @Override
-        public boolean canItemBeStored (@Nonnull ItemStack itemPrototype) {
-            return storage.canItemBeStored(slot, itemPrototype);
+        public boolean canItemBeStored (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+            return storage.canItemBeStored(slot, itemPrototype, matchPredicate);
         }
 
         @Override
-        public boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype) {
-            return storage.canItemBeExtracted(slot, itemPrototype);
+        public boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+            return storage.canItemBeExtracted(slot, itemPrototype, matchPredicate);
         }
 
         @Override
