@@ -528,6 +528,11 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
     }
 
     @Override
+    public ItemStack getPickBlock (IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        return getMainDrop(world, pos, state);
+    }
+
+    @Override
     public void harvestBlock (World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, @Nonnull ItemStack stack) {
         super.harvestBlock(world, player, pos, state, te, stack);
         world.setBlockToAir(pos);
