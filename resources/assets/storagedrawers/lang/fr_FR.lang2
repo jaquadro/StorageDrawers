@@ -1,0 +1,209 @@
+itemGroup.storagedrawers=Storage Drawers
+itemGroup.storagedrawersSorting=Storage Drawers - Tri
+
+storagedrawers.container.drawers=Tiroirs
+storagedrawers.container.compDrawers=Tiroirs de compactage
+storagedrawers.container.upgrades=Améliorations
+storagedrawers.container.controller=Contrôleur de tiroirs
+storagedrawers.container.unboundSlave=Esclave non lié
+storagedrawers.container.framingTable=Table de fabrication de tiroirs
+
+storagedrawers.msg.maxUpgrades=Ce tiroir ne peut pas accepter davantage d'améliorations.
+storagedrawers.msg.cannotAddUpgrade=Cette amélioration ne peut pas être installée sur ce tiroir.
+
+# Items
+item.storagedrawers.upgradeTemplate.name=Base d'amélioration
+item.storagedrawers.upgradeStorage.obsidian.name=Amélioration Stockage (I)
+item.storagedrawers.upgradeStorage.iron.name=Amélioration Stockage (II)
+item.storagedrawers.upgradeStorage.gold.name=Amélioration Stockage (III)
+item.storagedrawers.upgradeStorage.diamond.name=Amélioration Stockage (IV)
+item.storagedrawers.upgradeStorage.emerald.name=Amélioration Stockage (V)
+item.storagedrawers.upgradeOneStack.name=Réduction de stockage
+item.storagedrawers.upgradeOneStack.description=Réduit le stockage de base à une seule pile
+item.storagedrawers.upgradeStatus.level1.name=Amélioration Statut (I)
+item.storagedrawers.upgradeStatus.level1.description=Montre si le stockage est plein
+item.storagedrawers.upgradeStatus.level2.name=Amélioration Statut (II)
+item.storagedrawers.upgradeStatus.level2.description=Montre le niveau de remplissage
+item.storagedrawers.upgradeVoid.name=Amélioration du Néant
+item.storagedrawers.upgradeVoid.description=Détruit les objets en excès
+item.storagedrawers.upgradeCreative.store.name=Amélioration Créatif Stockage
+item.storagedrawers.upgradeCreative.store.description=Stockage quasi-infini
+item.storagedrawers.upgradeCreative.vend.name=Amélioration Créatif Vente
+item.storagedrawers.upgradeCreative.vend.description=Retrait des objets illimité
+item.storagedrawers.upgradeRedstone.combined.name=Amélioration Redstone
+item.storagedrawers.upgradeRedstone.combined.description=Emet un signal si stockage plein
+item.storagedrawers.upgradeRedstone.max.name=Amélioration Redstone Max.
+item.storagedrawers.upgradeRedstone.max.description=Emet un signal si la plupart des emplacements sont pleins
+item.storagedrawers.upgradeRedstone.min.name=Amélioration Redstone Min.
+item.storagedrawers.upgradeRedstone.min.description=Emet un signal si au moins un des emplacement est plein
+item.storagedrawers.drawerKey.name=Clé de tiroir
+item.storagedrawers.drawerKey.description=Verrouille ou déverouille les tiroirs
+item.storagedrawers.shroudKey.name=Clé de Dissimulation
+item.storagedrawers.shroudKey.description=Montre ou cache les étiquettes des objets
+item.storagedrawers.quantifyKey.name=Clé de Quantification
+item.storagedrawers.quantifyKey.description=Montre ou cache les étiquettes de quantité
+item.storagedrawers.personalKey.name=Clé Personnelle
+item.storagedrawers.personalKey.description=Protège l'accès par les autres joueurs
+item.storagedrawers.tape.name=Ruban adhésif d'emballage
+item.storagedrawers.tape.description=Emballe les tiroirs afin de pouvoir les déplacer avec leur contenu
+
+# Blocks
+tile.basicDrawers.fulldrawers1.name=Tiroir
+tile.basicDrawers.fulldrawers2.name=Tiroir 1x2
+tile.basicDrawers.fulldrawers4.name=Tiroir 2x2
+tile.basicDrawers.halfdrawers2.name=Tiroir étroit 1x2
+tile.basicDrawers.halfdrawers4.name=Tiroir étroit 2x2
+
+tile.customDrawers.fulldrawers1.name=Ebauche de tiroir à moulures
+tile.customDrawers.fulldrawers2.name=Ebauche de tiroir 1x2 à moulures
+tile.customDrawers.fulldrawers4.name=Ebauche de tiroir 2x2 à moulures
+tile.customDrawers.halfdrawers2.name=Ebauche de tiroir étroit 1x2 à moulures
+tile.customDrawers.halfdrawers4.name=Ebauche de tiroir étroit 2x2 à moulures
+
+tile.fullCustom1.name=Ebauche de tiroir à moulures
+tile.fullCustom2.name=Ebauche de tiroir 1x2 à moulures
+tile.fullCustom4.name=Ebauche de tiroir 2x2 à moulures
+tile.halfCustom2.name=Ebauche de tiroir étroit 1x2 à moulures
+tile.halfCustom4.name=Ebauche de tiroir étroit 2x2 à moulures
+tile.customTrim.name=Ebauche de bloc à moulures
+
+tile.compDrawers.name=Tiroir de compactage
+tile.controller.name=Contrôleur de tiroirs
+tile.controllerSlave.name=Esclave du contrôleur
+tile.framingTable.name=Table de fabrication de tiroirs
+
+tile.trim.oak.name=Bloc style tiroir en chêne
+tile.trim.spruce.name=Bloc style tiroir en sapin
+tile.trim.birch.name=Bloc style tiroir en bouleau
+tile.trim.jungle.name=Bloc style tiroir en acajou
+tile.trim.acacia.name=Bloc style tiroir en acacia
+tile.trim.big_oak.name=Bloc style tiroir en chêne noir
+
+tile.keyButton.drawer.name=Bouton clé de tiroir
+tile.keyButton.concealment.name=Bouton clé de Dissimulation
+tile.keyButton.personal.name=Bouton clé Personnelle
+tile.keyButton.quantify.name=Bouton clé de Quantification
+
+storagedrawers.drawers.description=Contient %d piles par tiroir
+storagedrawers.drawers.sealed=Contenu scellé
+storagedrawers.upgrade.description=Augmente le stockage de %d fois la valeur de base
+storagedrawers.controller.description=Interagit avec une banque de tiroirs connectés
+storagedrawers.controllerSlave.description=Jonctions supplémentaires pour les contrôleurs
+
+# Material
+storagedrawers.material=Matériau : %s
+storagedrawers.material.oak=Chêne
+storagedrawers.material.spruce=Sapin
+storagedrawers.material.birch=Bouleau
+storagedrawers.material.jungle=Acajou
+storagedrawers.material.acacia=Acacia
+storagedrawers.material.dark_oak=Chêne noir
+
+# Integration
+storagedrawers.waila.empty=<Vide>
+storagedrawers.waila.level=Niveau d'amélioration : %s
+storagedrawers.waila.drawer=Tiroir #%s : %s
+storagedrawers.waila.limit=Limite de pile : %s (x%s)
+storagedrawers.waila.nolimit=Limite de pile : ∞
+storagedrawers.waila.locked=Verrouillé
+storagedrawers.waila.void=Néant
+storagedrawers.waila.sorting=Tri
+storagedrawers.waila.protected=Protégé
+storagedrawers.waila.config.displayContents=Contenu des emplacements
+storagedrawers.waila.config.displayStackLimit=Limite des piles
+storagedrawers.waila.config.displayStatus=Etat des améliorations
+
+# Configuration
+storagedrawers.config.title=Configuration des tiroirs de stockage
+
+storagedrawers.config.general=Options générales
+storagedrawers.config.general.tooltip=Ceci et cela.
+
+storagedrawers.config.blocks=Options des blocs
+storagedrawers.config.blocks.tooltip=Configure les blocs de stockage individuels.
+
+storagedrawers.config.blocks.fullDrawers1=Tiroirs 1x1
+storagedrawers.config.blocks.fullDrawers2=Tiroirs 1x2
+storagedrawers.config.blocks.fullDrawers4=Tiroirs 2x2
+storagedrawers.config.blocks.halfDrawers2=Tiroirs étroits 1x2
+storagedrawers.config.blocks.halfDrawers4=Tiroirs étroits 2x2
+storagedrawers.config.blocks.compDrawers=Tiroirs de compactage
+storagedrawers.config.blocks.controller=Contrôleurs de tiroirs
+storagedrawers.config.blocks.trim=Ebauches
+storagedrawers.config.blocks.controllerSlave=Esclaves du contrôleur
+
+storagedrawers.config.upgrades=Options d'amélioration
+storagedrawers.config.upgrades.tooltip=Configure les améliorations de stockage individuelles.
+
+storagedrawers.config.upgrades.level2Mult=Multiplicateur de stockage (II)
+storagedrawers.config.upgrades.level3Mult=Multiplicateur de stockage (III)
+storagedrawers.config.upgrades.level4Mult=Multiplicateur de stockage (IV)
+storagedrawers.config.upgrades.level5Mult=Multiplicateur de stockage (V)
+storagedrawers.config.upgrades.level6Mult=Multiplicateur de stockage (VI)
+
+storagedrawers.config.prop.enableIndicatorUpgrades=Active les améliorations des indicateurs
+storagedrawers.config.prop.enableStorageUpgrades=Active les améliorations de stockage
+storagedrawers.config.prop.enableLockUpgrades=Active l'amélioration verrouillage
+storagedrawers.config.prop.enableShroudUpgrades=Active la dissimulation d'objets
+storagedrawers.config.prop.enableQuantifiableUpgrades=Active l'amélioration d'affichage des quantités
+storagedrawers.config.prop.enablePersonalUpgrades=Active la protection des accès
+storagedrawers.config.prop.enableVoidUpgrades=Active l'amélioration du Néant
+storagedrawers.config.prop.enableCreativeUpgrades=Active l'amélioration Créatif
+storagedrawers.config.prop.enableRedstoneUpgrades=Active l'amélioration Redstone
+storagedrawers.config.prop.enableSortingUpgrades=Autoriser l'amélioration tri
+storagedrawers.config.prop.enableSortingUpgrades.tooltip=Refined Relocation doit être chargé.
+storagedrawers.config.prop.renderStorageUpgrades=Rendu des améliorations de stockage
+storagedrawers.config.prop.creativeTabVanillaWoods=Onglet en créatif types de bois d'origine
+storagedrawers.config.prop.creativeTabVanillaWoods.tooltip=Active tous les style de bois d'origine dans l'onglet en mode créatif.
+storagedrawers.config.prop.enabled=Activé
+storagedrawers.config.prop.enabled.tooltip=Active les blocs en jeu.
+storagedrawers.config.prop.baseStorage=Stockage de base
+storagedrawers.config.prop.baseStorage.tooltip=Nombre de piles contenues par tiroir.
+storagedrawers.config.prop.recipeOutput=Sortie de recette
+storagedrawers.config.prop.recipeOutput.tooltip=Nombre d'objets obtenus lors de la fabrication.
+storagedrawers.config.prop.enableDrawerUI=Active l'interface des tiroirs
+storagedrawers.config.prop.enableDrawerUI.tooltip=Affiche le nombre d'objets et permet les améliorations.
+storagedrawers.config.prop.enableSidedInput=Active l'entrée par les côtés
+storagedrawers.config.prop.enableSidedInput.tooltip=D'autres blocs peuvent insérer des objets dans les tiroirs.
+storagedrawers.config.prop.enableSidedOutput=Active la sortie par les cotés
+storagedrawers.config.prop.enableSidedOutput.tooltip=D'autres blocs peuvent extraire des objets dans les tiroirs.
+storagedrawers.config.prop.enableItemConversion=Active la conversion d'objets
+storagedrawers.config.prop.enableItemConversion.tooltip=Les tiroirs convertissent automatiquement les objets compatibles avec le dictionnaire des minerais.
+storagedrawers.config.prop.enableFallbackRecipes=Active les recettes par défaut
+storagedrawers.config.prop.enableFallbackRecipes.tooltip=N'importe quelle planche valide peut fabriquer un tiroir en chêne.
+storagedrawers.config.prop.invertShift=Inverser la touche MAJ
+storagedrawers.config.prop.invertShift.tooltip=Inverse le clic et le Maj+clic.
+storagedrawers.config.prop.enableDebugLogging=Active le journal de déboguage
+storagedrawers.config.prop.enableDebugLogging.tooltip=Ajoute des information suplémentaires dans le journal.
+storagedrawers.config.prop.enableTape=Active le rouleau adhésif d'emballage
+storagedrawers.config.prop.enableTape.tooltip=Pour déplacer les tiroirs ayant du contenu.
+storagedrawers.config.prop.wailaStackRemainder=Présentation des quantités par WAILA
+storagedrawers.config.prop.wailaStackRemainder.tooltip=Comment sont affichées les quantités d'objets par WAILA.
+storagedrawers.config.prop.controllerRange=Distance limite du contrôleur
+storagedrawers.config.prop.controllerRange.tooltip=Distance limite pour détecter les blocks du réseau.
+storagedrawers.config.prop.enableFramedDrawers=Active les ébauches de tiroirs
+storagedrawers.config.prop.enableFramedDrawers.tooltip=Les ébauches permettent la fabrication de tiroirs customisés en matériaux spéciaux.
+
+storagedrawers.config.addons=Addons
+storagedrawers.config.addons.tooltip=Configurer les réglages globaux du pack d'addons.
+
+storagedrawers.config.addons.showNEI=Montrer les blocs dans NEI
+storagedrawers.config.addons.showCreative=Montrer les blocs dans l'onglet en mode créatif
+storagedrawers.config.addons.separateTabs=Séparer les onglets du mode créatif
+storagedrawers.config.addons.tooltip=Chaque pack utilise son propre onglet au lieu d'utiliser celui de Storage Drawers.
+
+storagedrawers.config.integration=Intégration
+storagedrawers.config.integration.tooltip=Configure l'intégration avec d'autres mods.
+
+storagedrawers.config.integration.enableAE2=Active l'intégration de Applied Energistics 2
+storagedrawers.config.integration.enableWaila=Active l'intégration de WAILA
+storagedrawers.config.integration.enableThaumcraft=Active l'intégration de Thaumcraft
+storagedrawers.config.integration.enableMineTweaker=Active l'intégration de MineTweaker
+
+storagedrawers.config.registries=Enregistrements
+storagedrawers.config.registries.tooltip=Configure les règles de compactage et les substitution du dictionnaire des minerais.
+
+storagedrawers.config.registries.compRules=Règles de compactage
+storagedrawers.config.registries.registerExtraCompRules=Enregistrer des règles suppl. de compactage
+storagedrawers.config.registries.oreWhitelist=Whitelist du dictionnaire des minerais
+storagedrawers.config.registries.oreBlacklist=Blacklist du dictionnaire des minerais
