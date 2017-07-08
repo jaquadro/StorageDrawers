@@ -616,20 +616,16 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
     @CapabilityInject(IDrawerGroup.class)
     public static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
-    @CapabilityInject(IItemRepository.class)
-    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
-        if (getGroup().hasCapability(capability, facing))
-            return getGroup().getCapability(capability, facing);
-
-        if (capability == DRAWER_ATTRIBUTES_CAPABILITY)
-            return (T) drawerAttributes;
         if (capability == DRAWER_GROUP_CAPABILITY)
             return (T) getGroup();
+
+        if (getGroup().hasCapability(capability, facing))
+            return getGroup().getCapability(capability, facing);
 
         return super.getCapability(capability, facing);
     }
@@ -637,11 +633,12 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
     {
+        if (capability == DRAWER_GROUP_CAPABILITY)
+            return true;
+
         if (getGroup().hasCapability(capability, facing))
             return true;
 
-        return capability == DRAWER_ATTRIBUTES_CAPABILITY
-            || capability == DRAWER_GROUP_CAPABILITY
-            || super.hasCapability(capability, facing);
+        return super.hasCapability(capability, facing);
     }
 }

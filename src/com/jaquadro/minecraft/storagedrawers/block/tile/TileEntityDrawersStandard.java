@@ -1,8 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
@@ -19,12 +21,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileEntityDrawersStandard extends TileEntityDrawers
 {
+    @CapabilityInject(IDrawerAttributes.class)
+    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+
     private static final String[] GUI_IDS = new String[] {
         null, StorageDrawers.MOD_ID + ":basicDrawers1", StorageDrawers.MOD_ID + ":basicDrawers2", null, StorageDrawers.MOD_ID + ":basicDrawers4"
     };
@@ -222,13 +228,18 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
         @Override
         public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-            return TileEntityDrawersStandard.this.hasCapability(capability, facing);
+            return capability == TileEntityDrawersStandard.DRAWER_ATTRIBUTES_CAPABILITY
+                || super.hasCapability(capability, facing);
+
         }
 
         @Nullable
         @Override
         public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-            return TileEntityDrawersStandard.this.getCapability(capability, facing);
+            if (capability == TileEntityDrawersStandard.DRAWER_ATTRIBUTES_CAPABILITY)
+                return (T) TileEntityDrawersStandard.this.getDrawerAttributes();
+
+            return super.getCapability(capability, facing);
         }
     }
 

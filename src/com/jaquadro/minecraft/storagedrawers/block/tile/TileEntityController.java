@@ -173,7 +173,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
         super.validate();
 
         if (!getWorld().isUpdateScheduled(getPos(), ModBlocks.controller))
-            getWorld().scheduleUpdate(getPos(), ModBlocks.controller, 1);
+            getWorld().scheduleBlockUpdate(getPos(), ModBlocks.controller, 1, 0);
     }
 
     @Override

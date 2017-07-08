@@ -1,6 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.FractionalDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
@@ -13,6 +15,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,6 +26,9 @@ import javax.annotation.Nullable;
 
 public class TileEntityDrawersComp extends TileEntityDrawers
 {
+    @CapabilityInject(IDrawerAttributes.class)
+    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+
     private GroupData groupData;
 
     private int capacity = 0;
@@ -88,13 +94,18 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-            return TileEntityDrawersComp.this.hasCapability(capability, facing);
+            return capability == TileEntityDrawersComp.DRAWER_ATTRIBUTES_CAPABILITY
+                || super.hasCapability(capability, facing);
+
         }
 
         @Nullable
         @Override
         public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-            return TileEntityDrawersComp.this.getCapability(capability, facing);
+            if (capability == TileEntityDrawersComp.DRAWER_ATTRIBUTES_CAPABILITY)
+                return (T) TileEntityDrawersComp.this.getDrawerAttributes();
+
+            return super.getCapability(capability, facing);
         }
     }
 
