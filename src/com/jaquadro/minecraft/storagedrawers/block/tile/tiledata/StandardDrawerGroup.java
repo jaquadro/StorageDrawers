@@ -279,7 +279,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
                 int originalCount = count;
                 setStoredItemCount(originalCount + amount, notify);
 
-                return amount - (count - originalCount);
+                return -amount - (originalCount - count);
             }
         }
 
