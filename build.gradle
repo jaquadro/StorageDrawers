@@ -10,6 +10,13 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.jfrog.bintray" version "1.7"
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'idea'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
@@ -120,11 +127,57 @@ processResources
     }
 }
 
+jar {
+    include "com/jaquadro/minecraft/storagedrawers/**"
+    include "assets/**"
+    include "mcmod.info"
+    include "pack.mcmeta"
+}
+
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    classifier = 'dev'
+    classifier = 'deobf'
+}
+
+task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
+    from sourceSets.main.allSource
+    from sourceSets.main.output
+    include 'com/jaquadro/minecraft/storagedrawers/api/**/*'
+    classifier 'api'
 }
 
 artifacts {
     archives deobfJar
+    archives apiJar
+    archives sourceJar
+    archives jar
+}
+
+publishing.publications {
+    StorageDrawers(MavenPublication) {
+        groupId = project.group
+        artifactId = project.archivesBaseName
+        version = project.version
+        artifact deobfJar
+        artifact sourceJar
+        artifact apiJar
+        artifact jar
+    }
+}
+
+bintrayUpload.dependsOn build
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['StorageDrawers']
+    publish = true
+    pkg {
+        repo = 'dev'
+        name = 'storagedrawers'
+        version {
+            name = project.version
+            released = new Date()
+        }
+    }
 }
