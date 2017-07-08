@@ -10,6 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -79,9 +80,6 @@ public class Waila extends IntegrationModule
 
     public static class WailaDrawer implements IWailaDataProvider
     {
-        @CapabilityInject(IDrawerAttributes.class)
-        public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
-
         @Override
         @Nonnull
         public ItemStack getWailaStack (IWailaDataAccessor accessor, IWailaConfigHandler config) {
@@ -101,7 +99,7 @@ public class Waila extends IntegrationModule
         @Override
         public List<String> getWailaBody (@Nonnull ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
             TileEntityDrawers tile = (TileEntityDrawers) accessor.getTileEntity();
-            IDrawerAttributes attr = tile.getCapability(DRAWER_ATTRIBUTES_CAPABILITY, null);
+            IDrawerAttributes attr = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY, null);
             if (attr == null)
                 attr = new EmptyDrawerAttributes();
 
