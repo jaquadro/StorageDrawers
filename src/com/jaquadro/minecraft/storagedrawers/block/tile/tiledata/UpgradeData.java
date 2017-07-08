@@ -79,7 +79,7 @@ public class UpgradeData extends TileDataShim
         upgrades[slot] = ItemStack.EMPTY;
         syncStorageMultiplier();
 
-        if (!canAddUpgrade(upgrade)) {
+        if (!upgrade.isEmpty() && !canAddUpgrade(upgrade)) {
             upgrades[slot] = prevUpgrade;
             syncStorageMultiplier();
             return false;

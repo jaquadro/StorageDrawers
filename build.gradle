@@ -131,7 +131,6 @@ jar {
     include "com/jaquadro/minecraft/storagedrawers/**"
     include "assets/**"
     include "mcmod.info"
-    include "pack.mcmeta"
 }
 
 task deobfJar(type: Jar) {

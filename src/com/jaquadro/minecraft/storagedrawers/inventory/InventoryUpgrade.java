@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 
 public class InventoryUpgrade implements IInventory
 {
-    private static final int upgradeCapacity = 5;
+    private static final int upgradeCapacity = 7;
 
     private TileEntityDrawers tile;
 
