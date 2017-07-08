@@ -44,7 +44,7 @@ dependencies {
     runtime "com.jaquadro.minecraft.chameleon:Chameleon:<VERSION>"
 }
 ```
-You can [browse the repo](https://dl.bintray.com/jaquadro/dev/com/jaquadro/minecraft/) to see what versions are available.
+An example version is `1.12-5.2.2`. You can [browse the repo](https://dl.bintray.com/jaquadro/dev/com/jaquadro/minecraft/) to see what versions are available.
 
 Reporting Bugs
 --------------
