@@ -1,8 +1,11 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
 import com.jaquadro.minecraft.chameleon.block.tiledata.TileDataShim;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
+import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackOreMatcher;
@@ -10,21 +13,35 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 public abstract class StandardDrawerGroup extends TileDataShim implements IDrawerGroup
 {
+    @CapabilityInject(IItemHandler.class)
+    public static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
+    @CapabilityInject(IItemRepository.class)
+    public static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
+
     private DrawerData[] slots;
     private int[] order;
 
+    private final IItemHandler itemHandler;
+    private final IItemRepository itemRepository;
+
     public StandardDrawerGroup (int slotCount) {
+        itemHandler = new DrawerItemHandler(this);
+        itemRepository = new DrawerItemRepository(this);
+
         slots = new DrawerData[slotCount];
         for (int i = 0; i < slotCount; i++)
             slots[i] = createDrawer(i);
@@ -98,6 +115,24 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         tag.setTag("Drawers", itemList);
 
         return tag;
+    }
+
+    @Override
+    public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == ITEM_HANDLER_CAPABILITY
+            || capability == ITEM_REPOSITORY_CAPABILITY;
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == ITEM_HANDLER_CAPABILITY)
+            return (T) itemHandler;
+        if (capability == ITEM_REPOSITORY_CAPABILITY)
+            return (T) itemRepository;
+
+        return null;
     }
 
     @Nonnull

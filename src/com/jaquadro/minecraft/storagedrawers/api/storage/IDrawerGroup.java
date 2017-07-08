@@ -26,6 +26,9 @@ public interface IDrawerGroup extends ICapabilityProvider
     @Nonnull
     int[] getAccessibleDrawerSlots ();
 
+    /**
+     * Implementors are strongly encouraged to provide IItemHandler and IItemRepository capabilities.
+     */
     @Override
     default boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
         return false;

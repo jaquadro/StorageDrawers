@@ -9,11 +9,11 @@ import net.minecraft.util.NonNullList;
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
-public class DrawerGroupItemRepository implements IItemRepository
+public class DrawerItemRepository implements IItemRepository
 {
     protected IDrawerGroup group;
 
-    public DrawerGroupItemRepository (IDrawerGroup group) {
+    public DrawerItemRepository (IDrawerGroup group) {
         this.group = group;
     }
 

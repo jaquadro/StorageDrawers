@@ -11,10 +11,9 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
-import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerGroupItemRepository;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.inventory.DrawerItemHandler;
+import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
@@ -618,23 +617,15 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     @CapabilityInject(IDrawerGroup.class)
     public static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
     @CapabilityInject(IItemRepository.class)
-    public static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
-    @CapabilityInject(IDrawerAttributes.class)
     static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
-    @CapabilityInject(IItemHandler.class)
-    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
-
-    private IItemHandler itemHandler = new DrawerItemHandler(this);
-    private IItemRepository itemRepository = new DrawerGroupItemRepository(this);
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
-        if (capability == ITEM_HANDLER_CAPABILITY)
-            return (T) itemHandler;
-        if (capability == ITEM_REPOSITORY_CAPABILITY)
-            return (T) itemRepository;
+        if (getGroup().hasCapability(capability, facing))
+            return getGroup().getCapability(capability, facing);
+
         if (capability == DRAWER_ATTRIBUTES_CAPABILITY)
             return (T) drawerAttributes;
         if (capability == DRAWER_GROUP_CAPABILITY)
@@ -646,9 +637,10 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
     {
-        return capability == ITEM_HANDLER_CAPABILITY
-            || capability == ITEM_REPOSITORY_CAPABILITY
-            || capability == DRAWER_ATTRIBUTES_CAPABILITY
+        if (getGroup().hasCapability(capability, facing))
+            return true;
+
+        return capability == DRAWER_ATTRIBUTES_CAPABILITY
             || capability == DRAWER_GROUP_CAPABILITY
             || super.hasCapability(capability, facing);
     }
