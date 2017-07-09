@@ -274,7 +274,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
             count = Math.min(amount, getMaxCapacity());
             count = Math.max(count, 0);
 
-            if (amount == 0 && !attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
+            if (count == 0 && !attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
                 reset(notify);
             else {
                 if (notify)
@@ -293,7 +293,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
 
         protected int adjustStoredItemCount (int amount, boolean notify) {
             if (protoStack.isEmpty() || amount == 0)
-                return amount;
+                return Math.abs(amount);
 
             if (amount > 0) {
                 if (attrs.isUnlimitedVending())
