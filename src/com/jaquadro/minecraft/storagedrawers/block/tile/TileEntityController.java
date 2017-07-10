@@ -746,28 +746,30 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
             Set<Integer> checkedSlots = (simulate) ? new HashSet<>() : null;
 
             int remaining = amount;
-            for (SlotRecord record : primaryRecords) {
-                IDrawerGroup candidateGroup = getGroupForSlotRecord(record);
-                if (candidateGroup == null)
-                    continue;
+            if (primaryRecords != null) {
+                for (SlotRecord record : primaryRecords) {
+                    IDrawerGroup candidateGroup = getGroupForSlotRecord(record);
+                    if (candidateGroup == null)
+                        continue;
 
-                IDrawer drawer = candidateGroup.getDrawer(record.slot);
-                if (!drawer.isEnabled())
-                    continue;
-                if (!testPredicateExtract(drawer, stack, predicate))
-                    continue;
-                if (!hasAccess(candidateGroup, drawer))
-                    continue;
+                    IDrawer drawer = candidateGroup.getDrawer(record.slot);
+                    if (!drawer.isEnabled())
+                        continue;
+                    if (!testPredicateExtract(drawer, stack, predicate))
+                        continue;
+                    if (!hasAccess(candidateGroup, drawer))
+                        continue;
 
-                remaining = (simulate)
-                    ? Math.max(remaining - drawer.getStoredItemCount(), 0)
-                    : drawer.adjustStoredItemCount(-remaining);
+                    remaining = (simulate)
+                        ? Math.max(remaining - drawer.getStoredItemCount(), 0)
+                        : drawer.adjustStoredItemCount(-remaining);
 
-                if (remaining == 0)
-                    return stackResult(stack, amount);
+                    if (remaining == 0)
+                        return stackResult(stack, amount);
 
-                if (simulate)
-                    checkedSlots.add(record.index);
+                    if (simulate)
+                        checkedSlots.add(record.index);
+                }
             }
 
             for (int slot : drawerSlots) {
