@@ -287,7 +287,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 if (willRemove == 0)
                     return amount;
 
-                pooledCount -= willRemove;
+                pooledCount -= willRemove * convRate[slot];
 
                 if (pooledCount == 0 && !attrs.isItemLocked(LockAttribute.LOCK_POPULATED))
                     reset();
