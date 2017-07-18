@@ -457,7 +457,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 populateRawSlot(index, result.getStack(), result.getSize());
                 group.log("Picked candidate " + result.getStack().toString() + " with conv=" + result.getSize());
 
-                for (int i = 0; i < index - 1; i++)
+                for (int i = 0; i < index; i++)
                     convRate[i] *= result.getSize();
             }
 
