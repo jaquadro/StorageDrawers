@@ -328,6 +328,13 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             return 0;
         }
 
+        public int getAcceptingMaxCapacity (int slot, @Nonnull ItemStack itemPrototype) {
+            if (attrs.isVoid())
+                return Integer.MAX_VALUE;
+
+            return getMaxCapacity(slot, itemPrototype);
+        }
+
         public int getRemainingCapacity (int slot) {
             if (baseStack().isEmpty() || convRate[slot] == 0)
                 return 0;
@@ -625,6 +632,11 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         @Override
         public int getMaxCapacity (@Nonnull ItemStack itemPrototype) {
             return storage.getMaxCapacity(slot, itemPrototype);
+        }
+
+        @Override
+        public int getAcceptingMaxCapacity (@Nonnull ItemStack itemPrototype) {
+            return storage.getAcceptingMaxCapacity(slot, itemPrototype);
         }
 
         @Override

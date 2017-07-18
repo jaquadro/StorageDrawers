@@ -330,6 +330,14 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
 
         @Override
+        public int getAcceptingMaxCapacity (@Nonnull ItemStack itemPrototype) {
+            if (attrs.isVoid())
+                return Integer.MAX_VALUE;
+
+            return getMaxCapacity(itemPrototype);
+        }
+
+        @Override
         public int getRemainingCapacity () {
             if (protoStack.isEmpty())
                 return 0;

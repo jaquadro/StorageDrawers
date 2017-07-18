@@ -88,6 +88,16 @@ public interface IDrawer
     int getMaxCapacity (@Nonnull ItemStack itemPrototype);
 
     /**
+     * Gets the maximum number of items that would be accepted for storage by this drawer.
+     *
+     * Because a drawer may be able to handle items in excess of its full capacity, this value may be larger than
+     * the result of getMaxCapacity().
+     */
+    default int getAcceptingMaxCapacity (@Nonnull ItemStack itemPrototype) {
+        return getMaxCapacity(itemPrototype);
+    }
+
+    /**
      * Gets the number of items that could still be added to this drawer before it is full.
      */
     int getRemainingCapacity ();
