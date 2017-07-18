@@ -63,11 +63,9 @@ public class DrawerItemHandler implements IItemHandler
 
         if (StorageDrawers.config.cache.enableItemConversion && orderedSlot > 0) {
             IDrawer drawer = group.getDrawer(orderedSlot);
-            if (!drawer.isEnabled() && drawer.isEmpty()) {
+            if (drawer.isEnabled() && drawer.isEmpty()) {
                 IDrawer prevDrawer = group.getDrawer(prevSlot);
-                if (!prevDrawer.isEnabled())
-                    return insertItemFullScan(stack, simulate);
-                else if (!prevDrawer.isEmpty())
+                if (!prevDrawer.isEnabled() || !prevDrawer.isEmpty())
                     return insertItemFullScan(stack, simulate);
             }
         }
@@ -99,8 +97,9 @@ public class DrawerItemHandler implements IItemHandler
         if (drawer.isEmpty() && !simulate)
             drawer.setStoredItem(stack);
 
+        boolean empty = drawer.isEmpty();
         int remainder = (simulate)
-            ? Math.max(stack.getCount() - drawer.getAcceptingRemainingCapacity(), 0)
+            ? Math.max(stack.getCount() - (empty ? drawer.getAcceptingMaxCapacity(stack) : drawer.getAcceptingRemainingCapacity()), 0)
             : drawer.adjustStoredItemCount(stack.getCount());
 
         if (remainder == stack.getCount())
