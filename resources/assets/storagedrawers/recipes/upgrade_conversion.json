@@ -3,7 +3,7 @@
         "type": "minecraft:item_exists",
         "item": "storagedrawers:upgrade_conversion"
     }],
-    "type": "minecraft:crafting_shaped",
+    "type": "forge:ore_shaped",
     "pattern": [
         "#/#",
         "/X/",
