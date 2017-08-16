@@ -156,25 +156,6 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     }
 
     @Override
-    public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
-        switch (getDrawerCount()) {
-            case 1:
-                return new ContainerDrawers1(playerInventory, this);
-            case 2:
-                return new ContainerDrawers2(playerInventory, this);
-            case 4:
-                return new ContainerDrawers4(playerInventory, this);
-            default:
-                return  null;
-        }
-    }
-
-    @Override
-    public String getGuiID () {
-        return GUI_IDS[getDrawerCount()];
-    }
-
-    @Override
     public int getDrawerCapacity () {
         if (getWorld() == null || getWorld().isRemote)
             return super.getDrawerCapacity();

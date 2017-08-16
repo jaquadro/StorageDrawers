@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.chameleon.block.ChamLockableTileEntity;
+import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
 import com.jaquadro.minecraft.chameleon.block.tiledata.CustomNameData;
 import com.jaquadro.minecraft.chameleon.block.tiledata.LockableData;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
@@ -25,7 +26,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.ILockableContainer;
+import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -39,9 +42,8 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends ChamLockableTileEntity implements ISealable, IProtectable, IDrawerGroup
+public abstract class TileEntityDrawers extends ChamTileEntity implements ISealable, IProtectable, IDrawerGroup, IWorldNameable
 {
-    private LockableData lockData = new LockableData();
     private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
     private MaterialData materialData = new MaterialData();
     private UpgradeData upgradeData = new DrawerUpgradeData();
@@ -142,7 +144,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
 
         upgradeData.setDrawerAttributes(drawerAttributes);
 
-        injectData(lockData);
         injectPortableData(customNameData);
         injectPortableData(upgradeData);
         injectPortableData(materialData);
@@ -223,11 +224,6 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     @Override
     public ISecurityProvider getSecurityProvider () {
         return StorageDrawers.securityRegistry.getProvider(securityKey);
-    }
-
-    @Override
-    public ILockableContainer getLockableContainer () {
-        return this;
     }
 
     @Override
@@ -612,6 +608,25 @@ public abstract class TileEntityDrawers extends ChamLockableTileEntity implement
     @Deprecated
     public int[] getAccessibleDrawerSlots () {
         return getGroup().getAccessibleDrawerSlots();
+    }
+
+    @Override
+    public String getName () {
+        return customNameData.getName();
+    }
+
+    @Override
+    public boolean hasCustomName () {
+        return customNameData.hasCustomName();
+    }
+
+    @Override
+    public ITextComponent getDisplayName () {
+        return customNameData.getDisplayName();
+    }
+
+    public void setInventoryName (String name) {
+        customNameData.setName(name);
     }
 
     @CapabilityInject(IDrawerGroup.class)

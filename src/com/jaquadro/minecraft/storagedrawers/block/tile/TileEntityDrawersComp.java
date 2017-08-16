@@ -110,16 +110,6 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     }
 
     @Override
-    public Container createContainer (InventoryPlayer playerInventory, EntityPlayer playerIn) {
-        return new ContainerDrawersComp(playerInventory, this);
-    }
-
-    @Override
-    public String getGuiID () {
-        return StorageDrawers.MOD_ID + ":compDrawers";
-    }
-
-    @Override
     public int getDrawerCapacity () {
         if (getWorld() == null || getWorld().isRemote)
             return super.getDrawerCapacity();

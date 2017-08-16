@@ -25,12 +25,6 @@ public interface IProtectable
     ISecurityProvider getSecurityProvider ();
 
     /**
-     * Gets the lockable interface if it exists on the protected drawer.
-     * @return A lockable interface, or null if lockable is not supported.
-     */
-    ILockableContainer getLockableContainer ();
-
-    /**
      * Sets the provider managing security for the target.  Set to null for default provider.
      * @return false if the operation is not supported, true otherwise.
      */
