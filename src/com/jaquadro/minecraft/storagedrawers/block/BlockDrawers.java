@@ -536,7 +536,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     }
 
     private void dropItemStack (World world, int x, int y, int z, EntityPlayer player, ItemStack stack) {
-        EntityItem entity = new EntityItem(world, x + .5f, y + .1f, z + .5f, stack);
+        EntityItem entity = new EntityItem(world, x + .5f, y + .5f, z + .5f, stack);
         entity.addVelocity(-entity.motionX, -entity.motionY, -entity.motionZ);
         world.spawnEntityInWorld(entity);
     }
@@ -804,6 +804,8 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
         if (level == 0)
             return null;
 
+        level = (level < 0 || level >= iconOverlayTrim.length) ? 0 : level;
+
         return iconOverlayTrim[level];
     }
 
@@ -811,6 +813,7 @@ public class BlockDrawers extends BlockContainer implements IExtendedBlockClickH
     protected IIcon getIcon (IBlockAccess blockAccess, int x, int y, int z, int side, int level) {
         int meta = blockAccess.getBlockMetadata(x, y, z);
         meta = (meta < 0 || meta >= iconSide.length) ? 0 : meta;
+        level = (level < 0 || level >= iconOverlay.length) ? 0 : level;
 
         TileEntityDrawers tile = getTileEntity(blockAccess, x, y, z);
         if (tile == null || side == tile.getDirection()) {
