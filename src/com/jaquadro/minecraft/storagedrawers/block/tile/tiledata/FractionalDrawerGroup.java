@@ -442,7 +442,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             Stack<CompactingHelper.Result> resultStack = new Stack<>();
 
             @Nonnull ItemStack lookupTarget = itemPrototype;
-            for (int i = 0; i < slotCount; i++) {
+            for (int i = 0; i < slotCount - 1; i++) {
                 CompactingHelper.Result lookup = compacting.findHigherTier(lookupTarget);
                 if (lookup.getStack().isEmpty())
                     break;
