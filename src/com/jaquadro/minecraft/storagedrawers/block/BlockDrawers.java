@@ -5,10 +5,14 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.BlockType;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
 import com.jaquadro.minecraft.storagedrawers.config.PlayerConfigSetting;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
@@ -213,6 +217,15 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
             tile.setInventoryName(itemStack.getDisplayName());
 
         world.setBlockState(pos, state.withProperty(FACING, facing), 3);
+
+        if (entity.getHeldItemOffhand().getItem() == ModItems.drawerKey) {
+            IDrawerAttributes _attrs = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY, null);
+            if (_attrs instanceof IDrawerAttributesModifiable) {
+                IDrawerAttributesModifiable attrs = (IDrawerAttributesModifiable) _attrs;
+                attrs.setItemLocked(LockAttribute.LOCK_EMPTY, true);
+                attrs.setItemLocked(LockAttribute.LOCK_POPULATED, true);
+            }
+        }
     }
 
     @Override

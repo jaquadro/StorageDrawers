@@ -1,3 +1,5 @@
+#PARSE_ESCAPES
+
 itemGroup.storagedrawers=Storage Drawers
 itemGroup.storagedrawersSorting=Storage Drawers - Sorting
 
@@ -39,7 +41,7 @@ item.storagedrawers.upgradeRedstone.max.description=Emits signal for most full s
 item.storagedrawers.upgradeRedstone.min.name=Redstone Min Upgrade
 item.storagedrawers.upgradeRedstone.min.description=Emits signal for least full slot.
 item.storagedrawers.drawerKey.name=Drawer Key
-item.storagedrawers.drawerKey.description=Locks and unlocks drawers
+item.storagedrawers.drawerKey.description=Locks and unlocks drawers\nHold in off-hand to lock newly-placed drawers
 item.storagedrawers.shroudKey.name=Concealment Key
 item.storagedrawers.shroudKey.description=Show or hide item labels
 item.storagedrawers.quantifyKey.name=Quantify Key
