@@ -63,19 +63,19 @@ public class ItemStackHelper
             proto.setTagCompound(tag);
         }
 
-        tag.setInteger("__storagedrawers_count", 0);
+        tag.setInteger("__storagedrawers_count", stack.getCount());
 
         return proto;
     }
 
     public static ItemStack encodeItemStack (@Nonnull ItemStack proto, int count) {
-        if (!proto.isEmpty() && count > 0) {
+        if (!proto.isEmpty() && count > 0 && count < 128) {
             ItemStack stack = proto.copy();
             stack.setCount(count);
             return stack;
         }
 
-        if (count == 0) {
+        if (count == 0 || count >= 128) {
             ItemStack stack = proto.copy();
 
             NBTTagCompound tag = stack.getTagCompound();
@@ -84,11 +84,33 @@ public class ItemStackHelper
                 stack.setTagCompound(tag);
             }
 
-            tag.setInteger("__storagedrawers_count", 0);
+            tag.setInteger("__storagedrawers_count", count);
             return stack;
         }
 
         return proto.copy();
+    }
+
+    public static ItemStack decodeItemStack (@Nonnull ItemStack stack) {
+        NBTTagCompound tag = stack.getTagCompound();
+        if (tag == null)
+            return stack;
+
+        if (tag.hasKey("__storagedrawers_count")) {
+            ItemStack decode = stack.copy();
+            decode.setCount(tag.getInteger("__storagedrawers_count"));
+
+            tag = decode.getTagCompound();
+            if (tag != null) {
+                decode.getTagCompound().removeTag("__storagedrawers_count");
+                if (tag.getSize() == 0)
+                    decode.setTagCompound(null);
+            }
+
+            return decode;
+        }
+
+        return stack;
     }
 
     public static boolean isStackEncoded (@Nonnull ItemStack stack) {

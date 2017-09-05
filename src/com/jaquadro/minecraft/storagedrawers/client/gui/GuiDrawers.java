@@ -10,6 +10,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -74,7 +75,7 @@ public class GuiDrawers extends GuiContainer
 
         if (inventorySlots instanceof ContainerDrawers) {
             ((ContainerDrawers) inventorySlots).activeRenderItem = null;
-            storageItemRender.overrideStack = null;
+            storageItemRender.overrideStack = ItemStack.EMPTY;
         }
 
         setItemRender(ri);

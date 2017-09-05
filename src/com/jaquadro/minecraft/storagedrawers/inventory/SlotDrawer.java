@@ -39,9 +39,9 @@ public class SlotDrawer extends Slot
 
     @Override
     public void putStack (@Nonnull ItemStack stack) {
+        stack = ItemStackHelper.decodeItemStack(stack);
         IDrawer target = drawer.setStoredItem(stack);
-        if (!ItemStackHelper.isStackEncoded(stack))
-            target.setStoredItemCount(stack.getCount());
+        target.setStoredItemCount(stack.getCount());
     }
 
     @Override

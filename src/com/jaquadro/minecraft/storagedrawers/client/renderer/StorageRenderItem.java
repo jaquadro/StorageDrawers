@@ -90,6 +90,8 @@ public class StorageRenderItem extends RenderItem
             return;
         }
 
+        item = ItemStackHelper.decodeItemStack(item);
+
         if (!item.isEmpty())
         {
             float scale = .5f;
