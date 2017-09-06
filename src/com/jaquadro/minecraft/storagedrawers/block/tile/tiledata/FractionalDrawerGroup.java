@@ -255,7 +255,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
         public int adjustStoredItemCount (int slot, int amount) {
             if (convRate[slot] == 0 || amount == 0)
-                return amount;
+                return Math.abs(amount);
 
             if (amount > 0) {
                 if (attrs.isUnlimitedVending())
