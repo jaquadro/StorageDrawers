@@ -10,6 +10,8 @@ public interface IDrawer
     /**
      * Gets an ItemStack of size 1 representing the type, metadata, and tags of the stored items.
      * The returned ItemStack should not be modified for any reason.  Make a copy if you need to store or modify it.
+     *
+     * To emphasize, DO NOT MODIFY THE ITEM STACK RETURNED BY THIS METHOD.
      */
     @Nonnull
     ItemStack getStoredItemPrototype ();
