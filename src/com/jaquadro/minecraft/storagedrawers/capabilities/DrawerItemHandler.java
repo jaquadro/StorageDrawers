@@ -124,11 +124,12 @@ public class DrawerItemHandler implements IItemHandler
         if (!drawer.isEnabled() || drawer.isEmpty() || drawer.getStoredItemCount() == 0)
             return ItemStack.EMPTY;
 
+        @Nonnull ItemStack prototype = drawer.getStoredItemPrototype();
         int remaining = (simulate)
             ? Math.max(amount - drawer.getStoredItemCount(), 0)
             : drawer.adjustStoredItemCount(-amount);
 
-        return stackResult(drawer.getStoredItemPrototype(), amount - remaining);
+        return stackResult(prototype, amount - remaining);
     }
 
     @Override
