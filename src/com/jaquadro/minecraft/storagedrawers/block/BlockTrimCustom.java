@@ -31,7 +31,7 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
 
     public BlockTrimCustom (String registryName, String name) {
         super(registryName, name);
-        isBlockContainer = true;
+        hasTileEntity = true;
     }
 
     @Override
