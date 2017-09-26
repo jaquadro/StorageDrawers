@@ -267,12 +267,10 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
                 int canAdd = (poolMax - pooledCount) / convRate[slot];
                 int willAdd = Math.min(amount, canAdd);
-                if (willAdd == 0)
-                    return amount;
-
-                pooledCount += convRate[slot] * willAdd;
-
-                group.onAmountChanged();
+                if (willAdd > 0) {
+                    pooledCount += convRate[slot] * willAdd;
+                    group.onAmountChanged();
+                }
 
                 if (attrs.isVoid())
                     return 0;
