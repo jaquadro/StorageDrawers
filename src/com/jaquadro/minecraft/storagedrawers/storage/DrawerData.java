@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
 public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable, IQuantifiable, IItemLockable
@@ -184,7 +185,8 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     public void writeToNBT (NBTTagCompound tag) {
         if (protoStack.getItem() != null) {
-            tag.setShort("Item", (short) Item.getIdFromItem(protoStack.getItem()));
+        	ResourceLocation resourcelocation = (ResourceLocation)Item.REGISTRY.getNameForObject(protoStack.getItem());
+            tag.setString("Item", resourcelocation == null ? "minecraft:air" : resourcelocation.toString());
             tag.setShort("Meta", (short) protoStack.getItemDamage());
             tag.setInteger("Count", protoStack.stackSize);
 
@@ -195,7 +197,8 @@ public class DrawerData extends BaseDrawerData implements IVoidable, IShroudable
 
     public void readFromNBT (NBTTagCompound tag) {
         if (tag.hasKey("Item") && tag.hasKey("Count")) {
-            Item item = Item.getItemById(tag.getShort("Item"));
+        	
+            Item item = Item.getByNameOrId(tag.getString("Item"));
             if (item != null) {
                 ItemStack stack = new ItemStack(item);
                 stack.setItemDamage(tag.getShort("Meta"));
