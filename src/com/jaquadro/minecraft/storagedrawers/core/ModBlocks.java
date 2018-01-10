@@ -195,9 +195,12 @@ public class ModBlocks
         @SubscribeEvent
         @SideOnly(Side.CLIENT)
         public static void registerModels (ModelRegistryEvent event) {
-            basicDrawers.initDynamic();
-            compDrawers.initDynamic();
-            customDrawers.initDynamic();
+            if (basicDrawers != null)
+                basicDrawers.initDynamic();
+            if (compDrawers != null)
+                compDrawers.initDynamic();
+            if (customDrawers != null)
+                customDrawers.initDynamic();
 
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.class, new TileEntityDrawersRenderer());
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersComp.class, new TileEntityDrawersRenderer());
