@@ -7,7 +7,7 @@ itemGroup.storagedrawersSorting=储物抽屉|分拣升级
 storagedrawers.container.drawers=抽屉
 storagedrawers.container.compDrawers=压缩抽屉
 storagedrawers.container.upgrades=升级组件
-storagedrawers.container.controller=抽屉管理器
+storagedrawers.container.drawer_controller=抽屉管理器
 storagedrawers.container.unboundSlave=未连接的传动方块
 storagedrawers.container.framingTable=成型台
 

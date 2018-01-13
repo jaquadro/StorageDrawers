@@ -4,7 +4,7 @@ itemGroup.storagedrawersSorting=Storage Drawers - Сортировка
 storagedrawers.container.drawers=Ящики
 storagedrawers.container.compDrawers=Уплотняющие Ящики
 storagedrawers.container.upgrades=Улучшения
-storagedrawers.container.controller=Контроллер Ящика
+storagedrawers.container.drawer_controller=Контроллер Ящика
 storagedrawers.container.unboundSlave=Непривязанный Подчинённый
 storagedrawers.container.framingTable=Стол Обрамления
 

@@ -4,7 +4,7 @@ itemGroup.storagedrawersSorting=Storage Drawers - Tri
 storagedrawers.container.drawers=Tiroirs
 storagedrawers.container.compDrawers=Tiroirs de compactage
 storagedrawers.container.upgrades=Améliorations
-storagedrawers.container.controller=Contrôleur de tiroirs
+storagedrawers.container.drawer_controller=Contrôleur de tiroirs
 storagedrawers.container.unboundSlave=Esclave non lié
 storagedrawers.container.framingTable=Table de fabrication de tiroirs
 

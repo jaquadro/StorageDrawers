@@ -6,7 +6,7 @@ itemGroup.storagedrawersSorting=Storage Drawers - Sorting
 storagedrawers.container.drawers=Drawers
 storagedrawers.container.compDrawers=Compacting Drawers
 storagedrawers.container.upgrades=Upgrades
-storagedrawers.container.controller=Drawer Controller
+storagedrawers.container.drawer_controller=Drawer Controller
 storagedrawers.container.unboundSlave=Unbound Slave
 storagedrawers.container.framingTable=Framing Table
 
