@@ -2,6 +2,8 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
@@ -55,6 +57,12 @@ public class ItemDrawers extends ItemBlock
                     tile.setMaterial(stack.getTagCompound().getString("material"));
 
                 tile.setIsSealed(false);
+            }
+
+            if (StorageDrawers.config.cache.defaultQuantify) {
+                IDrawerAttributes attributes = tile.getDrawerAttributes();
+                if (attributes instanceof IDrawerAttributesModifiable)
+                    ((IDrawerAttributesModifiable) attributes).setIsShowingQuantity(true);
             }
         }
 
