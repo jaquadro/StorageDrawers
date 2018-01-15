@@ -104,7 +104,7 @@ public class ContainerFramingTable extends Container
     @Override
     @Nonnull
     public ItemStack transferStackInSlot (EntityPlayer player, int slotIndex) {
-        ItemStack itemStack = null;
+        ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = inventorySlots.get(slotIndex);
 
         // Assume inventory and hotbar slot IDs are contiguous
