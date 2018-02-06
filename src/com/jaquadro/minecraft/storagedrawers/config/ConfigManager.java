@@ -68,6 +68,7 @@ public class ConfigManager
         public boolean creativeTabVanillaWoods;
         public boolean enableSidedInput;
         public boolean enableSidedOutput;
+        public boolean enableVendorSidedOutput;
         public boolean enableItemConversion;
         public boolean enableWailaIntegration;
         public boolean enableMineTweakerIntegration;
@@ -145,6 +146,7 @@ public class ConfigManager
         cache.enableDrawerUI = config.get(Configuration.CATEGORY_GENERAL, "enableDrawerUI", true).setLanguageKey(LANG_PREFIX + "prop.enableDrawerUI").getBoolean();
         cache.enableSidedInput = config.get(Configuration.CATEGORY_GENERAL, "enableSidedInput", true).setLanguageKey(LANG_PREFIX + "prop.enableSidedInput").getBoolean();
         cache.enableSidedOutput = config.get(Configuration.CATEGORY_GENERAL, "enableSidedOutput", true).setLanguageKey(LANG_PREFIX + "prop.enableSidedOutput").getBoolean();
+        cache.enableVendorSidedOutput = config.get(Configuration.CATEGORY_GENERAL, "enableVendorSidedOutput", false).setLanguageKey(LANG_PREFIX + "prop.enableVendorSidedOutput").getBoolean();
         cache.enableItemConversion = config.get(Configuration.CATEGORY_GENERAL, "enableItemConversion", true).setLanguageKey(LANG_PREFIX + "prop.enableItemConversion").getBoolean();
         cache.enableFallbackRecipes = config.get(Configuration.CATEGORY_GENERAL, "enableFallbackRecipes", true).setLanguageKey(LANG_PREFIX + "prop.enableFallbackRecipes").setRequiresMcRestart(true).getBoolean();
         cache.enableFramedDrawers = config.get(Configuration.CATEGORY_GENERAL, "enableFramedDrawers", true).setLanguageKey(LANG_PREFIX + "prop.enableFramedDrawers").setRequiresMcRestart(true).getBoolean();
