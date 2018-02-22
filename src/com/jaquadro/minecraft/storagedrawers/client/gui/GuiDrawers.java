@@ -79,6 +79,7 @@ public class GuiDrawers extends GuiContainer
         }
 
         setItemRender(ri);
+        this.renderHoveredToolTip(p_73863_1_, p_73863_2_);
     }
 
     @Override
