@@ -4,13 +4,13 @@ itemGroup.storagedrawersSorting=Storage Drawers - Sortieren
 storagedrawers.container.drawers=Schubfächer
 storagedrawers.container.compDrawers=Verdichtende Schubfächer
 storagedrawers.container.upgrades=Upgrades
-storagedrawers.container.controller=Schubfach-Controller
+storagedrawers.container.drawer_controller=Schubfach-Controller
 storagedrawers.container.unboundSlave=Uneingebundener Slave
 storagedrawers.container.framingTable=Rahmen-Werkbank
 
 storagedrawers.msg.maxUpgrades=Dieses Schubfach kann keine Upgrades mehr aufnehmen.
 storagedrawers.msg.cannotAddUpgrade=Dieses Update kann in dem Schubfach nicht installiert werden.
- 
+
 # Items
 item.storagedrawers.upgradeTemplate.name=Upgradeschablone
 item.storagedrawers.upgradeStorage.obsidian.name=Speicher-Upgrade (I)

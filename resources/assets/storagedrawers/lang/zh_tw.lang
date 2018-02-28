@@ -4,7 +4,7 @@ itemGroup.storagedrawersSorting=儲物抽屜|整理
 storagedrawers.container.drawers=抽屜
 storagedrawers.container.compDrawers=壓縮抽屜
 storagedrawers.container.upgrades=升級組件
-storagedrawers.container.controller=抽屜管理器
+storagedrawers.container.drawer_controller=抽屜管理器
 storagedrawers.container.unboundSlave=未連接的傳動方塊
 
 storagedrawers.msg.maxUpgrades=這個抽屜已無法接受更多的升級。

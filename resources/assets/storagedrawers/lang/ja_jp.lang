@@ -4,7 +4,7 @@ itemGroup.storagedrawersSorting=収納ひきだし - ソート
 storagedrawers.container.drawers=ひきだし
 storagedrawers.container.compDrawers=変換ひきだし
 storagedrawers.container.upgrades=アップグレード
-storagedrawers.container.controller=ひきだしコントローラ
+storagedrawers.container.drawer_controller=ひきだしコントローラ
 storagedrawers.container.unboundSlave=孤立している
 storagedrawers.container.framingTable=組み立て台
 

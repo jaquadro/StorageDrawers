@@ -36,7 +36,7 @@ public class BlockController extends BlockContainer implements INetworked
     public BlockController (String name) {
         super(Material.ROCK);
 
-        setUnlocalizedName(name);
+        setUnlocalizedName("drawer_controller");
         setRegistryName(name);
         this.useNeighborBrightness = true;
 
