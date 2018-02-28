@@ -65,8 +65,8 @@ public class ModBlocks
             ConfigManager config = StorageDrawers.config;
 
             registry.registerAll(
-                new BlockVariantDrawers("basicdrawers", "basicDrawers"),
-                new BlockKeyButton("keybutton", "keyButton")
+                new BlockVariantDrawers("basicdrawers", StorageDrawers.MOD_ID + ".basicDrawers"),
+                new BlockKeyButton("keybutton", StorageDrawers.MOD_ID + ".keyButton")
             );
 
             GameRegistry.registerTileEntity(TileEntityDrawersStandard.Legacy.class, StorageDrawers.MOD_ID + ":basicdrawers");
@@ -77,26 +77,26 @@ public class ModBlocks
             GameRegistry.registerTileEntity(TileEntityKeyButton.class, StorageDrawers.MOD_ID + ":keybutton");
 
             if (config.isBlockEnabled("compdrawers")) {
-                registry.register(new BlockCompDrawers("compdrawers", "compDrawers"));
+                registry.register(new BlockCompDrawers("compdrawers", StorageDrawers.MOD_ID + ".compDrawers"));
                 GameRegistry.registerTileEntity(TileEntityDrawersComp.class, StorageDrawers.MOD_ID + ":compdrawers");
             }
             if (config.isBlockEnabled("controller")) {
-                registry.register(new BlockController("controller"));
+                registry.register(new BlockController("controller", StorageDrawers.MOD_ID + ".controller"));
                 GameRegistry.registerTileEntity(TileEntityController.class, StorageDrawers.MOD_ID + ":controller");
             }
             if (config.isBlockEnabled("controllerSlave")) {
-                registry.register(new BlockSlave("controllerslave", "controllerSlave"));
+                registry.register(new BlockSlave("controllerslave", StorageDrawers.MOD_ID + ".controllerSlave"));
                 GameRegistry.registerTileEntity(TileEntitySlave.class, StorageDrawers.MOD_ID + ":controllerslave");
             }
             if (config.isBlockEnabled("trim")) {
-                registry.register(new BlockTrim("trim", "trim"));
+                registry.register(new BlockTrim("trim", StorageDrawers.MOD_ID + ".trim"));
             }
 
             if (config.cache.enableFramedDrawers) {
                 registry.registerAll(
-                    new BlockFramingTable("framingtable", "framingTable"),
-                    new BlockDrawersCustom("customdrawers", "customDrawers"),
-                    new BlockTrimCustom("customtrim", "customTrim")
+                    new BlockFramingTable("framingtable", StorageDrawers.MOD_ID + ".framingTable"),
+                    new BlockDrawersCustom("customdrawers", StorageDrawers.MOD_ID + ".customDrawers"),
+                    new BlockTrimCustom("customtrim", StorageDrawers.MOD_ID + ".customTrim")
                 );
 
                 GameRegistry.registerTileEntity(TileEntityFramingTable.class, StorageDrawers.MOD_ID + ":framingtable");

@@ -46,36 +46,36 @@ item.storagedrawers.tape.name=打包带
 item.storagedrawers.tape.description=捆扎封装抽屉以便带走。
 
 # Blocks
-tile.basicDrawers.fulldrawers1.name=基础抽屉
-tile.basicDrawers.fulldrawers2.name=1x2 基础抽屉
-tile.basicDrawers.fulldrawers4.name=2x2 基础抽屉
-tile.basicDrawers.halfdrawers2.name=1x2 小型基础抽屉
-tile.basicDrawers.halfdrawers4.name=2x2 小型基础抽屉
+tile.storagedrawers.basicDrawers.fulldrawers1.name=基础抽屉
+tile.storagedrawers.basicDrawers.fulldrawers2.name=1x2 基础抽屉
+tile.storagedrawers.basicDrawers.fulldrawers4.name=2x2 基础抽屉
+tile.storagedrawers.basicDrawers.halfdrawers2.name=1x2 小型基础抽屉
+tile.storagedrawers.basicDrawers.halfdrawers4.name=2x2 小型基础抽屉
 
-tile.customDrawers.fulldrawers1.name=镶框抽屉
-tile.customDrawers.fulldrawers2.name=1x2 镶框抽屉
-tile.customDrawers.fulldrawers4.name=2x2 镶框抽屉
-tile.customDrawers.halfdrawers2.name=1x2 小型镶框抽屉
-tile.customDrawers.halfdrawers4.name=2x2 小型镶框抽屉
+tile.storagedrawers.customDrawers.fulldrawers1.name=镶框抽屉
+tile.storagedrawers.customDrawers.fulldrawers2.name=1x2 镶框抽屉
+tile.storagedrawers.customDrawers.fulldrawers4.name=2x2 镶框抽屉
+tile.storagedrawers.customDrawers.halfdrawers2.name=1x2 小型镶框抽屉
+tile.storagedrawers.customDrawers.halfdrawers4.name=2x2 小型镶框抽屉
 
-tile.fullCustom1.name=镶框抽屉
-tile.fullCustom2.name=1x2 镶框抽屉
-tile.fullCustom4.name=2x2 镶框抽屉
-tile.halfCustom2.name=1x2 镶框抽屉
-tile.halfCustom4.name=2x2 镶框抽屉
-tile.customTrim.name=镶框
+tile.storagedrawers.fullCustom1.name=镶框抽屉
+tile.storagedrawers.fullCustom2.name=1x2 镶框抽屉
+tile.storagedrawers.fullCustom4.name=2x2 镶框抽屉
+tile.storagedrawers.halfCustom2.name=1x2 镶框抽屉
+tile.storagedrawers.halfCustom4.name=2x2 镶框抽屉
+tile.storagedrawers.customTrim.name=镶框
 
-tile.compDrawers.name=压缩抽屉
-tile.controller.name=抽屉管理器
-tile.controllerSlave.name=管理器传动方块
-tile.framingTable.name=成型台
+tile.storagedrawers.compDrawers.name=压缩抽屉
+tile.storagedrawers.controller.name=抽屉管理器
+tile.storagedrawers.controllerSlave.name=管理器传动方块
+tile.storagedrawers.framingTable.name=成型台
 
-tile.trim.oak.name=橡木桥接方块
-tile.trim.spruce.name=云杉木桥接方块
-tile.trim.birch.name=白桦木桥接方块
-tile.trim.jungle.name=丛林木桥接方块
-tile.trim.acacia.name=金合欢木桥接方块
-tile.trim.big_oak.name=深色橡木桥接方块
+tile.storagedrawers.trim.oak.name=橡木桥接方块
+tile.storagedrawers.trim.spruce.name=云杉木桥接方块
+tile.storagedrawers.trim.birch.name=白桦木桥接方块
+tile.storagedrawers.trim.jungle.name=丛林木桥接方块
+tile.storagedrawers.trim.acacia.name=金合欢木桥接方块
+tile.storagedrawers.trim.big_oak.name=深色橡木桥接方块
 
 storagedrawers.drawers.description=每个抽屉格可以储存%d组同类物品。
 storagedrawers.drawers.sealed=内容物已经封存，可供搬运。
@@ -205,7 +205,7 @@ storagedrawers.msg.cannotAddUpgrade=这个升级无法安装到此抽屉。
 storagedrawers.waila.config.displayContents=储存物
 storagedrawers.waila.config.displayStackLimit=堆叠上限
 storagedrawers.waila.config.displayStatus=升级状态
-tile.keyButton.concealment.name=屏蔽钥匙按钮
-tile.keyButton.drawer.name=綁定钥匙按钮
-tile.keyButton.personal.name=私人钥匙按钮
-tile.keyButton.quantify.name=数量钥匙按钮
+tile.storagedrawers.keyButton.concealment.name=屏蔽钥匙按钮
+tile.storagedrawers.keyButton.drawer.name=綁定钥匙按钮
+tile.storagedrawers.keyButton.personal.name=私人钥匙按钮
+tile.storagedrawers.keyButton.quantify.name=数量钥匙按钮

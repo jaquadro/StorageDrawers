@@ -17,35 +17,35 @@ item.storagedrawers.upgradeLock.name=Lock Upgrade
 item.storagedrawers.upgradeLock.description=Keep associated items when empty
 
 # Blocks
-tile.fullDrawers2.oak.name=מגירות אלון 1x2
-tile.fullDrawers2.spruce.name=מגירות אשוח 1x2
-tile.fullDrawers2.birch.name=מגירות ליבנה 1x2
-tile.fullDrawers2.jungle.name=מגירות עץ ג'ונגל 1x2
-tile.fullDrawers2.acacia.name=מגירות שיטה 1x2
-tile.fullDrawers2.big_oak.name=מגירות אלון כהה 1x2
+tile.storagedrawers.fullDrawers2.oak.name=מגירות אלון 1x2
+tile.storagedrawers.fullDrawers2.spruce.name=מגירות אשוח 1x2
+tile.storagedrawers.fullDrawers2.birch.name=מגירות ליבנה 1x2
+tile.storagedrawers.fullDrawers2.jungle.name=מגירות עץ ג'ונגל 1x2
+tile.storagedrawers.fullDrawers2.acacia.name=מגירות שיטה 1x2
+tile.storagedrawers.fullDrawers2.big_oak.name=מגירות אלון כהה 1x2
 
-tile.fullDrawers4.oak.name=מגירות אלון 2x2
-tile.fullDrawers4.spruce.name=מגירות אשוח 2x2
-tile.fullDrawers4.birch.name=מגירות ליבנה 2x2
-tile.fullDrawers4.jungle.name=מגירות עץ ג'ונגל 2x2
-tile.fullDrawers4.acacia.name=מגירות שיטה 2x2
-tile.fullDrawers4.big_oak.name=מגירות אלון כהה 2x2
+tile.storagedrawers.fullDrawers4.oak.name=מגירות אלון 2x2
+tile.storagedrawers.fullDrawers4.spruce.name=מגירות אשוח 2x2
+tile.storagedrawers.fullDrawers4.birch.name=מגירות ליבנה 2x2
+tile.storagedrawers.fullDrawers4.jungle.name=מגירות עץ ג'ונגל 2x2
+tile.storagedrawers.fullDrawers4.acacia.name=מגירות שיטה 2x2
+tile.storagedrawers.fullDrawers4.big_oak.name=מגירות אלון כהה 2x2
 
-tile.halfDrawers2.oak.name=מגירות אלון קטנות 1x2
-tile.halfDrawers2.spruce.name=מגירות אשוח קטנות 1x2
-tile.halfDrawers2.birch.name=מגירות ליבנה קטנות 1x2
-tile.halfDrawers2.jungle.name=מגירות עץ ג'ונגל קטנות 1x2
-tile.halfDrawers2.acacia.name=מגירות שיטה קטנות 1x2
-tile.halfDrawers2.big_oak.name=מגירות אלון כהה קטנות 1x2
+tile.storagedrawers.halfDrawers2.oak.name=מגירות אלון קטנות 1x2
+tile.storagedrawers.halfDrawers2.spruce.name=מגירות אשוח קטנות 1x2
+tile.storagedrawers.halfDrawers2.birch.name=מגירות ליבנה קטנות 1x2
+tile.storagedrawers.halfDrawers2.jungle.name=מגירות עץ ג'ונגל קטנות 1x2
+tile.storagedrawers.halfDrawers2.acacia.name=מגירות שיטה קטנות 1x2
+tile.storagedrawers.halfDrawers2.big_oak.name=מגירות אלון כהה קטנות 1x2
 
-tile.halfDrawers4.oak.name=מגירות אלון קטנות 2x2
-tile.halfDrawers4.spruce.name=מגירות אשוח קטנות 2x2
-tile.halfDrawers4.birch.name=מגירות ליבנה קטנות 2x2
-tile.halfDrawers4.jungle.name=מגירות עץ ג'ונגל קטנות 2x2
-tile.halfDrawers4.acacia.name=מגירות שיטה קטנות 2x2
-tile.halfDrawers4.big_oak.name=מגירות אלון כהה קטנות 2x2
+tile.storagedrawers.halfDrawers4.oak.name=מגירות אלון קטנות 2x2
+tile.storagedrawers.halfDrawers4.spruce.name=מגירות אשוח קטנות 2x2
+tile.storagedrawers.halfDrawers4.birch.name=מגירות ליבנה קטנות 2x2
+tile.storagedrawers.halfDrawers4.jungle.name=מגירות עץ ג'ונגל קטנות 2x2
+tile.storagedrawers.halfDrawers4.acacia.name=מגירות שיטה קטנות 2x2
+tile.storagedrawers.halfDrawers4.big_oak.name=מגירות אלון כהה קטנות 2x2
 
-tile.compDrawers.name=Compacting Drawer
+tile.storagedrawers.compDrawers.name=Compacting Drawer
 
 storagedrawers.drawers.description=מכיל %d ערימות בכל מגירה
 storagedrawers.upgrade.description=מכפיל את כמות האכסון ב־%d

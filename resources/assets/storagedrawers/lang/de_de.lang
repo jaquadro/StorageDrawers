@@ -48,41 +48,41 @@ item.storagedrawers.tape.name=Packband
 item.storagedrawers.tape.description=Versiegelt Schubfächer damit sie bewegt werden können
 
 # Blocks
-tile.basicDrawers.fulldrawers1.name=Standard-Schubfach
-tile.basicDrawers.fulldrawers2.name=Standard-Schubfächer 1x2
-tile.basicDrawers.fulldrawers4.name=Standard-Schubfächer 2x2
-tile.basicDrawers.halfdrawers2.name=Kompakte Schubfächer 1x2
-tile.basicDrawers.halfdrawers4.name=Kompakte Schubfächer 2x2
+tile.storagedrawers.basicDrawers.fulldrawers1.name=Standard-Schubfach
+tile.storagedrawers.basicDrawers.fulldrawers2.name=Standard-Schubfächer 1x2
+tile.storagedrawers.basicDrawers.fulldrawers4.name=Standard-Schubfächer 2x2
+tile.storagedrawers.basicDrawers.halfdrawers2.name=Kompakte Schubfächer 1x2
+tile.storagedrawers.basicDrawers.halfdrawers4.name=Kompakte Schubfächer 2x2
 
-tile.customDrawers.fulldrawers1.name=Umrahmtes Schubfach
-tile.customDrawers.fulldrawers2.name=Umrahmte Schubfächer 1x2
-tile.customDrawers.fulldrawers4.name=Umrahmte Schubfächer 2x2
-tile.customDrawers.halfdrawers2.name=Umrahmte Kompakte Schubfächer 1x2
-tile.customDrawers.halfdrawers4.name=Umrahmte Kompakte Schubfächer 2x2
+tile.storagedrawers.customDrawers.fulldrawers1.name=Umrahmtes Schubfach
+tile.storagedrawers.customDrawers.fulldrawers2.name=Umrahmte Schubfächer 1x2
+tile.storagedrawers.customDrawers.fulldrawers4.name=Umrahmte Schubfächer 2x2
+tile.storagedrawers.customDrawers.halfdrawers2.name=Umrahmte Kompakte Schubfächer 1x2
+tile.storagedrawers.customDrawers.halfdrawers4.name=Umrahmte Kompakte Schubfächer 2x2
 
-tile.fullCustom1.name=Umrahmtes Schubfach
-tile.fullCustom2.name=Umrahmte Schubfächer 1x2
-tile.fullCustom4.name=Umrahmte Schubfächer 2x2
-tile.halfCustom2.name=Umrahmte Schubfächer 1x2
-tile.halfCustom4.name=Umrahmte Schubfächer 2x2
-tile.customTrim.name=Umrahmte Verkleidung
+tile.storagedrawers.fullCustom1.name=Umrahmtes Schubfach
+tile.storagedrawers.fullCustom2.name=Umrahmte Schubfächer 1x2
+tile.storagedrawers.fullCustom4.name=Umrahmte Schubfächer 2x2
+tile.storagedrawers.halfCustom2.name=Umrahmte Schubfächer 1x2
+tile.storagedrawers.halfCustom4.name=Umrahmte Schubfächer 2x2
+tile.storagedrawers.customTrim.name=Umrahmte Verkleidung
 
-tile.compDrawers.name=Verdichtendes Schubfach
-tile.controller.name=Schubfach-Controller
-tile.controllerSlave.name=Controller Slave
-tile.framingTable.name=Rahmen-Werkbank
+tile.storagedrawers.compDrawers.name=Verdichtendes Schubfach
+tile.storagedrawers.controller.name=Schubfach-Controller
+tile.storagedrawers.controllerSlave.name=Controller Slave
+tile.storagedrawers.framingTable.name=Rahmen-Werkbank
 
-tile.trim.oak.name=Eichenverkleidung
-tile.trim.spruce.name=Fichtenverkleidung
-tile.trim.birch.name=Birkenverkleidung
-tile.trim.jungle.name=Tropenholzverkleidung
-tile.trim.acacia.name=Akazienverkleidung
-tile.trim.big_oak.name=Schwarzeichenverkleidung
+tile.storagedrawers.trim.oak.name=Eichenverkleidung
+tile.storagedrawers.trim.spruce.name=Fichtenverkleidung
+tile.storagedrawers.trim.birch.name=Birkenverkleidung
+tile.storagedrawers.trim.jungle.name=Tropenholzverkleidung
+tile.storagedrawers.trim.acacia.name=Akazienverkleidung
+tile.storagedrawers.trim.big_oak.name=Schwarzeichenverkleidung
 
-tile.keyButton.drawer.name=Schubfachschlüssel-Knopf
-tile.keyButton.concealment.name=Verbergungsschlüssel-Knopf
-tile.keyButton.personal.name=Persönlicher Schlüssel-Knopf
-tile.keyButton.quantify.name=Füllstandschlüssel-Knopf
+tile.storagedrawers.keyButton.drawer.name=Schubfachschlüssel-Knopf
+tile.storagedrawers.keyButton.concealment.name=Verbergungsschlüssel-Knopf
+tile.storagedrawers.keyButton.personal.name=Persönlicher Schlüssel-Knopf
+tile.storagedrawers.keyButton.quantify.name=Füllstandschlüssel-Knopf
 
 storagedrawers.drawers.description=Hält %d Stapel pro Schubfach
 storagedrawers.drawers.sealed=Inhalt versiegelt

@@ -45,36 +45,36 @@ item.storagedrawers.tape.name=Лента Для Упаковки
 item.storagedrawers.tape.description=Уплотнение ящикам при переезде
 
 # Blocks
-tile.basicDrawers.fulldrawers1.name=Основной Ящик
-tile.basicDrawers.fulldrawers2.name=Основной Ящик 1x2
-tile.basicDrawers.fulldrawers4.name=Основной Ящик 2x2
-tile.basicDrawers.halfdrawers2.name=Половина Ящика 1x2
-tile.basicDrawers.halfdrawers4.name=Половина Ящика 2x2
+tile.storagedrawers.basicDrawers.fulldrawers1.name=Основной Ящик
+tile.storagedrawers.basicDrawers.fulldrawers2.name=Основной Ящик 1x2
+tile.storagedrawers.basicDrawers.fulldrawers4.name=Основной Ящик 2x2
+tile.storagedrawers.basicDrawers.halfdrawers2.name=Половина Ящика 1x2
+tile.storagedrawers.basicDrawers.halfdrawers4.name=Половина Ящика 2x2
 
-tile.customDrawers.fulldrawers1.name=Обрамлённый Ящик
-tile.customDrawers.fulldrawers2.name=Обрамлённый Ящик 1x2
-tile.customDrawers.fulldrawers4.name=Обрамлённый Ящик 2x2
-tile.customDrawers.halfdrawers2.name=Обрамлённый Половинный Ящик 1x2
-tile.customDrawers.halfdrawers4.name=Обрамлённый Половинный Ящик 2x2
+tile.storagedrawers.customDrawers.fulldrawers1.name=Обрамлённый Ящик
+tile.storagedrawers.customDrawers.fulldrawers2.name=Обрамлённый Ящик 1x2
+tile.storagedrawers.customDrawers.fulldrawers4.name=Обрамлённый Ящик 2x2
+tile.storagedrawers.customDrawers.halfdrawers2.name=Обрамлённый Половинный Ящик 1x2
+tile.storagedrawers.customDrawers.halfdrawers4.name=Обрамлённый Половинный Ящик 2x2
 
-tile.fullCustom1.name=Обрамлённый Ящик
-tile.fullCustom2.name=Обрамлённый Ящик 1x2
-tile.fullCustom4.name=Обрамлённый Ящик 2x2
-tile.halfCustom2.name=Обрамлённый Ящик 1x2
-tile.halfCustom4.name=Обрамлённый Ящик 2x2
-tile.customTrim.name=Оформлен Отделкой
+tile.storagedrawers.fullCustom1.name=Обрамлённый Ящик
+tile.storagedrawers.fullCustom2.name=Обрамлённый Ящик 1x2
+tile.storagedrawers.fullCustom4.name=Обрамлённый Ящик 2x2
+tile.storagedrawers.halfCustom2.name=Обрамлённый Ящик 1x2
+tile.storagedrawers.halfCustom4.name=Обрамлённый Ящик 2x2
+tile.storagedrawers.customTrim.name=Оформлен Отделкой
 
-tile.compDrawers.name=Уплотняющие Ящики
-tile.controller.name=Контроллер Ящика
-tile.controllerSlave.name=Подчиненный Контроллера
-tile.framingTable.name=Стол Обрамления
+tile.storagedrawers.compDrawers.name=Уплотняющие Ящики
+tile.storagedrawers.controller.name=Контроллер Ящика
+tile.storagedrawers.controllerSlave.name=Подчиненный Контроллера
+tile.storagedrawers.framingTable.name=Стол Обрамления
 
-tile.trim.oak.name=Отделка из Дуба
-tile.trim.spruce.name=Отделка из Ели
-tile.trim.birch.name=Отделка из Берёзы
-tile.trim.jungle.name=Отделка из Тропического Дерева
-tile.trim.acacia.name=Отделка из Акации
-tile.trim.big_oak.name=Отделка из Тёмного Дуба
+tile.storagedrawers.trim.oak.name=Отделка из Дуба
+tile.storagedrawers.trim.spruce.name=Отделка из Ели
+tile.storagedrawers.trim.birch.name=Отделка из Берёзы
+tile.storagedrawers.trim.jungle.name=Отделка из Тропического Дерева
+tile.storagedrawers.trim.acacia.name=Отделка из Акации
+tile.storagedrawers.trim.big_oak.name=Отделка из Тёмного Дуба
 
 storagedrawers.drawers.description=Хранит %d стака(-ов) в ящике
 storagedrawers.drawers.sealed=Содержимое запечатано внутри

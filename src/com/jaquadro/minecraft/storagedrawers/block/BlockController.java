@@ -33,11 +33,11 @@ public class BlockController extends BlockContainer implements INetworked
 {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
-    public BlockController (String name) {
+    public BlockController (String registryName, String blockName) {
         super(Material.ROCK);
 
-        setUnlocalizedName("drawer_controller");
-        setRegistryName(name);
+        setUnlocalizedName(blockName);
+        setRegistryName(registryName);
         this.useNeighborBrightness = true;
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);

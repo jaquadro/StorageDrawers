@@ -39,29 +39,29 @@ item.storagedrawers.tape.name=梱包テープ
 item.storagedrawers.tape.description=ひきだしの中身をそのままに持ち運べる
 
 # Blocks
-tile.basicDrawers.fulldrawers1.name=普通のひきだし
-tile.basicDrawers.fulldrawers2.name=普通のひきだし 1x2
-tile.basicDrawers.fulldrawers4.name=普通のひきだし 2x2
-tile.basicDrawers.halfdrawers2.name=ハーフひきだし 1x2
-tile.basicDrawers.halfdrawers4.name=ハーフひきだし 2x2
+tile.storagedrawers.basicDrawers.fulldrawers1.name=普通のひきだし
+tile.storagedrawers.basicDrawers.fulldrawers2.name=普通のひきだし 1x2
+tile.storagedrawers.basicDrawers.fulldrawers4.name=普通のひきだし 2x2
+tile.storagedrawers.basicDrawers.halfdrawers2.name=ハーフひきだし 1x2
+tile.storagedrawers.basicDrawers.halfdrawers4.name=ハーフひきだし 2x2
 
-tile.customDrawers.fulldrawers1.name=ひきだしの骨組み
-tile.customDrawers.fulldrawers2.name=ひきだしの骨組み 1x2
-tile.customDrawers.fulldrawers4.name=ひきだしの骨組み 2x2
-tile.customDrawers.halfdrawers2.name=ひきだしの骨組み 1x2
-tile.customDrawers.halfdrawers4.name=ひきだしの骨組み 2x2
+tile.storagedrawers.customDrawers.fulldrawers1.name=ひきだしの骨組み
+tile.storagedrawers.customDrawers.fulldrawers2.name=ひきだしの骨組み 1x2
+tile.storagedrawers.customDrawers.fulldrawers4.name=ひきだしの骨組み 2x2
+tile.storagedrawers.customDrawers.halfdrawers2.name=ひきだしの骨組み 1x2
+tile.storagedrawers.customDrawers.halfdrawers4.name=ひきだしの骨組み 2x2
 
-tile.compDrawers.name=変換ひきだし
-tile.controller.name=ひきだしコントローラ
-tile.controllerSlave.name=ひきだし子コントローラ
-tile.framingTable.name=組み立て台
+tile.storagedrawers.compDrawers.name=変換ひきだし
+tile.storagedrawers.controller.name=ひきだしコントローラ
+tile.storagedrawers.controllerSlave.name=ひきだし子コントローラ
+tile.storagedrawers.framingTable.name=組み立て台
 
-tile.trim.oak.name=オークの飾り箱
-tile.trim.spruce.name=マツの飾り箱
-tile.trim.birch.name=シラカバの飾り箱
-tile.trim.jungle.name=ジャングルの飾り箱
-tile.trim.acacia.name=アカシアの飾り箱
-tile.trim.big_oak.name=ダークオークの飾り箱
+tile.storagedrawers.trim.oak.name=オークの飾り箱
+tile.storagedrawers.trim.spruce.name=マツの飾り箱
+tile.storagedrawers.trim.birch.name=シラカバの飾り箱
+tile.storagedrawers.trim.jungle.name=ジャングルの飾り箱
+tile.storagedrawers.trim.acacia.name=アカシアの飾り箱
+tile.storagedrawers.trim.big_oak.name=ダークオークの飾り箱
 
 storagedrawers.drawers.description=1つのひきだしに %d スタック入る
 storagedrawers.drawers.sealed=テープでぐるぐる巻きだ

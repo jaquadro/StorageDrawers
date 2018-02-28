@@ -19,35 +19,35 @@ item.storagedrawers.upgradeLock.name=Lock Upgrade
 item.storagedrawers.upgradeLock.description=Keep associated items when empty
 
 # Blocks
-tile.fullDrawers2.oak.name=참나무 서랍 1x2
-tile.fullDrawers2.spruce.name=가문비나무 서랍 1x2
-tile.fullDrawers2.birch.name=자작나무 서랍 1x2
-tile.fullDrawers2.jungle.name=정글나무 서랍 1x2
-tile.fullDrawers2.acacia.name=아카시아 서랍 1x2
-tile.fullDrawers2.big_oak.name=짙은 참나무 참나무 서랍 1x2
+tile.storagedrawers.fullDrawers2.oak.name=참나무 서랍 1x2
+tile.storagedrawers.fullDrawers2.spruce.name=가문비나무 서랍 1x2
+tile.storagedrawers.fullDrawers2.birch.name=자작나무 서랍 1x2
+tile.storagedrawers.fullDrawers2.jungle.name=정글나무 서랍 1x2
+tile.storagedrawers.fullDrawers2.acacia.name=아카시아 서랍 1x2
+tile.storagedrawers.fullDrawers2.big_oak.name=짙은 참나무 참나무 서랍 1x2
 
-tile.fullDrawers4.oak.name=참나무 서랍 2x2
-tile.fullDrawers4.spruce.name=가문비나무 서랍 2x2
-tile.fullDrawers4.birch.name=자작나무 서랍 2x2
-tile.fullDrawers4.jungle.name=정글나무 서랍 2x2
-tile.fullDrawers4.acacia.name=아카시아 서랍 2x2
-tile.fullDrawers4.big_oak.name=짙은 참나무 참나무 서랍 2x2
+tile.storagedrawers.fullDrawers4.oak.name=참나무 서랍 2x2
+tile.storagedrawers.fullDrawers4.spruce.name=가문비나무 서랍 2x2
+tile.storagedrawers.fullDrawers4.birch.name=자작나무 서랍 2x2
+tile.storagedrawers.fullDrawers4.jungle.name=정글나무 서랍 2x2
+tile.storagedrawers.fullDrawers4.acacia.name=아카시아 서랍 2x2
+tile.storagedrawers.fullDrawers4.big_oak.name=짙은 참나무 참나무 서랍 2x2
 
-tile.halfDrawers2.oak.name=조밀한 참나무 서랍 1x2
-tile.halfDrawers2.spruce.name=조밀한 가문비나무 서랍 1x2
-tile.halfDrawers2.birch.name=조밀한 자작나무 서랍 1x2
-tile.halfDrawers2.jungle.name=조밀한 정글나무 서랍 1x2
-tile.halfDrawers2.acacia.name=조밀한 아카시아 서랍 1x2
-tile.halfDrawers2.big_oak.name=조밀한 짙은 참나무 참나무 서랍 1x2
+tile.storagedrawers.halfDrawers2.oak.name=조밀한 참나무 서랍 1x2
+tile.storagedrawers.halfDrawers2.spruce.name=조밀한 가문비나무 서랍 1x2
+tile.storagedrawers.halfDrawers2.birch.name=조밀한 자작나무 서랍 1x2
+tile.storagedrawers.halfDrawers2.jungle.name=조밀한 정글나무 서랍 1x2
+tile.storagedrawers.halfDrawers2.acacia.name=조밀한 아카시아 서랍 1x2
+tile.storagedrawers.halfDrawers2.big_oak.name=조밀한 짙은 참나무 참나무 서랍 1x2
 
-tile.halfDrawers4.oak.name=조밀한 참나무 서랍 2x2
-tile.halfDrawers4.spruce.name=조밀한 가문비나무 서랍 2x2
-tile.halfDrawers4.birch.name=조밀한 자작나무 서랍 2x2
-tile.halfDrawers4.jungle.name=조밀한 정글나무 서랍 2x2
-tile.halfDrawers4.acacia.name=조밀한 아카시아 서랍 2x2
-tile.halfDrawers4.big_oak.name=조밀한 짙은 참나무 참나무 서랍 2x2
+tile.storagedrawers.halfDrawers4.oak.name=조밀한 참나무 서랍 2x2
+tile.storagedrawers.halfDrawers4.spruce.name=조밀한 가문비나무 서랍 2x2
+tile.storagedrawers.halfDrawers4.birch.name=조밀한 자작나무 서랍 2x2
+tile.storagedrawers.halfDrawers4.jungle.name=조밀한 정글나무 서랍 2x2
+tile.storagedrawers.halfDrawers4.acacia.name=조밀한 아카시아 서랍 2x2
+tile.storagedrawers.halfDrawers4.big_oak.name=조밀한 짙은 참나무 참나무 서랍 2x2
 
-tile.compDrawers.name=압축 서랍
+tile.storagedrawers.compDrawers.name=압축 서랍
 
 storagedrawers.drawers.description=서랍당 %d 스택을 보유 가능합니다.
 storagedrawers.upgrade.description=기준보다 %d배 더 많은 적제량

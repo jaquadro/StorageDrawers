@@ -48,41 +48,41 @@ item.storagedrawers.tape.name=Ruban adhésif d'emballage
 item.storagedrawers.tape.description=Emballe les tiroirs afin de pouvoir les déplacer avec leur contenu
 
 # Blocks
-tile.basicDrawers.fulldrawers1.name=Tiroir
-tile.basicDrawers.fulldrawers2.name=Tiroir 1x2
-tile.basicDrawers.fulldrawers4.name=Tiroir 2x2
-tile.basicDrawers.halfdrawers2.name=Tiroir étroit 1x2
-tile.basicDrawers.halfdrawers4.name=Tiroir étroit 2x2
+tile.storagedrawers.basicDrawers.fulldrawers1.name=Tiroir
+tile.storagedrawers.basicDrawers.fulldrawers2.name=Tiroir 1x2
+tile.storagedrawers.basicDrawers.fulldrawers4.name=Tiroir 2x2
+tile.storagedrawers.basicDrawers.halfdrawers2.name=Tiroir étroit 1x2
+tile.storagedrawers.basicDrawers.halfdrawers4.name=Tiroir étroit 2x2
 
-tile.customDrawers.fulldrawers1.name=Ebauche de tiroir à moulures
-tile.customDrawers.fulldrawers2.name=Ebauche de tiroir 1x2 à moulures
-tile.customDrawers.fulldrawers4.name=Ebauche de tiroir 2x2 à moulures
-tile.customDrawers.halfdrawers2.name=Ebauche de tiroir étroit 1x2 à moulures
-tile.customDrawers.halfdrawers4.name=Ebauche de tiroir étroit 2x2 à moulures
+tile.storagedrawers.customDrawers.fulldrawers1.name=Ebauche de tiroir à moulures
+tile.storagedrawers.customDrawers.fulldrawers2.name=Ebauche de tiroir 1x2 à moulures
+tile.storagedrawers.customDrawers.fulldrawers4.name=Ebauche de tiroir 2x2 à moulures
+tile.storagedrawers.customDrawers.halfdrawers2.name=Ebauche de tiroir étroit 1x2 à moulures
+tile.storagedrawers.customDrawers.halfdrawers4.name=Ebauche de tiroir étroit 2x2 à moulures
 
-tile.fullCustom1.name=Ebauche de tiroir à moulures
-tile.fullCustom2.name=Ebauche de tiroir 1x2 à moulures
-tile.fullCustom4.name=Ebauche de tiroir 2x2 à moulures
-tile.halfCustom2.name=Ebauche de tiroir étroit 1x2 à moulures
-tile.halfCustom4.name=Ebauche de tiroir étroit 2x2 à moulures
-tile.customTrim.name=Ebauche de bloc à moulures
+tile.storagedrawers.fullCustom1.name=Ebauche de tiroir à moulures
+tile.storagedrawers.fullCustom2.name=Ebauche de tiroir 1x2 à moulures
+tile.storagedrawers.fullCustom4.name=Ebauche de tiroir 2x2 à moulures
+tile.storagedrawers.halfCustom2.name=Ebauche de tiroir étroit 1x2 à moulures
+tile.storagedrawers.halfCustom4.name=Ebauche de tiroir étroit 2x2 à moulures
+tile.storagedrawers.customTrim.name=Ebauche de bloc à moulures
 
-tile.compDrawers.name=Tiroir de compactage
-tile.controller.name=Contrôleur de tiroirs
-tile.controllerSlave.name=Esclave du contrôleur
-tile.framingTable.name=Table de fabrication de tiroirs
+tile.storagedrawers.compDrawers.name=Tiroir de compactage
+tile.storagedrawers.controller.name=Contrôleur de tiroirs
+tile.storagedrawers.controllerSlave.name=Esclave du contrôleur
+tile.storagedrawers.framingTable.name=Table de fabrication de tiroirs
 
-tile.trim.oak.name=Bloc style tiroir en chêne
-tile.trim.spruce.name=Bloc style tiroir en sapin
-tile.trim.birch.name=Bloc style tiroir en bouleau
-tile.trim.jungle.name=Bloc style tiroir en acajou
-tile.trim.acacia.name=Bloc style tiroir en acacia
-tile.trim.big_oak.name=Bloc style tiroir en chêne noir
+tile.storagedrawers.trim.oak.name=Bloc style tiroir en chêne
+tile.storagedrawers.trim.spruce.name=Bloc style tiroir en sapin
+tile.storagedrawers.trim.birch.name=Bloc style tiroir en bouleau
+tile.storagedrawers.trim.jungle.name=Bloc style tiroir en acajou
+tile.storagedrawers.trim.acacia.name=Bloc style tiroir en acacia
+tile.storagedrawers.trim.big_oak.name=Bloc style tiroir en chêne noir
 
-tile.keyButton.drawer.name=Bouton clé de tiroir
-tile.keyButton.concealment.name=Bouton clé de Dissimulation
-tile.keyButton.personal.name=Bouton clé Personnelle
-tile.keyButton.quantify.name=Bouton clé de Quantification
+tile.storagedrawers.keyButton.drawer.name=Bouton clé de tiroir
+tile.storagedrawers.keyButton.concealment.name=Bouton clé de Dissimulation
+tile.storagedrawers.keyButton.personal.name=Bouton clé Personnelle
+tile.storagedrawers.keyButton.quantify.name=Bouton clé de Quantification
 
 storagedrawers.drawers.description=Contient %d piles par tiroir
 storagedrawers.drawers.sealed=Contenu scellé

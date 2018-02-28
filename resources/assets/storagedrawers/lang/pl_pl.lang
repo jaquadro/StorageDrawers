@@ -17,35 +17,35 @@ item.storagedrawers.upgradeLock.name=Ulepszenie blokady
 item.storagedrawers.upgradeLock.description=Zatrzymuje przypisany przedmiot gdy puste
 
 # Blocks
-tile.fullDrawers2.oak.name=Dębowe szuflady 1x2
-tile.fullDrawers2.spruce.name=Świerkowe szuflady 1x2
-tile.fullDrawers2.birch.name=Brzozowe szuflady 1x2
-tile.fullDrawers2.jungle.name=Dżunglowe szuflady 1x2
-tile.fullDrawers2.acacia.name=Akacjowe szuflady 1x2
-tile.fullDrawers2.big_oak.name=Czarnodębowe szuflady 1x2
+tile.storagedrawers.fullDrawers2.oak.name=Dębowe szuflady 1x2
+tile.storagedrawers.fullDrawers2.spruce.name=Świerkowe szuflady 1x2
+tile.storagedrawers.fullDrawers2.birch.name=Brzozowe szuflady 1x2
+tile.storagedrawers.fullDrawers2.jungle.name=Dżunglowe szuflady 1x2
+tile.storagedrawers.fullDrawers2.acacia.name=Akacjowe szuflady 1x2
+tile.storagedrawers.fullDrawers2.big_oak.name=Czarnodębowe szuflady 1x2
 
-tile.fullDrawers4.oak.name=Dębowe szuflady 2x2
-tile.fullDrawers4.spruce.name=Świerkowe szuflady 2x2
-tile.fullDrawers4.birch.name=Brzozowe szuflady 2x2
-tile.fullDrawers4.jungle.name=Dżunglowe szuflady 2x2
-tile.fullDrawers4.acacia.name=Akacjowe szuflady 2x2
-tile.fullDrawers4.big_oak.name=Czarnodębowe szuflady 2x2
+tile.storagedrawers.fullDrawers4.oak.name=Dębowe szuflady 2x2
+tile.storagedrawers.fullDrawers4.spruce.name=Świerkowe szuflady 2x2
+tile.storagedrawers.fullDrawers4.birch.name=Brzozowe szuflady 2x2
+tile.storagedrawers.fullDrawers4.jungle.name=Dżunglowe szuflady 2x2
+tile.storagedrawers.fullDrawers4.acacia.name=Akacjowe szuflady 2x2
+tile.storagedrawers.fullDrawers4.big_oak.name=Czarnodębowe szuflady 2x2
 
-tile.halfDrawers2.oak.name=Kompaktowe dębowe szuflady 1x2
-tile.halfDrawers2.spruce.name=Kompaktowe świerkowe szuflady 1x2
-tile.halfDrawers2.birch.name=Kompaktowe brzozowe szuflady 1x2
-tile.halfDrawers2.jungle.name=Kompaktowe dżunglowe szuflady 1x2
-tile.halfDrawers2.acacia.name=Kompaktowe akacjowe szuflady 1x2
-tile.halfDrawers2.big_oak.name=Kompaktowe czarnodębowe szuflady 1x2
+tile.storagedrawers.halfDrawers2.oak.name=Kompaktowe dębowe szuflady 1x2
+tile.storagedrawers.halfDrawers2.spruce.name=Kompaktowe świerkowe szuflady 1x2
+tile.storagedrawers.halfDrawers2.birch.name=Kompaktowe brzozowe szuflady 1x2
+tile.storagedrawers.halfDrawers2.jungle.name=Kompaktowe dżunglowe szuflady 1x2
+tile.storagedrawers.halfDrawers2.acacia.name=Kompaktowe akacjowe szuflady 1x2
+tile.storagedrawers.halfDrawers2.big_oak.name=Kompaktowe czarnodębowe szuflady 1x2
 
-tile.halfDrawers4.oak.name=Kompaktowe dębowe szuflady 2x2
-tile.halfDrawers4.spruce.name=Kompaktowe świerkowe szuflady 2x2
-tile.halfDrawers4.birch.name=Kompaktowe brzozowe szuflady 2x2
-tile.halfDrawers4.jungle.name=Kompaktowe dżunglowe szuflady 2x2
-tile.halfDrawers4.acacia.name=Kompaktowe akacjowe szuflady 2x2
-tile.halfDrawers4.big_oak.name=Kompaktowe czarnodębowe szuflady 2x2
+tile.storagedrawers.halfDrawers4.oak.name=Kompaktowe dębowe szuflady 2x2
+tile.storagedrawers.halfDrawers4.spruce.name=Kompaktowe świerkowe szuflady 2x2
+tile.storagedrawers.halfDrawers4.birch.name=Kompaktowe brzozowe szuflady 2x2
+tile.storagedrawers.halfDrawers4.jungle.name=Kompaktowe dżunglowe szuflady 2x2
+tile.storagedrawers.halfDrawers4.acacia.name=Kompaktowe akacjowe szuflady 2x2
+tile.storagedrawers.halfDrawers4.big_oak.name=Kompaktowe czarnodębowe szuflady 2x2
 
-tile.compDrawers.name=Kompaktująca szuflada
+tile.storagedrawers.compDrawers.name=Kompaktująca szuflada
 
 storagedrawers.drawers.description=Trzyma %d stowów na szufladę
 storagedrawers.upgrade.description=Zwiększa skład do %d*bazowa wartość
