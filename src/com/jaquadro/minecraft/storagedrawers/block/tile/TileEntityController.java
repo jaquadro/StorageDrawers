@@ -513,6 +513,9 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
             if (depth > range)
                 continue;
 
+            if (!getWorld().isBlockLoaded(coord, false))
+                continue;
+
             Block block = getWorld().getBlockState(coord).getBlock();
             if (!(block instanceof INetworked))
                 continue;
