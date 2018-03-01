@@ -725,11 +725,12 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
                 if (simulate && checkedSlots.contains(slot))
                     continue;
 
-                if (drawer.isEmpty())
+                boolean empty = drawer.isEmpty();
+                if (empty && !simulate)
                     drawer = drawer.setStoredItem(stack);
 
                 amount = (simulate)
-                    ? Math.max(amount - drawer.getAcceptingRemainingCapacity(), 0)
+                    ? Math.max(amount - (empty ? drawer.getAcceptingMaxCapacity(stack) : drawer.getAcceptingRemainingCapacity()), 0)
                     : drawer.adjustStoredItemCount(amount);
 
                 if (amount == 0)
