@@ -28,6 +28,5 @@ public class UpgradeItemRecipeHandler extends ShapedRecipeHandler
                 sticks, sticks, sticks
             }, result));
         }
-        super.loadCraftingRecipes(result);
     }
 }
