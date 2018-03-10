@@ -2,11 +2,15 @@ package com.jaquadro.minecraft.storagedrawers;
 
 import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
+import com.jaquadro.minecraft.storagedrawers.core.handlers.EventHandler;
 import com.jaquadro.minecraft.storagedrawers.core.handlers.GuiHandler;
 import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.BoolConfigUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityRegistry;
+
+import net.minecraft.item.Item;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -23,6 +27,11 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = StorageDrawers.MOD_ID, name = StorageDrawers.MOD_NAME, version = StorageDrawers.MOD_VERSION,
     dependencies = "required-after:Forge@[12.17.0.1908,);required-after:Chameleon;after:waila;",
@@ -36,6 +45,8 @@ public class StorageDrawers
     public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.";
 
     public static final Api api = new Api();
+    
+    public static Logger logger;
 
     public static final ModBlocks blocks = new ModBlocks();
     public static final ModItems items = new ModItems();
@@ -45,6 +56,8 @@ public class StorageDrawers
     public static ConfigManager config;
     public static CompTierRegistry compRegistry;
     public static OreDictRegistry oreDictRegistry;
+    public static HashMap<Item , Integer> itemTracer = new HashMap<Item, Integer>();
+    public static List<BlockPos> blocklock = new LinkedList<BlockPos>();
 
     public static RecipeHandlerRegistry recipeHandlerRegistry;
     public static RenderRegistry renderRegistry;
@@ -61,7 +74,9 @@ public class StorageDrawers
     @Mod.EventHandler
     public void preInit (FMLPreInitializationEvent event) {
         config = new ConfigManager(new File(event.getModConfigurationDirectory(), MOD_ID + ".cfg"));
-
+        
+        logger = event.getModLog();
+        
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
         network.registerMessage(BoolConfigUpdateMessage.Handler.class, BoolConfigUpdateMessage.class, 0, Side.SERVER);
 
@@ -93,6 +108,7 @@ public class StorageDrawers
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
         MinecraftForge.EVENT_BUS.register(proxy);
         MinecraftForge.EVENT_BUS.register(instance);
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
         //MinecraftForge.EVENT_BUS.register(DrawerModelBakeEventHandler.instance);
 
         LocalIntegrationRegistry.instance().init();

@@ -6,6 +6,8 @@ import com.jaquadro.minecraft.storagedrawers.api.config.IAddonConfig;
 import com.jaquadro.minecraft.storagedrawers.api.config.IBlockConfig;
 import com.jaquadro.minecraft.storagedrawers.api.config.IUserConfig;
 import com.jaquadro.minecraft.storagedrawers.api.pack.BlockConfiguration;
+
+import net.minecraft.item.Item;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 
@@ -85,6 +87,7 @@ public class ConfigManager
         public String[] compRules;
         public String[] oreWhitelist;
         public String[] oreBlacklist;
+        public String[] itemTracer;
 
         public int level2Mult;
         public int level3Mult;
@@ -186,7 +189,9 @@ public class ConfigManager
     public final ConfigSection sectionBlocksController = new ConfigSection(blockSections, sectionBlocks, "controller", "blocks.controller");
     public final ConfigSection sectionBlocksTrim = new ConfigSection(blockSections, sectionBlocks, "trim", "blocks.trim");
     public final ConfigSection sectionBlocksSlave = new ConfigSection(blockSections, sectionBlocks, "controllerslave", "blocks.controllerSlave");
-
+    public final ConfigSection sectionBlockTracer = new ConfigSection(blockSections, sectionBlocks, "tracer", "blocks.tracer");
+    
+    
     public Map<String, ConfigSection> blockSectionsMap = new HashMap<String, ConfigSection>();
 
     public IAddonConfig addonConfig = new AddonConfig();
@@ -260,6 +265,20 @@ public class ConfigManager
                 StorageDrawers.oreDictRegistry.addWhitelist(item);
             }
         }
+        
+        cache.itemTracer = config.getStringList("itemTracer", sectionRegistries.getQualifiedName(), new String[] { "minecraft:clay;1","minecraft:log;1" }, "Items should be in form domain:item;quantity or domain:item:meta;quantity.", null, LANG_PREFIX + "registries.itemTracer");
+        if (StorageDrawers.itemTracer != null) {
+            for (String rule : cache.itemTracer)
+            {
+            	System.out.println(rule);
+            	String[] items = rule.split(";");
+            	System.out.println("---------------------------" + items[0] + "___" + items[1]);
+            	int quantity = Integer.parseInt(items[1]);
+            	Item item =  Item.getByNameOrId(items[0]);
+            	if (item != null && quantity != 0)
+            		StorageDrawers.itemTracer.put(item, quantity);
+            }
+        }
 
         cache.registerExtraCompRules = config.get(sectionRegistries.getQualifiedName(), "registerExtraCompactingRules", true).setLanguageKey(LANG_PREFIX + "registries.registerExtraCompRules").setRequiresWorldRestart(true).getBoolean();
 
@@ -294,7 +313,7 @@ public class ConfigManager
         config.get(sectionBlocksTrim.getQualifiedName(), "recipeOutput", 4).setLanguageKey(LANG_PREFIX + "prop.recipeOutput").setRequiresMcRestart(true);
 
         config.get(sectionBlocksSlave.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
-
+        
         cache.level2Mult = config.get(sectionUpgrades.getQualifiedName(), "level2Mult", 2).setLanguageKey(LANG_PREFIX + "upgrades.level2Mult").setRequiresWorldRestart(true).getInt();
         cache.level3Mult = config.get(sectionUpgrades.getQualifiedName(), "level3Mult", 3).setLanguageKey(LANG_PREFIX + "upgrades.level3Mult").setRequiresWorldRestart(true).getInt();
         cache.level4Mult = config.get(sectionUpgrades.getQualifiedName(), "level4Mult", 5).setLanguageKey(LANG_PREFIX + "upgrades.level4Mult").setRequiresWorldRestart(true).getInt();

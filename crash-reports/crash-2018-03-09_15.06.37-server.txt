@@ -1,0 +1,112 @@
+---- Minecraft Crash Report ----
+// You're mean.
+
+Time: 09/03/18 15:06
+Description: Ticking entity
+
+java.util.ConcurrentModificationException
+	at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:901)
+	at java.util.ArrayList$Itr.next(ArrayList.java:851)
+	at com.jaquadro.minecraft.storagedrawers.core.handlers.EventHandler.onExplode(EventHandler.java:90)
+	at net.minecraftforge.fml.common.eventhandler.ASMEventHandler_14_EventHandler_onExplode_ExplosionEvent.invoke(.dynamic)
+	at net.minecraftforge.fml.common.eventhandler.ASMEventHandler.invoke(ASMEventHandler.java:90)
+	at net.minecraftforge.fml.common.eventhandler.EventBus.post(EventBus.java:185)
+	at net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(ForgeEventFactory.java:482)
+	at net.minecraft.world.Explosion.doExplosionA(Explosion.java:140)
+	at net.minecraft.world.WorldServer.newExplosion(WorldServer.java:1247)
+	at net.minecraft.world.World.createExplosion(World.java:2481)
+	at net.minecraft.entity.item.EntityTNTPrimed.explode(EntityTNTPrimed.java:111)
+	at net.minecraft.entity.item.EntityTNTPrimed.onUpdate(EntityTNTPrimed.java:98)
+	at net.minecraft.world.World.updateEntityWithOptionalForce(World.java:2118)
+	at net.minecraft.world.WorldServer.updateEntityWithOptionalForce(WorldServer.java:875)
+	at net.minecraft.world.World.updateEntity(World.java:2085)
+	at net.minecraft.world.World.updateEntities(World.java:1898)
+	at net.minecraft.world.WorldServer.updateEntities(WorldServer.java:647)
+	at net.minecraft.server.MinecraftServer.updateTimeLightAndEntities(MinecraftServer.java:784)
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:688)
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:156)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:537)
+	at java.lang.Thread.run(Thread.java:748)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Server thread
+Stacktrace:
+	at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:901)
+	at java.util.ArrayList$Itr.next(ArrayList.java:851)
+	at com.jaquadro.minecraft.storagedrawers.core.handlers.EventHandler.onExplode(EventHandler.java:90)
+	at net.minecraftforge.fml.common.eventhandler.ASMEventHandler_14_EventHandler_onExplode_ExplosionEvent.invoke(.dynamic)
+	at net.minecraftforge.fml.common.eventhandler.ASMEventHandler.invoke(ASMEventHandler.java:90)
+	at net.minecraftforge.fml.common.eventhandler.EventBus.post(EventBus.java:185)
+	at net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(ForgeEventFactory.java:482)
+	at net.minecraft.world.Explosion.doExplosionA(Explosion.java:140)
+	at net.minecraft.world.WorldServer.newExplosion(WorldServer.java:1247)
+	at net.minecraft.world.World.createExplosion(World.java:2481)
+	at net.minecraft.entity.item.EntityTNTPrimed.explode(EntityTNTPrimed.java:111)
+	at net.minecraft.entity.item.EntityTNTPrimed.onUpdate(EntityTNTPrimed.java:98)
+	at net.minecraft.world.World.updateEntityWithOptionalForce(World.java:2118)
+	at net.minecraft.world.WorldServer.updateEntityWithOptionalForce(WorldServer.java:875)
+	at net.minecraft.world.World.updateEntity(World.java:2085)
+
+-- Entity being ticked --
+Details:
+	Entity Type: PrimedTnt (net.minecraft.entity.item.EntityTNTPrimed)
+	Entity ID: 246
+	Entity Name: Block of TNT
+	Entity's Exact location: 261,69, 64,00, 117,51
+	Entity's Block location: World: (261,64,117), Chunk: (at 5,4,5 in 16,7; contains blocks 256,0,112 to 271,255,127), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,0,0 to 511,255,511)
+	Entity's Momentum: 0,00, -0,00, 0,00
+	Entity's Passengers: []
+	Entity's Vehicle: ~~ERROR~~ NullPointerException: null
+Stacktrace:
+	at net.minecraft.world.World.updateEntities(World.java:1898)
+	at net.minecraft.world.WorldServer.updateEntities(WorldServer.java:647)
+
+-- Affected level --
+Details:
+	Level name: New World
+	All players: 1 total; [EntityPlayerMP['Player778'/152, l='New World', x=256,79, y=63,00, z=117,25]]
+	Chunk stats: ServerChunkCache: 625 Drop: 0
+	Level seed: 8321940638964335035
+	Level generator: ID 00 - default, ver 1. Features enabled: true
+	Level generator options: 
+	Level spawn location: World: (262,64,126), Chunk: (at 6,4,14 in 16,7; contains blocks 256,0,112 to 271,255,127), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,0,0 to 511,255,511)
+	Level time: 12863 game time, 12863 day time
+	Level dimension: 0
+	Level storage version: 0x04ABD - Anvil
+	Level weather: Rain time: 11670 (now: false), thunder time: 58621 (now: false)
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: true
+Stacktrace:
+	at net.minecraft.server.MinecraftServer.updateTimeLightAndEntities(MinecraftServer.java:784)
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:688)
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:156)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:537)
+	at java.lang.Thread.run(Thread.java:748)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.10.2
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_131, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode), Oracle Corporation
+	Memory: 319540824 bytes (304 MB) / 938999808 bytes (895 MB) up to 1883242496 bytes (1796 MB)
+	JVM Flags: 0 total; 
+	IntCache: cache: 0, tcache: 0, allocated: 13, tallocated: 95
+	FML: MCP 9.32 Powered by Forge 12.18.3.2221 7 mods loaded, 7 mods active
+	States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed 'H' = Pre-initialized 'I' = Initialized 'J' = Post-initialized 'A' = Available 'D' = Disabled 'E' = Errored
+	UCHIJAAAA	mcp{9.19} [Minecraft Coder Pack] (minecraft.jar) 
+	UCHIJAAAA	FML{8.0.99.99} [Forge Mod Loader] (forgeSrc-1.10.2-12.18.3.2221.jar) 
+	UCHIJAAAA	Forge{12.18.3.2221} [Minecraft Forge] (forgeSrc-1.10.2-12.18.3.2221.jar) 
+	UCHIJAAAA	Chameleon{@VERSION@} [Chameleon] (bin) 
+	UCHIJAAAA	StorageDrawers{@VERSION@} [Storage Drawers] (bin) 
+	UCHIJAAAA	JEI{3.13.3.382} [Just Enough Items] (jei_1.10.2-3.13.3.382.jar) 
+	UCHIJAAAA	Waila{1.8.17-B31_1.10.2} [Waila] (Hwyla-1.8.17-B31_1.10.2.jar) 
+	Loaded coremods (and transformers): 
+	GL info: ~~ERROR~~ RuntimeException: No OpenGL context found in the current thread.
+	Profiler Position: N/A (disabled)
+	Player Count: 1 / 8; [EntityPlayerMP['Player778'/152, l='New World', x=256,79, y=63,00, z=117,25]]
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'fml,forge'
