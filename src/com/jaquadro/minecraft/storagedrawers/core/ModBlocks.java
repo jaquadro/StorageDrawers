@@ -208,11 +208,15 @@ public class ModBlocks
 
             ModelRegistry modelRegistry = Chameleon.instance.modelRegistry;
 
-            modelRegistry.registerModel(new BasicDrawerModel.Register());
-            modelRegistry.registerModel(new CompDrawerModel.Register());
-            modelRegistry.registerModel(new FramingTableModel.Register());
-            modelRegistry.registerModel(new CustomDrawerModel.Register());
-            modelRegistry.registerModel(new CustomTrimModel.Register());
+            if (basicDrawers != null)
+                modelRegistry.registerModel(new BasicDrawerModel.Register());
+            if (compDrawers != null)
+                modelRegistry.registerModel(new CompDrawerModel.Register());
+            if (customDrawers != null) {
+                modelRegistry.registerModel(new FramingTableModel.Register());
+                modelRegistry.registerModel(new CustomDrawerModel.Register());
+                modelRegistry.registerModel(new CustomTrimModel.Register());
+            }
 
             modelRegistry.registerItemVariants(trim);
             modelRegistry.registerItemVariants(controller);
