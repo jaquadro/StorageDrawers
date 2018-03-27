@@ -488,6 +488,35 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 : new ItemStackMatcher(protoStack[slot]);
         }
 
+        private void normalizeGroup () {
+            for (int limit = slotCount - 1; limit > 0; limit--) {
+                for (int i = 0; i < limit; i++) {
+                    if (protoStack[i].isEmpty()) {
+                        protoStack[i] = protoStack[i + 1];
+                        matchers[i] = matchers[i + 1];
+                        convRate[i] = convRate[i + 1];
+
+                        protoStack[i + 1] = ItemStack.EMPTY;
+                        matchers[i + 1] = ItemStackMatcher.EMPTY;
+                        convRate[i + 1] = 0;
+                    }
+                }
+            }
+
+            int minConvRate = Integer.MAX_VALUE;
+            for (int i = 0; i < slotCount; i++) {
+                if (convRate[i] > 0)
+                    minConvRate = Math.min(minConvRate, convRate[i]);
+            }
+
+            if (minConvRate > 1) {
+                for (int i = 0; i < slotCount; i++)
+                    convRate[i] /= minConvRate;
+
+                pooledCount /= minConvRate;
+            }
+        }
+
         @Override
         public NBTTagCompound serializeNBT () {
             NBTTagList itemList = new NBTTagList();
@@ -535,6 +564,9 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                     ? new ItemStackOreMatcher(protoStack[slot])
                     : new ItemStackMatcher(protoStack[slot]);
             }
+
+            // TODO: We should only need to normalize if we had blank items with a conv rate, but this fixes blocks that were saved broken
+            normalizeGroup();
         }
 
         public void deserializeLegacyNBT (NBTTagCompound tag) {
