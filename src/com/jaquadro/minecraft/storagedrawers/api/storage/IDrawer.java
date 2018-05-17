@@ -68,7 +68,7 @@ public interface IDrawer
             int stored = getStoredItemCount();
             int destroy = Math.min(Math.abs(amount), getStoredItemCount());
             setStoredItemCount(stored - destroy);
-            return amount + destroy;
+            return Math.abs(amount + destroy);
         } else {
             return 0;
         }
