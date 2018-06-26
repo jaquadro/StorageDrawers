@@ -21,12 +21,16 @@ public class DrawerInventoryHelper
 
             while (drawer.getStoredItemCount() > 0) {
                 ItemStack stack = drawer.getStoredItemPrototype().copy();
-                stack.setCount(drawer.getStoredItemCount());
+                int storedCount = drawer.getStoredItemCount();
+                int stackLimit = stack.getMaxStackSize();
+                int stackSize = Math.min(storedCount, stackLimit);
+
+                stack.setCount(stackSize);
                 if (stack.isEmpty())
                     break;
 
                 spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-                drawer.setStoredItemCount(0);
+                drawer.adjustStoredItemCount(-stackSize);
             }
         }
     }
