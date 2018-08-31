@@ -4,6 +4,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.capabilities.CapabilityDispatcher;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -123,10 +124,10 @@ public class ItemStackHelper
 
     static {
         try {
-            itemField = ItemStack.class.getDeclaredField("item");
-            itemDamageField = ItemStack.class.getDeclaredField("itemDamage");
-            stackTagCompoundField = ItemStack.class.getDeclaredField("stackTagCompound");
-            capabilitiesField = ItemStack.class.getDeclaredField("capabilities");
+            itemField = ReflectionHelper.findField(ItemStack.class,  "item", "field_151002_e");
+            itemDamageField = ReflectionHelper.findField(ItemStack.class,"itemDamage", "field_77991_e");
+            stackTagCompoundField = ReflectionHelper.findField(ItemStack.class,"stackTagCompound", "field_77990_d");
+            capabilitiesField = ReflectionHelper.findField(ItemStack.class,"capabilities");
 
             itemField.setAccessible(true);
             itemDamageField.setAccessible(true);
@@ -134,7 +135,7 @@ public class ItemStackHelper
             capabilitiesField.setAccessible(true);
 
             initialized = true;
-        } catch (NoSuchFieldException e) {
+        } catch (ReflectionHelper.UnableToFindFieldException e) {
             initialized = false;
         }
     }
