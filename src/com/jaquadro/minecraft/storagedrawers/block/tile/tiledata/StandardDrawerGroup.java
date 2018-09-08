@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
 import com.jaquadro.minecraft.chameleon.block.tiledata.TileDataShim;
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
@@ -296,7 +297,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
                 return Math.abs(amount);
 
             if (amount > 0) {
-                if (attrs.isUnlimitedVending())
+            	if (attrs.isUnlimitedVending())
                     return 0;
 
                 int originalCount = count;
@@ -311,6 +312,9 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
                 return amount - (count - originalCount);
             }
             else {
+            	if (attrs.isUnlimitedVending() && StorageDrawers.config.cache.enableVendorSidedOutput)
+                    return 0;
+
                 int originalCount = count;
                 setStoredItemCount(originalCount + amount, notify);
 
