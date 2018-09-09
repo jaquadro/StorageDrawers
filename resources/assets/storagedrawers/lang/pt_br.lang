@@ -1,0 +1,217 @@
+# Localizated to Portuguese (Brazil) by SAMUELPV
+
+#PARSE_ESCAPES
+
+itemGroup.storagedrawers=Storage Drawers
+itemGroup.storagedrawersSorting=Storage Drawers - Classificação
+
+storagedrawers.container.drawers=Gavetas
+storagedrawers.container.compDrawers=Gavetas de Compactação
+storagedrawers.container.upgrades=Melhorias
+storagedrawers.container.drawer_controller=Controlador de Gavetas
+storagedrawers.container.unboundSlave=Extensor Desvinculado
+storagedrawers.container.framingTable=Mesa de Emolduramento
+
+storagedrawers.msg.maxUpgrades=Esta gaveta já está com o máximo de melhorias.
+storagedrawers.msg.cannotAddUpgrade=Esta melhoria não pode ser instalada nesta gaveta.
+
+# Items
+item.storagedrawers.upgradeTemplate.name=Modelo de Melhoria
+item.storagedrawers.upgradeStorage.obsidian.name=Melhoria de Armazenamento (I)
+item.storagedrawers.upgradeStorage.iron.name=Melhoria de Armazenamento (II)
+item.storagedrawers.upgradeStorage.gold.name=Melhoria de Armazenamento (III)
+item.storagedrawers.upgradeStorage.diamond.name=Melhoria de Armazenamento (IV)
+item.storagedrawers.upgradeStorage.emerald.name=Melhoria de Armazenamento (V)
+item.storagedrawers.upgradeOneStack.name=Downgrade de Armazenamento
+item.storagedrawers.upgradeOneStack.description=Reduz o armazenamento base em um único stack
+item.storagedrawers.upgradeStatus.level1.name=Melhoria de Status (I)
+item.storagedrawers.upgradeStatus.level1.description=Mostra quando a gaveta estiver completamente cheia
+item.storagedrawers.upgradeStatus.level2.name=Melhoria de Status (II)
+item.storagedrawers.upgradeStatus.level2.description=Mostra o nível de armazenamento
+item.storagedrawers.upgradeVoid.name=Melhoria de Void
+item.storagedrawers.upgradeVoid.description=Destrói o excesso de itens
+item.storagedrawers.upgradeConversion.name=Melhoria de Conversão
+item.storagedrawers.upgradeConversion.description=Converte automaticamente itens compatíveis
+item.storagedrawers.upgradeCreative.store.name=Melhoria de Armazenamento (Criativo)
+item.storagedrawers.upgradeCreative.store.description=Armazenamento quase infinito
+item.storagedrawers.upgradeCreative.vend.name=Melhoria de Venda (Criativo)
+item.storagedrawers.upgradeCreative.vend.description=Retirada de itens infinito
+item.storagedrawers.upgradeRedstone.combined.name=Melhoria de Redstone
+item.storagedrawers.upgradeRedstone.combined.description=Emite sinal se o armazenamento estiver completo.
+item.storagedrawers.upgradeRedstone.max.name=Melhoria de Redstone Máx.
+item.storagedrawers.upgradeRedstone.max.description=Emite sinal se a maioria dos slots estiverem cheios.
+item.storagedrawers.upgradeRedstone.min.name=Melhoria de Redstone Mín.
+item.storagedrawers.upgradeRedstone.min.description=Emite sinal se pelo menos um dos slots estiver cheio.
+item.storagedrawers.drawerKey.name=Chave de Gaveta
+item.storagedrawers.drawerKey.description=Tranca e destranca gavetas. \nSegure na mão secundária para trancar gavetas recém colocadas
+item.storagedrawers.shroudKey.name=Chave de Ocultação
+item.storagedrawers.shroudKey.description=Mostra ou oculta ícones dos itens
+item.storagedrawers.quantifyKey.name=Chave de Quantidade
+item.storagedrawers.quantifyKey.description=Mostra ou oculta o texto de quantidade armazenada
+item.storagedrawers.personalKey.name=Chave Pessoal
+item.storagedrawers.personalKey.description=Protege o acesso de outros jogadores
+item.storagedrawers.tape.name=Fita Adesiva
+item.storagedrawers.tape.description=Lacra gavetas para transportar
+
+# Blocks
+tile.storagedrawers.basicDrawers.fulldrawers1.name=Gaveta Básica
+tile.storagedrawers.basicDrawers.fulldrawers2.name=Gavetas Básicas 1x2
+tile.storagedrawers.basicDrawers.fulldrawers4.name=Gavetas Básicas 2x2
+tile.storagedrawers.basicDrawers.halfdrawers2.name=Gavetas Compactas 1x2
+tile.storagedrawers.basicDrawers.halfdrawers4.name=Gavetas Compactas 2x2
+
+tile.storagedrawers.customDrawers.fulldrawers1.name=Gaveta Emoldurada
+tile.storagedrawers.customDrawers.fulldrawers2.name=Gavetas Emolduradas 1x2
+tile.storagedrawers.customDrawers.fulldrawers4.name=Gavetas Emolduradas 2x2
+tile.storagedrawers.customDrawers.halfdrawers2.name=Gavetas Emolduradas Compactas 1x2
+tile.storagedrawers.customDrawers.halfdrawers4.name=Gavetas Emolduradas Compactas 2x2
+
+tile.storagedrawers.fullCustom1.name=Gaveta Emoldurada
+tile.storagedrawers.fullCustom2.name=Gavetas Emolduradas 1x2
+tile.storagedrawers.fullCustom4.name=Gavetas Emolduradas 2x2
+tile.storagedrawers.halfCustom2.name=Gavetas Emolduradas 1x2
+tile.storagedrawers.halfCustom4.name=Gavetas Emolduradas 2x2
+tile.storagedrawers.customTrim.name=Decoração Emoldurada
+
+tile.storagedrawers.compDrawers.name=Gavetas de Compactação
+tile.storagedrawers.controller.name=Controlador de Gavetas
+tile.storagedrawers.controllerSlave.name=Extensor de Controlador
+tile.storagedrawers.framingTable.name=Mesa de Emolduramento
+
+tile.storagedrawers.trim.oak.name=Decoração de Carvalho
+tile.storagedrawers.trim.spruce.name=Decoração de Pinheiro
+tile.storagedrawers.trim.birch.name=Decoração de Eucalipto
+tile.storagedrawers.trim.jungle.name=Decoração de Madeira da Selva
+tile.storagedrawers.trim.acacia.name=Decoração de Acácia
+tile.storagedrawers.trim.big_oak.name=Decoração de Carvalho Escuro
+
+tile.storagedrawers.keyButton.drawer.name=Botão de Chave de Gaveta
+tile.storagedrawers.keyButton.concealment.name=Botão de Chave de Ocultação
+tile.storagedrawers.keyButton.personal.name=Botão de Chave Pessoal
+tile.storagedrawers.keyButton.quantify.name=Botão de Chave Quantidade
+
+storagedrawers.drawers.description=Armazena %d stacks por gaveta
+storagedrawers.drawers.sealed=Conteúdo lacrado
+storagedrawers.upgrade.description=Aumenta em %dx o valor de armazenamento
+storagedrawers.controller.description=Interage com um grupo de gavetas conectadas
+storagedrawers.controllerSlave.description=Estende a conexão dos controladores
+
+# Material
+storagedrawers.material=Material: %s
+storagedrawers.material.oak=Carvalho
+storagedrawers.material.spruce=Pinheiro
+storagedrawers.material.birch=Eucalipto
+storagedrawers.material.jungle=Madeira da Selva
+storagedrawers.material.acacia=Acácia
+storagedrawers.material.dark_oak=Carvalho Escuro
+
+# Integration
+storagedrawers.waila.empty=<Vazio>
+storagedrawers.waila.level=Nível de Melhoria: %s
+storagedrawers.waila.drawer=#%s: %s
+storagedrawers.waila.limit=Limite de Stack: %s (x%s)
+storagedrawers.waila.nolimit=Limite de Stack: ∞
+storagedrawers.waila.locked=Trancada
+storagedrawers.waila.void=Void
+storagedrawers.waila.sorting=Classificação
+storagedrawers.waila.protected=Protegida
+storagedrawers.waila.config.displayContents=Conteúdo dos Slots
+storagedrawers.waila.config.displayStackLimit=Limite de Stack
+storagedrawers.waila.config.displayStatus=Status de Melhoria
+
+# Configuration
+storagedrawers.config.title=Configuração de Storage Drawers
+
+storagedrawers.config.general=Configurações Gerais
+storagedrawers.config.general.tooltip=Isso e aquilo.
+
+storagedrawers.config.blocks=Configurações de Blocos
+storagedrawers.config.blocks.tooltip=Configura os blocos de armazenamento individuais.
+
+storagedrawers.config.blocks.fullDrawers1=Gavetas 1x1
+storagedrawers.config.blocks.fullDrawers2=Gavetas 1x2
+storagedrawers.config.blocks.fullDrawers4=Gavetas 2x2
+storagedrawers.config.blocks.halfDrawers2=Gavetas Compactas 1x2
+storagedrawers.config.blocks.halfDrawers4=Gavetas Compactas 2x2
+storagedrawers.config.blocks.compDrawers=Gaveta de Compactação
+storagedrawers.config.blocks.controller=Controlador de Gavetas
+storagedrawers.config.blocks.trim=Decoração
+storagedrawers.config.blocks.controllerSlave=Extensor de Controlador
+
+storagedrawers.config.upgrades=Configurações de Melhorias
+storagedrawers.config.upgrades.tooltip=Configura as melhorias de armazenamento individuais.
+
+storagedrawers.config.upgrades.level2Mult=Multiplicador de Armazenamento (II)
+storagedrawers.config.upgrades.level3Mult=Multiplicador de Armazenamento (III)
+storagedrawers.config.upgrades.level4Mult=Multiplicador de Armazenamento (IV)
+storagedrawers.config.upgrades.level5Mult=Multiplicador de Armazenamento (V)
+storagedrawers.config.upgrades.level6Mult=Multiplicador de Armazenamento (VI)
+
+storagedrawers.config.prop.enableIndicatorUpgrades=Ativar Indicator Upgrades
+storagedrawers.config.prop.enableStorageUpgrades=Ativar Melhoria de Armazenamentos
+storagedrawers.config.prop.enableLockUpgrades=Ativar Trancamento de Gaveta
+storagedrawers.config.prop.enableShroudUpgrades=Ativar Ocultação de Item
+storageDrawers.config.prop.enableQuantifiableUpgrades=Ativar Exibição de Quantidade
+storagedrawers.config.prop.enablePersonalUpgrades=Ativar Proteção de Acesso
+storagedrawers.config.prop.enableVoidUpgrades=Ativar Melhoria de Void
+storagedrawers.config.prop.enableCreativeUpgrades=Ativar Melhoria do Criativo
+storagedrawers.config.prop.enableRedstoneUpgrades=Ativar Melhoria de Redstone
+storagedrawers.config.prop.enableSortingUpgrades=Ativar Melhoria de Classificação
+storagedrawers.config.prop.enableSortingUpgrades.tooltip=Relocalização refinada deve ser carregada.
+storagedrawers.config.prop.renderStorageUpgrades=Render Melhoria de Armazenamentos
+storagedrawers.config.prop.creativeTabVanillaWoods=Madeiras do Vanilla na Aba do Criativo
+storagedrawers.config.prop.creativeTabVanillaWoods.tooltip=Ativa todos os tipos de madeira do vanilla na aba do criativo.
+storagedrawers.config.prop.enabled=Ativado
+storagedrawers.config.prop.enabled.tooltip=Ativa o bloco no jogo.
+storagedrawers.config.prop.baseStorage=Armazenamento Base
+storagedrawers.config.prop.baseStorage.tooltip=Número de stacks armazenados por gaveta.
+storagedrawers.config.prop.recipeOutput=Saída de Receita
+storagedrawers.config.prop.recipeOutput.tooltip=Número de itens de uma fabricação única.
+storagedrawers.config.prop.enableDrawerUI=Ativar Interface de Gaveta
+storagedrawers.config.prop.enableDrawerUI.tooltip=Mostra a quantidade de itens e fornece gerenciamento de melhorias.
+storagedrawers.config.prop.enableSidedInput=Ativar Sided Input
+storagedrawers.config.prop.enableSidedInput.tooltip=Outros blocos podem inserir itens dentro das gavetas.
+storagedrawers.config.prop.enableSidedOutput=Ativar Sided Output
+storagedrawers.config.prop.enableSidedOutput.tooltip=Outros blocos podem extrair itens de dentro das gavetas.
+storagedrawers.config.prop.enableItemConversion=Ativar Conversão de Itens
+storagedrawers.config.prop.enableItemConversion.tooltip=As gavetas convertem automaticamente itens compatíveis com ore dictionary.
+storagedrawers.config.prop.enableFallbackRecipes=Ativar Receitas Alternativas
+storagedrawers.config.prop.enableFallbackRecipes.tooltip=Qualquer tipo de tábua de madeira válida pode fazer gavetas de carvalho.
+storagedrawers.config.prop.invertShift=Inverter Shift
+storagedrawers.config.prop.invertShift.tooltip=Inverte o comportamento de clique e shift+clique.
+storagedrawers.config.prop.enableDebugLogging=Ativar Log de Depuração
+storagedrawers.config.prop.enableDebugLogging.tooltip=Exibe informações extras nos logs.
+storagedrawers.config.prop.enableTape=Ativar Fita Adesiva
+storagedrawers.config.prop.enableTape.tooltip=Para transportar gavetas com o conteúdo delas.
+storagedrawers.config.prop.wailaStackRemainder=Exibição de Quantia no WAILA
+storagedrawers.config.prop.wailaStackRemainder.tooltip=Como os valores dos itens são exibidos pelo WAILA.
+storagedrawers.config.prop.controllerRange=Alcance do Controlador
+storagedrawers.config.prop.controllerRange.tooltip=Alcance para detecção de blocos em grupo.
+storagedrawers.config.prop.enableFramedDrawers=Ativar Gavetas Emolduradas
+storagedrawers.config.prop.enableFramedDrawers.tooltip=Gavetas personalizadas com outros materiais.
+storagedrawers.config.prop.defaultQuantify=Quantidade Visível por Padrão
+storagedrawers.config.prop.defaultQuantify.tooltip=As gavetas mostram a quantidade em números quando colocados.
+
+storagedrawers.config.addons=Addons
+storagedrawers.config.addons.tooltip=Configura as configurações globais dos addons.
+
+storagedrawers.config.addons.showNEI=Mostrar Blocos no NEI
+storagedrawers.config.addons.showCreative=Mostrar Blocos nas Abas do Criativo
+storagedrawers.config.addons.separateTabs=Separar Abas do Criativo
+storagedrawers.config.addons.tooltip=Cada addon usa sua própria aba em vez da aba do Storage Drawers.
+
+storagedrawers.config.integration=Integração
+storagedrawers.config.integration.tooltip=Configura a integração com outros mods.
+
+storagedrawers.config.integration.enableAE2=Ativar Integração com Applied Energistics 2
+storagedrawers.config.integration.enableWaila=Ativar Integração com WAILA
+storagedrawers.config.integration.enableThaumcraft=Ativar Integração com Thaumcraft
+storagedrawers.config.integration.enableMineTweaker=Ativar Integração com MineTweaker
+
+storagedrawers.config.registries=Registros
+storagedrawers.config.registries.tooltip=Configura regras de compactação e substituição do Ore Dictionary.
+
+storagedrawers.config.registries.compRules=Regras de Compactação
+storagedrawers.config.registries.registerExtraCompRules=Registro de Regras de Compactação Extra
+storagedrawers.config.registries.oreWhitelist=Lista de Permissões do Ore Dictionary
+storagedrawers.config.registries.oreBlacklist=Lista Negra do Ore Dictionary
