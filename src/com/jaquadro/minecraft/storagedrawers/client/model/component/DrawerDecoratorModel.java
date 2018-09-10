@@ -22,7 +22,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +33,16 @@ public class DrawerDecoratorModel implements IBakedModel
     public static final ResourceLocation iconClaimLock = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/claim_lock_icon");
     public static final ResourceLocation iconVoid = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/void_icon");
     public static final ResourceLocation iconShroudCover = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/drawers_oak_trim");
+    public static final ResourceLocation iconUpgrades[] = new ResourceLocation[]{
+            new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/upgrade_icon0"),
+            new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/upgrade_icon1"),
+            new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/upgrade_icon2"),
+            new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/upgrade_icon3"),
+            new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/upgrade_icon4"),
+            new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/upgrade_icon5"),
+            new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/upgrade_icon6")
+    };
+
 
     private IBakedModel baseModel;
     private IExtendedBlockState blockState;
@@ -58,7 +67,7 @@ public class DrawerDecoratorModel implements IBakedModel
     }
 
     public static boolean shouldHandleState (DrawerStateModelData stateModel) {
-        return stateModel != null && (stateModel.isShrouded() || stateModel.isVoid() || stateModel.isItemLocked() || stateModel.getOwner() != null);
+        return stateModel != null && (stateModel.isShrouded() || stateModel.isVoid() || stateModel.isItemLocked() || stateModel.isUpgraded() || stateModel.getOwner() != null);
     }
 
     @Override
@@ -76,6 +85,7 @@ public class DrawerDecoratorModel implements IBakedModel
                 buildLockGeometry(renderer);
             if (modelData.isVoid())
                 buildVoidGeometry(renderer);
+            buildUpgradeGeometry(renderer, modelData.getUpgradeLevels());
         }
 
         renderer.stopBaking();
@@ -147,6 +157,26 @@ public class DrawerDecoratorModel implements IBakedModel
         renderer.bakePartialFace(ChamRender.FACE_ZPOS, blockState, icon, 0, 0, 1, 1, false, 1, 1, 1);
         renderer.state.clearRotateTransform();
     }
+
+    private void buildUpgradeGeometry (ChamRender renderer, final int upgradeLevels[]) {
+        double depth = drawer.isHalfDepth() ? .5 : 1;
+
+        renderer.state.setRotateTransform(ChamRender.ZPOS, dir.getIndex());
+
+        for (int i = upgradeLevels.length - 1; i >= 0; i--) {
+            int level = upgradeLevels[i];
+            int h = upgradeLevels.length - 1 - i;
+            if (level == 0) continue;
+            TextureAtlasSprite icon = Chameleon.instance.iconRegistry.getIcon(iconUpgrades[level]);
+
+            renderer.setRenderBounds(1 - .0625, (14 - h)/16., 0, 1, (15 - h)/16., depth + .003);
+            renderer.bakePartialFace(ChamRender.FACE_ZPOS, blockState, icon, 0, 0, 1, 1, false, 1, 1, 1);
+        }
+
+        renderer.state.clearRotateTransform();
+    }
+
+
 
     private void buildShroudGeometry (ChamRender renderer) {
         if (!(blockState.getBlock() instanceof BlockDrawers))

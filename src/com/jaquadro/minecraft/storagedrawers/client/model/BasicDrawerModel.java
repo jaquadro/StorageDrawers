@@ -73,6 +73,8 @@ public final class BasicDrawerModel
             resource.add(DrawerDecoratorModel.iconLock);
             resource.add(DrawerDecoratorModel.iconShroudCover);
             resource.add(DrawerDecoratorModel.iconVoid);
+            resource.addAll(Arrays.asList(DrawerDecoratorModel.iconUpgrades));
+
             resource.add(DrawerSealedModel.iconTapeCover);
             return resource;
         }
