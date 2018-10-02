@@ -1,3 +1,5 @@
+#PARSE_ESCAPES
+
 itemGroup.storagedrawers=Storage Drawers
 itemGroup.storagedrawersSorting=Storage Drawers - Sortieren
 
@@ -26,6 +28,8 @@ item.storagedrawers.upgradeStatus.level2.name=Status-Upgrade (II)
 item.storagedrawers.upgradeStatus.level2.description=Zeigt Füllstand an
 item.storagedrawers.upgradeVoid.name=Void-Upgrade
 item.storagedrawers.upgradeVoid.description=Zerstört überschüssige Items
+item.storagedrawers.upgradeConversion.name=Umwandlungs-Upgrade
+item.storagedrawers.upgradeConversion.description=Wandelt automatisch kompatible Items um
 item.storagedrawers.upgradeCreative.store.name=Kreativ-Speicherupgrade
 item.storagedrawers.upgradeCreative.store.description=Nahezu endloser Speicher
 item.storagedrawers.upgradeCreative.vend.name=Kreativ-Automatenupgrade
@@ -141,12 +145,12 @@ storagedrawers.config.upgrades.level4Mult=Speichermultiplikator (IV)
 storagedrawers.config.upgrades.level5Mult=Speichermultiplikator (V)
 storagedrawers.config.upgrades.level6Mult=Speichermultiplikator (VI)
 
-storagedrawers.config.prop.itemRenderType=Itemrendertyp
-storagedrawers.config.prop.itemRenderType.tooltip=Wechsele zwischen 2D oder 3D Darstellung.
 storagedrawers.config.prop.enableIndicatorUpgrades=Erlaube Indikatorupgrades
 storagedrawers.config.prop.enableStorageUpgrades=Erlaube Speicherupgrades
 storagedrawers.config.prop.enableLockUpgrades=Erlaube Schubfachverschließung
 storagedrawers.config.prop.enableShroudUpgrades=Erlaube Verbergen
+storageDrawers.config.prop.enableQuantifiableUpgrades=Erlaube Mengenanzeige
+storagedrawers.config.prop.enablePersonalUpgrades=Erlaube Zugriffskontrole
 storagedrawers.config.prop.enableVoidUpgrades=Erlaube Void-Upgrade
 storagedrawers.config.prop.enableCreativeUpgrades=Erlaube Kreativ-Upgrade
 storagedrawers.config.prop.enableRedstoneUpgrades=Enable Redstone-Upgrade
@@ -183,6 +187,8 @@ storagedrawers.config.prop.controllerRange=Controllerreichweite
 storagedrawers.config.prop.controllerRange.tooltip=Reichweite bei der Erkennung von Netzwerkblöcken
 storagedrawers.config.prop.enableFramedDrawers=Erlaube umrahmte Schubfächer
 storagedrawers.config.prop.enableFramedDrawers.tooltip=Schubfächer aus benutzerdefinierten Materialien
+storagedrawers.config.prop.defaultQuantify=Menge standardmäßig sichtbar
+storagedrawers.config.prop.defaultQuantify.tooltip=Schubfächer zeigen Mengenangaben, sobald sie platziert werden.
 
 storagedrawers.config.addons=Addons
 storagedrawers.config.addons.tooltip=Konfiguriere globale Addon-Einstellungen
