@@ -179,7 +179,7 @@ public class BlockController extends BlockContainer implements INetworked
         if (world.isRemote)
             return;
 
-        TileEntityController te = getTileEntity(world, pos);
+        TileEntityController te = getTileEntitySafe(world, pos);
         if (te == null)
             return;
 
