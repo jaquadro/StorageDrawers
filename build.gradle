@@ -1,12 +1,13 @@
 buildscript {
     repositories {
-        jcenter()
-        maven {
-            url = "http://files.minecraftforge.net/maven"
+        maven { 
+            url = 'https://files.minecraftforge.net/maven' 
         }
+        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
 
@@ -14,66 +15,99 @@ plugins {
     id "com.jfrog.bintray" version "1.7"
 }
 
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
+apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
-apply plugin: 'net.minecraftforge.gradle.forge'
 
-evaluationDependsOn(":..:Chameleon-${minecraft_base_version}")
+//evaluationDependsOn(":..:Chameleon-${minecraft_base_version}")
 
-ext {
-    chameleon = project(":..:Chameleon-${minecraft_base_version}")
-}
+//ext {
+//    chameleon = project(":..:Chameleon-${minecraft_base_version}")
+//}
 
 version = "${minecraft_version}-${mod_version}"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
 
-idea {
+/*idea {
   module.iml.withXml {
     def atts = it.asNode().component.content.sourceFolder
       .find { it.@url == 'file://$MODULE_DIR$/resources' }
       .attributes()
     atts.put('type', 'java-resource')
   }
-}
+}*/
 
-sourceCompatibility = targetCompatibility = "1.8"
-compileJava {
-    sourceCompatibility = targetCompatibility = "1.8"
-}
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' 
 
 minecraft {
-    version = chameleon.forge_version
-    runDir = "runtime"
+    // The mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   Snapshot are built nightly.
+    // stable_#            Stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not always work.
+    // Simply re-run your setup task after changing the mappings to update your workspace.
+    mappings channel: 'snapshot', version: forge_mappings
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    
+    //accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not allways work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = chameleon.forge_mappings
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
+    runs {
+        client {
+            workingDirectory project.file('run').canonicalPath
 
-    replaceIn "StorageDrawers.java"
-    replace '@VERSION@', project.version
-    replace 'required-after:chameleon', "required-after:chameleon@[${chameleon_version},${chameleon_max_version})"
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                storagedrawers {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run').canonicalPath
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                storagedrawers {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run').canonicalPath
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', 'hungerstrike', '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                storagedrawers {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+
+    //replaceIn "StorageDrawers.java"
+    //replace '@VERSION@', project.version
+    //replace 'required-after:chameleon', "required-after:chameleon@[${chameleon_version},${chameleon_max_version})"
 }
-
-sourceSets.main {
-    java {
-        srcDirs project.projectDir.getPath() + '/src'
-    }
-    resources {
-        srcDirs project.projectDir.getPath() + '/resources'
-    }
-}
-
-/*sourceSets.api {
-    java {
-        srcDirs project.projectDir.getPath() + '/api/mcp'
-    }
-}*/
 
 repositories {
     maven { // JEI
@@ -95,13 +129,13 @@ repositories {
 }
 
 dependencies {
-    compile chameleon
+    //compile chameleon
 
-    compileOnly "mezz.jei:jei_${minecraft_version}:${jei_version}:api"
-    runtime "mezz.jei:jei_${minecraft_version}:${jei_version}"
+    //compileOnly "mezz.jei:jei_${minecraft_version}:${jei_version}:api"
+    //runtime "mezz.jei:jei_${minecraft_version}:${jei_version}"
 
-    compileOnly "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
-    runtime "mcp.mobius.waila:Hwyla:${hwyla_version}"
+    //compileOnly "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
+    //runtime "mcp.mobius.waila:Hwyla:${hwyla_version}"
 
     //deobfCompile "MineTweaker3:MineTweaker3-API:${mt_version}"
     //deobfCompile "org.ow2.asm:asm-debug-all:5.0.3"
@@ -109,32 +143,31 @@ dependencies {
 
 processResources
 {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+    from (sourceSets.main.resources.srcDirs) {
+        include 'META-INF/mods.toml'
+        expand 'version': project.version
     }
 }
 
 jar {
-    include "com/jaquadro/minecraft/storagedrawers/**"
-    include "assets/**"
-    include "mcmod.info"
-    include "pack.mcmeta"
+    manifest {
+        attributes([
+            "Specification-Title": "storagedrawers",
+            "Specification-Vendor": "Justin Aquadro",
+            "Specification-Version": "${version}", // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"Justin Aquadro",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+    //include "com/jaquadro/minecraft/storagedrawers/**"
+    //include "assets/**"
+    //include "mcmod.info"
+    //include "pack.mcmeta"
 }
 
-task deobfJar(type: Jar) {
+/*task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
 }
@@ -180,4 +213,4 @@ bintray {
             released = new Date()
         }
     }
-}
+}*/

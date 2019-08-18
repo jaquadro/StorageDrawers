@@ -311,6 +311,9 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
                 return amount - (count - originalCount);
             }
             else {
+                if (attrs.isUnlimitedVending())
+                    return 0;
+
                 int originalCount = count;
                 setStoredItemCount(originalCount + amount, notify);
 
