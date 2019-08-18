@@ -2,9 +2,9 @@ package com.jaquadro.minecraft.storagedrawers.capabilities;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -26,27 +26,26 @@ public class CapabilityDrawerGroup
     {
         @Nullable
         @Override
-        public NBTBase writeNBT (Capability<IDrawerGroup> capability, IDrawerGroup instance, EnumFacing side) {
+        public INBT writeNBT (Capability<IDrawerGroup> capability, IDrawerGroup instance, Direction side) {
             if (instance instanceof INBTSerializable)
                 return ((INBTSerializable) instance).serializeNBT();
 
-            return new NBTTagCompound();
+            return new CompoundNBT();
         }
 
         @Override
-        public void readNBT (Capability<IDrawerGroup> capability, IDrawerGroup instance, EnumFacing side, NBTBase nbt) {
+        public void readNBT (Capability<IDrawerGroup> capability, IDrawerGroup instance, Direction side, INBT nbt) {
             if (instance instanceof INBTSerializable) {
                 @SuppressWarnings("unchecked")
-                INBTSerializable<NBTBase> serializer = (INBTSerializable)instance;
+                INBTSerializable<INBT> serializer = (INBTSerializable)instance;
                 serializer.deserializeNBT(nbt);
-                return;
             }
         }
     }
 
     private static class DefaultImplementation extends StandardDrawerGroup
     {
-        public DefaultImplementation () {
+        DefaultImplementation () {
             super(1);
         }
 

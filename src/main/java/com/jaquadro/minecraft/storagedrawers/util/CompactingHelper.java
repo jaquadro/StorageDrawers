@@ -2,9 +2,8 @@ package com.jaquadro.minecraft.storagedrawers.util;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
@@ -120,7 +119,7 @@ public class CompactingHelper
         List<ItemStack> candidates = new ArrayList<>();
         Map<ItemStack, Integer> candidatesRate = new HashMap<>();
 
-        for (IRecipe recipe : CraftingManager.REGISTRY) {
+        for (IRecipe recipe : world.getServer().getRecipeManager().getRecipes()) {
             ItemStack output = recipe.getRecipeOutput();
             if (!ItemStackOreMatcher.areItemsEqual(stack, output, true))
                 continue;
@@ -158,10 +157,10 @@ public class CompactingHelper
         return new Result(ItemStack.EMPTY, 0);
     }
 
-    private List<ItemStack> findAllMatchingRecipes (InventoryCrafting crafting) {
+    private List<ItemStack> findAllMatchingRecipes (CraftingInventory crafting) {
         List<ItemStack> candidates = new ArrayList<>();
 
-        for (Object aRecipeList : CraftingManager.REGISTRY) {
+        for (Object aRecipeList : world.getServer().getRecipeManager().getRecipes()) {
             IRecipe recipe = (IRecipe) aRecipeList;
             if (recipe.matches(crafting, world)) {
                 ItemStack result = recipe.getCraftingResult(crafting);
@@ -180,7 +179,7 @@ public class CompactingHelper
             for (ItemStack candidate : candidates) {
                 ResourceLocation matchName = candidate.getItem().getRegistryName();
                 if (matchName != null) {
-                    if (referenceName.getResourceDomain().equals(matchName.getResourceDomain()))
+                    if (referenceName.getNamespace().equals(matchName.getPath()))
                         return candidate;
                 }
             }
@@ -204,7 +203,7 @@ public class CompactingHelper
             @Nonnull ItemStack match = ItemStack.EMPTY;
 
             for (ItemStack ingItemMatch : refMatchingStacks) {
-                if (ingredient.apply(ingItemMatch)) {
+                if (ingredient.test(ingItemMatch)) {
                     match = ingItemMatch;
                     break;
                 }
@@ -228,7 +227,7 @@ public class CompactingHelper
         return inv.getSizeInventory();
     }
 
-    private static class InventoryLookup extends InventoryCrafting
+    private static class InventoryLookup extends CraftingInventory
     {
         private ItemStack[] stackList;
 

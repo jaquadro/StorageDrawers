@@ -3,12 +3,12 @@ package com.jaquadro.minecraft.storagedrawers.capabilities;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.EnumSet;
 
-public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttributesModifiable, INBTSerializable<NBTTagCompound>
+public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttributesModifiable, INBTSerializable<CompoundNBT>
 {
     private EnumSet<LockAttribute> itemLock = EnumSet.noneOf(LockAttribute.class);
     private boolean isConcealed;
@@ -133,23 +133,23 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
     }
 
     @Override
-    public NBTTagCompound serializeNBT () {
-        NBTTagCompound tag = new NBTTagCompound();
+    public CompoundNBT serializeNBT () {
+        CompoundNBT tag = new CompoundNBT();
 
-        tag.setInteger("itemLock", LockAttribute.getBitfield(itemLock));
-        tag.setBoolean("concealed", isConcealed);
-        tag.setBoolean("void", isVoid);
-        tag.setBoolean("quant", isShowingQuantity);
-        tag.setBoolean("unlimited", isUnlimitedStorage);
-        tag.setBoolean("vending", isUnlimitedVending);
-        tag.setBoolean("conv", isConversion);
+        tag.putInt("itemLock", LockAttribute.getBitfield(itemLock));
+        tag.putBoolean("concealed", isConcealed);
+        tag.putBoolean("void", isVoid);
+        tag.putBoolean("quant", isShowingQuantity);
+        tag.putBoolean("unlimited", isUnlimitedStorage);
+        tag.putBoolean("vending", isUnlimitedVending);
+        tag.putBoolean("conv", isConversion);
 
         return tag;
     }
 
     @Override
-    public void deserializeNBT (NBTTagCompound nbt) {
-        itemLock = LockAttribute.getEnumSet(nbt.getInteger("itemLock"));
+    public void deserializeNBT (CompoundNBT nbt) {
+        itemLock = LockAttribute.getEnumSet(nbt.getInt("itemLock"));
         isConcealed = nbt.getBoolean("concealed");
         isVoid = nbt.getBoolean("void");
         isShowingQuantity = nbt.getBoolean("quant");

@@ -2,10 +2,10 @@ package com.jaquadro.minecraft.storagedrawers.util;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class CountFormatter
 {
     public static String format (FontRenderer font, IDrawer drawer) {
@@ -46,11 +46,11 @@ public class CountFormatter
 
         if (count >= 1000000000)
             text = String.format("%.1fG", count / 1000000f);
-        else if (count >= 100000000 || (count >= 1000000 && font.getUnicodeFlag()))
+        else if (count >= 100000000)
             text = String.format("%.0fM", count / 1000000f);
         else if (count >= 1000000)
             text = String.format("%.1fM", count / 1000000f);
-        else if (count >= 100000 || (count >= 10000 && font.getUnicodeFlag()))
+        else if (count >= 100000)
             text = String.format("%.0fK", count / 1000f);
         else if (count >= 10000)
             text = String.format("%.1fK", count / 1000f);

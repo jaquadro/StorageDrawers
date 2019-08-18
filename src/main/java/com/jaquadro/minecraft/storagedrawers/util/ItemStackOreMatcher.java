@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.util;
+/*package com.jaquadro.minecraft.storagedrawers.util;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import net.minecraft.item.ItemStack;
@@ -109,3 +109,4 @@ public class ItemStackOreMatcher extends ItemStackMatcher
         return ItemStack.areItemStackTagsEqual(stack1, stack2);
     }
 }
+*/

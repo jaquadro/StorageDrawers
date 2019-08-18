@@ -3,9 +3,9 @@ package com.jaquadro.minecraft.storagedrawers.capabilities;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -26,27 +26,27 @@ public class CapabilityDrawerAttributes
     {
         @Nullable
         @Override
-        public NBTBase writeNBT (Capability<IDrawerAttributes> capability, IDrawerAttributes instance, EnumFacing side) {
+        public INBT writeNBT (Capability<IDrawerAttributes> capability, IDrawerAttributes instance, Direction side) {
             if (instance instanceof INBTSerializable)
                 return ((INBTSerializable) instance).serializeNBT();
 
-            NBTTagCompound tag = new NBTTagCompound();
-            tag.setBoolean("lockedPop", instance.isItemLocked(LockAttribute.LOCK_POPULATED));
-            tag.setBoolean("lockedEmpty", instance.isItemLocked(LockAttribute.LOCK_EMPTY));
-            tag.setBoolean("concealed", instance.isConcealed());
-            tag.setBoolean("void", instance.isVoid());
-            tag.setBoolean("quant", instance.isShowingQuantity());
-            tag.setBoolean("unlimited", instance.isUnlimitedStorage());
-            tag.setBoolean("vending", instance.isUnlimitedVending());
+            CompoundNBT tag = new CompoundNBT();
+            tag.putBoolean("lockedPop", instance.isItemLocked(LockAttribute.LOCK_POPULATED));
+            tag.putBoolean("lockedEmpty", instance.isItemLocked(LockAttribute.LOCK_EMPTY));
+            tag.putBoolean("concealed", instance.isConcealed());
+            tag.putBoolean("void", instance.isVoid());
+            tag.putBoolean("quant", instance.isShowingQuantity());
+            tag.putBoolean("unlimited", instance.isUnlimitedStorage());
+            tag.putBoolean("vending", instance.isUnlimitedVending());
 
             return tag;
         }
 
         @Override
-        public void readNBT (Capability<IDrawerAttributes> capability, IDrawerAttributes instance, EnumFacing side, NBTBase nbt) {
+        public void readNBT (Capability<IDrawerAttributes> capability, IDrawerAttributes instance, Direction side, INBT nbt) {
             if (instance instanceof INBTSerializable) {
                 @SuppressWarnings("unchecked")
-                INBTSerializable<NBTBase> serializer = (INBTSerializable)instance;
+                INBTSerializable<INBT> serializer = (INBTSerializable)instance;
                 serializer.deserializeNBT(nbt);
                 return;
             }
@@ -55,7 +55,7 @@ public class CapabilityDrawerAttributes
                 throw new RuntimeException("IDrawerAttributes instance does not implement IDrawerAttributesModifiable");
             IDrawerAttributesModifiable modifiable = (IDrawerAttributesModifiable) instance;
 
-            NBTTagCompound tag = (NBTTagCompound)nbt;
+            CompoundNBT tag = (CompoundNBT) nbt;
             modifiable.setItemLocked(LockAttribute.LOCK_POPULATED, tag.getBoolean("lockedPop"));
             modifiable.setItemLocked(LockAttribute.LOCK_EMPTY, tag.getBoolean("lockedEmpty"));
             modifiable.setIsConcealed(tag.getBoolean("concealed"));

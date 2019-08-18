@@ -146,6 +146,12 @@ public class DrawerItemHandler implements IItemHandler
         return drawer.getMaxCapacity();
     }
 
+    @Override
+    // TODO: Implement proper
+    public boolean isItemValid (int slot, @Nonnull ItemStack stack) {
+        return true;
+    }
+
     private boolean slotIsVirtual (int slot) {
         return slot == 0;
     }
