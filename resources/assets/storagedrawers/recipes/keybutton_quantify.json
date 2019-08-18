@@ -2,6 +2,9 @@
     "conditions": [{
         "type": "minecraft:item_exists",
         "item": "storagedrawers:keybutton"
+    }, {
+        "type": "minecraft:item_exists",
+        "item": "storagedrawers:quantify_key"
     }],
     "type": "minecraft:crafting_shapeless",
     "ingredients": [
