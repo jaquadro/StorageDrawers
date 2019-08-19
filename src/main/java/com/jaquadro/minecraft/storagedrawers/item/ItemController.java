@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item;
+/*package com.jaquadro.minecraft.storagedrawers.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
@@ -25,3 +25,4 @@ public class ItemController extends ItemBlock
         list.add(I18n.format("storagedrawers.controller.description"));
     }
 }
+*/

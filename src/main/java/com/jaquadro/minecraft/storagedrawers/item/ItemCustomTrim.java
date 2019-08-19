@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item;
+/*package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityTrim;
 import net.minecraft.block.Block;
@@ -67,3 +67,4 @@ public class ItemCustomTrim extends ItemBlock
         return itag;
     }
 }
+*/

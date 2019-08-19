@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.config;
+/*package com.jaquadro.minecraft.storagedrawers.config;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import net.minecraft.item.Item;
@@ -203,3 +203,4 @@ public class OreDictRegistry
         return maxKeyCount >= mergedIds.size();
     }
 }
+*/

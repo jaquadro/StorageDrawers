@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block.tile;
+/*package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.BlockFramingTable;
@@ -281,3 +281,4 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
         return new AxisAlignedBB(xMin, pos.getY() + 1, zMin, xMax, pos.getY() + 2, zMax);
     }
 }
+*/

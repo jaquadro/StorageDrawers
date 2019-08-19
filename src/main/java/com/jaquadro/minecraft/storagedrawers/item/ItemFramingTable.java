@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item;
+/*package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockFramingTable;
 import net.minecraft.block.Block;
@@ -70,3 +70,4 @@ public class ItemFramingTable extends ItemBlock
         return true;
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block.tile;
+/*package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
 import net.minecraft.block.state.IBlockState;
@@ -62,3 +62,4 @@ public class TileEntityKeyButton extends ChamTileEntity
         return tag;
     }
 }
+*/

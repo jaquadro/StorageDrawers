@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.client.model;
+/*package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.model.ChamModel;
@@ -155,3 +155,4 @@ public class FramingTableModel extends ChamModel
         }
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block.tile;
+/*package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
@@ -20,3 +20,4 @@ public class TileEntityTrim extends ChamTileEntity
         return true;
     }
 }
+*/

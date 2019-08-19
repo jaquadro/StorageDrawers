@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.config;
+/*package com.jaquadro.minecraft.storagedrawers.config;
 
 import com.jaquadro.minecraft.chameleon.util.ItemResourceLocation;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
@@ -160,3 +160,4 @@ public class CompTierRegistry
         return null;
     }
 }
+*/

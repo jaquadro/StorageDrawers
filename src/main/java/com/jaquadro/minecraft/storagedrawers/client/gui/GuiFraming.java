@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.client.gui;
+/*package com.jaquadro.minecraft.storagedrawers.client.gui;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
@@ -48,3 +48,4 @@ public class GuiFraming extends GuiContainer
         drawTexturedModalRect(guiX, guiY, 0, 0, xSize, ySize);
     }
 }
+*/

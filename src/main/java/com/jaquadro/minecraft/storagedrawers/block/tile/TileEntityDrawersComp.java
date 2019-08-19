@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block.tile;
+/*package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
@@ -149,3 +149,4 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         return hasCustomName() ? super.getName() : "storagedrawers.container.compDrawers";
     }
 }
+*/

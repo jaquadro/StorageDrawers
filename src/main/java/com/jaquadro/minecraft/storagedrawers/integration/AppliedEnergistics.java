@@ -1,13 +1,13 @@
-package com.jaquadro.minecraft.storagedrawers.integration;
+/*package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.integration.ae2.*;
 
-import java.lang.reflect.Constructor;
+import java.lang.reflect.Constructor;*/
 
-public class AppliedEnergistics extends IntegrationModule
-{
+//public class AppliedEnergistics extends IntegrationModule
+//{
     /*private static class ReflectionFactory implements IStorageBusMonitorFactory
     {
         private Class classInventoryAdaptor;
@@ -57,13 +57,13 @@ public class AppliedEnergistics extends IntegrationModule
 
     private IStorageBusMonitorFactory factory;*/
 
-    @Override
-    public String getModID () {
-        return "appliedenergistics2";
-    }
-
-    @Override
-    public void init () throws Throwable {
+//    @Override
+//    public String getModID () {
+//        return "appliedenergistics2";
+//    }
+//
+//    @Override
+//    public void init () throws Throwable {
         /*ShapedRecipeHandler shapedHandler = new ShapedRecipeHandler();
         if (shapedHandler.isValid())
             StorageDrawers.recipeHandlerRegistry.registerRecipeHandler(shapedHandler.getRecipeClass(), shapedHandler);
@@ -79,10 +79,10 @@ public class AppliedEnergistics extends IntegrationModule
             throw new Exception("No valid Storage Bus Monitor factory");
 
         factory = rfactory;*/
-    }
-
-    @Override
-    public void postInit () {
-        //AEApi.instance().registries().externalStorage().addExternalStorageInterface(new DrawerExternalStorageHandler(factory));
-    }
-}
+//    }
+//
+//    @Override
+//    public void postInit () {
+//        //AEApi.instance().registries().externalStorage().addExternalStorageInterface(new DrawerExternalStorageHandler(factory));
+//    }
+//}

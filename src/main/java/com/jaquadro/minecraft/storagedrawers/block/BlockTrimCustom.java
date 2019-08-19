@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block;
+/*package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.chameleon.block.properties.UnlistedModelData;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.MaterialModelData;
@@ -119,3 +119,4 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
         return getDefaultState();
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.client.model;
+/*package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.jaquadro.minecraft.chameleon.model.PassLimitedModel;
@@ -118,3 +118,4 @@ public final class CompDrawerModel
 
     private static final ItemHandler itemHandler = new ItemHandler();
 }
+*/

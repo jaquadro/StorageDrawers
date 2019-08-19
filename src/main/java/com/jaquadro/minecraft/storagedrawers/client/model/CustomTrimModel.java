@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.client.model;
+/*package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.jaquadro.minecraft.chameleon.Chameleon;
@@ -171,3 +171,4 @@ public class CustomTrimModel extends ChamModel
 
     private static final ItemHandler itemHandler = new ItemHandler();
 }
+*/

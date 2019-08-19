@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.inventory;
+/*package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
@@ -159,3 +159,4 @@ public class ContainerFramingTable extends Container
         return itemStack;
     }
 }
+*/

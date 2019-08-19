@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block;
+/*package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.chameleon.block.properties.UnlistedModelData;
 import com.jaquadro.minecraft.storagedrawers.api.storage.BlockType;
@@ -130,3 +130,4 @@ public class BlockDrawersCustom extends BlockStandardDrawers
         return ((IExtendedBlockState)state).withProperty(MAT_MODEL, new MaterialModelData(tile));
     }
 }
+*/

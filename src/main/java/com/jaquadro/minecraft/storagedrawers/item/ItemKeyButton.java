@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item;
+/*package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.chameleon.resources.IItemMeshMapper;
 import com.jaquadro.minecraft.chameleon.resources.IItemVariantProvider;
@@ -65,3 +65,4 @@ public class ItemKeyButton extends ItemMultiTexture implements IItemMeshMapper, 
         return variants;
     }
 }
+*/

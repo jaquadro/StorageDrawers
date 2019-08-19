@@ -1,10 +1,10 @@
-package com.jaquadro.minecraft.storagedrawers.integration.ae2;
+//package com.jaquadro.minecraft.storagedrawers.integration.ae2;
 
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import net.minecraft.tileentity.TileEntity;
+//import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+//import net.minecraft.tileentity.TileEntity;
 
-public class DrawerExternalStorageHandler // implements IExternalStorageHandler
-{
+//public class DrawerExternalStorageHandler // implements IExternalStorageHandler
+//{
     /*private IStorageBusMonitorFactory sbmFactory;
 
     public DrawerExternalStorageHandler (IStorageBusMonitorFactory factory) {
@@ -23,4 +23,4 @@ public class DrawerExternalStorageHandler // implements IExternalStorageHandler
 
         return null;
     }*/
-}
+//}

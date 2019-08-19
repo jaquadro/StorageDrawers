@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block;
+/*package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
@@ -68,3 +68,4 @@ public class BlockSlave extends BlockContainer implements INetworked
         return tile;
     }
 }
+*/

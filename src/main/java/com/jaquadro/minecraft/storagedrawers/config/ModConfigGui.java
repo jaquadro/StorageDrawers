@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.config;
+/*package com.jaquadro.minecraft.storagedrawers.config;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import net.minecraft.client.gui.GuiScreen;
@@ -25,3 +25,4 @@ public class ModConfigGui extends GuiConfig
     }
 
 }
+*/

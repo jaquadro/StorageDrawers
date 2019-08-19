@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration;
+/*package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.chameleon.integration.IntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
@@ -33,3 +33,4 @@ public class LocalIntegrationRegistry
         return instance.registry;
     }
 }
+*/

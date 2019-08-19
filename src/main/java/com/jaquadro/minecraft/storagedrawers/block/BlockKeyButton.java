@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block;
+/*package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityKeyButton;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
@@ -330,3 +330,4 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
         }
     }
 }
+*/

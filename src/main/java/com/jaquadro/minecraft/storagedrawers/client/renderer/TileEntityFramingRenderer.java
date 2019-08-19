@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.client.renderer;
+/*package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.BlockFramingTable;
@@ -89,3 +89,4 @@ public class TileEntityFramingRenderer extends TileEntitySpecialRenderer<TileEnt
         GL11.glPopMatrix();
     }
 }
+*/

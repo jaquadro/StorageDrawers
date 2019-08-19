@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.client.model.component;
+/*package com.jaquadro.minecraft.storagedrawers.client.model.component;
 
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.model.WrappedChamModel;
@@ -34,3 +34,4 @@ public class DrawerSealedModel extends WrappedChamModel
         renderer.stopBaking();
     }
 }
+*/

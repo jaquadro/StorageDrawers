@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item;
+/*package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.chameleon.resources.IItemMeshMapper;
 import com.jaquadro.minecraft.chameleon.resources.IItemVariantProvider;
@@ -70,3 +70,4 @@ public class ItemTrim extends ItemMultiTexture implements IItemMeshMapper, IItem
         return mappings;
     }
 }
+*/

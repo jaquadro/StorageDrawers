@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block;
+/*package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.chameleon.block.properties.UnlistedTileEntity;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
@@ -217,3 +217,4 @@ public class BlockFramingTable extends BlockContainer
         return ((IExtendedBlockState)state).withProperty(TILE, tile);
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item;
+/*package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ISealable;
@@ -66,3 +66,4 @@ public class ItemTape extends Item
         return EnumActionResult.FAIL;
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block;
+/*package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
@@ -106,3 +106,4 @@ public class BlockTrim extends Block implements INetworked
 }
 
 
+*/

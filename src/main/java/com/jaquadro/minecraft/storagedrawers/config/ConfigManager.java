@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.config;
+/*package com.jaquadro.minecraft.storagedrawers.config;
 
 import com.google.common.collect.Maps;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
@@ -275,3 +275,4 @@ public class ConfigManager
         }
     }
 }
+*/

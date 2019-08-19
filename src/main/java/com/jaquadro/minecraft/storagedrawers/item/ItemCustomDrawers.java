@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item;
+/*package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.base.Function;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
@@ -95,3 +95,4 @@ public class ItemCustomDrawers extends ItemDrawers
         return itag;
     }
 }
+*/

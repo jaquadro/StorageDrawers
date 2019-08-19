@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
+/*package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
 import com.jaquadro.minecraft.chameleon.block.tiledata.TileDataShim;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
@@ -60,3 +60,4 @@ public class ControllerData extends TileDataShim
         return false;
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration.jei;
+/*package com.jaquadro.minecraft.storagedrawers.integration.jei;
 
 import com.jaquadro.minecraft.storagedrawers.core.recipe.TemplateRecipe;
 import mezz.jei.api.IJeiHelpers;
@@ -42,4 +42,4 @@ public class TemplateRecipeWrapper extends BlankRecipeWrapper implements IShaped
         if (recipeOutput != null)
             ingredients.setOutput(ItemStack.class, recipeOutput);
     }
-}
+}*/

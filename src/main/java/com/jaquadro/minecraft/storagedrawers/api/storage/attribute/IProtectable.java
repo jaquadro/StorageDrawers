@@ -1,7 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage.attribute;
 
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
-import net.minecraft.world.ILockableContainer;
 
 import java.util.UUID;
 

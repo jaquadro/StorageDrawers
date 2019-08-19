@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block;
+/*package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
@@ -228,3 +228,4 @@ public class BlockController extends BlockContainer implements INetworked
         return tile;
     }
 }
+*/

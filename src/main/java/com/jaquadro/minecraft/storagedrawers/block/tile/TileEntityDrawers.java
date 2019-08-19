@@ -21,9 +21,13 @@ import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.INameable;
 import net.minecraft.util.math.BlockPos;
 
 import net.minecraft.util.text.ITextComponent;
@@ -32,6 +36,7 @@ import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -42,7 +47,7 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends ChamTileEntity implements ISealable, IProtectable, IDrawerGroup, IWorldNameable
+public abstract class TileEntityDrawers extends TileEntity implements ISealable, IProtectable, IDrawerGroup, INameable
 {
     private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
     private MaterialData materialData = new MaterialData();
@@ -437,7 +442,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ISeala
         return count;
     }
 
-    public int interactPutItemsIntoSlot (int slot, EntityPlayer player) {
+    public int interactPutItemsIntoSlot (int slot, PlayerEntity player) {
         int count;
         if (getWorld().getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID))
             count = interactPutCurrentInventoryIntoSlot(slot, player);
@@ -625,7 +630,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ISeala
         return customNameData.getDisplayName();
     }
 
-    public void setInventoryName (String name) {
+    public void setCustomName (ITextComponent name) {
         customNameData.setName(name);
     }
 
@@ -634,7 +639,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ISeala
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
     {
         if (capability == DRAWER_GROUP_CAPABILITY)
             return (T) getGroup();

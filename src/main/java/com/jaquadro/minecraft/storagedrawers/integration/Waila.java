@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.integration;
+/*package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
@@ -175,3 +175,4 @@ public class Waila extends IntegrationModule
         }
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block;
+/*package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.BlockType;
@@ -123,3 +123,4 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
         return super.getActualState(state, world, pos).withProperty(SLOTS, slots);
     }
 }
+*/

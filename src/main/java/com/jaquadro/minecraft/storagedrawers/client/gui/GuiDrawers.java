@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.client.gui;
+/*package com.jaquadro.minecraft.storagedrawers.client.gui;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
@@ -149,3 +149,4 @@ public class GuiDrawers extends GuiContainer
         return prev;
     }
 }
+*/

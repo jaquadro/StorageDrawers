@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.util;
+/*package com.jaquadro.minecraft.storagedrawers.util;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
@@ -270,3 +270,4 @@ public class CompactingHelper
         }
     }
 }
+*/

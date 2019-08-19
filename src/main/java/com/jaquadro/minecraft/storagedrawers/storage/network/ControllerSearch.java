@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.storage.network;
+/*package com.jaquadro.minecraft.storagedrawers.storage.network;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.BlockController;
@@ -66,3 +66,4 @@ public class ControllerSearch
         return Math.max(Math.max(Math.abs(coord1.getX() - coord2.getX()), Math.abs(coord1.getY() - coord2.getY())), Math.abs(coord1.getZ() - coord2.getZ()));
     }
 }
+*/
