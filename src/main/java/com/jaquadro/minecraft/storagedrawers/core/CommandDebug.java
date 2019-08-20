@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.core;
+/*package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
@@ -130,3 +130,4 @@ public class CommandDebug extends CommandBase
         sender.sendMessage(new TextComponentString(message));
     }
 }
+*/

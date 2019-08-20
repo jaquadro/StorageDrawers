@@ -1,43 +1,62 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
-import com.jaquadro.minecraft.chameleon.Chameleon;
-import com.jaquadro.minecraft.chameleon.resources.ModelRegistry;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.*;
-import com.jaquadro.minecraft.storagedrawers.block.tile.*;
-import com.jaquadro.minecraft.storagedrawers.client.model.*;
-import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
-import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityFramingRenderer;
-import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
-import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPlanks;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
+@ObjectHolder(StorageDrawers.MOD_ID)
 public class ModBlocks
 {
-    @ObjectHolder(StorageDrawers.MOD_ID + ":basicdrawers")
+    public static final Block
+        OAK_FULL_DRAWERS_1 = null,
+        OAK_FULL_DRAWERS_2 = null,
+        OAK_FULL_DRAWERS_4 = null,
+        OAK_HALF_DRAWERS_1 = null,
+        OAK_HALF_DRAWERS_2 = null,
+        OAK_HALF_DRAWERS_4 = null,
+        SPRUCE_FULL_DRAWERS_1 = null,
+        SPRUCE_FULL_DRAWERS_2 = null,
+        SPRUCE_FULL_DRAWERS_4 = null,
+        SPRUCE_HALF_DRAWERS_1 = null,
+        SPRUCE_HALF_DRAWERS_2 = null,
+        SPRUCE_HALF_DRAWERS_4 = null,
+        BIRCH_FULL_DRAWERS_1 = null,
+        BIRCH_FULL_DRAWERS_2 = null,
+        BIRCH_FULL_DRAWERS_4 = null,
+        BIRCH_HALF_DRAWERS_1 = null,
+        BIRCH_HALF_DRAWERS_2 = null,
+        BIRCH_HALF_DRAWERS_4 = null,
+        JUNGLE_FULL_DRAWERS_1 = null,
+        JUNGLE_FULL_DRAWERS_2 = null,
+        JUNGLE_FULL_DRAWERS_4 = null,
+        JUNGLE_HALF_DRAWERS_1 = null,
+        JUNGLE_HALF_DRAWERS_2 = null,
+        JUNGLE_HALF_DRAWERS_4 = null,
+        ACACIA_FULL_DRAWERS_1 = null,
+        ACACIA_FULL_DRAWERS_2 = null,
+        ACACIA_FULL_DRAWERS_4 = null,
+        ACACIA_HALF_DRAWERS_1 = null,
+        ACACIA_HALF_DRAWERS_2 = null,
+        ACACIA_HALF_DRAWERS_4 = null,
+        DARK_OAK_FULL_DRAWERS_1 = null,
+        DARK_OAK_FULL_DRAWERS_2 = null,
+        DARK_OAK_FULL_DRAWERS_4 = null,
+        DARK_OAK_HALF_DRAWERS_1 = null,
+        DARK_OAK_HALF_DRAWERS_2 = null,
+        DARK_OAK_HALF_DRAWERS_4 = null;
+    
+    /*@ObjectHolder(StorageDrawers.MOD_ID + ":basicdrawers")
     public static BlockDrawers basicDrawers;
     @ObjectHolder(StorageDrawers.MOD_ID + ":compdrawers")
     public static BlockCompDrawers compDrawers;
@@ -54,14 +73,53 @@ public class ModBlocks
     @ObjectHolder(StorageDrawers.MOD_ID + ":customtrim")
     public static BlockTrimCustom customTrim;
     @ObjectHolder(StorageDrawers.MOD_ID + ":keybutton")
-    public static BlockKeyButton keyButton;
+    public static BlockKeyButton keyButton;*/
 
     @Mod.EventBusSubscriber(modid = StorageDrawers.MOD_ID)
     public static class Registration
     {
+        private static List<Block> blockList = new ArrayList<Block>();
+
         @SubscribeEvent
         public static void registerBlocks (RegistryEvent.Register<Block> event) {
-            IForgeRegistry<Block> registry = event.getRegistry();
+            registerDrawerBlock(event, "oak_full_drawers_1", 1, false);
+            registerDrawerBlock(event, "oak_full_drawers_2", 2, false);
+            registerDrawerBlock(event, "oak_full_drawers_4", 4, false);
+            registerDrawerBlock(event, "oak_half_drawers_1", 1, true);
+            registerDrawerBlock(event, "oak_half_drawers_2", 2, true);
+            registerDrawerBlock(event, "oak_half_drawers_4", 4, true);
+            registerDrawerBlock(event, "spruce_full_drawers_1", 1, false);
+            registerDrawerBlock(event, "spruce_full_drawers_2", 2, false);
+            registerDrawerBlock(event, "spruce_full_drawers_4", 4, false);
+            registerDrawerBlock(event, "spruce_half_drawers_1", 1, true);
+            registerDrawerBlock(event, "spruce_half_drawers_2", 2, true);
+            registerDrawerBlock(event, "spruce_half_drawers_4", 4, true);
+            registerDrawerBlock(event, "birch_full_drawers_1", 1, false);
+            registerDrawerBlock(event, "birch_full_drawers_2", 2, false);
+            registerDrawerBlock(event, "birch_full_drawers_4", 4, false);
+            registerDrawerBlock(event, "birch_half_drawers_1", 1, true);
+            registerDrawerBlock(event, "birch_half_drawers_2", 2, true);
+            registerDrawerBlock(event, "birch_half_drawers_4", 4, true);
+            registerDrawerBlock(event, "jungle_full_drawers_1", 1, false);
+            registerDrawerBlock(event, "jungle_full_drawers_2", 2, false);
+            registerDrawerBlock(event, "jungle_full_drawers_4", 4, false);
+            registerDrawerBlock(event, "jungle_half_drawers_1", 1, true);
+            registerDrawerBlock(event, "jungle_half_drawers_2", 2, true);
+            registerDrawerBlock(event, "jungle_half_drawers_4", 4, true);
+            registerDrawerBlock(event, "acacia_full_drawers_1", 1, false);
+            registerDrawerBlock(event, "acacia_full_drawers_2", 2, false);
+            registerDrawerBlock(event, "acacia_full_drawers_4", 4, false);
+            registerDrawerBlock(event, "acacia_half_drawers_1", 1, true);
+            registerDrawerBlock(event, "acacia_half_drawers_2", 2, true);
+            registerDrawerBlock(event, "acacia_half_drawers_4", 4, true);
+            registerDrawerBlock(event, "dark_oak_full_drawers_1", 1, false);
+            registerDrawerBlock(event, "dark_oak_full_drawers_2", 2, false);
+            registerDrawerBlock(event, "dark_oak_full_drawers_4", 4, false);
+            registerDrawerBlock(event, "dark_oak_half_drawers_1", 1, true);
+            registerDrawerBlock(event, "dark_oak_half_drawers_2", 2, true);
+            registerDrawerBlock(event, "dark_oak_half_drawers_4", 4, true);
+
+            /*IForgeRegistry<Block> registry = event.getRegistry();
             ConfigManager config = StorageDrawers.config;
 
             registry.registerAll(
@@ -101,12 +159,35 @@ public class ModBlocks
 
                 GameRegistry.registerTileEntity(TileEntityFramingTable.class, StorageDrawers.MOD_ID + ":framingtable");
                 GameRegistry.registerTileEntity(TileEntityTrim.class, StorageDrawers.MOD_ID + ":trim");
-            }
+            }*/
+        }
+
+        private static Block registerDrawerBlock(RegistryEvent.Register<Block> event, String name, int drawerCount, boolean halfDepth) {
+            return registerBlock(event, name, new BlockStandardDrawers(drawerCount, halfDepth, Block.Properties.create(Material.WOOD)
+                .sound(SoundType.WOOD).lightValue(255).hardnessAndResistance(5f)));
+        }
+
+        private static Block registerBlock(RegistryEvent.Register<Block> event, String name, Block block) {
+            return registerBlock(event, name, block, blockList);
+        }
+
+        private static Block registerBlock(RegistryEvent.Register<Block> event, String name, Block block, List<Block> group) {
+            block.setRegistryName(name);
+            event.getRegistry().register(block);
+            group.add(block);
+
+            return block;
         }
 
         @SubscribeEvent
         public static void registerItems (RegistryEvent.Register<Item> event) {
-            IForgeRegistry<Item> registry = event.getRegistry();
+            for (Block block : blockList) {
+                BlockItem itemBlock = new BlockItem(block, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS));
+                itemBlock.setRegistryName(block.getRegistryName());
+                event.getRegistry().register(itemBlock);
+            }
+
+            /*IForgeRegistry<Item> registry = event.getRegistry();
             ConfigManager config = StorageDrawers.config;
 
             registry.registerAll(
@@ -134,22 +215,10 @@ public class ModBlocks
             for (String key : new String[] { "drawerBasic" })
                 OreDictionary.registerOre(key, new ItemStack(basicDrawers, 1, OreDictionary.WILDCARD_VALUE));
             for (String key : new String[] { "drawerTrim" })
-                OreDictionary.registerOre(key, new ItemStack(trim, 1, OreDictionary.WILDCARD_VALUE));
+                OreDictionary.registerOre(key, new ItemStack(trim, 1, OreDictionary.WILDCARD_VALUE));*/
         }
 
-        private static final ResourceLocation EMPTY_GROUP = new ResourceLocation("", "");
-
-        @Nonnull
-        public static ItemStack makeBasicDrawerItemStack (EnumBasicDrawer info, String material, int count) {
-            ItemStack stack = new ItemStack(ModBlocks.basicDrawers, count, info.getMetadata());
-
-            NBTTagCompound data = new NBTTagCompound();
-            data.setString("material", material);
-            stack.setTagCompound(data);
-
-            return stack;
-        }
-
+        /*
         @SubscribeEvent
         public static void registerRecipes (RegistryEvent.Register<IRecipe> event) {
             IForgeRegistry<IRecipe> registry = event.getRegistry();
@@ -190,8 +259,9 @@ public class ModBlocks
                         .setRegistryName(result.getItem().getRegistryName() + "_" + material.toString()));
                 }
             }
-        }
+        }*/
 
+        /*
         @SubscribeEvent
         @SideOnly(Side.CLIENT)
         public static void registerModels (ModelRegistryEvent event) {
@@ -222,6 +292,6 @@ public class ModBlocks
             modelRegistry.registerItemVariants(controller);
             modelRegistry.registerItemVariants(controllerSlave);
             modelRegistry.registerItemVariants(keyButton);
-        }
+        }*/
     }
 }

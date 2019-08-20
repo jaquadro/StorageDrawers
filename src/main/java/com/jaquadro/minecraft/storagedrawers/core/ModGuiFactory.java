@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.core;
+/*package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.config.ModConfigGui;
 import net.minecraft.client.Minecraft;
@@ -27,3 +27,4 @@ public class ModGuiFactory implements IModGuiFactory
         return null;
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item;
+/*package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import net.minecraft.client.resources.I18n;
@@ -39,3 +39,4 @@ public class ItemUpgrade extends Item
         return allowMultiple;
     }
 }
+*/

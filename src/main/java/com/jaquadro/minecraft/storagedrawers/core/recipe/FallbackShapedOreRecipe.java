@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.core.recipe;
+/*package com.jaquadro.minecraft.storagedrawers.core.recipe;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -20,3 +20,4 @@ public class FallbackShapedOreRecipe extends ShapedOreRecipe
         super(group, result, recipe);
     }
 }
+*/

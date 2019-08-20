@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item;
+/*package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.chameleon.resources.IItemMeshMapper;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
@@ -67,3 +67,4 @@ public class ItemUpgradeStorage extends ItemUpgrade implements IItemMeshMapper
         return mappings;
     }
 }
+*/

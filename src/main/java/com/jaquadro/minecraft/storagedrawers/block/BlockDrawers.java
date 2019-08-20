@@ -67,7 +67,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
     public BlockDrawers (int drawerCount, boolean halfDepth, Block.Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState()
+        this.setDefaultState(stateContainer.getBaseState()
             .with(HORIZONTAL_FACING, Direction.NORTH)
             .with(ITEM_LOCKED, false)
             .with(SHROUDED, false)
@@ -86,11 +86,11 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     }
 
     // TODO: ABSTRACT?  Still need BlockState?
-    public int getDrawerCount (BlockState state) {
+    public int getDrawerCount () {
         return drawerCount;
     }
 
-    public boolean isHalfDepth (BlockState state) {
+    public boolean isHalfDepth () {
         return halfDepth;
     }
 
@@ -321,19 +321,19 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         return 0;
     }
 
-    protected boolean hitTop (float hitY) {
+    protected boolean hitTop (double hitY) {
         return hitY > .5;
     }
 
-    protected boolean hitLeft (int side, float hitX, float hitZ) {
+    protected boolean hitLeft (Direction side, double hitX, double hitZ) {
         switch (side) {
-            case 2:
+            case NORTH:
                 return hitX > .5;
-            case 3:
+            case SOUTH:
                 return hitX < .5;
-            case 4:
+            case WEST:
                 return hitZ < .5;
-            case 5:
+            case EAST:
                 return hitZ > .5;
             default:
                 return true;

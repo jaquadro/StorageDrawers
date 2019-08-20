@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item;
+/*package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.collect.Multimap;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
@@ -71,3 +71,4 @@ public class ItemKey extends Item
 
     protected void handleDrawerAttributes (IDrawerAttributesModifiable attrs) { }
 }
+*/

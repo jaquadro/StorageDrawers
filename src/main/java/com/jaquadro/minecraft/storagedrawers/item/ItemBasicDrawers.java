@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item;
+/*package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.base.Function;
 import com.jaquadro.minecraft.chameleon.resources.IItemMeshResolver;
@@ -92,3 +92,4 @@ public class ItemBasicDrawers extends ItemDrawers implements IItemMeshResolver, 
         }
     }
 }
+*/

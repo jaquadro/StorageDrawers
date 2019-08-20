@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item;
+/*package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
@@ -21,3 +21,4 @@ public class ItemDrawerKey extends ItemKey
         attrs.setItemLocked(LockAttribute.LOCK_POPULATED, !locked);
     }
 }
+*/

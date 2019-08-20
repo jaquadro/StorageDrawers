@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.core;
+/*package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.resources.ModelRegistry;
@@ -103,3 +103,4 @@ public class ModItems
         return StorageDrawers.MOD_ID.toLowerCase() + "." + name;
     }
 }
+*/

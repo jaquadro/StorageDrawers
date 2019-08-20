@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block;
+/*package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
@@ -125,3 +125,4 @@ public class BlockVariantDrawers extends BlockStandardDrawers
         return BlockPlanks.EnumType.OAK;
     }
 }
+*/

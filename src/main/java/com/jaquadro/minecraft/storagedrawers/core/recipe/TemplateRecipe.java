@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.core.recipe;
+/*package com.jaquadro.minecraft.storagedrawers.core.recipe;
 
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
@@ -107,3 +107,4 @@ public class TemplateRecipe implements IRecipe
         return null;
     }
 }
+*/

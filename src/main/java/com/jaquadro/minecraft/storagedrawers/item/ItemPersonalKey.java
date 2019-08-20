@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.item;
+/*package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.collect.Multimap;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
@@ -56,3 +56,4 @@ public class ItemPersonalKey extends Item
         }
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.core.handlers;
+/*package com.jaquadro.minecraft.storagedrawers.core.handlers;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
@@ -39,3 +39,4 @@ public class GuiHandler implements IGuiHandler
         return null;
     }
 }
+*/
