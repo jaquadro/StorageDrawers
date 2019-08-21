@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.client.renderer;
+/*package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.geometry.Area2D;
@@ -406,3 +406,4 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         return x + (w * fillAmt);
     }
 }
+*/

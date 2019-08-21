@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.client.model;
+/*package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.jaquadro.minecraft.chameleon.model.CachedBuilderModel;
@@ -149,3 +149,4 @@ public final class BasicDrawerModel
 
     private static final ItemHandler itemHandler = new ItemHandler();
 }
+*/

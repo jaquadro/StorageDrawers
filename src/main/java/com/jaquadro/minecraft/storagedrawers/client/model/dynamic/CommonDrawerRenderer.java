@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.client.model.dynamic;
+/*package com.jaquadro.minecraft.storagedrawers.client.model.dynamic;
 
 import com.jaquadro.minecraft.chameleon.render.ChamRender;
 import com.jaquadro.minecraft.chameleon.render.ChamRenderState;
@@ -184,3 +184,4 @@ public class CommonDrawerRenderer
         end();
     }
 }
+*/

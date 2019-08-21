@@ -1,66 +1,45 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-import com.jaquadro.minecraft.chameleon.block.ChamLockableTileEntity;
-import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
-import com.jaquadro.minecraft.chameleon.block.tiledata.CustomNameData;
-import com.jaquadro.minecraft.chameleon.block.tiledata.LockableData;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
-import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
-import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
-import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
-import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
-import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
-import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
-import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
-import net.minecraft.block.state.IBlockState;
+import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.INameable;
-import net.minecraft.util.math.BlockPos;
 
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.ILockableContainer;
-import net.minecraft.world.IWorldNameable;
-import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends TileEntity implements ISealable, IProtectable, IDrawerGroup, INameable
+public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawerGroup /* IProtectable, INameable */
 {
-    private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
-    private MaterialData materialData = new MaterialData();
-    private UpgradeData upgradeData = new DrawerUpgradeData();
+    //private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
+    //private MaterialData materialData = new MaterialData();
+    //private UpgradeData upgradeData = new DrawerUpgradeData();
 
-    public final ControllerData controllerData = new ControllerData();
+    //public final ControllerData controllerData = new ControllerData();
 
-    private int direction;
-    private String material;
+    //private int direction;
+    //private String material;
     private int drawerCapacity = 1;
-    private boolean taped = false;
-    private UUID owner;
-    private String securityKey;
+    //private boolean taped = false;
+    //private UUID owner;
+    //private String securityKey;
 
     private IDrawerAttributesModifiable drawerAttributes;
 
@@ -79,7 +58,7 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
         }
     }
 
-    private class DrawerUpgradeData extends UpgradeData
+    /*private class DrawerUpgradeData extends UpgradeData
     {
         DrawerUpgradeData () {
             super(7);
@@ -142,17 +121,19 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
 
             return true;
         }
-    }
+    }*/
 
-    protected TileEntityDrawers () {
+    protected TileEntityDrawers (TileEntityType<?> tileEntityType) {
+        super(tileEntityType);
+
         drawerAttributes = new DrawerAttributes();
 
-        upgradeData.setDrawerAttributes(drawerAttributes);
+        /*upgradeData.setDrawerAttributes(drawerAttributes);
 
         injectPortableData(customNameData);
         injectPortableData(upgradeData);
         injectPortableData(materialData);
-        injectData(controllerData);
+        injectData(controllerData);*/
     }
 
     public abstract IDrawerGroup getGroup ();
@@ -161,47 +142,26 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
         return drawerAttributes;
     }
 
-    public UpgradeData upgrades () {
-        return upgradeData;
-    }
+    //public UpgradeData upgrades () {
+    //    return upgradeData;
+    //}
 
-    public MaterialData material () {
-        return materialData;
-    }
-
-    public int getDirection () {
-        return direction;
-    }
-
-    public void setDirection (int direction) {
-        this.direction = direction % 6;
-    }
-
-    public String getMaterial () {
-        return material;
-    }
-
-    public String getMaterialOrDefault () {
-        String mat = getMaterial();
-        return (mat != null) ? mat : "oak";
-    }
-
-    public void setMaterial (String material) {
-        this.material = material;
-    }
+    //public MaterialData material () {
+    //    return materialData;
+    //}
 
     public int getDrawerCapacity () {
         return drawerCapacity;
     }
 
     public int getEffectiveDrawerCapacity () {
-        if (upgradeData.hasOneStackUpgrade())
-            return 1;
+        //if (upgradeData.hasOneStackUpgrade())
+        //    return 1;
 
         return getDrawerCapacity();
     }
 
-    @Override
+    /*@Override
     public UUID getOwner () {
         if (!StorageDrawers.config.cache.enablePersonalUpgrades)
             return null;
@@ -247,11 +207,11 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
         }
 
         return true;
-    }
+    }*/
 
     protected void onAttributeChanged () { }
 
-    public boolean isSealed () {
+    /*public boolean isSealed () {
         if (!StorageDrawers.config.cache.enableTape)
             return false;
 
@@ -272,9 +232,9 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
         }
 
         return true;
-    }
+    }*/
 
-    public boolean isRedstone () {
+    /*public boolean isRedstone () {
         if (!StorageDrawers.config.cache.enableRedstoneUpgrades)
             return false;
 
@@ -360,7 +320,7 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
             return 15;
 
         return (int)Math.ceil(maxRatio * 14);
-    }
+    }*/
 
     @Nonnull
     public ItemStack takeItemsFromSlot (int slot, int count) {
@@ -373,10 +333,10 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
 
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.getCount());
 
-        if (isRedstone() && getWorld() != null) {
-            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
-            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType(), false);
-        }
+        //if (isRedstone() && getWorld() != null) {
+        //    getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
+        //    getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType(), false);
+        //}
 
         // TODO: Reset empty drawer in subclasses
 
@@ -404,7 +364,7 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
         return countAdded;
     }
 
-    public int interactPutCurrentItemIntoSlot (int slot, EntityPlayer player) {
+    public int interactPutCurrentItemIntoSlot (int slot, PlayerEntity player) {
         IDrawer drawer = getDrawer(slot);
         if (!drawer.isEnabled())
             return 0;
@@ -417,7 +377,7 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
         return count;
     }
 
-    public int interactPutCurrentInventoryIntoSlot (int slot, EntityPlayer player) {
+    public int interactPutCurrentInventoryIntoSlot (int slot, PlayerEntity player) {
         IDrawer drawer = getGroup().getDrawer(slot);
         if (!drawer.isEnabled())
             return 0;
@@ -444,53 +404,30 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
 
     public int interactPutItemsIntoSlot (int slot, PlayerEntity player) {
         int count;
-        if (getWorld().getTotalWorldTime() - lastClickTime < 10 && player.getPersistentID().equals(lastClickUUID))
+        if (getWorld().getGameTime() - lastClickTime < 10 && player.getUniqueID().equals(lastClickUUID))
             count = interactPutCurrentInventoryIntoSlot(slot, player);
         else
             count = interactPutCurrentItemIntoSlot(slot, player);
 
-        lastClickTime = getWorld().getTotalWorldTime();
-        lastClickUUID = player.getPersistentID();
+        lastClickTime = getWorld().getGameTime();
+        lastClickUUID = player.getUniqueID();
 
         return count;
     }
 
     @Override
-    protected void readFromFixedNBT (NBTTagCompound tag) {
-        super.readFromFixedNBT(tag);
+    public void readPortable (CompoundNBT tag) {
+        super.readPortable(tag);
 
-        setDirection(tag.getByte("Dir"));
+        //material = null;
+        //if (tag.hasKey("Mat"))
+        //    material = tag.getString("Mat");
 
-        taped = false;
-        if (tag.hasKey("Tape"))
-            taped = tag.getBoolean("Tape");
-    }
-
-    @Override
-    protected NBTTagCompound writeToFixedNBT (NBTTagCompound tag) {
-        tag = super.writeToFixedNBT(tag);
-
-        tag.setByte("Dir", (byte) direction);
-
-        if (taped)
-            tag.setBoolean("Tape", true);
-
-        return tag;
-    }
-
-    @Override
-    public void readFromPortableNBT (NBTTagCompound tag) {
-        super.readFromPortableNBT(tag);
-
-        material = null;
-        if (tag.hasKey("Mat"))
-            material = tag.getString("Mat");
-
-        drawerCapacity = tag.getInteger("Cap");
+        drawerCapacity = tag.getInt("Cap");
 
         drawerAttributes.setItemLocked(LockAttribute.LOCK_EMPTY, false);
         drawerAttributes.setItemLocked(LockAttribute.LOCK_POPULATED, false);
-        if (tag.hasKey("Lock")) {
+        if (tag.contains("Lock")) {
             EnumSet<LockAttribute> attrs = LockAttribute.getEnumSet(tag.getByte("Lock"));
             if (attrs != null) {
                 drawerAttributes.setItemLocked(LockAttribute.LOCK_EMPTY, attrs.contains(LockAttribute.LOCK_EMPTY));
@@ -499,31 +436,31 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
         }
 
         drawerAttributes.setIsConcealed(false);
-        if (tag.hasKey("Shr"))
+        if (tag.contains("Shr"))
             drawerAttributes.setIsConcealed(tag.getBoolean("Shr"));
 
         drawerAttributes.setIsShowingQuantity(false);
-        if (tag.hasKey("Qua")) {
+        if (tag.contains("Qua")) {
             drawerAttributes.setIsShowingQuantity(tag.getBoolean("Qua"));
         }
 
-        owner = null;
+        /*owner = null;
         if (tag.hasKey("Own"))
             owner = UUID.fromString(tag.getString("Own"));
 
         securityKey = null;
         if (tag.hasKey("Sec"))
-            securityKey = tag.getString("Sec");
+            securityKey = tag.getString("Sec");*/
     }
 
     @Override
-    public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
-        tag = super.writeToPortableNBT(tag);
+    public CompoundNBT writePortable (CompoundNBT tag) {
+        tag = super.writePortable(tag);
 
-        tag.setInteger("Cap", getDrawerCapacity());
+        tag.putInt("Cap", getDrawerCapacity());
 
-        if (material != null)
-            tag.setString("Mat", material);
+        //if (material != null)
+        //    tag.setString("Mat", material);
 
         EnumSet<LockAttribute> attrs = EnumSet.noneOf(LockAttribute.class);
         if (drawerAttributes.isItemLocked(LockAttribute.LOCK_EMPTY))
@@ -532,30 +469,30 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
             attrs.add(LockAttribute.LOCK_POPULATED);
 
         if (!attrs.isEmpty()) {
-            tag.setByte("Lock", (byte)LockAttribute.getBitfield(attrs));
+            tag.putByte("Lock", (byte)LockAttribute.getBitfield(attrs));
         }
 
         if (drawerAttributes.isConcealed())
-            tag.setBoolean("Shr", true);
+            tag.putBoolean("Shr", true);
 
         if (drawerAttributes.isShowingQuantity())
-            tag.setBoolean("Qua", true);
+            tag.putBoolean("Qua", true);
 
-        if (owner != null)
+        /*if (owner != null)
             tag.setString("Own", owner.toString());
 
         if (securityKey != null)
-            tag.setString("Sec", securityKey);
+            tag.setString("Sec", securityKey);*/
 
         return tag;
     }
 
     @Override
     public void markDirty () {
-        if (isRedstone() && getWorld() != null) {
-            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
-            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType(), false);
-        }
+        //if (isRedstone() && getWorld() != null) {
+        //    getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
+        //    getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType(), false);
+        //}
 
         super.markDirty();
     }
@@ -564,20 +501,20 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
         if (getWorld() != null && getWorld().isRemote)
             return;
 
-        TargetPoint point = new TargetPoint(getWorld().provider.getDimension(),
-            getPos().getX(), getPos().getY(), getPos().getZ(), 500);
-        StorageDrawers.network.sendToAllAround(new CountUpdateMessage(getPos(), slot, count), point);
+        PacketDistributor.TargetPoint point = new PacketDistributor.TargetPoint(
+            getPos().getX(), getPos().getY(), getPos().getZ(), 500, getWorld().dimension.getType());
+        MessageHandler.INSTANCE.send(PacketDistributor.NEAR.with(() -> point), new CountUpdateMessage(getPos(), slot, count));
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void clientUpdateCount (final int slot, final int count) {
         if (!getWorld().isRemote)
             return;
 
-        Minecraft.getMinecraft().addScheduledTask(() -> TileEntityDrawers.this.clientUpdateCountAsync(slot, count));
+        Minecraft.getInstance().enqueue(() -> TileEntityDrawers.this.clientUpdateCountAsync(slot, count));
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private void clientUpdateCountAsync (int slot, int count) {
         IDrawer drawer = getDrawer(slot);
         if (drawer.isEnabled() && drawer.getStoredItemCount() != count)
@@ -585,15 +522,15 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
 
     }
 
-    @Override
+    //@Override
     public boolean dataPacketRequiresRenderUpdate () {
         return true;
     }
 
-    @Override
-    public boolean shouldRefresh (World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
-        return oldState.getBlock() != newSate.getBlock();
-    }
+    //@Override
+    //public boolean shouldRefresh (World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+    //    return oldState.getBlock() != newSate.getBlock();
+    //}
 
     @Override
     @Deprecated
@@ -615,7 +552,7 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
         return getGroup().getAccessibleDrawerSlots();
     }
 
-    @Override
+    /*@Override
     public String getName () {
         return customNameData.getName();
     }
@@ -632,33 +569,25 @@ public abstract class TileEntityDrawers extends TileEntity implements ISealable,
 
     public void setCustomName (ITextComponent name) {
         customNameData.setName(name);
-    }
+    }*/
 
     @CapabilityInject(IDrawerGroup.class)
     public static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
 
-    @SuppressWarnings("unchecked")
+    private final LazyOptional<?> capabilityGroup = LazyOptional.of(this::getGroup);
+
+    @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
     {
+        IDrawerGroup group = getGroup();
         if (capability == DRAWER_GROUP_CAPABILITY)
-            return (T) getGroup();
+            return capabilityGroup.cast();
 
-        if (getGroup().hasCapability(capability, facing))
-            return getGroup().getCapability(capability, facing);
+        LazyOptional<T> cap = getGroup().getCapability(capability, facing);
+        if (cap.isPresent())
+            return cap;
 
         return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
-    {
-        if (capability == DRAWER_GROUP_CAPABILITY)
-            return true;
-
-        if (getGroup().hasCapability(capability, facing))
-            return true;
-
-        return super.hasCapability(capability, facing);
     }
 }

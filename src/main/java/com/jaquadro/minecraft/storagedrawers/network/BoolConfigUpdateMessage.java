@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.network;
+/*package com.jaquadro.minecraft.storagedrawers.network;
 
 import java.util.Map;
 import java.util.UUID;
@@ -67,3 +67,4 @@ public class BoolConfigUpdateMessage implements IMessage {
         }
     }
 }
+*/

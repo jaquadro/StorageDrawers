@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
+/*package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
 import com.jaquadro.minecraft.chameleon.block.tiledata.TileDataShim;
 import net.minecraft.item.ItemStack;
@@ -101,3 +101,4 @@ public class MaterialData extends TileDataShim
         return tag;
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.client.model.component;
+/*package com.jaquadro.minecraft.storagedrawers.client.model.component;
 
 import com.jaquadro.minecraft.chameleon.Chameleon;
 import com.jaquadro.minecraft.chameleon.geometry.Area2D;
@@ -177,3 +177,4 @@ public class DrawerDecoratorModel implements IBakedModel
         }
     }
 }
+*/

@@ -2,16 +2,14 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CommonProxy
 {
@@ -37,14 +35,14 @@ public class CommonProxy
     public void registerRenderers ()
     { }
 
-    public void updatePlayerInventory (EntityPlayer player) {
-        if (player instanceof EntityPlayerMP)
-            ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+    public void updatePlayerInventory (PlayerEntity player) {
+        if (player instanceof ServerPlayerEntity)
+            ((ServerPlayerEntity) player).sendContainerToPlayer(player.container);
     }
 
     @SubscribeEvent
     public void playerRightClick (PlayerInteractEvent.RightClickBlock event) {
-        if (event.getHand() == EnumHand.MAIN_HAND && event.getItemStack().isEmpty()) {
+        if (event.getHand() == Hand.MAIN_HAND && event.getItemStack().isEmpty()) {
             TileEntity tile = event.getWorld().getTileEntity(event.getPos());
             if (tile instanceof TileEntityDrawers) {
                 event.setUseBlock(Event.Result.ALLOW);

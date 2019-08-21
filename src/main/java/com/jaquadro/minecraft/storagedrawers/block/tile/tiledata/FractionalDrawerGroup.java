@@ -1,26 +1,23 @@
-package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
+/*package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
-import com.jaquadro.minecraft.chameleon.block.tiledata.TileDataShim;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
-import com.jaquadro.minecraft.storagedrawers.util.CompactingHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
-import com.jaquadro.minecraft.storagedrawers.util.ItemStackOreMatcher;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -39,12 +36,12 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
     private FractionalDrawer[] slots;
     private int[] order;
 
-    private final IItemHandler itemHandler;
-    private final IItemRepository itemRepository;
+    private final LazyOptional<IItemHandler> itemHandler;
+    private final LazyOptional<IItemRepository> itemRepository;
 
     public FractionalDrawerGroup (int slotCount) {
-        itemHandler = new DrawerItemHandler(this);
-        itemRepository = new DrawerItemRepository(this);
+        itemHandler = LazyOptional.of(() -> new DrawerItemHandler(this));
+        itemRepository = LazyOptional.of(() -> new DrawerItemRepository(this));
 
         storage = new FractionalStorage(this, slotCount);
 
@@ -90,35 +87,26 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
     }
 
     @Override
-    public void readFromNBT (NBTTagCompound tag) {
-        if (tag.hasKey("Drawers"))
-            storage.deserializeNBT(tag.getCompoundTag("Drawers"));
-        else if (tag.hasKey("Slots"))
-            storage.deserializeLegacyNBT(tag);
+    public void read (CompoundNBT tag) {
+        if (tag.contains("Drawers"))
+            storage.deserializeNBT(tag.getCompound("Drawers"));
     }
 
     @Override
-    public NBTTagCompound writeToNBT (NBTTagCompound tag) {
-        tag.setTag("Drawers", storage.serializeNBT());
+    public CompoundNBT write (CompoundNBT tag) {
+        tag.put("Drawers", storage.serializeNBT());
         return tag;
     }
 
+    @Nonnull
     @Override
-    public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == ITEM_HANDLER_CAPABILITY
-            || capability == ITEM_REPOSITORY_CAPABILITY;
-    }
-
-    @Nullable
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> LazyOptional<T> getCapability (@Nonnull Capability<T> capability, @Nullable Direction facing) {
         if (capability == ITEM_HANDLER_CAPABILITY)
-            return (T) itemHandler;
+            return itemHandler.cast();
         if (capability == ITEM_REPOSITORY_CAPABILITY)
-            return (T) itemRepository;
+            return itemRepository.cast();
 
-        return null;
+        return LazyOptional.empty();
     }
 
     public void syncAttributes () {
@@ -137,7 +125,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
     protected void onAmountChanged () { }
 
-    private static class FractionalStorage implements INBTSerializable<NBTTagCompound>
+    private static class FractionalStorage implements INBTSerializable<CompoundNBT>
     {
         @CapabilityInject(IDrawerAttributes.class)
         static Capability<IDrawerAttributes> ATTR_CAPABILITY = null;
@@ -165,13 +153,11 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
             convRate = new int[slotCount];
 
-            attrs = new EmptyDrawerAttributes();
+            attrs = EmptyDrawerAttributes.EMPTY;
         }
 
         public void setCapabilityProvider (ICapabilityProvider capProvider) {
-            IDrawerAttributes capAttrs = capProvider.getCapability(ATTR_CAPABILITY, null);
-            if (capAttrs != null)
-                attrs = capAttrs;
+            attrs = capProvider.getCapability(ATTR_CAPABILITY, null).orElse(EmptyDrawerAttributes.EMPTY);
         }
 
         public int getPooledCount () {
@@ -209,7 +195,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             if (baseRate() == 0) {
                 populateSlots(itemPrototype);
                 for (int i = 0; i < slotCount; i++) {
-                    if (ItemStackOreMatcher.areItemsEqual(protoStack[i], itemPrototype)) {
+                    if (ItemStackMatcher.areItemsEqual(protoStack[i], itemPrototype)) { // TODO: ItemStackOreMatcher
                         slot = i;
                         pooledCount = 0;
                     }
@@ -320,7 +306,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 return itemStackLimit * group.getStackCapacity();
             }
 
-            if (ItemStackOreMatcher.areItemsEqual(protoStack[slot], itemPrototype))
+            if (ItemStackMatcher.areItemsEqual(protoStack[slot], itemPrototype)) // TODO: ItemStackOreMatcher
                 return getMaxCapacity(slot);
 
             return 0;
@@ -429,9 +415,10 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             if (world == null) {
                 protoStack[0] = itemPrototype;
                 convRate[0] = 1;
-                matchers[0] = attrs.isDictConvertible()
-                    ? new ItemStackOreMatcher(protoStack[0])
-                    : new ItemStackMatcher(protoStack[0]);
+                matchers[0] = new ItemStackMatcher(protoStack[0]);
+                //matchers[0] = attrs.isDictConvertible()
+                //    ? new ItemStackOreMatcher(protoStack[0])
+                //    : new ItemStackMatcher(protoStack[0]);
 
                 return;
             }
@@ -483,9 +470,10 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         private void populateRawSlot (int slot, @Nonnull ItemStack itemPrototype, int rate) {
             protoStack[slot] = itemPrototype;
             convRate[slot] = rate;
-            matchers[slot] = attrs.isDictConvertible()
-                ? new ItemStackOreMatcher(protoStack[slot])
-                : new ItemStackMatcher(protoStack[slot]);
+            matchers[slot] = new ItemStackMatcher(protoStack[slot]);
+            //matchers[slot] = attrs.isDictConvertible()
+            //    ? new ItemStackOreMatcher(protoStack[slot])
+            //    : new ItemStackMatcher(protoStack[slot]);
         }
 
         private void normalizeGroup () {
@@ -518,100 +506,65 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         }
 
         @Override
-        public NBTTagCompound serializeNBT () {
-            NBTTagList itemList = new NBTTagList();
+        public CompoundNBT serializeNBT () {
+            ListNBT itemList = new ListNBT();
             for (int i = 0; i < slotCount; i++) {
                 if (protoStack[i].isEmpty())
                     continue;
 
-                NBTTagCompound itemTag = new NBTTagCompound();
-                protoStack[i].writeToNBT(itemTag);
+                CompoundNBT itemTag = new CompoundNBT();
+                protoStack[i].write(itemTag);
 
-                NBTTagCompound slotTag = new NBTTagCompound();
-                slotTag.setByte("Slot", (byte)i);
-                slotTag.setInteger("Conv", convRate[i]);
-                slotTag.setTag("Item", itemTag);
+                CompoundNBT slotTag = new CompoundNBT();
+                slotTag.putByte("Slot", (byte)i);
+                slotTag.putInt("Conv", convRate[i]);
+                slotTag.put("Item", itemTag);
 
-                itemList.appendTag(slotTag);
+                itemList.add(slotTag);
             }
 
-            NBTTagCompound tag = new NBTTagCompound();
-            tag.setInteger("Count", pooledCount);
-            tag.setTag("Items", itemList);
+            CompoundNBT tag = new CompoundNBT();
+            tag.putInt("Count", pooledCount);
+            tag.put("Items", itemList);
 
             return tag;
         }
 
         @Override
-        public void deserializeNBT (NBTTagCompound tag) {
+        public void deserializeNBT (CompoundNBT tag) {
             for (int i = 0; i < slotCount; i++) {
                 protoStack[i] = ItemStack.EMPTY;
                 matchers[i] = ItemStackMatcher.EMPTY;
                 convRate[i] = 0;
             }
 
-            pooledCount = tag.getInteger("Count");
+            pooledCount = tag.getInt("Count");
 
-            NBTTagList itemList = tag.getTagList("Items", Constants.NBT.TAG_COMPOUND);
-            for (int i = 0; i < itemList.tagCount(); i++) {
-                NBTTagCompound slotTag = itemList.getCompoundTagAt(i);
+            ListNBT itemList = tag.getList("Items", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < itemList.size(); i++) {
+                CompoundNBT slotTag = itemList.getCompound(i);
                 int slot = slotTag.getByte("Slot");
 
-                protoStack[slot] = new ItemStack(slotTag.getCompoundTag("Item"));
+                protoStack[slot] = ItemStack.read(slotTag.getCompound("Item"));
                 convRate[slot] = slotTag.getByte("Conv");
 
-                matchers[slot] = attrs.isDictConvertible()
-                    ? new ItemStackOreMatcher(protoStack[slot])
-                    : new ItemStackMatcher(protoStack[slot]);
+                matchers[slot] = new ItemStackMatcher(protoStack[slot]);
+                //matchers[slot] = attrs.isDictConvertible()
+                //    ? new ItemStackOreMatcher(protoStack[slot])
+                //    : new ItemStackMatcher(protoStack[slot]);
             }
 
             // TODO: We should only need to normalize if we had blank items with a conv rate, but this fixes blocks that were saved broken
             normalizeGroup();
         }
 
-        public void deserializeLegacyNBT (NBTTagCompound tag) {
-            for (int i = 0; i < slotCount; i++) {
-                protoStack[i] = ItemStack.EMPTY;
-                convRate[i] = 0;
-            }
-
-            pooledCount = tag.getInteger("Count");
-
-            if (tag.hasKey("Conv0"))
-                convRate[0] = tag.getByte("Conv0");
-            if (tag.hasKey("Conv1"))
-                convRate[1] = tag.getByte("Conv1");
-            if (tag.hasKey("Conv2"))
-                convRate[2] = tag.getByte("Conv2");
-
-            NBTTagList slots = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
-            for (int i = 0; i < slotCount; i++) {
-                NBTTagCompound slot = slots.getCompoundTagAt(i);
-                if (!slot.hasKey("Item"))
-                    continue;
-
-                Item item = Item.getItemById(slot.getShort("Item"));
-                if (item == null)
-                    continue;
-
-                ItemStack stack = new ItemStack(item);
-                stack.setItemDamage(slot.getShort("Meta"));
-                if (slot.hasKey("Tags"))
-                    stack.setTagCompound(slot.getCompoundTag("Tags"));
-
-                protoStack[i] = stack;
-                matchers[i] = attrs.isDictConvertible()
-                    ? new ItemStackOreMatcher(protoStack[i])
-                    : new ItemStackMatcher(protoStack[i]);
-            }
-        }
-
         public void syncAttributes () {
             for (int i = 0; i < slotCount; i++) {
                 if (!protoStack[i].isEmpty()) {
-                    matchers[i] = attrs.isDictConvertible()
-                        ? new ItemStackOreMatcher(protoStack[i])
-                        : new ItemStackMatcher(protoStack[i]);
+                    matchers[i] = new ItemStackMatcher(protoStack[i]);
+                    //matchers[i] = attrs.isDictConvertible()
+                    //    ? new ItemStackOreMatcher(protoStack[i])
+                    //    : new ItemStackMatcher(protoStack[i]);
                 }
             }
         }
@@ -715,3 +668,4 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         }
     }
 }
+*/

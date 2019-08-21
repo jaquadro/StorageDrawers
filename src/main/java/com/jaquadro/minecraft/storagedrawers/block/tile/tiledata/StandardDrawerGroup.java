@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
-import com.jaquadro.minecraft.chameleon.block.tiledata.TileDataShim;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
@@ -8,17 +7,16 @@ import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
-import com.jaquadro.minecraft.storagedrawers.util.ItemStackOreMatcher;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -35,12 +33,12 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
     private DrawerData[] slots;
     private int[] order;
 
-    private final IItemHandler itemHandler;
-    private final IItemRepository itemRepository;
+    private final LazyOptional<IItemHandler> itemHandler;
+    private final LazyOptional<IItemRepository> itemRepository;
 
     public StandardDrawerGroup (int slotCount) {
-        itemHandler = new DrawerItemHandler(this);
-        itemRepository = new DrawerItemRepository(this);
+        itemHandler = LazyOptional.of(() -> new DrawerItemHandler(this));
+        itemRepository = LazyOptional.of(() -> new DrawerItemRepository(this));
 
         slots = new DrawerData[slotCount];
         for (int i = 0; i < slotCount; i++)
@@ -76,63 +74,40 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
     }
 
     @Override
-    public void readFromNBT (NBTTagCompound tag) {
-        if (!tag.hasKey("Drawers")) {
-            if (tag.hasKey("Slots"))
-                readFromLegacyNBT(tag);
+    public void read (CompoundNBT tag) {
+        if (!tag.contains("Drawers"))
             return;
+
+        ListNBT itemList = tag.getList("Drawers", Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < itemList.size(); i++) {
+            if (i < slots.length)
+                slots[i].deserializeNBT(itemList.getCompound(i));
         }
-
-        NBTTagList itemList = tag.getTagList("Drawers", Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < itemList.tagCount(); i++) {
-            if (i >= 0 && i < slots.length)
-                slots[i].deserializeNBT(itemList.getCompoundTagAt(i));
-        }
-    }
-
-    public void readFromLegacyNBT (NBTTagCompound tag) {
-        NBTTagList slotTags = tag.getTagList("Slots", Constants.NBT.TAG_COMPOUND);
-
-        DrawerData[] realSlots = new DrawerData[slotTags.tagCount()];
-        for (int i = 0; i < realSlots.length && i < slots.length; i++)
-            realSlots[i] = slots[i];
-
-        slots = realSlots;
-
-        for (int i = 0; i < slots.length; i++)
-            slots[i].deserializeLegacyNBT(slotTags.getCompoundTagAt(i));
     }
 
     @Override
-    public NBTTagCompound writeToNBT (NBTTagCompound tag) {
+    public CompoundNBT write (CompoundNBT tag) {
         if (slots == null)
             return tag;
 
-        NBTTagList itemList = new NBTTagList();
+        ListNBT itemList = new ListNBT();
         for (DrawerData slot : slots)
-            itemList.appendTag(slot.serializeNBT());
+            itemList.add(slot.serializeNBT());
 
-        tag.setTag("Drawers", itemList);
+        tag.put("Drawers", itemList);
 
         return tag;
     }
 
+    @Nonnull
     @Override
-    public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == ITEM_HANDLER_CAPABILITY
-            || capability == ITEM_REPOSITORY_CAPABILITY;
-    }
-
-    @Nullable
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> LazyOptional<T> getCapability (@Nonnull Capability<T> capability, @Nullable Direction facing) {
         if (capability == ITEM_HANDLER_CAPABILITY)
-            return (T) itemHandler;
+            return itemHandler.cast();
         if (capability == ITEM_REPOSITORY_CAPABILITY)
-            return (T) itemRepository;
+            return itemRepository.cast();
 
-        return null;
+        return LazyOptional.empty();
     }
 
     @Nonnull
@@ -169,7 +144,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
     }
 
-    public static class DrawerData implements IDrawer, INBTSerializable<NBTTagCompound>
+    public static class DrawerData implements IDrawer, INBTSerializable<CompoundNBT>
     {
         @CapabilityInject(IDrawerAttributes.class)
         static Capability<IDrawerAttributes> ATTR_CAPABILITY = null;
@@ -184,15 +159,13 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
 
         public DrawerData (StandardDrawerGroup group) {
             this.group = group;
-            attrs = new EmptyDrawerAttributes();
+            attrs = EmptyDrawerAttributes.EMPTY;
             protoStack = ItemStack.EMPTY;
             matcher = ItemStackMatcher.EMPTY;
         }
 
         public void setCapabilityProvider (ICapabilityProvider capProvider) {
-            IDrawerAttributes capAttrs = capProvider.getCapability(ATTR_CAPABILITY, null);
-            if (capAttrs != null)
-                attrs = capAttrs;
+            attrs = capProvider.getCapability(ATTR_CAPABILITY, null).orElse(EmptyDrawerAttributes.EMPTY);
         }
 
         @Override
@@ -222,9 +195,9 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
             protoStack.setCount(1);
             count = 0;
 
-            if (attrs.isDictConvertible())
-                matcher = new ItemStackOreMatcher(protoStack);
-            else
+            //if (attrs.isDictConvertible())
+            //    matcher = new ItemStackOreMatcher(protoStack);
+            //else
                 matcher = new ItemStackMatcher(protoStack);
 
             group.syncSlots();
@@ -240,9 +213,9 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
             protoStack.setCount(1);
             count = 0;
 
-            if (attrs.isDictConvertible())
-                matcher = new ItemStackOreMatcher(protoStack);
-            else
+            //if (attrs.isDictConvertible())
+            //    matcher = new ItemStackOreMatcher(protoStack);
+            //else
                 matcher = new ItemStackMatcher(protoStack);
 
             return this;
@@ -398,49 +371,29 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
 
         @Override
-        public NBTTagCompound serializeNBT () {
-            NBTTagCompound tag = new NBTTagCompound();
+        public CompoundNBT serializeNBT () {
+            CompoundNBT tag = new CompoundNBT();
             if (protoStack.isEmpty())
                 return tag;
 
-            NBTTagCompound item = new NBTTagCompound();
-            protoStack.writeToNBT(item);
+            CompoundNBT item = new CompoundNBT();
+            protoStack.write(item);
 
-            tag.setTag("Item", item);
-            tag.setInteger("Count", count);
+            tag.put("Item", item);
+            tag.putInt("Count", count);
 
             return tag;
         }
 
         @Override
-        public void deserializeNBT (NBTTagCompound nbt) {
+        public void deserializeNBT (CompoundNBT nbt) {
             ItemStack tagItem = ItemStack.EMPTY;
             int tagCount = 0;
 
-            if (nbt.hasKey("Item"))
-                tagItem = new ItemStack(nbt.getCompoundTag("Item"));
-            if (nbt.hasKey("Count"))
-                tagCount = nbt.getInteger("Count");
-
-            setStoredItemRaw(tagItem);
-            setStoredItemCountRaw(tagCount);
-        }
-
-        public void deserializeLegacyNBT (NBTTagCompound nbt) {
-            ItemStack tagItem = ItemStack.EMPTY;
-            int tagCount = 0;
-
-            if (nbt.hasKey("Count"))
-                tagCount = nbt.getInteger("Count");
-            if (nbt.hasKey("Item")) {
-                Item item = Item.getItemById(nbt.getShort("Item"));
-                if (item != null) {
-                    tagItem = new ItemStack(item);
-                    tagItem.setItemDamage(nbt.getShort("Meta"));
-                    if (nbt.hasKey("Tags"))
-                        tagItem.setTagCompound(nbt.getCompoundTag("Tags"));
-                }
-            }
+            if (nbt.contains("Item"))
+                tagItem = ItemStack.read(nbt.getCompound("Item"));
+            if (nbt.contains("Count"))
+                tagCount = nbt.getInt("Count");
 
             setStoredItemRaw(tagItem);
             setStoredItemCountRaw(tagCount);
@@ -448,9 +401,9 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
 
         public void syncAttributes () {
             if (!protoStack.isEmpty()) {
-                if (attrs.isDictConvertible())
-                    matcher = new ItemStackOreMatcher(protoStack);
-                else
+                //if (attrs.isDictConvertible())
+                //    matcher = new ItemStackOreMatcher(protoStack);
+                //else
                     matcher = new ItemStackMatcher(protoStack);
             }
         }

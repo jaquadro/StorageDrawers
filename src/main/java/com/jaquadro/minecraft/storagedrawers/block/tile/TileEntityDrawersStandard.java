@@ -1,27 +1,16 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
-import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
-import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
-import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
-import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,11 +26,16 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
     private int capacity = 0;
 
+    public TileEntityDrawersStandard (TileEntityType<?> tileEntityType) {
+        super(tileEntityType);
+    }
+
     public static class Slot1 extends TileEntityDrawersStandard
     {
         private GroupData groupData = new GroupData(1);
 
-        public Slot1 () {
+        public Slot1 (TileEntityType<?> tileEntityType) {
+            super(tileEntityType);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -61,7 +55,8 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     {
         private GroupData groupData = new GroupData(2);
 
-        public Slot2 () {
+        public Slot2 (TileEntityType<?> tileEntityType) {
+            super(tileEntityType);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -81,7 +76,8 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     {
         private GroupData groupData = new GroupData(4);
 
-        public Slot4 () {
+        public Slot4 (TileEntityType<?> tileEntityType) {
+            super(tileEntityType);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -97,54 +93,14 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
     }
 
-    public static class Legacy extends TileEntityDrawersStandard
-    {
-        private GroupData groupData = new GroupData(4);
-
-        public Legacy () {
-            groupData.setCapabilityProvider(this);
-            injectPortableData(groupData);
-        }
-
-        @Override
-        public IDrawerGroup getGroup () {
-            return groupData;
-        }
-
-        @Override
-        protected void onAttributeChanged () {
-            groupData.syncAttributes();
-        }
-
-        public void replaceWithCurrent () {
-            TileEntityDrawersStandard replacement = createEntity(groupData.getDrawerCount());
-            if (replacement != null) {
-                replacement.deserializeNBT(serializeNBT());
-                getWorld().setTileEntity(getPos(), replacement);
-                replacement.markDirty();
-            }
-        }
-
-        @Override
-        public void validate () {
-            super.validate();
-            getWorld().scheduleBlockUpdate(getPos(), ModBlocks.basicDrawers, 1, 0);
-        }
-
-        @Override
-        public NBTTagCompound writeToPortableNBT (NBTTagCompound tag) {
-            return super.writeToPortableNBT(tag);
-        }
-    }
-
-    public static TileEntityDrawersStandard createEntity (int slotCount) {
+    public static TileEntityDrawersStandard createEntity (TileEntityType<?> tileEntityType, int slotCount) {
         switch (slotCount) {
             case 1:
-                return new Slot1();
+                return new Slot1(tileEntityType);
             case 2:
-                return new Slot2();
+                return new Slot2(tileEntityType);
             case 4:
-                return new Slot4();
+                return new Slot4(tileEntityType);
             default:
                 return null;
         }
@@ -155,48 +111,10 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         return null;
     }
 
-    @Override
-    public int getDrawerCapacity () {
-        if (getWorld() == null || getWorld().isRemote)
-            return super.getDrawerCapacity();
-
-        if (capacity == 0) {
-            IBlockState blockState = getWorld().getBlockState(this.pos);
-            if (!blockState.getPropertyKeys().contains(BlockStandardDrawers.BLOCK))
-                return 1;
-
-            EnumBasicDrawer type = blockState.getValue(BlockStandardDrawers.BLOCK);
-            ConfigManager config = StorageDrawers.config;
-
-            switch (type) {
-                case FULL1:
-                    capacity = config.getBlockBaseStorage("fulldrawers1");
-                    break;
-                case FULL2:
-                    capacity = config.getBlockBaseStorage("fulldrawers2");
-                    break;
-                case FULL4:
-                    capacity = config.getBlockBaseStorage("fulldrawers4");
-                    break;
-                case HALF2:
-                    capacity = config.getBlockBaseStorage("halfdrawers2");
-                    break;
-                case HALF4:
-                    capacity = config.getBlockBaseStorage("halfdrawers4");
-                    break;
-                default:
-                    capacity = 1;
-            }
-
-            if (capacity <= 0)
-                capacity = 1;
-        }
-
-        return capacity;
-    }
-
     private class GroupData extends StandardDrawerGroup
     {
+        private final LazyOptional<?> attributesHandler = LazyOptional.of(TileEntityDrawersStandard.this::getDrawerAttributes);
+
         public GroupData (int slotCount) {
             super(slotCount);
         }
@@ -207,18 +125,11 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
             return new StandardDrawerData(this, slot);
         }
 
+        @Nonnull
         @Override
-        public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-            return capability == TileEntityDrawersStandard.DRAWER_ATTRIBUTES_CAPABILITY
-                || super.hasCapability(capability, facing);
-
-        }
-
-        @Nullable
-        @Override
-        public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+        public <T> LazyOptional<T> getCapability (@Nonnull Capability<T> capability, @Nullable Direction facing) {
             if (capability == TileEntityDrawersStandard.DRAWER_ATTRIBUTES_CAPABILITY)
-                return (T) TileEntityDrawersStandard.this.getDrawerAttributes();
+                return attributesHandler.cast();
 
             return super.getCapability(capability, facing);
         }
@@ -235,7 +146,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
         @Override
         protected int getStackCapacity () {
-            return upgrades().getStorageMultiplier() * getEffectiveDrawerCapacity();
+            return /*upgrades().getStorageMultiplier()*/ 1 * getEffectiveDrawerCapacity();
         }
 
         @Override

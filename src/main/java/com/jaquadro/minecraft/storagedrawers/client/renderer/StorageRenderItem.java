@@ -1,16 +1,20 @@
-package com.jaquadro.minecraft.storagedrawers.client.renderer;
+/*package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemModelMesher;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -24,9 +28,9 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
-public class StorageRenderItem extends RenderItem
+public class StorageRenderItem extends ItemRenderer
 {
-    private RenderItem parent;
+    private ItemRenderer parent;
 
     @Nonnull
     public ItemStack overrideStack;
@@ -173,3 +177,4 @@ public class StorageRenderItem extends RenderItem
         Tessellator.getInstance().draw();
     }
 }
+*/
