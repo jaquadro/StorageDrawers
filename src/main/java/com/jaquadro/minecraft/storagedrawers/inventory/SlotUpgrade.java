@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.inventory;
+/*package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
@@ -49,3 +49,4 @@ public class SlotUpgrade extends Slot
         return canTakeStack(null);
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.inventory;
+/*package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
@@ -79,3 +79,4 @@ public class SlotDrawer extends Slot
         return other instanceof SlotDrawer && ((SlotDrawer) other).getDrawerGroup() == group;
     }
 }
+*/

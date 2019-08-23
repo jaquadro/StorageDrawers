@@ -2,11 +2,15 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.*;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -14,6 +18,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 @ObjectHolder(StorageDrawers.MOD_ID)
 public class ModBlocks
@@ -55,6 +60,11 @@ public class ModBlocks
         DARK_OAK_HALF_DRAWERS_1 = null,
         DARK_OAK_HALF_DRAWERS_2 = null,
         DARK_OAK_HALF_DRAWERS_4 = null;
+
+    public static final TileEntityType<?>
+        STANDARD_DRAWERS_1 = null,
+        STANDARD_DRAWERS_2 = null,
+        STANDARD_DRAWERS_4 = null;
     
     /*@ObjectHolder(StorageDrawers.MOD_ID + ":basicdrawers")
     public static BlockDrawers basicDrawers;
@@ -162,6 +172,51 @@ public class ModBlocks
             }*/
         }
 
+        @SubscribeEvent
+        public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
+            registerTileEntity(event, "standard_drawers_1", TileEntityDrawersStandard.Slot1::new,
+                OAK_FULL_DRAWERS_1,
+                OAK_HALF_DRAWERS_1,
+                SPRUCE_FULL_DRAWERS_1,
+                SPRUCE_HALF_DRAWERS_1,
+                BIRCH_FULL_DRAWERS_1,
+                BIRCH_HALF_DRAWERS_1,
+                JUNGLE_FULL_DRAWERS_1,
+                JUNGLE_HALF_DRAWERS_1,
+                ACACIA_FULL_DRAWERS_1,
+                ACACIA_HALF_DRAWERS_1,
+                DARK_OAK_FULL_DRAWERS_1,
+                DARK_OAK_HALF_DRAWERS_1);
+            
+            registerTileEntity(event, "standard_drawers_2", TileEntityDrawersStandard.Slot1::new,
+                OAK_FULL_DRAWERS_2,
+                OAK_HALF_DRAWERS_2,
+                SPRUCE_FULL_DRAWERS_2,
+                SPRUCE_HALF_DRAWERS_2,
+                BIRCH_FULL_DRAWERS_2,
+                BIRCH_HALF_DRAWERS_2,
+                JUNGLE_FULL_DRAWERS_2,
+                JUNGLE_HALF_DRAWERS_2,
+                ACACIA_FULL_DRAWERS_2,
+                ACACIA_HALF_DRAWERS_2,
+                DARK_OAK_FULL_DRAWERS_2,
+                DARK_OAK_HALF_DRAWERS_2);
+
+            registerTileEntity(event, "standard_drawers_4", TileEntityDrawersStandard.Slot1::new,
+                OAK_FULL_DRAWERS_4,
+                OAK_HALF_DRAWERS_4,
+                SPRUCE_FULL_DRAWERS_4,
+                SPRUCE_HALF_DRAWERS_4,
+                BIRCH_FULL_DRAWERS_4,
+                BIRCH_HALF_DRAWERS_4,
+                JUNGLE_FULL_DRAWERS_4,
+                JUNGLE_HALF_DRAWERS_4,
+                ACACIA_FULL_DRAWERS_4,
+                ACACIA_HALF_DRAWERS_4,
+                DARK_OAK_FULL_DRAWERS_4,
+                DARK_OAK_HALF_DRAWERS_4);
+        }
+
         private static Block registerDrawerBlock(RegistryEvent.Register<Block> event, String name, int drawerCount, boolean halfDepth) {
             return registerBlock(event, name, new BlockStandardDrawers(drawerCount, halfDepth, Block.Properties.create(Material.WOOD)
                 .sound(SoundType.WOOD).lightValue(255).hardnessAndResistance(5f)));
@@ -177,6 +232,11 @@ public class ModBlocks
             group.add(block);
 
             return block;
+        }
+
+        private static <T extends TileEntity> void registerTileEntity(RegistryEvent.Register<TileEntityType<?>> event, String name, Supplier<? extends T> factory, Block... blocks) {
+            event.getRegistry().register(TileEntityType.Builder.create(factory, blocks)
+                .build(null).setRegistryName(new ResourceLocation(StorageDrawers.MOD_ID, name)));
         }
 
         @SubscribeEvent

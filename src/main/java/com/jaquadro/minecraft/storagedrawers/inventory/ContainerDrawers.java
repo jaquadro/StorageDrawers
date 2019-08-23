@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.inventory;
+/*package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
@@ -163,3 +163,4 @@ public class ContainerDrawers extends Container
         return itemStack;
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
+/*package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
 import com.jaquadro.minecraft.chameleon.block.tiledata.TileDataShim;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
@@ -271,3 +271,4 @@ public class UpgradeData extends TileDataShim
 
     protected void onUpgradeChanged (ItemStack oldUpgrade, ItemStack newUpgrade) { }
 }
+*/

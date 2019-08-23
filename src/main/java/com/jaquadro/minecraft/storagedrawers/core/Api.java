@@ -13,7 +13,7 @@ public class Api implements IStorageDrawersApi
         instance = this;
     }
 
-    @Override
+    /*@Override
     public IRenderRegistry renderRegistry () {
         return StorageDrawers.renderRegistry;
     }
@@ -21,5 +21,5 @@ public class Api implements IStorageDrawersApi
     @Override
     public IWailaRegistry wailaRegistry () {
         return StorageDrawers.wailaRegistry;
-    }
+    }*/
 }

@@ -7,6 +7,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,6 +33,10 @@ public class CommonProxy
         new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_4_off"),
     };
 
+    public CommonProxy () {
+        MinecraftForge.EVENT_BUS.addListener(this::playerRightClick);
+    }
+
     public void registerRenderers ()
     { }
 
@@ -40,8 +45,7 @@ public class CommonProxy
             ((ServerPlayerEntity) player).sendContainerToPlayer(player.container);
     }
 
-    @SubscribeEvent
-    public void playerRightClick (PlayerInteractEvent.RightClickBlock event) {
+    private void playerRightClick (PlayerInteractEvent.RightClickBlock event) {
         if (event.getHand() == Hand.MAIN_HAND && event.getItemStack().isEmpty()) {
             TileEntity tile = event.getWorld().getTileEntity(event.getPos());
             if (tile instanceof TileEntityDrawers) {

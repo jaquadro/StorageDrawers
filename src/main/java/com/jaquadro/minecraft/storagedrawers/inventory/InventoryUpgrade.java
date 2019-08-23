@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.inventory;
+/*package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
@@ -133,3 +133,4 @@ public class InventoryUpgrade implements IInventory
         return tile.upgrades().canRemoveUpgrade(slot);
     }
 }
+*/

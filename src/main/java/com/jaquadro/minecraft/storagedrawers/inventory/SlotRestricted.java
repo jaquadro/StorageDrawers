@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.inventory;
+/*package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -17,3 +17,4 @@ public class SlotRestricted extends Slot
         return inventory.isItemValidForSlot(getSlotIndex(), stack);
     }
 }
+*/

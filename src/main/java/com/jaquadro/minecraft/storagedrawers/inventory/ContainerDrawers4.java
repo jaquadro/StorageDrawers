@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.inventory;
+/*package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -24,3 +24,4 @@ public class ContainerDrawers4 extends ContainerDrawers
     }
 }
 
+*/

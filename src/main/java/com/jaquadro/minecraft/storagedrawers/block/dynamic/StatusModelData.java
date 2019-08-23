@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block.dynamic;
+/*package com.jaquadro.minecraft.storagedrawers.block.dynamic;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -198,3 +198,4 @@ public class StatusModelData
         }
     }
 }
+*/

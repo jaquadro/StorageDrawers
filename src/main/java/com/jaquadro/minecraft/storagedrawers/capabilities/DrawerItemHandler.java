@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.capabilities;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import net.minecraft.item.ItemStack;
@@ -50,9 +49,9 @@ public class DrawerItemHandler implements IItemHandler
     @Nonnull
     public ItemStack insertItem (int slot, @Nonnull ItemStack stack, boolean simulate) {
         if (slotIsVirtual(slot)) {
-            if (StorageDrawers.config.cache.enableItemConversion)
-                return insertItemFullScan(stack, simulate);
-            else
+            //if (StorageDrawers.config.cache.enableItemConversion)
+            //    return insertItemFullScan(stack, simulate);
+            //else
                 return stack;
         }
 
@@ -61,21 +60,21 @@ public class DrawerItemHandler implements IItemHandler
         int orderedSlot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
         int prevSlot = (slot >= 1 && slot < order.length) ? order[slot - 1] : -1;
 
-        if (StorageDrawers.config.cache.enableItemConversion && orderedSlot > 0) {
+        /*if (StorageDrawers.config.cache.enableItemConversion && orderedSlot > 0) {
             IDrawer drawer = group.getDrawer(orderedSlot);
             if (drawer.isEnabled() && drawer.isEmpty()) {
                 IDrawer prevDrawer = group.getDrawer(prevSlot);
                 if (!prevDrawer.isEnabled() || !prevDrawer.isEmpty())
                     return insertItemFullScan(stack, simulate);
             }
-        }
+        }*/
 
         return insertItemInternal(orderedSlot, stack, simulate);
     }
 
     @Nonnull
     private ItemStack insertItemFullScan (@Nonnull ItemStack stack, boolean simulate) {
-        IItemRepository itemRepo = group.getCapability(ITEM_REPOSITORY_CAPABILITY, null);
+        IItemRepository itemRepo = group.getCapability(ITEM_REPOSITORY_CAPABILITY, null).orElse(null);
         if (itemRepo != null)
             return itemRepo.insertItem(stack, simulate);
 

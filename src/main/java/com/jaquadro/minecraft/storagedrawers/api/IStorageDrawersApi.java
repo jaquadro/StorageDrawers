@@ -5,7 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.registry.IWailaRegistry;
 
 public interface IStorageDrawersApi
 {
-    IRenderRegistry renderRegistry ();
+    //IRenderRegistry renderRegistry ();
 
-    IWailaRegistry wailaRegistry ();
+    //IWailaRegistry wailaRegistry ();
 }

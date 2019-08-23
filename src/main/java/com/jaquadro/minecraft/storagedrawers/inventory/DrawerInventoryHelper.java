@@ -2,7 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -42,14 +42,16 @@ public class DrawerInventoryHelper
         float zOff = RANDOM.nextFloat() * 0.8F + 0.1F;
 
         while (!stack.isEmpty()) {
-            EntityItem entityitem = new EntityItem(world, x + xOff, y + yOff, z + zOff, stack.splitStack(RANDOM.nextInt(21) + 10));
+            ItemEntity entityitem = new ItemEntity(world, x + xOff, y + yOff, z + zOff, stack.split(RANDOM.nextInt(21) + 10));
 
             float velocity = 0.05F;
-            entityitem.motionX = RANDOM.nextGaussian() * (double)velocity;
-            entityitem.motionY = RANDOM.nextGaussian() * (double)velocity + 0.20000000298023224D;
-            entityitem.motionZ = RANDOM.nextGaussian() * (double)velocity;
+            entityitem.setMotion(
+                RANDOM.nextGaussian() * (double)velocity,
+                RANDOM.nextGaussian() * (double)velocity + 0.20000000298023224D,
+                RANDOM.nextGaussian() * (double)velocity
+            );
 
-            world.spawnEntity(entityitem);
+            world.addEntity(entityitem);
         }
     }
 }

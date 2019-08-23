@@ -2,14 +2,8 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import com.jaquadro.minecraft.storagedrawers.block.dynamic.StatusModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
-import com.jaquadro.minecraft.storagedrawers.item.*;
-import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -97,10 +91,10 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     @OnlyIn(Dist.CLIENT)
     public void initDynamic () { }
 
-    @OnlyIn(Dist.CLIENT)
+    /*@OnlyIn(Dist.CLIENT)
     public StatusModelData getStatusInfo (BlockState state) {
         return null;
-    }
+    }*/
 
     @Override
     public BlockRenderLayer getRenderLayer () {
@@ -170,11 +164,11 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     public void onBlockPlacedBy (World world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
         if (stack.hasDisplayName()) {
             TileEntityDrawers tile = getTileEntity(world, pos);
-            if (tile != null)
-                tile.setCustomName(stack.getDisplayName());
+            //if (tile != null)
+            //    tile.setCustomName(stack.getDisplayName());
         }
 
-        if (entity.getHeldItemOffhand().getItem() == ModItems.drawerKey) {
+        /*if (entity.getHeldItemOffhand().getItem() == ModItems.drawerKey) {
             TileEntityDrawers tile = getTileEntity(world, pos);
             if (tile != null) {
                 IDrawerAttributes _attrs = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(new EmptyDrawerAttributes());
@@ -184,7 +178,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                     attrs.setItemLocked(LockAttribute.LOCK_POPULATED, true);
                 }
             }
-        }
+        }*/
     }
 
     @Override
@@ -217,8 +211,8 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, pos);
 
-        if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
-            return false;
+        //if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
+        //    return false;
 
         //if (StorageDrawers.config.cache.debugTrace) {
             StorageDrawers.log.info("BlockDrawers.onBlockActivated");
@@ -420,14 +414,14 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         TileEntityDrawers tile = getTileEntity(world, pos);
 
         if (tile != null) {
-            for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {
+            /*for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {
                 ItemStack stack = tile.upgrades().getUpgrade(i);
                 if (!stack.isEmpty()) {
                     if (stack.getItem() instanceof ItemUpgradeCreative)
                         continue;
                     spawnAsEntity(world, pos, stack);
                 }
-            }
+            }*/
 
             if (!tile.getDrawerAttributes().isUnlimitedVending())
                 DrawerInventoryHelper.dropInventoryItems(world, pos, tile.getGroup());
@@ -527,7 +521,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         return true;
     }
 
-    @Override
+    /*@Override
     @SuppressWarnings("deprecation")
     public int getWeakPower (BlockState state, IBlockReader blockAccess, BlockPos pos, Direction side) {
         if (!canProvidePower(state))
@@ -538,7 +532,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
             return 0;
 
         return tile.getRedstoneLevel();
-    }
+    }*/
 
     @Override
     @SuppressWarnings("deprecation")

@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.block.modeldata;
+/*package com.jaquadro.minecraft.storagedrawers.block.modeldata;
 
 import com.jaquadro.minecraft.chameleon.model.ModelData;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
@@ -102,3 +102,4 @@ public final class DrawerStateModelData extends ModelData
         return c;
     }
 }
+*/

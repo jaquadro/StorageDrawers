@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,8 +35,8 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     {
         private GroupData groupData = new GroupData(1);
 
-        public Slot1 (TileEntityType<?> tileEntityType) {
-            super(tileEntityType);
+        public Slot1 () {
+            super(ModBlocks.STANDARD_DRAWERS_1);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -55,8 +56,8 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     {
         private GroupData groupData = new GroupData(2);
 
-        public Slot2 (TileEntityType<?> tileEntityType) {
-            super(tileEntityType);
+        public Slot2 () {
+            super(ModBlocks.STANDARD_DRAWERS_2);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -76,8 +77,8 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     {
         private GroupData groupData = new GroupData(4);
 
-        public Slot4 (TileEntityType<?> tileEntityType) {
-            super(tileEntityType);
+        public Slot4 () {
+            super(ModBlocks.STANDARD_DRAWERS_4);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -93,14 +94,14 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
     }
 
-    public static TileEntityDrawersStandard createEntity (TileEntityType<?> tileEntityType, int slotCount) {
+    public static TileEntityDrawersStandard createEntity (int slotCount) {
         switch (slotCount) {
             case 1:
-                return new Slot1(tileEntityType);
+                return new Slot1();
             case 2:
-                return new Slot2(tileEntityType);
+                return new Slot2();
             case 4:
-                return new Slot4(tileEntityType);
+                return new Slot4();
             default:
                 return null;
         }
