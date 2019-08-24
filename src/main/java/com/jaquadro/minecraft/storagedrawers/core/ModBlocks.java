@@ -85,7 +85,7 @@ public class ModBlocks
     @ObjectHolder(StorageDrawers.MOD_ID + ":keybutton")
     public static BlockKeyButton keyButton;*/
 
-    @Mod.EventBusSubscriber(modid = StorageDrawers.MOD_ID)
+    @Mod.EventBusSubscriber(modid = StorageDrawers.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class Registration
     {
         private static List<Block> blockList = new ArrayList<Block>();
@@ -219,7 +219,7 @@ public class ModBlocks
 
         private static Block registerDrawerBlock(RegistryEvent.Register<Block> event, String name, int drawerCount, boolean halfDepth) {
             return registerBlock(event, name, new BlockStandardDrawers(drawerCount, halfDepth, Block.Properties.create(Material.WOOD)
-                .sound(SoundType.WOOD).lightValue(255).hardnessAndResistance(5f)));
+                .sound(SoundType.WOOD).hardnessAndResistance(5f)));
         }
 
         private static Block registerBlock(RegistryEvent.Register<Block> event, String name, Block block) {

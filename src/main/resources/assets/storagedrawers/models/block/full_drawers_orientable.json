@@ -1,0 +1,13 @@
+{
+    "parent": "storagedrawers:block/full_drawers",
+    "textures": {
+        "particle": "#front",
+        "trim": "#trim",
+        "down": "#top",
+        "up": "#top",
+        "north": "#front",
+        "east": "#side",
+        "south": "#side",
+        "west": "#side"
+    }
+}

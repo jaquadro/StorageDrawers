@@ -5,13 +5,16 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import net.minecraft.block.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
@@ -38,11 +41,11 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     // TODO: TE.getModelData()
     //public static final IUnlistedProperty<DrawerStateModelData> STATE_MODEL = UnlistedModelData.create(DrawerStateModelData.class);
 
-    private static final VoxelShape AABB_FULL = Block.makeCuboidShape(0, 0, 0, 1, 1, 1);
-    private static final VoxelShape AABB_NORTH_HALF = Block.makeCuboidShape(0, 0, .5, 1, 1, 1);
-    private static final VoxelShape AABB_SOUTH_HALF = Block.makeCuboidShape(0, 0, 0, 1, 1, .5);
-    private static final VoxelShape AABB_WEST_HALF = Block.makeCuboidShape(.5, 0, 0, 1, 1, 1);
-    private static final VoxelShape AABB_EAST_HALF = Block.makeCuboidShape(0, 0, 0, .5, 1, 1);
+    private static final VoxelShape AABB_FULL = Block.makeCuboidShape(0, 0, 0, 16, 16, 16);
+    private static final VoxelShape AABB_NORTH_HALF = Block.makeCuboidShape(0, 0, 8, 16, 16, 16);
+    private static final VoxelShape AABB_SOUTH_HALF = Block.makeCuboidShape(0, 0, 0, 16, 16, 8);
+    private static final VoxelShape AABB_WEST_HALF = Block.makeCuboidShape(8, 0, 0, 16, 16, 16);
+    private static final VoxelShape AABB_EAST_HALF = Block.makeCuboidShape(0, 0, 0, 8, 16, 16);
 
     private final int drawerCount;
     private final boolean halfDepth;
@@ -68,7 +71,12 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
             .with(VOIDING, false));
 
         this.drawerCount = drawerCount;
-        this.halfDepth = true;
+        this.halfDepth = halfDepth;
+    }
+
+    @Override
+    protected void fillStateContainer (StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(HORIZONTAL_FACING, ITEM_LOCKED, SHROUDED, VOIDING);
     }
 
     public boolean retrimBlock (World world, BlockPos pos, ItemStack prototype) {
@@ -335,9 +343,10 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     }
 
     protected BlockRayTraceResult rayTraceEyes(World world, PlayerEntity player, double length) {
-        Vec3d startPos = new Vec3d(player.posX, player.posY, player.posZ);
-        Vec3d endPos = startPos.add(player.getLookVec().x * length, player.getLookVec().y * length, player.getLookVec().z * length);
-        RayTraceContext context = new RayTraceContext(startPos, endPos, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player);
+        Vec3d eyePos = player.getEyePosition(1);
+        Vec3d lookPos = player.getLook(1);
+        Vec3d endPos = eyePos.add(lookPos.x * length, lookPos.y * length, lookPos.z * length);
+        RayTraceContext context = new RayTraceContext(eyePos, endPos, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player);
         return world.rayTraceBlocks(context);
     }
 
@@ -428,6 +437,30 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         }
 
         super.onReplaced(state, world, pos, newState, isMoving);
+    }
+
+    @Override
+    public boolean removedByPlayer (BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
+        if (player.isCreative()) {
+            if (creativeCanBreakBlock(state, world, pos, player))
+                world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
+            else
+                onBlockClicked(state, world, pos, player);
+
+            return false;
+        }
+
+        return willHarvest || super.removedByPlayer(state, world, pos, player, false, fluid);
+    }
+
+    public boolean creativeCanBreakBlock (BlockState state, World world, BlockPos pos, PlayerEntity player) {
+        double blockReachDistance = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1;
+
+        BlockRayTraceResult rayResult = rayTraceEyes(world, player, blockReachDistance + 1);
+        if (rayResult.getType() == RayTraceResult.Type.MISS || state.get(HORIZONTAL_FACING) != rayResult.getFace())
+            return true;
+        else
+            return false;
     }
 
     @Override
@@ -539,4 +572,6 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     public int getStrongPower (BlockState state, IBlockReader worldIn, BlockPos pos, Direction side) {
         return (side == Direction.UP) ? getWeakPower(state, worldIn, pos, side) : 0;
     }
+
+
 }

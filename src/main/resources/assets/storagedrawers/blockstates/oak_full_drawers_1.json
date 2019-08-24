@@ -1,0 +1,28 @@
+{
+    "multipart": [
+        {   "when": { "facing": "north" },
+            "apply": { "model":  "storagedrawers:block/oak_full_drawers_1" }
+        },
+        {   "when": { "facing": "east" },
+            "apply": { "model":  "storagedrawers:block/oak_full_drawers_1", "y": 90 }
+        },
+        {   "when": { "facing": "south" },
+            "apply": { "model":  "storagedrawers:block/oak_full_drawers_1", "y": 180 }
+        },
+        {   "when": { "facing": "west" },
+            "apply": { "model":  "storagedrawers:block/oak_full_drawers_1", "y": 270 }
+        },
+        {   "when": { "facing": "north", "item_locked": true },
+            "apply": { "model":  "storagedrawers:block/full_drawer_lock" }
+        },
+        {   "when": { "facing": "east", "item_locked": true },
+            "apply": { "model":  "storagedrawers:block/full_drawer_lock", "y": 90 }
+        },
+        {   "when": { "facing": "south", "item_locked": true },
+            "apply": { "model":  "storagedrawers:block/full_drawer_lock", "y": 180 }
+        },
+        {   "when": { "facing": "west", "item_locked": true },
+            "apply": { "model":  "storagedrawers:block/full_drawer_lock", "y": 270 }
+        }
+    ]
+}
