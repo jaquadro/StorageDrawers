@@ -1,43 +1,89 @@
-/*package com.jaquadro.minecraft.storagedrawers.client.model;
+package com.jaquadro.minecraft.storagedrawers.client.model;
 
-import com.google.common.collect.ImmutableList;
-import com.jaquadro.minecraft.chameleon.model.CachedBuilderModel;
-import com.jaquadro.minecraft.chameleon.model.PassLimitedModel;
-import com.jaquadro.minecraft.chameleon.model.ProxyBuilderModel;
-import com.jaquadro.minecraft.chameleon.resources.register.DefaultRegister;
+import com.google.common.collect.Lists;
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
-import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockVariantDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.modeldata.DrawerStateModelData;
-import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerDecoratorModel;
-import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPlanks;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.*;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.model.*;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.resources.IResource;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import org.apache.commons.io.IOUtils;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public final class BasicDrawerModel
 {
-    public static class Register extends DefaultRegister
+    private static final Map<Direction, IBakedModel> lockOverlays = new HashMap<>();
+
+    @Mod.EventBusSubscriber(modid = StorageDrawers.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static class Register // extends DefaultRegister
     {
-        public Register () {
+        @SubscribeEvent
+        public static void registerTextures (TextureStitchEvent.Pre event) {
+            IResource iresource = null;
+            Reader reader = null;
+            BlockModel unbakedModel = null;
+            try {
+                iresource = Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_lock.json"));
+                reader = new InputStreamReader(iresource.getInputStream(), StandardCharsets.UTF_8);
+                unbakedModel = BlockModel.deserialize(reader);
+            } catch (IOException e) {
+
+            } finally {
+                IOUtils.closeQuietly(reader);
+                IOUtils.closeQuietly((Closeable)iresource);
+            }
+
+            //unbakedModel.name = new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock").toString();
+
+            for (String x : unbakedModel.textures.values()) {
+                event.addSprite(new ResourceLocation(x));
+            }
+        }
+
+        @SubscribeEvent
+        public static void registerModels (ModelBakeEvent event) {
+            // IUnbakedModel unbaked = event.getModelLoader().getUnbakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"));
+            lockOverlays.put(Direction.NORTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y0, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
+            lockOverlays.put(Direction.EAST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y90, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
+            lockOverlays.put(Direction.SOUTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y180, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
+            lockOverlays.put(Direction.WEST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y270, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
+            replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_1);
+            replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_2);
+            replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_4);
+        }
+
+        public static void replaceBlock(ModelBakeEvent event, Block block) {
+            for (BlockState state : block.getStateContainer().getValidStates()) {
+                ModelResourceLocation modelResource = BlockModelShapes.getModelLocation(state);
+                IBakedModel parentModel = event.getModelManager().getModel(modelResource);
+                if (parentModel != event.getModelManager().getMissingModel())
+                    event.getModelRegistry().put(modelResource, new Model(parentModel, state.get(BlockDrawers.HORIZONTAL_FACING)));
+            }
+        }
+
+        /*public Register () {
             super(ModBlocks.basicDrawers);
         }
 
-        @Override
         public List<IBlockState> getBlockStates () {
             List<IBlockState> states = new ArrayList<>();
 
@@ -75,20 +121,68 @@ public final class BasicDrawerModel
             resource.add(DrawerDecoratorModel.iconVoid);
             resource.add(DrawerSealedModel.iconTapeCover);
             return resource;
+        }*/
+    }
+
+    public static class MergedModel implements IBakedModel {
+        protected final IBakedModel mainModel;
+        protected final IBakedModel[] models;
+
+        public MergedModel (IBakedModel mainModel, IBakedModel... models) {
+            this.mainModel = mainModel;
+            this.models = models;
+        }
+
+        @Override
+        public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, Random rand) {
+            List<BakedQuad> quads = Lists.newArrayList();
+            quads.addAll(mainModel.getQuads(state, side, rand));
+            for (IBakedModel model : models)
+                quads.addAll(model.getQuads(state, side, rand));
+            return quads;
+        }
+
+        @Override
+        public boolean isAmbientOcclusion () {
+            return mainModel.isAmbientOcclusion();
+        }
+
+        @Override
+        public boolean isGui3d () {
+            return mainModel.isGui3d();
+        }
+
+        @Override
+        public boolean isBuiltInRenderer () {
+            return mainModel.isBuiltInRenderer();
+        }
+
+        @Override
+        public TextureAtlasSprite getParticleTexture () {
+            return mainModel.getParticleTexture();
+        }
+
+        @Override
+        public ItemOverrideList getOverrides () {
+            return mainModel.getOverrides();
         }
     }
 
     public static class Model extends ProxyBuilderModel
     {
-        public Model (IBakedModel parent) {
+        Direction side;
+
+        public Model (IBakedModel parent, Direction side) {
             super(parent);
+            this.side = side;
         }
 
         @Override
-        protected IBakedModel buildModel (IBlockState state, IBakedModel parent) {
-            try {
-                EnumBasicDrawer drawer = state.getValue(BlockStandardDrawers.BLOCK);
-                EnumFacing dir = state.getValue(BlockDrawers.FACING);
+        protected IBakedModel buildModel (BlockState state, IBakedModel parent) {
+            return new MergedModel(parent, lockOverlays.get(side));
+            /*try {
+                //EnumBasicDrawer drawer = state.get(BlockStandardDrawers.BLOCK);
+                Direction dir = state.get(BlockDrawers.HORIZONTAL_FACING);
 
                 if (!(state instanceof IExtendedBlockState))
                     return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
@@ -103,16 +197,16 @@ public final class BasicDrawerModel
             }
             catch (Throwable t) {
                 return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
-            }
+            }*/
         }
 
-        @Override
+        /*@Override
         public ItemOverrideList getOverrides () {
             return itemHandler;
-        }
+        }*/
 
-        @Override
-        public List<Object> getKey (IBlockState state) {
+        /*@Override
+        public List<Object> getKey (BlockState state) {
             try {
                 List<Object> key = new ArrayList<Object>();
                 IExtendedBlockState xstate = (IExtendedBlockState)state;
@@ -123,10 +217,10 @@ public final class BasicDrawerModel
             catch (Throwable t) {
                 return super.getKey(state);
             }
-        }
+        }*/
     }
 
-    private static class ItemHandler extends ItemOverrideList
+    /*private static class ItemHandler extends ItemOverrideList
     {
         public ItemHandler () {
             super(ImmutableList.<ItemOverride>of());
@@ -147,6 +241,5 @@ public final class BasicDrawerModel
         }
     }
 
-    private static final ItemHandler itemHandler = new ItemHandler();
+    private static final ItemHandler itemHandler = new ItemHandler();*/
 }
-*/

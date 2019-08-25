@@ -11,6 +11,8 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -321,11 +323,11 @@ public class ModBlocks
             }
         }*/
 
-        /*
-        @SubscribeEvent
-        @SideOnly(Side.CLIENT)
-        public static void registerModels (ModelRegistryEvent event) {
-            if (basicDrawers != null)
+        //@SubscribeEvent
+        //@SideOnly(Side.CLIENT)
+        //public static void registerModels (ModelBakeEvent event) {
+            //event.getModelRegistry().
+            /*if (basicDrawers != null)
                 basicDrawers.initDynamic();
             if (compDrawers != null)
                 compDrawers.initDynamic();
@@ -351,7 +353,7 @@ public class ModBlocks
             modelRegistry.registerItemVariants(trim);
             modelRegistry.registerItemVariants(controller);
             modelRegistry.registerItemVariants(controllerSlave);
-            modelRegistry.registerItemVariants(keyButton);
-        }*/
+            modelRegistry.registerItemVariants(keyButton);*/
+        //}
     }
 }

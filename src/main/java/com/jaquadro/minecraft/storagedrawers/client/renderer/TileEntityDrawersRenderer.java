@@ -16,71 +16,75 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.client.model.component.DrawerSealedModel;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStatus;
 import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
+import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEntityDrawers>
+@OnlyIn(Dist.CLIENT)
+public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDrawers>
 {
     private boolean[] renderAsBlock = new boolean[4];
     private ItemStack[] renderStacks = new ItemStack[4];
 
-    private RenderItem renderItem;
+    private ItemRenderer renderItem;
 
     @Override
-    public void render (TileEntityDrawers tile, double x, double y, double z, float partialTickTime, int destroyStage, float par7) {
+    public void render (TileEntityDrawers tile, double x, double y, double z, float partialTickTime, int destroyStage) {
         if (tile == null)
             return;
 
-        float depth = 1;
-
-        IBlockState state = tile.getWorld().getBlockState(tile.getPos());
-        if (state == null)
+        World world = tile.getWorld();
+        if (world == null)
             return;
 
-        Block block = state.getBlock();
-        if (block instanceof BlockDrawers) {
-            if (state.getProperties().containsKey(BlockStandardDrawers.BLOCK)) {
-                EnumBasicDrawer info = state.getValue(BlockStandardDrawers.BLOCK);
-                depth = info.isHalfDepth() ? .5f : 1;
-            }
-        }
-        else
+        BlockState state = world.getBlockState(tile.getPos());
+        if (!(state.getBlock() instanceof BlockDrawers))
             return;
+
+        BlockDrawers block = (BlockDrawers)state.getBlock();
+        float depth = block.isHalfDepth() ? .5f : 1;
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
+        GlStateManager.translated(x, y, z);
 
-        renderItem = Minecraft.getMinecraft().getRenderItem();
+        renderItem = Minecraft.getInstance().getItemRenderer();
 
-        EnumFacing side = EnumFacing.getFront(tile.getDirection());
+        Direction side = state.get(BlockDrawers.HORIZONTAL_FACING);
         int ambLight = getWorld().getCombinedLight(tile.getPos().offset(side), 0);
         int lu = ambLight % 65536;
         int lv = ambLight / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)lu / 1.0F, (float)lv / 1.0F);
+        GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (float)lu, (float)lv);
 
-        ChamRender renderer = ChamRenderManager.instance.getRenderer(Tessellator.getInstance().getBuffer());
+        //ChamRender renderer = ChamRenderManager.instance.getRenderer(Tessellator.getInstance().getBuffer());
 
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getInstance();
         boolean cache = mc.gameSettings.fancyGraphics;
         mc.gameSettings.fancyGraphics = true;
-        renderUpgrades(renderer, tile, state);
-        if (!tile.getDrawerAttributes().isConcealed() && !tile.isSealed())
+        //renderUpgrades(renderer, tile, state);
+        if (!tile.getDrawerAttributes().isConcealed())
             renderFastItemSet(renderer, tile, state, side, depth, partialTickTime);
 
         mc.gameSettings.fancyGraphics = cache;
@@ -96,10 +100,10 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         GlStateManager.popMatrix();
 
-        ChamRenderManager.instance.releaseRenderer(renderer);
+        //ChamRenderManager.instance.releaseRenderer(renderer);
     }
 
-    private void renderFastItemSet (ChamRender renderer, TileEntityDrawers tile, IBlockState state, EnumFacing side, float depth, float partialTickTime) {
+    private void renderFastItemSet (ChamRender renderer, TileEntityDrawers tile, BlockState state, Direction side, float depth, float partialTickTime) {
         int drawerCount = tile.getDrawerCount();
 
         for (int i = 0; i < drawerCount; i++) {
@@ -124,7 +128,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         }
 
         if (tile.getDrawerAttributes().isShowingQuantity()) {
-            EntityPlayerSP player = Minecraft.getMinecraft().player;
+            PlayerEntity player = Minecraft.getInstance().player;
             BlockPos blockPos = tile.getPos().add(.5, .5, .5);
             double distance = Math.sqrt(blockPos.distanceSq(player.getPosition()));
 
@@ -139,7 +143,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         }
     }
 
-    private void renderText (String text, TileEntityDrawers tile, IBlockState state, int slot, EnumFacing side, float depth, float alpha) {
+    private void renderText (String text, TileEntityDrawers tile, BlockState state, int slot, Direction side, float depth, float alpha) {
         if (text == null || text.isEmpty())
             return;
 
@@ -172,7 +176,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
         GlStateManager.popMatrix();
     }
 
-    private void renderFastItem (ChamRender renderer, @Nonnull ItemStack itemStack, TileEntityDrawers tile, IBlockState state, int slot, EnumFacing side, float depth, float partialTickTime) {
+    private void renderFastItem (ChamRender renderer, @Nonnull ItemStack itemStack, TileEntityDrawers tile, BlockState state, int slot, Direction side, float depth, float partialTickTime) {
         int drawerCount = tile.getDrawerCount();
         float size = (drawerCount == 1) ? .5f : .25f;
 
