@@ -26,6 +26,7 @@ import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.extensions.IForgeBlock;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -50,6 +51,9 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     private final int drawerCount;
     private final boolean halfDepth;
 
+    public final AxisAlignedBB[] slotGeometry;
+    public final AxisAlignedBB[] labelGeometry;
+
     //@SideOnly(Side.CLIENT)
     //private StatusModelData[] statusInfo;
 
@@ -72,6 +76,14 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
         this.drawerCount = drawerCount;
         this.halfDepth = halfDepth;
+
+        slotGeometry = new AxisAlignedBB[drawerCount];
+        labelGeometry = new AxisAlignedBB[drawerCount];
+
+        for (int i = 0; i < drawerCount; i++) {
+            slotGeometry[i] = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+            labelGeometry[i] = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+        }
     }
 
     @Override
@@ -507,6 +519,11 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
         return super.getExplosionResistance(world, pos, exploder, explosion);
     }*/
+
+    @Override
+    public boolean hasTileEntity (BlockState state) {
+        return true;
+    }
 
     public TileEntityDrawers getTileEntity (IBlockReader blockAccess, BlockPos pos) {
         if (inTileLookup.get())

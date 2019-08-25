@@ -8,12 +8,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.resources.IResource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -38,24 +41,60 @@ public final class BasicDrawerModel
     {
         @SubscribeEvent
         public static void registerTextures (TextureStitchEvent.Pre event) {
-            IResource iresource = null;
-            Reader reader = null;
-            BlockModel unbakedModel = null;
-            try {
-                iresource = Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_lock.json"));
-                reader = new InputStreamReader(iresource.getInputStream(), StandardCharsets.UTF_8);
-                unbakedModel = BlockModel.deserialize(reader);
-            } catch (IOException e) {
-
-            } finally {
-                IOUtils.closeQuietly(reader);
-                IOUtils.closeQuietly((Closeable)iresource);
-            }
+            BlockModel unbakedModel = getBlockModel(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_lock.json"));
 
             //unbakedModel.name = new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock").toString();
 
             for (String x : unbakedModel.textures.values()) {
                 event.addSprite(new ResourceLocation(x));
+            }
+
+            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_slots_1.json"),
+                ModBlocks.OAK_FULL_DRAWERS_1,
+                ModBlocks.SPRUCE_FULL_DRAWERS_1,
+                ModBlocks.BIRCH_FULL_DRAWERS_1,
+                ModBlocks.JUNGLE_FULL_DRAWERS_1,
+                ModBlocks.ACACIA_FULL_DRAWERS_1,
+                ModBlocks.DARK_OAK_FULL_DRAWERS_1);
+            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_slots_2.json"),
+                ModBlocks.OAK_FULL_DRAWERS_2,
+                ModBlocks.SPRUCE_FULL_DRAWERS_2,
+                ModBlocks.BIRCH_FULL_DRAWERS_2,
+                ModBlocks.JUNGLE_FULL_DRAWERS_2,
+                ModBlocks.ACACIA_FULL_DRAWERS_2,
+                ModBlocks.DARK_OAK_FULL_DRAWERS_2);
+            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_slots_4.json"),
+                ModBlocks.OAK_FULL_DRAWERS_4,
+                ModBlocks.SPRUCE_FULL_DRAWERS_4,
+                ModBlocks.BIRCH_FULL_DRAWERS_4,
+                ModBlocks.JUNGLE_FULL_DRAWERS_4,
+                ModBlocks.ACACIA_FULL_DRAWERS_4,
+                ModBlocks.DARK_OAK_FULL_DRAWERS_4);
+        }
+
+        private static BlockModel getBlockModel (ResourceLocation location) {
+            IResource iresource = null;
+            Reader reader = null;
+            try {
+                iresource = Minecraft.getInstance().getResourceManager().getResource(location);
+                reader = new InputStreamReader(iresource.getInputStream(), StandardCharsets.UTF_8);
+                return BlockModel.deserialize(reader);
+            } catch (IOException e) {
+                return null;
+            } finally {
+                IOUtils.closeQuietly(reader);
+                IOUtils.closeQuietly((Closeable)iresource);
+            }
+        }
+
+        private static void populateGeometryData(ResourceLocation location, BlockDrawers... blocks) {
+            BlockModel slotInfo = getBlockModel(location);
+            for (BlockDrawers block : blocks) {
+                for (int i = 0; i < block.getDrawerCount(); i++) {
+                    Vector3f from = slotInfo.getElements().get(i).positionFrom;
+                    Vector3f to = slotInfo.getElements().get(i).positionTo;
+                    block.labelGeometry[i] = new AxisAlignedBB(from.getX(), from.getY(), from.getZ(), to.getX(), to.getY(), to.getZ());
+                }
             }
         }
 
@@ -69,6 +108,8 @@ public final class BasicDrawerModel
             replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_1);
             replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_2);
             replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_4);
+
+            event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y0, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK);
         }
 
         public static void replaceBlock(ModelBakeEvent event, Block block) {

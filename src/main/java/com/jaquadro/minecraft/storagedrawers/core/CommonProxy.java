@@ -56,8 +56,10 @@ public class CommonProxy
             BlockState state = event.getWorld().getBlockState(pos);
             Block block = state.getBlock();
             if (block instanceof BlockDrawers) {
-                if (!((BlockDrawers) block).creativeCanBreakBlock(state, event.getWorld(), pos, event.getPlayer()))
+                if (!((BlockDrawers) block).creativeCanBreakBlock(state, event.getWorld(), pos, event.getPlayer())) {
+                    state.onBlockClicked(event.getWorld(), pos, event.getPlayer());
                     event.setCanceled(true);
+                }
             }
         //}
     }

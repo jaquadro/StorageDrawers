@@ -50,15 +50,19 @@ public class BlockStandardDrawers extends BlockDrawers
 
     @Override
     protected int getDrawerSlot (Direction side, double hitX, double hitY, double hitZ) {
+        hitX %= 1;
+        hitY %= 1;
+        hitZ %= 1;
+
         if (getDrawerCount() == 1)
             return 0;
         if (getDrawerCount() == 2)
             return hitTop(hitY) ? 0 : 1;
 
         if (hitLeft(side, hitX, hitZ))
-            return hitTop(hitY) ? 0 : 1;
+            return hitTop(hitY) ? 0 : 2;
         else
-            return hitTop(hitY) ? 2 : 3;
+            return hitTop(hitY) ? 1 : 3;
     }
 
     @Override

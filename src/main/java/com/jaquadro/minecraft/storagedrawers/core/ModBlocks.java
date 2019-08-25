@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.*;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -11,10 +12,13 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -25,7 +29,7 @@ import java.util.function.Supplier;
 @ObjectHolder(StorageDrawers.MOD_ID)
 public class ModBlocks
 {
-    public static final Block
+    public static final BlockDrawers
         OAK_FULL_DRAWERS_1 = null,
         OAK_FULL_DRAWERS_2 = null,
         OAK_FULL_DRAWERS_4 = null,
@@ -322,6 +326,14 @@ public class ModBlocks
                 }
             }
         }*/
+
+        @SubscribeEvent
+        @OnlyIn(Dist.CLIENT)
+        public static void registerModels (ModelBakeEvent event) {
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.Slot1.class, new TileEntityDrawersRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.Slot2.class, new TileEntityDrawersRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.Slot4.class, new TileEntityDrawersRenderer());
+        }
 
         //@SubscribeEvent
         //@SideOnly(Side.CLIENT)
