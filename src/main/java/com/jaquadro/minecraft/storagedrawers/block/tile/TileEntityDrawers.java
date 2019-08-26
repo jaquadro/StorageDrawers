@@ -10,15 +10,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.INameable;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.ModelDataManager;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
@@ -28,6 +34,11 @@ import java.util.UUID;
 
 public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawerGroup /* IProtectable, INameable */
 {
+    public static final ModelProperty<IDrawerAttributes> ATTRIBUTES = new ModelProperty<>();
+    //public static final ModelProperty<Boolean> ITEM_LOCKED = new ModelProperty<>();
+    //public static final ModelProperty<Boolean> SHROUDED = new ModelProperty<>();
+    //public static final ModelProperty<Boolean> VOIDING = new ModelProperty<>();
+
     //private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
     //private MaterialData materialData = new MaterialData();
     //private UpgradeData upgradeData = new DrawerUpgradeData();
@@ -209,7 +220,10 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         return true;
     }*/
 
-    protected void onAttributeChanged () { }
+    protected void onAttributeChanged () {
+        requestModelDataUpdate();
+        //refreshModelData();
+    }
 
     /*public boolean isSealed () {
         if (!StorageDrawers.config.cache.enableTape)
@@ -444,6 +458,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
             drawerAttributes.setIsShowingQuantity(tag.getBoolean("Qua"));
         }
 
+        drawerAttributes.setItemLocked(LockAttribute.LOCK_POPULATED, true);
+
         /*owner = null;
         if (tag.hasKey("Own"))
             owner = UUID.fromString(tag.getString("Own"));
@@ -589,5 +605,22 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
             return cap;
 
         return super.getCapability(capability, facing);
+    }
+
+    @Nonnull
+    @Override
+    public IModelData getModelData () {
+        return new ModelDataMap.Builder()
+            .withInitial(ATTRIBUTES, drawerAttributes).build();
+            /*.withInitial(ITEM_LOCKED, drawerAttributes.isItemLocked(LockAttribute.LOCK_EMPTY))
+            .withInitial(SHROUDED, drawerAttributes.isConcealed())
+            .withInitial(VOIDING, drawerAttributes.isVoid()).build();*/
+    }
+
+    private void refreshModelData () {
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+            ModelDataManager.requestModelDataRefresh(this);
+            Minecraft.getInstance().worldRenderer.markBlockRangeForRenderUpdate(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY(), pos.getZ());
+        });
     }
 }

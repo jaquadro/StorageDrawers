@@ -48,6 +48,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
         @Override
         protected void onAttributeChanged () {
+            super.onAttributeChanged();
             groupData.syncAttributes();
         }
     }
@@ -69,6 +70,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
         @Override
         protected void onAttributeChanged () {
+            super.onAttributeChanged();
             groupData.syncAttributes();
         }
     }
@@ -90,6 +92,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
         @Override
         protected void onAttributeChanged () {
+            super.onAttributeChanged();
             groupData.syncAttributes();
         }
     }

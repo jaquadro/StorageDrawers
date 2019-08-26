@@ -2,7 +2,10 @@ package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.google.common.collect.Lists;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,10 +21,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.data.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.io.IOUtils;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Closeable;
 import java.io.IOException;
@@ -130,28 +136,32 @@ public final class BasicDrawerModel
             lockOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y180, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
             lockOverlaysHalf.put(Direction.WEST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y270, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
 
-            replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_1, lockOverlaysFull);
-            replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_2, lockOverlaysFull);
-            replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_4, lockOverlaysFull);
-            replaceBlock(event, ModBlocks.OAK_HALF_DRAWERS_1, lockOverlaysHalf);
-            replaceBlock(event, ModBlocks.OAK_HALF_DRAWERS_2, lockOverlaysHalf);
-            replaceBlock(event, ModBlocks.OAK_HALF_DRAWERS_4, lockOverlaysHalf);
-            replaceBlock(event, ModBlocks.SPRUCE_FULL_DRAWERS_1, lockOverlaysFull);
-            replaceBlock(event, ModBlocks.SPRUCE_FULL_DRAWERS_2, lockOverlaysFull);
-            replaceBlock(event, ModBlocks.SPRUCE_FULL_DRAWERS_4, lockOverlaysFull);
-            replaceBlock(event, ModBlocks.SPRUCE_HALF_DRAWERS_1, lockOverlaysHalf);
-            replaceBlock(event, ModBlocks.SPRUCE_HALF_DRAWERS_2, lockOverlaysHalf);
-            replaceBlock(event, ModBlocks.SPRUCE_HALF_DRAWERS_4, lockOverlaysHalf);
+            replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_1);
+            replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_2);
+            replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_4);
+            replaceBlock(event, ModBlocks.OAK_HALF_DRAWERS_1);
+            replaceBlock(event, ModBlocks.OAK_HALF_DRAWERS_2);
+            replaceBlock(event, ModBlocks.OAK_HALF_DRAWERS_4);
+            replaceBlock(event, ModBlocks.SPRUCE_FULL_DRAWERS_1);
+            replaceBlock(event, ModBlocks.SPRUCE_FULL_DRAWERS_2);
+            replaceBlock(event, ModBlocks.SPRUCE_FULL_DRAWERS_4);
+            replaceBlock(event, ModBlocks.SPRUCE_HALF_DRAWERS_1);
+            replaceBlock(event, ModBlocks.SPRUCE_HALF_DRAWERS_2);
+            replaceBlock(event, ModBlocks.SPRUCE_HALF_DRAWERS_4);
 
             event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y0, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK);
         }
 
-        public static void replaceBlock(ModelBakeEvent event, Block block, Map<Direction, IBakedModel> overlays) {
+        public static void replaceBlock(ModelBakeEvent event, BlockDrawers block) {
             for (BlockState state : block.getStateContainer().getValidStates()) {
                 ModelResourceLocation modelResource = BlockModelShapes.getModelLocation(state);
                 IBakedModel parentModel = event.getModelManager().getModel(modelResource);
-                if (parentModel != event.getModelManager().getMissingModel())
-                    event.getModelRegistry().put(modelResource, new Model(parentModel, overlays, state.get(BlockDrawers.HORIZONTAL_FACING)));
+                if (parentModel != event.getModelManager().getMissingModel()) {
+                    if (block.isHalfDepth())
+                        event.getModelRegistry().put(modelResource, new Model2.HalfModel(parentModel));
+                    else
+                        event.getModelRegistry().put(modelResource, new Model2.FullModel(parentModel));
+                }
             }
         }
 
@@ -214,6 +224,70 @@ public final class BasicDrawerModel
             quads.addAll(mainModel.getQuads(state, side, rand));
             for (IBakedModel model : models)
                 quads.addAll(model.getQuads(state, side, rand));
+            return quads;
+        }
+
+        @Override
+        public boolean isAmbientOcclusion () {
+            return mainModel.isAmbientOcclusion();
+        }
+
+        @Override
+        public boolean isGui3d () {
+            return mainModel.isGui3d();
+        }
+
+        @Override
+        public boolean isBuiltInRenderer () {
+            return mainModel.isBuiltInRenderer();
+        }
+
+        @Override
+        public TextureAtlasSprite getParticleTexture () {
+            return mainModel.getParticleTexture();
+        }
+
+        @Override
+        public ItemOverrideList getOverrides () {
+            return mainModel.getOverrides();
+        }
+    }
+
+    public static abstract class Model2 implements IDynamicBakedModel {
+        protected final IBakedModel mainModel;
+        protected final Map<Direction, IBakedModel> lockOverlay;
+
+        public static class FullModel extends Model2 {
+            FullModel(IBakedModel mainModel) {
+                super(mainModel, lockOverlaysFull);
+            }
+        }
+
+        public static class HalfModel extends Model2 {
+            HalfModel(IBakedModel mainModel) {
+                super(mainModel, lockOverlaysHalf);
+            }
+        }
+
+        private Model2(IBakedModel mainModel, Map<Direction, IBakedModel> lockOverlay) {
+            this.mainModel = mainModel;
+            this.lockOverlay = lockOverlay;
+        }
+
+        @Nonnull
+        @Override
+        public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
+            List<BakedQuad> quads = Lists.newArrayList();
+            quads.addAll(mainModel.getQuads(state, side, rand));
+
+            if (state != null && extraData.hasProperty(TileEntityDrawers.ATTRIBUTES)) {
+                IDrawerAttributes attr = extraData.getData(TileEntityDrawers.ATTRIBUTES);
+                Direction dir = state.get(BlockDrawers.HORIZONTAL_FACING);
+
+                if (attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED))
+                    quads.addAll(lockOverlay.get(dir).getQuads(state, side, rand, extraData));
+            }
+
             return quads;
         }
 
