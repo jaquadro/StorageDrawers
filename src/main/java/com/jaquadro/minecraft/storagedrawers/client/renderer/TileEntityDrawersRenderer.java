@@ -160,7 +160,6 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
 
         BlockDrawers block = (BlockDrawers)state.getBlock();
         AxisAlignedBB labelGeometry = block.labelGeometry[slot];
-        float frontDepth = (float)labelGeometry.minZ * .0625f;
 
         GlStateManager.pushMatrix();
 
@@ -170,7 +169,8 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         float scaleY = (float)labelGeometry.getYSize() / 16;
         float moveX = (float)labelGeometry.minX;
         float moveY = 16f - (float)labelGeometry.maxY;
-        moveRendering(scaleX, scaleY, moveX, moveY, 1f - depth + frontDepth - .005f);
+        float moveZ = (float)labelGeometry.minZ * .0625f;
+        moveRendering(scaleX, scaleY, moveX, moveY, moveZ);
 
         //List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
         //for (IRenderLabel renderHandler : renderHandlers) {
