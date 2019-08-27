@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
+import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
@@ -239,12 +240,12 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
             StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item.toString());
         //}
 
-        /*
+
         if (!item.isEmpty()) {
             if (item.getItem() instanceof ItemKey)
                 return false;
 
-            if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
+            /*if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
                 if (!retrimBlock(world, pos, item))
                     return false;
 
@@ -298,18 +299,18 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 return true;
             }
             else if (item.getItem() == ModItems.tape)
-                return false;
+                return false;*/
         }
         else if (item.isEmpty() && player.isSneaking()) {
-            if (tileDrawers.isSealed()) {
+            /*if (tileDrawers.isSealed()) {
                 tileDrawers.setIsSealed(false);
                 return true;
             }
             else if (StorageDrawers.config.cache.enableDrawerUI) {
                 player.openGui(StorageDrawers.instance, GuiHandler.drawersGuiID, world, pos.getX(), pos.getY(), pos.getZ());
                 return true;
-            }
-        }*/
+            }*/
+        }
 
         if (state.get(HORIZONTAL_FACING) != hit.getFace())
             return false;

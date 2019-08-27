@@ -458,8 +458,6 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
             drawerAttributes.setIsShowingQuantity(tag.getBoolean("Qua"));
         }
 
-        drawerAttributes.setItemLocked(LockAttribute.LOCK_POPULATED, true);
-
         /*owner = null;
         if (tag.hasKey("Own"))
             owner = UUID.fromString(tag.getString("Own"));

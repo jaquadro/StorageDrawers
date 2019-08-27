@@ -1,17 +1,14 @@
-/*package com.jaquadro.minecraft.storagedrawers.item;
+package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
+import net.minecraft.item.Item;
 
 
 public class ItemDrawerKey extends ItemKey
 {
-    public ItemDrawerKey (String registryName, String unlocalizedName) {
-        setRegistryName(registryName);
-        setUnlocalizedName(unlocalizedName);
-        setCreativeTab(ModCreativeTabs.tabStorageDrawers);
-        setMaxDamage(0);
+    public ItemDrawerKey (Item.Properties properties) {
+        super(properties);
     }
 
     @Override
@@ -21,4 +18,3 @@ public class ItemDrawerKey extends ItemKey
         attrs.setItemLocked(LockAttribute.LOCK_POPULATED, !locked);
     }
 }
-*/
