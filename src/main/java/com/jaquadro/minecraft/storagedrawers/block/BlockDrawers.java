@@ -53,6 +53,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     private final boolean halfDepth;
 
     public final AxisAlignedBB[] slotGeometry;
+    public final AxisAlignedBB[] countGeometry;
     public final AxisAlignedBB[] labelGeometry;
 
     //@SideOnly(Side.CLIENT)
@@ -79,10 +80,12 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         this.halfDepth = halfDepth;
 
         slotGeometry = new AxisAlignedBB[drawerCount];
+        countGeometry = new AxisAlignedBB[drawerCount];
         labelGeometry = new AxisAlignedBB[drawerCount];
 
         for (int i = 0; i < drawerCount; i++) {
             slotGeometry[i] = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+            countGeometry[i] = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
             labelGeometry[i] = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
         }
     }

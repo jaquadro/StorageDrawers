@@ -194,7 +194,7 @@ public class ModBlocks
                 DARK_OAK_FULL_DRAWERS_1,
                 DARK_OAK_HALF_DRAWERS_1);
             
-            registerTileEntity(event, "standard_drawers_2", TileEntityDrawersStandard.Slot1::new,
+            registerTileEntity(event, "standard_drawers_2", TileEntityDrawersStandard.Slot2::new,
                 OAK_FULL_DRAWERS_2,
                 OAK_HALF_DRAWERS_2,
                 SPRUCE_FULL_DRAWERS_2,
@@ -208,7 +208,7 @@ public class ModBlocks
                 DARK_OAK_FULL_DRAWERS_2,
                 DARK_OAK_HALF_DRAWERS_2);
 
-            registerTileEntity(event, "standard_drawers_4", TileEntityDrawersStandard.Slot1::new,
+            registerTileEntity(event, "standard_drawers_4", TileEntityDrawersStandard.Slot4::new,
                 OAK_FULL_DRAWERS_4,
                 OAK_HALF_DRAWERS_4,
                 SPRUCE_FULL_DRAWERS_4,

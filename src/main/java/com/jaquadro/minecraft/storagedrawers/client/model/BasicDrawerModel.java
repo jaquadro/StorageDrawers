@@ -54,42 +54,48 @@ public final class BasicDrawerModel
                 event.addSprite(new ResourceLocation(x));
             }
 
-            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_slots_1.json"),
+            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_1.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_1.json"),
                 ModBlocks.OAK_FULL_DRAWERS_1,
                 ModBlocks.SPRUCE_FULL_DRAWERS_1,
                 ModBlocks.BIRCH_FULL_DRAWERS_1,
                 ModBlocks.JUNGLE_FULL_DRAWERS_1,
                 ModBlocks.ACACIA_FULL_DRAWERS_1,
                 ModBlocks.DARK_OAK_FULL_DRAWERS_1);
-            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_slots_2.json"),
+            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_2.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_2.json"),
                 ModBlocks.OAK_FULL_DRAWERS_2,
                 ModBlocks.SPRUCE_FULL_DRAWERS_2,
                 ModBlocks.BIRCH_FULL_DRAWERS_2,
                 ModBlocks.JUNGLE_FULL_DRAWERS_2,
                 ModBlocks.ACACIA_FULL_DRAWERS_2,
                 ModBlocks.DARK_OAK_FULL_DRAWERS_2);
-            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_slots_4.json"),
+            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_4.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_4.json"),
                 ModBlocks.OAK_FULL_DRAWERS_4,
                 ModBlocks.SPRUCE_FULL_DRAWERS_4,
                 ModBlocks.BIRCH_FULL_DRAWERS_4,
                 ModBlocks.JUNGLE_FULL_DRAWERS_4,
                 ModBlocks.ACACIA_FULL_DRAWERS_4,
                 ModBlocks.DARK_OAK_FULL_DRAWERS_4);
-            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/half_drawers_slots_1.json"),
+            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_1.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_1.json"),
                 ModBlocks.OAK_HALF_DRAWERS_1,
                 ModBlocks.SPRUCE_HALF_DRAWERS_1,
                 ModBlocks.BIRCH_HALF_DRAWERS_1,
                 ModBlocks.JUNGLE_HALF_DRAWERS_1,
                 ModBlocks.ACACIA_HALF_DRAWERS_1,
                 ModBlocks.DARK_OAK_HALF_DRAWERS_1);
-            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/half_drawers_slots_2.json"),
+            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_2.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_2.json"),
                 ModBlocks.OAK_HALF_DRAWERS_2,
                 ModBlocks.SPRUCE_HALF_DRAWERS_2,
                 ModBlocks.BIRCH_HALF_DRAWERS_2,
                 ModBlocks.JUNGLE_HALF_DRAWERS_2,
                 ModBlocks.ACACIA_HALF_DRAWERS_2,
                 ModBlocks.DARK_OAK_HALF_DRAWERS_2);
-            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/half_drawers_slots_4.json"),
+            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_4.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_4.json"),
                 ModBlocks.OAK_HALF_DRAWERS_4,
                 ModBlocks.SPRUCE_HALF_DRAWERS_4,
                 ModBlocks.BIRCH_HALF_DRAWERS_4,
@@ -113,13 +119,19 @@ public final class BasicDrawerModel
             }
         }
 
-        private static void populateGeometryData(ResourceLocation location, BlockDrawers... blocks) {
-            BlockModel slotInfo = getBlockModel(location);
+        private static void populateGeometryData(ResourceLocation locationIcon, ResourceLocation locationCount, BlockDrawers... blocks) {
+            BlockModel slotInfo = getBlockModel(locationIcon);
+            BlockModel countInfo = getBlockModel(locationCount);
             for (BlockDrawers block : blocks) {
                 for (int i = 0; i < block.getDrawerCount(); i++) {
                     Vector3f from = slotInfo.getElements().get(i).positionFrom;
                     Vector3f to = slotInfo.getElements().get(i).positionTo;
                     block.labelGeometry[i] = new AxisAlignedBB(from.getX(), from.getY(), from.getZ(), to.getX(), to.getY(), to.getZ());
+                }
+                for (int i = 0; i < block.getDrawerCount(); i++) {
+                    Vector3f from = countInfo.getElements().get(i).positionFrom;
+                    Vector3f to = countInfo.getElements().get(i).positionTo;
+                    block.countGeometry[i] = new AxisAlignedBB(from.getX(), from.getY(), from.getZ(), to.getX(), to.getY(), to.getZ());
                 }
             }
         }

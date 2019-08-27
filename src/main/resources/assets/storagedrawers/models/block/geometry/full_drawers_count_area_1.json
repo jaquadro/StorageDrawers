@@ -1,0 +1,12 @@
+{
+    "__comment": "Defines the 2D area for rendering a text count",
+    "parent": "block/block",
+    "elements": [ {
+        "from": [ 1, 1, 1 ],
+        "to": [ 15, 2, 16],
+        "faces": {
+            "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#particle" }
+        },
+        "__comment": "slot 1"
+    } ]
+}

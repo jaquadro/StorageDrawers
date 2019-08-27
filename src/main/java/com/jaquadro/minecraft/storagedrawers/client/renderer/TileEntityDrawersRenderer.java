@@ -127,7 +127,7 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
             return;
 
         BlockDrawers block = (BlockDrawers)state.getBlock();
-        AxisAlignedBB labelGeometry = block.labelGeometry[slot];
+        AxisAlignedBB labelGeometry = block.countGeometry[slot];
         //StatusModelData statusInfo = block.getStatusInfo(state);
         float frontDepth = (float)labelGeometry.minZ * .0625f;
         int textWidth = getFontRenderer().getStringWidth(text);

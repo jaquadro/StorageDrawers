@@ -1,0 +1,33 @@
+{
+    "__comment": "Defines the 2D area for rendering a text count",
+    "parent": "block/block",
+    "elements": [ {
+        "from": [ 1, 9, 1 ],
+        "to": [ 7, 10, 16],
+        "faces": {
+            "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#particle" }
+        },
+        "__comment": "slot 1 (top left)"
+    }, {
+        "from": [ 9, 9, 1 ],
+        "to": [ 15, 10, 16],
+        "faces": {
+            "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#particle" }
+        },
+        "__comment": "slot 2 (top right)"
+    }, {
+        "from": [ 1, 1, 1 ],
+        "to": [ 7, 2, 16],
+        "faces": {
+            "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#particle" }
+        },
+        "__comment": "slot 3 (bottom left)"
+    }, {
+        "from": [ 9, 1, 1 ],
+        "to": [ 15, 2, 16],
+        "faces": {
+            "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#particle" }
+        },
+        "__comment": "slot 4 (bottom right)"
+    } ]
+}

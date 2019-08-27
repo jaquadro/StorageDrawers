@@ -13,7 +13,8 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModItems
 {
     public static final Item
-        DRAWER_KEY = null;
+        DRAWER_KEY = null,
+        QUANTIFY_KEY = null;
 
     /*@ObjectHolder(StorageDrawers.MOD_ID + ":upgrade_template")
     public static Item upgradeTemplate;
@@ -48,6 +49,7 @@ public class ModItems
         @SubscribeEvent
         public static void registerItems (RegistryEvent.Register<Item> event) {
             register(event, "drawer_key", new ItemDrawerKey(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "quantify_key", new ItemQuantifyKey(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
 
             //IForgeRegistry<Item> itemRegistry = event.getRegistry();
             //ConfigManager config = StorageDrawers.config;
