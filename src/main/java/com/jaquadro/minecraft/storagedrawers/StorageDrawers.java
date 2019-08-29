@@ -49,6 +49,8 @@ public class StorageDrawers
         CapabilityItemRepository.register();
         CapabilityDrawerAttributes.register();
 
+        ModContainers.registerScreens();
+
         //compRegistry = new CompTierRegistry();
         //oreDictRegistry = new OreDictRegistry();
         //renderRegistry = new RenderRegistry();

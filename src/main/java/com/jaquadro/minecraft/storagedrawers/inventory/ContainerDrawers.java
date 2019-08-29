@@ -1,16 +1,29 @@
-/*package com.jaquadro.minecraft.storagedrawers.inventory;
+package com.jaquadro.minecraft.storagedrawers.inventory;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
+import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.block.Block;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -18,6 +31,9 @@ import java.util.List;
 
 public class ContainerDrawers extends Container
 {
+    @ObjectHolder(StorageDrawers.MOD_ID + ":drawer_container")
+    public static final ContainerType<Container> TYPE = null;
+
     private static final int InventoryX = 8;
     private static final int InventoryY = 117;
     private static final int HotbarY = 175;
@@ -25,40 +41,62 @@ public class ContainerDrawers extends Container
     private static final int UpgradeX = 26;
     private static final int UpgradeY = 86;
 
-    private IInventory upgradeInventory;
+    //private IInventory upgradeInventory;
 
     private List<Slot> storageSlots;
     private List<Slot> upgradeSlots;
     private List<Slot> playerSlots;
     private List<Slot> hotbarSlots;
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public StorageRenderItem activeRenderItem;
 
     private boolean isRemote;
 
-    public ContainerDrawers (InventoryPlayer playerInventory, TileEntityDrawers tileEntity) {
-        upgradeInventory = new InventoryUpgrade(tileEntity);
+    public ContainerDrawers (int windowId, PlayerInventory playerInv, PacketBuffer data) {
+        this(windowId, playerInv, getTileEntity(playerInv, data.readBlockPos()));
+    }
+
+    protected static TileEntityDrawers getTileEntity (PlayerInventory playerInv, BlockPos pos) {
+        World world = playerInv.player.getEntityWorld();
+        TileEntity tile = world.getTileEntity(pos);
+        if (!(tile instanceof TileEntityDrawers))
+            StorageDrawers.log.error("Expected a drawers tile entity at " + pos.toString());
+        else
+            return (TileEntityDrawers)tile;
+
+        return null;
+    }
+
+    public ContainerDrawers (int windowId, PlayerInventory playerInventory, TileEntityDrawers tileEntity) {
+        super(ModContainers.DRAWER_CONTAINER_1, windowId);
+
+        int drawerCount = 0;
+
+        //upgradeInventory = new InventoryUpgrade(tileEntity);
+        Block block = tileEntity.getBlockState().getBlock();
+        if (block instanceof BlockDrawers)
+            drawerCount = ((BlockDrawers) block).getDrawerCount();
 
         storageSlots = new ArrayList<>();
-        for (int i = 0; i < tileEntity.getDrawerCount(); i++)
-            storageSlots.add(addSlotToContainer(new SlotDrawer(this, tileEntity.getGroup(), i, getStorageSlotX(i), getStorageSlotY(i))));
+        for (int i = 0; i < drawerCount; i++)
+            storageSlots.add(addSlot(new SlotDrawer(this, tileEntity.getGroup(), i, getStorageSlotX(i), getStorageSlotY(i))));
 
-        upgradeSlots = new ArrayList<>();
-        for (int i = 0; i < 7; i++)
-            upgradeSlots.add(addSlotToContainer(new SlotUpgrade(upgradeInventory, i, UpgradeX + i * 18, UpgradeY)));
+        //upgradeSlots = new ArrayList<>();
+        //for (int i = 0; i < 7; i++)
+        //    upgradeSlots.add(addSlot(new SlotUpgrade(upgradeInventory, i, UpgradeX + i * 18, UpgradeY)));
 
         playerSlots = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++)
-                playerSlots.add(addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, InventoryX + j * 18, InventoryY + i * 18)));
+                playerSlots.add(addSlot(new Slot(playerInventory, j + i * 9 + 9, InventoryX + j * 18, InventoryY + i * 18)));
         }
 
         hotbarSlots = new ArrayList<>();
         for (int i = 0; i < 9; i++)
-            hotbarSlots.add(addSlotToContainer(new Slot(playerInventory, i, InventoryX + i * 18, HotbarY)));
+            hotbarSlots.add(addSlot(new Slot(playerInventory, i, InventoryX + i * 18, HotbarY)));
 
-        isRemote = tileEntity.getWorld().isRemote;
+        isRemote = playerInventory.player.getEntityWorld().isRemote;
     }
 
     public void setLastAccessedItem (ItemStack stack) {
@@ -83,13 +121,13 @@ public class ContainerDrawers extends Container
     }
 
     @Override
-    public boolean canInteractWith (EntityPlayer player) {
-        return upgradeInventory.isUsableByPlayer(player);
+    public boolean canInteractWith (PlayerEntity player) {
+        return true; //return upgradeInventory.isUsableByPlayer(player);
     }
 
     @Override
     @Nonnull
-    public ItemStack transferStackInSlot (EntityPlayer player, int slotIndex) {
+    public ItemStack transferStackInSlot (PlayerEntity player, int slotIndex) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = inventorySlots.get(slotIndex);
 
@@ -163,4 +201,3 @@ public class ContainerDrawers extends Container
         return itemStack;
     }
 }
-*/

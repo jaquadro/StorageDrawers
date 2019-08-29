@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import net.minecraft.block.*;
@@ -10,7 +11,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -21,6 +26,8 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
@@ -28,8 +35,10 @@ import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeBlock;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -313,6 +322,25 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 player.openGui(StorageDrawers.instance, GuiHandler.drawersGuiID, world, pos.getX(), pos.getY(), pos.getZ());
                 return true;
             }*/
+
+            if (!world.isRemote) {
+                NetworkHooks.openGui((ServerPlayerEntity)player, new INamedContainerProvider()
+                {
+                    @Override
+                    public ITextComponent getDisplayName () {
+                        return new StringTextComponent("Drawer UI");
+                    }
+
+                    @Nullable
+                    @Override
+                    public Container createMenu (int windowId, PlayerInventory playerInv, PlayerEntity playerEntity) {
+                        return new ContainerDrawers1(windowId, playerInv, tileDrawers);
+                    }
+                }, extraData -> {
+                    extraData.writeBlockPos(pos);
+                });
+                return true;
+            }
         }
 
         if (state.get(HORIZONTAL_FACING) != hit.getFace())

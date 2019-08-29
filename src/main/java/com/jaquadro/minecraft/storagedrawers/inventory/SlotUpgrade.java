@@ -1,11 +1,8 @@
 /*package com.jaquadro.minecraft.storagedrawers.inventory;
 
-import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -28,18 +25,18 @@ public class SlotUpgrade extends Slot
     }
 
     @Override
-    public boolean canTakeStack (EntityPlayer player) {
+    public boolean canTakeStack (PlayerEntity player) {
         if (inventory instanceof InventoryUpgrade) {
             ItemStack stack = getStack();
-            if (stack.getItem() == ModItems.upgradeStorage) {
-                EnumUpgradeStorage upgrade = EnumUpgradeStorage.byMetadata(stack.getMetadata());
-                return ((InventoryUpgrade) inventory).canRemoveStorageUpgrade(getSlotIndex());
-            }
+            //if (stack.getItem() == ModItems.upgradeStorage) {
+            //    EnumUpgradeStorage upgrade = EnumUpgradeStorage.byMetadata(stack.getMetadata());
+            //    return ((InventoryUpgrade) inventory).canRemoveStorageUpgrade(getSlotIndex());
+            //}
 
-            if (player != null) {
-                if (stack.getItem() == ModItems.upgradeCreative && !player.capabilities.isCreativeMode)
-                    return false;
-            }
+            //if (player != null) {
+            //    if (stack.getItem() == ModItems.upgradeCreative && !player.capabilities.isCreativeMode)
+            //        return false;
+            //}
         }
 
         return true;

@@ -1,7 +1,8 @@
-/*package com.jaquadro.minecraft.storagedrawers.inventory;
+package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.network.PacketBuffer;
 
 public class ContainerDrawers1 extends ContainerDrawers
 {
@@ -9,8 +10,12 @@ public class ContainerDrawers1 extends ContainerDrawers
         { 80, 36 }
     };
 
-    public ContainerDrawers1 (InventoryPlayer playerInventory, TileEntityDrawers tileEntity) {
-        super(playerInventory, tileEntity);
+    public ContainerDrawers1 (int windowId, PlayerInventory playerInv, PacketBuffer data) {
+        super(windowId, playerInv, data);
+    }
+
+    public ContainerDrawers1 (int windowId, PlayerInventory playerInventory, TileEntityDrawers tileEntity) {
+        super(windowId, playerInventory, tileEntity);
     }
 
     @Override
@@ -23,4 +28,3 @@ public class ContainerDrawers1 extends ContainerDrawers
         return slotCoordinates[slot][1];
     }
 }
-*/

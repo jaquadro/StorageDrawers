@@ -1,18 +1,21 @@
-/*package com.jaquadro.minecraft.storagedrawers.inventory;
+package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class SlotDrawer extends Slot
 {
-    private static IInventory emptyInventory = new InventoryBasic("[Null]", true, 0);
+    private static IInventory emptyInventory = new EmptyInventory();
     private ContainerDrawers container;
     private final IDrawerGroup group;
     private final IDrawer drawer;
@@ -55,7 +58,7 @@ public class SlotDrawer extends Slot
     }
 
     @Override
-    public boolean canTakeStack (EntityPlayer playerIn) {
+    public boolean canTakeStack (PlayerEntity playerIn) {
         return false;
     }
 
@@ -78,5 +81,22 @@ public class SlotDrawer extends Slot
     public boolean isSameInventory (Slot other) {
         return other instanceof SlotDrawer && ((SlotDrawer) other).getDrawerGroup() == group;
     }
+
+    static class EmptyInventory extends Inventory implements ISidedInventory {
+        public EmptyInventory() {
+            super(0);
+        }
+
+        public int[] getSlotsForFace(Direction side) {
+            return new int[0];
+        }
+
+        public boolean canInsertItem(int index, ItemStack itemStackIn, @Nullable Direction direction) {
+            return false;
+        }
+
+        public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+            return false;
+        }
+    }
 }
-*/

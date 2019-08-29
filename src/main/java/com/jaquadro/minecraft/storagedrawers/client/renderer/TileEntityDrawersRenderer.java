@@ -44,7 +44,6 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
             return;
 
         BlockDrawers block = (BlockDrawers)state.getBlock();
-        float depth = block.isHalfDepth() ? .5f : 1;
 
         GlStateManager.pushMatrix();
         GlStateManager.translated(x, y, z);
@@ -64,7 +63,7 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         mc.gameSettings.fancyGraphics = true;
         //renderUpgrades(renderer, tile, state);
         if (!tile.getDrawerAttributes().isConcealed())
-            renderFastItemSet(tile, state, side, depth, partialTickTime);
+            renderFastItemSet(tile, state, side, partialTickTime);
 
         mc.gameSettings.fancyGraphics = cache;
 
@@ -82,7 +81,7 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         //ChamRenderManager.instance.releaseRenderer(renderer);
     }
 
-    private void renderFastItemSet (TileEntityDrawers tile, BlockState state, Direction side, float depth, float partialTickTime) {
+    private void renderFastItemSet (TileEntityDrawers tile, BlockState state, Direction side, float partialTickTime) {
         int drawerCount = tile.getDrawerCount();
 
         for (int i = 0; i < drawerCount; i++) {
@@ -98,12 +97,12 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
 
         for (int i = 0; i < drawerCount; i++) {
             if (!renderStacks[i].isEmpty() && !renderAsBlock[i])
-                renderFastItem(renderStacks[i], tile, state, i, side, depth, partialTickTime);
+                renderFastItem(renderStacks[i], tile, state, i, side, partialTickTime);
         }
 
         for (int i = 0; i < drawerCount; i++) {
             if (!renderStacks[i].isEmpty() && renderAsBlock[i])
-                renderFastItem(renderStacks[i], tile, state, i, side, depth, partialTickTime);
+                renderFastItem(renderStacks[i], tile, state, i, side, partialTickTime);
         }
 
         if (tile.getDrawerAttributes().isShowingQuantity()) {
@@ -117,27 +116,26 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
 
             if (distance < 10) {
                 for (int i = 0; i < drawerCount; i++)
-                    renderText(CountFormatter.format(getFontRenderer(), tile.getDrawer(i)), tile, state, i, side, depth, alpha);
+                    renderText(CountFormatter.format(getFontRenderer(), tile.getDrawer(i)), tile, state, i, side, alpha);
             }
         }
     }
 
-    private void renderText (String text, TileEntityDrawers tile, BlockState state, int slot, Direction side, float depth, float alpha) {
+    private void renderText (String text, TileEntityDrawers tile, BlockState state, int slot, Direction side, float alpha) {
         if (text == null || text.isEmpty())
             return;
 
         BlockDrawers block = (BlockDrawers)state.getBlock();
         AxisAlignedBB labelGeometry = block.countGeometry[slot];
-        //StatusModelData statusInfo = block.getStatusInfo(state);
-        float frontDepth = (float)labelGeometry.minZ * .0625f;
         int textWidth = getFontRenderer().getStringWidth(text);
 
         float x = (float)(labelGeometry.minX + labelGeometry.getXSize() / 2);
         float y = 16f - (float)labelGeometry.minY - (float)labelGeometry.getYSize();
+        float z = (float)labelGeometry.minZ * .0625f;
 
         GlStateManager.pushMatrix();
         alignRendering(side);
-        moveRendering(.125f, .125f, x, y, 1f - depth + frontDepth - .005f);
+        moveRendering(.125f, .125f, x, y, z);
 
         GlStateManager.disableLighting();
         GlStateManager.enablePolygonOffset();
@@ -155,7 +153,7 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         GlStateManager.popMatrix();
     }
 
-    private void renderFastItem (@Nonnull ItemStack itemStack, TileEntityDrawers tile, BlockState state, int slot, Direction side, float depth, float partialTickTime) {
+    private void renderFastItem (@Nonnull ItemStack itemStack, TileEntityDrawers tile, BlockState state, int slot, Direction side, float partialTickTime) {
         int drawerCount = ((BlockDrawers)state.getBlock()).getDrawerCount();
 
         BlockDrawers block = (BlockDrawers)state.getBlock();

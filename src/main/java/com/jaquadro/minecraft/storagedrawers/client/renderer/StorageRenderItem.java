@@ -1,33 +1,29 @@
-/*package com.jaquadro.minecraft.storagedrawers.client.renderer;
+package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ModelManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class StorageRenderItem extends ItemRenderer
 {
     private ItemRenderer parent;
@@ -37,7 +33,7 @@ public class StorageRenderItem extends ItemRenderer
 
     public StorageRenderItem (TextureManager texManager, ModelManager modelManager, ItemColors colors) {
         super(texManager, modelManager, colors);
-        parent = Minecraft.getMinecraft().getRenderItem();
+        parent = Minecraft.getInstance().getItemRenderer();
         overrideStack = ItemStack.EMPTY;
     }
 
@@ -62,12 +58,12 @@ public class StorageRenderItem extends ItemRenderer
     }
 
     @Override
-    public void renderItem (@Nonnull ItemStack stack, EntityLivingBase entity, ItemCameraTransforms.TransformType transform, boolean flag) {
+    public void renderItem (@Nonnull ItemStack stack, LivingEntity entity, ItemCameraTransforms.TransformType transform, boolean flag) {
         parent.renderItem(stack, entity, transform, flag);
     }
 
     @Override
-    public IBakedModel getItemModelWithOverrides (@Nonnull ItemStack stack, World world, EntityLivingBase entity) {
+    public IBakedModel getItemModelWithOverrides (@Nonnull ItemStack stack, World world, LivingEntity entity) {
         return parent.getItemModelWithOverrides(stack, world, entity);
     }
 
@@ -100,10 +96,10 @@ public class StorageRenderItem extends ItemRenderer
         {
             float scale = .5f;
             float xoff = 0;
-            if (font.getUnicodeFlag()) {
-                scale = 1f;
-                xoff = 1;
-            }
+            //if (font.getUnicodeFlag()) {
+            //    scale = 1f;
+            //    xoff = 1;
+            //}
 
             int stackSize = item.getCount();
             if (ItemStackHelper.isStackEncoded(item))
@@ -111,11 +107,11 @@ public class StorageRenderItem extends ItemRenderer
 
             if (stackSize >= 0 || text != null)
             {
-                if (stackSize >= 100000000 || (stackSize >= 1000000 && font.getUnicodeFlag()))
+                if (stackSize >= 100000000)
                     text = (text == null) ? String.format("%.0fM", stackSize / 1000000f) : text;
                 else if (stackSize >= 1000000)
                     text = (text == null) ? String.format("%.1fM", stackSize / 1000000f) : text;
-                else if (stackSize >= 100000 || (stackSize >= 10000 && font.getUnicodeFlag()))
+                else if (stackSize >= 100000)
                     text = (text == null) ? String.format("%.0fK", stackSize / 1000f) : text;
                 else if (stackSize >= 10000)
                     text = (text == null) ? String.format("%.1fK", stackSize / 1000f) : text;
@@ -126,10 +122,10 @@ public class StorageRenderItem extends ItemRenderer
                 int textY = (int)((y + 16 - 7 * scale) / scale) - 1;
 
                 GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
+                GlStateManager.disableDepthTest();
                 GlStateManager.disableBlend();
                 GlStateManager.pushMatrix();
-                GlStateManager.scale(scale, scale, scale);
+                GlStateManager.scalef(scale, scale, scale);
 
                 if (stackSize > 0)
                     font.drawStringWithShadow(text, textX, textY, 16777215);
@@ -137,8 +133,9 @@ public class StorageRenderItem extends ItemRenderer
                     font.drawStringWithShadow(text, textX, textY, (255 << 16) | (96 << 8) | (96));
 
                 GlStateManager.popMatrix();
+                GlStateManager.enableBlend();
                 GlStateManager.enableLighting();
-                GlStateManager.enableDepth();
+                GlStateManager.enableDepthTest();
             }
 
             if (item.getItem().showDurabilityBar(item))
@@ -147,9 +144,9 @@ public class StorageRenderItem extends ItemRenderer
                 int j1 = (int)Math.round(13.0D - health * 13.0D);
                 int k = (int)Math.round(255.0D - health * 255.0D);
                 GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
-                GlStateManager.disableTexture2D();
-                GlStateManager.disableAlpha();
+                GlStateManager.disableDepthTest();
+                GlStateManager.disableTexture();
+                GlStateManager.disableAlphaTest();
                 GlStateManager.disableBlend();
                 Tessellator tessellator = Tessellator.getInstance();
                 BufferBuilder worldrenderer = tessellator.getBuffer();
@@ -159,10 +156,11 @@ public class StorageRenderItem extends ItemRenderer
                 this.renderQuad(worldrenderer, x + 2, y + 13, 12, 1, (255 - k) / 4, 64, 0, 255);
                 this.renderQuad(worldrenderer, x + 2, y + 13, j1, 1, 255 - k, k, 0, 255);
                 //GL11.glEnable(GL11.GL_BLEND); // Forge: Disable Bled because it screws with a lot of things down the line.
-                GlStateManager.enableAlpha();
-                GlStateManager.enableTexture2D();
+                GlStateManager.enableBlend();
+                GlStateManager.enableAlphaTest();
+                GlStateManager.enableTexture();
                 GlStateManager.enableLighting();
-                GlStateManager.enableDepth();
+                GlStateManager.enableDepthTest();
             }
         }
     }
@@ -177,4 +175,3 @@ public class StorageRenderItem extends ItemRenderer
         Tessellator.getInstance().draw();
     }
 }
-*/
