@@ -1,18 +1,15 @@
-/*package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
+package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
-import com.jaquadro.minecraft.chameleon.block.tiledata.TileDataShim;
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
-import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
+import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 
@@ -111,7 +108,7 @@ public class UpgradeData extends TileDataShim
                 continue;
 
             ItemUpgrade reference = (ItemUpgrade)stack.getItem();
-            if (candidate == reference)
+            if (candidate.getUpgradeGroup() == reference.getUpgradeGroup())
                 return false;
         }
 
@@ -176,19 +173,16 @@ public class UpgradeData extends TileDataShim
 
         for (ItemStack stack : upgrades) {
             Item item = stack.getItem();
-            if (item == ModItems.upgradeOneStack)
+            if (item == ModItems.ONE_STACK_UPGRADE)
                 hasOneStack = true;
-            else if (item == ModItems.upgradeVoid)
+            else if (item == ModItems.VOID_UPGRADE)
                 hasVoid = true;
-            else if (item == ModItems.upgradeConversion)
+            else if (item == ModItems.CONVERSION_UPGRADE)
                 hasConversion = true;
-            else if (item == ModItems.upgradeCreative) {
-                EnumUpgradeCreative type = EnumUpgradeCreative.byMetadata(stack.getMetadata());
-                if (type == EnumUpgradeCreative.STORAGE)
-                    hasUnlimited = true;
-                else if (type == EnumUpgradeCreative.VENDING)
-                    hasVending = true;
-            }
+            else if (item == ModItems.CREATIVE_STORAGE_UPGRADE)
+                hasUnlimited = true;
+            else if (item == ModItems.CREATIVE_VENDING_UPGRADE)
+                hasVending = true;
         }
 
         attrs.setIsVoid(hasVoid);
@@ -198,26 +192,25 @@ public class UpgradeData extends TileDataShim
     }
 
     private void syncStorageMultiplier () {
-        ConfigManager config = StorageDrawers.config;
         storageMultiplier = 0;
 
         for (ItemStack stack : upgrades) {
-            if (stack.getItem() == ModItems.upgradeStorage) {
-                int level = EnumUpgradeStorage.byMetadata(stack.getMetadata()).getLevel();
-                storageMultiplier += config.getStorageUpgradeMultiplier(level);
+            if (stack.getItem() instanceof ItemUpgradeStorage) {
+                int level = ((ItemUpgradeStorage) stack.getItem()).level.getLevel();
+                storageMultiplier += CommonConfig.UPGRADES.getLevelMult(level);
             }
         }
 
         if (storageMultiplier == 0)
-            storageMultiplier = config.getStorageUpgradeMultiplier(1);
+            storageMultiplier = CommonConfig.UPGRADES.getLevelMult(0);
     }
 
     private void syncStatusLevel () {
         statusType = null;
 
         for (ItemStack stack : upgrades) {
-            if (stack.getItem() == ModItems.upgradeStatus) {
-                statusType = EnumUpgradeStatus.byMetadata(stack.getMetadata());
+            if (stack.getItem() instanceof ItemUpgradeStatus) {
+                statusType = ((ItemUpgradeStatus) stack.getItem()).level;
                 break;
             }
         }
@@ -227,48 +220,47 @@ public class UpgradeData extends TileDataShim
         redstoneType = null;
 
         for (ItemStack stack : upgrades) {
-            if (stack.getItem() == ModItems.upgradeRedstone) {
-                redstoneType = EnumUpgradeRedstone.byMetadata(stack.getMetadata());
+            if (stack.getItem() instanceof ItemUpgradeRedstone) {
+                redstoneType = ((ItemUpgradeRedstone) stack.getItem()).type;
                 break;
             }
         }
     }
 
     @Override
-    public void readFromNBT (NBTTagCompound tag) {
+    public void read (CompoundNBT tag) {
         for (int i = 0; i < upgrades.length; i++)
             upgrades[i] = ItemStack.EMPTY;
 
-        if (!tag.hasKey("Upgrades"))
+        if (!tag.contains("Upgrades"))
             return;
 
-        NBTTagList tagList = tag.getTagList("Upgrades", Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < tagList.tagCount(); i++) {
-            NBTTagCompound upgradeTag = tagList.getCompoundTagAt(i);
+        ListNBT tagList = tag.getList("Upgrades", Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < tagList.size(); i++) {
+            CompoundNBT upgradeTag = tagList.getCompound(i);
 
             int slot = upgradeTag.getByte("Slot");
-            upgrades[slot] = new ItemStack(upgradeTag);
+            upgrades[slot] = ItemStack.read(upgradeTag);
         }
 
         syncUpgrades();
     }
 
     @Override
-    public NBTTagCompound writeToNBT (NBTTagCompound tag) {
-        NBTTagList tagList = new NBTTagList();
+    public CompoundNBT write (CompoundNBT tag) {
+        ListNBT tagList = new ListNBT();
         for (int i = 0; i < upgrades.length; i++) {
             if (!upgrades[i].isEmpty()) {
-                NBTTagCompound upgradeTag = upgrades[i].writeToNBT(new NBTTagCompound());
-                upgradeTag.setByte("Slot", (byte)i);
+                CompoundNBT upgradeTag = upgrades[i].write(new CompoundNBT());
+                upgradeTag.putByte("Slot", (byte)i);
 
-                tagList.appendTag(upgradeTag);
+                tagList.add(upgradeTag);
             }
         }
 
-        tag.setTag("Upgrades", tagList);
+        tag.put("Upgrades", tagList);
         return tag;
     }
 
     protected void onUpgradeChanged (ItemStack oldUpgrade, ItemStack newUpgrade) { }
 }
-*/

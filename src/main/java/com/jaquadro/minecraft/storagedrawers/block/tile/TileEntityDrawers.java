@@ -3,17 +3,20 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.BooleanProperty;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.INameable;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -41,7 +44,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
 
     //private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
     //private MaterialData materialData = new MaterialData();
-    //private UpgradeData upgradeData = new DrawerUpgradeData();
+    private UpgradeData upgradeData = new DrawerUpgradeData();
 
     //public final ControllerData controllerData = new ControllerData();
 
@@ -69,7 +72,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         }
     }
 
-    /*private class DrawerUpgradeData extends UpgradeData
+    private class DrawerUpgradeData extends UpgradeData
     {
         DrawerUpgradeData () {
             super(7);
@@ -80,7 +83,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
             if (!super.canAddUpgrade(upgrade))
                 return false;
 
-            if (upgrade.getItem() == ModItems.upgradeOneStack) {
+            if (upgrade.getItem() == ModItems.ONE_STACK_UPGRADE) {
                 int lostStackCapacity = upgradeData.getStorageMultiplier() * (getEffectiveDrawerCapacity() - 1);
                 if (!stackCapacityCheck(lostStackCapacity))
                     return false;
@@ -95,9 +98,9 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
                 return false;
 
             ItemStack upgrade = getUpgrade(slot);
-            if (upgrade.getItem() == ModItems.upgradeStorage) {
-                int storageLevel = EnumUpgradeStorage.byMetadata(upgrade.getMetadata()).getLevel();
-                int storageMult = StorageDrawers.config.getStorageUpgradeMultiplier(storageLevel);
+            if (upgrade.getItem() instanceof ItemUpgradeStorage) {
+                int storageLevel = ((ItemUpgradeStorage) upgrade.getItem()).level.getLevel();
+                int storageMult = CommonConfig.UPGRADES.getLevelMult(storageLevel);
                 int effectiveStorageMult = upgradeData.getStorageMultiplier();
                 if (effectiveStorageMult == storageMult)
                     storageMult--;
@@ -132,19 +135,19 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
 
             return true;
         }
-    }*/
+    }
 
     protected TileEntityDrawers (TileEntityType<?> tileEntityType) {
         super(tileEntityType);
 
         drawerAttributes = new DrawerAttributes();
 
-        /*upgradeData.setDrawerAttributes(drawerAttributes);
+        upgradeData.setDrawerAttributes(drawerAttributes);
 
-        injectPortableData(customNameData);
+        //injectPortableData(customNameData);
         injectPortableData(upgradeData);
-        injectPortableData(materialData);
-        injectData(controllerData);*/
+        //injectPortableData(materialData);
+        //injectData(controllerData);
     }
 
     public abstract IDrawerGroup getGroup ();
@@ -153,9 +156,9 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         return drawerAttributes;
     }
 
-    //public UpgradeData upgrades () {
-    //    return upgradeData;
-    //}
+    public UpgradeData upgrades () {
+        return upgradeData;
+    }
 
     //public MaterialData material () {
     //    return materialData;
@@ -248,9 +251,9 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         return true;
     }*/
 
-    /*public boolean isRedstone () {
-        if (!StorageDrawers.config.cache.enableRedstoneUpgrades)
-            return false;
+    public boolean isRedstone () {
+        //if (!StorageDrawers.config.cache.enableRedstoneUpgrades)
+        //    return false;
 
         return upgradeData.getRedstoneType() != null;
     }
@@ -334,7 +337,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
             return 15;
 
         return (int)Math.ceil(maxRatio * 14);
-    }*/
+    }
 
     @Nonnull
     public ItemStack takeItemsFromSlot (int slot, int count) {
@@ -347,10 +350,10 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
 
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.getCount());
 
-        //if (isRedstone() && getWorld() != null) {
-        //    getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
-        //    getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType(), false);
-        //}
+        if (isRedstone() && getWorld() != null) {
+            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockState().getBlock());
+            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockState().getBlock());
+        }
 
         // TODO: Reset empty drawer in subclasses
 
@@ -503,10 +506,10 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
 
     @Override
     public void markDirty () {
-        //if (isRedstone() && getWorld() != null) {
-        //    getWorld().notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
-        //    getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockType(), false);
-        //}
+        if (isRedstone() && getWorld() != null) {
+            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockState().getBlock());
+            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockState().getBlock());
+        }
 
         super.markDirty();
     }

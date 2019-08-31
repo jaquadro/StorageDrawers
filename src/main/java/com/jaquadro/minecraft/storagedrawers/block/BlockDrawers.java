@@ -4,6 +4,8 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
+import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
+import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import net.minecraft.block.*;
@@ -334,7 +336,13 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                     @Nullable
                     @Override
                     public Container createMenu (int windowId, PlayerInventory playerInv, PlayerEntity playerEntity) {
-                        return new ContainerDrawers1(windowId, playerInv, tileDrawers);
+                        if (drawerCount == 1)
+                            return new ContainerDrawers1(windowId, playerInv, tileDrawers);
+                        else if (drawerCount == 2)
+                            return new ContainerDrawers2(windowId, playerInv, tileDrawers);
+                        else if (drawerCount == 4)
+                            return new ContainerDrawers4(windowId, playerInv, tileDrawers);
+                        return null;
                     }
                 }, extraData -> {
                     extraData.writeBlockPos(pos);

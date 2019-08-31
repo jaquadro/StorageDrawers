@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
 
@@ -11,11 +12,11 @@ public class ContainerDrawers1 extends ContainerDrawers
     };
 
     public ContainerDrawers1 (int windowId, PlayerInventory playerInv, PacketBuffer data) {
-        super(windowId, playerInv, data);
+        super(ModContainers.DRAWER_CONTAINER_1, windowId, playerInv, data);
     }
 
     public ContainerDrawers1 (int windowId, PlayerInventory playerInventory, TileEntityDrawers tileEntity) {
-        super(windowId, playerInventory, tileEntity);
+        super(ModContainers.DRAWER_CONTAINER_1, windowId, playerInventory, tileEntity);
     }
 
     @Override

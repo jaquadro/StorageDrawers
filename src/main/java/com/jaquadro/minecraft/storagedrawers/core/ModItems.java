@@ -13,6 +13,19 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModItems
 {
     public static final Item
+        OBSIDIAN_STORAGE_UPGRADE = null,
+        IRON_STORAGE_UPGRADE = null,
+        GOLD_STORAGE_UPGRADE = null,
+        DIAMOND_STORAGE_UPGRADE = null,
+        EMERALD_STORAGE_UPGRADE = null,
+        ONE_STACK_UPGRADE = null,
+        VOID_UPGRADE = null,
+        CREATIVE_STORAGE_UPGRADE = null,
+        CREATIVE_VENDING_UPGRADE = null,
+        CONVERSION_UPGRADE = null,
+        REDSTONE_UPGRADE = null,
+        MIN_REDSTONE_UPGRADE = null,
+        MAX_REDSTONE_UPGRADE = null,
         DRAWER_KEY = null,
         QUANTIFY_KEY = null;
 
@@ -48,6 +61,19 @@ public class ModItems
     {
         @SubscribeEvent
         public static void registerItems (RegistryEvent.Register<Item> event) {
+            register(event, "obsidian_storage_upgrade", new ItemUpgradeStorage(EnumUpgradeStorage.OBSIDIAN, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "iron_storage_upgrade", new ItemUpgradeStorage(EnumUpgradeStorage.IRON, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "gold_storage_upgrade", new ItemUpgradeStorage(EnumUpgradeStorage.GOLD, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "diamond_storage_upgrade", new ItemUpgradeStorage(EnumUpgradeStorage.DIAMOND, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "emerald_storage_upgrade", new ItemUpgradeStorage(EnumUpgradeStorage.EMERALD, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "one_stack_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "void_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "creative_storage_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "creative_vending_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "conversion_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "redstone_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "min_redstone_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "max_redstone_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
             register(event, "drawer_key", new ItemDrawerKey(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
             register(event, "quantify_key", new ItemQuantifyKey(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
 

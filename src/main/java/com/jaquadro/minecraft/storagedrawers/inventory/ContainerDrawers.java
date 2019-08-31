@@ -26,14 +26,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContainerDrawers extends Container
+public abstract class ContainerDrawers extends Container
 {
-    @ObjectHolder(StorageDrawers.MOD_ID + ":drawer_container")
-    public static final ContainerType<Container> TYPE = null;
-
     private static final int InventoryX = 8;
     private static final int InventoryY = 117;
     private static final int HotbarY = 175;
@@ -53,8 +51,8 @@ public class ContainerDrawers extends Container
 
     private boolean isRemote;
 
-    public ContainerDrawers (int windowId, PlayerInventory playerInv, PacketBuffer data) {
-        this(windowId, playerInv, getTileEntity(playerInv, data.readBlockPos()));
+    public ContainerDrawers (@Nullable ContainerType<?> type, int windowId, PlayerInventory playerInv, PacketBuffer data) {
+        this(type, windowId, playerInv, getTileEntity(playerInv, data.readBlockPos()));
     }
 
     protected static TileEntityDrawers getTileEntity (PlayerInventory playerInv, BlockPos pos) {
@@ -68,8 +66,8 @@ public class ContainerDrawers extends Container
         return null;
     }
 
-    public ContainerDrawers (int windowId, PlayerInventory playerInventory, TileEntityDrawers tileEntity) {
-        super(ModContainers.DRAWER_CONTAINER_1, windowId);
+    public ContainerDrawers (@Nullable ContainerType<?> type, int windowId, PlayerInventory playerInventory, TileEntityDrawers tileEntity) {
+        super(type, windowId);
 
         int drawerCount = 0;
 
