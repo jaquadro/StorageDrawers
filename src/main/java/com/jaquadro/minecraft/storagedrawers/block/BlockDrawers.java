@@ -47,10 +47,6 @@ import java.util.List;
 
 public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 {
-    // TODO: Hold these as properties?
-    public static final BooleanProperty ITEM_LOCKED = BooleanProperty.create("item_locked");
-    public static final BooleanProperty SHROUDED = BooleanProperty.create("shrouded");
-    public static final BooleanProperty VOIDING = BooleanProperty.create("voiding");
 
     // TODO: TE.getModelData()
     //public static final IUnlistedProperty<DrawerStateModelData> STATE_MODEL = UnlistedModelData.create(DrawerStateModelData.class);
@@ -84,10 +80,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     public BlockDrawers (int drawerCount, boolean halfDepth, int storageUnits, Block.Properties properties) {
         super(properties);
         this.setDefaultState(stateContainer.getBaseState()
-            .with(HORIZONTAL_FACING, Direction.NORTH)
-            .with(ITEM_LOCKED, false)
-            .with(SHROUDED, false)
-            .with(VOIDING, false));
+            .with(HORIZONTAL_FACING, Direction.NORTH));
 
         this.drawerCount = drawerCount;
         this.halfDepth = halfDepth;
@@ -106,7 +99,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
     @Override
     protected void fillStateContainer (StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING, ITEM_LOCKED, SHROUDED, VOIDING);
+        builder.add(HORIZONTAL_FACING);
     }
 
     public boolean retrimBlock (World world, BlockPos pos, ItemStack prototype) {

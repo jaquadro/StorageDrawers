@@ -54,5 +54,6 @@
     "item.storagedrawers.quantify_key": "Quantify Key",
     "item.storagedrawers.quantify_key.desc": "Show or hide stored quantity labels",
     "item.storagedrawers.personal_key": "Personal Key",
-    "item.storagedrawers.personal_key.desc": "Protect access from other players"
+    "item.storagedrawers.personal_key.desc": "Protect access from other players",
+    "itemGroup.storagedrawers": "Storage Drawers"
 }

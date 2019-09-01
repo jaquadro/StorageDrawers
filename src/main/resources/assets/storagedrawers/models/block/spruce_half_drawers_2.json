@@ -3,6 +3,7 @@
     "textures": {
         "top": "storagedrawers:blocks/drawers_spruce_side",
         "front": "storagedrawers:blocks/drawers_spruce_front_2",
+        "back": "storagedrawers:blocks/drawers_spruce_side",
         "side": "storagedrawers:blocks/drawers_spruce_side",
         "trim": "storagedrawers:blocks/drawers_spruce_trim"
     }
