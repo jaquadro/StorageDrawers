@@ -2,14 +2,16 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
-import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import net.minecraft.block.*;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +38,6 @@ import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.extensions.IForgeBlock;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
@@ -62,6 +63,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
     private final int drawerCount;
     private final boolean halfDepth;
+    private final int storageUnits;
 
     public final AxisAlignedBB[] slotGeometry;
     public final AxisAlignedBB[] countGeometry;
@@ -79,7 +81,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         }
     };
 
-    public BlockDrawers (int drawerCount, boolean halfDepth, Block.Properties properties) {
+    public BlockDrawers (int drawerCount, boolean halfDepth, int storageUnits, Block.Properties properties) {
         super(properties);
         this.setDefaultState(stateContainer.getBaseState()
             .with(HORIZONTAL_FACING, Direction.NORTH)
@@ -89,6 +91,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
         this.drawerCount = drawerCount;
         this.halfDepth = halfDepth;
+        this.storageUnits = storageUnits;
 
         slotGeometry = new AxisAlignedBB[drawerCount];
         countGeometry = new AxisAlignedBB[drawerCount];
@@ -121,6 +124,10 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
     public boolean isHalfDepth () {
         return halfDepth;
+    }
+
+    public int getStorageUnits() {
+        return storageUnits;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -203,7 +210,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
             //    tile.setCustomName(stack.getDisplayName());
         }
 
-        /*if (entity.getHeldItemOffhand().getItem() == ModItems.drawerKey) {
+        if (entity.getHeldItemOffhand().getItem() == ModItems.DRAWER_KEY) {
             TileEntityDrawers tile = getTileEntity(world, pos);
             if (tile != null) {
                 IDrawerAttributes _attrs = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(new EmptyDrawerAttributes());
@@ -213,7 +220,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                     attrs.setItemLocked(LockAttribute.LOCK_POPULATED, true);
                 }
             }
-        }*/
+        }
     }
 
     @Override
@@ -249,10 +256,10 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         //if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
         //    return false;
 
-        //if (StorageDrawers.config.cache.debugTrace) {
+        if (CommonConfig.GENERAL.debugTrace.get()) {
             StorageDrawers.log.info("BlockDrawers.onBlockActivated");
             StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item.toString());
-        //}
+        }
 
 
         if (!item.isEmpty()) {
@@ -325,7 +332,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 return true;
             }*/
 
-            if (!world.isRemote) {
+            if (CommonConfig.GENERAL.enableUI.get() && !world.isRemote) {
                 NetworkHooks.openGui((ServerPlayerEntity)player, new INamedContainerProvider()
                 {
                     @Override
@@ -382,9 +389,9 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     protected boolean hitLeft (Direction side, double hitX, double hitZ) {
         switch (side) {
             case NORTH:
-                return hitX > .5;
-            case SOUTH:
                 return hitX < .5;
+            case SOUTH:
+                return hitX > .5;
             case WEST:
                 return hitZ < .5;
             case EAST:
@@ -407,22 +414,17 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         if (worldIn.isRemote)
             return;
 
-        //if (StorageDrawers.config.cache.debugTrace)
+        if (CommonConfig.GENERAL.debugTrace.get())
             StorageDrawers.log.info("onBlockClicked");
+
         BlockRayTraceResult rayResult = rayTraceEyes(worldIn, playerIn, playerIn.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1);
         if (rayResult.getType() == RayTraceResult.Type.MISS)
             return;
 
         Direction side = rayResult.getFace();
-        Vec3d hitVec = rayResult.getHitVec();
-
-        // adjust hitVec for drawers
-        float hitX = (float)(hitVec.x - pos.getX());
-        float hitY = (float)(hitVec.y - pos.getY());
-        float hitZ = (float)(hitVec.z - pos.getZ());
 
         TileEntityDrawers tileDrawers = getTileEntitySafe(worldIn, pos);
-        if (state.get(HORIZONTAL_FACING) != side)
+        if (state.get(HORIZONTAL_FACING) != rayResult.getFace())
             return;
 
         //if (tileDrawers.isSealed())
@@ -431,7 +433,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         //if (!SecurityManager.hasAccess(playerIn.getGameProfile(), tileDrawers))
         //    return;
 
-        int slot = getDrawerSlot(side, hitX, hitY, hitZ);
+        int slot = getDrawerSlot(rayResult);
         IDrawer drawer = tileDrawers.getDrawer(slot);
 
         ItemStack item;
@@ -448,7 +450,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         else
             item = tileDrawers.takeItemsFromSlot(slot, 1);
 
-        //if (StorageDrawers.config.cache.debugTrace)
+        if (CommonConfig.GENERAL.debugTrace.get())
             StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item.toString());
 
         if (!item.isEmpty()) {
@@ -484,8 +486,8 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 }
             }*/
 
-            if (!tile.getDrawerAttributes().isUnlimitedVending())
-                DrawerInventoryHelper.dropInventoryItems(world, pos, tile.getGroup());
+            //if (!tile.getDrawerAttributes().isUnlimitedVending())
+            //    DrawerInventoryHelper.dropInventoryItems(world, pos, tile.getGroup());
         }
 
         super.onReplaced(state, world, pos, newState, isMoving);
@@ -611,7 +613,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         return true;
     }
 
-    /*@Override
+    @Override
     @SuppressWarnings("deprecation")
     public int getWeakPower (BlockState state, IBlockReader blockAccess, BlockPos pos, Direction side) {
         if (!canProvidePower(state))
@@ -622,7 +624,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
             return 0;
 
         return tile.getRedstoneLevel();
-    }*/
+    }
 
     @Override
     @SuppressWarnings("deprecation")

@@ -71,9 +71,9 @@ public class ModItems
             register(event, "creative_storage_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
             register(event, "creative_vending_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
             register(event, "conversion_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
-            register(event, "redstone_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
-            register(event, "min_redstone_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
-            register(event, "max_redstone_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "redstone_upgrade", new ItemUpgradeRedstone(EnumUpgradeRedstone.COMBINED, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "min_redstone_upgrade", new ItemUpgradeRedstone(EnumUpgradeRedstone.MIN, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "max_redstone_upgrade", new ItemUpgradeRedstone(EnumUpgradeRedstone.MAX, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
             register(event, "drawer_key", new ItemDrawerKey(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
             register(event, "quantify_key", new ItemQuantifyKey(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
 

@@ -16,8 +16,16 @@ public class BlockStandardDrawers extends BlockDrawers
     //@SideOnly(Side.CLIENT)
     //private StatusModelData[] statusInfo;
 
+    public BlockStandardDrawers (int drawerCount, boolean halfDepth, int storageUnits, Block.Properties properties) {
+       super(drawerCount, halfDepth, storageUnits, properties);
+    }
+
     public BlockStandardDrawers (int drawerCount, boolean halfDepth, Block.Properties properties) {
-        super(drawerCount, halfDepth, properties);
+        super(drawerCount, halfDepth, calcUnits(drawerCount, halfDepth), properties);
+    }
+
+    private static int calcUnits (int drawerCount, boolean halfDepth) {
+        return halfDepth ? 16 / drawerCount : 32 / drawerCount;
     }
 
     /*@Override
@@ -50,9 +58,9 @@ public class BlockStandardDrawers extends BlockDrawers
 
     @Override
     protected int getDrawerSlot (Direction side, double hitX, double hitY, double hitZ) {
-        hitX %= 1;
-        hitY %= 1;
-        hitZ %= 1;
+        hitX = Math.abs(hitX % 1);
+        hitY = Math.abs(hitY % 1);
+        hitZ = Math.abs(hitZ % 1);
 
         if (getDrawerCount() == 1)
             return 0;

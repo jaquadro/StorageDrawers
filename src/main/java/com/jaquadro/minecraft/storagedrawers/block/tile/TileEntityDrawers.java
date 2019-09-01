@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
+import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
@@ -50,7 +51,6 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
 
     //private int direction;
     //private String material;
-    private int drawerCapacity = 1;
     //private boolean taped = false;
     //private UUID owner;
     //private String securityKey;
@@ -165,12 +165,12 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
     //}
 
     public int getDrawerCapacity () {
-        return drawerCapacity;
+        return ((BlockDrawers)getBlockState().getBlock()).getStorageUnits();
     }
 
     public int getEffectiveDrawerCapacity () {
-        //if (upgradeData.hasOneStackUpgrade())
-        //    return 1;
+        if (upgradeData.hasOneStackUpgrade())
+            return 1;
 
         return getDrawerCapacity();
     }
@@ -440,8 +440,6 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         //if (tag.hasKey("Mat"))
         //    material = tag.getString("Mat");
 
-        drawerCapacity = tag.getInt("Cap");
-
         drawerAttributes.setItemLocked(LockAttribute.LOCK_EMPTY, false);
         drawerAttributes.setItemLocked(LockAttribute.LOCK_POPULATED, false);
         if (tag.contains("Lock")) {
@@ -473,8 +471,6 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
     @Override
     public CompoundNBT writePortable (CompoundNBT tag) {
         tag = super.writePortable(tag);
-
-        tag.putInt("Cap", getDrawerCapacity());
 
         //if (material != null)
         //    tag.setString("Mat", material);

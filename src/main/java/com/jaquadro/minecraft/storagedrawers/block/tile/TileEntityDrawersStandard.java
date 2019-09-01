@@ -150,7 +150,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
         @Override
         protected int getStackCapacity () {
-            return /*upgrades().getStorageMultiplier()*/ 1 * getEffectiveDrawerCapacity();
+            return upgrades().getStorageMultiplier() * getEffectiveDrawerCapacity();
         }
 
         @Override

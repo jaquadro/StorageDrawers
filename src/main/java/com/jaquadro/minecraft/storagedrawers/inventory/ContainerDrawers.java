@@ -4,14 +4,11 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
-import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.Block;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
@@ -19,11 +16,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,7 +34,7 @@ public abstract class ContainerDrawers extends Container
     private static final int UpgradeX = 26;
     private static final int UpgradeY = 86;
 
-    //private IInventory upgradeInventory;
+    private IInventory upgradeInventory;
 
     private List<Slot> storageSlots;
     private List<Slot> upgradeSlots;
@@ -71,7 +66,7 @@ public abstract class ContainerDrawers extends Container
 
         int drawerCount = 0;
 
-        //upgradeInventory = new InventoryUpgrade(tileEntity);
+        upgradeInventory = new InventoryUpgrade(tileEntity);
         Block block = tileEntity.getBlockState().getBlock();
         if (block instanceof BlockDrawers)
             drawerCount = ((BlockDrawers) block).getDrawerCount();
@@ -80,9 +75,9 @@ public abstract class ContainerDrawers extends Container
         for (int i = 0; i < drawerCount; i++)
             storageSlots.add(addSlot(new SlotDrawer(this, tileEntity.getGroup(), i, getStorageSlotX(i), getStorageSlotY(i))));
 
-        //upgradeSlots = new ArrayList<>();
-        //for (int i = 0; i < 7; i++)
-        //    upgradeSlots.add(addSlot(new SlotUpgrade(upgradeInventory, i, UpgradeX + i * 18, UpgradeY)));
+        upgradeSlots = new ArrayList<>();
+        for (int i = 0; i < 7; i++)
+            upgradeSlots.add(addSlot(new SlotUpgrade(upgradeInventory, i, UpgradeX + i * 18, UpgradeY)));
 
         playerSlots = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -120,7 +115,7 @@ public abstract class ContainerDrawers extends Container
 
     @Override
     public boolean canInteractWith (PlayerEntity player) {
-        return true; //return upgradeInventory.isUsableByPlayer(player);
+        return upgradeInventory.isUsableByPlayer(player);
     }
 
     @Override

@@ -15,6 +15,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -27,16 +29,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemDrawers extends ItemBlock
+public class ItemDrawers extends BlockItem
 {
-    public ItemDrawers (Block block) {
-        super(block);
-        setMaxDamage(0);
-    }
-
-    @Override
-    public int getMetadata (int damage) {
-        return damage;
+    public ItemDrawers (Block block, Item.Properties properties) {
+        super(block, properties);
     }
 
     @Override

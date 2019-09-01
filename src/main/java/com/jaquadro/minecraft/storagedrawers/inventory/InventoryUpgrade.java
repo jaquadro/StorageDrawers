@@ -1,14 +1,9 @@
-/*package com.jaquadro.minecraft.storagedrawers.inventory;
+package com.jaquadro.minecraft.storagedrawers.inventory;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import com.jaquadro.minecraft.storagedrawers.item.*;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nonnull;
 
@@ -65,21 +60,6 @@ public class InventoryUpgrade implements IInventory
     }
 
     @Override
-    public String getName () {
-        return tile.getName();
-    }
-
-    @Override
-    public boolean hasCustomName () {
-        return tile.hasCustomName();
-    }
-
-    @Override
-    public ITextComponent getDisplayName () {
-        return tile.getDisplayName();
-    }
-
-    @Override
     public int getInventoryStackLimit () {
         return 1;
     }
@@ -90,34 +70,19 @@ public class InventoryUpgrade implements IInventory
     }
 
     @Override
-    public boolean isUsableByPlayer (EntityPlayer player) {
+    public boolean isUsableByPlayer (PlayerEntity player) {
         return true;
     }
 
     @Override
-    public void openInventory (EntityPlayer player) { }
+    public void openInventory (PlayerEntity player) { }
 
     @Override
-    public void closeInventory (EntityPlayer player) { }
+    public void closeInventory (PlayerEntity player) { }
 
     @Override
     public boolean isItemValidForSlot (int slot, @Nonnull ItemStack item) {
         return tile.upgrades().canAddUpgrade(item);
-    }
-
-    @Override
-    public int getField (int id) {
-        return 0;
-    }
-
-    @Override
-    public void setField (int id, int value) {
-
-    }
-
-    @Override
-    public int getFieldCount () {
-        return 0;
     }
 
     @Override
@@ -133,4 +98,3 @@ public class InventoryUpgrade implements IInventory
         return tile.upgrades().canRemoveUpgrade(slot);
     }
 }
-*/
