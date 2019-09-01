@@ -1,0 +1,10 @@
+{
+    "parent": "storagedrawers:block/half_drawers_orientable",
+    "textures": {
+        "top": "storagedrawers:blocks/drawers_acacia_side_h",
+        "front": "storagedrawers:blocks/drawers_acacia_front_2",
+        "back": "storagedrawers:blocks/drawers_acacia_side",
+        "side": "storagedrawers:blocks/drawers_acacia_side_v",
+        "trim": "storagedrawers:blocks/drawers_acacia_trim"
+    }
+}
