@@ -1,85 +1,78 @@
 package thaumcraft.api.crafting;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.common.util.RecipeMatcher;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.AspectList;
-import thaumcraft.api.research.ResearchHelper;
+import thaumcraft.api.capabilities.ThaumcraftCapabilities;
 
-public class InfusionRecipe
+public class InfusionRecipe implements IThaumcraftRecipe
 {
-	protected AspectList aspects;
-	protected String[] research;
-	private Object[] components;
-	private Object recipeInput;
-	protected Object recipeOutput;
-	protected int instability;
+	public AspectList aspects;
+	public String research;
+	private String name;
+	protected NonNullList<Ingredient> components = NonNullList.create();
+	public Ingredient sourceInput; //Use Ingredient.EMPTY of the source item can be anything
+	public Object recipeOutput;
+	public int instability;
 	
-	public InfusionRecipe(String research, Object output, int inst, AspectList aspects2, Object input, Object[] recipe) {
-		this(new String[]{research},output,inst,aspects2,input,recipe);
-	}
-	
-	public InfusionRecipe(String[] research, Object output, int inst, AspectList aspects2, Object input, Object[] recipe) {
+	public InfusionRecipe(String research, Object outputResult, int inst, AspectList aspects2, Object centralItem, Object ... recipe) {
+		this.name="";
 		this.research = research;
-		this.recipeOutput = output;
-		this.recipeInput = input;
+		this.recipeOutput = outputResult;
 		this.aspects = aspects2;
-		this.components = recipe;
-		this.instability = inst;
+		this.instability = inst;		
+		this.sourceInput = ThaumcraftApiHelper.getIngredient(centralItem);
+		if (sourceInput==null) {
+			String ret = "Invalid infusion central item: "+centralItem;
+            throw new RuntimeException(ret);
+		}		
+		for (Object in : recipe)
+        {
+            Ingredient ing = ThaumcraftApiHelper.getIngredient(in);
+            if (ing != null) {
+            	components.add(ing);
+            } else {
+                String ret = "Invalid infusion recipe: ";
+                for (Object tmp :  recipe)
+                {
+                    ret += tmp + ", ";
+                }
+                ret += outputResult;
+                throw new RuntimeException(ret);
+            }
+        }
 	}
 
 	/**
      * Used to check if a recipe matches current crafting inventory
      * @param player 
      */
-	public boolean matches(ArrayList<ItemStack> input, ItemStack central, World world, EntityPlayer player) {
-		if (getRecipeInput()==null) return false;
-			
-		if (research!=null && research[0].length()>0 && !ResearchHelper.isResearchComplete(player.getName(), research)) {
+	public boolean matches(List<ItemStack> input, ItemStack central, World world, EntityPlayer player) {
+		if (getRecipeInput()==null) return false;			
+		if (!ThaumcraftCapabilities.getKnowledge(player).isResearchKnown(research)) {
     		return false;
-    	}
-		
-		ItemStack i2 = central.copy();
-		if (getRecipeInput() instanceof ItemStack &&
-				((ItemStack)getRecipeInput()).getItemDamage()==OreDictionary.WILDCARD_VALUE) {
-			i2.setItemDamage(OreDictionary.WILDCARD_VALUE);
-		}
-		
-		if (!ThaumcraftApiHelper.areItemStacksEqualForCrafting(i2, getRecipeInput())) return false;
-		
-		ArrayList<ItemStack> ii = new ArrayList<ItemStack>();
-		for (ItemStack is:input) {
-			ii.add(is.copy());
-		}
-		
-		for (Object comp:getComponents()) {
-			boolean b=false;
-			for (int a=0;a<ii.size();a++) {
-				 i2 = ii.get(a).copy();
-				if (ThaumcraftApiHelper.areItemStacksEqualForCrafting(i2, comp)) {
-					ii.remove(a);
-					b=true;
-					break;
-				}
-			}
-			if (!b) return false;
-		}
-		return ii.size()==0?true:false;
+    	}		
+		return (getRecipeInput()==Ingredient.EMPTY || this.getRecipeInput().apply(central)) && RecipeMatcher.findMatches(input, getComponents()) != null;
     }
     
-    public String[] getResearch() {
+	@Override
+    public String getResearch() {
 		return research;
     }
     
-	public Object getRecipeInput() {
-		return recipeInput;
+	public Ingredient getRecipeInput() {
+		return sourceInput;
 	}
 
-	public Object[] getComponents() {
+	public NonNullList<Ingredient> getComponents() {
 		return components;
 	}
 	
@@ -89,18 +82,29 @@ public class InfusionRecipe
 	
 	public AspectList getAspects() {
 		return aspects;
-	}
-			
+	}			
 	
-	public Object getRecipeOutput(EntityPlayer player, ItemStack input, ArrayList<ItemStack> comps ) {
+	public Object getRecipeOutput(EntityPlayer player, ItemStack input, List<ItemStack> comps ) {
 		return recipeOutput;
     }
     
-    public AspectList getAspects(EntityPlayer player, ItemStack input, ArrayList<ItemStack> comps) {
+    public AspectList getAspects(EntityPlayer player, ItemStack input, List<ItemStack> comps) {
 		return aspects;
     }
     
-    public int getInstability(EntityPlayer player, ItemStack input, ArrayList<ItemStack> comps) {
+    public int getInstability(EntityPlayer player, ItemStack input, List<ItemStack> comps) {
 		return instability;
     }
+    
+    private String group="";
+	
+	@Override
+	public String getGroup() {
+		return group;
+	}
+	
+	public InfusionRecipe setGroup(ResourceLocation s) {
+		this.group=s.toString();
+		return this;
+	}
 }

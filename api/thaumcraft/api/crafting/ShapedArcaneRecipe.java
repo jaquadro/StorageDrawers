@@ -1,284 +1,83 @@
 package thaumcraft.api.crafting;
 
-import java.util.HashMap;
-import java.util.List;
+import javax.annotation.Nonnull;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.CraftingHelper.ShapedPrimer;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import thaumcraft.api.ThaumcraftApiHelper;
+import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
-import thaumcraft.api.research.ResearchHelper;
+import thaumcraft.api.items.ItemsTC;
 
-public class ShapedArcaneRecipe implements IArcaneRecipe
+public class ShapedArcaneRecipe extends ShapedOreRecipe implements IArcaneRecipe
 {
-    //Added in for future ease of change, but hard coded for now.
-    private static final int MAX_CRAFT_GRID_WIDTH = 3;
-    private static final int MAX_CRAFT_GRID_HEIGHT = 3;
+	
+	private String research;
+	private int vis;
+	private AspectList crystals;
 
-    public ItemStack output = null;
-    public  Object[] input = null;
-    public AspectList aspects = null;
-    public String[] research; 
-    public int width = 0;
-    public int height = 0;
-    private boolean mirrored = true;
-
-    
-    public ShapedArcaneRecipe(String research, ItemStack result, AspectList aspects, Object... recipe){ this(new String[]{research}, result, aspects, recipe); }
-    
-    public ShapedArcaneRecipe(String[] research, ItemStack result, AspectList aspects, Object... recipe)
-    {
-        output = result.copy();
-        this.research = research;
-        this.aspects = aspects;
-        String shape = "";
-        
-        int idx = 0;
-
-        if (recipe[idx] instanceof Boolean)
-        {
-            mirrored = (Boolean)recipe[idx];
-            if (recipe[idx+1] instanceof Object[])
-            {
-                recipe = (Object[])recipe[idx+1];
-            }
-            else
-            {
-                idx = 1;
-            }
-        }
-
-        if (recipe[idx] instanceof String[])
-        {
-            String[] parts = ((String[])recipe[idx++]);
-
-            for (String s : parts)
-            {
-                width = s.length();
-                shape += s;
-            }
-
-            height = parts.length;
-        }
-        else
-        {
-            while (recipe[idx] instanceof String)
-            {
-                String s = (String)recipe[idx++];
-                shape += s;
-                width = s.length();
-                height++;
-            }
-        }
-
-        if (width * height != shape.length())
-        {
-            String ret = "Invalid shaped ore recipe: ";
-            for (Object tmp :  recipe)
-            {
-                ret += tmp + ", ";
-            }
-            ret += output;
-            throw new RuntimeException(ret);
-        }
-
-        HashMap<Character, Object> itemMap = new HashMap<Character, Object>();
-
-        for (; idx < recipe.length; idx += 2)
-        {
-            Character chr = (Character)recipe[idx];
-            Object in = recipe[idx + 1];
-
-            if (in instanceof ItemStack)
-            {
-                itemMap.put(chr, ((ItemStack)in).copy());
-            }
-            else if (in instanceof Item)
-            {
-                itemMap.put(chr, new ItemStack((Item)in));
-            }
-            else if (in instanceof Block)
-            {
-                itemMap.put(chr, new ItemStack((Block)in, 1, OreDictionary.WILDCARD_VALUE));
-            }
-            else if (in instanceof String)
-            {
-                itemMap.put(chr, OreDictionary.getOres((String)in));
-            }
-            else
-            {
-                String ret = "Invalid shaped ore recipe: ";
-                for (Object tmp :  recipe)
-                {
-                    ret += tmp + ", ";
-                }
-                ret += output;
-                throw new RuntimeException(ret);
-            }
-        }
-
-        input = new Object[width * height];
-        int x = 0;
-        for (char chr : shape.toCharArray())
-        {
-            input[x++] = itemMap.get(chr);
-        }
-        
-    }
-
-    @Override
-    public ItemStack getCraftingResult(InventoryCrafting var1){ return output.copy(); }
-
-    @Override
-    public int getRecipeSize(){ return input.length; }
-
-    @Override
-    public ItemStack getRecipeOutput(){ return output; }
-    
-    @Override
-    public boolean matches(InventoryCrafting inv, World world)
-    {
-    	return inv instanceof IArcaneWorkbench && matches(inv,world,null);
-    }
-
-    @Override
-    public boolean matches(InventoryCrafting inv, World world, EntityPlayer player)
-    {
-    	if (player!=null && ( research!=null && research[0].length()>0 && !ResearchHelper.isResearchComplete(player.getName(), research))) {
-    		return false;
-    	}
-        for (int x = 0; x <= MAX_CRAFT_GRID_WIDTH - width; x++)
-        {
-            for (int y = 0; y <= MAX_CRAFT_GRID_HEIGHT - height; ++y)
-            {
-                if (checkMatch(inv, x, y, false))
-                {
-                    return true;
-                }
-
-                if (mirrored && checkMatch(inv, x, y, true))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private boolean checkMatch(InventoryCrafting inv, int startX, int startY, boolean mirror)
-    {
-        for (int x = 0; x < MAX_CRAFT_GRID_WIDTH; x++)
-        {
-            for (int y = 0; y < MAX_CRAFT_GRID_HEIGHT; y++)
-            {
-                int subX = x - startX;
-                int subY = y - startY;
-                Object target = null;
-
-                if (subX >= 0 && subY >= 0 && subX < width && subY < height)
-                {
-                    if (mirror)
-                    {
-                        target = input[width - subX - 1 + subY * width];
-                    }
-                    else
-                    {
-                        target = input[subX + subY * width];
-                    }
-                }
-
-                ItemStack slot = inv.getStackInRowAndColumn(x, y);
-
-                if (target instanceof ItemStack)
-                {
-                    if (!checkItemEquals((ItemStack)target, slot))
-                    {
-                        return false;
-                    }
-                }
-                else if (target instanceof List)
-                {
-                    boolean matched = false;
-
-                    for (ItemStack item : (List<ItemStack>)target)
-                    {
-                        matched = matched || checkItemEquals(item, slot);
-                    }
-
-                    if (!matched)
-                    {
-                        return false;
-                    }
-                }
-                else if (target == null && slot != null)
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    private boolean checkItemEquals(ItemStack target, ItemStack input)
-    {
-        if (input == null && target != null || input != null && target == null)
-        {
-            return false;
-        }
-        return (target.getItem() == input.getItem() && 
-        		(!target.hasTagCompound() || ThaumcraftApiHelper.areItemStackTagsEqualForCrafting(input,target)) &&
-        		(target.getItemDamage() == OreDictionary.WILDCARD_VALUE|| target.getItemDamage() == input.getItemDamage()));
-    }
-
-    public ShapedArcaneRecipe setMirrored(boolean mirror)
-    {
-        mirrored = mirror;
-        return this;
-    }
-
-    /**
-     * Returns the input for this recipe, any mod accessing this value should never
-     * manipulate the values in this array as it will effect the recipe itself.
-     * @return The recipes input vales.
-     */
-    public Object[] getInput()
-    {
-        return this.input;
-    }
-    
-    @Override		
-	public AspectList getAspects() {
-		return aspects;
-	}
-    
-    @Override		
-	public AspectList getAspects(InventoryCrafting inv) {
-		return aspects;
+	public ShapedArcaneRecipe(ResourceLocation group, String res, int vis, AspectList crystals, Block     result, Object... recipe){ this(group, res, vis, crystals, new ItemStack(result), recipe); }
+    public ShapedArcaneRecipe(ResourceLocation group, String res, int vis, AspectList crystals, Item      result, Object... recipe){ this(group, res, vis, crystals, new ItemStack(result), recipe); }
+    public ShapedArcaneRecipe(ResourceLocation group, String res, int vis, AspectList crystals, @Nonnull ItemStack result, Object... recipe) { this(group, res, vis, crystals, result, CraftingHelper.parseShaped(recipe)); }
+	public ShapedArcaneRecipe(ResourceLocation group, String res, int vis, AspectList crystals, @Nonnull ItemStack result, ShapedPrimer primer) {
+		super(group, result, primer);
+		this.research = res;
+		this.vis = vis;
+		this.crystals = crystals;
 	}
 	
 	@Override
-	public String[] getResearch() {
+	public ItemStack getCraftingResult(InventoryCrafting var1) {
+		if (!(var1 instanceof IArcaneWorkbench)) return ItemStack.EMPTY; 
+		return super.getCraftingResult(var1);
+	}
+	
+	@Override
+	public boolean matches(InventoryCrafting inv, World world) {
+		
+		if (inv.getSizeInventory()<15) return false;
+		
+		InventoryCrafting dummy = new InventoryCrafting(new ContainerDummy(),3,3);
+		for (int a=0;a<9;a++) dummy.setInventorySlotContents(a, inv.getStackInSlot(a));
+		
+		if (crystals!=null && inv.getSizeInventory()>=15)
+		for (Aspect aspect:crystals.getAspects()) {
+			ItemStack cs = ThaumcraftApiHelper.makeCrystal(aspect,crystals.getAmount(aspect));
+			boolean b = false;
+    		for (int i = 0; i < 6; ++i)
+            {
+            	ItemStack itemstack1 = inv.getStackInSlot(9+i);            	
+            	if (itemstack1!=null && itemstack1.getItem()==ItemsTC.crystalEssence && itemstack1.getCount()>=cs.getCount() && ItemStack.areItemStackTagsEqual(cs,itemstack1))
+                {
+                    b = true;
+                }
+            }
+    		if (!b) return false;
+    	}
+		
+		return inv instanceof IArcaneWorkbench && super.matches(dummy, world);
+	}
+
+	@Override
+	public int getVis() {
+		return vis;
+	}
+
+	@Override
+	public String getResearch() {
 		return research;
 	}
-	
+
 	@Override
-	public ItemStack[] getRemainingItems(InventoryCrafting p_179532_1_)
-    {
-        ItemStack[] aitemstack = new ItemStack[p_179532_1_.getSizeInventory()];
-
-        for (int i = 0; i < Math.min(9, aitemstack.length); ++i)
-        {
-            ItemStack itemstack = p_179532_1_.getStackInSlot(i);
-            aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
-        }
-
-        return aitemstack;
-    }
+	public AspectList getCrystals() {
+		return crystals;
+	}
+	
 }

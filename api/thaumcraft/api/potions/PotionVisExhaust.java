@@ -9,20 +9,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PotionVisExhaust extends Potion
 {
-    public static PotionVisExhaust instance = null; // will be instantiated at runtime
+    public static Potion instance = null; // will be instantiated at runtime
     private int statusIconIndex = -1;
     
     public PotionVisExhaust(boolean par2, int par3)
     {
-    	super(new ResourceLocation("vis_exhaust"),par2,par3);
-    	setIconIndex(0, 0);
-    }
-    
-    public static void init()
-    {
-    	instance.setPotionName("potion.visexhaust");
-    	instance.setIconIndex(5, 1);
-    	instance.setEffectiveness(0.25D);
+    	super(par2,par3);
+    	setIconIndex(5, 1);
+    	setPotionName("potion.vis_exhaust");
+    	setEffectiveness(0.25D);
     }
     
 	@Override

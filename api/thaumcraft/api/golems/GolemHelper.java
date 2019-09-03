@@ -3,9 +3,11 @@ package thaumcraft.api.golems;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.golems.seals.ISeal;
@@ -16,7 +18,7 @@ import thaumcraft.api.golems.tasks.Task;
 public class GolemHelper {
 
 	/**
-	 * Make sure to register your seals during the preInit phase.
+	 * Make sure to register your seals during the preInit phase before TC is loaded
 	 * @param seal
 	 */
 	public static void registerSeal(ISeal seal) {
@@ -39,15 +41,98 @@ public class GolemHelper {
 		ThaumcraftApi.internalMethods.addGolemTask(dim, task);
 	}
 	
-	public static HashMap<Integer,ArrayList<ProvisionRequest>> provisionRequests = new HashMap<Integer,ArrayList<ProvisionRequest>>();
+	public static HashMap<Integer,ArrayList<ProvisionRequest>> provisionRequests = new HashMap<>();
+	final static int LISTLIMIT = 1000;
 	
+	/**
+	 * 
+	 * @param world
+	 * @param seal
+	 * @param stack the stack requested. Can accept wildcard values.
+	 */
 	public static void requestProvisioning(World world, ISealEntity seal, ItemStack stack) {
-		if (!provisionRequests.containsKey(world.provider.getDimensionId()))
-			provisionRequests.put(world.provider.getDimensionId(), new ArrayList<ProvisionRequest>());
-		ArrayList<ProvisionRequest> list = provisionRequests.get(world.provider.getDimensionId());
-		ProvisionRequest pr = new ProvisionRequest(seal,stack);
-		if (!list.contains(pr))
+		if (!provisionRequests.containsKey(world.provider.getDimension()))
+			provisionRequests.put(world.provider.getDimension(), new ArrayList<ProvisionRequest>());
+		ArrayList<ProvisionRequest> list = provisionRequests.get(world.provider.getDimension());
+		ProvisionRequest pr = new ProvisionRequest(seal,stack.copy());
+		if (!list.contains(pr)) {
 			list.add(pr);
+		}
+		if (list.size()>LISTLIMIT) list.remove(0);
+	}
+	
+	/**
+	 * 
+	 * @param world
+	 * @param pos
+	 * @param side
+	 * @param stack the stack requested. Can accept wildcard values.
+	 */
+	public static void requestProvisioning(World world, BlockPos pos, EnumFacing side, ItemStack stack) {
+		if (!provisionRequests.containsKey(world.provider.getDimension()))
+			provisionRequests.put(world.provider.getDimension(), new ArrayList<ProvisionRequest>());
+		ArrayList<ProvisionRequest> list = provisionRequests.get(world.provider.getDimension());
+		ProvisionRequest pr = new ProvisionRequest(pos, side, stack.copy());
+		if (!list.contains(pr)) {
+			list.add(pr);
+		}
+		if (list.size()>LISTLIMIT) list.remove(0);
+	}
+	
+	/**
+	 * 
+	 * @param world
+	 * @param entity
+	 * @param stack the stack requested. Can accept wildcard values.
+	 */
+	public static void requestProvisioning(World world, Entity entity, ItemStack stack) {
+		if (!provisionRequests.containsKey(world.provider.getDimension()))
+			provisionRequests.put(world.provider.getDimension(), new ArrayList<ProvisionRequest>());
+		ArrayList<ProvisionRequest> list = provisionRequests.get(world.provider.getDimension());
+		ProvisionRequest pr = new ProvisionRequest(entity, stack.copy());
+		if (!list.contains(pr)) {
+			list.add(pr);
+		}
+		if (list.size()>LISTLIMIT) list.remove(0);
+	}
+	
+	/**
+	 * 
+	 * @param world
+	 * @param pos
+	 * @param side
+	 * @param stack the stack requested. Can accept wildcard values.
+	 * @param ui a unique number to make the request slightly more unique in case you want to add multiple similar requests
+	 */
+	public static void requestProvisioning(World world, BlockPos pos, EnumFacing side, ItemStack stack, int ui) {
+		if (!provisionRequests.containsKey(world.provider.getDimension()))
+			provisionRequests.put(world.provider.getDimension(), new ArrayList<ProvisionRequest>());
+		ArrayList<ProvisionRequest> list = provisionRequests.get(world.provider.getDimension());
+		ProvisionRequest pr = new ProvisionRequest(pos, side, stack.copy());
+		pr.setUI(ui);
+		if (!list.contains(pr)) {
+			list.add(pr);
+		}
+		if (list.size()>LISTLIMIT) list.remove(0);
+	}
+	
+	/**
+	 * 
+	 * @param world
+	 * @param entity
+	 * @param stack the stack requested. Can accept wildcard values.
+	 * @param ui a unique number to make the request slightly more unique in case you want to add multiple similar requests
+	 */
+	public static void requestProvisioning(World world, Entity entity, ItemStack stack, int ui) {
+		if (!provisionRequests.containsKey(world.provider.getDimension()))
+			provisionRequests.put(world.provider.getDimension(), new ArrayList<ProvisionRequest>());
+		ArrayList<ProvisionRequest> list = provisionRequests.get(world.provider.getDimension());
+		ProvisionRequest pr = new ProvisionRequest(entity, stack.copy());
+		pr.setUI(ui);
+		if (!list.contains(pr)) {
+			list.add(pr);
+		}
+		if (list.size()>LISTLIMIT) list.remove(0);
 	}
 	
 	/**
@@ -85,18 +170,18 @@ public class GolemHelper {
 	 * @return
 	 */
 	public static AxisAlignedBB getBoundsForArea(ISealEntity seal) {
-		return AxisAlignedBB.fromBounds(
+		return new AxisAlignedBB(
 				seal.getSealPos().pos.getX(), seal.getSealPos().pos.getY(), seal.getSealPos().pos.getZ(), 
 				seal.getSealPos().pos.getX()+1, seal.getSealPos().pos.getY()+1, seal.getSealPos().pos.getZ()+1)
 				.offset(
 					seal.getSealPos().face.getFrontOffsetX(), 
 					seal.getSealPos().face.getFrontOffsetY(), 
 					seal.getSealPos().face.getFrontOffsetZ())
-				.addCoord(
+				.expand(
 					seal.getSealPos().face.getFrontOffsetX()!=0?(seal.getArea().getX()-1) * seal.getSealPos().face.getFrontOffsetX():0, 
 					seal.getSealPos().face.getFrontOffsetY()!=0?(seal.getArea().getY()-1) * seal.getSealPos().face.getFrontOffsetY():0, 
 					seal.getSealPos().face.getFrontOffsetZ()!=0?(seal.getArea().getZ()-1) * seal.getSealPos().face.getFrontOffsetZ():0)
-				.expand(
+				.grow(
 					seal.getSealPos().face.getFrontOffsetX()==0?seal.getArea().getX()-1:0,
 					seal.getSealPos().face.getFrontOffsetY()==0?seal.getArea().getY()-1:0,
 					seal.getSealPos().face.getFrontOffsetZ()==0?seal.getArea().getZ()-1:0 );

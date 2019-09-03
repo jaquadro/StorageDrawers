@@ -182,4 +182,23 @@ public interface IDrawer
     default boolean isEnabled () {
         return true;
     }
+
+    /**
+     * Gets auxiliary data that has been associated with this drawer.
+     *
+     * @param key The key used to identify the data.
+     * @return An opaque object that was previously stored.
+     */
+    default Object getExtendedData (String key) {
+        return null;
+    }
+
+    /**
+     * Stores auxiliary data with this drawer, mainly for use in integration.
+     * @param key The key to identify the data with.
+     * @param data The data to store.
+     */
+    default void setExtendedData (String key, Object data) {
+
+    }
 }

@@ -1,7 +1,7 @@
 package thaumcraft.api.golems;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 
 public enum EnumGolemTrait {
 	SMART(new ResourceLocation("thaumcraft","textures/misc/golem/tag_smart.png")), 
@@ -21,7 +21,8 @@ public enum EnumGolemTrait {
 	FIREPROOF(new ResourceLocation("thaumcraft","textures/misc/golem/tag_fireproof.png")),
 	BREAKER(new ResourceLocation("thaumcraft","textures/misc/golem/tag_breaker.png")),
 	HAULER(new ResourceLocation("thaumcraft","textures/misc/golem/tag_hauler.png")),
-	RANGED(new ResourceLocation("thaumcraft","textures/misc/golem/tag_ranged.png"));
+	RANGED(new ResourceLocation("thaumcraft","textures/misc/golem/tag_ranged.png")),
+	BLASTPROOF(new ResourceLocation("thaumcraft","textures/misc/golem/tag_blastproof.png"));
 	
 	static {
 		CLUMSY.opposite = DEFT;
@@ -42,10 +43,10 @@ public enum EnumGolemTrait {
 	}
 	
 	public String getLocalizedName() {
-		return StatCollector.translateToLocal("golem.trait."+this.name().toLowerCase());
+		return I18n.translateToLocal("golem.trait."+this.name().toLowerCase());
 	}
 	
 	public String getLocalizedDescription() {
-		return StatCollector.translateToLocal("golem.trait.text."+this.name().toLowerCase());
+		return I18n.translateToLocal("golem.trait.text."+this.name().toLowerCase());
 	}
 }

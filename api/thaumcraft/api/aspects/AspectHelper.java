@@ -7,22 +7,26 @@ import java.util.Random;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApi.EntityTagsNBT;
 import thaumcraft.api.ThaumcraftApiHelper;
+import thaumcraft.api.internal.CommonInternals;
 
 public class AspectHelper {
-
+	
 	public static AspectList cullTags(AspectList temp) {
+		return cullTags(temp,7);
+	}
+
+	public static AspectList cullTags(AspectList temp, int cap) {
 		AspectList temp2 = new AspectList();
 		for (Aspect tag:temp.getAspects()) {
 			if (tag!=null)
 				temp2.add(tag, temp.getAmount(tag));
 		}
-		while (temp2!=null && temp2.size()>6) {
+		while (temp2!=null && temp2.size()>cap) {
 			Aspect lowest = null;
 			float low = Short.MAX_VALUE;
 			for (Aspect tag:temp2.getAspects()) {
@@ -65,24 +69,25 @@ public class AspectHelper {
 		return ThaumcraftApi.internalMethods.getObjectAspects(is);
 	}
 
-	public static AspectList generateTags(Item item, int meta) {
-		return ThaumcraftApi.internalMethods.generateTags(item, meta);
+	public static AspectList generateTags(ItemStack is) {
+		return ThaumcraftApi.internalMethods.generateTags(is);
 	}
 
 	public static AspectList getEntityAspects(Entity entity) { 		
 		AspectList tags = null;               
+		String entityString = EntityList.getEntityString(entity);
 	    if (entity instanceof EntityPlayer) {
 	    	tags = new AspectList();
 	    	tags.add(Aspect.MAN, 4);        	
 			Random rand = new Random(((EntityPlayer)entity).getName().hashCode());
 	    	Aspect[] posa = Aspect.aspects.values().toArray(new Aspect[]{});
-			tags.add(posa[rand.nextInt(posa.length)], 4);
-	    	tags.add(posa[rand.nextInt(posa.length)], 4);
-	    	tags.add(posa[rand.nextInt(posa.length)], 4);
+			tags.add(posa[rand.nextInt(posa.length)], 15);
+	    	tags.add(posa[rand.nextInt(posa.length)], 15);
+	    	tags.add(posa[rand.nextInt(posa.length)], 15);
 	    } else {
 	        f1:
-			for (ThaumcraftApi.EntityTags et:ThaumcraftApi.scanEntities) {
-				if (!et.entityName.equals(EntityList.getEntityString(entity))) continue;
+			for (ThaumcraftApi.EntityTags et:CommonInternals.scanEntities) {
+				if (!et.entityName.equals(entityString)) continue;
 				if (et.nbts==null || et.nbts.length==0) {
 					tags = et.aspects;
 				} else {
@@ -98,7 +103,7 @@ public class AspectHelper {
 					tags = et.aspects;
 				}
 			}
-	    }           		
+	    }           	
 		return tags;
 	}
 

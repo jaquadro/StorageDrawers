@@ -11,6 +11,10 @@ package thaumcraft.api.aspects;
  */
 public interface IAspectSource extends IAspectContainer {
 	
-	
+	/**
+	 * If this returns true then it will not act as an aspect source.
+	 * @return
+	 */
+	public boolean isBlocked();
 	
 }

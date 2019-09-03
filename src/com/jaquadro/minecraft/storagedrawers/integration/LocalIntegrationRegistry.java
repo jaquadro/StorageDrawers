@@ -12,8 +12,8 @@ public class LocalIntegrationRegistry
         IntegrationRegistry reg = instance();
         if (Loader.isModLoaded("waila") && StorageDrawers.config.cache.enableWailaIntegration)
             reg.add(new Waila());
-        //if (Loader.isModLoaded("Thaumcraft") && StorageDrawers.config.cache.enableThaumcraftIntegration)
-        //    reg.add(new Thaumcraft());
+        if (Loader.isModLoaded("thaumcraft") && StorageDrawers.config.cache.enableThaumcraftIntegration)
+            reg.add(new Thaumcraft());
         //if (Loader.isModLoaded("appliedenergistics2") && StorageDrawers.config.cache.enableAE2Integration)
         //    reg.add(new AppliedEnergistics());
         //if (Loader.isModLoaded("crafttweaker") && StorageDrawers.config.cache.enableMineTweakerIntegration)

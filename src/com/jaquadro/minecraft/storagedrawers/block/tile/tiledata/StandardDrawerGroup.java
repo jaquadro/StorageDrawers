@@ -23,6 +23,8 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public abstract class StandardDrawerGroup extends TileDataShim implements IDrawerGroup
@@ -182,6 +184,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         private ItemStack publicStack;
         private int count;
         private ItemStackMatcher matcher;
+        private Map<String, Object> auxData;
 
         public DrawerData (StandardDrawerGroup group) {
             this.group = group;
@@ -436,6 +439,8 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
 
             setStoredItemRaw(tagItem);
             setStoredItemCountRaw(tagCount);
+
+            onItemChanged();
         }
 
         public void deserializeLegacyNBT (NBTTagCompound nbt) {
@@ -456,6 +461,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
 
             setStoredItemRaw(tagItem);
             setStoredItemCountRaw(tagCount);
+            onItemChanged();
         }
 
         public void syncAttributes () {
@@ -465,6 +471,22 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
                 else
                     matcher = new ItemStackMatcher(protoStack);
             }
+        }
+
+        @Override
+        public Object getExtendedData (String key) {
+            if (auxData == null || !auxData.containsKey(key))
+                return null;
+
+            return auxData.get(key);
+        }
+
+        @Override
+        public void setExtendedData (String key, Object data) {
+            if (auxData == null)
+                auxData = new HashMap<>();
+
+            auxData.put(key, data);
         }
 
         protected int getStackCapacity() {

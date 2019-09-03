@@ -69,11 +69,11 @@ sourceSets.main {
     }
 }
 
-/*sourceSets.api {
+sourceSets.api {
     java {
-        srcDirs project.projectDir.getPath() + '/api/mcp'
+        srcDirs project.projectDir.getPath() + '/api'
     }
-}*/
+}
 
 repositories {
     maven { // JEI

@@ -1,4 +1,4 @@
-/*package com.jaquadro.minecraft.storagedrawers.integration;
+package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.api.StorageDrawersApi;
@@ -9,10 +9,10 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,11 +21,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.IEssentiaContainerItem;
 import thaumcraft.api.aspects.AspectList;
+import thaumcraft.api.blocks.BlocksTC;
+import thaumcraft.api.items.ItemsTC;
 
 public class Thaumcraft extends IntegrationModule
 {
@@ -33,7 +35,7 @@ public class Thaumcraft extends IntegrationModule
 
     @Override
     public String getModID () {
-        return "Thaumcraft";
+        return "thaumcraft";
     }
 
     @Override
@@ -41,11 +43,12 @@ public class Thaumcraft extends IntegrationModule
         MinecraftForge.EVENT_BUS.register(this);
 
         aspectItems = new Item[] {
-            GameRegistry.findItem(getModID(), "phial"),
-            GameRegistry.findItem(getModID(), "wispy_essence"),
-            GameRegistry.findItem(getModID(), "crystal_essence"),
-            GameRegistry.findItem(getModID(), "jar"),
-            GameRegistry.findItem(getModID(), "label"),
+            ItemsTC.phial,
+            ItemsTC.crystalEssence,
+            ItemsTC.jarBrace,
+            ItemsTC.label,
+            Item.getItemFromBlock(BlocksTC.jarNormal),
+            Item.getItemFromBlock(BlocksTC.jarVoid),
         };
 
         StorageDrawersApi.instance().renderRegistry().registerPreLabelRenderHandler(new LabelRenderHandler());
@@ -106,7 +109,7 @@ public class Thaumcraft extends IntegrationModule
                 return defaultName;
 
             Aspect aspect = (Aspect)aspectObj;
-            EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+            EntityPlayerSP player = Minecraft.getMinecraft().player;
 
             //if (!ThaumcraftApiHelper.hasDiscoveredAspect(player.getDisplayName(), aspect))
             //    return defaultName + " (???)";
@@ -127,7 +130,7 @@ public class Thaumcraft extends IntegrationModule
             if (!(aspectObj instanceof Aspect))
                 return;
 
-            EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+            EntityPlayerSP player = Minecraft.getMinecraft().player;
             BlockPos blockPos = tileEntity.getPos().add(.5, .5, .5);
             double distance = Math.sqrt(blockPos.distanceSq(player.getPosition()));
 
@@ -171,7 +174,7 @@ public class Thaumcraft extends IntegrationModule
             Minecraft.getMinecraft().renderEngine.bindTexture(aspectResource);
 
             Tessellator tessellator = Tessellator.getInstance();
-            VertexBuffer worldRenderer = tessellator.getBuffer();
+            BufferBuilder worldRenderer = tessellator.getBuffer();
             renderQuad(worldRenderer, x, y, w, h, (int)(r), (int)(g), (int)(b), (int)(alpha * 255));
 
             GlStateManager.disablePolygonOffset();
@@ -182,7 +185,7 @@ public class Thaumcraft extends IntegrationModule
         }
     }
 
-    private void renderQuad (VertexBuffer tessellator, int x, int y, int w, int h, int r, int g, int b, int a)
+    private void renderQuad (BufferBuilder tessellator, int x, int y, int w, int h, int r, int g, int b, int a)
     {
         tessellator.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
         tessellator.pos(x + 0, y + 0, 0).tex(0, 0).color(r, g, b, a).endVertex();
@@ -192,4 +195,3 @@ public class Thaumcraft extends IntegrationModule
         Tessellator.getInstance().draw();
     }
 }
-*/

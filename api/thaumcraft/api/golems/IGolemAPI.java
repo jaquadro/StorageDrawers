@@ -2,6 +2,7 @@ package thaumcraft.api.golems;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 /**
@@ -20,7 +21,7 @@ public interface IGolemAPI {
 	/**
 	 * Causes the golem to hold the itemstack supplied.
 	 * @param stack
-	 * @return anything left over that the golem could not hold. If the golem picked up the entire stack this will be a null.
+	 * @return anything left over that the golem could not hold. If the golem picked up the entire stack this will be an empty stack.
 	 */
 	public ItemStack holdItem(ItemStack stack);
 	
@@ -40,10 +41,17 @@ public interface IGolemAPI {
 	 * @return 
 	 */
 	public boolean canCarry(ItemStack stack, boolean partial);
+	
+	/**
+	 * Checks how much carrying capacity the golem has for the given stack
+	 * @param stack the stack the golem has room for - can be null
+	 * @return 
+	 */
+	public int canCarryAmount(ItemStack stack);
 
 	public boolean isCarrying(ItemStack stack);
 	
-	public ItemStack[] getCarrying();
+	public NonNullList<ItemStack> getCarrying();
 	
 	/**
 	 * Gives the golem xp towards increasing its rank rating. Default is usually 1 for completing a task. 
@@ -51,7 +59,7 @@ public interface IGolemAPI {
 	 */
 	public void addRankXp(int xp);
 
-	
+	public byte getGolemColor();
 	
 	/**
 	 * Plays arm swinging animated for attacks and such

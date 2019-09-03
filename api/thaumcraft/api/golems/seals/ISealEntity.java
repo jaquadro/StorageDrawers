@@ -1,7 +1,7 @@
 package thaumcraft.api.golems.seals;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public interface ISealEntity {
@@ -29,9 +29,19 @@ public interface ISealEntity {
 	boolean isLocked();
 
 	void setLocked(boolean locked);
+	
+	public boolean isRedstoneSensitive();
+
+	public void setRedstoneSensitive(boolean redstone);
 
 	String getOwner();
 
 	void setOwner(String owner);
+	
+	public byte getColor();
+
+	public void setColor(byte color);
+
+	public boolean isStoppedByRedstone(World world);
 
 }

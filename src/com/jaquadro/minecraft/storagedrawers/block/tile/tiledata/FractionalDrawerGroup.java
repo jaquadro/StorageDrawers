@@ -25,6 +25,8 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 import java.util.function.Predicate;
 
@@ -645,6 +647,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
     {
         private FractionalStorage storage;
         private int slot;
+        private Map<String, Object> auxData;
 
         public FractionalDrawer (FractionalStorage storage, int slot) {
             this.storage = storage;
@@ -742,6 +745,22 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         @Override
         public boolean isSmallestUnit () {
             return storage.isSmallestUnit(slot);
+        }
+
+        @Override
+        public Object getExtendedData (String key) {
+            if (auxData == null || !auxData.containsKey(key))
+                return null;
+
+            return auxData.get(key);
+        }
+
+        @Override
+        public void setExtendedData (String key, Object data) {
+            if (auxData == null)
+                auxData = new HashMap<>();
+
+            auxData.put(key, data);
         }
     }
 }
