@@ -4,11 +4,11 @@ import net.minecraft.util.IStringSerializable;
 
 public enum EnumUpgradeStorage implements IStringSerializable
 {
-    OBSIDIAN(0, 2, "obsidian", "obsidian"),
-    IRON(1, 3, "iron", "iron"),
-    GOLD(2, 4, "gold", "gold"),
-    DIAMOND(3, 5, "diamond", "diamond"),
-    EMERALD(4, 6, "emerald", "emerald");
+    OBSIDIAN(0, 1, "obsidian", "obsidian"),
+    IRON(1, 2, "iron", "iron"),
+    GOLD(2, 3, "gold", "gold"),
+    DIAMOND(3, 4, "diamond", "diamond"),
+    EMERALD(4, 5, "emerald", "emerald");
 
     private static final EnumUpgradeStorage[] META_LOOKUP;
     private static final EnumUpgradeStorage[] LEVEL_LOOKUP;
