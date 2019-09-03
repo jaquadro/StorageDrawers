@@ -145,6 +145,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         private FractionalDrawerGroup group;
         private int slotCount;
         private ItemStack[] protoStack;
+        private ItemStack[] publicStack;
         private int[] convRate;
         private ItemStackMatcher[] matchers;
         private int pooledCount;
@@ -156,10 +157,12 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             this.slotCount = slotCount;
 
             protoStack = new ItemStack[slotCount];
+            publicStack = new ItemStack[slotCount];
             matchers = new ItemStackMatcher[slotCount];
 
             for (int i = 0; i < slotCount; i++) {
                 protoStack[i] = ItemStack.EMPTY;
+                publicStack[i] = ItemStack.EMPTY;
                 matchers[i] = ItemStackMatcher.EMPTY;
             }
 
@@ -191,8 +194,20 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         }
 
         @Nonnull
+        public ItemStack getPublicStack (int slot) {
+            publicStack[slot].setCount(getStoredCount(slot));
+            return publicStack[slot];
+        }
+
+        @Nonnull
         public ItemStack baseStack () {
             return protoStack[0];
+        }
+
+        @Nonnull
+        public ItemStack getPublicBaseStack () {
+            publicStack[0].setCount(getStoredCount(0));
+            return publicStack[0];
         }
 
         public int baseRate () {
@@ -417,6 +432,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
             for (int i = 0; i < slotCount; i++) {
                 protoStack[i] = ItemStack.EMPTY;
+                publicStack[i] = ItemStack.EMPTY;
                 matchers[i] = ItemStackMatcher.EMPTY;
                 convRate[i] = 0;
             }
@@ -428,6 +444,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             World world = group.getWorld();
             if (world == null) {
                 protoStack[0] = itemPrototype;
+                publicStack[0] = itemPrototype.copy(); // TODO: Shallow copy
                 convRate[0] = 1;
                 matchers[0] = attrs.isDictConvertible()
                     ? new ItemStackOreMatcher(protoStack[0])
@@ -482,6 +499,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
         private void populateRawSlot (int slot, @Nonnull ItemStack itemPrototype, int rate) {
             protoStack[slot] = itemPrototype;
+            publicStack[slot] = itemPrototype.copy(); // TODO: Shallow Copy
             convRate[slot] = rate;
             matchers[slot] = attrs.isDictConvertible()
                 ? new ItemStackOreMatcher(protoStack[slot])
@@ -493,10 +511,12 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 for (int i = 0; i < limit; i++) {
                     if (protoStack[i].isEmpty()) {
                         protoStack[i] = protoStack[i + 1];
+                        publicStack[i] = publicStack[i + 1];
                         matchers[i] = matchers[i + 1];
                         convRate[i] = convRate[i + 1];
 
                         protoStack[i + 1] = ItemStack.EMPTY;
+                        publicStack[i + 1] = ItemStack.EMPTY;
                         matchers[i + 1] = ItemStackMatcher.EMPTY;
                         convRate[i + 1] = 0;
                     }
@@ -546,6 +566,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         public void deserializeNBT (NBTTagCompound tag) {
             for (int i = 0; i < slotCount; i++) {
                 protoStack[i] = ItemStack.EMPTY;
+                publicStack[i] = ItemStack.EMPTY;
                 matchers[i] = ItemStackMatcher.EMPTY;
                 convRate[i] = 0;
             }
@@ -558,6 +579,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 int slot = slotTag.getByte("Slot");
 
                 protoStack[slot] = new ItemStack(slotTag.getCompoundTag("Item"));
+                publicStack[slot] = protoStack[slot].copy(); // TODO: Shallow Copy
                 convRate[slot] = slotTag.getByte("Conv");
 
                 matchers[slot] = attrs.isDictConvertible()
@@ -572,6 +594,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         public void deserializeLegacyNBT (NBTTagCompound tag) {
             for (int i = 0; i < slotCount; i++) {
                 protoStack[i] = ItemStack.EMPTY;
+                publicStack[i] = ItemStack.EMPTY;
                 convRate[i] = 0;
             }
 
@@ -600,6 +623,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                     stack.setTagCompound(slot.getCompoundTag("Tags"));
 
                 protoStack[i] = stack;
+                publicStack[i] = stack.copy(); // TODO: Shallow copy
                 matchers[i] = attrs.isDictConvertible()
                     ? new ItemStackOreMatcher(protoStack[i])
                     : new ItemStackMatcher(protoStack[i]);
@@ -631,6 +655,12 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         @Override
         public ItemStack getStoredItemPrototype () {
             return storage.getStack(slot);
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack getPublicItemStack () {
+            return storage.getPublicStack(slot);
         }
 
         @Nonnull

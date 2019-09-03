@@ -40,10 +40,7 @@ public class DrawerItemHandler implements IItemHandler
         if (!drawer.isEnabled() || drawer.isEmpty())
             return ItemStack.EMPTY;
 
-        ItemStack stack = drawer.getStoredItemPrototype().copy();
-        stack.setCount(drawer.getStoredItemCount());
-
-        return stack;
+        return drawer.getPublicItemStack();
     }
 
     @Override

@@ -179,6 +179,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
 
         @Nonnull
         private ItemStack protoStack;
+        private ItemStack publicStack;
         private int count;
         private ItemStackMatcher matcher;
 
@@ -186,6 +187,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
             this.group = group;
             attrs = new EmptyDrawerAttributes();
             protoStack = ItemStack.EMPTY;
+            publicStack = ItemStack.EMPTY;
             matcher = ItemStackMatcher.EMPTY;
         }
 
@@ -199,6 +201,13 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         @Nonnull
         public ItemStack getStoredItemPrototype () {
             return protoStack;
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack getPublicItemStack () {
+            publicStack.setCount(getStoredItemCount());
+            return publicStack;
         }
 
         @Override
@@ -220,6 +229,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
 
             protoStack = itemPrototype;
             protoStack.setCount(1);
+            publicStack = itemPrototype.copy(); // TODO: Shallow copy
             count = 0;
 
             if (attrs.isDictConvertible())
@@ -238,6 +248,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
             itemPrototype = ItemStackHelper.getItemPrototype(itemPrototype);
             protoStack = itemPrototype;
             protoStack.setCount(1);
+            publicStack = itemPrototype.copy(); // TODO: Shallow copy
             count = 0;
 
             if (attrs.isDictConvertible())
@@ -311,6 +322,9 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
                 return amount - (count - originalCount);
             }
             else {
+                if (attrs.isUnlimitedVending())
+                    return 0;
+
                 int originalCount = count;
                 setStoredItemCount(originalCount + amount, notify);
 
@@ -386,6 +400,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
 
         protected void reset (boolean notify) {
             protoStack = ItemStack.EMPTY;
+            publicStack = ItemStack.EMPTY;
             count = 0;
             matcher = ItemStackMatcher.EMPTY;
 

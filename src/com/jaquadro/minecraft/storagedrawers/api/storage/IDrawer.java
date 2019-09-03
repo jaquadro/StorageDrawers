@@ -17,6 +17,22 @@ public interface IDrawer
     ItemStack getStoredItemPrototype ();
 
     /**
+     * Gets an ItemStack with a populated count field suitable for returning to the outside world.
+     * The ItemStack is kept synchronized with the drawer item count and should neither be stored nor modified for
+     * any reason.
+     *
+     * To emphasize, DO NOT MODIFY THE ITEM STACK RETURNED BY THIS METHOD.
+     */
+    @Nonnull
+    default ItemStack getPublicItemStack () {
+        // Default implementation actually makes a copy each time (for compatibility with old implementors),
+        // but overriders can maintain a persistent stack.
+        ItemStack stack = getStoredItemPrototype().copy();
+        stack.setCount(getStoredItemCount());
+        return stack;
+    }
+
+    /**
      * Sets the type of the stored item and initializes it to 0.  Any existing item will be replaced.
      *
      * @param itemPrototype An ItemStack representing the type, metadata, and tags of the item to store.
