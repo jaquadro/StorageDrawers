@@ -80,6 +80,7 @@ public class ConfigManager
         public boolean stackRemainderWaila;
         public boolean registerExtraCompRules;
         public boolean defaultQuantify;
+        public boolean keepContentsOnBreak;
         public String[] compRules;
         public String[] oreWhitelist;
         public String[] oreBlacklist;
@@ -157,6 +158,7 @@ public class ConfigManager
             "Writes additional log messages while using the mod.  Mainly for debug purposes.  Should be kept disabled unless instructed otherwise.")
             .setLanguageKey(LANG_PREFIX + "prop.enableDebugLogging").getBoolean();
         cache.defaultQuantify = config.get(Configuration.CATEGORY_GENERAL, "defaultQuantify", false).setLanguageKey(LANG_PREFIX + "prop.defaultQuantify").getBoolean();
+        cache.keepContentsOnBreak = config.get(Configuration.CATEGORY_GENERAL, "keepContentsOnBreak", true).setLanguageKey(LANG_PREFIX + "prop.keepContentsOnBreak").getBoolean();
 
         //cache.enableAE2Integration = config.get(sectionIntegration.getQualifiedName(), "enableAE2", true).setLanguageKey(LANG_PREFIX + "integration.enableAE2").setRequiresMcRestart(true).getBoolean();
         cache.enableWailaIntegration = config.get(sectionIntegration.getQualifiedName(), "enableWaila", true).setLanguageKey(LANG_PREFIX + "integration.enableWaila").setRequiresMcRestart(true).getBoolean();

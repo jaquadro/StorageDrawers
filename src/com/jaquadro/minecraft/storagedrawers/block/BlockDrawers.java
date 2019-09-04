@@ -497,7 +497,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
     public void breakBlock (World world, BlockPos pos, IBlockState state) {
         TileEntityDrawers tile = getTileEntity(world, pos);
 
-        if (tile != null && !tile.isSealed()) {
+        if (tile != null && !tile.isSealed() && !StorageDrawers.config.cache.keepContentsOnBreak) {
             for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {
                 ItemStack stack = tile.upgrades().getUpgrade(i);
                 if (!stack.isEmpty()) {
@@ -530,7 +530,20 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         if (data == null)
             data = new NBTTagCompound();
 
-        if (tile.isSealed()) {
+        boolean hasContents = false;
+        if (StorageDrawers.config.cache.keepContentsOnBreak) {
+            for (int i = 0; i < tile.getGroup().getDrawerCount(); i++) {
+                IDrawer drawer = tile.getGroup().getDrawer(i);
+                if (drawer != null && !drawer.isEmpty())
+                    hasContents = true;
+            }
+            for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {
+                if (!tile.upgrades().getUpgrade(i).isEmpty())
+                    hasContents = true;
+            }
+        }
+
+        if (tile.isSealed() || (StorageDrawers.config.cache.keepContentsOnBreak && hasContents)) {
             NBTTagCompound tiledata = new NBTTagCompound();
             tile.writeToNBT(tiledata);
             data.setTag("tile", tiledata);
