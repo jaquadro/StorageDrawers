@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityItemRepository;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
@@ -29,7 +30,7 @@ public class StorageDrawers
     public static CommonProxy proxy;
 
     //public static ConfigManager config;
-    //public static CompTierRegistry compRegistry;
+    public static CompTierRegistry compRegistry;
     //public static OreDictRegistry oreDictRegistry;
 
     //public static RenderRegistry renderRegistry;
@@ -55,7 +56,7 @@ public class StorageDrawers
 
         ModContainers.registerScreens();
 
-        //compRegistry = new CompTierRegistry();
+        compRegistry = new CompTierRegistry();
         //oreDictRegistry = new OreDictRegistry();
         //renderRegistry = new RenderRegistry();
         //wailaRegistry = new WailaRegistry();

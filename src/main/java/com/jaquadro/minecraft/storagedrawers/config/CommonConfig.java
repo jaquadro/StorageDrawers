@@ -25,6 +25,7 @@ public final class CommonConfig
         public final ForgeConfigSpec.ConfigValue<Boolean> enableSidedOutput;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableItemConversion;
         public final ForgeConfigSpec.ConfigValue<Boolean> debugTrace;
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableExtraCompactingRules;
 
         public General(ForgeConfigSpec.Builder builder) {
             builder.push("General");
@@ -42,6 +43,8 @@ public final class CommonConfig
                 .define("enableSidedOutput", true);
             enableItemConversion = builder
                 .define("enableItemConversion", true);
+            enableExtraCompactingRules = builder
+                .define("enableExtraCompactingRules", true);
             debugTrace = builder
                 .define("debugTrace", false);
 

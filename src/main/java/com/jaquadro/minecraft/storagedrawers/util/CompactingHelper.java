@@ -1,6 +1,7 @@
-/*package com.jaquadro.minecraft.storagedrawers.util;
+package com.jaquadro.minecraft.storagedrawers.util;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
@@ -48,12 +49,13 @@ public class CompactingHelper
 
     @Nonnull
     public Result findHigherTier (@Nonnull ItemStack stack) {
-        if (!world.isRemote && StorageDrawers.config.cache.debugTrace)
+        boolean debugTrace = CommonConfig.GENERAL.debugTrace.get();
+        if (!world.isRemote && debugTrace)
             StorageDrawers.log.info("Finding ascending candidates for " + stack.toString());
 
         CompTierRegistry.Record record = StorageDrawers.compRegistry.findHigherTier(stack);
         if (record != null) {
-            if (!world.isRemote && StorageDrawers.config.cache.debugTrace)
+            if (!world.isRemote && debugTrace)
                 StorageDrawers.log.info("Found " + record.upper.toString() + " in registry with conv=" + record.convRate);
 
             return new Result(record.upper, record.convRate);
@@ -78,11 +80,12 @@ public class CompactingHelper
                     if (comp.getCount() != lookupSize)
                         continue;
 
-                    if (!ItemStackOreMatcher.areItemsEqual(comp, stack, false))
+                    // TODO: ItemStackMatcher.areItemsEqual(comp, stack, false)
+                    if (!ItemStackMatcher.areItemsEqual(comp, stack))
                         continue;
 
                     candidates.add(match);
-                    if (!world.isRemote && StorageDrawers.config.cache.debugTrace)
+                    if (!world.isRemote && debugTrace)
                         StorageDrawers.log.info("Found ascending candidate for " + stack.toString() + ": " + match.toString() + " size=" + lookupSize + ", inverse=" + comp.toString());
 
                     break;
@@ -97,7 +100,7 @@ public class CompactingHelper
         if (candidates.size() > 0)
             return new Result(candidates.get(0), lookupSize);
 
-        if (!world.isRemote && StorageDrawers.config.cache.debugTrace)
+        if (!world.isRemote && debugTrace)
             StorageDrawers.log.info("No candidates found");
 
         return new Result(ItemStack.EMPTY, 0);
@@ -105,12 +108,13 @@ public class CompactingHelper
 
     @Nonnull
     public Result findLowerTier (@Nonnull ItemStack stack) {
-        if (!world.isRemote && StorageDrawers.config.cache.debugTrace)
+        boolean debugTrace = CommonConfig.GENERAL.debugTrace.get();
+        if (!world.isRemote && debugTrace)
             StorageDrawers.log.info("Finding descending candidates for " + stack.toString());
 
         CompTierRegistry.Record record = StorageDrawers.compRegistry.findLowerTier(stack);
         if (record != null) {
-            if (!world.isRemote && StorageDrawers.config.cache.debugTrace)
+            if (!world.isRemote && debugTrace)
                 StorageDrawers.log.info("Found " + record.lower.toString() + " in registry with conv=" + record.convRate);
 
             return new Result(record.lower, record.convRate);
@@ -119,9 +123,10 @@ public class CompactingHelper
         List<ItemStack> candidates = new ArrayList<>();
         Map<ItemStack, Integer> candidatesRate = new HashMap<>();
 
-        for (IRecipe recipe : world.getServer().getRecipeManager().getRecipes()) {
+        for (IRecipe recipe : world.getRecipeManager().getRecipes()) {
             ItemStack output = recipe.getRecipeOutput();
-            if (!ItemStackOreMatcher.areItemsEqual(stack, output, true))
+            // TODO: ItemStackOreMatcher.areItemsEqual(stack, output, true)
+            if (!ItemStackMatcher.areItemsEqual(stack, output))
                 continue;
 
             @Nonnull ItemStack match = tryMatch(stack, recipe.getIngredients());
@@ -130,13 +135,14 @@ public class CompactingHelper
                 List<ItemStack> compMatches = findAllMatchingRecipes(lookup1);
                 for (ItemStack comp : compMatches) {
                     int recipeSize = recipe.getIngredients().size();
-                    if (ItemStackOreMatcher.areItemsEqual(match, comp, true) && comp.getCount() == recipeSize) {
+                    // TODO: ItemStackOreMatcher.areItemsEqual(match, comp, true)
+                    if (ItemStackMatcher.areItemsEqual(match, comp) && comp.getCount() == recipeSize) {
                         candidates.add(match);
                         candidatesRate.put(match, recipeSize);
 
-                        if (!world.isRemote && StorageDrawers.config.cache.debugTrace)
+                        if (!world.isRemote && debugTrace)
                             StorageDrawers.log.info("Found descending candidate for " + stack.toString() + ": " + match.toString() + " size=" + recipeSize + ", inverse=" + comp.toString());
-                    } else if (!world.isRemote && StorageDrawers.config.cache.debugTrace)
+                    } else if (!world.isRemote && debugTrace)
                         StorageDrawers.log.info("Back-check failed for " + match.toString() + " size=" + lookupSize + ", inverse=" + comp.toString());
                 }
             }
@@ -151,7 +157,7 @@ public class CompactingHelper
             return new Result(match, candidatesRate.get(match));
         }
 
-        if (!world.isRemote && StorageDrawers.config.cache.debugTrace)
+        if (!world.isRemote && debugTrace)
             StorageDrawers.log.info("No candidates found");
 
         return new Result(ItemStack.EMPTY, 0);
@@ -160,7 +166,7 @@ public class CompactingHelper
     private List<ItemStack> findAllMatchingRecipes (CraftingInventory crafting) {
         List<ItemStack> candidates = new ArrayList<>();
 
-        for (Object aRecipeList : world.getServer().getRecipeManager().getRecipes()) {
+        for (Object aRecipeList : world.getRecipeManager().getRecipes()) {
             IRecipe recipe = (IRecipe) aRecipeList;
             if (recipe.matches(crafting, world)) {
                 ItemStack result = recipe.getCraftingResult(crafting);
@@ -270,4 +276,3 @@ public class CompactingHelper
         }
     }
 }
-*/

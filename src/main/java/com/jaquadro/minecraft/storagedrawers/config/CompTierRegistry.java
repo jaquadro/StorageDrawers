@@ -1,12 +1,12 @@
-/*package com.jaquadro.minecraft.storagedrawers.config;
+package com.jaquadro.minecraft.storagedrawers.config;
 
-import com.jaquadro.minecraft.chameleon.util.ItemResourceLocation;
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.block.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.item.Items;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -37,26 +37,27 @@ public class CompTierRegistry
     public void initialize () {
         initialized = true;
 
-        if (StorageDrawers.config.cache.registerExtraCompRules) {
+        if (CommonConfig.GENERAL.enableExtraCompactingRules.get()) {
             register(new ItemStack(Blocks.CLAY), new ItemStack(Items.CLAY_BALL), 4);
             register(new ItemStack(Blocks.SNOW), new ItemStack(Items.SNOWBALL), 4);
             register(new ItemStack(Blocks.GLOWSTONE), new ItemStack(Items.GLOWSTONE_DUST), 4);
-            register(new ItemStack(Blocks.BRICK_BLOCK), new ItemStack(Items.BRICK), 4);
-            register(new ItemStack(Blocks.NETHER_BRICK), new ItemStack(Items.NETHERBRICK), 4);
+            register(new ItemStack(Blocks.BRICKS), new ItemStack(Items.BRICK), 4);
+            register(new ItemStack(Blocks.NETHER_BRICKS), new ItemStack(Items.NETHER_BRICK), 4);
             register(new ItemStack(Blocks.NETHER_WART_BLOCK), new ItemStack(Items.NETHER_WART), 9);
             register(new ItemStack(Blocks.QUARTZ_BLOCK), new ItemStack(Items.QUARTZ), 4);
-            register(new ItemStack(Blocks.MELON_BLOCK), new ItemStack(Items.MELON), 9);
+            register(new ItemStack(Blocks.MELON), new ItemStack(Items.MELON), 9);
 
-            if (!Loader.isModLoaded("ExtraUtilities")) {
+            if (!ModList.get().isLoaded("extrautilities")) {
                 register(new ItemStack(Blocks.SANDSTONE), new ItemStack(Blocks.SAND), 4);
-                register(new ItemStack(Blocks.RED_SANDSTONE), new ItemStack(Blocks.SAND, 1, 1), 4);
+                register(new ItemStack(Blocks.RED_SANDSTONE), new ItemStack(Blocks.RED_SAND, 1), 4);
             }
         }
 
-        if (StorageDrawers.config.cache.compRules != null) {
-            for (String rule : StorageDrawers.config.cache.compRules)
-                register(rule);
-        }
+        // TODO: Configurable compacting rules
+        //if (StorageDrawers.config.cache.compRules != null) {
+        //    for (String rule : StorageDrawers.config.cache.compRules)
+        //        register(rule);
+        //}
 
         for (String rule : pendingRules) {
             register(rule);
@@ -91,23 +92,18 @@ public class CompTierRegistry
         if (parts.length != 3)
             return false;
 
-        ItemResourceLocation upperResource = new ItemResourceLocation(parts[0]);
-        ItemStack upperItem = upperResource.getItemStack();
+        ResourceLocation upperResource = new ResourceLocation(parts[0]);
+        Item upperItem = ForgeRegistries.ITEMS.getValue(upperResource);
 
-        ItemResourceLocation lowerResource = new ItemResourceLocation(parts[1]);
-        ItemStack lowerItem = lowerResource.getItemStack();
+        ResourceLocation lowerResource = new ResourceLocation(parts[1]);
+        Item lowerItem = ForgeRegistries.ITEMS.getValue(lowerResource);
 
-        if (upperItem.isEmpty() || lowerItem.isEmpty())
+        if (upperItem == null || lowerItem == null)
             return false;
-
-        if (upperItem.getMetadata() == OreDictionary.WILDCARD_VALUE)
-            upperItem = new ItemStack(upperItem.getItem(), 1, 0);
-        if (lowerItem.getMetadata() == OreDictionary.WILDCARD_VALUE)
-            lowerItem = new ItemStack(lowerItem.getItem(), 1, 0);
 
         try {
             int conv = Integer.parseInt(parts[2]);
-            return register(upperItem, lowerItem, conv);
+            return register(new ItemStack(upperItem), new ItemStack(lowerItem), conv);
         }
         catch (NumberFormatException e) {
             return false;
@@ -160,4 +156,3 @@ public class CompTierRegistry
         return null;
     }
 }
-*/

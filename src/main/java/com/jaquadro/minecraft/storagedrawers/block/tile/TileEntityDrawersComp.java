@@ -1,25 +1,23 @@
-/*package com.jaquadro.minecraft.storagedrawers.block.tile;
+package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.FractionalDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
-import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
+import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
+import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,11 +31,21 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
     private int capacity = 0;
 
-    public TileEntityDrawersComp () {
+    public TileEntityDrawersComp (TileEntityType<?> tileEntityType) {
+        super(tileEntityType);
+
         groupData = new GroupData(3);
         groupData.setCapabilityProvider(this);
 
         injectPortableData(groupData);
+    }
+
+    public TileEntityDrawersComp () {
+        this(ModBlocks.FRACTIONAL_DRAWERS_3);
+    }
+
+    public static TileEntityDrawersComp createEntity () {
+        return new TileEntityDrawersComp(ModBlocks.FRACTIONAL_DRAWERS_3);
     }
 
     @Override
@@ -63,7 +71,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         protected void log (String message) {
-            if (!getWorld().isRemote && StorageDrawers.config.cache.debugTrace)
+            if (!getWorld().isRemote && CommonConfig.GENERAL.debugTrace.get())
                 StorageDrawers.log.info(message);
         }
 
@@ -83,33 +91,27 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         @Override
         protected void onAmountChanged () {
             if (getWorld() != null && !getWorld().isRemote) {
-                IMessage message = new CountUpdateMessage(getPos(), 0, getPooledCount());
-                NetworkRegistry.TargetPoint targetPoint = new NetworkRegistry.TargetPoint(getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 500);
-
-                StorageDrawers.network.sendToAllAround(message, targetPoint);
+                PacketDistributor.TargetPoint point = new PacketDistributor.TargetPoint(
+                    getPos().getX(), getPos().getY(), getPos().getZ(), 500, getWorld().dimension.getType());
+                MessageHandler.INSTANCE.send(PacketDistributor.NEAR.with(() -> point), new CountUpdateMessage(getPos(), 0, getPooledCount()));
 
                 markDirty();
             }
         }
 
-        @Override
-        public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-            return capability == TileEntityDrawersComp.DRAWER_ATTRIBUTES_CAPABILITY
-                || super.hasCapability(capability, facing);
+        private final LazyOptional<?> capabilityAttributes = LazyOptional.of(TileEntityDrawersComp.this::getDrawerAttributes);
 
-        }
-
-        @Nullable
+        @Nonnull
         @Override
-        public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+        public <T> LazyOptional<T> getCapability (@Nonnull Capability<T> capability, @Nullable Direction facing) {
             if (capability == TileEntityDrawersComp.DRAWER_ATTRIBUTES_CAPABILITY)
-                return (T) TileEntityDrawersComp.this.getDrawerAttributes();
+                return capabilityAttributes.cast();
 
             return super.getCapability(capability, facing);
         }
     }
 
-    @Override
+    /*@Override
     public int getDrawerCapacity () {
         if (getWorld() == null || getWorld().isRemote)
             return super.getDrawerCapacity();
@@ -123,7 +125,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         return capacity;
-    }
+    }*/
 
     @Override
     public boolean dataPacketRequiresRenderUpdate () {
@@ -131,22 +133,21 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void clientUpdateCount (final int slot, final int count) {
         if (!getWorld().isRemote)
             return;
 
-        Minecraft.getMinecraft().addScheduledTask(() -> TileEntityDrawersComp.this.clientUpdateCountAsync(count));
+        Minecraft.getInstance().enqueue(() -> TileEntityDrawersComp.this.clientUpdateCountAsync(count));
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private void clientUpdateCountAsync (int count) {
         groupData.setPooledCount(count);
     }
 
-    @Override
+    /*@Override
     public String getName () {
         return hasCustomName() ? super.getName() : "storagedrawers.container.compDrawers";
-    }
+    }*/
 }
-*/

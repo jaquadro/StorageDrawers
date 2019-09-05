@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.*;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
 import net.minecraft.block.Block;
@@ -65,12 +66,14 @@ public class ModBlocks
         DARK_OAK_FULL_DRAWERS_4 = null,
         DARK_OAK_HALF_DRAWERS_1 = null,
         DARK_OAK_HALF_DRAWERS_2 = null,
-        DARK_OAK_HALF_DRAWERS_4 = null;
+        DARK_OAK_HALF_DRAWERS_4 = null,
+        COMPACTING_DRAWERS_3 = null;
 
     public static final TileEntityType<?>
         STANDARD_DRAWERS_1 = null,
         STANDARD_DRAWERS_2 = null,
-        STANDARD_DRAWERS_4 = null;
+        STANDARD_DRAWERS_4 = null,
+        FRACTIONAL_DRAWERS_3 = null;
     
     /*@ObjectHolder(StorageDrawers.MOD_ID + ":basicdrawers")
     public static BlockDrawers basicDrawers;
@@ -134,6 +137,7 @@ public class ModBlocks
             registerDrawerBlock(event, "dark_oak_half_drawers_1", 1, true);
             registerDrawerBlock(event, "dark_oak_half_drawers_2", 2, true);
             registerDrawerBlock(event, "dark_oak_half_drawers_4", 4, true);
+            registerCompactingDrawerBlock(event, "compacting_drawers_3");
 
             /*IForgeRegistry<Block> registry = event.getRegistry();
             ConfigManager config = StorageDrawers.config;
@@ -221,11 +225,19 @@ public class ModBlocks
                 ACACIA_HALF_DRAWERS_4,
                 DARK_OAK_FULL_DRAWERS_4,
                 DARK_OAK_HALF_DRAWERS_4);
+
+            registerTileEntity(event, "fractional_drawers_3", TileEntityDrawersComp::new,
+                COMPACTING_DRAWERS_3);
         }
 
         private static Block registerDrawerBlock(RegistryEvent.Register<Block> event, String name, int drawerCount, boolean halfDepth) {
             return registerBlock(event, name, new BlockStandardDrawers(drawerCount, halfDepth, Block.Properties.create(Material.WOOD)
                 .sound(SoundType.WOOD).hardnessAndResistance(5f)));
+        }
+
+        private static Block registerCompactingDrawerBlock(RegistryEvent.Register<Block> event, String name) {
+            return registerBlock(event, name, new BlockCompDrawers(Block.Properties.create(Material.ROCK)
+                .sound(SoundType.STONE).hardnessAndResistance(10f)));
         }
 
         private static Block registerBlock(RegistryEvent.Register<Block> event, String name, Block block) {
@@ -333,6 +345,7 @@ public class ModBlocks
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.Slot1.class, new TileEntityDrawersRenderer());
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.Slot2.class, new TileEntityDrawersRenderer());
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.Slot4.class, new TileEntityDrawersRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersComp.class, new TileEntityDrawersRenderer());
         }
 
         //@SubscribeEvent

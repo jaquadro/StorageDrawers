@@ -1,5 +1,5 @@
 {
-    "parent": "storagedrawers:block/drawer_orientable",
+    "parent": "storagedrawers:block/full_drawers_orientable",
     "textures": {
         "top": "storagedrawers:blocks/drawers_comp_side",
         "front": "storagedrawers:blocks/drawers_comp_front_1",
