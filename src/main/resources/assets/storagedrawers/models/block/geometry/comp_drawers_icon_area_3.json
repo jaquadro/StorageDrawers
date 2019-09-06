@@ -1,0 +1,25 @@
+{
+    "parent": "block/block",
+    "elements": [ {
+        "from": [ 6, 10, 1 ],
+        "to": [ 10, 14, 16],
+        "faces": {
+            "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#particle" }
+        },
+        "__comment": "slot 1 (top)"
+    }, {
+        "from": [ 2, 2, 1 ],
+        "to": [ 6, 6, 16],
+        "faces": {
+            "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#particle" }
+        },
+        "__comment": "slot 2 (bottom left)"
+    }, {
+        "from": [ 10, 2, 1 ],
+        "to": [ 14, 6, 16],
+        "faces": {
+            "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#particle" }
+        },
+        "__comment": "slot 3 (bottom right)"
+    } ]
+}

@@ -105,6 +105,9 @@ public final class BasicDrawerModel
                 ModBlocks.JUNGLE_HALF_DRAWERS_4,
                 ModBlocks.ACACIA_HALF_DRAWERS_4,
                 ModBlocks.DARK_OAK_HALF_DRAWERS_4);
+            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_icon_area_3.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_count_area_3.json"),
+                ModBlocks.COMPACTING_DRAWERS_3);
         }
 
         private static BlockModel getBlockModel (ResourceLocation location) {

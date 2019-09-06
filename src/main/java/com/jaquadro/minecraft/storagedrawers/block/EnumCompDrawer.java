@@ -10,6 +10,7 @@ public enum EnumCompDrawer implements IDrawerGeometry, IStringSerializable
     OPEN3(2, 3, "open3");
 
     private static final EnumCompDrawer[] META_LOOKUP;
+    private static final EnumCompDrawer[] OPEN_SLOTS_LOOKUP;
 
     private final int meta;
     private final int openSlots;
@@ -45,6 +46,10 @@ public enum EnumCompDrawer implements IDrawerGeometry, IStringSerializable
         return META_LOOKUP[meta];
     }
 
+    public static EnumCompDrawer byOpenSlots (int openSlots) {
+        return OPEN_SLOTS_LOOKUP[openSlots];
+    }
+
     @Override
     public String toString () {
         return getName();
@@ -59,6 +64,11 @@ public enum EnumCompDrawer implements IDrawerGeometry, IStringSerializable
         META_LOOKUP = new EnumCompDrawer[values().length];
         for (EnumCompDrawer upgrade : values()) {
             META_LOOKUP[upgrade.getMetadata()] = upgrade;
+        }
+
+        OPEN_SLOTS_LOOKUP = new EnumCompDrawer[values().length + 1];
+        for (EnumCompDrawer item : values()) {
+            OPEN_SLOTS_LOOKUP[item.getOpenSlots()] = item;
         }
     }
 }

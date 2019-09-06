@@ -1,13 +1,17 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.FractionalDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -83,6 +87,19 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         @Override
         protected void onItemChanged () {
             if (getWorld() != null && !getWorld().isRemote) {
+                int usedSlots = 0;
+                for (int slot : getAccessibleDrawerSlots()) {
+                    IDrawer drawer = getDrawer(slot);
+                    if (drawer != null && !drawer.isEmpty())
+                        usedSlots += 1;
+                }
+                usedSlots = Math.max(usedSlots, 1);
+
+                EnumCompDrawer open = getBlockState().get(BlockCompDrawers.SLOTS);
+                if (open.getOpenSlots() != usedSlots) {
+                    getWorld().setBlockState(pos, getBlockState().with(BlockCompDrawers.SLOTS, EnumCompDrawer.byOpenSlots(usedSlots)), 3);
+                }
+
                 markDirty();
                 markBlockForUpdate();
             }
