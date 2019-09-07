@@ -10,6 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
+import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
@@ -342,6 +343,8 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                             return new ContainerDrawers2(windowId, playerInv, tileDrawers);
                         else if (drawerCount == 4)
                             return new ContainerDrawers4(windowId, playerInv, tileDrawers);
+                        else if (drawerCount == 3 && BlockDrawers.this instanceof BlockCompDrawers)
+                            return new ContainerDrawersComp(windowId, playerInv, tileDrawers);
                         return null;
                     }
                 }, extraData -> {
