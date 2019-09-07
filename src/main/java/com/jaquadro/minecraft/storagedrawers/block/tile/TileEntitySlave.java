@@ -1,20 +1,20 @@
-/*package com.jaquadro.minecraft.storagedrawers.block.tile;
+package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.Drawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
-import net.minecraft.block.state.IBlockState;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -23,12 +23,18 @@ import java.util.function.Predicate;
 
 public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
 {
-    private static final int[] drawerSlots = new int[] { 0 };
+    private static final int[] drawerSlots = new int[]{0};
 
     public final ControllerData controllerData = new ControllerData();
 
-    public TileEntitySlave () {
+    public TileEntitySlave (TileEntityType<?> tileEntityType) {
+        super(tileEntityType);
+
         injectData(controllerData);
+    }
+
+    public TileEntitySlave () {
+        this(ModBlocks.Tile.CONTROLLER_SLAVE);
     }
 
     public void bindController (BlockPos coord) {
@@ -38,11 +44,6 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
 
     public BlockPos getControllerPos () {
         return controllerData.getCoord();
-    }
-
-    @Override
-    public boolean shouldRefresh (World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
-        return oldState.getBlock() != newSate.getBlock();
     }
 
     public TileEntityController getController () {
@@ -94,26 +95,22 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
     @CapabilityInject(IDrawerGroup.class)
     static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
 
-    private DrawerItemHandler itemHandler = new DrawerItemHandler(this);
-    private ItemRepositoryProxy itemRepository = new ItemRepositoryProxy();
+    private final DrawerItemHandler itemHandler = new DrawerItemHandler(this);
+    private final ItemRepositoryProxy itemRepository = new ItemRepositoryProxy();
+
+    private final LazyOptional<?> capabilityItemHandler = LazyOptional.of(() -> itemHandler);
+    private final LazyOptional<?> capabilityItemRepository = LazyOptional.of(() -> itemRepository);
+    private final LazyOptional<?> capabilityGroup = LazyOptional.of(() -> this);
 
     @Override
-    public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == ITEM_HANDLER_CAPABILITY
-            || capability == ITEM_REPOSITORY_CAPABILITY
-            || capability == DRAWER_GROUP_CAPABILITY
-            || super.hasCapability(capability, facing);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+    @Nonnull
+    public <T> LazyOptional<T> getCapability (@Nonnull Capability<T> capability, @Nullable Direction facing) {
         if (capability == ITEM_HANDLER_CAPABILITY)
-            return (T) itemHandler;
+            return capabilityItemHandler.cast();
         if (capability == ITEM_REPOSITORY_CAPABILITY)
-            return (T) itemRepository;
+            return capabilityItemRepository.cast();
         if (capability == DRAWER_GROUP_CAPABILITY)
-            return (T) this;
+            return capabilityGroup.cast();
 
         return super.getCapability(capability, facing);
     }
@@ -178,4 +175,3 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
         }
     }
 }
-*/

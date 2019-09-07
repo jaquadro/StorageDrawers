@@ -1,8 +1,7 @@
-/*package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
+package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
-import com.jaquadro.minecraft.chameleon.block.tiledata.TileDataShim;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
@@ -12,22 +11,22 @@ public class ControllerData extends TileDataShim
     private BlockPos controllerCoord;
 
     @Override
-    public void readFromNBT (NBTTagCompound tag) {
+    public void read (CompoundNBT tag) {
         controllerCoord = null;
-        if (tag.hasKey("Controller", Constants.NBT.TAG_COMPOUND)) {
-            NBTTagCompound ctag = tag.getCompoundTag("Controller");
-            controllerCoord = new BlockPos(ctag.getInteger("x"), ctag.getInteger("y"), ctag.getInteger("z"));
+        if (tag.contains("Controller", Constants.NBT.TAG_COMPOUND)) {
+            CompoundNBT ctag = tag.getCompound("Controller");
+            controllerCoord = new BlockPos(ctag.getInt("x"), ctag.getInt("y"), ctag.getInt("z"));
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT (NBTTagCompound tag) {
+    public CompoundNBT write (CompoundNBT tag) {
         if (controllerCoord != null) {
-            NBTTagCompound ctag = new NBTTagCompound();
-            ctag.setInteger("x", controllerCoord.getX());
-            ctag.setInteger("y", controllerCoord.getY());
-            ctag.setInteger("z", controllerCoord.getZ());
-            tag.setTag("Controller", ctag);
+            CompoundNBT ctag = new CompoundNBT();
+            ctag.putInt("x", controllerCoord.getX());
+            ctag.putInt("y", controllerCoord.getY());
+            ctag.putInt("z", controllerCoord.getZ());
+            tag.put("Controller", ctag);
         }
 
         return tag;
@@ -60,4 +59,3 @@ public class ControllerData extends TileDataShim
         return false;
     }
 }
-*/

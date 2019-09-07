@@ -2,8 +2,10 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.*;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -69,30 +71,29 @@ public class ModBlocks
         DARK_OAK_HALF_DRAWERS_4 = null,
         COMPACTING_DRAWERS_3 = null;
 
+    public static final Block
+        OAK_TRIM = null,
+        SPRUCE_TRIM = null,
+        BIRCH_TRIM = null,
+        JUNGLE_TRIM = null,
+        ACACIA_TRIM = null,
+        DARK_OAK_TRIM = null;
+
+    public static final BlockController CONTROLLER = null;
+    public static final BlockSlave CONTROLLER_SLAVE = null;
+
+    @ObjectHolder(StorageDrawers.MOD_ID)
+    public static final class Tile {
+        public static final TileEntityType<?>
+            CONTROLLER = null,
+            CONTROLLER_SLAVE = null;
+    }
+
     public static final TileEntityType<?>
         STANDARD_DRAWERS_1 = null,
         STANDARD_DRAWERS_2 = null,
         STANDARD_DRAWERS_4 = null,
         FRACTIONAL_DRAWERS_3 = null;
-    
-    /*@ObjectHolder(StorageDrawers.MOD_ID + ":basicdrawers")
-    public static BlockDrawers basicDrawers;
-    @ObjectHolder(StorageDrawers.MOD_ID + ":compdrawers")
-    public static BlockCompDrawers compDrawers;
-    @ObjectHolder(StorageDrawers.MOD_ID + ":controller")
-    public static BlockController controller;
-    @ObjectHolder(StorageDrawers.MOD_ID + ":controllerslave")
-    public static BlockSlave controllerSlave;
-    @ObjectHolder(StorageDrawers.MOD_ID + ":trim")
-    public static BlockTrim trim;
-    @ObjectHolder(StorageDrawers.MOD_ID + ":framingtable")
-    public static BlockFramingTable framingTable;
-    @ObjectHolder(StorageDrawers.MOD_ID + ":customdrawers")
-    public static BlockDrawersCustom customDrawers;
-    @ObjectHolder(StorageDrawers.MOD_ID + ":customtrim")
-    public static BlockTrimCustom customTrim;
-    @ObjectHolder(StorageDrawers.MOD_ID + ":keybutton")
-    public static BlockKeyButton keyButton;*/
 
     @Mod.EventBusSubscriber(modid = StorageDrawers.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class Registration
@@ -107,37 +108,48 @@ public class ModBlocks
             registerDrawerBlock(event, "oak_half_drawers_1", 1, true);
             registerDrawerBlock(event, "oak_half_drawers_2", 2, true);
             registerDrawerBlock(event, "oak_half_drawers_4", 4, true);
+            registerTrimBlock(event, "oak_trim");
             registerDrawerBlock(event, "spruce_full_drawers_1", 1, false);
             registerDrawerBlock(event, "spruce_full_drawers_2", 2, false);
             registerDrawerBlock(event, "spruce_full_drawers_4", 4, false);
             registerDrawerBlock(event, "spruce_half_drawers_1", 1, true);
             registerDrawerBlock(event, "spruce_half_drawers_2", 2, true);
             registerDrawerBlock(event, "spruce_half_drawers_4", 4, true);
+            registerTrimBlock(event, "spruce_trim");
             registerDrawerBlock(event, "birch_full_drawers_1", 1, false);
             registerDrawerBlock(event, "birch_full_drawers_2", 2, false);
             registerDrawerBlock(event, "birch_full_drawers_4", 4, false);
             registerDrawerBlock(event, "birch_half_drawers_1", 1, true);
             registerDrawerBlock(event, "birch_half_drawers_2", 2, true);
             registerDrawerBlock(event, "birch_half_drawers_4", 4, true);
+            registerTrimBlock(event, "birch_trim");
             registerDrawerBlock(event, "jungle_full_drawers_1", 1, false);
             registerDrawerBlock(event, "jungle_full_drawers_2", 2, false);
             registerDrawerBlock(event, "jungle_full_drawers_4", 4, false);
             registerDrawerBlock(event, "jungle_half_drawers_1", 1, true);
             registerDrawerBlock(event, "jungle_half_drawers_2", 2, true);
             registerDrawerBlock(event, "jungle_half_drawers_4", 4, true);
+            registerTrimBlock(event, "jungle_trim");
             registerDrawerBlock(event, "acacia_full_drawers_1", 1, false);
             registerDrawerBlock(event, "acacia_full_drawers_2", 2, false);
             registerDrawerBlock(event, "acacia_full_drawers_4", 4, false);
             registerDrawerBlock(event, "acacia_half_drawers_1", 1, true);
             registerDrawerBlock(event, "acacia_half_drawers_2", 2, true);
             registerDrawerBlock(event, "acacia_half_drawers_4", 4, true);
+            registerTrimBlock(event, "acacia_trim");
             registerDrawerBlock(event, "dark_oak_full_drawers_1", 1, false);
             registerDrawerBlock(event, "dark_oak_full_drawers_2", 2, false);
             registerDrawerBlock(event, "dark_oak_full_drawers_4", 4, false);
             registerDrawerBlock(event, "dark_oak_half_drawers_1", 1, true);
             registerDrawerBlock(event, "dark_oak_half_drawers_2", 2, true);
             registerDrawerBlock(event, "dark_oak_half_drawers_4", 4, true);
+            registerTrimBlock(event, "dark_oak_trim");
             registerCompactingDrawerBlock(event, "compacting_drawers_3");
+
+            registerBlock(event, "controller", new BlockController(Block.Properties.create(Material.ROCK)
+                .sound(SoundType.STONE).hardnessAndResistance(5)));
+            registerBlock(event, "controller_slave", new BlockSlave(Block.Properties.create(Material.ROCK)
+                .sound(SoundType.STONE).hardnessAndResistance(5)));
 
             /*IForgeRegistry<Block> registry = event.getRegistry();
             ConfigManager config = StorageDrawers.config;
@@ -226,12 +238,18 @@ public class ModBlocks
                 DARK_OAK_FULL_DRAWERS_4,
                 DARK_OAK_HALF_DRAWERS_4);
 
-            registerTileEntity(event, "fractional_drawers_3", TileEntityDrawersComp::new,
-                COMPACTING_DRAWERS_3);
+            registerTileEntity(event, "fractional_drawers_3", TileEntityDrawersComp::new, COMPACTING_DRAWERS_3);
+            registerTileEntity(event, "controller", TileEntityController::new, CONTROLLER);
+            registerTileEntity(event, "controller_slave", TileEntitySlave::new, CONTROLLER_SLAVE);
         }
 
         private static Block registerDrawerBlock(RegistryEvent.Register<Block> event, String name, int drawerCount, boolean halfDepth) {
             return registerBlock(event, name, new BlockStandardDrawers(drawerCount, halfDepth, Block.Properties.create(Material.WOOD)
+                .sound(SoundType.WOOD).hardnessAndResistance(5f)));
+        }
+
+        private static Block registerTrimBlock(RegistryEvent.Register<Block> event, String name) {
+            return registerBlock(event, name, new BlockTrim(Block.Properties.create(Material.WOOD)
                 .sound(SoundType.WOOD).hardnessAndResistance(5f)));
         }
 

@@ -26,6 +26,7 @@ public final class CommonConfig
         public final ForgeConfigSpec.ConfigValue<Boolean> enableItemConversion;
         public final ForgeConfigSpec.ConfigValue<Boolean> debugTrace;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableExtraCompactingRules;
+        public final ForgeConfigSpec.ConfigValue<Integer> controllerRange;
 
         public General(ForgeConfigSpec.Builder builder) {
             builder.push("General");
@@ -35,6 +36,8 @@ public final class CommonConfig
                     "1x1 drawers hold 8 units, 1x2 drawers hold 4 units, 2x2 drawers hold 2 units.",
                     "Half-depth drawers hold half those amounts.")
                 .define("baseStackStorage", 4);
+            controllerRange = builder
+                .defineInRange("controllerRange", 12, 1, 50);
             enableUI = builder
                 .define("enableUI", true);
             enableSidedInput = builder

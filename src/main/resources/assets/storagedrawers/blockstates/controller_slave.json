@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "storagedrawers:block/controller_slave" }
+    }
+}

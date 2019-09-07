@@ -1,38 +1,22 @@
-/*package com.jaquadro.minecraft.storagedrawers.block;
+package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
-import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class BlockSlave extends BlockContainer implements INetworked
+public class BlockSlave extends Block implements INetworked
 {
-    public BlockSlave (String registryName, String blockName) {
-        super(Material.ROCK);
-
-        setCreativeTab(ModCreativeTabs.tabStorageDrawers);
-        setHardness(5f);
-        setUnlocalizedName(blockName);
-        setRegistryName(registryName);
-        setSoundType(SoundType.STONE);
+    public BlockSlave (Block.Properties properties) {
+        super(properties);
     }
 
-    @Override
-    public EnumBlockRenderType getRenderType (IBlockState state) {
-        return EnumBlockRenderType.MODEL;
-    }
-
-    public void toggle (World world, BlockPos pos, EntityPlayer player, EnumKeyType keyType) {
+    public void toggle (World world, BlockPos pos, PlayerEntity player, EnumKeyType keyType) {
         TileEntitySlave tile = getTileEntity(world, pos);
         if (tile == null)
             return;
@@ -42,18 +26,23 @@ public class BlockSlave extends BlockContainer implements INetworked
             return;
 
         Block block = world.getBlockState(controllerPos).getBlock();
-        if (block instanceof BlockContainer) {
+        if (block instanceof BlockController) {
             BlockController controller = (BlockController)block;
             controller.toggle(world, controllerPos, player, keyType);
         }
     }
 
     @Override
-    public TileEntitySlave createNewTileEntity (World world, int meta) {
+    public boolean hasTileEntity (BlockState state) {
+        return true;
+    }
+
+    @Override
+    public TileEntitySlave createTileEntity (BlockState state, IBlockReader world) {
         return new TileEntitySlave();
     }
 
-    public TileEntitySlave getTileEntity (IBlockAccess blockAccess, BlockPos pos) {
+    public TileEntitySlave getTileEntity (IBlockReader blockAccess, BlockPos pos) {
         TileEntity tile = blockAccess.getTileEntity(pos);
         return (tile instanceof TileEntitySlave) ? (TileEntitySlave) tile : null;
     }
@@ -61,11 +50,10 @@ public class BlockSlave extends BlockContainer implements INetworked
     public TileEntitySlave getTileEntitySafe (World world, BlockPos pos) {
         TileEntitySlave tile = getTileEntity(world, pos);
         if (tile == null) {
-            tile = createNewTileEntity(world, 0);
+            tile = createTileEntity(world.getBlockState(pos), world);
             world.setTileEntity(pos, tile);
         }
 
         return tile;
     }
 }
-*/
