@@ -1,8 +1,6 @@
-/*package com.jaquadro.minecraft.storagedrawers.integration;
+package com.jaquadro.minecraft.storagedrawers.integration;
 
-import com.jaquadro.minecraft.chameleon.integration.IntegrationModule;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.registry.IWailaTooltipHandler;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
@@ -11,168 +9,105 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
-import mcp.mobius.waila.api.IWailaRegistrar;
-import net.minecraft.client.Minecraft;
+import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import mcp.mobius.waila.api.*;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Method;
 
 import java.util.List;
 
-public class Waila extends IntegrationModule
+@WailaPlugin(StorageDrawers.MOD_ID)
+public class Waila implements IWailaPlugin
 {
-    private static Class classConfigHandler;
-
-    private static Method methInstance;
-    private static Method methAddConfig;
-
     @Override
-    public String getModID () {
-        return "waila";
+    public void register (IRegistrar registrar) {
+        registerProvider(registrar);
     }
 
-    @Override
-    public void init () throws Throwable {
-        classConfigHandler = Class.forName("mcp.mobius.waila.api.impl.ConfigHandler");
-
-        methInstance = classConfigHandler.getMethod("instance");
-        methAddConfig = classConfigHandler.getMethod("addConfig", String.class, String.class, String.class);
-
-        FMLInterModComms.sendMessage("waila", "register", StorageDrawers.SOURCE_PATH + "integration.Waila.registerProvider");
-    }
-
-    @Override
-    public void postInit () { }
-
-    @SuppressWarnings("unused")
-    public static void registerProvider(IWailaRegistrar registrar) {
+    private void registerProvider(IRegistrar registrar) {
         WailaDrawer provider = new WailaDrawer();
 
-        registrar.registerBodyProvider(provider, BlockDrawers.class);
-        registrar.registerStackProvider(provider, BlockDrawers.class);
-
-        try {
-            Object configHandler = methInstance.invoke(null);
-
-            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.content", I18n.format("storageDrawers.waila.config.displayContents"), true);
-            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.stacklimit", I18n.format("storageDrawers.waila.config.displayStackLimit"), true);
-            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.status", I18n.format("storageDrawers.waila.config.displayStatus"), true);
-        }
-        catch (Exception e) {
-            // Oh well, we couldn't hook the waila config
-        }
+        registrar.addConfig(new ResourceLocation(StorageDrawers.MOD_ID, "display.content"), true);
+        registrar.addConfig(new ResourceLocation(StorageDrawers.MOD_ID, "display.stacklimit"), true);
+        registrar.addConfig(new ResourceLocation(StorageDrawers.MOD_ID, "display.status"), true);
+        registrar.registerComponentProvider(provider, TooltipPosition.BODY, BlockDrawers.class);
     }
 
-    public static class WailaDrawer implements IWailaDataProvider
+    public static class WailaDrawer implements IComponentProvider
     {
         @Override
         @Nonnull
-        public ItemStack getWailaStack (IWailaDataAccessor accessor, IWailaConfigHandler config) {
-            NonNullList<ItemStack> drops = NonNullList.create();
-            accessor.getBlock().getDrops(drops, accessor.getWorld(), accessor.getPosition(), accessor.getBlockState(), 0);
-            if (drops.size() == 0)
-                return ItemStack.EMPTY;
-
-            return drops.get(0);
+        public ItemStack getStack (IDataAccessor accessor, IPluginConfig config) {
+            return new ItemStack(accessor.getBlock(), 1);
         }
 
         @Override
-        public List<String> getWailaHead (@Nonnull ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-            return currenttip;
-        }
-
-        @Override
-        public List<String> getWailaBody (@Nonnull ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        public void appendBody (List<ITextComponent> currenttip, IDataAccessor accessor, IPluginConfig config) {
             TileEntityDrawers tile = (TileEntityDrawers) accessor.getTileEntity();
-            IDrawerAttributes attr = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY, null);
-            if (attr == null)
-                attr = new EmptyDrawerAttributes();
+            IDrawerAttributes attr = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY, null).orElse(EmptyDrawerAttributes.EMPTY);
 
-            if (SecurityManager.hasAccess(Minecraft.getMinecraft().player.getGameProfile(), tile)) {
-                if (config.getConfig("display.content")) {
+            //if (SecurityManager.hasAccess(Minecraft.getInstance().player.getGameProfile(), tile)) {
+                if (config.get(new ResourceLocation(StorageDrawers.MOD_ID, "display.content"))) {
                     for (int i = 0; i < tile.getDrawerCount(); i++) {
                         IDrawer drawer = tile.getDrawer(i);
                         if (!drawer.isEnabled())
                             continue;
 
-                        String name = I18n.format("storagedrawers.waila.empty");
+                        ITextComponent name = new TranslationTextComponent("tooltip.storagedrawers.waila.empty");
 
                         ItemStack stack = drawer.getStoredItemPrototype();
                         if (!stack.isEmpty()) {
-                            String stackName = stack.getDisplayName();
-                            List<IWailaTooltipHandler> handlers = StorageDrawers.wailaRegistry.getTooltipHandlers();
-                            for (int j = 0, n = handlers.size(); j < n; j++)
-                                stackName = handlers.get(j).transformItemName(drawer, stackName);
+                            ITextComponent stackName = stack.getDisplayName();
 
                             if (drawer.getStoredItemCount() == Integer.MAX_VALUE)
-                                name = stackName + " [\u221E]";
+                                name = stackName.appendText("[\u221E]");
                             else if (drawer instanceof IFractionalDrawer && ((IFractionalDrawer) drawer).getConversionRate() > 1)
-                                name = stackName + ((i == 0) ? " [" : " [+") + ((IFractionalDrawer) drawer).getStoredItemRemainder() + "]";
-                            else if (StorageDrawers.config.cache.stackRemainderWaila) {
+                                name = stackName.appendText(((i == 0) ? " [" : " [+") + ((IFractionalDrawer) drawer).getStoredItemRemainder() + "]");
+                            else if (CommonConfig.INTEGRATION.wailaStackRemainder.get()) {
                                 int stacks = drawer.getStoredItemCount() / drawer.getStoredItemStackSize();
                                 int remainder = drawer.getStoredItemCount() - (stacks * drawer.getStoredItemStackSize());
                                 if (stacks > 0 && remainder > 0)
-                                    name = stackName + " [" + stacks + "x" + drawer.getStoredItemStackSize() + " + " + remainder + "]";
+                                    name = stackName.appendText(" [" + stacks + "x" + drawer.getStoredItemStackSize() + " + " + remainder + "]");
                                 else if (stacks > 0)
-                                    name = stackName + " [" + stacks + "x" + drawer.getStoredItemStackSize() + "]";
+                                    name = stackName.appendText(" [" + stacks + "x" + drawer.getStoredItemStackSize() + "]");
                                 else
-                                    name = stackName + " [" + remainder + "]";
+                                    name = stackName.appendText(" [" + remainder + "]");
                             } else
-                                name = stackName + " [" + drawer.getStoredItemCount() + "]";
+                                name = stackName.appendText(" [" + drawer.getStoredItemCount() + "]");
                         }
-                        currenttip.add(I18n.format("storagedrawers.waila.drawer", i + 1, name));
+                        currenttip.add(new TranslationTextComponent("tooltip.storagedrawers.waila.drawer", i + 1, name));
                     }
                 }
 
-                if (config.getConfig("display.stacklimit")) {
+                if (config.get(new ResourceLocation(StorageDrawers.MOD_ID, "display.stacklimit"))) {
                     if (tile.getDrawerAttributes().isUnlimitedStorage() || tile.getDrawerAttributes().isUnlimitedVending())
-                        currenttip.add(I18n.format("storagedrawers.waila.nolimit"));
+                        currenttip.add(new TranslationTextComponent("tooltip.storagedrawers.waila.nolimit"));
                     else {
                         int multiplier = tile.upgrades().getStorageMultiplier();
                         int limit = tile.getEffectiveDrawerCapacity() * multiplier;
-                        currenttip.add(I18n.format("storagedrawers.waila.limit", limit, multiplier));
+                        currenttip.add(new TranslationTextComponent("tooltip.storagedrawers.waila.limit", limit, multiplier));
                     }
                 }
-            }
+            //}
 
-            if (config.getConfig("display.status")) {
+            if (config.get(new ResourceLocation(StorageDrawers.MOD_ID, "display.status"))) {
                 String attrib = "";
                 if (attr.isItemLocked(LockAttribute.LOCK_POPULATED))
-                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storagedrawers.waila.locked");
+                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("tooltip.storagedrawers.waila.locked");
                 if (attr.isVoid())
-                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storagedrawers.waila.void");
-                if (tile.getOwner() != null)
-                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storagedrawers.waila.protected");
+                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("tooltip.storagedrawers.waila.void");
+                //if (tile.getOwner() != null)
+                //    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storagedrawers.waila.protected");
 
                 if (!attrib.isEmpty())
-                    currenttip.add(attrib);
+                    currenttip.add(new StringTextComponent(attrib));
             }
-
-            return currenttip;
-        }
-
-        @Override
-        public List<String> getWailaTail (@Nonnull ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-            return currenttip;
-        }
-
-        @Override
-        public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
-            return null;
         }
     }
 }
-*/

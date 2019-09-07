@@ -7,6 +7,7 @@ public final class CommonConfig
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final General GENERAL = new General(BUILDER);
     public static final Upgrades UPGRADES = new Upgrades(BUILDER);
+    public static final Integration INTEGRATION = new Integration(BUILDER);
     public static final ForgeConfigSpec spec = BUILDER.build();
 
     private static boolean loaded = false;
@@ -50,6 +51,19 @@ public final class CommonConfig
                 .define("enableExtraCompactingRules", true);
             debugTrace = builder
                 .define("debugTrace", false);
+
+            builder.pop();
+        }
+    }
+
+    public static class Integration {
+        public final ForgeConfigSpec.ConfigValue<Boolean> wailaStackRemainder;
+
+        public Integration (ForgeConfigSpec.Builder builder) {
+            builder.push("Integration");
+
+            wailaStackRemainder = builder
+                .define("wailaStackRemainder", true);
 
             builder.pop();
         }

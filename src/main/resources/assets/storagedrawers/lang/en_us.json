@@ -44,7 +44,14 @@
     "block.storagedrawers.compacting_drawers_3": "Compacting Drawers",
     "block.storagedrawers.controller": "Drawer Controller",
     "block.storagedrawers.controller_slave": "Drawer Controller Slave",
+
+    "config.waila.plugin_storagedrawers": "Storage Drawers",
+    "config.waila.plugin_storagedrawers.display.content": "Slot Contents",
+    "config.waila.plugin_storagedrawers.display.stacklimit": "Stack Limit",
+    "config.waila.plugin_storagedrawers.display.status": "Upgrade Status",
+
     "container.storagedrawers.upgrades": "Upgrades",
+
     "item.storagedrawers.obsidian_storage_upgrade": "Storage Upgrade (I)",
     "item.storagedrawers.iron_storage_upgrade": "Storage Upgrade (II)",
     "item.storagedrawers.gold_storage_upgrade": "Storage Upgrade (III)",
@@ -64,5 +71,14 @@
     "item.storagedrawers.quantify_key.desc": "Show or hide stored quantity labels",
     "item.storagedrawers.personal_key": "Personal Key",
     "item.storagedrawers.personal_key.desc": "Protect access from other players",
-    "itemGroup.storagedrawers": "Storage Drawers"
+
+    "itemGroup.storagedrawers": "Storage Drawers",
+
+    "tooltip.storagedrawers.waila.empty": "<Empty>",
+    "tooltip.storagedrawers.waila.drawer": "#%s: %s",
+    "tooltip.storagedrawers.waila.nolimit": "Stack Limit: ∞",
+    "tooltip.storagedrawers.waila.limit": "Stack Limit: %s (x%s)",
+    "tooltip.storagedrawers.waila.locked": "Locked",
+    "tooltip.storagedrawers.waila.void": "Void",
+    "tooltip.storagedrawers.waila.protected": "Protected"
 }
