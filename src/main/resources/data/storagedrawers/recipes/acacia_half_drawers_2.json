@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "/X/",
+        "///",
+        "/X/"
+    ],
+    "key": {
+        "/": { "item": "minecraft:acacia_slab" },
+        "X": { "tag": "forge:chests" }
+    },
+    "result": { "item": "storagedrawers:acacia_half_drawers_2", "count": 2 }
+}

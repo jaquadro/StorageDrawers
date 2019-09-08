@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "/X/",
+        "///",
+        "/X/"
+    ],
+    "key": {
+        "/": { "item": "minecraft:dark_oak_planks" },
+        "X": { "tag": "forge:chests" }
+    },
+    "result": { "item": "storagedrawers:dark_oak_full_drawers_2", "count": 2 }
+}

@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "X/X",
+        "/X/",
+        "X/X"
+    ],
+    "key": {
+        "/": { "tag": "forge:rods/wooden" },
+        "X": { "item": "minecraft:jungle_planks" }
+    },
+    "result": { "item": "storagedrawers:jungle_trim", "count": 4 }
+}
