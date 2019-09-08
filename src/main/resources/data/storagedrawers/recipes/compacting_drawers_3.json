@@ -2,14 +2,14 @@
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "###",
-        "CXC",
-        "#D#"
+        "TXT",
+        "#I#"
     ],
     "key": {
         "#": { "item": "minecraft:stone" },
-        "C": { "item": "minecraft:comparator" },
+        "T": { "item": "minecraft:piston" },
         "X": { "tag": "storagedrawers:drawers" },
-        "D": { "tag": "forge:gems/diamond" }
+        "I": { "tag": "forge:ingots/iron" }
     },
-    "result": { "item": "storagedrawers:controller" }
+    "result": { "item": "storagedrawers:compacting_drawers_3" }
 }

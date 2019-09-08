@@ -1,8 +1,4 @@
 {
-    "conditions": [{
-        "type": "minecraft:item_exists",
-        "item": "storagedrawers:quantify_key"
-    }],
     "type": "minecraft:crafting_shapeless",
     "ingredients": [
         { "item": "storagedrawers:drawer_key" },

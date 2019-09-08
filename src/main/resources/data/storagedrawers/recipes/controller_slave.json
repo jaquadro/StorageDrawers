@@ -1,19 +1,15 @@
 {
-    "conditions": [{
-        "type": "minecraft:item_exists",
-        "item": "storagedrawers:controllerslave"
-    }],
-    "type": "forge:ore_shaped",
+    "type": "minecraft:crafting_shaped",
     "pattern": [
         "###",
         "CXC",
         "#G#"
     ],
     "key": {
-        "#": { "item": "minecraft:stone", "data": 0 },
+        "#": { "item": "minecraft:stone" },
         "C": { "item": "minecraft:comparator" },
-        "X": { "ore": "drawerBasic", "type": "forge:ore_dict" },
-        "G": { "ore": "ingotGold", "type": "forge:ore_dict" }
+        "X": { "tag": "storagedrawers:drawers" },
+        "G": { "tag": "forge:ingots/gold" }
     },
-    "result": { "item": "storagedrawers:controllerslave" }
+    "result": { "item": "storagedrawers:controller_slave" }
 }
