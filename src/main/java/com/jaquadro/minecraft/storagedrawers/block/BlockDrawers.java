@@ -33,6 +33,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
@@ -331,7 +332,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 {
                     @Override
                     public ITextComponent getDisplayName () {
-                        return new StringTextComponent("Drawer UI");
+                        return new TranslationTextComponent(getTranslationKey());
                     }
 
                     @Nullable

@@ -31,6 +31,6 @@ public class ItemUpgradeStorage extends ItemUpgrade
     @OnlyIn(Dist.CLIENT)
     protected ITextComponent getDescription() {
         int mult = CommonConfig.UPGRADES.getLevelMult(level.getLevel());
-        return new TranslationTextComponent(this.getTranslationKey() + ".desc", mult);
+        return new TranslationTextComponent("item.storagedrawers.storage_upgrade.desc", mult);
     }
 }
