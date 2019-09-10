@@ -172,7 +172,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         if (upgradeData.hasOneStackUpgrade())
             return 1;
 
-        return getDrawerCapacity();
+        return getDrawerCapacity() * CommonConfig.GENERAL.baseStackStorage.get();
     }
 
     /*@Override
