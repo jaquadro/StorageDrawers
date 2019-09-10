@@ -51,7 +51,7 @@ public class ItemDrawers extends BlockItem
         Block block = Block.getBlockFromItem(itemStack.getItem());
         if (block instanceof BlockDrawers) {
             BlockDrawers drawers = (BlockDrawers)block;
-            return drawers.getStorageUnits() * CommonConfig.GENERAL.baseStackStorage.get();
+            return drawers.getStorageUnits() * CommonConfig.GENERAL.getBaseStackStorage();
         }
 
         return 0;

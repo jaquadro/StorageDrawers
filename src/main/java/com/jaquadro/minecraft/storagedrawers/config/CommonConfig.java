@@ -54,6 +54,13 @@ public final class CommonConfig
 
             builder.pop();
         }
+
+        public int getBaseStackStorage() {
+            if (!isLoaded())
+                return 1;
+
+            return baseStackStorage.get();
+        }
     }
 
     public static class Integration {
