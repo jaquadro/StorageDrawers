@@ -1,29 +1,18 @@
-/*package com.jaquadro.minecraft.storagedrawers.item;
+package com.jaquadro.minecraft.storagedrawers.item;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
-import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
-import com.jaquadro.minecraft.storagedrawers.config.ConfigManager;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
-import com.mojang.realmsclient.gui.ChatFormatting;
+import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,75 +25,35 @@ public class ItemDrawers extends BlockItem
     }
 
     @Override
-    public boolean placeBlockAt (@Nonnull ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
-        if (!super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState))
-            return false;
+    @OnlyIn(Dist.CLIENT)
+    public void addInformation (ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
 
-        TileEntityDrawers tile = (TileEntityDrawers) world.getTileEntity(pos);
-        if (tile != null) {
-            if (side != EnumFacing.UP && side != EnumFacing.DOWN)
-                tile.setDirection(side.ordinal());
+        //if (stack.hasTag() && stack.getTag().contains("material")) {
+        //    String key = stack.getTag().getString("material");
+        //    tooltip.add(new TranslationTextComponent("storagedrawers.material", I18n.format("storagedrawers.material." + key)));
+        //}
 
-            if (tile instanceof TileEntityDrawersStandard) {
-                if (stack.hasTagCompound() && stack.getTagCompound().hasKey("tile"))
-                    tile.readFromPortableNBT(stack.getTagCompound().getCompoundTag("tile"));
+        tooltip.add(new TranslationTextComponent("tooltip.storagedrawers.drawers.capacity", getCapacityForBlock(stack)).applyTextStyle(TextFormatting.GRAY));
 
-                if (stack.hasTagCompound() && stack.getTagCompound().hasKey("material"))
-                    tile.setMaterial(stack.getTagCompound().getString("material"));
+        if (stack.hasTag() && stack.getTag().contains("tile"))
+            tooltip.add(new TranslationTextComponent("tooltip.storagedrawers.drawers.sealed").applyTextStyle(TextFormatting.YELLOW));
 
-                tile.setIsSealed(false);
-            }
-
-            if (StorageDrawers.config.cache.defaultQuantify) {
-                IDrawerAttributes attributes = tile.getDrawerAttributes();
-                if (attributes instanceof IDrawerAttributesModifiable)
-                    ((IDrawerAttributesModifiable) attributes).setIsShowingQuantity(true);
-            }
-        }
-
-        return true;
+        //tooltip.add(getDescription().applyTextStyle(TextFormatting.GRAY));
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation (@Nonnull ItemStack itemStack, @Nullable World world, List<String> list, ITooltipFlag advanced) {
-        if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("material")) {
-            String key = itemStack.getTagCompound().getString("material");
-            list.add(I18n.format("storagedrawers.material", I18n.format("storagedrawers.material." + key)));
-        }
-
-        list.add(I18n.format("storagedrawers.drawers.description", getCapacityForBlock(itemStack)));
-
-        if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("tile"))
-            list.add(ChatFormatting.YELLOW + I18n.format("storagedrawers.drawers.sealed"));
+    @OnlyIn(Dist.CLIENT)
+    protected ITextComponent getDescription() {
+        return new TranslationTextComponent(this.getTranslationKey() + ".desc");
     }
 
     private int getCapacityForBlock (@Nonnull ItemStack itemStack) {
-        ConfigManager config = StorageDrawers.config;
         Block block = Block.getBlockFromItem(itemStack.getItem());
-
-        if (block instanceof BlockStandardDrawers) {
-            EnumBasicDrawer info = EnumBasicDrawer.byMetadata(itemStack.getMetadata());
-            switch (info) {
-                case FULL1:
-                    return config.getBlockBaseStorage("fulldrawers1");
-                case FULL2:
-                    return config.getBlockBaseStorage("fulldrawers2");
-                case FULL4:
-                    return config.getBlockBaseStorage("fulldrawers4");
-                case HALF2:
-                    return config.getBlockBaseStorage("halfdrawers2");
-                case HALF4:
-                    return config.getBlockBaseStorage("halfdrawers4");
-                default:
-                    return 0;
-            }
-        }
-        else if (block == ModBlocks.compDrawers) {
-            return config.getBlockBaseStorage("compDrawers");
+        if (block instanceof BlockDrawers) {
+            BlockDrawers drawers = (BlockDrawers)block;
+            return drawers.getStorageUnits() * CommonConfig.GENERAL.baseStackStorage.get();
         }
 
         return 0;
     }
 }
-*/

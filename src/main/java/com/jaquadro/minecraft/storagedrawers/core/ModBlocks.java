@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
+import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -276,7 +277,12 @@ public class ModBlocks
         @SubscribeEvent
         public static void registerItems (RegistryEvent.Register<Item> event) {
             for (Block block : blockList) {
-                BlockItem itemBlock = new BlockItem(block, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS));
+                BlockItem itemBlock = null;
+                if (block instanceof BlockDrawers)
+                    itemBlock = new ItemDrawers(block, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS));
+                else
+                    itemBlock = new BlockItem(block, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS));
+
                 itemBlock.setRegistryName(block.getRegistryName());
                 event.getRegistry().register(itemBlock);
             }

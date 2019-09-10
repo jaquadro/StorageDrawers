@@ -199,6 +199,12 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
     @Override
     public void onBlockPlacedBy (World world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
+        if (stack.hasTag() && stack.getTag().contains("tile")) {
+            TileEntityDrawers tile = getTileEntity(world, pos);
+            if (tile != null)
+                tile.readPortable(stack.getTag().getCompound("tile"));
+        }
+
         if (stack.hasDisplayName()) {
             TileEntityDrawers tile = getTileEntity(world, pos);
             //if (tile != null)

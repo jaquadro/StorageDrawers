@@ -86,6 +86,8 @@
 
     "itemGroup.storagedrawers": "Storage Drawers",
 
+    "tooltip.storagedrawers.drawers.capacity": "Holds %d stacks per drawer",
+    "tooltip.storagedrawers.drawers.sealed": "Contents sealed within",
     "tooltip.storagedrawers.waila.empty": "<Empty>",
     "tooltip.storagedrawers.waila.drawer": "#%s: %s",
     "tooltip.storagedrawers.waila.nolimit": "Stack Limit: ∞",
