@@ -85,15 +85,13 @@ public class ModBlocks
     @ObjectHolder(StorageDrawers.MOD_ID)
     public static final class Tile {
         public static final TileEntityType<?>
+            STANDARD_DRAWERS_1 = null,
+            STANDARD_DRAWERS_2 = null,
+            STANDARD_DRAWERS_4 = null,
+            FRACTIONAL_DRAWERS_3 = null,
             CONTROLLER = null,
             CONTROLLER_SLAVE = null;
     }
-
-    public static final TileEntityType<?>
-        STANDARD_DRAWERS_1 = null,
-        STANDARD_DRAWERS_2 = null,
-        STANDARD_DRAWERS_4 = null,
-        FRACTIONAL_DRAWERS_3 = null;
 
     @Mod.EventBusSubscriber(modid = StorageDrawers.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class Registration
@@ -238,7 +236,7 @@ public class ModBlocks
                 DARK_OAK_FULL_DRAWERS_4,
                 DARK_OAK_HALF_DRAWERS_4);
 
-            registerTileEntity(event, "fractional_drawers_3", TileEntityDrawersComp::new, COMPACTING_DRAWERS_3);
+            registerTileEntity(event, "fractional_drawers_3", TileEntityDrawersComp.Slot3::new, COMPACTING_DRAWERS_3);
             registerTileEntity(event, "controller", TileEntityController::new, CONTROLLER);
             registerTileEntity(event, "controller_slave", TileEntitySlave::new, CONTROLLER_SLAVE);
         }
@@ -363,7 +361,7 @@ public class ModBlocks
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.Slot1.class, new TileEntityDrawersRenderer());
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.Slot2.class, new TileEntityDrawersRenderer());
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.Slot4.class, new TileEntityDrawersRenderer());
-            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersComp.class, new TileEntityDrawersRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersComp.Slot3.class, new TileEntityDrawersRenderer());
         }
 
         //@SubscribeEvent

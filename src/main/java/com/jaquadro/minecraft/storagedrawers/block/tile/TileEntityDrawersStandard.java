@@ -36,7 +36,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         private GroupData groupData = new GroupData(1);
 
         public Slot1 () {
-            super(ModBlocks.STANDARD_DRAWERS_1);
+            super(ModBlocks.Tile.STANDARD_DRAWERS_1);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -58,7 +58,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         private GroupData groupData = new GroupData(2);
 
         public Slot2 () {
-            super(ModBlocks.STANDARD_DRAWERS_2);
+            super(ModBlocks.Tile.STANDARD_DRAWERS_2);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -80,7 +80,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         private GroupData groupData = new GroupData(4);
 
         public Slot4 () {
-            super(ModBlocks.STANDARD_DRAWERS_4);
+            super(ModBlocks.Tile.STANDARD_DRAWERS_4);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }

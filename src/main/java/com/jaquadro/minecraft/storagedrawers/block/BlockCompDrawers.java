@@ -79,7 +79,7 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
 
     @Override
     public TileEntityDrawers createTileEntity (BlockState state, IBlockReader world) {
-        return TileEntityDrawersComp.createEntity();
+        return new TileEntityDrawersComp.Slot3();
     }
 
     /*@Override

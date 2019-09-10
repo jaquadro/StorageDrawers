@@ -20,6 +20,8 @@ import net.minecraft.resources.IResource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
@@ -43,7 +45,7 @@ public final class BasicDrawerModel
     private static final Map<Direction, IBakedModel> lockOverlaysFull = new HashMap<>();
     private static final Map<Direction, IBakedModel> lockOverlaysHalf = new HashMap<>();
 
-    @Mod.EventBusSubscriber(modid = StorageDrawers.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(modid = StorageDrawers.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class Register // extends DefaultRegister
     {
         @SubscribeEvent
@@ -166,6 +168,31 @@ public final class BasicDrawerModel
             replaceBlock(event, ModBlocks.SPRUCE_HALF_DRAWERS_1);
             replaceBlock(event, ModBlocks.SPRUCE_HALF_DRAWERS_2);
             replaceBlock(event, ModBlocks.SPRUCE_HALF_DRAWERS_4);
+            replaceBlock(event, ModBlocks.BIRCH_FULL_DRAWERS_1);
+            replaceBlock(event, ModBlocks.BIRCH_FULL_DRAWERS_2);
+            replaceBlock(event, ModBlocks.BIRCH_FULL_DRAWERS_4);
+            replaceBlock(event, ModBlocks.BIRCH_HALF_DRAWERS_1);
+            replaceBlock(event, ModBlocks.BIRCH_HALF_DRAWERS_2);
+            replaceBlock(event, ModBlocks.BIRCH_HALF_DRAWERS_4);
+            replaceBlock(event, ModBlocks.JUNGLE_FULL_DRAWERS_1);
+            replaceBlock(event, ModBlocks.JUNGLE_FULL_DRAWERS_2);
+            replaceBlock(event, ModBlocks.JUNGLE_FULL_DRAWERS_4);
+            replaceBlock(event, ModBlocks.JUNGLE_HALF_DRAWERS_1);
+            replaceBlock(event, ModBlocks.JUNGLE_HALF_DRAWERS_2);
+            replaceBlock(event, ModBlocks.JUNGLE_HALF_DRAWERS_4);
+            replaceBlock(event, ModBlocks.ACACIA_FULL_DRAWERS_1);
+            replaceBlock(event, ModBlocks.ACACIA_FULL_DRAWERS_2);
+            replaceBlock(event, ModBlocks.ACACIA_FULL_DRAWERS_4);
+            replaceBlock(event, ModBlocks.ACACIA_HALF_DRAWERS_1);
+            replaceBlock(event, ModBlocks.ACACIA_HALF_DRAWERS_2);
+            replaceBlock(event, ModBlocks.ACACIA_HALF_DRAWERS_4);
+            replaceBlock(event, ModBlocks.DARK_OAK_FULL_DRAWERS_1);
+            replaceBlock(event, ModBlocks.DARK_OAK_FULL_DRAWERS_2);
+            replaceBlock(event, ModBlocks.DARK_OAK_FULL_DRAWERS_4);
+            replaceBlock(event, ModBlocks.DARK_OAK_HALF_DRAWERS_1);
+            replaceBlock(event, ModBlocks.DARK_OAK_HALF_DRAWERS_2);
+            replaceBlock(event, ModBlocks.DARK_OAK_HALF_DRAWERS_4);
+            replaceBlock(event, ModBlocks.COMPACTING_DRAWERS_3);
 
             event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y0, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK);
         }

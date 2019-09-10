@@ -31,35 +31,35 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     @CapabilityInject(IDrawerAttributes.class)
     static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
 
-    private GroupData groupData;
-
-    private int capacity = 0;
-
     public TileEntityDrawersComp (TileEntityType<?> tileEntityType) {
         super(tileEntityType);
-
-        groupData = new GroupData(3);
-        groupData.setCapabilityProvider(this);
-
-        injectPortableData(groupData);
     }
 
-    public TileEntityDrawersComp () {
-        this(ModBlocks.FRACTIONAL_DRAWERS_3);
-    }
+    public static class Slot3 extends TileEntityDrawersComp
+    {
+        private GroupData groupData = new GroupData(3);
 
-    public static TileEntityDrawersComp createEntity () {
-        return new TileEntityDrawersComp(ModBlocks.FRACTIONAL_DRAWERS_3);
+        public Slot3 () {
+            super(ModBlocks.Tile.FRACTIONAL_DRAWERS_3);
+            groupData.setCapabilityProvider(this);
+            injectPortableData(groupData);
+        }
+
+        @Override
+        public IDrawerGroup getGroup () {
+            return groupData;
+        }
+
+        @Override
+        protected void onAttributeChanged () {
+            super.onAttributeChanged();
+            groupData.syncAttributes();
+        }
     }
 
     @Override
     public IDrawerGroup getGroup () {
-        return groupData;
-    }
-
-    @Override
-    protected void onAttributeChanged () {
-        groupData.syncAttributes();
+        return null;
     }
 
     private class GroupData extends FractionalDrawerGroup
@@ -160,7 +160,9 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
     @OnlyIn(Dist.CLIENT)
     private void clientUpdateCountAsync (int count) {
-        groupData.setPooledCount(count);
+        if (getGroup() instanceof FractionalDrawerGroup) {
+            ((FractionalDrawerGroup)getGroup()).setPooledCount(count);
+        }
     }
 
     /*@Override

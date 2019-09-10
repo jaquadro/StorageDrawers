@@ -156,7 +156,7 @@ jar {
         attributes([
             "Specification-Title": "storagedrawers",
             "Specification-Vendor": "Justin Aquadro",
-            "Specification-Version": "${version}", // We are version 1 of ourselves
+            "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"Justin Aquadro",
@@ -174,13 +174,21 @@ jar {
 //    classifier = 'deobf'
 //}
 //
-//task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
-//    from sourceSets.main.allSource
-//    from sourceSets.main.output
-//    include 'com/jaquadro/minecraft/storagedrawers/api/**/*'
-//    classifier 'api'
-//}
-//
+
+task apiJar(type: Jar) {
+    classifier = 'api'
+    include 'com/jaquadro/minecraft/storagedrawers/api/**/*'
+    from sourceSets.main.allSource
+    from sourceSets.main.output
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+tasks.build.dependsOn apiJar, sourcesJar
+
 //artifacts {
 //    archives deobfJar
 //    archives apiJar
