@@ -504,6 +504,12 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         return willHarvest || super.removedByPlayer(state, world, pos, player, false, fluid);
     }
 
+    @Override
+    public void harvestBlock (World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
+        super.harvestBlock(worldIn, player, pos, state, te, stack);
+        worldIn.removeBlock(pos, false);
+    }
+
     public boolean creativeCanBreakBlock (BlockState state, World world, BlockPos pos, PlayerEntity player) {
         double blockReachDistance = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1;
 
