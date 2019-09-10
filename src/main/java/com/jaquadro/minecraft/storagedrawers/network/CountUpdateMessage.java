@@ -78,5 +78,6 @@ public class CountUpdateMessage
                 }
             }
         }
+        ctx.setPacketHandled(true);
     }
 }
