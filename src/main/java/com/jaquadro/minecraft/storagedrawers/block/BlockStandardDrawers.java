@@ -25,7 +25,7 @@ public class BlockStandardDrawers extends BlockDrawers
     }
 
     private static int calcUnits (int drawerCount, boolean halfDepth) {
-        return halfDepth ? 16 / drawerCount : 32 / drawerCount;
+        return halfDepth ? 4 / drawerCount : 8 / drawerCount;
     }
 
     /*@Override
