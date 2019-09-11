@@ -5,7 +5,9 @@ import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -123,7 +125,7 @@ public class CompactingHelper
         List<ItemStack> candidates = new ArrayList<>();
         Map<ItemStack, Integer> candidatesRate = new HashMap<>();
 
-        for (IRecipe recipe : world.getRecipeManager().getRecipes()) {
+        for (IRecipe<CraftingInventory> recipe : world.getRecipeManager().getRecipes(IRecipeType.CRAFTING).values()) {
             ItemStack output = recipe.getRecipeOutput();
             // TODO: ItemStackOreMatcher.areItemsEqual(stack, output, true)
             if (!ItemStackMatcher.areItemsEqual(stack, output))
@@ -166,8 +168,7 @@ public class CompactingHelper
     private List<ItemStack> findAllMatchingRecipes (CraftingInventory crafting) {
         List<ItemStack> candidates = new ArrayList<>();
 
-        for (Object aRecipeList : world.getRecipeManager().getRecipes()) {
-            IRecipe recipe = (IRecipe) aRecipeList;
+        for (ICraftingRecipe recipe : world.getRecipeManager().getRecipes(IRecipeType.CRAFTING, crafting, world)) {
             if (recipe.matches(crafting, world)) {
                 ItemStack result = recipe.getCraftingResult(crafting);
                 if (!result.isEmpty())
