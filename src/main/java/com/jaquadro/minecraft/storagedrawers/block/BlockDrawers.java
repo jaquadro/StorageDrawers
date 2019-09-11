@@ -542,13 +542,24 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         if (data == null)
             data = new CompoundNBT();
 
-        //if (tile.isSealed()) {
+        boolean hasContents = false;
+        for (int i = 0; i < tile.getGroup().getDrawerCount(); i++) {
+            IDrawer drawer = tile.getGroup().getDrawer(i);
+            if (drawer != null && !drawer.isEmpty())
+                hasContents = true;
+        }
+        for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {
+            if (!tile.upgrades().getUpgrade(i).isEmpty())
+                hasContents = true;
+        }
+
+        if (hasContents) {
             CompoundNBT tiledata = new CompoundNBT();
             tile.write(tiledata);
             data.put("tile", tiledata);
-        //}
+            drop.setTag(data);
+        }
 
-        drop.setTag(data);
         return drop;
     }
 
