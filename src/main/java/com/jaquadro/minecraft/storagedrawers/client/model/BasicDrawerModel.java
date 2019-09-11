@@ -131,6 +131,9 @@ public final class BasicDrawerModel
             BlockModel slotInfo = getBlockModel(locationIcon);
             BlockModel countInfo = getBlockModel(locationCount);
             for (BlockDrawers block : blocks) {
+                if (block == null)
+                    continue;
+
                 for (int i = 0; i < block.getDrawerCount(); i++) {
                     Vector3f from = slotInfo.getElements().get(i).positionFrom;
                     Vector3f to = slotInfo.getElements().get(i).positionTo;
