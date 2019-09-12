@@ -58,9 +58,16 @@ public class BlockStandardDrawers extends BlockDrawers
 
     @Override
     protected int getDrawerSlot (Direction side, double hitX, double hitY, double hitZ) {
-        hitX = Math.abs(hitX % 1);
-        hitY = Math.abs(hitY % 1);
-        hitZ = Math.abs(hitZ % 1);
+        if (hitX < 0)
+            hitX -= Math.floor(hitX);
+        if (hitY < 0)
+            hitY -= Math.floor(hitY);
+        if (hitZ < 0)
+            hitZ -= Math.floor(hitZ);
+
+        hitX %= 1;
+        hitY %= 1;
+        hitZ %= 1;
 
         if (getDrawerCount() == 1)
             return 0;

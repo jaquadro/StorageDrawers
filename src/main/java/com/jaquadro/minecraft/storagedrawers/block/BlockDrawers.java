@@ -392,9 +392,9 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     protected boolean hitLeft (Direction side, double hitX, double hitZ) {
         switch (side) {
             case NORTH:
-                return hitX < .5;
-            case SOUTH:
                 return hitX > .5;
+            case SOUTH:
+                return hitX < .5;
             case WEST:
                 return hitZ < .5;
             case EAST:
