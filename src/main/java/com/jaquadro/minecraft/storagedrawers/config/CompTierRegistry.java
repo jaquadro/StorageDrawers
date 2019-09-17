@@ -39,13 +39,13 @@ public class CompTierRegistry
 
         if (CommonConfig.GENERAL.enableExtraCompactingRules.get()) {
             register(new ItemStack(Blocks.CLAY), new ItemStack(Items.CLAY_BALL), 4);
-            register(new ItemStack(Blocks.SNOW), new ItemStack(Items.SNOWBALL), 4);
+            register(new ItemStack(Blocks.SNOW_BLOCK), new ItemStack(Items.SNOWBALL), 4);
             register(new ItemStack(Blocks.GLOWSTONE), new ItemStack(Items.GLOWSTONE_DUST), 4);
             register(new ItemStack(Blocks.BRICKS), new ItemStack(Items.BRICK), 4);
             register(new ItemStack(Blocks.NETHER_BRICKS), new ItemStack(Items.NETHER_BRICK), 4);
             register(new ItemStack(Blocks.NETHER_WART_BLOCK), new ItemStack(Items.NETHER_WART), 9);
             register(new ItemStack(Blocks.QUARTZ_BLOCK), new ItemStack(Items.QUARTZ), 4);
-            register(new ItemStack(Blocks.MELON), new ItemStack(Items.MELON), 9);
+            register(new ItemStack(Blocks.MELON), new ItemStack(Items.MELON_SLICE), 9);
 
             if (!ModList.get().isLoaded("extrautilities")) {
                 register(new ItemStack(Blocks.SANDSTONE), new ItemStack(Blocks.SAND), 4);

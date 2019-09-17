@@ -58,6 +58,8 @@ public class StorageDrawers
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ModContainers.registerScreens());
 
         compRegistry = new CompTierRegistry();
+        compRegistry.initialize();
+
         //oreDictRegistry = new OreDictRegistry();
         //renderRegistry = new RenderRegistry();
         //wailaRegistry = new WailaRegistry();
