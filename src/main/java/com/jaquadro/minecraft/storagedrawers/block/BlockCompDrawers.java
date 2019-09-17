@@ -9,6 +9,7 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
 
 public class BlockCompDrawers extends BlockDrawers implements INetworked
@@ -53,15 +54,11 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }*/
 
     @Override
-    protected int getDrawerSlot (Direction side, double hitX, double hitY, double hitZ) {
-        hitX = Math.abs(hitX % 1);
-        hitY = Math.abs(hitY % 1);
-        hitZ = Math.abs(hitZ % 1);
-
-        if (hitTop(hitY))
+    protected int getDrawerSlot (Direction side, Vec3d hit) {
+        if (hitTop(hit.y))
             return 0;
 
-        if (hitLeft(side, hitX, hitZ))
+        if (hitLeft(side, hit.x, hit.z))
             return 1;
         else
             return 2;

@@ -377,11 +377,18 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     }
 
     protected final int getDrawerSlot (BlockRayTraceResult hit) {
-        Vec3d hitVec = hit.getHitVec();
-        return getDrawerSlot(hit.getFace(), hitVec.x, hitVec.y, hitVec.z);
+        return getDrawerSlot(hit.getFace(), normalizeHitVec(hit.getHitVec()));
     }
 
-    protected int getDrawerSlot (Direction side, double hitX, double hitY, double hitZ) {
+    private Vec3d normalizeHitVec (Vec3d hit) {
+        return new Vec3d(
+            ((hit.x < 0) ? hit.x - Math.floor(hit.x) : hit.x) % 1,
+            ((hit.y < 0) ? hit.y - Math.floor(hit.y) : hit.y) % 1,
+            ((hit.z < 0) ? hit.z - Math.floor(hit.z) : hit.z) % 1
+        );
+    }
+
+    protected int getDrawerSlot (Direction side, Vec3d hit) {
         return 0;
     }
 

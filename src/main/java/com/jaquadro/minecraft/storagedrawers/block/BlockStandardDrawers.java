@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
 
 public class BlockStandardDrawers extends BlockDrawers
@@ -57,27 +58,16 @@ public class BlockStandardDrawers extends BlockDrawers
     }
 
     @Override
-    protected int getDrawerSlot (Direction side, double hitX, double hitY, double hitZ) {
-        if (hitX < 0)
-            hitX -= Math.floor(hitX);
-        if (hitY < 0)
-            hitY -= Math.floor(hitY);
-        if (hitZ < 0)
-            hitZ -= Math.floor(hitZ);
-
-        hitX %= 1;
-        hitY %= 1;
-        hitZ %= 1;
-
+    protected int getDrawerSlot (Direction side, Vec3d hit) {
         if (getDrawerCount() == 1)
             return 0;
         if (getDrawerCount() == 2)
-            return hitTop(hitY) ? 0 : 1;
+            return hitTop(hit.y) ? 0 : 1;
 
-        if (hitLeft(side, hitX, hitZ))
-            return hitTop(hitY) ? 0 : 2;
+        if (hitLeft(side, hit.x, hit.z))
+            return hitTop(hit.y) ? 0 : 2;
         else
-            return hitTop(hitY) ? 1 : 3;
+            return hitTop(hit.y) ? 1 : 3;
     }
 
     @Override
