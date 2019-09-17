@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -53,11 +54,7 @@ public class CompTierRegistry
             }
         }
 
-        // TODO: Configurable compacting rules
-        //if (StorageDrawers.config.cache.compRules != null) {
-        //    for (String rule : StorageDrawers.config.cache.compRules)
-        //        register(rule);
-        //}
+        CommonConfig.onLoad(() -> CommonConfig.GENERAL.compRules.get().forEach(this::register));
 
         for (String rule : pendingRules) {
             register(rule);
@@ -79,7 +76,32 @@ public class CompTierRegistry
 
         records.add(r);
 
+        StorageDrawers.log.info("New compacting rule " + convRate + " " + lower.getItem().toString() + " = 1 " + upper.getItem().toString());
+
         return true;
+    }
+
+    public static boolean validateRuleSyntax (String rule) {
+        String[] parts = rule.split("\\s*,\\s*");
+        if (parts.length != 3)
+            return false;
+
+        ResourceLocation upperResource = ResourceLocation.tryCreate(parts[0]);
+        ResourceLocation lowerResource = ResourceLocation.tryCreate(parts[1]);
+        if (upperResource == null || lowerResource == null)
+            return false;
+
+        try {
+            int conv = Integer.parseInt(parts[2]);
+            return conv >= 1;
+        }
+        catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public void register (List<String> rules) {
+        rules.forEach(this::register);
     }
 
     public boolean register (String rule) {

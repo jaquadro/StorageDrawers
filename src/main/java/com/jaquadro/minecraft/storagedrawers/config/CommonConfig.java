@@ -2,6 +2,10 @@ package com.jaquadro.minecraft.storagedrawers.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
 public final class CommonConfig
 {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
@@ -11,12 +15,23 @@ public final class CommonConfig
     public static final ForgeConfigSpec spec = BUILDER.build();
 
     private static boolean loaded = false;
+    private static List<Runnable> loadActions = new ArrayList<>();
+
     public static void setLoaded() {
+        if (!loaded)
+            loadActions.forEach(Runnable::run);
         loaded = true;
     }
 
     public static boolean isLoaded() {
         return loaded;
+    }
+
+    public static void onLoad(Runnable action) {
+        if (loaded)
+            action.run();
+        else
+            loadActions.add(action);
     }
 
     public static class General {
@@ -28,9 +43,12 @@ public final class CommonConfig
         public final ForgeConfigSpec.ConfigValue<Boolean> debugTrace;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableExtraCompactingRules;
         public final ForgeConfigSpec.ConfigValue<Integer> controllerRange;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> compRules;
 
         public General(ForgeConfigSpec.Builder builder) {
             builder.push("General");
+            List<String> test = new ArrayList<>();
+            test.add("minecraft:clay, minecraft:clay_ball, 4");
 
             baseStackStorage = builder
                 .comment("The number of item stacks held in a basic unit of storage.",
@@ -51,9 +69,19 @@ public final class CommonConfig
                 .define("enableExtraCompactingRules", true);
             debugTrace = builder
                 .define("debugTrace", false);
+            compRules = builder
+                .comment("List of rules in format \"domain:item1, domain:item2, n\".",
+                    "Causes a compacting drawer convert n of item1 into 1 of item2.")
+                .defineList("compactingRules", test, obj -> CompTierRegistry.validateRuleSyntax((String)obj));
 
             builder.pop();
         }
+
+        /*cache.compRules = config.getStringList("compactingRules", sectionRegistries.getQualifiedName(), new String[] { "minecraft:clay, minecraft:clay_ball, 4" }, "Items should be in form domain:item or domain:item:meta.", null, LANG_PREFIX + "registries.compRules");
+        if (StorageDrawers.compRegistry != null) {
+            for (String rule : cache.compRules)
+                StorageDrawers.compRegistry.register(rule);
+        }*/
 
         public int getBaseStackStorage() {
             if (!isLoaded())
@@ -84,7 +112,7 @@ public final class CommonConfig
         public final ForgeConfigSpec.ConfigValue<Integer> level5Mult;
 
         public Upgrades (ForgeConfigSpec.Builder builder) {
-            builder.push("Storage Upgrades");
+            builder.push("StorageUpgrades");
             builder.comment("Storage upgrades multiply storage capacity by the given amount.",
                 "When multiple storage upgrades are used together, their multipliers are added before being applied.");
 
