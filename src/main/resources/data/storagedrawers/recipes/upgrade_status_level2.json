@@ -1,6 +1,6 @@
 {
     "conditions": [{
-        "type": "minecraft:item_exists",
+        "type": "forge:item_exists",
         "item": "storagedrawers:upgrade_status"
     }],
     "type": "forge:ore_shaped",

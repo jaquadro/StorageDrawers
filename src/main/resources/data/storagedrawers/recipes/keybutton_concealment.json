@@ -1,9 +1,9 @@
 {
     "conditions": [{
-        "type": "minecraft:item_exists",
+        "type": "forge:item_exists",
         "item": "storagedrawers:keybutton"
     }, {
-        "type": "minecraft:item_exists",
+        "type": "forge:item_exists",
         "item": "storagedrawers:shroud_key"
     }],
     "type": "minecraft:crafting_shapeless",
