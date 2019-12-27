@@ -211,7 +211,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
             //    tile.setCustomName(stack.getDisplayName());
         }
 
-        if (entity.getHeldItemOffhand().getItem() == ModItems.DRAWER_KEY) {
+        if (entity != null && entity.getHeldItemOffhand().getItem() == ModItems.DRAWER_KEY) {
             TileEntityDrawers tile = getTileEntity(world, pos);
             if (tile != null) {
                 IDrawerAttributes _attrs = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(new EmptyDrawerAttributes());
