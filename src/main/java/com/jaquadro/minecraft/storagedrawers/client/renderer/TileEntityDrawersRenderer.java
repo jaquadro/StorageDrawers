@@ -25,6 +25,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -82,19 +83,26 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
 
         mc.gameSettings.fancyGraphics = cache;
 
-        RenderSystem.enableLighting();
+     //   RenderSystem.enableLighting();
         //RenderSystem.enableLight(0);
         //RenderSystem.enableLight(1);
-        RenderSystem.enableColorMaterial();
-        RenderSystem.colorMaterial(1032, 5634);
-        RenderSystem.disableRescaleNormal();
+     //   RenderSystem.enableColorMaterial();
+     //   RenderSystem.colorMaterial(1032, 5634);
+     //   RenderSystem.disableRescaleNormal();
         //GlStateManager.disableNormalize();
-        RenderSystem.disableBlend();
+     //   RenderSystem.disableBlend();
 
         matrix.pop();
         //GlStateManager.popMatrix();
 
         //ChamRenderManager.instance.releaseRenderer(renderer);
+
+        ActiveRenderInfo activeRender = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
+        Vec3d projView = activeRender.getProjectedView();
+        BlockPos pos = tile.getPos();
+
+        matrix.translate(projView.x - pos.getX(), projView.y - pos.getY(), projView.z - pos.getZ());
+        RenderHelper.setupLevelDiffuseLighting(matrix.getLast().getMatrix());
     }
 
     private void renderFastItemSet (TileEntityDrawers tile, BlockState state, MatrixStack matrix, Direction side, float partialTickTime) {
@@ -112,8 +120,8 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         }
 
         for (int i = 0; i < drawerCount; i++) {
-            if (!renderStacks[i].isEmpty() && !renderAsBlock[i])
-                renderFastItem(renderStacks[i], tile, state, i, matrix, side, partialTickTime);
+            //if (!renderStacks[i].isEmpty() && !renderAsBlock[i])
+            //    renderFastItem(renderStacks[i], tile, state, i, matrix, side, partialTickTime);
         }
 
         for (int i = 0; i < drawerCount; i++) {
@@ -155,21 +163,21 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         alignRendering(matrix, side);
         moveRendering(matrix, .125f, .125f, x, y, z);
 
-        RenderSystem.disableLighting();
+        /*RenderSystem.disableLighting();
         RenderSystem.enablePolygonOffset();
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
-        RenderSystem.polygonOffset(-1, -20);
+        RenderSystem.polygonOffset(-1, -20);*/
 
         IRenderTypeBuffer.Impl buffer = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
         int color = (int)(255 * alpha) << 24 | 255 << 16 | 255 << 8 | 255;
         fontRenderer.renderString(text, -textWidth / 2, 0, color, false, matrix.getLast().getMatrix(), buffer, false, 0, 15728880);
         buffer.finish();
 
-        RenderSystem.disableBlend();
+        /*RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
         RenderSystem.disablePolygonOffset();
-        RenderSystem.enableLighting();
+        RenderSystem.enableLighting();*/
 
         matrix.pop();
     }
@@ -245,17 +253,17 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         // directly away from the face, which is visible as the block faces having identical
         // (dark) shading.
 
-        RenderSystem.enableRescaleNormal();
-        RenderSystem.disableRescaleNormal();
-        RenderSystem.pushLightingAttributes();
-        RenderSystem.enableRescaleNormal();
-        RenderSystem.popAttributes();
+        //RenderSystem.enableRescaleNormal();
+        //RenderSystem.disableRescaleNormal();
+        //RenderSystem.pushLightingAttributes();
+        //RenderSystem.enableRescaleNormal();
+        //RenderSystem.popAttributes();
 
         try {
             matrix.push();
             //renderItem.renderItemIntoGUI(itemStack, 0, 0);
             RenderSystem.pushMatrix();
-            RenderSystem.enableRescaleNormal();
+            //RenderSystem.enableRescaleNormal();
             RenderSystem.enableAlphaTest();
             RenderSystem.defaultAlphaFunc();
             RenderSystem.enableBlend();
@@ -270,9 +278,26 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
             IBakedModel itemModel = renderItem.getItemModelWithOverrides(itemStack, null, null);
             boolean render3D = itemModel.func_230044_c_();
 
-            //if (!render3D)
-            //    RenderHelper.setupGuiFlatDiffuseLighting();
+            matrix.push();
+            long dayTime = Minecraft.getInstance().world.getDayTime();
+            //matrix.rotate(Vector3f.YP.rotationDegrees(dayTime));
+            //matrix.rotate(Vector3f.XP.rotationDegrees(dayTime * 1.2f));
+            //matrix.rotate(Vector3f.ZP.rotationDegrees(dayTime * 1.35f));
+            MatrixStack matrixstack = new MatrixStack();
+            matrixstack.scale(2.6f, 2.6f, 1);
+            matrixstack.rotate(new Quaternion(Vector3f.YP, 171.6f, true));
+            matrixstack.rotate(new Quaternion(Vector3f.XP, 84.9f, true));
+            matrixstack.rotate(Vector3f.YP.rotationDegrees(dayTime));
+            matrixstack.rotate(Vector3f.XP.rotationDegrees(dayTime * 1.2f));
+            //matrixstack.rotate(Vector3f.ZP.rotationDegrees(dayTime * 1.35f));
+            //GlStateManager.setupWorldDiffuseLighting(matrixstack.getLast().getMatrix());
+            matrix.pop();
+            if (render3D)
+                RenderHelper.setupGui3DDiffuseLighting();
+            else
+                RenderHelper.setupGuiFlatDiffuseLighting();
 
+            matrix.getLast().getNormal().set(Matrix3f.makeScaleMatrix(1, -1, 1));
             renderItem.renderItem(itemStack, ItemCameraTransforms.TransformType.GUI, false, matrix, buffer, 15728880, OverlayTexture.NO_OVERLAY, itemModel);
             buffer.finish();
 
