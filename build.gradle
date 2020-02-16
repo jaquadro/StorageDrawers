@@ -28,15 +28,6 @@ version = "${minecraft_version}-${mod_version}"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
 
-/*idea {
-  module.iml.withXml {
-    def atts = it.asNode().component.content.sourceFolder
-      .find { it.@url == 'file://$MODULE_DIR$/resources' }
-      .attributes()
-    atts.put('type', 'java-resource')
-  }
-}*/
-
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' 
 
 minecraft {
@@ -134,10 +125,10 @@ dependencies {
     //compile chameleon
 
     //compileOnly "mezz.jei:jei-${minecraft_version}:${jei_version}:api"
-    compile fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+    //compile fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
 
     //compileOnly "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
-    compile fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+    //compile fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
 
     //deobfCompile "MineTweaker3:MineTweaker3-API:${mt_version}"
     //deobfCompile "org.ow2.asm:asm-debug-all:5.0.3"

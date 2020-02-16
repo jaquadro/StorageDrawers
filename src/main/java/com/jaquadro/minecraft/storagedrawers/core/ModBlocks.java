@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.*;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
@@ -11,6 +12,9 @@ import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
@@ -28,6 +32,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 @ObjectHolder(StorageDrawers.MOD_ID)
@@ -85,13 +90,12 @@ public class ModBlocks
 
     @ObjectHolder(StorageDrawers.MOD_ID)
     public static final class Tile {
-        public static final TileEntityType<?>
-            STANDARD_DRAWERS_1 = null,
-            STANDARD_DRAWERS_2 = null,
-            STANDARD_DRAWERS_4 = null,
-            FRACTIONAL_DRAWERS_3 = null,
-            CONTROLLER = null,
-            CONTROLLER_SLAVE = null;
+        public static final TileEntityType<TileEntityDrawersStandard> STANDARD_DRAWERS_1 = null;
+        public static final TileEntityType<TileEntityDrawersStandard> STANDARD_DRAWERS_2 = null;
+        public static final TileEntityType<TileEntityDrawersStandard> STANDARD_DRAWERS_4 = null;
+        public static final TileEntityType<TileEntityDrawersComp> FRACTIONAL_DRAWERS_3 = null;
+        public static final TileEntityType<TileEntityController> CONTROLLER = null;
+        public static final TileEntityType<TileEntitySlave> CONTROLLER_SLAVE = null;
     }
 
     @Mod.EventBusSubscriber(modid = StorageDrawers.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -364,10 +368,10 @@ public class ModBlocks
         @SubscribeEvent
         @OnlyIn(Dist.CLIENT)
         public static void registerModels (ModelBakeEvent event) {
-            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.Slot1.class, new TileEntityDrawersRenderer());
-            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.Slot2.class, new TileEntityDrawersRenderer());
-            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersStandard.Slot4.class, new TileEntityDrawersRenderer());
-            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDrawersComp.Slot3.class, new TileEntityDrawersRenderer());
+            ClientRegistry.bindTileEntityRenderer(Tile.STANDARD_DRAWERS_1, TileEntityDrawersRenderer::new);
+            ClientRegistry.bindTileEntityRenderer(Tile.STANDARD_DRAWERS_2, TileEntityDrawersRenderer::new);
+            ClientRegistry.bindTileEntityRenderer(Tile.STANDARD_DRAWERS_4, TileEntityDrawersRenderer::new);
+            ClientRegistry.bindTileEntityRenderer(Tile.FRACTIONAL_DRAWERS_3, TileEntityDrawersRenderer::new);
         }
 
         //@SubscribeEvent

@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -24,6 +25,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.common.MinecraftForge;
@@ -50,13 +52,13 @@ public final class BasicDrawerModel
     {
         @SubscribeEvent
         public static void registerTextures (TextureStitchEvent.Pre event) {
-            if (event.getMap() != Minecraft.getInstance().getTextureMap())
-                return;
+            //if (event.getMap() != Minecraft.getInstance().getTextureMap())
+            //    return;
 
             BlockModel unbakedModel = getBlockModel(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_lock.json"));
 
-            for (String x : unbakedModel.textures.values()) {
-                event.addSprite(new ResourceLocation(x));
+            for (Either<Material, String> x : unbakedModel.textures.values()) {
+                x.ifRight((value) -> event.addSprite(new ResourceLocation(value)));
             }
 
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_1.json"),
@@ -150,14 +152,14 @@ public final class BasicDrawerModel
         @SubscribeEvent
         public static void registerModels (ModelBakeEvent event) {
             // IUnbakedModel unbaked = event.getModelLoader().getUnbakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"));
-            lockOverlaysFull.put(Direction.NORTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y0, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
-            lockOverlaysFull.put(Direction.EAST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y90, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
-            lockOverlaysFull.put(Direction.SOUTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y180, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
-            lockOverlaysFull.put(Direction.WEST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y270, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
-            lockOverlaysHalf.put(Direction.NORTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y0, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
-            lockOverlaysHalf.put(Direction.EAST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y90, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
-            lockOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y180, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
-            lockOverlaysHalf.put(Direction.WEST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y270, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
+            lockOverlaysFull.put(Direction.NORTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter()));
+            lockOverlaysFull.put(Direction.EAST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y90, ModelLoader.defaultTextureGetter()));
+            lockOverlaysFull.put(Direction.SOUTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y180, ModelLoader.defaultTextureGetter()));
+            lockOverlaysFull.put(Direction.WEST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y270, ModelLoader.defaultTextureGetter()));
+            lockOverlaysHalf.put(Direction.NORTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter()));
+            lockOverlaysHalf.put(Direction.EAST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y90, ModelLoader.defaultTextureGetter()));
+            lockOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y180, ModelLoader.defaultTextureGetter()));
+            lockOverlaysHalf.put(Direction.WEST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y270, ModelLoader.defaultTextureGetter()));
 
             replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_1);
             replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_2);
@@ -197,7 +199,7 @@ public final class BasicDrawerModel
             replaceBlock(event, ModBlocks.DARK_OAK_HALF_DRAWERS_4);
             replaceBlock(event, ModBlocks.COMPACTING_DRAWERS_3);
 
-            event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y0, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK);
+            event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
         }
 
         public static void replaceBlock(ModelBakeEvent event, BlockDrawers block) {
@@ -286,6 +288,11 @@ public final class BasicDrawerModel
         }
 
         @Override
+        public boolean func_230044_c_ () {
+            return mainModel.func_230044_c_();
+        }
+
+        @Override
         public boolean isBuiltInRenderer () {
             return mainModel.isBuiltInRenderer();
         }
@@ -320,6 +327,11 @@ public final class BasicDrawerModel
         private Model2(IBakedModel mainModel, Map<Direction, IBakedModel> lockOverlay) {
             this.mainModel = mainModel;
             this.lockOverlay = lockOverlay;
+        }
+
+        @Override
+        public boolean func_230044_c_ () {
+            return mainModel.func_230044_c_();
         }
 
         @Nonnull

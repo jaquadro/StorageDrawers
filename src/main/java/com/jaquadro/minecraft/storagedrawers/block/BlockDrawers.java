@@ -133,10 +133,10 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         return null;
     }*/
 
-    @Override
+    /*@Override
     public BlockRenderLayer getRenderLayer () {
         return BlockRenderLayer.CUTOUT_MIPPED;
-    }
+    }*/
 
     //@Override
     //public boolean canRenderInLayer (IBlockState state, BlockRenderLayer layer) {
@@ -242,14 +242,14 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     }
 
     @Override
-    public boolean onBlockActivated (BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated (BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack item = player.getHeldItem(hand);
         if (hand == Hand.OFF_HAND)
-            return false;
+            return ActionResultType.CONSUME;
 
         if (world.isRemote && Util.milliTime() == ignoreEventTime) {
             ignoreEventTime = 0;
-            return false;
+            return ActionResultType.CONSUME;
         }
 
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, pos);
@@ -265,7 +265,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
         if (!item.isEmpty()) {
             if (item.getItem() instanceof ItemKey)
-                return false;
+                return ActionResultType.PASS;
 
             /*if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
                 if (!retrimBlock(world, pos, item))
@@ -323,7 +323,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
             else if (item.getItem() == ModItems.tape)
                 return false;*/
         }
-        else if (item.isEmpty() && player.isSneaking()) {
+        else if (item.isEmpty() && player.isShiftKeyDown()) {
             /*if (tileDrawers.isSealed()) {
                 tileDrawers.setIsSealed(false);
                 return true;
@@ -357,12 +357,12 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 }, extraData -> {
                     extraData.writeBlockPos(pos);
                 });
-                return true;
+                return ActionResultType.SUCCESS;
             }
         }
 
         if (state.get(HORIZONTAL_FACING) != hit.getFace())
-            return false;
+            return ActionResultType.CONSUME;
 
         //if (tileDrawers.isSealed())
         //    return false;
@@ -373,7 +373,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         if (item.isEmpty())
             player.setHeldItem(hand, ItemStack.EMPTY);
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     protected final int getDrawerSlot (BlockRayTraceResult hit) {
@@ -455,7 +455,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 invertShift = setting.value;
             }
         }*/
-        if (playerIn.isSneaking() != invertShift)
+        if (playerIn.isShiftKeyDown() != invertShift)
             item = tileDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
         else
             item = tileDrawers.takeItemsFromSlot(slot, 1);

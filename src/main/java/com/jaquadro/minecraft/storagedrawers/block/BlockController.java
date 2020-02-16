@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -21,6 +22,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -47,16 +49,16 @@ public class BlockController extends HorizontalBlock implements INetworked
     }
 
     @Override
-    public boolean onBlockActivated (BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated (BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         Direction blockDir = state.get(HORIZONTAL_FACING);
         TileEntityController te = getTileEntitySafe(world, pos);
 
         ItemStack item = player.inventory.getCurrentItem();
         if (!item.isEmpty() && toggle(world, pos, player, item.getItem()))
-            return true;
+            return ActionResultType.SUCCESS;
 
         if (blockDir != hit.getFace())
-            return false;
+            return ActionResultType.CONSUME;
 
         if (!world.isRemote) {
             if (CommonConfig.GENERAL.debugTrace.get() && item.isEmpty())
@@ -65,7 +67,7 @@ public class BlockController extends HorizontalBlock implements INetworked
             te.interactPutItemsIntoInventory(player);
         }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     public boolean toggle (World world, BlockPos pos, PlayerEntity player, Item item) {
@@ -114,7 +116,7 @@ public class BlockController extends HorizontalBlock implements INetworked
     }
 
     @Override
-    public void tick (BlockState state, World world, BlockPos pos, Random rand) {
+    public void tick (BlockState state, ServerWorld world, BlockPos pos, Random rand) {
         if (world.isRemote)
             return;
 

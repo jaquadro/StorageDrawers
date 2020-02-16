@@ -4,12 +4,21 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
-import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.matrix.MatrixStack;
+//import com.mojang.blaze3d.platform.GLX;
+//import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -30,8 +39,12 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
 
     private ItemRenderer renderItem;
 
+    public TileEntityDrawersRenderer (TileEntityRendererDispatcher dispatcher) {
+        super(dispatcher);
+    }
+
     @Override
-    public void render (TileEntityDrawers tile, double x, double y, double z, float partialTickTime, int destroyStage) {
+    public void render (TileEntityDrawers tile, float partialTickTime, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         if (tile == null)
             return;
 
@@ -45,16 +58,18 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
 
         BlockDrawers block = (BlockDrawers)state.getBlock();
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translated(x, y, z);
+        matrix.push();
+
+        //GlStateManager.pushMatrix();
+        //GlStateManager.translated(x, y, z);
 
         renderItem = Minecraft.getInstance().getItemRenderer();
 
         Direction side = state.get(BlockDrawers.HORIZONTAL_FACING);
-        int ambLight = getWorld().getCombinedLight(tile.getPos().offset(side), 0);
-        int lu = ambLight % 65536;
-        int lv = ambLight / 65536;
-        GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (float)lu, (float)lv);
+        //int ambLight = getWorld().getCombinedLight(tile.getPos().offset(side), 0);
+        //int lu = ambLight % 65536;
+        //int lv = ambLight / 65536;
+        //GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (float)lu, (float)lv);
 
         //ChamRender renderer = ChamRenderManager.instance.getRenderer(Tessellator.getInstance().getBuffer());
 
@@ -63,25 +78,26 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         mc.gameSettings.fancyGraphics = true;
         //renderUpgrades(renderer, tile, state);
         if (!tile.getDrawerAttributes().isConcealed())
-            renderFastItemSet(tile, state, side, partialTickTime);
+            renderFastItemSet(tile, state, matrix, side, partialTickTime);
 
         mc.gameSettings.fancyGraphics = cache;
 
-        GlStateManager.enableLighting();
-        GlStateManager.enableLight(0);
-        GlStateManager.enableLight(1);
-        GlStateManager.enableColorMaterial();
-        GlStateManager.colorMaterial(1032, 5634);
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.disableNormalize();
-        GlStateManager.disableBlend();
+        RenderSystem.enableLighting();
+        //RenderSystem.enableLight(0);
+        //RenderSystem.enableLight(1);
+        RenderSystem.enableColorMaterial();
+        RenderSystem.colorMaterial(1032, 5634);
+        RenderSystem.disableRescaleNormal();
+        //GlStateManager.disableNormalize();
+        RenderSystem.disableBlend();
 
-        GlStateManager.popMatrix();
+        matrix.pop();
+        //GlStateManager.popMatrix();
 
         //ChamRenderManager.instance.releaseRenderer(renderer);
     }
 
-    private void renderFastItemSet (TileEntityDrawers tile, BlockState state, Direction side, float partialTickTime) {
+    private void renderFastItemSet (TileEntityDrawers tile, BlockState state, MatrixStack matrix, Direction side, float partialTickTime) {
         int drawerCount = tile.getDrawerCount();
 
         for (int i = 0; i < drawerCount; i++) {
@@ -97,12 +113,12 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
 
         for (int i = 0; i < drawerCount; i++) {
             if (!renderStacks[i].isEmpty() && !renderAsBlock[i])
-                renderFastItem(renderStacks[i], tile, state, i, side, partialTickTime);
+                renderFastItem(renderStacks[i], tile, state, i, matrix, side, partialTickTime);
         }
 
         for (int i = 0; i < drawerCount; i++) {
             if (!renderStacks[i].isEmpty() && renderAsBlock[i])
-                renderFastItem(renderStacks[i], tile, state, i, side, partialTickTime);
+                renderFastItem(renderStacks[i], tile, state, i, matrix, side, partialTickTime);
         }
 
         if (tile.getDrawerAttributes().isShowingQuantity()) {
@@ -116,59 +132,64 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
 
             if (distance < 10) {
                 for (int i = 0; i < drawerCount; i++)
-                    renderText(CountFormatter.format(getFontRenderer(), tile.getDrawer(i)), tile, state, i, side, alpha);
+                    renderText(CountFormatter.format(this.renderDispatcher.getFontRenderer(), tile.getDrawer(i)), tile, state, i, matrix, side, alpha);
             }
         }
     }
 
-    private void renderText (String text, TileEntityDrawers tile, BlockState state, int slot, Direction side, float alpha) {
+    private void renderText (String text, TileEntityDrawers tile, BlockState state, int slot, MatrixStack matrix, Direction side, float alpha) {
         if (text == null || text.isEmpty())
             return;
 
+        FontRenderer fontRenderer = this.renderDispatcher.getFontRenderer();
+
         BlockDrawers block = (BlockDrawers)state.getBlock();
         AxisAlignedBB labelGeometry = block.countGeometry[slot];
-        int textWidth = getFontRenderer().getStringWidth(text);
+        int textWidth = fontRenderer.getStringWidth(text);
 
         float x = (float)(labelGeometry.minX + labelGeometry.getXSize() / 2);
         float y = 16f - (float)labelGeometry.minY - (float)labelGeometry.getYSize();
         float z = (float)labelGeometry.minZ * .0625f;
 
-        GlStateManager.pushMatrix();
-        alignRendering(side);
-        moveRendering(.125f, .125f, x, y, z);
+        matrix.push();
+        alignRendering(matrix, side);
+        moveRendering(matrix, .125f, .125f, x, y, z);
 
-        GlStateManager.disableLighting();
-        GlStateManager.enablePolygonOffset();
-        GlStateManager.depthMask(false);
-        GlStateManager.enableBlend();
-        GlStateManager.polygonOffset(-1, -20);
+        RenderSystem.disableLighting();
+        RenderSystem.enablePolygonOffset();
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
+        RenderSystem.polygonOffset(-1, -20);
 
-        getFontRenderer().drawString(text, -textWidth / 2, 0, (int)(255 * alpha) << 24 | 255 << 16 | 255 << 8 | 255);
+        IRenderTypeBuffer.Impl buffer = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+        int color = (int)(255 * alpha) << 24 | 255 << 16 | 255 << 8 | 255;
+        fontRenderer.renderString(text, -textWidth / 2, 0, color, false, matrix.getLast().getMatrix(), buffer, false, 0, 15728880);
+        buffer.finish();
 
-        GlStateManager.disableBlend();
-        GlStateManager.depthMask(true);
-        GlStateManager.disablePolygonOffset();
-        GlStateManager.enableLighting();
+        RenderSystem.disableBlend();
+        RenderSystem.depthMask(true);
+        RenderSystem.disablePolygonOffset();
+        RenderSystem.enableLighting();
 
-        GlStateManager.popMatrix();
+        matrix.pop();
     }
 
-    private void renderFastItem (@Nonnull ItemStack itemStack, TileEntityDrawers tile, BlockState state, int slot, Direction side, float partialTickTime) {
+    private void renderFastItem (@Nonnull ItemStack itemStack, TileEntityDrawers tile, BlockState state, int slot, MatrixStack matrix, Direction side, float partialTickTime) {
         int drawerCount = ((BlockDrawers)state.getBlock()).getDrawerCount();
 
         BlockDrawers block = (BlockDrawers)state.getBlock();
         AxisAlignedBB labelGeometry = block.labelGeometry[slot];
 
-        GlStateManager.pushMatrix();
+        matrix.push();
 
-        alignRendering(side);
+        alignRendering(matrix, side);
 
         float scaleX = (float)labelGeometry.getXSize() / 16;
         float scaleY = (float)labelGeometry.getYSize() / 16;
-        float moveX = (float)labelGeometry.minX;
-        float moveY = 16f - (float)labelGeometry.maxY;
+        float moveX = (float)labelGeometry.minX + (8 * scaleX);
+        float moveY = 16f - (float)labelGeometry.maxY + (8 * scaleY);
         float moveZ = (float)labelGeometry.minZ * .0625f;
-        moveRendering(scaleX, scaleY, moveX, moveY, moveZ);
+        moveRendering(matrix, scaleX, scaleY, moveX, moveY, moveZ);
 
         //List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
         //for (IRenderLabel renderHandler : renderHandlers) {
@@ -182,28 +203,36 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         // to account for slightly different shading on the half-size "icons" in 1x2 and 2x2
         // drawers due to the extreme angles caused by flattening the block (as noted below).
 
-        GlStateManager.pushMatrix();
+        matrix.push();
         if (drawerCount == 1) {
-            GlStateManager.scalef(2.6f, 2.6f, 1);
-            GlStateManager.rotatef(171.6f, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotatef(84.9f, 1.0F, 0.0F, 0.0F);
+            matrix.scale(2.6f, 2.6f, 1);
+            matrix.rotate(new Quaternion(Vector3f.YP, 171.6f, true));
+            matrix.rotate(new Quaternion(Vector3f.XP, 84.9f, true));
+            //GlStateManager.pushMatrix();
+            //GlStateManager.scalef(2.6f, 2.6f, 1);
+            //GlStateManager.rotatef(171.6f, 0.0F, 1.0F, 0.0F);
+            //GlStateManager.rotatef(84.9f, 1.0F, 0.0F, 0.0F);
         }
         else {
-            GlStateManager.scalef(1.92f, 1.92f, 1);
-            GlStateManager.rotatef(169.2f, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotatef(79.0f, 1.0F, 0.0F, 0.0F);
+            matrix.scale(1.92f, 1.92f, 1);
+            matrix.rotate(new Quaternion(Vector3f.YP, 169.2f, true));
+            matrix.rotate(new Quaternion(Vector3f.XP, 79.0f, true));
+            //GlStateManager.scalef(1.92f, 1.92f, 1);
+            //GlStateManager.rotatef(169.2f, 0.0F, 1.0F, 0.0F);
+            //GlStateManager.rotatef(79.0f, 1.0F, 0.0F, 0.0F);
         }
-        RenderHelper.enableStandardItemLighting();
-        GlStateManager.popMatrix();
+        //RenderHelper.enableStandardItemLighting();
+        //GlStateManager.popMatrix();
+        matrix.pop();
 
         // TileEntitySkullRenderer alters both of these options on, but does not restore them.
-        GlStateManager.enableCull();
-        GlStateManager.disableRescaleNormal();
+        RenderSystem.enableCull();
+        RenderSystem.disableRescaleNormal();
 
         // GL_POLYGON_OFFSET is used to offset flat icons toward the viewer (-Z) in screen space,
         // so they always appear on top of the drawer's front space.
-        GlStateManager.enablePolygonOffset();
-        GlStateManager.polygonOffset(-1, -1);
+        RenderSystem.enablePolygonOffset();
+        RenderSystem.polygonOffset(-1, -1);
 
         // DIRTY HACK: Fool GlStateManager into thinking GL_RESCALE_NORMAL is enabled, but disable
         // it using popAttrib This prevents RenderItem from enabling it again.
@@ -216,40 +245,71 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         // directly away from the face, which is visible as the block faces having identical
         // (dark) shading.
 
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.pushLightingAttributes();
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.popAttributes();
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.pushLightingAttributes();
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.popAttributes();
 
         try {
-            renderItem.renderItemIntoGUI(itemStack, 0, 0);
+            matrix.push();
+            //renderItem.renderItemIntoGUI(itemStack, 0, 0);
+            RenderSystem.pushMatrix();
+            RenderSystem.enableRescaleNormal();
+            RenderSystem.enableAlphaTest();
+            RenderSystem.defaultAlphaFunc();
+            RenderSystem.enableBlend();
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+            matrix.translate(0, 0, 100f);
+            matrix.scale(1, -1, 1);
+            matrix.scale(16, 16, 16);
+
+            IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
+            IBakedModel itemModel = renderItem.getItemModelWithOverrides(itemStack, null, null);
+            boolean render3D = itemModel.func_230044_c_();
+
+            //if (!render3D)
+            //    RenderHelper.setupGuiFlatDiffuseLighting();
+
+            renderItem.renderItem(itemStack, ItemCameraTransforms.TransformType.GUI, false, matrix, buffer, 15728880, OverlayTexture.NO_OVERLAY, itemModel);
+            buffer.finish();
+
+            //if (!render3D)
+            //    RenderHelper.setupGui3DDiffuseLighting();
+
+            RenderSystem.disableAlphaTest();
+            RenderSystem.disableRescaleNormal();
+            RenderSystem.popMatrix();
+            matrix.pop();
         }
         catch (Exception e) {
             // Shrug
         }
-        
-        GlStateManager.disableBlend(); // Clean up after RenderItem
-        GlStateManager.enableAlphaTest();  // Restore world render state after RenderItem
 
-        GlStateManager.disablePolygonOffset();
+        RenderSystem.disableBlend(); // Clean up after RenderItem
+        RenderSystem.enableAlphaTest();  // Restore world render state after RenderItem
 
-        GlStateManager.popMatrix();
+        RenderSystem.disablePolygonOffset();
+
+        matrix.pop();
     }
 
     private boolean isItemBlockType (@Nonnull ItemStack itemStack) {
-        return itemStack.getItem() instanceof BlockItem && renderItem.shouldRenderItemIn3D(itemStack);
+        return itemStack.getItem() instanceof BlockItem; // && renderItem.shouldRenderItemIn3D(itemStack);
     }
 
-    private void alignRendering (Direction side) {
+    private void alignRendering (MatrixStack matrix, Direction side) {
         // Rotate to face the correct direction for the drawer's orientation.
 
-        GlStateManager.translatef(.5f, .5f, .5f);
-        GlStateManager.rotatef(getRotationYForSide2D(side), 0, 1, 0);
-        GlStateManager.translatef(-.5f, -.5f, -.5f);
+        matrix.translate(.5f, .5f, .5f);
+        //GlStateManager.rotatef(getRotationYForSide2D(side), 0, 1, 0);
+        matrix.rotate(new Quaternion(Vector3f.YP, getRotationYForSide2D(side), true));
+        matrix.translate(-.5f, -.5f, -.5f);
     }
 
-    private void moveRendering (float scaleX, float scaleY, float offsetX, float offsetY, float offsetZ) {
+    private void moveRendering (MatrixStack matrix, float scaleX, float scaleY, float offsetX, float offsetY, float offsetZ) {
         // NOTE: RenderItem expects to be called in a context where Y increases toward the bottom of the screen
         // However, for in-world rendering the opposite is true. So we translate up by 1 along Y, and then flip
         // along Y. Since the item is drawn at the back of the drawer, we also translate by `1-offsetZ` to move
@@ -257,11 +317,11 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
 
         // The 0.00001 for the Z-scale both flattens the item and negates the 32.0 Z-scale done by RenderItem.
 
-        GlStateManager.translatef(0, 1, 1-offsetZ);
-        GlStateManager.scalef(1 / 16f, -1 / 16f, 0.00001f);
+        matrix.translate(0, 1, 1-offsetZ);
+        matrix.scale(1 / 16f, -1 / 16f, 0.00001f);
 
-        GlStateManager.translatef(offsetX, offsetY, 0f);
-        GlStateManager.scalef(scaleX, scaleY, 1);
+        matrix.translate(offsetX, offsetY, 0f);
+        matrix.scale(scaleX, scaleY, 1);
     }
 
     private static final float[] sideRotationY2D = { 0, 0, 2, 0, 3, 1 };

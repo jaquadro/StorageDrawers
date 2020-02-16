@@ -77,6 +77,12 @@ public abstract class ProxyBuilderModel implements IBakedModel
         return (model != null) ? model.getOverrides() : ItemOverrideList.EMPTY;
     }
 
+    @Override
+    public boolean func_230044_c_ () {
+        IBakedModel model = getActiveModel();
+        return (model != null) ? model.func_230044_c_() : false;
+    }
+
     public List<Object> getKey (BlockState state) {
         return EMPTY_KEY;
     }
