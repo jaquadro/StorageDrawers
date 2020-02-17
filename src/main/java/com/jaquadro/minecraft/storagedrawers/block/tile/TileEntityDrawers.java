@@ -64,6 +64,15 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
     {
         @Override
         protected void onAttributeChanged () {
+            if (!TileEntityDrawers.this.drawerAttributes.isItemLocked(LockAttribute.LOCK_POPULATED)) {
+                for (int slot = 0; slot < TileEntityDrawers.this.getGroup().getDrawerCount(); slot++) {
+                    if (TileEntityDrawers.this.emptySlotCanBeCleared(slot)) {
+                        IDrawer drawer = TileEntityDrawers.this.getGroup().getDrawer(slot);
+                        drawer.setStoredItem(ItemStack.EMPTY);
+                    }
+                }
+            }
+
             TileEntityDrawers.this.onAttributeChanged();
             if (getWorld() != null && !getWorld().isRemote) {
                 markDirty();
@@ -173,6 +182,11 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
             return 1;
 
         return getDrawerCapacity() * CommonConfig.GENERAL.baseStackStorage.get();
+    }
+
+    protected boolean emptySlotCanBeCleared (int slot) {
+        IDrawer drawer = TileEntityDrawers.this.getGroup().getDrawer(slot);
+        return !drawer.isEmpty() && drawer.getStoredItemCount() == 0;
     }
 
     /*@Override
@@ -440,24 +454,27 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         //if (tag.hasKey("Mat"))
         //    material = tag.getString("Mat");
 
-        drawerAttributes.setItemLocked(LockAttribute.LOCK_EMPTY, false);
-        drawerAttributes.setItemLocked(LockAttribute.LOCK_POPULATED, false);
         if (tag.contains("Lock")) {
             EnumSet<LockAttribute> attrs = LockAttribute.getEnumSet(tag.getByte("Lock"));
             if (attrs != null) {
                 drawerAttributes.setItemLocked(LockAttribute.LOCK_EMPTY, attrs.contains(LockAttribute.LOCK_EMPTY));
                 drawerAttributes.setItemLocked(LockAttribute.LOCK_POPULATED, attrs.contains(LockAttribute.LOCK_POPULATED));
             }
+        } else {
+            drawerAttributes.setItemLocked(LockAttribute.LOCK_EMPTY, false);
+            drawerAttributes.setItemLocked(LockAttribute.LOCK_POPULATED, false);
         }
 
-        drawerAttributes.setIsConcealed(false);
         if (tag.contains("Shr"))
             drawerAttributes.setIsConcealed(tag.getBoolean("Shr"));
+        else
+            drawerAttributes.setIsConcealed(false);
 
-        drawerAttributes.setIsShowingQuantity(false);
-        if (tag.contains("Qua")) {
+
+        if (tag.contains("Qua"))
             drawerAttributes.setIsShowingQuantity(tag.getBoolean("Qua"));
-        }
+        else
+            drawerAttributes.setIsShowingQuantity(false);
 
         /*owner = null;
         if (tag.hasKey("Own"))
