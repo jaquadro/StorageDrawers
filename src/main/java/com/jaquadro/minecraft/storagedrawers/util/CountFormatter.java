@@ -45,7 +45,7 @@ public class CountFormatter
         String text;
 
         if (count >= 1000000000)
-            text = String.format("%.1fG", count / 1000000f);
+            text = String.format("%.1fG", count / 1000000000f);
         else if (count >= 100000000)
             text = String.format("%.0fM", count / 1000000f);
         else if (count >= 1000000)
