@@ -1,16 +1,21 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
 public class BlockCompDrawers extends BlockDrawers implements INetworked
 {
@@ -62,6 +67,22 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
             return 1;
         else
             return 2;
+    }
+
+    @Override
+    public void onBlockPlacedBy (World world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
+        super.onBlockPlacedBy(world, pos, state, entity, stack);
+
+        TileEntityDrawers tile = getTileEntity(world, pos);
+        if (tile != null) {
+            IDrawerGroup group = tile.getGroup();
+            for (int i = group.getDrawerCount() - 1; i >= 0; i--) {
+                if (!group.getDrawer(i).isEmpty()) {
+                    world.setBlockState(pos, state.with(SLOTS, EnumCompDrawer.byOpenSlots(i + 1)), 3);
+                    break;
+                }
+            }
+        }
     }
 
     /*@Override
