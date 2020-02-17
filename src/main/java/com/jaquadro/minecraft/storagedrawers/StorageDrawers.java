@@ -15,6 +15,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -43,6 +44,7 @@ public class StorageDrawers
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModConfigEvent);
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -71,6 +73,10 @@ public class StorageDrawers
         //compRegistry.initialize();
 
         //LocalIntegrationRegistry.instance().postInit();
+    }
+
+    private void clientSetup (final FMLClientSetupEvent event) {
+        ModBlocks.Registration.bindRenderTypes();
     }
 
     private void onModConfigEvent(final ModConfig.ModConfigEvent event) {

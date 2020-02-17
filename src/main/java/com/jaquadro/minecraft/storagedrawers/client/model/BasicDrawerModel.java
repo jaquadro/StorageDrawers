@@ -47,6 +47,8 @@ public final class BasicDrawerModel
     private static final Map<Direction, IBakedModel> lockOverlaysFull = new HashMap<>();
     private static final Map<Direction, IBakedModel> lockOverlaysHalf = new HashMap<>();
 
+    private static boolean geometryDataLoaded = false;
+
     @Mod.EventBusSubscriber(modid = StorageDrawers.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class Register // extends DefaultRegister
     {
@@ -58,8 +60,21 @@ public final class BasicDrawerModel
             BlockModel unbakedModel = getBlockModel(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_lock.json"));
 
             for (Either<Material, String> x : unbakedModel.textures.values()) {
-                x.ifRight((value) -> event.addSprite(new ResourceLocation(value)));
+                x.ifLeft((value) -> {
+                    if (value.getAtlasLocation().equals(event.getMap().getTextureLocation()))
+                        event.addSprite(value.getTextureLocation());
+                });
+                // x.ifRight((value) -> event.addSprite(new ResourceLocation(value)));
             }
+
+            loadGeometryData();
+        }
+
+        private static void loadGeometryData () {
+            if (geometryDataLoaded)
+                return;
+
+            geometryDataLoaded = true;
 
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_1.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_1.json"),

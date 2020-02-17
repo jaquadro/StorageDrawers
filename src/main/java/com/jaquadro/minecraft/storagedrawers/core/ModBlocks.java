@@ -12,6 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -372,6 +373,14 @@ public class ModBlocks
             ClientRegistry.bindTileEntityRenderer(Tile.STANDARD_DRAWERS_2, TileEntityDrawersRenderer::new);
             ClientRegistry.bindTileEntityRenderer(Tile.STANDARD_DRAWERS_4, TileEntityDrawersRenderer::new);
             ClientRegistry.bindTileEntityRenderer(Tile.FRACTIONAL_DRAWERS_3, TileEntityDrawersRenderer::new);
+        }
+
+        @OnlyIn(Dist.CLIENT)
+        public static void bindRenderTypes () {
+            for (Block block : blockList) {
+                if (block instanceof BlockDrawers)
+                    RenderTypeLookup.setRenderLayer(block, RenderType.getCutoutMipped());
+            }
         }
 
         //@SubscribeEvent
