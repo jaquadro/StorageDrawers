@@ -29,8 +29,10 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -54,6 +56,10 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     //public static final IUnlistedProperty<DrawerStateModelData> STATE_MODEL = UnlistedModelData.create(DrawerStateModelData.class);
 
     private static final VoxelShape AABB_FULL = Block.makeCuboidShape(0, 0, 0, 16, 16, 16);
+    private static final VoxelShape AABB_NORTH_FULL = VoxelShapes.combineAndSimplify(AABB_FULL, Block.makeCuboidShape(1, 1, 0, 15, 15, 1), IBooleanFunction.ONLY_FIRST);
+    private static final VoxelShape AABB_SOUTH_FULL = VoxelShapes.combineAndSimplify(AABB_FULL, Block.makeCuboidShape(1, 1, 15, 15, 15, 16), IBooleanFunction.ONLY_FIRST);
+    private static final VoxelShape AABB_WEST_FULL = VoxelShapes.combineAndSimplify(AABB_FULL, Block.makeCuboidShape(0, 1, 1, 1, 15, 15), IBooleanFunction.ONLY_FIRST);
+    private static final VoxelShape AABB_EAST_FULL = VoxelShapes.combineAndSimplify(AABB_FULL, Block.makeCuboidShape(15, 1, 1, 16, 15, 15), IBooleanFunction.ONLY_FIRST);
     private static final VoxelShape AABB_NORTH_HALF = Block.makeCuboidShape(0, 0, 8, 16, 16, 16);
     private static final VoxelShape AABB_SOUTH_HALF = Block.makeCuboidShape(0, 0, 0, 16, 16, 8);
     private static final VoxelShape AABB_WEST_HALF = Block.makeCuboidShape(8, 0, 0, 16, 16, 16);
@@ -146,22 +152,21 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
     @Override
     public VoxelShape getShape (BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        if (!halfDepth)
-            return AABB_FULL;
-
         Direction direction = state.get(HORIZONTAL_FACING);
         switch (direction) {
             case EAST:
-                return AABB_EAST_HALF;
+                return halfDepth ? AABB_EAST_HALF : AABB_EAST_FULL;
             case WEST:
-                return AABB_WEST_HALF;
+                return halfDepth ? AABB_WEST_HALF : AABB_WEST_FULL;
             case SOUTH:
-                return AABB_SOUTH_HALF;
+                return halfDepth ? AABB_SOUTH_HALF : AABB_SOUTH_FULL;
             case NORTH:
             default:
-                return AABB_NORTH_HALF;
+                return halfDepth ? AABB_NORTH_HALF : AABB_NORTH_FULL;
         }
     }
+
+
 
     @Override
     public BlockState getStateForPlacement (BlockItemUseContext context) {
@@ -245,11 +250,11 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     public ActionResultType onBlockActivated (BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack item = player.getHeldItem(hand);
         if (hand == Hand.OFF_HAND)
-            return ActionResultType.CONSUME;
+            return ActionResultType.PASS;
 
         if (world.isRemote && Util.milliTime() == ignoreEventTime) {
             ignoreEventTime = 0;
-            return ActionResultType.CONSUME;
+            return ActionResultType.PASS;
         }
 
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, pos);
@@ -362,7 +367,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         }
 
         if (state.get(HORIZONTAL_FACING) != hit.getFace())
-            return ActionResultType.CONSUME;
+            return ActionResultType.PASS;
 
         //if (tileDrawers.isSealed())
         //    return false;
