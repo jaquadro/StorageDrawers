@@ -51,7 +51,10 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         if (!(state.getBlock() instanceof BlockDrawers))
             return;
 
-        //combinedLight = 15728880;
+        if (tile.upgrades().hasIlluminationUpgrade()) {
+            int blockLight = Math.max(combinedLight % 65536, 208);
+            combinedLight = (combinedLight & 0xFFFF0000) | blockLight;
+        }
 
         renderItem = Minecraft.getInstance().getItemRenderer();
         Direction side = state.get(BlockDrawers.HORIZONTAL_FACING);

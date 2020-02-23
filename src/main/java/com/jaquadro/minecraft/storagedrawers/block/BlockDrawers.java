@@ -290,14 +290,14 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                     if (!world.isRemote)
                         player.sendStatusMessage(new TranslationTextComponent("message.storagedrawers.cannot_add_upgrade"), true);
 
-                    return false;
+                    return ActionResultType.PASS;
                 }
 
                 if (!tileDrawers.upgrades().addUpgrade(item)) {
                     if (!world.isRemote)
                         player.sendStatusMessage(new TranslationTextComponent("message.storagedrawers.max_upgrades"), true);
 
-                    return false;
+                    return ActionResultType.PASS;
                 }
 
                 world.notifyBlockUpdate(pos, state, state, 3);
@@ -308,7 +308,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                         player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
                 }
 
-                return true;
+                return ActionResultType.SUCCESS;
             }
             /*else if (item.getItem() instanceof ItemPersonalKey) {
                 String securityKey = ((ItemPersonalKey) item.getItem()).getSecurityProviderKey(item.getItemDamage());
