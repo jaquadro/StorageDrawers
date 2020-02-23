@@ -12,6 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -173,8 +174,18 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
     //    return materialData;
     //}
 
+
+    @Override
+    public boolean isGroupValid () {
+        return !isRemoved();
+    }
+
     public int getDrawerCapacity () {
-        return ((BlockDrawers)getBlockState().getBlock()).getStorageUnits();
+        Block block = getBlockState().getBlock();
+        if (!(block instanceof BlockDrawers))
+            return 0;
+
+        return ((BlockDrawers)block).getStorageUnits();
     }
 
     public int getEffectiveDrawerCapacity () {

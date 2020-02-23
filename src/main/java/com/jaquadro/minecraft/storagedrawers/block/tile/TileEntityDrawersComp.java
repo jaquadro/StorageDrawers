@@ -88,6 +88,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         @Override
+        public boolean isGroupValid () {
+            return TileEntityDrawersComp.this.isGroupValid();
+        }
+
+        @Override
         protected void log (String message) {
             if (!getWorld().isRemote && CommonConfig.GENERAL.debugTrace.get())
                 StorageDrawers.log.info(message);
