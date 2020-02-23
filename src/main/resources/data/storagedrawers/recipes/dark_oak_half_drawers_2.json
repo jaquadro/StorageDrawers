@@ -7,7 +7,7 @@
     ],
     "key": {
         "/": { "item": "minecraft:dark_oak_slab" },
-        "X": { "tag": "forge:chests" }
+        "X": { "tag": "forge:chests/wooden" }
     },
     "result": { "item": "storagedrawers:dark_oak_half_drawers_2", "count": 2 }
 }

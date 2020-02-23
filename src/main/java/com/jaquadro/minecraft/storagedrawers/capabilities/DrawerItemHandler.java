@@ -22,12 +22,16 @@ public class DrawerItemHandler implements IItemHandler
 
     @Override
     public int getSlots () {
+        if (!group.isGroupValid())
+            return 0;
         return group.getDrawerCount() + 1;
     }
 
     @Override
     @Nonnull
     public ItemStack getStackInSlot (int slot) {
+        if (!group.isGroupValid())
+            return ItemStack.EMPTY;
         if (slotIsVirtual(slot))
             return ItemStack.EMPTY;
 
@@ -48,6 +52,9 @@ public class DrawerItemHandler implements IItemHandler
     @Override
     @Nonnull
     public ItemStack insertItem (int slot, @Nonnull ItemStack stack, boolean simulate) {
+        if (!group.isGroupValid())
+            return stack;
+
         if (slotIsVirtual(slot)) {
             //if (StorageDrawers.config.cache.enableItemConversion)
             //    return insertItemFullScan(stack, simulate);
@@ -112,6 +119,8 @@ public class DrawerItemHandler implements IItemHandler
     @Override
     @Nonnull
     public ItemStack extractItem (int slot, int amount, boolean simulate) {
+        if (!group.isGroupValid())
+            return ItemStack.EMPTY;
         if (slotIsVirtual(slot))
             return ItemStack.EMPTY;
 
@@ -133,6 +142,8 @@ public class DrawerItemHandler implements IItemHandler
 
     @Override
     public int getSlotLimit (int slot) {
+        if (!group.isGroupValid())
+            return 0;
         if (slotIsVirtual(slot))
             return Integer.MAX_VALUE;
 

@@ -1,0 +1,19 @@
+{
+    "type": "storagedrawers:dark_oak_trim",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "storagedrawers:dark_oak_trim"
+                }
+            ],
+            "conditions": [
+                {
+                    "condition": "minecraft:survives_explosion"
+                }
+            ]
+        }
+    ]
+}

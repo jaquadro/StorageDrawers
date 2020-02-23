@@ -37,6 +37,11 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
         this(ModBlocks.Tile.CONTROLLER_SLAVE);
     }
 
+    @Override
+    public boolean isGroupValid () {
+        return !isRemoved();
+    }
+
     public void bindController (BlockPos coord) {
         if (controllerData.bindCoord(coord))
             markDirty();

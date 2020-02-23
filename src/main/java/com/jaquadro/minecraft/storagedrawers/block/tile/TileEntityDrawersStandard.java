@@ -129,6 +129,11 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
             return new StandardDrawerData(this, slot);
         }
 
+        @Override
+        public boolean isGroupValid () {
+            return TileEntityDrawersStandard.this.isGroupValid();
+        }
+
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability (@Nonnull Capability<T> capability, @Nullable Direction facing) {

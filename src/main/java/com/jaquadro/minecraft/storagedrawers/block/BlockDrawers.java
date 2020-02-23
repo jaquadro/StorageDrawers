@@ -12,6 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -283,25 +284,25 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 }
 
                 return true;
-            }
-            else if (item.getItem() instanceof ItemUpgrade) {
+            }*/
+            if (item.getItem() instanceof ItemUpgrade) {
                 if (!tileDrawers.upgrades().canAddUpgrade(item)) {
                     if (!world.isRemote)
-                        player.sendStatusMessage(new TextComponentTranslation("storagedrawers.msg.cannotAddUpgrade"), true);
+                        player.sendStatusMessage(new TranslationTextComponent("message.storagedrawers.cannot_add_upgrade"), true);
 
                     return false;
                 }
 
                 if (!tileDrawers.upgrades().addUpgrade(item)) {
                     if (!world.isRemote)
-                        player.sendStatusMessage(new TextComponentTranslation("storagedrawers.msg.maxUpgrades"), true);
+                        player.sendStatusMessage(new TranslationTextComponent("message.storagedrawers.max_upgrades"), true);
 
                     return false;
                 }
 
                 world.notifyBlockUpdate(pos, state, state, 3);
 
-                if (!player.capabilities.isCreativeMode) {
+                if (!player.isCreative()) {
                     item.shrink(1);
                     if (item.getCount() <= 0)
                         player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
@@ -309,7 +310,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
                 return true;
             }
-            else if (item.getItem() instanceof ItemPersonalKey) {
+            /*else if (item.getItem() instanceof ItemPersonalKey) {
                 String securityKey = ((ItemPersonalKey) item.getItem()).getSecurityProviderKey(item.getItemDamage());
                 ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
 
@@ -324,9 +325,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 else
                     return false;
                 return true;
-            }
-            else if (item.getItem() == ModItems.tape)
-                return false;*/
+            }*/
         }
         else if (item.isEmpty() && player.isShiftKeyDown()) {
             /*if (tileDrawers.isSealed()) {
@@ -568,6 +567,11 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         if (hasContents) {
             CompoundNBT tiledata = new CompoundNBT();
             tile.write(tiledata);
+
+            tiledata.remove("x");
+            tiledata.remove("y");
+            tiledata.remove("z");
+
             data.put("tile", tiledata);
             drop.setTag(data);
         }

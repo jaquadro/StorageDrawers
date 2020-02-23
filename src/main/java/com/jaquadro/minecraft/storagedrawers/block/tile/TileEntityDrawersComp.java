@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.FractionalDrawerGroup;
@@ -62,6 +63,19 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         return null;
     }
 
+    @Override
+    protected boolean emptySlotCanBeCleared (int slot) {
+        if (slot != 0)
+            return false;
+
+        if (getGroup() instanceof FractionalDrawerGroup) {
+            FractionalDrawerGroup fracGroup = (FractionalDrawerGroup)getGroup();
+            return !getGroup().getDrawer(0).isEmpty() && fracGroup.getPooledCount() == 0;
+        }
+
+        return false;
+    }
+
     private class GroupData extends FractionalDrawerGroup
     {
         public GroupData (int slotCount) {
@@ -71,6 +85,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         @Override
         protected World getWorld () {
             return TileEntityDrawersComp.this.getWorld();
+        }
+
+        @Override
+        public boolean isGroupValid () {
+            return TileEntityDrawersComp.this.isGroupValid();
         }
 
         @Override

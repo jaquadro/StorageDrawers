@@ -27,6 +27,13 @@ public interface IDrawerGroup extends ICapabilityProvider
     @Nonnull
     int[] getAccessibleDrawerSlots ();
 
+    /**
+     * Checks if the group is still valid to use (e.g. if a backing tile is still present)
+     */
+    default boolean isGroupValid () {
+        return true;
+    };
+
     @Nonnull
     @Override
     default <T> LazyOptional<T> getCapability (@Nonnull final Capability<T> cap, final @Nullable Direction side) {

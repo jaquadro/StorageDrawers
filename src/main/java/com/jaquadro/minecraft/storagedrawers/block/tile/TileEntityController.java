@@ -176,6 +176,11 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
             getWorld().getPendingBlockTicks().scheduleTick(getPos(), ModBlocks.CONTROLLER, 1, TickPriority.NORMAL);
     }
 
+    @Override
+    public boolean isGroupValid () {
+        return !isRemoved();
+    }
+
     public int interactPutItemsIntoInventory (PlayerEntity player) {
         boolean dumpInventory = getWorld().getGameTime() - lastClickTime < 10 && player.getUniqueID().equals(lastClickUUID);
         int count = 0;
@@ -555,7 +560,7 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
 
     protected IDrawerGroup getGroupForSlotRecord (SlotRecord record) {
         IDrawerGroup group = record.group;
-        if (group == null)
+        if (group == null || !group.isGroupValid())
             return null;
 
         if (group instanceof TileEntity) {

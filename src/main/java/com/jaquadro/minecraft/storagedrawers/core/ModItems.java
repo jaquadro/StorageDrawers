@@ -26,6 +26,7 @@ public class ModItems
         REDSTONE_UPGRADE = null,
         MIN_REDSTONE_UPGRADE = null,
         MAX_REDSTONE_UPGRADE = null,
+        ILLUMINATION_UPGRADE = null,
         UPGRADE_TEMPLATE = null,
         DRAWER_KEY = null,
         QUANTIFY_KEY = null;
@@ -75,6 +76,7 @@ public class ModItems
             register(event, "redstone_upgrade", new ItemUpgradeRedstone(EnumUpgradeRedstone.COMBINED, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
             register(event, "min_redstone_upgrade", new ItemUpgradeRedstone(EnumUpgradeRedstone.MIN, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
             register(event, "max_redstone_upgrade", new ItemUpgradeRedstone(EnumUpgradeRedstone.MAX, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
+            register(event, "illumination_upgrade", new ItemUpgrade(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
             register(event, "upgrade_template", new Item(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
             register(event, "drawer_key", new ItemDrawerKey(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
             register(event, "quantify_key", new ItemQuantifyKey(new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS)));
