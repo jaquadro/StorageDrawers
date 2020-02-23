@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[24,)"
+loaderVersion="[30,)"
 issueTrackerURL="https://github.com/jaquadro/StorageDrawers/issues"
 displayURL="https://minecraft.curseforge.com/projects/storagedrawers"
 authors="Texelsaur"
@@ -15,13 +15,13 @@ authors="Texelsaur"
 [[dependencies.storagedrawers]]
     modId="forge"
     mandatory=true
-    versionRange="[24,)"
+    versionRange="[30,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.storagedrawers]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.14,)"
+    versionRange="[1.15,)"
     ordering="NONE"
     side="BOTH"

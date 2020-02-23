@@ -172,7 +172,7 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
 
             //IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
             IBakedModel itemModel = renderItem.getItemModelWithOverrides(itemStack, null, null);
-            boolean render3D = itemModel.func_230044_c_();
+            boolean render3D = itemModel.isGui3d(); // itemModel.func_230044_c_();
             finish.accept(buffer);
 
             if (render3D)
