@@ -54,7 +54,12 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         int ambLight = getWorld().getCombinedLight(tile.getPos().offset(side), 0);
         int lu = ambLight % 65536;
         int lv = ambLight / 65536;
-        GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (float)lu, (float)lv);
+
+        if (tile.upgrades().hasIlluminationUpgrade())
+            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (float)Math.max(208, lu), (float)lv);
+        else
+            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (float)lu, (float)lv);
+
 
         //ChamRender renderer = ChamRenderManager.instance.getRenderer(Tessellator.getInstance().getBuffer());
 

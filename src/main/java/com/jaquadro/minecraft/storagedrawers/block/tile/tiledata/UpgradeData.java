@@ -26,6 +26,7 @@ public class UpgradeData extends TileDataShim
     private boolean hasUnlimited;
     private boolean hasVending;
     private boolean hasConversion;
+    private boolean hasIllumination;
 
     private IDrawerAttributesModifiable attrs;
 
@@ -148,6 +149,10 @@ public class UpgradeData extends TileDataShim
         return hasConversion;
     }
 
+    public boolean hasIlluminationUpgrade () {
+        return hasIllumination;
+    }
+
     private int getNextUpgradeSlot () {
         for (int i = 0; i < upgrades.length; i++) {
             if (upgrades[i].isEmpty())
@@ -170,6 +175,7 @@ public class UpgradeData extends TileDataShim
         hasUnlimited = false;
         hasVending = false;
         hasConversion = false;
+        hasIllumination = false;
 
         for (ItemStack stack : upgrades) {
             Item item = stack.getItem();
@@ -183,6 +189,8 @@ public class UpgradeData extends TileDataShim
                 hasUnlimited = true;
             else if (item == ModItems.CREATIVE_VENDING_UPGRADE)
                 hasVending = true;
+            else if (item == ModItems.ILLUMINATION_UPGRADE)
+                hasIllumination = true;
         }
 
         attrs.setIsVoid(hasVoid);

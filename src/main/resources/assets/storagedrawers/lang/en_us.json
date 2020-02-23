@@ -68,6 +68,8 @@
     "item.storagedrawers.creative_vending_upgrade.desc": "Unlimited item withdrawal",
     "item.storagedrawers.conversion_upgrade": "Conversion Upgrade",
     "item.storagedrawers.conversion_upgrade.desc": "Auto-converts compatible items",
+    "item.storagedrawers.illumination_upgrade": "Illumination Upgrade",
+    "item.storagedrawers.illumination_upgrade.desc": "Illuminates drawer labels in the dark",
     "item.storagedrawers.redstone_upgrade": "Redstone Upgrade",
     "item.storagedrawers.redstone_upgrade.desc": "Emits signal for total storage",
     "item.storagedrawers.min_redstone_upgrade": "Min Redstone Upgrade",
