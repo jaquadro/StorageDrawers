@@ -562,6 +562,11 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         if (hasContents) {
             CompoundNBT tiledata = new CompoundNBT();
             tile.write(tiledata);
+
+            tiledata.remove("x");
+            tiledata.remove("y");
+            tiledata.remove("z");
+
             data.put("tile", tiledata);
             drop.setTag(data);
         }
