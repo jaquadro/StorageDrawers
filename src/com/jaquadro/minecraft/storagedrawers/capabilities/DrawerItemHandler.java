@@ -92,7 +92,7 @@ public class DrawerItemHandler implements IItemHandler
             return stack;
 
         if (drawer.isEmpty() && !simulate)
-            drawer.setStoredItem(stack);
+            drawer = drawer.setStoredItem(stack);
 
         boolean empty = drawer.isEmpty();
         int remainder = (simulate)

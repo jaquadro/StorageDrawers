@@ -70,6 +70,11 @@ public class ItemDrawers extends ItemBlock
     }
 
     @Override
+    public int getItemBurnTime (ItemStack itemStack) {
+        return 0;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public void addInformation (@Nonnull ItemStack itemStack, @Nullable World world, List<String> list, ITooltipFlag advanced) {
         if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("material")) {
