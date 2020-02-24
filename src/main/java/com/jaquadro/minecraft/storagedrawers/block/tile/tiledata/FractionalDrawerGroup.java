@@ -358,7 +358,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         }
 
         public boolean canItemBeStored (int slot, @Nonnull ItemStack itemPrototype, Predicate<ItemStack> predicate) {
-            if (protoStack[slot].isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
+            if (protoStack[slot].isEmpty() && protoStack[0].isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
                 return true;
 
             if (predicate == null)
