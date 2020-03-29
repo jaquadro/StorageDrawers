@@ -53,6 +53,11 @@ public final class BasicDrawerModel
             if (event.getMap() != Minecraft.getInstance().getTextureMap())
                 return;
 
+            if (ModBlocks.OAK_FULL_DRAWERS_1 == null) {
+                StorageDrawers.log.warn("Block objects not set in TextureStitchEvent.  Is your mod environment broken?");
+                return;
+            }
+
             BlockModel unbakedModel = getBlockModel(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_lock.json"));
 
             for (String x : unbakedModel.textures.values()) {
@@ -159,6 +164,11 @@ public final class BasicDrawerModel
             lockOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y180, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
             lockOverlaysHalf.put(Direction.WEST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y270, Minecraft.getInstance().getTextureMap()::getSprite, DefaultVertexFormats.BLOCK));
 
+            if (ModBlocks.OAK_FULL_DRAWERS_1 == null) {
+                StorageDrawers.log.warn("Block objects not set in ModelBakeEvent.  Is your mod environment broken?");
+                return;
+            }
+
             replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_1);
             replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_2);
             replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_4);
@@ -204,12 +214,16 @@ public final class BasicDrawerModel
             for (BlockState state : block.getStateContainer().getValidStates()) {
                 ModelResourceLocation modelResource = BlockModelShapes.getModelLocation(state);
                 IBakedModel parentModel = event.getModelManager().getModel(modelResource);
-                if (parentModel != event.getModelManager().getMissingModel()) {
-                    if (block.isHalfDepth())
-                        event.getModelRegistry().put(modelResource, new Model2.HalfModel(parentModel));
-                    else
-                        event.getModelRegistry().put(modelResource, new Model2.FullModel(parentModel));
-                }
+                if (parentModel == null) {
+                    StorageDrawers.log.warn("Got back null model from ModelBakeEvent.ModelManager for resource " + modelResource.toString());
+                    continue;
+                } else if (parentModel == event.getModelManager().getMissingModel())
+                    continue;
+
+                if (block.isHalfDepth())
+                    event.getModelRegistry().put(modelResource, new Model2.HalfModel(parentModel));
+                else
+                    event.getModelRegistry().put(modelResource, new Model2.FullModel(parentModel));
             }
         }
 
