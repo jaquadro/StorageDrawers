@@ -590,6 +590,9 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         @Nonnull
         @Override
         public IDrawer setStoredItem (@Nonnull ItemStack itemPrototype) {
+            if (ItemStackHelper.isStackEncoded(itemPrototype))
+                itemPrototype = ItemStackHelper.decodeItemStackPrototype(itemPrototype);
+
             return storage.setStoredItem(slot, itemPrototype);
         }
 

@@ -89,25 +89,39 @@ public class ItemStackHelper
     }
 
     public static ItemStack decodeItemStack (@Nonnull ItemStack stack) {
+        int count = ItemStackHelper.decodedCount(stack);
+        ItemStack decode = ItemStackHelper.stripDecoding(stack);
+        decode.setCount(count);
+        return decode;
+    }
+
+    public static ItemStack decodeItemStackPrototype (@Nonnull ItemStack stack) {
+        ItemStack decode = ItemStackHelper.stripDecoding(stack);
+        decode.setCount(1);
+        return decode;
+    }
+
+    public static int decodedCount (@Nonnull ItemStack stack) {
         CompoundNBT tag = stack.getTag();
-        if (tag == null)
-            return stack;
+        if (tag != null && tag.contains("__storagedrawers_count"))
+            return tag.getInt("__storagedrawers_count");
 
-        if (tag.contains("__storagedrawers_count")) {
-            ItemStack decode = stack.copy();
-            decode.setCount(tag.getInt("__storagedrawers_count"));
+        return stack.getCount();
+    }
 
-            tag = decode.getTag();
-            if (tag != null) {
-                decode.getTag().remove("__storagedrawers_count");
-                if (tag.size() == 0)
-                    decode.setTag(null);
-            }
+    public static ItemStack stripDecoding (@Nonnull ItemStack stack) {
+        ItemStack decode = stack.copy();
+        CompoundNBT tag = decode.getTag();
 
-            return decode;
+        if (tag != null && tag.contains("__storagedrawers_count")) {
+            tag.remove("__storagedrawers_count");
+            if (tag.size() == 0)
+                decode.setTag(null);
+            else
+                decode.setTag(tag);
         }
 
-        return stack;
+        return decode;
     }
 
     public static boolean isStackEncoded (@Nonnull ItemStack stack) {
