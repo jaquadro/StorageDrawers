@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
-/*
+
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
@@ -111,4 +111,3 @@ public class Waila implements IWailaPlugin
         }
     }
 }
-*/
