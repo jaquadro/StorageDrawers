@@ -113,6 +113,7 @@ public class StorageDrawers
             config.syncConfig();
         if (event.isWorldRunning() && preShiftValue != config.cache.invertShift) {
             StorageDrawers.network.sendToServer(new BoolConfigUpdateMessage(FMLClientHandler.instance().getClientPlayerEntity().getUniqueID().toString(), "invertShift", config.cache.invertShift));
+            StorageDrawers.network.sendToServer(new BoolConfigUpdateMessage(FMLClientHandler.instance().getClientPlayerEntity().getUniqueID().toString(), "invertClick", config.cache.invertClick));
         }
     }
 

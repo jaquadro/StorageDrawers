@@ -48,14 +48,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -228,12 +225,60 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         }
     }
 
+    private boolean isInvertedHand (EntityPlayer player) {
+        Map<String, PlayerConfigSetting<?>> configSettings = ConfigManager.serverPlayerConfigSettings.get(player.getUniqueID());
+        boolean invertHand = StorageDrawers.config.cache.invertClick;
+        if (configSettings != null) {
+            PlayerConfigSetting<Boolean> setting = (PlayerConfigSetting<Boolean>) configSettings.get("invertClick");
+            if (setting != null) {
+                invertHand = setting.value;
+            }
+        }
+
+        return invertHand;
+    }
+
     @Override
     public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        ItemStack item = player.getHeldItem(hand);
         if (hand == EnumHand.OFF_HAND)
             return false;
 
+        if (!isInvertedHand(player))
+            return insertOrApplyItem(world, pos, state, player, side, hitX, hitY, hitZ);
+
+        extractItem(world, pos, player, side, hitX, hitY, hitZ);
+        return true;
+    }
+
+    @Override
+    public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn) {
+        if (worldIn.isRemote)
+            return;
+        if (StorageDrawers.config.cache.debugTrace)
+            StorageDrawers.log.info("onBlockClicked");
+
+        RayTraceResult rayResult = net.minecraftforge.common.ForgeHooks.rayTraceEyes(playerIn, ((EntityPlayerMP) playerIn).interactionManager.getBlockReachDistance() + 1);
+        if (rayResult == null)
+            return;
+
+        EnumFacing side = rayResult.sideHit;
+
+        // adjust hitVec for drawers
+        float hitX = (float)(rayResult.hitVec.x - pos.getX());
+        float hitY = (float)(rayResult.hitVec.y - pos.getY());
+        float hitZ = (float)(rayResult.hitVec.z - pos.getZ());
+
+        if (!isInvertedHand(playerIn)) {
+            if (worldIn.isRemote)
+                return;
+            extractItem(worldIn, pos, playerIn, side, hitX, hitY, hitZ);
+        }
+        else
+            insertOrApplyItem(worldIn, pos, worldIn.getBlockState(pos), playerIn, side, hitX, hitY, hitZ);
+    }
+
+    public boolean insertOrApplyItem (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+        ItemStack item = player.getHeldItem(EnumHand.MAIN_HAND);
         if (world.isRemote && Minecraft.getSystemTime() == ignoreEventTime) {
             ignoreEventTime = 0;
             return false;
@@ -330,7 +375,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         tileDrawers.interactPutItemsIntoSlot(slot, player);
 
         if (item.isEmpty())
-            player.setHeldItem(hand, ItemStack.EMPTY);
+            player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 
         return true;
     }
@@ -358,26 +403,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         }
     }
 
-    @Override
-    public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn) {
-        if (worldIn.isRemote) {
-            return;
-        }
-
-        if (StorageDrawers.config.cache.debugTrace)
-            StorageDrawers.log.info("onBlockClicked");
-
-        RayTraceResult rayResult = net.minecraftforge.common.ForgeHooks.rayTraceEyes(playerIn, ((EntityPlayerMP) playerIn).interactionManager.getBlockReachDistance() + 1);
-        if (rayResult == null)
-            return;
-
-        EnumFacing side = rayResult.sideHit;
-
-        // adjust hitVec for drawers
-        float hitX = (float)(rayResult.hitVec.x - pos.getX());
-        float hitY = (float)(rayResult.hitVec.y - pos.getY());
-        float hitZ = (float)(rayResult.hitVec.z - pos.getZ());
-
+    public void extractItem(World worldIn, BlockPos pos, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileEntityDrawers tileDrawers = getTileEntitySafe(worldIn, pos);
         if (tileDrawers.getDirection() != side.ordinal())
             return;

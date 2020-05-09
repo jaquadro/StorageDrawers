@@ -76,6 +76,7 @@ public class ConfigManager
         public boolean enableFallbackRecipes;
         public boolean enableFramedDrawers;
         public boolean invertShift;
+        public boolean invertClick;
         public boolean debugTrace;
         public boolean stackRemainderWaila;
         public boolean registerExtraCompRules;
@@ -154,6 +155,9 @@ public class ConfigManager
         cache.invertShift = config.get(Configuration.CATEGORY_GENERAL, "invertShift", false,
             "Inverts how shift works with drawers. If this is true, shifting will only give one item, where regular clicks will give a full stack. Leave false for default behavior.")
             .setLanguageKey(LANG_PREFIX + "prop.invertShift").getBoolean();
+        cache.invertClick = config.get(Configuration.CATEGORY_GENERAL, "invertClick", false,
+            "Inverts left and right click action on drawers.  If this is true, left click will insert items and right click will extract items.  Leave false for default behavior.")
+            .setLanguageKey(LANG_PREFIX + "prop.invertClick").getBoolean();
         cache.debugTrace = config.get(Configuration.CATEGORY_GENERAL, "enableDebugLogging", false,
             "Writes additional log messages while using the mod.  Mainly for debug purposes.  Should be kept disabled unless instructed otherwise.")
             .setLanguageKey(LANG_PREFIX + "prop.enableDebugLogging").getBoolean();
