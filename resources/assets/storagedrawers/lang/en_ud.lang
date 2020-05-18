@@ -1,0 +1,209 @@
+
+itemGroup.storagedrawers=sɹǝʍɐɹᗡ ǝᵷɐɹoʇS
+itemGroup.storagedrawersSorting=ᵷuᴉʇɹoS - sɹǝʍɐɹᗡ ǝᵷɐɹoʇS
+
+storagedrawers.container.drawers=sɹǝʍɐɹᗡ
+storagedrawers.container.compDrawers=sɹǝʍɐɹᗡ ᵷuᴉʇɔɐdɯoƆ
+storagedrawers.container.upgrades=sǝpɐɹᵷd∩
+storagedrawers.container.controller=ɹǝꞁꞁoɹʇuoƆ ɹǝʍɐɹᗡ
+storagedrawers.container.unboundSlave=ǝʌɐꞁS punoqu∩
+storagedrawers.container.framingTable=ǝꞁqɐ⟘ ᵷuᴉɯɐɹℲ
+
+storagedrawers.msg.maxUpgrades=˙sǝpɐɹᵷdn ǝɹoɯ ʎuɐ ʇdǝɔɔɐ ʇouuɐɔ ɹǝʍɐɹp sᴉɥ⟘
+storagedrawers.msg.cannotAddUpgrade=˙ɹǝʍɐɹp sᴉɥʇ uᴉ pǝꞁꞁɐʇsuᴉ ǝq ʇouuɐɔ ǝpɐɹᵷdn ʇɐɥ⟘
+
+item.storagedrawers.upgradeTemplate.name=ǝʇɐꞁdɯǝ⟘ ǝpɐɹᵷd∩
+item.storagedrawers.upgradeStorage.obsidian.name=(I) ǝpɐɹᵷd∩ ǝᵷɐɹoʇS
+item.storagedrawers.upgradeStorage.iron.name=(II) ǝpɐɹᵷd∩ ǝᵷɐɹoʇS
+item.storagedrawers.upgradeStorage.gold.name=(III) ǝpɐɹᵷd∩ ǝᵷɐɹoʇS
+item.storagedrawers.upgradeStorage.diamond.name=(ᴧI) ǝpɐɹᵷd∩ ǝᵷɐɹoʇS
+item.storagedrawers.upgradeStorage.emerald.name=(ᴧ) ǝpɐɹᵷd∩ ǝᵷɐɹoʇS
+item.storagedrawers.upgradeOneStack.name=ǝpɐɹᵷuʍoᗡ ǝᵷɐɹoʇS
+item.storagedrawers.upgradeOneStack.description=ʞɔɐʇs ǝꞁᵷuᴉs ɐ oʇ ǝᵷɐɹoʇs ǝsɐq sǝɔnpǝᴚ
+item.storagedrawers.upgradeStatus.level1.name=(I) ǝpɐɹᵷd∩ snʇɐʇS
+item.storagedrawers.upgradeStatus.level1.description=ǝᵷɐɹoʇs ꞁꞁnɟ sʍoɥS
+item.storagedrawers.upgradeStatus.level2.name=(II) ǝpɐɹᵷd∩ snʇɐʇS
+item.storagedrawers.upgradeStatus.level2.description=ꞁǝʌǝꞁ ꞁꞁᴉɟ sʍoɥS
+item.storagedrawers.upgradeVoid.name=ǝpɐɹᵷd∩ pᴉoᴧ
+item.storagedrawers.upgradeVoid.description=sɯǝʇᴉ ssǝɔxǝ sʎoɹʇsǝᗡ
+item.storagedrawers.upgradeConversion.name=ǝpɐɹᵷd∩ uoᴉsɹǝʌuoƆ
+item.storagedrawers.upgradeConversion.description=sɯǝʇᴉ ǝꞁqᴉʇɐdɯoɔ sʇɹǝʌuoɔ-oʇnⱯ
+item.storagedrawers.upgradeCreative.store.name=ǝpɐɹᵷd∩ ǝᵷɐɹoʇS ǝʌᴉʇɐǝɹƆ
+item.storagedrawers.upgradeCreative.store.description=ǝᵷɐɹoʇs ǝʇᴉuᴉɟuᴉ-ɹɐǝN
+item.storagedrawers.upgradeCreative.vend.name=ǝpɐɹᵷd∩ ᵷuᴉpuǝᴧ ǝʌᴉʇɐǝɹƆ
+item.storagedrawers.upgradeCreative.vend.description=ꞁɐʍɐɹpɥʇᴉʍ ɯǝʇᴉ pǝʇᴉɯᴉꞁu∩
+item.storagedrawers.upgradeRedstone.combined.name=ǝpɐɹᵷd∩ ǝuoʇspǝᴚ
+item.storagedrawers.upgradeRedstone.combined.description=˙ǝᵷɐɹoʇs ꞁɐʇoʇ ɹoɟ ꞁɐuᵷᴉs sʇᴉɯƎ
+item.storagedrawers.upgradeRedstone.max.name=ǝpɐɹᵷd∩ xɐW ǝuoʇspǝᴚ
+item.storagedrawers.upgradeRedstone.max.description=˙ʇoꞁs ꞁꞁnɟ ʇsoɯ ɹoɟ ꞁɐuᵷᴉs sʇᴉɯƎ
+item.storagedrawers.upgradeRedstone.min.name=ǝpɐɹᵷd∩ uᴉW ǝuoʇspǝᴚ
+item.storagedrawers.upgradeRedstone.min.description=˙ʇoꞁs ꞁꞁnɟ ʇsɐǝꞁ ɹoɟ ꞁɐuᵷᴉs sʇᴉɯƎ
+item.storagedrawers.drawerKey.name=ʎǝʞ ɹǝʍɐɹᗡ
+item.storagedrawers.drawerKey.description=sɹǝʍɐɹp pǝɔɐꞁd-ʎꞁʍǝu ʞɔoꞁ oʇ puɐɥ-ɟɟo uᴉ pꞁoH\nsɹǝʍɐɹp sʞɔoꞁun puɐ sʞɔoꞀ
+item.storagedrawers.shroudKey.name=ʎǝʞ ʇuǝɯꞁɐǝɔuoƆ
+item.storagedrawers.shroudKey.description=sꞁǝqɐꞁ ɯǝʇᴉ ǝpᴉɥ ɹo ʍoɥS
+item.storagedrawers.quantifyKey.name=ʎǝʞ ʎɟᴉʇuɐnΌ
+item.storagedrawers.quantifyKey.description=sꞁǝqɐꞁ ʎʇᴉʇuɐnb pǝɹoʇs ǝpᴉɥ ɹo ʍoɥS
+item.storagedrawers.personalKey.name=ʎǝʞ ꞁɐuosɹǝԀ
+item.storagedrawers.personalKey.description=sɹǝʎɐꞁd ɹǝɥʇo ɯoɹɟ ssǝɔɔɐ ʇɔǝʇoɹԀ
+item.storagedrawers.tape.name=ǝdɐ⟘ ᵷuᴉʞɔɐԀ
+item.storagedrawers.tape.description=ᵷuᴉʌoɯ ɹoɟ sɹǝʍɐɹp sꞁɐǝS
+
+tile.basicDrawers.fulldrawers1.name=ɹǝʍɐɹᗡ ɔᴉsɐᗺ
+tile.basicDrawers.fulldrawers2.name=ᘔx⥝ sɹǝʍɐɹᗡ ɔᴉsɐᗺ
+tile.basicDrawers.fulldrawers4.name=ᘔxᘔ sɹǝʍɐɹᗡ ɔᴉsɐᗺ
+tile.basicDrawers.halfdrawers2.name=ᘔx⥝ sɹǝʍɐɹᗡ ɟꞁɐH
+tile.basicDrawers.halfdrawers4.name=ᘔxᘔ sɹǝʍɐɹᗡ ɟꞁɐH
+
+tile.customDrawers.fulldrawers1.name=ɹǝʍɐɹᗡ pǝɯɐɹℲ
+tile.customDrawers.fulldrawers2.name=ᘔx⥝ sɹǝʍɐɹᗡ pǝɯɐɹℲ
+tile.customDrawers.fulldrawers4.name=ᘔxᘔ sɹǝʍɐɹᗡ pǝɯɐɹℲ
+tile.customDrawers.halfdrawers2.name=ᘔx⥝ sɹǝʍɐɹᗡ ɟꞁɐH pǝɯɐɹℲ
+tile.customDrawers.halfdrawers4.name=ᘔxᘔ sɹǝʍɐɹᗡ ɟꞁɐH pǝɯɐɹℲ
+
+tile.fullCustom1.name=ɹǝʍɐɹᗡ pǝɯɐɹℲ
+tile.fullCustom2.name=ᘔx⥝ sɹǝʍɐɹᗡ pǝɯɐɹℲ
+tile.fullCustom4.name=ᘔxᘔ sɹǝʍɐɹᗡ pǝɯɐɹℲ
+tile.halfCustom2.name=ᘔx⥝ sɹǝʍɐɹᗡ pǝɯɐɹℲ
+tile.halfCustom4.name=ᘔxᘔ sɹǝʍɐɹᗡ pǝɯɐɹℲ
+tile.customTrim.name=ɯᴉɹ⟘ pǝɯɐɹℲ
+
+tile.compDrawers.name=ɹǝʍɐɹᗡ ᵷuᴉʇɔɐdɯoƆ
+tile.controller.name=ɹǝꞁꞁoɹʇuoƆ ɹǝʍɐɹᗡ
+tile.controllerSlave.name=ǝʌɐꞁS ɹǝꞁꞁoɹʇuoƆ
+tile.framingTable.name=ǝꞁqɐ⟘ ᵷuᴉɯɐɹℲ
+
+tile.trim.oak.name=ɯᴉɹ⟘ ʞɐO
+tile.trim.spruce.name=ɯᴉɹ⟘ ǝɔnɹdS
+tile.trim.birch.name=ɯᴉɹ⟘ ɥɔɹᴉᗺ
+tile.trim.jungle.name=ɯᴉɹ⟘ ǝꞁᵷunՐ
+tile.trim.acacia.name=ɯᴉɹ⟘ ɐᴉɔɐɔⱯ
+tile.trim.big_oak.name=ɯᴉɹ⟘ ʞɐO ʞɹɐᗡ
+
+tile.keyButton.drawer.name=uoʇʇnᗺ ʎǝʞ ɹǝʍɐɹᗡ
+tile.keyButton.concealment.name=uoʇʇnᗺ ʎǝʞ ʇuǝɯꞁɐǝɔuoƆ
+tile.keyButton.personal.name=uoʇʇnᗺ ʎǝʞ ꞁɐuosɹǝԀ
+tile.keyButton.quantify.name=uoʇʇnᗺ ʎǝʞ ʎɟᴉʇuɐnΌ
+
+storagedrawers.drawers.description=ɹǝʍɐɹp ɹǝd sʞɔɐʇs %d spꞁoH
+storagedrawers.drawers.sealed=uᴉɥʇᴉʍ pǝꞁɐǝs sʇuǝʇuoƆ
+storagedrawers.upgrade.description=ǝnꞁɐʌ ǝsɐq sǝɯᴉʇ %d oʇ ǝᵷɐɹoʇs sǝsɐǝɹɔuI
+storagedrawers.controller.description=sɹǝʍɐɹp pǝʇɔǝuuoɔ ɟo ʞuɐq ɐ ɥʇᴉʍ ʇɔɐɹǝʇuI
+storagedrawers.controllerSlave.description=sɹǝꞁꞁoɹʇuoɔ ɹoɟ sʇuᴉod ɥɔɐʇʇɐ ɐɹʇxƎ
+
+storagedrawers.material=%s :ꞁɐᴉɹǝʇɐW
+storagedrawers.material.oak=ʞɐO
+storagedrawers.material.spruce=ǝɔnɹdS
+storagedrawers.material.birch=ɥɔɹᴉᗺ
+storagedrawers.material.jungle=ǝꞁᵷunՐ
+storagedrawers.material.acacia=ɐᴉɔɐɔⱯ
+storagedrawers.material.dark_oak=ʞɐO ʞɹɐᗡ
+
+storagedrawers.waila.empty=<ʎʇdɯƎ>
+storagedrawers.waila.level=%s :ꞁǝʌǝꞀ ǝpɐɹᵷd∩
+storagedrawers.waila.drawer=%2$s :%1$s#
+storagedrawers.waila.limit=(%2$sx) %1$s :ʇᴉɯᴉꞀ ʞɔɐʇS
+storagedrawers.waila.nolimit=∞ :ʇᴉɯᴉꞀ ʞɔɐʇS
+storagedrawers.waila.locked=pǝʞɔoꞀ
+storagedrawers.waila.void=pᴉoᴧ
+storagedrawers.waila.sorting=ᵷuᴉʇɹoS
+storagedrawers.waila.protected=pǝʇɔǝʇoɹԀ
+storagedrawers.waila.config.displayContents=sʇuǝʇuoƆ ʇoꞁS
+storagedrawers.waila.config.displayStackLimit=ʇᴉɯᴉꞀ ʞɔɐʇS
+storagedrawers.waila.config.displayStatus=snʇɐʇS ǝpɐɹᵷd∩
+
+storagedrawers.config.title=uoᴉʇɐɹnᵷᴉɟuoƆ sɹǝʍɐɹᗡ ǝᵷɐɹoʇS
+
+storagedrawers.config.general=sᵷuᴉʇʇǝS ꞁɐɹǝuǝ⅁
+storagedrawers.config.general.tooltip=˙ʇɐɥʇ puɐ sᴉɥ⟘
+
+storagedrawers.config.blocks=sᵷuᴉʇʇǝS ʞɔoꞁᗺ
+storagedrawers.config.blocks.tooltip=˙sʞɔoꞁq ǝᵷɐɹoʇs ꞁɐnpᴉʌᴉpuᴉ ǝɹnᵷᴉɟuoƆ
+
+storagedrawers.config.blocks.fullDrawers1=⥝x⥝ sɹǝʍɐɹᗡ
+storagedrawers.config.blocks.fullDrawers2=ᘔx⥝ sɹǝʍɐɹᗡ
+storagedrawers.config.blocks.fullDrawers4=ᘔxᘔ sɹǝʍɐɹᗡ
+storagedrawers.config.blocks.halfDrawers2=ᘔx⥝ sɹǝʍɐɹᗡ ʇɔɐdɯoƆ
+storagedrawers.config.blocks.halfDrawers4=ᘔxᘔ sɹǝʍɐɹᗡ ʇɔɐdɯoƆ
+storagedrawers.config.blocks.compDrawers=ɹǝʍɐɹᗡ ᵷuᴉʇɔɐdɯoƆ
+storagedrawers.config.blocks.controller=ɹǝꞁꞁoɹʇuoƆ ɹǝʍɐɹᗡ
+storagedrawers.config.blocks.trim=ɯᴉɹ⟘
+storagedrawers.config.blocks.controllerSlave=ǝʌɐꞁS ɹǝꞁꞁoɹʇuoƆ
+
+storagedrawers.config.upgrades=sᵷuᴉʇʇǝS ǝpɐɹᵷd∩
+storagedrawers.config.upgrades.tooltip=˙sǝpɐɹᵷdn ǝᵷɐɹoʇs ꞁɐnpᴉʌᴉpuᴉ ǝɹnᵷᴉɟuoƆ
+
+storagedrawers.config.upgrades.level2Mult=(II) ɹǝᴉꞁdᴉʇꞁnW ǝᵷɐɹoʇS
+storagedrawers.config.upgrades.level3Mult=(III) ɹǝᴉꞁdᴉʇꞁnW ǝᵷɐɹoʇS
+storagedrawers.config.upgrades.level4Mult=(ᴧI) ɹǝᴉꞁdᴉʇꞁnW ǝᵷɐɹoʇS
+storagedrawers.config.upgrades.level5Mult=(ᴧ) ɹǝᴉꞁdᴉʇꞁnW ǝᵷɐɹoʇS
+storagedrawers.config.upgrades.level6Mult=(Iᴧ) ɹǝᴉꞁdᴉʇꞁnW ǝᵷɐɹoʇS
+
+storagedrawers.config.prop.enableIndicatorUpgrades=sǝpɐɹᵷd∩ ɹoʇɐɔᴉpuI ǝꞁqɐuƎ
+storagedrawers.config.prop.enableStorageUpgrades=sǝpɐɹᵷd∩ ǝᵷɐɹoʇS ǝꞁqɐuƎ
+storagedrawers.config.prop.enableLockUpgrades=ᵷuᴉʞɔoꞀ ɹǝʍɐɹᗡ ǝꞁqɐuƎ
+storagedrawers.config.prop.enableShroudUpgrades=ᵷuᴉꞁɐǝɔuoƆ ɯǝʇI ǝꞁqɐuƎ
+storageDrawers.config.prop.enableQuantifiableUpgrades=ʎɐꞁdsᴉᗡ ʎʇᴉʇuɐnΌ ǝꞁqɐuƎ
+storagedrawers.config.prop.enablePersonalUpgrades=uoᴉʇɔǝʇoɹԀ ssǝɔɔⱯ ǝꞁqɐuƎ
+storagedrawers.config.prop.enableVoidUpgrades=ǝpɐɹᵷd∩ pᴉoᴧ ǝꞁqɐuƎ
+storagedrawers.config.prop.enableCreativeUpgrades=ǝpɐɹᵷd∩ ǝʌᴉʇɐǝɹƆ ǝꞁqɐuƎ
+storagedrawers.config.prop.enableRedstoneUpgrades=ǝpɐɹᵷd∩ ǝuoʇspǝᴚ ǝꞁqɐuƎ
+storagedrawers.config.prop.enableSortingUpgrades=ǝpɐɹᵷd∩ ᵷuᴉʇɹoS ǝꞁqɐuƎ
+storagedrawers.config.prop.enableSortingUpgrades.tooltip=˙pǝpɐoꞁ ǝq ʇsnɯ uoᴉʇɐɔoꞁǝᴚ pǝuᴉɟǝᴚ
+storagedrawers.config.prop.renderStorageUpgrades=sǝpɐɹᵷd∩ ǝᵷɐɹoʇS ɹǝpuǝᴚ
+storagedrawers.config.prop.creativeTabVanillaWoods=spooM ɐꞁꞁᴉuɐᴧ qɐ⟘ ǝʌᴉʇɐǝɹƆ
+storagedrawers.config.prop.creativeTabVanillaWoods.tooltip=˙qɐʇ ǝʌᴉʇɐǝɹɔ uo sǝꞁʎʇs pooʍ ɐꞁꞁᴉuɐʌ ꞁꞁɐ ǝꞁqɐuƎ
+storagedrawers.config.prop.enabled=pǝꞁqɐuƎ
+storagedrawers.config.prop.enabled.tooltip=˙ǝɯɐᵷ uᴉ ʞɔoꞁq ǝꞁqɐuƎ
+storagedrawers.config.prop.baseStorage=ǝᵷɐɹoʇS ǝsɐᗺ
+storagedrawers.config.prop.baseStorage.tooltip=˙ɹǝʍɐɹp ɹǝd pꞁǝɥ sʞɔɐʇs ɟo ɹǝqɯnN
+storagedrawers.config.prop.recipeOutput=ʇndʇnO ǝdᴉɔǝᴚ
+storagedrawers.config.prop.recipeOutput.tooltip=˙ᵷuᴉʇɟɐɹɔ ǝꞁᵷuᴉs ɯoɹɟ sɯǝʇᴉ ɟo ɹǝqɯnN
+storagedrawers.config.prop.enableDrawerUI=I∩ ɹǝʍɐɹᗡ ǝꞁqɐuƎ
+storagedrawers.config.prop.enableDrawerUI.tooltip=˙ʇuǝɯǝᵷɐuɐɯ ǝpɐɹᵷdn sǝpᴉʌoɹd puɐ sʇunoɔ ɯǝʇᴉ sʍoɥS
+storagedrawers.config.prop.enableSidedInput=ʇnduI pǝpᴉS ǝꞁqɐuƎ
+storagedrawers.config.prop.enableSidedInput.tooltip=˙sɹǝʍɐɹp oʇuᴉ sɯǝʇᴉ ʇɹǝsuᴉ uɐɔ sʞɔoꞁq ɹǝɥʇO
+storagedrawers.config.prop.enableSidedOutput=ʇndʇnO pǝpᴉS ǝꞁqɐuƎ
+storagedrawers.config.prop.enableSidedOutput.tooltip=˙sɹǝʍɐɹp ɯoɹɟ sɯǝʇᴉ ʇɔɐɹʇxǝ uɐɔ sʞɔoꞁq ɹǝɥʇO
+storagedrawers.config.prop.enableItemConversion=uoᴉsɹǝʌuoƆ ɯǝʇI ǝꞁqɐuƎ
+storagedrawers.config.prop.enableItemConversion.tooltip=˙sɯǝʇᴉ ǝꞁqᴉʇɐdɯoɔ ʎɹɐuoᴉʇɔᴉp ǝɹo ʇɹǝʌuoɔ-oʇnɐ sɹǝʍɐɹᗡ
+storagedrawers.config.prop.enableFallbackRecipes=sǝdᴉɔǝᴚ ʞɔɐqꞁꞁɐℲ ǝꞁqɐuƎ
+storagedrawers.config.prop.enableFallbackRecipes.tooltip=˙sɹǝʍɐɹp ʞɐo ʇɟɐɹɔ uɐɔ pooʍ ʞuɐꞁd pᴉꞁɐʌ ʎuⱯ
+storagedrawers.config.prop.invertShift=ʞɐǝuS ʇɹǝʌuI
+storagedrawers.config.prop.invertShift.tooltip=˙ɹoᴉʌɐɥǝq ʞɔᴉꞁɔ+ʞɐǝus puɐ ʞɔᴉꞁɔ sʇɹǝʌuI
+storagedrawers.config.prop.enableDebugLogging=ᵷuᴉᵷᵷoꞀ ᵷnqǝᗡ ǝꞁqɐuƎ
+storagedrawers.config.prop.enableDebugLogging.tooltip=˙sᵷoꞁ ǝɥʇ oʇ uoᴉʇɐɯɹoɟuᴉ ɐɹʇxǝ sʇuᴉɹԀ
+storagedrawers.config.prop.enableTape=ǝdɐ⟘ ǝꞁqɐuƎ
+storagedrawers.config.prop.enableTape.tooltip=˙sʇuǝʇuoɔ ɥʇᴉʍ sɹǝʍɐɹp ᵷuᴉʌoɯ ɹoℲ
+storagedrawers.config.prop.wailaStackRemainder=uoᴉʇɐʇuǝsǝɹd ʇunoɯɐ ⱯꞀIⱯM
+storagedrawers.config.prop.wailaStackRemainder.tooltip=˙ⱯꞀIⱯM ʎq pǝʎɐꞁdsᴉp ǝɹɐ sʇunoɯɐ ɯǝʇᴉ ʍoH
+storagedrawers.config.prop.controllerRange=ǝᵷuɐᴚ ɹǝꞁꞁoɹʇuoƆ
+storagedrawers.config.prop.controllerRange.tooltip=˙sʞɔoꞁq pǝʞɹoʍʇǝu ᵷuᴉʇɔǝʇǝp ɹoɟ ǝᵷuɐᴚ
+storagedrawers.config.prop.enableFramedDrawers=sɹǝʍɐɹᗡ pǝɯɐɹℲ ǝꞁqɐuƎ
+storagedrawers.config.prop.enableFramedDrawers.tooltip=˙sꞁɐᴉɹǝʇɐɯ ɯoʇsnɔ ɥʇᴉʍ sɹǝʍɐɹᗡ
+storagedrawers.config.prop.defaultQuantify=ʇꞁnɐɟǝᗡ ʎq ǝꞁqᴉsᴉᴧ ʎʇᴉʇuɐnΌ
+storagedrawers.config.prop.defaultQuantify.tooltip=˙pǝɔɐꞁd uǝɥʍ sɹǝqɯnu ʎʇᴉʇuɐnb ʎɐꞁdsᴉp sɹǝʍɐɹᗡ
+
+storagedrawers.config.addons=suoppⱯ
+storagedrawers.config.addons.tooltip=˙sᵷuᴉʇʇǝs ʞɔɐd uoppɐ ꞁɐqoꞁᵷ ǝɹnᵷᴉɟuoƆ
+
+storagedrawers.config.addons.showNEI=IƎN uᴉ sʞɔoꞁᗺ ʍoɥS
+storagedrawers.config.addons.showCreative=sqɐ⟘ ǝʌᴉʇɐǝɹƆ uᴉ sʞɔoꞁᗺ ʍoɥS
+storagedrawers.config.addons.separateTabs=sqɐ⟘ ǝʌᴉʇɐǝɹƆ ǝʇɐɹɐdǝS
+storagedrawers.config.addons.tooltip=˙qɐʇ sɹǝʍɐɹᗡ ǝᵷɐɹoʇS ǝɥʇ ɟo pɐǝʇsuᴉ qɐʇ uʍo sʇᴉ sǝsn ʞɔɐd ɥɔɐƎ
+
+storagedrawers.config.integration=uoᴉʇɐɹᵷǝʇuI
+storagedrawers.config.integration.tooltip=˙spoɯ ɹǝɥʇo ɥʇᴉʍ uoᴉʇɐɹᵷǝʇuᴉ ǝɹnᵷᴉɟuoƆ
+
+storagedrawers.config.integration.enableAE2=uoᴉʇɐɹᵷǝʇuI ᘔ sɔᴉʇsᴉᵷɹǝuƎ pǝᴉꞁddⱯ ǝꞁqɐuƎ
+storagedrawers.config.integration.enableWaila=uoᴉʇɐɹᵷǝʇuI ⱯꞀIⱯM ǝꞁqɐuƎ
+storagedrawers.config.integration.enableThaumcraft=uoᴉʇɐɹᵷǝʇuI ʇɟɐɹɔɯnɐɥ⟘ ǝꞁqɐuƎ
+storagedrawers.config.integration.enableMineTweaker=uoᴉʇɐɹᵷǝʇuI ɹǝʞɐǝʍ⟘ǝuᴉW ǝꞁqɐuƎ
+
+storagedrawers.config.registries=sǝᴉɹʇsᴉᵷǝᴚ
+storagedrawers.config.registries.tooltip=˙uoᴉʇnʇᴉʇsqns ʎɹɐuoᴉʇɔᴉp ǝɹo puɐ sǝꞁnɹ ᵷuᴉʇɔɐdɯoɔ ǝɹnᵷᴉɟuoƆ
+
+storagedrawers.config.registries.compRules=sǝꞁnᴚ ᵷuᴉʇɔɐdɯoƆ
+storagedrawers.config.registries.registerExtraCompRules=sǝꞁnᴚ ᵷuᴉʇɔɐdɯoƆ ɐɹʇxƎ ɹǝʇsᴉᵷǝᴚ
+storagedrawers.config.registries.oreWhitelist=ʇsᴉꞁǝʇᴉɥM ʎɹɐuoᴉʇɔᴉᗡ ǝɹO
+storagedrawers.config.registries.oreBlacklist=ʇsᴉꞁʞɔɐꞁᗺ ʎɹɐuoᴉʇɔᴉᗡ ǝɹO
