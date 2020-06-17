@@ -1,9 +1,11 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.chameleon.block.properties.UnlistedModelData;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IFrameableItem;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.MaterialModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityTrim;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
+import com.jaquadro.minecraft.storagedrawers.item.ItemCustomTrim;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -54,7 +56,7 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
     @Nonnull
     protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
         TileEntityTrim tile = getTileEntity(world, pos);
-        ItemCustomDrawers item = (ItemCustomDrawers)Item.getItemFromBlock(this);
+        IFrameableItem item = (IFrameableItem)Item.getItemFromBlock(this);
         ItemStack source = new ItemStack(this);
         if (tile == null) {
             return item.makeItemStack(source, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
