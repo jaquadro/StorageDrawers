@@ -1,18 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
-import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IFrameableItem;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
-import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemCustomTrim;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -82,17 +78,13 @@ public class ContainerFramingTable extends Container
         ItemStack matFront = tableInventory.getStackInSlot(materialFrontSlot.getSlotIndex());
 
         if (!target.isEmpty()) {
-            Block block = Block.getBlockFromItem(target.getItem());
-            if (block instanceof BlockDrawersCustom) {
-                IBlockState state = block.getStateFromMeta(target.getMetadata());
-                if (!matSide.isEmpty()) {
-                    craftResult.setInventorySlotContents(0, ItemCustomDrawers.makeItemStack(state, 1, matSide, matTrim, matFront));
-                    return;
-                }
-            }
-            else if (block instanceof BlockTrimCustom) {
-                if (!matSide.isEmpty()) {
-                    craftResult.setInventorySlotContents(0, ItemCustomTrim.makeItemStack(block, 1, matSide, matTrim));
+            Item item = target.getItem();
+            if (item instanceof IFrameableItem) {
+                IFrameableItem frameable = (IFrameableItem)item;
+                if (frameable.consumeSide().accepts(matSide)
+                    && frameable.consumeTrim().accepts(matTrim)
+                    && frameable.consumeFront().accepts(matFront)) {
+                    craftResult.setInventorySlotContents(0, frameable.makeItemStack(target.copy(), matSide, matTrim, matFront));
                     return;
                 }
             }

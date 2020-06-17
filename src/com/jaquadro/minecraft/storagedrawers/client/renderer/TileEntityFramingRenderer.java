@@ -1,16 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IFrameableItem;
 import com.jaquadro.minecraft.storagedrawers.block.BlockFramingTable;
-import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
-import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemCustomTrim;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
@@ -34,14 +32,9 @@ public class TileEntityFramingRenderer extends TileEntitySpecialRenderer<TileEnt
 
         ItemStack target = tile.getStackInSlot(0);
         if (!target.isEmpty()) {
-            Block block = Block.getBlockFromItem(target.getItem());
-            IBlockState blockState = block.getStateFromMeta(target.getMetadata());
-            if (block instanceof BlockDrawersCustom) {
-                ItemStack result = ItemCustomDrawers.makeItemStack(blockState, 1, tile.getStackInSlot(1), tile.getStackInSlot(2), tile.getStackInSlot(3));
-                renderSlot(tile, x, y, z, result, 1f, .5f, .25f, -.5f);
-            }
-            else if (block instanceof BlockTrimCustom) {
-                ItemStack result = ItemCustomTrim.makeItemStack(block, 1, tile.getStackInSlot(1), tile.getStackInSlot(2));
+            Item item = target.getItem();
+            if(item instanceof IFrameableItem) {
+                ItemStack result = ((IFrameableItem) item).makeItemStack(target.copy(), tile.getStackInSlot(1), tile.getStackInSlot(2), tile.getStackInSlot(3));
                 renderSlot(tile, x, y, z, result, 1f, .5f, .25f, -.5f);
             }
         }
