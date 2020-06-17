@@ -1,14 +1,15 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.chameleon.block.properties.UnlistedModelData;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IFrameableItem;
 import com.jaquadro.minecraft.storagedrawers.block.modeldata.MaterialModelData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityTrim;
-import com.jaquadro.minecraft.storagedrawers.item.ItemCustomTrim;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -23,7 +24,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
 {
@@ -54,10 +54,13 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
     @Nonnull
     protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
         TileEntityTrim tile = getTileEntity(world, pos);
-        if (tile == null)
-            return ItemCustomTrim.makeItemStack(this, 1, ItemStack.EMPTY, ItemStack.EMPTY);
+        IFrameableItem item = (IFrameableItem)Item.getItemFromBlock(this);
+        ItemStack source = new ItemStack(this);
+        if (tile == null) {
+            return item.makeItemStack(source, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
+        }
 
-        return ItemCustomTrim.makeItemStack(this, 1, tile.material().getSide(), tile.material().getTrim());
+        return item.makeItemStack(source, tile.material().getSide(), tile.material().getTrim(), ItemStack.EMPTY);
     }
 
     @Override

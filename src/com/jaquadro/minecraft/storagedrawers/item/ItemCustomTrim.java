@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IFrameableItem;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityTrim;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -14,7 +15,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemCustomTrim extends ItemBlock
+public class ItemCustomTrim extends ItemBlock implements IFrameableItem
 {
     public ItemCustomTrim (Block block) {
         super(block);
@@ -26,7 +27,7 @@ public class ItemCustomTrim extends ItemBlock
             return false;
 
         TileEntityTrim tile = (TileEntityTrim) world.getTileEntity(pos);
-        if (tile != null && stack.hasTagCompound() && !stack.getTagCompound().hasKey("tile")) {
+        if (tile != null && stack.hasTagCompound()) {
             if (stack.getTagCompound().hasKey("MatS"))
                 tile.material().setSide(new ItemStack(stack.getTagCompound().getCompoundTag("MatS")));
             if (stack.getTagCompound().hasKey("MatT"))
@@ -37,8 +38,27 @@ public class ItemCustomTrim extends ItemBlock
     }
 
     @Nonnull
-    public static ItemStack makeItemStack (Block block, int count, @Nonnull ItemStack matSide, @Nonnull ItemStack matTrim) {
-        Item item = Item.getItemFromBlock(block);
+    @Override
+    public ConsumeType consumeSide() {
+        return ConsumeType.REQUIRED;
+    }
+
+    @Nonnull
+    @Override
+    public ConsumeType consumeTrim() {
+        return ConsumeType.OPTIONAL;
+    }
+
+    @Nonnull
+    @Override
+    public ConsumeType consumeFront() {
+        return ConsumeType.UNACCEPTABLE;
+    }
+
+    @Override
+    @Nonnull
+    public ItemStack makeItemStack (@Nonnull ItemStack source, @Nonnull ItemStack matSide, @Nonnull ItemStack matTrim, @Nonnull ItemStack matFront) {
+        Item item = source.getItem();
         if (!(item instanceof ItemCustomTrim))
             return ItemStack.EMPTY;
 
@@ -50,7 +70,7 @@ public class ItemCustomTrim extends ItemBlock
         if (!matTrim.isEmpty())
             tag.setTag("MatT", getMaterialTag(matTrim));
 
-        ItemStack stack = new ItemStack(item, count, 0);
+        ItemStack stack = new ItemStack(item);
         if (!tag.hasNoTags())
             stack.setTagCompound(tag);
 

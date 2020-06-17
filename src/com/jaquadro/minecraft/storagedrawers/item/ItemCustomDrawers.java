@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.base.Function;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IFrameableItem;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import net.minecraft.block.Block;
@@ -16,7 +17,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ItemCustomDrawers extends ItemDrawers
+public class ItemCustomDrawers extends ItemDrawers implements IFrameableItem
 {
     private Function nameFunction;
 
@@ -48,7 +49,7 @@ public class ItemCustomDrawers extends ItemDrawers
             return false;
 
         TileEntityDrawers tile = (TileEntityDrawers) world.getTileEntity(pos);
-        if (tile != null && stack.hasTagCompound() && !stack.getTagCompound().hasKey("tile")) {
+        if (tile != null && stack.hasTagCompound()) {
             if (stack.getTagCompound().hasKey("MatS"))
                 tile.material().setSide(new ItemStack(stack.getTagCompound().getCompoundTag("MatS")));
             if (stack.getTagCompound().hasKey("MatT"))
@@ -61,28 +62,48 @@ public class ItemCustomDrawers extends ItemDrawers
     }
 
     @Nonnull
-    public static ItemStack makeItemStack (IBlockState blockState, int count, @Nonnull ItemStack matSide, @Nonnull ItemStack matTrim, @Nonnull ItemStack matFront) {
-        Block block = blockState.getBlock();
-        Item item = Item.getItemFromBlock(block);
+    @Override
+    public ConsumeType consumeSide () {
+        return ConsumeType.REQUIRED;
+    }
+
+    @Nonnull
+    @Override
+    public ConsumeType consumeTrim () {
+        return ConsumeType.OPTIONAL;
+    }
+
+    @Nonnull
+    @Override
+    public ConsumeType consumeFront () {
+        return ConsumeType.OPTIONAL;
+    }
+
+    @Nonnull
+    public ItemStack makeItemStack (@Nonnull ItemStack source, @Nonnull ItemStack matSide, @Nonnull ItemStack matTrim, @Nonnull ItemStack matFront) {
+        Item item = source.getItem();
         if (!(item instanceof ItemCustomDrawers))
             return ItemStack.EMPTY;
 
-        NBTTagCompound tag = new NBTTagCompound();
+        NBTTagCompound tag = source.getTagCompound();
+        if (tag == null) tag = new NBTTagCompound();
 
         if (!matSide.isEmpty())
             tag.setTag("MatS", getMaterialTag(matSide));
+        else tag.removeTag("MatS");
 
         if (!matTrim.isEmpty())
             tag.setTag("MatT", getMaterialTag(matTrim));
+        else tag.removeTag("MatT");
 
         if (!matFront.isEmpty())
             tag.setTag("MatF", getMaterialTag(matFront));
+        else tag.removeTag("MatF");
 
-        ItemStack stack = new ItemStack(item, count, block.getMetaFromState(blockState));
-        if (!tag.hasNoTags())
-            stack.setTagCompound(tag);
+        if(tag.hasNoTags()) tag = null;
+        source.setTagCompound(tag);
 
-        return stack;
+        return source;
     }
 
     private static NBTTagCompound getMaterialTag (@Nonnull ItemStack mat) {
