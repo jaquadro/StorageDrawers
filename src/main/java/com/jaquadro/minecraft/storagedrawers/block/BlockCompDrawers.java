@@ -13,7 +13,7 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -40,12 +40,6 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
         builder.add(SLOTS);
     }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean causesSuffocation (BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-    }
-
     /*@Override
     @SideOnly(Side.CLIENT)
     public void initDynamic () {
@@ -59,7 +53,7 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }*/
 
     @Override
-    protected int getDrawerSlot (Direction side, Vec3d hit) {
+    protected int getDrawerSlot (Direction side, Vector3d hit) {
         if (hitTop(hit.y))
             return 0;
 

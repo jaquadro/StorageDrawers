@@ -19,13 +19,14 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -34,13 +35,11 @@ import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -233,7 +232,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     @Override
     public boolean isReplaceable (BlockState state, BlockItemUseContext useContext) {
         if (useContext.getPlayer().isCreative() && useContext.getHand() == Hand.OFF_HAND) {
-            double blockReachDistance = useContext.getPlayer().getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1;
+            double blockReachDistance = useContext.getPlayer().getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1;
             BlockRayTraceResult result = rayTraceEyes(useContext.getWorld(), useContext.getPlayer(), blockReachDistance);
 
             if (result.getType() == RayTraceResult.Type.MISS || result.getFace() != state.get(HORIZONTAL_FACING))
@@ -327,7 +326,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 return true;
             }*/
         }
-        else if (item.isEmpty() && player.isShiftKeyDown()) {
+        else if (item.isEmpty() && player.isSneaking()) {
             /*if (tileDrawers.isSealed()) {
                 tileDrawers.setIsSealed(false);
                 return true;
@@ -384,15 +383,15 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         return getDrawerSlot(hit.getFace(), normalizeHitVec(hit.getHitVec()));
     }
 
-    private Vec3d normalizeHitVec (Vec3d hit) {
-        return new Vec3d(
+    private Vector3d normalizeHitVec (Vector3d hit) {
+        return new Vector3d(
             ((hit.x < 0) ? hit.x - Math.floor(hit.x) : hit.x) % 1,
             ((hit.y < 0) ? hit.y - Math.floor(hit.y) : hit.y) % 1,
             ((hit.z < 0) ? hit.z - Math.floor(hit.z) : hit.z) % 1
         );
     }
 
-    protected int getDrawerSlot (Direction side, Vec3d hit) {
+    protected int getDrawerSlot (Direction side, Vector3d hit) {
         return 0;
     }
 
@@ -416,9 +415,9 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     }
 
     protected BlockRayTraceResult rayTraceEyes(World world, PlayerEntity player, double length) {
-        Vec3d eyePos = player.getEyePosition(1);
-        Vec3d lookPos = player.getLook(1);
-        Vec3d endPos = eyePos.add(lookPos.x * length, lookPos.y * length, lookPos.z * length);
+        Vector3d eyePos = player.getEyePosition(1);
+        Vector3d lookPos = player.getLook(1);
+        Vector3d endPos = eyePos.add(lookPos.x * length, lookPos.y * length, lookPos.z * length);
         RayTraceContext context = new RayTraceContext(eyePos, endPos, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player);
         return world.rayTraceBlocks(context);
     }
@@ -431,7 +430,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         if (CommonConfig.GENERAL.debugTrace.get())
             StorageDrawers.log.info("onBlockClicked");
 
-        BlockRayTraceResult rayResult = rayTraceEyes(worldIn, playerIn, playerIn.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1);
+        BlockRayTraceResult rayResult = rayTraceEyes(worldIn, playerIn, playerIn.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1);
         if (rayResult.getType() == RayTraceResult.Type.MISS)
             return;
 
@@ -459,7 +458,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 invertShift = setting.value;
             }
         }*/
-        if (playerIn.isShiftKeyDown() != invertShift)
+        if (playerIn.isSneaking() != invertShift)
             item = tileDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
         else
             item = tileDrawers.takeItemsFromSlot(slot, 1);
@@ -479,7 +478,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
     private void dropItemStack (World world, BlockPos pos, PlayerEntity player, @Nonnull ItemStack stack) {
         ItemEntity entity = new ItemEntity(world, pos.getX() + .5f, pos.getY() + .3f, pos.getZ() + .5f, stack);
-        Vec3d motion = entity.getMotion();
+        Vector3d motion = entity.getMotion();
         entity.addVelocity(-motion.x, -motion.y, -motion.z);
         world.addEntity(entity);
     }
@@ -507,8 +506,9 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         super.onReplaced(state, world, pos, newState, isMoving);
     }
 
+
     @Override
-    public boolean removedByPlayer (BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
+    public boolean removedByPlayer (BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
         if (player.isCreative()) {
             if (creativeCanBreakBlock(state, world, pos, player))
                 world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
@@ -521,6 +521,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         return willHarvest || super.removedByPlayer(state, world, pos, player, false, fluid);
     }
 
+
     @Override
     public void harvestBlock (World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
         super.harvestBlock(worldIn, player, pos, state, te, stack);
@@ -528,7 +529,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     }
 
     public boolean creativeCanBreakBlock (BlockState state, World world, BlockPos pos, PlayerEntity player) {
-        double blockReachDistance = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1;
+        double blockReachDistance = player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1;
 
         BlockRayTraceResult rayResult = rayTraceEyes(world, player, blockReachDistance + 1);
         if (rayResult.getType() == RayTraceResult.Type.MISS || state.get(HORIZONTAL_FACING) != rayResult.getFace())

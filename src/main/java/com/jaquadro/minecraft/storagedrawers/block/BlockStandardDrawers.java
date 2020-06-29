@@ -6,8 +6,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
+
+import java.util.Vector;
 
 public class BlockStandardDrawers extends BlockDrawers
 {
@@ -52,13 +54,7 @@ public class BlockStandardDrawers extends BlockDrawers
     }*/
 
     @Override
-    @SuppressWarnings("deprecation")
-    public boolean causesSuffocation (BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-    }
-
-    @Override
-    protected int getDrawerSlot (Direction side, Vec3d hit) {
+    protected int getDrawerSlot (Direction side, Vector3d hit) {
         if (getDrawerCount() == 1)
             return 0;
         if (getDrawerCount() == 2)

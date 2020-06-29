@@ -8,6 +8,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -34,10 +35,13 @@ public class ItemDrawers extends BlockItem
         //    tooltip.add(new TranslationTextComponent("storagedrawers.material", I18n.format("storagedrawers.material." + key)));
         //}
 
-        tooltip.add(new TranslationTextComponent("tooltip.storagedrawers.drawers.capacity", getCapacityForBlock(stack)).applyTextStyle(TextFormatting.GRAY));
+        ITextComponent textCapacity = new TranslationTextComponent("tooltip.storagedrawers.drawers.capacity", getCapacityForBlock(stack));
+        tooltip.add(new StringTextComponent("").func_230529_a_(textCapacity).func_240699_a_(TextFormatting.GRAY));
 
-        if (stack.hasTag() && stack.getTag().contains("tile"))
-            tooltip.add(new TranslationTextComponent("tooltip.storagedrawers.drawers.sealed").applyTextStyle(TextFormatting.YELLOW));
+        if (stack.hasTag() && stack.getTag().contains("tile")) {
+            ITextComponent textSealed = new TranslationTextComponent("tooltip.storagedrawers.drawers.sealed");
+            tooltip.add(new StringTextComponent("").func_230529_a_(textSealed).func_240699_a_(TextFormatting.YELLOW));
+        }
 
         //tooltip.add(getDescription().applyTextStyle(TextFormatting.GRAY));
     }

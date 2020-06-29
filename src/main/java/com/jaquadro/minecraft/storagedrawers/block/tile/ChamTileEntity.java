@@ -44,8 +44,8 @@ public class ChamTileEntity extends TileEntity implements IForgeTileEntity
     }
 
     @Override
-    public final void read (CompoundNBT tag) {
-        super.read(tag);
+    public final void func_230337_a_ (BlockState state, CompoundNBT tag) {
+        super.func_230337_a_(state, tag);
 
         failureSnapshot = null;
 
@@ -56,6 +56,10 @@ public class ChamTileEntity extends TileEntity implements IForgeTileEntity
         catch (Throwable t) {
             trapLoadFailure(t, tag);
         }
+    }
+
+    public final void read (CompoundNBT tag) {
+        func_230337_a_(null, tag);
     }
 
     @Override

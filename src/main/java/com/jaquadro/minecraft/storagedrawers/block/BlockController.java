@@ -39,11 +39,6 @@ public class BlockController extends HorizontalBlock implements INetworked
     }
 
     @Override
-    public int tickRate (IWorldReader world) {
-        return 100;
-    }
-
-    @Override
     public BlockState getStateForPlacement (BlockItemUseContext context) {
         return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
@@ -126,7 +121,7 @@ public class BlockController extends HorizontalBlock implements INetworked
 
         te.updateCache();
 
-        world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
+        world.getPendingBlockTicks().scheduleTick(pos, this, 100);
     }
 
     @Override

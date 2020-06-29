@@ -10,6 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
@@ -21,6 +22,8 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -249,7 +252,9 @@ public class ModBlocks
 
         private static Block registerDrawerBlock(RegistryEvent.Register<Block> event, String name, int drawerCount, boolean halfDepth) {
             return registerBlock(event, name, new BlockStandardDrawers(drawerCount, halfDepth, Block.Properties.create(Material.WOOD)
-                .sound(SoundType.WOOD).hardnessAndResistance(5f)));
+                .sound(SoundType.WOOD).hardnessAndResistance(5f)
+                .func_235842_b_(Registration::predFalse) // isSuffocating
+                .func_235847_c_(Registration::predFalse))); // causesSuffocation
         }
 
         private static Block registerTrimBlock(RegistryEvent.Register<Block> event, String name) {
@@ -259,7 +264,9 @@ public class ModBlocks
 
         private static Block registerCompactingDrawerBlock(RegistryEvent.Register<Block> event, String name) {
             return registerBlock(event, name, new BlockCompDrawers(Block.Properties.create(Material.ROCK)
-                .sound(SoundType.STONE).hardnessAndResistance(10f)));
+                .sound(SoundType.STONE).hardnessAndResistance(10f)
+                .func_235842_b_(Registration::predFalse) // isSuffocating
+                .func_235847_c_(Registration::predFalse))); // causesSuffocation
         }
 
         private static Block registerBlock(RegistryEvent.Register<Block> event, String name, Block block) {
@@ -415,5 +422,9 @@ public class ModBlocks
             modelRegistry.registerItemVariants(controllerSlave);
             modelRegistry.registerItemVariants(keyButton);*/
         //}
+
+        private static boolean predFalse (BlockState p_235436_0_, IBlockReader p_235436_1_, BlockPos p_235436_2_) {
+            return false;
+        }
     }
 }

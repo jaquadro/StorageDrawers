@@ -11,12 +11,13 @@ buildscript {
     }
 }
 
-//plugins {
-//    id "com.jfrog.bintray" version "1.7"
-//}
+plugins {
+    id "com.jfrog.bintray" version "1.8.1"
+}
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
+apply plugin: 'maven-publish'
 
 //evaluationDependsOn(":..:Chameleon-${minecraft_base_version}")
 
@@ -160,58 +161,60 @@ jar {
     //include "pack.mcmeta"
 }
 
-//task deobfJar(type: Jar) {
-//    from sourceSets.main.output
-//    classifier = 'deobf'
-//}
-//
+jar.finalizedBy('reobfJar')
 
-task apiJar(type: Jar) {
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
+
+task apiJar(type: Jar, dependsOn: classes) {
     classifier = 'api'
     include 'com/jaquadro/minecraft/storagedrawers/api/**/*'
     from sourceSets.main.allSource
     from sourceSets.main.output
 }
 
-task sourcesJar(type: Jar) {
+task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allJava
 }
 
 tasks.build.dependsOn apiJar, sourcesJar
 
-//artifacts {
-//    archives deobfJar
-//    archives apiJar
-//    archives sourceJar
-//    archives jar
-//}
-//
-//publishing.publications {
-//    StorageDrawers(MavenPublication) {
-//        groupId = project.group
-//        artifactId = project.archivesBaseName
-//        version = project.version
-//        artifact deobfJar
-//        artifact sourceJar
-//        artifact apiJar
-//        artifact jar
-//    }
-//}
-//
-//bintrayUpload.dependsOn build
-//
-//bintray {
-//    user = System.getenv('BINTRAY_USER')
-//    key = System.getenv('BINTRAY_KEY')
-//    publications = ['StorageDrawers']
-//    publish = true
-//    pkg {
-//        repo = 'dev'
-//        name = 'storagedrawers'
-//        version {
-//            name = project.version
-//            released = new Date()
-//        }
-//    }
-//}
+artifacts {
+    archives apiJar
+    archives sourcesJar
+    archives deobfJar
+    archives jar
+}
+
+publishing.publications {
+    StorageDrawers(MavenPublication) {
+        groupId = project.group
+        artifactId = project.archivesBaseName
+        version = project.version
+        artifact sourcesJar
+        artifact apiJar
+        artifact deobfJar
+        artifact jar
+    }
+}
+
+bintrayUpload.dependsOn build
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['StorageDrawers']
+    publish = true
+    pkg {
+        repo = 'dev'
+        name = 'storagedrawers'
+        version {
+            name = project.version
+            released = new Date()
+        }
+    }
+}

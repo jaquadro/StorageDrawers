@@ -13,12 +13,16 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.settings.GraphicsFanciness;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Matrix3f;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -60,14 +64,14 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         Direction side = state.get(BlockDrawers.HORIZONTAL_FACING);
 
         Minecraft mc = Minecraft.getInstance();
-        boolean cache = mc.gameSettings.fancyGraphics;
-        mc.gameSettings.fancyGraphics = true;
+        GraphicsFanciness cache = mc.gameSettings.field_238330_f_;
+        mc.gameSettings.field_238330_f_ = GraphicsFanciness.FANCY;
         //renderUpgrades(renderer, tile, state);
 
         if (!tile.getDrawerAttributes().isConcealed())
             renderFastItemSet(tile, state, matrix, buffer, combinedLight, combinedOverlay, side, partialTickTime);
 
-        mc.gameSettings.fancyGraphics = cache;
+        mc.gameSettings.field_238330_f_ = cache;
 
         matrix.pop();
         RenderHelper.setupLevelDiffuseLighting(matrix.getLast().getMatrix());
@@ -101,7 +105,7 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         if (tile.getDrawerAttributes().isShowingQuantity()) {
             PlayerEntity player = Minecraft.getInstance().player;
             BlockPos blockPos = tile.getPos().add(.5, .5, .5);
-            double distance = Math.sqrt(blockPos.distanceSq(player.getPosition()));
+            double distance = Math.sqrt(blockPos.distanceSq(player.func_233580_cy_()));
 
             float alpha = 1;
             if (distance > 4)
@@ -130,7 +134,7 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
 
         float x = (float)(labelGeometry.minX + labelGeometry.getXSize() / 2);
         float y = 16f - (float)labelGeometry.minY - (float)labelGeometry.getYSize();
-        float z = (float)labelGeometry.minZ * .0625f;
+        float z = (float)labelGeometry.minZ * .0625f - .01f;
 
         matrix.push();
 
@@ -217,7 +221,7 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         matrix.translate(0, 1, 1-offsetZ);
         matrix.scale(1 / 16f, -1 / 16f, 0.00005f);
 
-        matrix.translate(offsetX, offsetY, 0f);
+        matrix.translate(offsetX, offsetY, 0);
         matrix.scale(scaleX, scaleY, 1);
     }
 

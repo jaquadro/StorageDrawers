@@ -54,12 +54,12 @@ public enum EnumBasicDrawer implements IDrawerGeometry, IStringSerializable
 
     @Override
     public String toString () {
-        return getName();
+        return func_176610_l();
     }
 
     @Override
     @Nonnull
-    public String getName () {
+    public String func_176610_l () {
         return name;
     }
 

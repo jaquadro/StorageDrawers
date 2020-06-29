@@ -33,13 +33,13 @@ public enum EnumKeyType implements IStringSerializable
 
     @Override
     @Nonnull
-    public String getName () {
+    public String func_176610_l () {
         return name;
     }
 
     @Override
     public String toString () {
-        return getName();
+        return func_176610_l();
     }
 
     static {
