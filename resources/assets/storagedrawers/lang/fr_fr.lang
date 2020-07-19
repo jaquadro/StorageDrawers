@@ -1,3 +1,5 @@
+#PARSE_ESCAPES
+
 itemGroup.storagedrawers=Storage Drawers
 itemGroup.storagedrawersSorting=Storage Drawers - Tri
 
@@ -26,24 +28,26 @@ item.storagedrawers.upgradeStatus.level2.name=Amélioration Statut (II)
 item.storagedrawers.upgradeStatus.level2.description=Montre le niveau de remplissage
 item.storagedrawers.upgradeVoid.name=Amélioration du Néant
 item.storagedrawers.upgradeVoid.description=Détruit les objets en excès
+item.storagedrawers.upgradeConversion.name=Amélioration Conversion
+item.storagedrawers.upgradeConversion.description=Convertit automatiquement les objets compatibles
 item.storagedrawers.upgradeCreative.store.name=Amélioration Créatif Stockage
 item.storagedrawers.upgradeCreative.store.description=Stockage quasi-infini
 item.storagedrawers.upgradeCreative.vend.name=Amélioration Créatif Vente
 item.storagedrawers.upgradeCreative.vend.description=Retrait des objets illimité
 item.storagedrawers.upgradeRedstone.combined.name=Amélioration Redstone
-item.storagedrawers.upgradeRedstone.combined.description=Emet un signal si stockage plein
+item.storagedrawers.upgradeRedstone.combined.description=Émet un signal si stockage plein
 item.storagedrawers.upgradeRedstone.max.name=Amélioration Redstone Max.
-item.storagedrawers.upgradeRedstone.max.description=Emet un signal si la plupart des emplacements sont pleins
+item.storagedrawers.upgradeRedstone.max.description=Émet un signal si la plupart des emplacements sont pleins
 item.storagedrawers.upgradeRedstone.min.name=Amélioration Redstone Min.
-item.storagedrawers.upgradeRedstone.min.description=Emet un signal si au moins un des emplacement est plein
+item.storagedrawers.upgradeRedstone.min.description=Émet un signal si au moins un des emplacements est plein
 item.storagedrawers.drawerKey.name=Clé de tiroir
-item.storagedrawers.drawerKey.description=Verrouille ou déverouille les tiroirs
+item.storagedrawers.drawerKey.description=Verrouille ou déverrouille les tiroirs
 item.storagedrawers.shroudKey.name=Clé de Dissimulation
 item.storagedrawers.shroudKey.description=Montre ou cache les étiquettes des objets
 item.storagedrawers.quantifyKey.name=Clé de Quantification
 item.storagedrawers.quantifyKey.description=Montre ou cache les étiquettes de quantité
 item.storagedrawers.personalKey.name=Clé Personnelle
-item.storagedrawers.personalKey.description=Protège l'accès par les autres joueurs
+item.storagedrawers.personalKey.description=Protège l'accès des autres joueurs
 item.storagedrawers.tape.name=Ruban adhésif d'emballage
 item.storagedrawers.tape.description=Emballe les tiroirs afin de pouvoir les déplacer avec leur contenu
 
@@ -54,18 +58,18 @@ tile.storagedrawers.basicDrawers.fulldrawers4.name=Tiroir 2x2
 tile.storagedrawers.basicDrawers.halfdrawers2.name=Tiroir étroit 1x2
 tile.storagedrawers.basicDrawers.halfdrawers4.name=Tiroir étroit 2x2
 
-tile.storagedrawers.customDrawers.fulldrawers1.name=Ebauche de tiroir à moulures
-tile.storagedrawers.customDrawers.fulldrawers2.name=Ebauche de tiroir 1x2 à moulures
-tile.storagedrawers.customDrawers.fulldrawers4.name=Ebauche de tiroir 2x2 à moulures
-tile.storagedrawers.customDrawers.halfdrawers2.name=Ebauche de tiroir étroit 1x2 à moulures
-tile.storagedrawers.customDrawers.halfdrawers4.name=Ebauche de tiroir étroit 2x2 à moulures
+tile.storagedrawers.customDrawers.fulldrawers1.name=Ébauche de tiroir à moulures
+tile.storagedrawers.customDrawers.fulldrawers2.name=Ébauche de tiroir 1x2 à moulures
+tile.storagedrawers.customDrawers.fulldrawers4.name=Ébauche de tiroir 2x2 à moulures
+tile.storagedrawers.customDrawers.halfdrawers2.name=Ébauche de tiroir étroit 1x2 à moulures
+tile.storagedrawers.customDrawers.halfdrawers4.name=Ébauche de tiroir étroit 2x2 à moulures
 
-tile.storagedrawers.fullCustom1.name=Ebauche de tiroir à moulures
-tile.storagedrawers.fullCustom2.name=Ebauche de tiroir 1x2 à moulures
-tile.storagedrawers.fullCustom4.name=Ebauche de tiroir 2x2 à moulures
-tile.storagedrawers.halfCustom2.name=Ebauche de tiroir étroit 1x2 à moulures
-tile.storagedrawers.halfCustom4.name=Ebauche de tiroir étroit 2x2 à moulures
-tile.storagedrawers.customTrim.name=Ebauche de bloc à moulures
+tile.storagedrawers.fullCustom1.name=Ébauche de tiroir à moulures
+tile.storagedrawers.fullCustom2.name=Ébauche de tiroir 1x2 à moulures
+tile.storagedrawers.fullCustom4.name=Ébauche de tiroir 2x2 à moulures
+tile.storagedrawers.halfCustom2.name=Ébauche de tiroir étroit 1x2 à moulures
+tile.storagedrawers.halfCustom4.name=Ébauche de tiroir étroit 2x2 à moulures
+tile.storagedrawers.customTrim.name=Ébauche de bloc à moulures
 
 tile.storagedrawers.compDrawers.name=Tiroir de compactage
 tile.storagedrawers.controller.name=Contrôleur de tiroirs
@@ -111,7 +115,7 @@ storagedrawers.waila.sorting=Tri
 storagedrawers.waila.protected=Protégé
 storagedrawers.waila.config.displayContents=Contenu des emplacements
 storagedrawers.waila.config.displayStackLimit=Limite des piles
-storagedrawers.waila.config.displayStatus=Etat des améliorations
+storagedrawers.waila.config.displayStatus=État des améliorations
 
 # Configuration
 storagedrawers.config.title=Configuration des tiroirs de stockage
@@ -129,7 +133,7 @@ storagedrawers.config.blocks.halfDrawers2=Tiroirs étroits 1x2
 storagedrawers.config.blocks.halfDrawers4=Tiroirs étroits 2x2
 storagedrawers.config.blocks.compDrawers=Tiroirs de compactage
 storagedrawers.config.blocks.controller=Contrôleurs de tiroirs
-storagedrawers.config.blocks.trim=Ebauches
+storagedrawers.config.blocks.trim=Ébauches
 storagedrawers.config.blocks.controllerSlave=Esclaves du contrôleur
 
 storagedrawers.config.upgrades=Options d'amélioration
@@ -154,7 +158,7 @@ storagedrawers.config.prop.enableSortingUpgrades=Autoriser l'amélioration tri
 storagedrawers.config.prop.enableSortingUpgrades.tooltip=Refined Relocation doit être chargé.
 storagedrawers.config.prop.renderStorageUpgrades=Rendu des améliorations de stockage
 storagedrawers.config.prop.creativeTabVanillaWoods=Onglet en créatif types de bois d'origine
-storagedrawers.config.prop.creativeTabVanillaWoods.tooltip=Active tous les style de bois d'origine dans l'onglet en mode créatif.
+storagedrawers.config.prop.creativeTabVanillaWoods.tooltip=Active tous les styles de bois d'origine dans l'onglet en mode créatif.
 storagedrawers.config.prop.enabled=Activé
 storagedrawers.config.prop.enabled.tooltip=Active les blocs en jeu.
 storagedrawers.config.prop.baseStorage=Stockage de base
@@ -183,6 +187,8 @@ storagedrawers.config.prop.controllerRange=Distance limite du contrôleur
 storagedrawers.config.prop.controllerRange.tooltip=Distance limite pour détecter les blocks du réseau.
 storagedrawers.config.prop.enableFramedDrawers=Active les ébauches de tiroirs
 storagedrawers.config.prop.enableFramedDrawers.tooltip=Les ébauches permettent la fabrication de tiroirs customisés en matériaux spéciaux.
+storagedrawers.config.prop.defaultQuantify=Quantité visible par défaut
+storagedrawers.config.prop.defaultQuantify.tooltip=Les tiroirs affichent les quantités contenues lorsqu'ils sont placés.
 
 storagedrawers.config.addons=Addons
 storagedrawers.config.addons.tooltip=Configurer les réglages globaux du pack d'addons.
