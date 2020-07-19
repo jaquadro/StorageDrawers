@@ -1,5 +1,3 @@
-#author new3(github.com/new3mc)
-
 itemGroup.storagedrawers=스토리지 드로워즈[Storage Drawers]
 itemGroup.storagedrawersSorting=스토리지 드로워즈[Storage Drawers] - 정렬
 
@@ -11,7 +9,7 @@ storagedrawers.container.unboundSlave=연결되지 않은 슬레이브
 storagedrawers.container.framingTable=서랍 커스텀 테이블
 
 storagedrawers.msg.maxUpgrades=이 서랍은 더 업그레이드할 수 없습니다.
-storagedrawers.msg.cannotAddUpgrade=이 업그레이드는 이 서랍에 설치할 수 없습니다.
+storagedrawers.msg.cannotAddUpgrade=그 업그레이드는 이 서랍에 설치할 수 없습니다.
 
 # Items
 item.storagedrawers.upgradeTemplate.name=업그레이드 템플릿
@@ -21,7 +19,7 @@ item.storagedrawers.upgradeStorage.gold.name=저장 업그레이드 (III)
 item.storagedrawers.upgradeStorage.diamond.name=저장 업그레이드 (IV)
 item.storagedrawers.upgradeStorage.emerald.name=저장 업그레이드 (V)
 item.storagedrawers.upgradeOneStack.name=저장 다운그레이드
-item.storagedrawers.upgradeOneStack.description=기본 용량을 한 스택으로 감소시킵니다.
+item.storagedrawers.upgradeOneStack.description=기본 저장량을 한 스택으로 감소시킵니다.
 item.storagedrawers.upgradeStatus.level1.name=상태 업그레이드 (I)
 item.storagedrawers.upgradeStatus.level1.description=저장량이 다 찼는지 여부를 표시해 줍니다.
 item.storagedrawers.upgradeStatus.level2.name=상태 업그레이드 (II)
@@ -31,7 +29,7 @@ item.storagedrawers.upgradeVoid.description=초과된 아이템을 삭제합니�
 item.storagedrawers.upgradeConversion.name=변환 업그레이드
 item.storagedrawers.upgradeConversion.description=호환 가능한 아이템을 자동으로 변환해 줍니다.
 item.storagedrawers.upgradeCreative.store.name=크리에이티브 저장 업그레이드
-item.storagedrawers.upgradeCreative.store.description=저장 용량이 거의 무한대가 됩니다.
+item.storagedrawers.upgradeCreative.store.description=최대 저장량이 거의 무한대가 됩니다.
 item.storagedrawers.upgradeCreative.vend.name=크리에이티브 공급 업그레이드
 item.storagedrawers.upgradeCreative.vend.description=아이템을 무제한으로 뽑아낼 수 있습니다.
 item.storagedrawers.upgradeRedstone.combined.name=레드스톤 업그레이드
@@ -41,9 +39,9 @@ item.storagedrawers.upgradeRedstone.max.description=가장 많이 저장된 칸�
 item.storagedrawers.upgradeRedstone.min.name=레드스톤(최소) 업그레이드
 item.storagedrawers.upgradeRedstone.min.description=가장 적게 저장된 칸의 저장량에 비례해 레드스톤 신호를 방출합니다.
 item.storagedrawers.drawerKey.name=서랍 열쇠
-item.storagedrawers.drawerKey.description=서랍을 잠그거나 풉니다.\n보조 손에 든 채로 서랍을 설치하면 잠긴 채로 설치됩니다.
+item.storagedrawers.drawerKey.description=서랍을 잠그거나 풉니다. 보조 손에 든 채로 서랍을 설치하면 잠긴 채로 설치됩니다.
 item.storagedrawers.shroudKey.name=숨김 열쇠
-item.storagedrawers.shroudKey.description=저장된 아이템의 아이콘을 표시하거나 숨깁니다.
+item.storagedrawers.shroudKey.description=저장된 아이템이 무엇인지 표시하거나 숨깁니다.
 item.storagedrawers.quantifyKey.name=수량 열쇠
 item.storagedrawers.quantifyKey.description=저장된 아이템의 개수를 표시하거나 숨깁니다.
 item.storagedrawers.personalKey.name=개인 열쇠
@@ -52,77 +50,47 @@ item.storagedrawers.tape.name=포장 테이프
 item.storagedrawers.tape.description=이사하기 위해 서랍을 포장합니다.
 
 # Blocks
-block.storagedrawers.oak_full_drawers_1=참나무 서랍 1x1
-block.storagedrawers.oak_full_drawers_2=참나무 서랍 1x2
-block.storagedrawers.oak_full_drawers_4=참나무 서랍 2x2
-block.storagedrawers.oak_half_drawers_1=소형 참나무 서랍 1x1
-block.storagedrawers.oak_half_drawers_2=소형 참나무 서랍 1x2
-block.storagedrawers.oak_half_drawers_4=소형 참나무 서랍 2x2
-block.storagedrawers.spruce_full_drawers_1=가문비나무 서랍 1x1
-block.storagedrawers.spruce_full_drawers_2=가문비나무 서랍 1x2
-block.storagedrawers.spruce_full_drawers_4=가문비나무 서랍 2x2
-block.storagedrawers.spruce_half_drawers_1=소형 가문비나무 서랍 1x1
-block.storagedrawers.spruce_half_drawers_2=소형 가문비나무 서랍 1x2
-block.storagedrawers.spruce_half_drawers_4=소형 가문비나무 서랍 2x2
-block.storagedrawers.birch_full_drawers_1=자작나무 서랍 1x1
-block.storagedrawers.birch_full_drawers_2=자작나무 서랍 1x2
-block.storagedrawers.birch_full_drawers_4=자작나무 서랍 2x2
-block.storagedrawers.birch_half_drawers_1=소형 자작나무 서랍 1x1
-block.storagedrawers.birch_half_drawers_2=소형 자작나무 서랍 1x2
-block.storagedrawers.birch_half_drawers_4=소형 자작나무 서랍 2x2
-block.storagedrawers.jungle_full_drawers_1=정글 나무 서랍 1x1
-block.storagedrawers.jungle_full_drawers_2=정글 나무 서랍 1x2
-block.storagedrawers.jungle_full_drawers_4=정글 나무 서랍 2x2
-block.storagedrawers.jungle_half_drawers_1=소형 정글 나무 서랍 1x1
-block.storagedrawers.jungle_half_drawers_2=소형 정글 나무 서랍 1x2
-block.storagedrawers.jungle_half_drawers_4=소형 정글 나무 서랍 2x2
-block.storagedrawers.acacia_full_drawers_1=아카시아나무 서랍 1x1
-block.storagedrawers.acacia_full_drawers_2=아카시아나무 서랍 1x2
-block.storagedrawers.acacia_full_drawers_4=아카시아나무 서랍 2x2
-block.storagedrawers.acacia_half_drawers_1=소형 아카시아나무 서랍 1x1
-block.storagedrawers.acacia_half_drawers_2=소형 아카시아나무 서랍 1x2
-block.storagedrawers.acacia_half_drawers_4=소형 아카시아나무 서랍 2x2
-block.storagedrawers.dark_oak_full_drawers_1=짙은 참나무 서랍 1x1
-block.storagedrawers.dark_oak_full_drawers_2=짙은 참나무 서랍 1x2
-block.storagedrawers.dark_oak_full_drawers_4=짙은 참나무 서랍 2x2
-block.storagedrawers.dark_oak_half_drawers_1=소형 짙은 참나무 서랍 1x1
-block.storagedrawers.dark_oak_half_drawers_2=소형 짙은 참나무 서랍 1x2
-block.storagedrawers.dark_oak_half_drawers_4=소형 짙은 참나무 서랍 2x2
+tile.storagedrawers.basicDrawers.fulldrawers1.name=기본 서랍
+tile.storagedrawers.basicDrawers.fulldrawers2.name=기본 서랍 1x2
+tile.storagedrawers.basicDrawers.fulldrawers4.name=기본 서랍 2x2
+tile.storagedrawers.basicDrawers.halfdrawers2.name=소형 서랍 1x2
+tile.storagedrawers.basicDrawers.halfdrawers4.name=소형 서랍 2x2
 
-block.storagedrawers.customDrawers.fulldrawers1.name=커스텀 서랍
-block.storagedrawers.customDrawers.fulldrawers2.name=커스텀 서랍 1x2
-block.storagedrawers.customDrawers.fulldrawers4.name=커스텀 서랍 2x2
-block.storagedrawers.customDrawers.halfdrawers2.name=소형 커스텀 서랍 1x2
-block.storagedrawers.customDrawers.halfdrawers4.name=소형 커스텀 서랍 2x2
 
-block.storagedrawers.fullCustom1.name=커스텀 서랍
-block.storagedrawers.fullCustom2.name=커스텀 서랍 1x2
-block.storagedrawers.fullCustom4.name=커스텀 서랍 2x2
-block.storagedrawers.halfCustom2.name=소형 커스텀 서랍 1x2
-block.storagedrawers.halfCustom4.name=소형 커스텀 서랍 2x2
-block.storagedrawers.customTrim.name=커스텀 장식
+tile.storagedrawers.customDrawers.fulldrawers1.name=커스텀 서랍
+tile.storagedrawers.customDrawers.fulldrawers2.name=커스텀 서랍 1x2
+tile.storagedrawers.customDrawers.fulldrawers4.name=커스텀 서랍 2x2
+tile.storagedrawers.customDrawers.halfdrawers2.name=소형 커스텀 서랍 1x2
+tile.storagedrawers.customDrawers.halfdrawers4.name=소형 커스텀 서랍 2x2
 
-block.storagedrawers.compDrawers.name=압축 서랍
-block.storagedrawers.controller.name=서랍 제어기
-block.storagedrawers.controllerSlave.name=제어기 슬레이브
-block.storagedrawers.framingTable.name=서랍 커스텀 테이블
+tile.storagedrawers.fullCustom1.name=커스텀 서랍
+tile.storagedrawers.fullCustom2.name=커스텀 서랍 1x2
+tile.storagedrawers.fullCustom4.name=커스텀 서랍 2x2
+tile.storagedrawers.halfCustom2.name=소형 커스텀 서랍 1x2
+tile.storagedrawers.halfCustom4.name=소형 커스텀 서랍 2x2
+tile.storagedrawers.customTrim.name=커스텀 장식
 
-block.storagedrawers.trim.oak.name=참나무 장식
-block.storagedrawers.trim.spruce.name=가문비나무 장식
-block.storagedrawers.trim.birch.name=자작나무 장식
-block.storagedrawers.trim.jungle.name=정글 나무 장식
-block.storagedrawers.trim.acacia.name=아카시아나무 장식
-block.storagedrawers.trim.big_oak.name=짙은 참나무 장식
+tile.storagedrawers.compDrawers.name=압축 서랍
+tile.storagedrawers.controller.name=서랍 제어기
+tile.storagedrawers.controllerSlave.name=제어기 슬레이브
+tile.storagedrawers.framingTable.name=서랍 커스텀 테이블
 
-block.storagedrawers.keyButton.drawer.name=서랍 열쇠 버튼
-block.storagedrawers.keyButton.concealment.name=숨김 열쇠 버튼
-block.storagedrawers.keyButton.personal.name=개인 열쇠 버튼
-block.storagedrawers.keyButton.quantify.name=수량 열쇠 버튼
+tile.storagedrawers.trim.oak.name=참나무 장식
+tile.storagedrawers.trim.spruce.name=가문비나무 장식
+tile.storagedrawers.trim.birch.name=자작나무 장식
+tile.storagedrawers.trim.jungle.name=정글 나무 장식
+tile.storagedrawers.trim.acacia.name=아카시아나무 장식
+tile.storagedrawers.trim.big_oak.name=짙은 참나무 장식
+
+tile.storagedrawers.keyButton.drawer.name=서랍 열쇠 버튼
+tile.storagedrawers.keyButton.concealment.name=숨김 열쇠 버튼
+tile.storagedrawers.keyButton.personal.name=개인 열쇠 버튼
+tile.storagedrawers.keyButton.quantify.name=수량 열쇠 버튼
 
 storagedrawers.drawers.description=서랍당 %d 스택을 저장할 수 있습니다.
-storagedrawers.drawers.sealed=Contents sealed within
+storagedrawers.drawers.sealed=내용물이 포장되어 있음
 storagedrawers.upgrade.description=기본 저장량의 %d배만큼 저장량이 증가합니다.
-storagedrawers.controller.description=연결된 서랍들의 덩어리와 상호작용합니다.
+storagedrawers.controller.description=연결된 일련의 서랍과 상호작용합니다.
 storagedrawers.controllerSlave.description=제어기에 연결한 것과 같은 효과를 갖는 추가 포인트입니다.
 
 # Material
@@ -193,7 +161,7 @@ storagedrawers.config.prop.creativeTabVanillaWoods.tooltip=크리에이티브 �
 storagedrawers.config.prop.enabled=Enabled
 storagedrawers.config.prop.enabled.tooltip=Enable block in game.
 storagedrawers.config.prop.baseStorage=Base Storage
-storagedrawers.config.prop.baseStorage.tooltip=서랍 하나에 들어가는 스택의 수.
+storagedrawers.config.prop.baseStorage.tooltip=기본 저장량(서랍 하나에 들어가는 스택의 수).
 storagedrawers.config.prop.recipeOutput=Recipe Output
 storagedrawers.config.prop.recipeOutput.tooltip=조합법 하나에서 만들어지는 아이템 개수.
 storagedrawers.config.prop.enableDrawerUI=Enable Drawer UI
@@ -244,3 +212,5 @@ storagedrawers.config.registries.compRules=Compacting Rules
 storagedrawers.config.registries.registerExtraCompRules=Register Extra Compacting Rules
 storagedrawers.config.registries.oreWhitelist=Ore Dictionary Whitelist
 storagedrawers.config.registries.oreBlacklist=Ore Dictionary Blacklist
+
+# author new3(github.com/new3mc)
