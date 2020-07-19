@@ -1,0 +1,215 @@
+#PARSE_ESCAPES
+
+itemGroup.storagedrawers=Storage Drawers
+itemGroup.storagedrawersSorting=Storage Drawers - Sortering
+
+storagedrawers.container.drawers=Lådor
+storagedrawers.container.compDrawers=Komprimerade lådor
+storagedrawers.container.upgrades=Uppgraderingar
+storagedrawers.container.drawer_controller=Lådkontroll
+storagedrawers.container.unboundSlave=Obunden slav
+storagedrawers.container.framingTable=Inramningsbord
+
+storagedrawers.msg.maxUpgrades=Denna låda kan inte uppgraderas ytterligare.
+storagedrawers.msg.cannotAddUpgrade=Denna uppgradering kan inte installeras på denna låda.
+
+# Items
+item.storagedrawers.upgradeTemplate.name=Uppgraderingsmall
+item.storagedrawers.upgradeStorage.obsidian.name=Lagringsuppgradering (I)
+item.storagedrawers.upgradeStorage.iron.name=Lagringsuppgradering (II)
+item.storagedrawers.upgradeStorage.gold.name=Lagringsuppgradering (III)
+item.storagedrawers.upgradeStorage.diamond.name=Lagringsuppgradering (IV)
+item.storagedrawers.upgradeStorage.emerald.name=Lagringsuppgradering (V)
+item.storagedrawers.upgradeStatus.level1.name=Statusuppgradering (I)
+item.storagedrawers.upgradeOneStack.name=Lagringsnedgradering
+item.storagedrawers.upgradeOneStack.description=Reducerar grundlagringen till en enda föremålsgrupp
+item.storagedrawers.upgradeStatus.level1.description=Visar full lagring
+item.storagedrawers.upgradeStatus.level2.name=Statusuppgradering (II)
+item.storagedrawers.upgradeStatus.level2.description=Visar fyllningsnivå
+item.storagedrawers.upgradeVoid.name=Tomhetsuppgradering
+item.storagedrawers.upgradeVoid.description=Förstör överflödiga föremål
+item.storagedrawers.upgradeConversion.name=Omvandlingsuppgradering
+item.storagedrawers.upgradeConversion.description=Omvandlar kompatibla föremål automatiskt
+item.storagedrawers.upgradeCreative.store.name=Kreativ lagringsuppgradering
+item.storagedrawers.upgradeCreative.store.description=Nästintill oändlig lagring
+item.storagedrawers.upgradeCreative.vend.name=Kreativ automatuppgradering
+item.storagedrawers.upgradeCreative.vend.description=Obegränsat uttag av föremål
+item.storagedrawers.upgradeRedstone.combined.name=Redstoneuppgradering
+item.storagedrawers.upgradeRedstone.combined.description=Avger signal vid full lagring.
+item.storagedrawers.upgradeRedstone.max.name=Maximal redstoneuppgradering
+item.storagedrawers.upgradeRedstone.max.description=Avger signal för mest fulla plats.
+item.storagedrawers.upgradeRedstone.min.name=Minimal redstoneuppgradering
+item.storagedrawers.upgradeRedstone.min.description=Avger signal för minst fulla plats.
+item.storagedrawers.drawerKey.name=Lådnyckel
+item.storagedrawers.drawerKey.description=Låser och låser upp lådor
+item.storagedrawers.shroudKey.name=Etikettnyckel
+item.storagedrawers.shroudKey.description=Visar eller döljer föremålsetiketter
+item.storagedrawers.quantifyKey.name=Kvantifieringsnyckel
+item.storagedrawers.quantifyKey.description=Visar eller döljer etiketter för lagrat antal
+item.storagedrawers.personalKey.name=Personlig nyckel
+item.storagedrawers.personalKey.description=Förhindrar åtkomst för andra spelare
+item.storagedrawers.tape.name=Paketeringstejp
+item.storagedrawers.tape.description=Förseglar lådor för att kunna flytta dem
+
+# Blocks
+tile.storagedrawers.basicDrawers.fulldrawers1.name=Enkel låda
+tile.storagedrawers.basicDrawers.fulldrawers2.name=Enkla lådor 1x2
+tile.storagedrawers.basicDrawers.fulldrawers4.name=Enkla lådor 2x2
+tile.storagedrawers.basicDrawers.halfdrawers2.name=Halva lådor 1x2
+tile.storagedrawers.basicDrawers.halfdrawers4.name=Halva lådor 2x2
+
+tile.storagedrawers.customDrawers.fulldrawers1.name=Inramad låda
+tile.storagedrawers.customDrawers.fulldrawers2.name=Inramade lådor 1x2
+tile.storagedrawers.customDrawers.fulldrawers4.name=Inramade lådor 2x2
+tile.storagedrawers.customDrawers.halfdrawers2.name=Inramade halva lådor 1x2
+tile.storagedrawers.customDrawers.halfdrawers4.name=Inramade halva lådor 2x2
+
+tile.storagedrawers.fullCustom1.name=Inramad låda
+tile.storagedrawers.fullCustom2.name=Inramade lådor 1x2
+tile.storagedrawers.fullCustom4.name=Inramade lådor 2x2
+tile.storagedrawers.halfCustom2.name=Inramade lådor 1x2
+tile.storagedrawers.halfCustom4.name=Inramade lådor 2x2
+tile.storagedrawers.customTrim.name=Inramad kant
+
+tile.storagedrawers.compDrawers.name=Komprimerad låda
+tile.storagedrawers.controller.name=Lådkontroll
+tile.storagedrawers.controllerSlave.name=Kontrollslav
+tile.storagedrawers.framingTable.name=Inramningsbord
+
+tile.storagedrawers.trim.oak.name=Ekträram
+tile.storagedrawers.trim.spruce.name=Granträram
+tile.storagedrawers.trim.birch.name=Björkträram
+tile.storagedrawers.trim.jungle.name=Djungelträram
+tile.storagedrawers.trim.acacia.name=Akaciaträram
+tile.storagedrawers.trim.big_oak.name=Mörk ekträram
+
+tile.storagedrawers.keyButton.drawer.name=Knapp för lådnyckel
+tile.storagedrawers.keyButton.concealment.name=Knapp för förseglingsnyckel
+tile.storagedrawers.keyButton.personal.name=Knapp för personlig nyckel
+tile.storagedrawers.keyButton.quantify.name=Knapp för kvantifieringsnyckel
+
+storagedrawers.drawers.description=Rymmer %d föremålsgrupper per låda
+storagedrawers.drawers.sealed=Innehållet har förseglats
+storagedrawers.upgrade.description=Ökar lagringen till %d gånger basvärdet
+storagedrawers.controller.description=Interagera med en grupp anslutna lådor
+storagedrawers.controllerSlave.description=Extra fästpunkter för kontroll
+
+# Material
+storagedrawers.material=Material: %s
+storagedrawers.material.oak=Ekträ
+storagedrawers.material.spruce=Granträ
+storagedrawers.material.birch=Björkträ
+storagedrawers.material.jungle=Djungelträ
+storagedrawers.material.acacia=Akaciaträ
+storagedrawers.material.dark_oak=Mörkt ekträ
+
+# Integration
+storagedrawers.waila.empty=<Tom>
+storagedrawers.waila.level=Uppgraderingsnivå: %s
+storagedrawers.waila.drawer=Låda %s: %s
+storagedrawers.waila.limit=Gräns för föremålsgrupper: %s (x%s)
+storagedrawers.waila.nolimit=Gräns för föremålsgrupper: ∞
+storagedrawers.waila.locked=Låst
+storagedrawers.waila.void=Tomhet
+storagedrawers.waila.sorting=Sortering
+storagedrawers.waila.protected=Skyddad
+storagedrawers.waila.config.displayContents=Föremålsgruppinnehåll
+storagedrawers.waila.config.displayStackLimit=Gräns för föremålsgrupper
+storagedrawers.waila.config.displayStatus=Uppgraderingsstatus
+
+# Configuration
+storagedrawers.config.title=Konfiguration av Storage Drawers
+
+storagedrawers.config.general=Allmänna inställningar
+storagedrawers.config.general.tooltip=Allt möjligt.
+
+storagedrawers.config.blocks=Blockinställningar
+storagedrawers.config.blocks.tooltip=Konfigurera individuella lagringsblock.
+
+storagedrawers.config.blocks.fullDrawers1=Lådor 1x1
+storagedrawers.config.blocks.fullDrawers2=Lådor 1x2
+storagedrawers.config.blocks.fullDrawers4=Lådor 2x2
+storagedrawers.config.blocks.halfDrawers2=Kompakta lådor 1x2
+storagedrawers.config.blocks.halfDrawers4=Kompakta lådor 2x2
+storagedrawers.config.blocks.compDrawers=Komprimerade lådor
+storagedrawers.config.blocks.controller=Lådkontroll
+storagedrawers.config.blocks.trim=Kant
+storagedrawers.config.blocks.controllerSlave=Kontrollslav
+
+storagedrawers.config.upgrades=Uppgraderingsinställningar
+storagedrawers.config.upgrades.tooltip=Konfigurera individuella lagringsuppgraderingar.
+
+storagedrawers.config.upgrades.level2Mult=Lagringsmultiplikator (II)
+storagedrawers.config.upgrades.level3Mult=Lagringsmultiplikator (III)
+storagedrawers.config.upgrades.level4Mult=Lagringsmultiplikator (IV)
+storagedrawers.config.upgrades.level5Mult=Lagringsmultiplikator (V)
+storagedrawers.config.upgrades.level6Mult=Lagringsmultiplikator (VI)
+
+storagedrawers.config.prop.enableIndicatorUpgrades=Aktivera indikatorsuppgraderingar
+storagedrawers.config.prop.enableStorageUpgrades=Aktivera lagringsuppgraderingar
+storagedrawers.config.prop.enableLockUpgrades=Aktivera låsning av lådor
+storagedrawers.config.prop.enableShroudUpgrades=Aktivera föremålsförsegling
+storageDrawers.config.prop.enableQuantifiableUpgrades=Aktivera kvantitetsvisning
+storagedrawers.config.prop.enablePersonalUpgrades=Aktivera åtkomstskydd
+storagedrawers.config.prop.enableVoidUpgrades=Aktivera tomrumsuppgradering
+storagedrawers.config.prop.enableCreativeUpgrades=Aktivera kreativ uppgradering
+storagedrawers.config.prop.enableRedstoneUpgrades=Aktivera redstoneuppgraderingar
+storagedrawers.config.prop.enableSortingUpgrades=Aktivera sorteringsuppgraderingar
+storagedrawers.config.prop.enableSortingUpgrades.tooltip=Refined Relocation måste läsas in.
+storagedrawers.config.prop.renderStorageUpgrades=Rendera lagringsuppgraderingar
+storagedrawers.config.prop.creativeTabVanillaWoods=Vanliga träsorter i kreativt läge
+storagedrawers.config.prop.creativeTabVanillaWoods.tooltip=Aktivera alla träsorter i kreativt läge.
+storagedrawers.config.prop.enabled=Aktiverad
+storagedrawers.config.prop.enabled.tooltip=Aktivera block i spelet.
+storagedrawers.config.prop.baseStorage=Grundlagring
+storagedrawers.config.prop.baseStorage.tooltip=Antal stackar som varje låda innehåller.
+storagedrawers.config.prop.recipeOutput=Receptutmatning
+storagedrawers.config.prop.recipeOutput.tooltip=Antal föremål från en tillverkning
+storagedrawers.config.prop.enableDrawerUI=Aktivera lådgränssnitt
+storagedrawers.config.prop.enableDrawerUI.tooltip=Visa antal föremål och tillhandahåll uppgraderingshantering.
+storagedrawers.config.prop.enableSidedInput=Aktivera inmatning från sidan
+storagedrawers.config.prop.enableSidedInput.tooltip=Andra block kan infoga föremål i lådor.
+storagedrawers.config.prop.enableSidedOutput=Aktivera utmatning från sidan
+storagedrawers.config.prop.enableSidedOutput.tooltip=Andra block kan extrahera föremål från lådor.
+storagedrawers.config.prop.enableItemConversion=Aktivera föremålsomvandling
+storagedrawers.config.prop.enableItemConversion.tooltip=Lådor omvandlar automatiskt föremål som är kompatibla med OreDictionary.
+storagedrawers.config.prop.enableFallbackRecipes=Aktivera reservrecept
+storagedrawers.config.prop.enableFallbackRecipes.tooltip=Alla giltiga plankor kan användas för att tillverka ekträlådor.
+storagedrawers.config.prop.invertShift=Invertera Shift
+storagedrawers.config.prop.invertShift.tooltip=Inverterar beteendet för klick och Shift+klick.
+storagedrawers.config.prop.enableDebugLogging=Aktivera felsökningsloggning
+storagedrawers.config.prop.enableDebugLogging.tooltip=Skriver ut extra information till loggarna.
+storagedrawers.config.prop.enableTape=Aktivera tejp
+storagedrawers.config.prop.enableTape.tooltip=För att flytta lådor med dess innehåll.
+storagedrawers.config.prop.wailaStackRemainder=Mängdvisning i WAILA
+storagedrawers.config.prop.wailaStackRemainder.tooltip=Hur föremålsmängder visas i WAILA.
+storagedrawers.config.prop.controllerRange=Kontrollräckvidd
+storagedrawers.config.prop.controllerRange.tooltip=Räckvidd för att hitta nätverksblock.
+storagedrawers.config.prop.enableFramedDrawers=Aktivera inramade lådor
+storagedrawers.config.prop.enableFramedDrawers.tooltip=Lådor med anpassade material.
+storagedrawers.config.prop.defaultQuantify=Kvantitet visas som standard
+storagedrawers.config.prop.defaultQuantify.tooltip=Lådor som visar kvantiteten när de placeras.
+
+storagedrawers.config.addons=Tillägg
+storagedrawers.config.addons.tooltip=Konfigurera inställningar för globala tilläggspaket.
+
+storagedrawers.config.addons.showNEI=Visa block i NEI
+storagedrawers.config.addons.showCreative=Visa block i kreativt läge
+storagedrawers.config.addons.separateTabs=Separata kreativa flikar
+storagedrawers.config.addons.tooltip=Varje paket använder sina egna flikar i stället för flikarna i Storage Drawers.
+
+storagedrawers.config.integration=Integrering
+storagedrawers.config.integration.tooltip=Konfigurera integrering med andra moddar.
+
+storagedrawers.config.integration.enableAE2=Aktivera integrering med Applied Energistics 2
+storagedrawers.config.integration.enableWaila=Aktivera integrering med WAILA
+storagedrawers.config.integration.enableThaumcraft=Aktivera integrering med Thaumcraft
+storagedrawers.config.integration.enableMineTweaker=Aktivera integrering med MineTweaker
+
+storagedrawers.config.registries=Register
+storagedrawers.config.registries.tooltip=Konfigurera komprimeringsregler och OreDictionary-ersättning.
+
+storagedrawers.config.registries.compRules=Komprimeringsregler
+storagedrawers.config.registries.registerExtraCompRules=Registrera extra komprimeringsregler
+storagedrawers.config.registries.oreWhitelist=Vitlista för OreDictionary
+storagedrawers.config.registries.oreBlacklist=Svartlista för OreDictionary
