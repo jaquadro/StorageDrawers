@@ -98,14 +98,14 @@ block.storagedrawers.customDrawers.halfdrawers4.name=소형 커스텀 서랍 2x2
 block.storagedrawers.fullCustom1.name=커스텀 서랍
 block.storagedrawers.fullCustom2.name=커스텀 서랍 1x2
 block.storagedrawers.fullCustom4.name=커스텀 서랍 2x2
-block.storagedrawers.halfCustom2.name=커스텀 서랍 1x2
-block.storagedrawers.halfCustom4.name=커스텀 서랍 2x2
-block.storagedrawers.customTrim.name=Framed Trim
+block.storagedrawers.halfCustom2.name=소형 커스텀 서랍 1x2
+block.storagedrawers.halfCustom4.name=소형 커스텀 서랍 2x2
+block.storagedrawers.customTrim.name=커스텀 장식
 
 block.storagedrawers.compDrawers.name=압축 서랍
 block.storagedrawers.controller.name=서랍 제어기
 block.storagedrawers.controllerSlave.name=제어기 슬레이브
-block.storagedrawers.framingTable.name=Framing Table
+block.storagedrawers.framingTable.name=서랍 커스텀 테이블
 
 block.storagedrawers.trim.oak.name=참나무 장식
 block.storagedrawers.trim.spruce.name=가문비나무 장식
@@ -217,7 +217,7 @@ storagedrawers.config.prop.wailaStackRemainder.tooltip=WAILA에 의해 어떻게
 storagedrawers.config.prop.controllerRange=Controller Range
 storagedrawers.config.prop.controllerRange.tooltip=네트워크에 속한 블록을 감지하는 범위.
 storagedrawers.config.prop.enableFramedDrawers=Enable Framed Drawers
-storagedrawers.config.prop.enableFramedDrawers.tooltip=플레이어가 원하는 블럭으로 만드는 커스텀 서랍.
+storagedrawers.config.prop.enableFramedDrawers.tooltip=커스텀 블록으로 만드는 서랍.
 storagedrawers.config.prop.defaultQuantify=Quantity Visible by Default
 storagedrawers.config.prop.defaultQuantify.tooltip=설치되었을 때 아이템의 개수를 표시합니다.
 
