@@ -72,7 +72,7 @@ tile.storagedrawers.customTrim.name=커스텀 장식
 
 tile.storagedrawers.compDrawers.name=압축 서랍
 tile.storagedrawers.controller.name=서랍 컨트롤러
-tile.storagedrawers.controllerSlave.name= 슬레이브
+tile.storagedrawers.controllerSlave.name=컨트롤러 슬레이브
 tile.storagedrawers.framingTable.name=서랍 커스텀 테이블
 
 tile.storagedrawers.trim.oak.name=참나무 장식
@@ -91,7 +91,7 @@ storagedrawers.drawers.description=서랍당 %d 스택을 저장할 수 있습�
 storagedrawers.drawers.sealed=내용물이 포장되어 있음
 storagedrawers.upgrade.description=기본 저장량의 %d배만큼 저장량이 증가합니다.
 storagedrawers.controller.description=연결된 일련의 서랍과 상호작용합니다.
-storagedrawers.controllerSlave.description=에 연결한 것과 같은 효과를 갖는 추가 포인트입니다.
+storagedrawers.controllerSlave.description=컨트롤러에 연결한 것과 같은 효과를 갖는 추가 포인트입니다.
 
 # Material
 storagedrawers.material=재료: %s
@@ -133,7 +133,7 @@ storagedrawers.config.blocks.halfDrawers4=소형 서랍 2x2
 storagedrawers.config.blocks.compDrawers=압축 서랍
 storagedrawers.config.blocks.controller=서랍 컨트롤러
 storagedrawers.config.blocks.trim=장식
-storagedrawers.config.blocks.controllerSlave=제어기 슬레이브
+storagedrawers.config.blocks.controllerSlave=컨트롤러 슬레이브
 
 storagedrawers.config.upgrades=업그레이드 설정
 storagedrawers.config.upgrades.tooltip=저장량 업그레이드의 개별 설정
