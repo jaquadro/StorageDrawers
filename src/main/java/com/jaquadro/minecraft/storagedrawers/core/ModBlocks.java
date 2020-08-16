@@ -253,8 +253,8 @@ public class ModBlocks
         private static Block registerDrawerBlock(RegistryEvent.Register<Block> event, String name, int drawerCount, boolean halfDepth) {
             return registerBlock(event, name, new BlockStandardDrawers(drawerCount, halfDepth, Block.Properties.create(Material.WOOD)
                 .sound(SoundType.WOOD).hardnessAndResistance(5f)
-                .func_235842_b_(Registration::predFalse) // isSuffocating
-                .func_235847_c_(Registration::predFalse))); // causesSuffocation
+                .setSuffocates(Registration::predFalse)
+                .setOpaque(Registration::predFalse)));
         }
 
         private static Block registerTrimBlock(RegistryEvent.Register<Block> event, String name) {
@@ -265,8 +265,8 @@ public class ModBlocks
         private static Block registerCompactingDrawerBlock(RegistryEvent.Register<Block> event, String name) {
             return registerBlock(event, name, new BlockCompDrawers(Block.Properties.create(Material.ROCK)
                 .sound(SoundType.STONE).hardnessAndResistance(10f)
-                .func_235842_b_(Registration::predFalse) // isSuffocating
-                .func_235847_c_(Registration::predFalse))); // causesSuffocation
+                .setSuffocates(Registration::predFalse)
+                .setOpaque(Registration::predFalse)));
         }
 
         private static Block registerBlock(RegistryEvent.Register<Block> event, String name, Block block) {

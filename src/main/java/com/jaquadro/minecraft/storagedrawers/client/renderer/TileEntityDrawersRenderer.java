@@ -105,7 +105,7 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         if (tile.getDrawerAttributes().isShowingQuantity()) {
             PlayerEntity player = Minecraft.getInstance().player;
             BlockPos blockPos = tile.getPos().add(.5, .5, .5);
-            double distance = Math.sqrt(blockPos.distanceSq(player.func_233580_cy_()));
+            double distance = Math.sqrt(blockPos.distanceSq(player.getPosition()));
 
             float alpha = 1;
             if (distance > 4)

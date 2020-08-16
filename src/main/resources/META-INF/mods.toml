@@ -3,6 +3,7 @@ loaderVersion="[32,)"
 issueTrackerURL="https://github.com/jaquadro/StorageDrawers/issues"
 displayURL="https://minecraft.curseforge.com/projects/storagedrawers"
 authors="Texelsaur"
+license="MIT"
 
 [[mods]]
     modId="storagedrawers"

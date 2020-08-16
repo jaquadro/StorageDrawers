@@ -44,7 +44,7 @@ public class ItemUpgrade extends Item
     @Override
     @OnlyIn(Dist.CLIENT)
     public void addInformation (@Nonnull ItemStack itemStack, @Nullable World world, List<ITextComponent> list, ITooltipFlag advanced) {
-        list.add(new StringTextComponent("").func_230529_a_(getDescription()).func_240699_a_(TextFormatting.GRAY));
+        list.add(new StringTextComponent("").append(getDescription()).mergeStyle(TextFormatting.GRAY));
     }
 
     @OnlyIn(Dist.CLIENT)

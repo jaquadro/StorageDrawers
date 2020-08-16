@@ -61,24 +61,24 @@ public class DrawerScreen extends ContainerScreen<ContainerDrawers>
         }
     }
 
-    @Override // init
-    protected void func_231160_c_ () {
-        super.func_231160_c_();
+    @Override
+    protected void init () {
+        super.init();
 
         if (storageItemRender == null) {
-            ItemRenderer defaultRenderItem = field_230706_i_.getItemRenderer(); // minecraft
-            storageItemRender = new StorageRenderItem(field_230706_i_.getTextureManager(), defaultRenderItem.getItemModelMesher().getModelManager(), field_230706_i_.getItemColors());
+            ItemRenderer defaultRenderItem = minecraft.getItemRenderer();
+            storageItemRender = new StorageRenderItem(minecraft.getTextureManager(), defaultRenderItem.getItemModelMesher().getModelManager(), minecraft.getItemColors());
         }
     }
 
-    @Override // render
-    public void func_230430_a_ (MatrixStack stack, int p_render_1_, int p_render_2_, float p_render_3_) {
+    @Override
+    public void render (MatrixStack stack, int p_render_1_, int p_render_2_, float p_render_3_) {
         ItemRenderer ri = setItemRender(storageItemRender);
         container.activeRenderItem = storageItemRender;
 
-        this.func_230446_a_(stack); // renderBackground
-        super.func_230430_a_(stack, p_render_1_, p_render_2_, p_render_3_); // render
-        this.func_230459_a_(stack, p_render_1_, p_render_2_); // renderHoveredTooltip
+        this.renderBackground(stack);
+        super.render(stack, p_render_1_, p_render_2_, p_render_3_);
+        this.func_230459_a_(stack, p_render_1_, p_render_2_);
 
         container.activeRenderItem = null;
         storageItemRender.overrideStack = ItemStack.EMPTY;
@@ -87,25 +87,25 @@ public class DrawerScreen extends ContainerScreen<ContainerDrawers>
     }
 
     @Override
-    protected void func_230451_b_ (MatrixStack stack, int mouseX, int mouseY) { // drawContainerForegroundLayer
-        this.field_230712_o_.func_238422_b_(stack, this.field_230704_d_, 8.0F, 6.0F, 4210752); // drawString
-        this.field_230712_o_.func_238421_b_(stack, I18n.format("container.storagedrawers.upgrades"), 8, 75, 4210752);
-        this.field_230712_o_.func_238422_b_(stack, this.playerInventory.getDisplayName(), 8, this.ySize - 96 + 2, 4210752);
+    protected void drawGuiContainerForegroundLayer (MatrixStack stack, int mouseX, int mouseY) {
+        this.font.drawString(stack, this.title.getString(), 8.0F, 6.0F, 4210752);
+        this.font.drawString(stack, I18n.format("container.storagedrawers.upgrades"), 8, 75, 4210752);
+        this.font.drawString(stack, this.playerInventory.getDisplayName().getString(), 8, this.ySize - 96 + 2, 4210752);
     }
 
     @Override
-    protected void func_230450_a_ (MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer (MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color4f(1, 1, 1, 1);
 
-        field_230706_i_.getTextureManager().bindTexture(background);
+        minecraft.getTextureManager().bindTexture(background);
 
-        int guiX = (field_230708_k_ - xSize) / 2;
-        int guiY = (field_230709_l_ - ySize) / 2;
-        func_238474_b_(stack, guiX, guiY, 0, 0, xSize, ySize); // blit
+        int guiX = (width - xSize) / 2;
+        int guiY = (height - ySize) / 2;
+        blit(stack, guiX, guiY, 0, 0, xSize, ySize);
 
         List<Slot> storageSlots = container.getStorageSlots();
         for (Slot slot : storageSlots) {
-            func_238474_b_(stack, guiX + slot.xPos, guiY + slot.yPos, smDisabledX, smDisabledY, 16, 16); // blit
+            blit(stack, guiX + slot.xPos, guiY + slot.yPos, smDisabledX, smDisabledY, 16, 16);
         }
 
         /*List<Slot> upgradeSlots = container.getUpgradeSlots();
@@ -135,8 +135,8 @@ public class DrawerScreen extends ContainerScreen<ContainerDrawers>
     }
 
     private ItemRenderer setItemRender (ItemRenderer renderItem) {
-        ItemRenderer prev = field_230707_j_;
-        field_230707_j_ = renderItem;
+        ItemRenderer prev = itemRenderer;
+        itemRenderer = renderItem;
 
         return prev;
     }

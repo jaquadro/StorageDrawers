@@ -42,7 +42,7 @@ public class ItemKey extends Item
         super(properties);
 
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.field_233823_f_, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double)2, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double)2, AttributeModifier.Operation.ADDITION));
         modifiers = builder.build();
     }
 
@@ -55,7 +55,7 @@ public class ItemKey extends Item
     @OnlyIn(Dist.CLIENT)
     public void addInformation (ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new StringTextComponent("").func_230529_a_(getDescription()).func_240699_a_(TextFormatting.GRAY));
+        tooltip.add(new StringTextComponent("").append(getDescription()).mergeStyle(TextFormatting.GRAY));
     }
 
     @OnlyIn(Dist.CLIENT)

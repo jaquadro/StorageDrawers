@@ -52,11 +52,11 @@ public enum EnumCompDrawer implements IDrawerGeometry, IStringSerializable
 
     @Override
     public String toString () {
-        return func_176610_l();
+        return getString();
     }
 
     @Override
-    public String func_176610_l () {
+    public String getString () {
         return name;
     }
 

@@ -36,11 +36,11 @@ public class ItemDrawers extends BlockItem
         //}
 
         ITextComponent textCapacity = new TranslationTextComponent("tooltip.storagedrawers.drawers.capacity", getCapacityForBlock(stack));
-        tooltip.add(new StringTextComponent("").func_230529_a_(textCapacity).func_240699_a_(TextFormatting.GRAY));
+        tooltip.add(new StringTextComponent("").append(textCapacity).mergeStyle(TextFormatting.GRAY));
 
         if (stack.hasTag() && stack.getTag().contains("tile")) {
             ITextComponent textSealed = new TranslationTextComponent("tooltip.storagedrawers.drawers.sealed");
-            tooltip.add(new StringTextComponent("").func_230529_a_(textSealed).func_240699_a_(TextFormatting.YELLOW));
+            tooltip.add(new StringTextComponent("").append(textSealed).mergeStyle(TextFormatting.YELLOW));
         }
 
         //tooltip.add(getDescription().applyTextStyle(TextFormatting.GRAY));
