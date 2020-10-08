@@ -543,7 +543,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
             return;
 
         PacketDistributor.TargetPoint point = new PacketDistributor.TargetPoint(
-            getPos().getX(), getPos().getY(), getPos().getZ(), 500, getWorld().func_234923_W_());
+            getPos().getX(), getPos().getY(), getPos().getZ(), 500, getWorld().getDimensionKey());
         MessageHandler.INSTANCE.send(PacketDistributor.NEAR.with(() -> point), new CountUpdateMessage(getPos(), slot, count));
     }
 

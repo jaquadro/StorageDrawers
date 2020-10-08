@@ -104,15 +104,15 @@ minecraft {
 repositories {
     maven { // JEI
         name = "JEI repo"
-        url "http://dvs1.progwml6.com/files/maven"
+        url "https://dvs1.progwml6.com/files/maven"
     }
     maven { // CraftTweaker
         name = "jared maven"
-        url "http://maven.blamejared.com/"
+        url "https://maven.blamejared.com/"
     }
     maven { // HWYLA
         name = "HWYLA repo"
-        url "http://tehnut.info/maven"
+        url "https://maven.tehnut.info"
     }
     maven {
         name = "CurseForge"

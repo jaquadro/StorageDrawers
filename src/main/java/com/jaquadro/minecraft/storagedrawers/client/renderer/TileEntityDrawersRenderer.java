@@ -64,14 +64,14 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         Direction side = state.get(BlockDrawers.HORIZONTAL_FACING);
 
         Minecraft mc = Minecraft.getInstance();
-        GraphicsFanciness cache = mc.gameSettings.field_238330_f_;
-        mc.gameSettings.field_238330_f_ = GraphicsFanciness.FANCY;
+        GraphicsFanciness cache = mc.gameSettings.graphicFanciness;
+        mc.gameSettings.graphicFanciness = GraphicsFanciness.FANCY;
         //renderUpgrades(renderer, tile, state);
 
         if (!tile.getDrawerAttributes().isConcealed())
             renderFastItemSet(tile, state, matrix, buffer, combinedLight, combinedOverlay, side, partialTickTime);
 
-        mc.gameSettings.field_238330_f_ = cache;
+        mc.gameSettings.graphicFanciness = cache;
 
         matrix.pop();
         RenderHelper.setupLevelDiffuseLighting(matrix.getLast().getMatrix());
