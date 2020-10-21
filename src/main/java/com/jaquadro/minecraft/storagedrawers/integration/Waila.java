@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
-/*
+
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
@@ -14,6 +14,7 @@ import mcp.mobius.waila.api.*;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -63,23 +64,26 @@ public class Waila implements IWailaPlugin
 
                         ItemStack stack = drawer.getStoredItemPrototype();
                         if (!stack.isEmpty()) {
-                            ITextComponent stackName = stack.getDisplayName();
+                            IFormattableTextComponent stackName = new StringTextComponent("").append(stack.getDisplayName());
 
-                            if (drawer.getStoredItemCount() == Integer.MAX_VALUE)
-                                name = stackName.appendText("[\u221E]");
-                            else if (drawer instanceof IFractionalDrawer && ((IFractionalDrawer) drawer).getConversionRate() > 1)
-                                name = stackName.appendText(((i == 0) ? " [" : " [+") + ((IFractionalDrawer) drawer).getStoredItemRemainder() + "]");
+                            if (drawer.getStoredItemCount() == Integer.MAX_VALUE) {
+                                name = stackName.appendString("[\u221E]");
+                            }
+                            else if (drawer instanceof IFractionalDrawer && ((IFractionalDrawer) drawer).getConversionRate() > 1) {
+                                String text = ((i == 0) ? " [" : " [+") + ((IFractionalDrawer) drawer).getStoredItemRemainder() + "]";
+                                name = stackName.appendString(text);
+                            }
                             else if (CommonConfig.INTEGRATION.wailaStackRemainder.get()) {
                                 int stacks = drawer.getStoredItemCount() / drawer.getStoredItemStackSize();
                                 int remainder = drawer.getStoredItemCount() - (stacks * drawer.getStoredItemStackSize());
                                 if (stacks > 0 && remainder > 0)
-                                    name = stackName.appendText(" [" + stacks + "x" + drawer.getStoredItemStackSize() + " + " + remainder + "]");
+                                    name = stackName.appendString(" [" + stacks + "x" + drawer.getStoredItemStackSize() + " + " + remainder + "]");
                                 else if (stacks > 0)
-                                    name = stackName.appendText(" [" + stacks + "x" + drawer.getStoredItemStackSize() + "]");
+                                    name = stackName.appendString(" [" + stacks + "x" + drawer.getStoredItemStackSize() + "]");
                                 else
-                                    name = stackName.appendText(" [" + remainder + "]");
+                                    name = stackName.appendString(" [" + remainder + "]");
                             } else
-                                name = stackName.appendText(" [" + drawer.getStoredItemCount() + "]");
+                                name = stackName.appendString(" [" + drawer.getStoredItemCount() + "]");
                         }
                         currenttip.add(new TranslationTextComponent("tooltip.storagedrawers.waila.drawer", i + 1, name));
                     }
@@ -111,4 +115,3 @@ public class Waila implements IWailaPlugin
         }
     }
 }
-*/

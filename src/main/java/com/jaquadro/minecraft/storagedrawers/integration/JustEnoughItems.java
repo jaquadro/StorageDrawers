@@ -6,20 +6,25 @@ import com.jaquadro.minecraft.storagedrawers.integration.jei.TemplateRecipeHandl
 import com.jaquadro.minecraft.storagedrawers.integration.jei.TemplateRecipeWrapper;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
+import mezz.jei.api.registration.IModIngredientRegistration;
+import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.ISubtypeRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@JEIPlugin
+@JeiPlugin
 public class JustEnoughItems extends IntegrationModule implements IModPlugin
 {
     private static final String MOD_ID = "JEI";
     private static Set<ItemStack> pendingHide = new HashSet<ItemStack>();
-    private static IItemBlacklist blacklist;
+    //private static IItemBlacklist blacklist;
 
     @Override
     public String getModID () {
@@ -37,17 +42,12 @@ public class JustEnoughItems extends IntegrationModule implements IModPlugin
     }
 
     @Override
-    public void registerItemSubtypes (ISubtypeRegistry subtypeRegistry) {
-
+    public ResourceLocation getPluginUid () {
+        return null;
     }
 
     @Override
-    public void registerIngredients (IModIngredientRegistration registry) {
-
-    }
-
-    @Override
-    public void register (IModRegistry registry) {
+    public void registerRecipes (IRecipeRegistration registration) {
         TemplateRecipeWrapper templateWrapper = new TemplateRecipeWrapper(new TemplateRecipe(), registry.getJeiHelpers());
         TemplateRecipeHandler templateHandler = new TemplateRecipeHandler(templateWrapper);
 
@@ -58,11 +58,6 @@ public class JustEnoughItems extends IntegrationModule implements IModPlugin
             blacklist.addItemToBlacklist(stack);
 
         pendingHide.clear();
-    }
-
-    @Override
-    public void onRuntimeAvailable (IJeiRuntime jeiRuntime) {
-
     }
 
     private static void hideItem (ItemStack stack) {
