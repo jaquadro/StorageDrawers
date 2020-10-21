@@ -102,17 +102,21 @@ minecraft {
 }
 
 repositories {
-    maven { // JEI
-        name = "JEI repo"
-        url "http://dvs1.progwml6.com/files/maven"
+    maven {
+        name = "JEI"
+        url "https://dvs1.progwml6.com/files/maven"
     }
-    maven { // CraftTweaker
-        name = "jared maven"
-        url "http://maven.blamejared.com/"
+    maven {
+        name = "CraftTweaker"
+        url "https://maven.blamejared.com/"
     }
-    maven { // HWYLA
-        name = "HWYLA repo"
-        url "http://tehnut.info/maven"
+    maven {
+        name 'TOP'
+        url "https://maven.tterrag.com/"
+    }
+    maven {
+        name = "HWYLA"
+        url "https://maven.tehnut.info"
     }
     maven {
         name = "CurseForge"
@@ -121,26 +125,38 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${project.forge_version}"
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     //compile chameleon
 
-    //compileOnly "mezz.jei:jei-${minecraft_version}:${jei_version}:api"
-    //compile fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
 
-    //compileOnly "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
-    //compile fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+    compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.16:${top_version}:api")
+    runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.16:${top_version}")
+
+    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
+    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
 
     //deobfCompile "MineTweaker3:MineTweaker3-API:${mt_version}"
     //deobfCompile "org.ow2.asm:asm-debug-all:5.0.3"
+
+    compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${minecraft_version}:${crafttweaker_version}")
 }
 
-processResources
-{
-    from (sourceSets.main.resources.srcDirs) {
-        include 'META-INF/mods.toml'
-        expand 'version': project.version
+task replaceResources(type: Copy) {
+    outputs.upToDateWhen { false }
+    from(sourceSets.main.resources) {
+        include "META-INF/mods.toml"
+        expand "version": mod_version, "mc_version": minecraft_version, "forge_version": min_forge_version, "loader_version": loader_version
     }
+    into "$buildDir/resources/main/"
+}
+
+processResources {
+    //Exclude the mods.toml file as we manually handle that and don't want it to invalidate our cache
+    exclude 'META-INF/mods.toml'
+    finalizedBy replaceResources
 }
 
 jar {

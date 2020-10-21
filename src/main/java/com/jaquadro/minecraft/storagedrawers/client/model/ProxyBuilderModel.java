@@ -78,9 +78,9 @@ public abstract class ProxyBuilderModel implements IBakedModel
     }
 
     @Override
-    public boolean func_230044_c_ () {
+    public boolean isSideLit () {
         IBakedModel model = getActiveModel();
-        return (model != null) ? model.func_230044_c_() : false;
+        return (model != null) ? model.isSideLit() : false;
     }
 
     public List<Object> getKey (BlockState state) {

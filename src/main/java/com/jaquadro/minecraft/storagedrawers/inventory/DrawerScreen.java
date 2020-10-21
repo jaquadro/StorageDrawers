@@ -78,7 +78,7 @@ public class DrawerScreen extends ContainerScreen<ContainerDrawers>
 
         this.renderBackground(stack);
         super.render(stack, p_render_1_, p_render_2_, p_render_3_);
-        this.func_230459_a_(stack, p_render_1_, p_render_2_);
+        this.renderHoveredTooltip(stack, p_render_1_, p_render_2_);
 
         container.activeRenderItem = null;
         storageItemRender.overrideStack = ItemStack.EMPTY;

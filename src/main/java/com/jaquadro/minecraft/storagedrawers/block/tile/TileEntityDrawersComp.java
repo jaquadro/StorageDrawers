@@ -128,7 +128,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         protected void onAmountChanged () {
             if (getWorld() != null && !getWorld().isRemote) {
                 PacketDistributor.TargetPoint point = new PacketDistributor.TargetPoint(
-                    getPos().getX(), getPos().getY(), getPos().getZ(), 500, getWorld().func_234923_W_());
+                    getPos().getX(), getPos().getY(), getPos().getZ(), 500, getWorld().getDimensionKey());
                 MessageHandler.INSTANCE.send(PacketDistributor.NEAR.with(() -> point), new CountUpdateMessage(getPos(), 0, getPooledCount()));
 
                 markDirty();

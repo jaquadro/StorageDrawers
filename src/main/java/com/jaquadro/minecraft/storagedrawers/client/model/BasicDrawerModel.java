@@ -303,8 +303,8 @@ public final class BasicDrawerModel
         }
 
         @Override
-        public boolean func_230044_c_ () {
-            return mainModel.func_230044_c_();
+        public boolean isSideLit () {
+            return mainModel.isSideLit();
         }
 
         @Override
@@ -345,8 +345,8 @@ public final class BasicDrawerModel
         }
 
         @Override
-        public boolean func_230044_c_ () {
-            return mainModel.func_230044_c_();
+        public boolean isSideLit () {
+            return mainModel.isSideLit();
         }
 
         @Nonnull
