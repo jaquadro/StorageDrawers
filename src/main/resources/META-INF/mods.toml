@@ -16,8 +16,9 @@ license="MIT"
 [[dependencies.storagedrawers]]
     modId="minecraft"
     mandatory=true
-    versionRange="[${mc_version}]"
+    versionRange="[${mc_version},]"
     side="BOTH"
+
 [[dependencies.storagedrawers]]
     modId="forge"
     mandatory=true

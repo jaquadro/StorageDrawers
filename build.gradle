@@ -141,7 +141,7 @@ dependencies {
     //deobfCompile "MineTweaker3:MineTweaker3-API:${mt_version}"
     //deobfCompile "org.ow2.asm:asm-debug-all:5.0.3"
 
-    compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${minecraft_version}:${crafttweaker_version}")
+    //compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${minecraft_version}:${crafttweaker_version}")
 }
 
 task replaceResources(type: Copy) {

@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.capabilities;
 
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
+import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -56,7 +57,8 @@ public class DrawerItemHandler implements IItemHandler
             return stack;
 
         if (slotIsVirtual(slot)) {
-            //if (StorageDrawers.config.cache.enableItemConversion)
+            // TODO: Why was ItemConversion check needed here?
+            // if (CommonConfig.GENERAL.enableItemConversion.get())
                 return insertItemFullScan(stack, simulate);
             //else
             //    return stack;
@@ -67,15 +69,8 @@ public class DrawerItemHandler implements IItemHandler
         int orderedSlot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
         int prevSlot = (slot >= 1 && slot < order.length) ? order[slot - 1] : -1;
 
-        /*if (StorageDrawers.config.cache.enableItemConversion && orderedSlot > 0) {
-            IDrawer drawer = group.getDrawer(orderedSlot);
-            if (drawer.isEnabled() && drawer.isEmpty()) {
-                IDrawer prevDrawer = group.getDrawer(prevSlot);
-                if (!prevDrawer.isEnabled() || !prevDrawer.isEmpty())
-                    return insertItemFullScan(stack, simulate);
-            }
-        }*/
-        if (orderedSlot > 0) {
+        // TODO: Why was ItemConversion check needed here?
+        if (orderedSlot > 0 /* && CommonConfig.GENERAL.enableItemConversion.get() */) {
             IDrawer drawer = group.getDrawer(orderedSlot);
             if (drawer.isEnabled() && drawer.isEmpty()) {
                 IDrawer prevDrawer = group.getDrawer(prevSlot);
