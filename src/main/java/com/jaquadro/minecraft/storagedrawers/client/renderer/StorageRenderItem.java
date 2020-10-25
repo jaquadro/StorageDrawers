@@ -100,10 +100,10 @@ public class StorageRenderItem extends ItemRenderer
             return;
         }
 
-        item = ItemStackHelper.decodeItemStack(item);
-
         if (!item.isEmpty())
         {
+            item = ItemStackHelper.decodeItemStack(item);
+
             float scale = .5f;
             float xoff = 0;
             //if (font.getUnicodeFlag()) {

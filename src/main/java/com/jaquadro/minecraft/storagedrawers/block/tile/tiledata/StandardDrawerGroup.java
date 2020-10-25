@@ -181,9 +181,11 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
 
         protected IDrawer setStoredItem (@Nonnull ItemStack itemPrototype, boolean notify) {
-            if (matcher.matches(itemPrototype)) {
+            if (ItemStackHelper.isStackEncoded(itemPrototype))
+                itemPrototype = ItemStackHelper.decodeItemStackPrototype(itemPrototype);
+
+            if (matcher.matches(itemPrototype))
                 return this;
-            }
 
             itemPrototype = ItemStackHelper.getItemPrototype(itemPrototype);
             if (itemPrototype.isEmpty()) {
