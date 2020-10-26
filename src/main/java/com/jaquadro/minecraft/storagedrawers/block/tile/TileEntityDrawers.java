@@ -60,12 +60,13 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
 
     private long lastClickTime;
     private UUID lastClickUUID;
+    private boolean loading;
 
     private class DrawerAttributes extends BasicDrawerAttributes
     {
         @Override
         protected void onAttributeChanged () {
-            if (!TileEntityDrawers.this.drawerAttributes.isItemLocked(LockAttribute.LOCK_POPULATED)) {
+            if (!loading && !TileEntityDrawers.this.drawerAttributes.isItemLocked(LockAttribute.LOCK_POPULATED)) {
                 for (int slot = 0; slot < TileEntityDrawers.this.getGroup().getDrawerCount(); slot++) {
                     if (TileEntityDrawers.this.emptySlotCanBeCleared(slot)) {
                         IDrawer drawer = TileEntityDrawers.this.getGroup().getDrawer(slot);
@@ -459,6 +460,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
 
     @Override
     public void readPortable (CompoundNBT tag) {
+        loading = true;
         super.readPortable(tag);
 
         //material = null;
@@ -494,6 +496,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         securityKey = null;
         if (tag.hasKey("Sec"))
             securityKey = tag.getString("Sec");*/
+        loading = false;
     }
 
     @Override
