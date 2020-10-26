@@ -56,10 +56,7 @@ public class DrawerItemHandler implements IItemHandler
             return stack;
 
         if (slotIsVirtual(slot)) {
-            //if (StorageDrawers.config.cache.enableItemConversion)
-                return insertItemFullScan(stack, simulate);
-            //else
-            //    return stack;
+            return insertItemFullScan(stack, simulate);
         }
 
         slot -= 1;
@@ -67,14 +64,6 @@ public class DrawerItemHandler implements IItemHandler
         int orderedSlot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
         int prevSlot = (slot >= 1 && slot < order.length) ? order[slot - 1] : -1;
 
-        /*if (StorageDrawers.config.cache.enableItemConversion && orderedSlot > 0) {
-            IDrawer drawer = group.getDrawer(orderedSlot);
-            if (drawer.isEnabled() && drawer.isEmpty()) {
-                IDrawer prevDrawer = group.getDrawer(prevSlot);
-                if (!prevDrawer.isEnabled() || !prevDrawer.isEmpty())
-                    return insertItemFullScan(stack, simulate);
-            }
-        }*/
         if (orderedSlot > 0) {
             IDrawer drawer = group.getDrawer(orderedSlot);
             if (drawer.isEnabled() && drawer.isEmpty()) {
