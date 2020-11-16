@@ -13,6 +13,8 @@ import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -27,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
@@ -50,7 +53,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BlockDrawers extends HorizontalBlock implements INetworked
+public abstract class BlockDrawers extends HorizontalBlock implements INetworked, IWaterLoggable
 {
 
     // TODO: TE.getModelData()
@@ -89,7 +92,8 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     public BlockDrawers (int drawerCount, boolean halfDepth, int storageUnits, Block.Properties properties) {
         super(properties);
         this.setDefaultState(stateContainer.getBaseState()
-            .with(HORIZONTAL_FACING, Direction.NORTH));
+            .with(HORIZONTAL_FACING, Direction.NORTH)
+            .with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(false)));
 
         this.drawerCount = drawerCount;
         this.halfDepth = halfDepth;
@@ -109,6 +113,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     @Override
     protected void fillStateContainer (StateContainer.Builder<Block, BlockState> builder) {
         builder.add(HORIZONTAL_FACING);
+        builder.add( BlockStateProperties.WATERLOGGED);
     }
 
     public boolean retrimBlock (World world, BlockPos pos, ItemStack prototype) {
@@ -167,11 +172,19 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         }
     }
 
-
+    @Override
+    public IFluidState getFluidState(BlockState state) {
+        return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+    }
 
     @Override
     public BlockState getStateForPlacement (BlockItemUseContext context) {
-        return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+        IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
+        // Check if we are placed within a waterlogged location.
+        boolean waterlogged = ifluidstate.isTagged(FluidTags.WATER) && ifluidstate.getLevel() == 8;
+        System.err.println("Placing block with waterlogged = " + waterlogged);
+        return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite())
+                .with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(waterlogged));
     }
 
     /*@Override
