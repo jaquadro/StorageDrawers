@@ -93,12 +93,18 @@ public final class CommonConfig
 
     public static class Integration {
         public final ForgeConfigSpec.ConfigValue<Boolean> wailaStackRemainder;
+        public final ForgeConfigSpec.BooleanValue wailaRespectQuantifyKey;
 
         public Integration (ForgeConfigSpec.Builder builder) {
             builder.push("Integration");
 
             wailaStackRemainder = builder
-                .define("wailaStackRemainder", true);
+                    .comment("When true, shows quantity as NxS + R (by stack size) rather than count")
+                    .define("wailaStackRemainder", true);
+
+            wailaRespectQuantifyKey = builder
+                    .comment("When true, does not show current quantities unless quantify key was used")
+                    .define("wailaRespectQuantifyKey", false);
 
             builder.pop();
         }

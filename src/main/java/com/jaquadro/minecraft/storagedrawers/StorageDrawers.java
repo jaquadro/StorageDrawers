@@ -6,17 +6,20 @@ import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.integration.TheOneProbe;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -45,6 +48,7 @@ public class StorageDrawers
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModQueueEvent);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModConfigEvent);
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -77,6 +81,11 @@ public class StorageDrawers
 
     private void clientSetup (final FMLClientSetupEvent event) {
         ModBlocks.Registration.bindRenderTypes();
+    }
+
+    @SuppressWarnings("Convert2MethodRef")  // otherwise the class loader gets upset if TheOneProbe is not loaded
+    private void onModQueueEvent(final InterModEnqueueEvent event) {
+        InterModComms.sendTo("theoneprobe", "getTheOneProbe", () -> new TheOneProbe());
     }
 
     private void onModConfigEvent(final ModConfig.ModConfigEvent event) {
