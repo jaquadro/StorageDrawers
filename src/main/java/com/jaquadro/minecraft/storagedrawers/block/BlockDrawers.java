@@ -231,7 +231,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
     @Override
     public boolean isReplaceable (BlockState state, BlockItemUseContext useContext) {
-        if (useContext.getPlayer().isCreative() && useContext.getHand() == Hand.OFF_HAND) {
+        if (useContext.getPlayer() && useContext.getPlayer().isCreative() && useContext.getHand() == Hand.OFF_HAND) {
             double blockReachDistance = useContext.getPlayer().getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1;
             BlockRayTraceResult result = rayTraceEyes(useContext.getWorld(), useContext.getPlayer(), blockReachDistance);
 
