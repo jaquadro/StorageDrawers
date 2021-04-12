@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers;
 
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityItemRepository;
+import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.core.*;
@@ -43,6 +44,7 @@ public class StorageDrawers
         proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.spec);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModConfigEvent);
@@ -80,7 +82,10 @@ public class StorageDrawers
     }
 
     private void onModConfigEvent(final ModConfig.ModConfigEvent event) {
-        CommonConfig.setLoaded();
+        if (event.getConfig().getType() == ModConfig.Type.COMMON)
+            CommonConfig.setLoaded();
+        if (event.getConfig().getType() == ModConfig.Type.CLIENT)
+            ClientConfig.setLoaded();
     }
 
     @SubscribeEvent

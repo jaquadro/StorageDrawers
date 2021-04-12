@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
@@ -216,7 +217,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
             //    tile.setCustomName(stack.getDisplayName());
         }
 
-        if (entity.getHeldItemOffhand().getItem() == ModItems.DRAWER_KEY) {
+        if (entity != null && entity.getHeldItemOffhand().getItem() == ModItems.DRAWER_KEY) {
             TileEntityDrawers tile = getTileEntity(world, pos);
             if (tile != null) {
                 IDrawerAttributes _attrs = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(new EmptyDrawerAttributes());
@@ -454,14 +455,8 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         IDrawer drawer = tileDrawers.getDrawer(slot);
 
         ItemStack item;
-        //Map<String, PlayerConfigSetting<?>> configSettings = ConfigManager.serverPlayerConfigSettings.get(playerIn.getUniqueID());
-        boolean invertShift = false;
-        /*if (configSettings != null) {
-            PlayerConfigSetting<Boolean> setting = (PlayerConfigSetting<Boolean>) configSettings.get("invertShift");
-            if (setting != null) {
-                invertShift = setting.value;
-            }
-        }*/
+        boolean invertShift = ClientConfig.GENERAL.invertShift.get();
+
         if (playerIn.isSneaking() != invertShift)
             item = tileDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
         else
