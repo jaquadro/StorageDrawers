@@ -99,7 +99,7 @@ public class AddUpgradeRecipe extends SpecialRecipe {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return StorageDrawers.UPRADE_RECIPE_SERIALIZER.get();
+        return StorageDrawers.UPGRADE_RECIPE_SERIALIZER.get();
     }
 
 }

@@ -49,7 +49,7 @@ public class StorageDrawers
     //public static SecurityRegistry securityRegistry;
 
     private static final DeferredRegister<IRecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MOD_ID);
-    public static final RegistryObject<IRecipeSerializer<AddUpgradeRecipe>> UPRADE_RECIPE_SERIALIZER = RECIPES.register("add_upgrade", () -> new SpecialRecipeSerializer<>(AddUpgradeRecipe::new));
+    public static final RegistryObject<IRecipeSerializer<AddUpgradeRecipe>> UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_upgrade", () -> new SpecialRecipeSerializer<>(AddUpgradeRecipe::new));
 
     public StorageDrawers () {
         proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
