@@ -71,8 +71,8 @@ public class BlockController extends HorizontalBlock implements INetworked
 
         if (item == ModItems.DRAWER_KEY)
             toggle(world, pos, player, EnumKeyType.DRAWER);
-        //else if (item == ModItems.shroudKey)
-        //    toggle(world, pos, player, EnumKeyType.CONCEALMENT);
+        else if (item == ModItems.SHROUD_KEY)
+            toggle(world, pos, player, EnumKeyType.CONCEALMENT);
         else if (item == ModItems.QUANTIFY_KEY)
             toggle(world, pos, player, EnumKeyType.QUANTIFY);
         //else if (item == ModItems.personalKey)
@@ -95,9 +95,9 @@ public class BlockController extends HorizontalBlock implements INetworked
             case DRAWER:
                 te.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());
                 break;
-            //case CONCEALMENT:
-            //    te.toggleShroud(player.getGameProfile());
-            //    break;
+            case CONCEALMENT:
+                te.toggleShroud(player.getGameProfile());
+                break;
             case QUANTIFY:
                 te.toggleQuantified(player.getGameProfile());
                 break;

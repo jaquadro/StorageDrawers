@@ -46,6 +46,10 @@ public final class BasicDrawerModel
 {
     private static final Map<Direction, IBakedModel> lockOverlaysFull = new HashMap<>();
     private static final Map<Direction, IBakedModel> lockOverlaysHalf = new HashMap<>();
+    private static final Map<Direction, IBakedModel> voidOverlaysFull = new HashMap<>();
+    private static final Map<Direction, IBakedModel> voidOverlaysHalf = new HashMap<>();
+    private static final Map<Direction, IBakedModel> shroudOverlaysFull = new HashMap<>();
+    private static final Map<Direction, IBakedModel> shroudOverlaysHalf = new HashMap<>();
 
     private static boolean geometryDataLoaded = false;
 
@@ -62,17 +66,22 @@ public final class BasicDrawerModel
                 return;
             }
 
-            BlockModel unbakedModel = getBlockModel(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_lock.json"));
+            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_lock.json"));
+            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_void.json"));
+            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_shroud.json"));
+
+            loadGeometryData();
+        }
+
+        private static void loadUnbakedModel(TextureStitchEvent.Pre event, ResourceLocation resource) {
+            BlockModel unbakedModel = getBlockModel(resource);
 
             for (Either<RenderMaterial, String> x : unbakedModel.textures.values()) {
                 x.ifLeft((value) -> {
                     if (value.getAtlasLocation().equals(event.getMap().getTextureLocation()))
                         event.addSprite(value.getTextureLocation());
                 });
-                // x.ifRight((value) -> event.addSprite(new ResourceLocation(value)));
             }
-
-            loadGeometryData();
         }
 
         private static void loadGeometryData () {
@@ -180,6 +189,24 @@ public final class BasicDrawerModel
             lockOverlaysHalf.put(Direction.EAST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y90, ModelLoader.defaultTextureGetter()));
             lockOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y180, ModelLoader.defaultTextureGetter()));
             lockOverlaysHalf.put(Direction.WEST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), ModelRotation.X0_Y270, ModelLoader.defaultTextureGetter()));
+
+            voidOverlaysFull.put(Direction.NORTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter()));
+            voidOverlaysFull.put(Direction.EAST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), ModelRotation.X0_Y90, ModelLoader.defaultTextureGetter()));
+            voidOverlaysFull.put(Direction.SOUTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), ModelRotation.X0_Y180, ModelLoader.defaultTextureGetter()));
+            voidOverlaysFull.put(Direction.WEST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), ModelRotation.X0_Y270, ModelLoader.defaultTextureGetter()));
+            voidOverlaysHalf.put(Direction.NORTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter()));
+            voidOverlaysHalf.put(Direction.EAST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), ModelRotation.X0_Y90, ModelLoader.defaultTextureGetter()));
+            voidOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), ModelRotation.X0_Y180, ModelLoader.defaultTextureGetter()));
+            voidOverlaysHalf.put(Direction.WEST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), ModelRotation.X0_Y270, ModelLoader.defaultTextureGetter()));
+
+            shroudOverlaysFull.put(Direction.NORTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter()));
+            shroudOverlaysFull.put(Direction.EAST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), ModelRotation.X0_Y90, ModelLoader.defaultTextureGetter()));
+            shroudOverlaysFull.put(Direction.SOUTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), ModelRotation.X0_Y180, ModelLoader.defaultTextureGetter()));
+            shroudOverlaysFull.put(Direction.WEST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), ModelRotation.X0_Y270, ModelLoader.defaultTextureGetter()));
+            shroudOverlaysHalf.put(Direction.NORTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter()));
+            shroudOverlaysHalf.put(Direction.EAST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), ModelRotation.X0_Y90, ModelLoader.defaultTextureGetter()));
+            shroudOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), ModelRotation.X0_Y180, ModelLoader.defaultTextureGetter()));
+            shroudOverlaysHalf.put(Direction.WEST, event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), ModelRotation.X0_Y270, ModelLoader.defaultTextureGetter()));
 
             if (ModBlocks.OAK_FULL_DRAWERS_1 == null) {
                 StorageDrawers.log.warn("Block objects not set in ModelBakeEvent.  Is your mod environment broken?");
@@ -340,22 +367,26 @@ public final class BasicDrawerModel
     public static abstract class Model2 implements IDynamicBakedModel {
         protected final IBakedModel mainModel;
         protected final Map<Direction, IBakedModel> lockOverlay;
+        protected final Map<Direction, IBakedModel> voidOverlay;
+        protected final Map<Direction, IBakedModel> shroudOverlay;
 
         public static class FullModel extends Model2 {
             FullModel(IBakedModel mainModel) {
-                super(mainModel, lockOverlaysFull);
+                super(mainModel, lockOverlaysFull, voidOverlaysFull, shroudOverlaysFull);
             }
         }
 
         public static class HalfModel extends Model2 {
             HalfModel(IBakedModel mainModel) {
-                super(mainModel, lockOverlaysHalf);
+                super(mainModel, lockOverlaysHalf, voidOverlaysHalf, shroudOverlaysHalf);
             }
         }
 
-        private Model2(IBakedModel mainModel, Map<Direction, IBakedModel> lockOverlay) {
+        private Model2(IBakedModel mainModel, Map<Direction, IBakedModel> lockOverlay, Map<Direction, IBakedModel> voidOverlay, Map<Direction, IBakedModel> shroudOverlay) {
             this.mainModel = mainModel;
             this.lockOverlay = lockOverlay;
+            this.voidOverlay = voidOverlay;
+            this.shroudOverlay = shroudOverlay;
         }
 
         @Override
@@ -375,6 +406,10 @@ public final class BasicDrawerModel
 
                 if (attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED))
                     quads.addAll(lockOverlay.get(dir).getQuads(state, side, rand, extraData));
+                if (attr.isVoid())
+                    quads.addAll(voidOverlay.get(dir).getQuads(state, side, rand, extraData));
+                if (attr.isConcealed())
+                    quads.addAll(shroudOverlay.get(dir).getQuads(state, side, rand, extraData));
             }
 
             return quads;

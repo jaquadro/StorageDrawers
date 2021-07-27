@@ -1,0 +1,13 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "shroud": "storagedrawers:blocks/indicator/shroud_icon"
+    },
+    "elements": [ {
+        "from": [ 1, 15, 7.98 ],
+        "to": [ 2, 16, 16],
+        "faces": {
+            "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#shroud", "cullface": "north" }
+        }
+    } ]
+}
