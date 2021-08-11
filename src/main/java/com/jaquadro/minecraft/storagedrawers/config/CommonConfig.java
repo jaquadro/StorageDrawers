@@ -71,7 +71,7 @@ public final class CommonConfig
                 .define("debugTrace", false);
             compRules = builder
                 .comment("List of rules in format \"domain:item1, domain:item2, n\".",
-                    "Causes a compacting drawer convert n of item1 into 1 of item2.")
+                    "Creates a compacting drawer rule to convert 1 of item1 into n of item2.")
                 .defineList("compactingRules", test, obj -> CompTierRegistry.validateRuleSyntax((String)obj));
 
             builder.pop();
