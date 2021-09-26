@@ -39,9 +39,8 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "com.jaquadro.minecraft.storagedrawers:StorageDrawers:<VERSION>:api"
+    fg.deobf  "com.jaquadro.minecraft.storagedrawers:StorageDrawers:<VERSION>:api"
     runtime "com.jaquadro.minecraft.storagedrawers:StorageDrawers:<VERSION>"
-    runtime "com.jaquadro.minecraft.chameleon:Chameleon:<VERSION>"
 }
 ```
 An example version is `1.12-5.2.2`. You can [browse the repo](https://dl.bintray.com/jaquadro/dev/com/jaquadro/minecraft/) to see what versions are available.
