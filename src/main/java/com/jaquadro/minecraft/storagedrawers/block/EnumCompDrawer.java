@@ -1,9 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGeometry;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
-public enum EnumCompDrawer implements IDrawerGeometry, IStringSerializable
+public enum EnumCompDrawer implements IDrawerGeometry, StringRepresentable
 {
     OPEN1(0, 1, "open1"),
     OPEN2(1, 2, "open2"),
@@ -52,11 +52,11 @@ public enum EnumCompDrawer implements IDrawerGeometry, IStringSerializable
 
     @Override
     public String toString () {
-        return getString();
+        return getSerializedName();
     }
 
     @Override
-    public String getString () {
+    public String getSerializedName () {
         return name;
     }
 

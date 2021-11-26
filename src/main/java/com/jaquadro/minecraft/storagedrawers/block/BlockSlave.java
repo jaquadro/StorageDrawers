@@ -2,21 +2,23 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class BlockSlave extends Block implements INetworked
 {
-    public BlockSlave (Block.Properties properties) {
+    public BlockSlave (BlockBehaviour.Properties properties) {
         super(properties);
     }
 
-    public void toggle (World world, BlockPos pos, PlayerEntity player, EnumKeyType keyType) {
+    public void toggle (Level world, BlockPos pos, Player player, EnumKeyType keyType) {
         TileEntitySlave tile = getTileEntity(world, pos);
         if (tile == null)
             return;
@@ -38,20 +40,20 @@ public class BlockSlave extends Block implements INetworked
     }
 
     @Override
-    public TileEntitySlave createTileEntity (BlockState state, IBlockReader world) {
+    public TileEntitySlave createTileEntity (BlockState state, BlockGetter world) {
         return new TileEntitySlave();
     }
 
-    public TileEntitySlave getTileEntity (IBlockReader blockAccess, BlockPos pos) {
-        TileEntity tile = blockAccess.getTileEntity(pos);
+    public TileEntitySlave getTileEntity (BlockGetter blockAccess, BlockPos pos) {
+        BlockEntity tile = blockAccess.getBlockEntity(pos);
         return (tile instanceof TileEntitySlave) ? (TileEntitySlave) tile : null;
     }
 
-    public TileEntitySlave getTileEntitySafe (World world, BlockPos pos) {
+    public TileEntitySlave getTileEntitySafe (Level world, BlockPos pos) {
         TileEntitySlave tile = getTileEntity(world, pos);
         if (tile == null) {
             tile = createTileEntity(world.getBlockState(pos), world);
-            world.setTileEntity(pos, tile);
+            world.setBlockEntity(pos, tile);
         }
 
         return tile;

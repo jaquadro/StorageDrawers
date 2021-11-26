@@ -6,8 +6,8 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -15,6 +15,8 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup.DrawerData;
 
 public class TileEntityDrawersStandard extends TileEntityDrawers
 {
@@ -26,7 +28,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
     private int capacity = 0;
 
-    public TileEntityDrawersStandard (TileEntityType<?> tileEntityType) {
+    public TileEntityDrawersStandard (BlockEntityType<?> tileEntityType) {
         super(tileEntityType);
     }
 
@@ -162,17 +164,17 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
             DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
 
-            if (getWorld() != null && !getWorld().isRemote) {
-                markDirty();
+            if (getLevel() != null && !getLevel().isClientSide) {
+                setChanged();
                 markBlockForUpdate();
             }
         }
 
         @Override
         protected void onAmountChanged () {
-            if (getWorld() != null && !getWorld().isRemote) {
+            if (getLevel() != null && !getLevel().isClientSide) {
                 syncClientCount(slot, getStoredItemCount());
-                markDirty();
+                setChanged();
             }
         }
     }

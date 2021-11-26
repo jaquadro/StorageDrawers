@@ -7,11 +7,11 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.LazyOptional;
@@ -21,13 +21,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository.ItemRecord;
+
 public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
 {
     private static final int[] drawerSlots = new int[]{0};
 
     public final ControllerData controllerData = new ControllerData();
 
-    public TileEntitySlave (TileEntityType<?> tileEntityType) {
+    public TileEntitySlave (BlockEntityType<?> tileEntityType) {
         super(tileEntityType);
 
         injectData(controllerData);
@@ -44,7 +46,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
 
     public void bindController (BlockPos coord) {
         if (controllerData.bindCoord(coord))
-            markDirty();
+            setChanged();
     }
 
     public BlockPos getControllerPos () {
@@ -59,7 +61,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
     @Override
     public int[] getAccessibleDrawerSlots () {
         TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getPos()))
+        if (controller == null || !controller.isValidSlave(getBlockPos()))
             return drawerSlots;
 
         return controller.getAccessibleDrawerSlots();
@@ -68,7 +70,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
     @Override
     public int getDrawerCount () {
         TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getPos()))
+        if (controller == null || !controller.isValidSlave(getBlockPos()))
             return 0;
 
         return controller.getDrawerCount();
@@ -78,19 +80,19 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
     @Nonnull
     public IDrawer getDrawer (int slot) {
         TileEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getPos()))
+        if (controller == null || !controller.isValidSlave(getBlockPos()))
             return Drawers.DISABLED;
 
         return controller.getDrawer(slot);
     }
 
     @Override
-    public void markDirty () {
+    public void setChanged () {
         TileEntityController controller = getController();
-        if (controller != null && controller.isValidSlave(getPos()))
-            controller.markDirty();
+        if (controller != null && controller.isValidSlave(getBlockPos()))
+            controller.setChanged();
 
-        super.markDirty();
+        super.setChanged();
     }
 
     static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
@@ -123,7 +125,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
         @Override
         public NonNullList<ItemRecord> getAllItems () {
             TileEntityController controller = getController();
-            if (controller == null || !controller.isValidSlave(getPos()))
+            if (controller == null || !controller.isValidSlave(getBlockPos()))
                 return NonNullList.create();
 
             return controller.getItemRepository().getAllItems();
@@ -133,7 +135,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
         @Override
         public ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate, Predicate<ItemStack> predicate) {
             TileEntityController controller = getController();
-            if (controller == null || !controller.isValidSlave(getPos()))
+            if (controller == null || !controller.isValidSlave(getBlockPos()))
                 return stack;
 
             return controller.getItemRepository().insertItem(stack, simulate, predicate);
@@ -143,7 +145,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
         @Override
         public ItemStack extractItem (@Nonnull ItemStack stack, int amount, boolean simulate, Predicate<ItemStack> predicate) {
             TileEntityController controller = getController();
-            if (controller == null || !controller.isValidSlave(getPos()))
+            if (controller == null || !controller.isValidSlave(getBlockPos()))
                 return ItemStack.EMPTY;
 
             return controller.getItemRepository().extractItem(stack, amount, simulate, predicate);
@@ -152,7 +154,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
         @Override
         public int getStoredItemCount (@Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
             TileEntityController controller = getController();
-            if (controller == null || !controller.isValidSlave(getPos()))
+            if (controller == null || !controller.isValidSlave(getBlockPos()))
                 return 0;
 
             return controller.getItemRepository().getStoredItemCount(stack, predicate);
@@ -161,7 +163,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
         @Override
         public int getRemainingItemCapacity (@Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
             TileEntityController controller = getController();
-            if (controller == null || !controller.isValidSlave(getPos()))
+            if (controller == null || !controller.isValidSlave(getBlockPos()))
                 return 0;
 
             return controller.getItemRepository().getRemainingItemCapacity(stack, predicate);
@@ -170,7 +172,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
         @Override
         public int getItemCapacity (@Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
             TileEntityController controller = getController();
-            if (controller == null || !controller.isValidSlave(getPos()))
+            if (controller == null || !controller.isValidSlave(getBlockPos()))
                 return 0;
 
             return controller.getItemRepository().getItemCapacity(stack, predicate);

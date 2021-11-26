@@ -7,10 +7,10 @@ import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -72,11 +72,11 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
     }
 
     @Override
-    public void read (CompoundNBT tag) {
+    public void read (CompoundTag tag) {
         if (!tag.contains("Drawers"))
             return;
 
-        ListNBT itemList = tag.getList("Drawers", Constants.NBT.TAG_COMPOUND);
+        ListTag itemList = tag.getList("Drawers", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < itemList.size(); i++) {
             if (i < slots.length)
                 slots[i].deserializeNBT(itemList.getCompound(i));
@@ -84,11 +84,11 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
     }
 
     @Override
-    public CompoundNBT write (CompoundNBT tag) {
+    public CompoundTag write (CompoundTag tag) {
         if (slots == null)
             return tag;
 
-        ListNBT itemList = new ListNBT();
+        ListTag itemList = new ListTag();
         for (DrawerData slot : slots)
             itemList.add(slot.serializeNBT());
 
@@ -142,7 +142,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
     }
 
-    public static class DrawerData implements IDrawer, INBTSerializable<CompoundNBT>
+    public static class DrawerData implements IDrawer, INBTSerializable<CompoundTag>
     {
         static Capability<IDrawerAttributes> ATTR_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
@@ -370,13 +370,13 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
 
         @Override
-        public CompoundNBT serializeNBT () {
-            CompoundNBT tag = new CompoundNBT();
+        public CompoundTag serializeNBT () {
+            CompoundTag tag = new CompoundTag();
             if (protoStack.isEmpty())
                 return tag;
 
-            CompoundNBT item = new CompoundNBT();
-            protoStack.write(item);
+            CompoundTag item = new CompoundTag();
+            protoStack.save(item);
 
             tag.put("Item", item);
             tag.putInt("Count", count);
@@ -385,12 +385,12 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
 
         @Override
-        public void deserializeNBT (CompoundNBT nbt) {
+        public void deserializeNBT (CompoundTag nbt) {
             ItemStack tagItem = ItemStack.EMPTY;
             int tagCount = 0;
 
             if (nbt.contains("Item"))
-                tagItem = ItemStack.read(nbt.getCompound("Item"));
+                tagItem = ItemStack.of(nbt.getCompound("Item"));
             if (nbt.contains("Count"))
                 tagCount = nbt.getInt("Count");
 

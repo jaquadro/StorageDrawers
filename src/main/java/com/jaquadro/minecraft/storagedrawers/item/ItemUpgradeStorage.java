@@ -1,9 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
-import net.minecraft.item.Item;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -29,8 +29,8 @@ public class ItemUpgradeStorage extends ItemUpgrade
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    protected ITextComponent getDescription() {
+    protected Component getDescription() {
         int mult = CommonConfig.UPGRADES.getLevelMult(level.getLevel());
-        return new TranslationTextComponent("item.storagedrawers.storage_upgrade.desc", mult);
+        return new TranslatableComponent("item.storagedrawers.storage_upgrade.desc", mult);
     }
 }

@@ -1,17 +1,17 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
 
 public class SlotStorage extends Slot
 {
-    public SlotStorage (IInventory inventory, int index, int x, int y) {
+    public SlotStorage (Container inventory, int index, int x, int y) {
         super(inventory, index, x, y);
     }
 
     @Override
-    public boolean canTakeStack (PlayerEntity player) {
+    public boolean mayPickup (Player player) {
         return false;
     }
 }

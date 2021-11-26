@@ -3,9 +3,9 @@ package com.jaquadro.minecraft.storagedrawers.capabilities;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -24,11 +24,11 @@ public class CapabilityDrawerAttributes
     {
         @Nullable
         @Override
-        public INBT writeNBT (Capability<IDrawerAttributes> capability, IDrawerAttributes instance, Direction side) {
+        public Tag writeNBT (Capability<IDrawerAttributes> capability, IDrawerAttributes instance, Direction side) {
             if (instance instanceof INBTSerializable)
                 return ((INBTSerializable) instance).serializeNBT();
 
-            CompoundNBT tag = new CompoundNBT();
+            CompoundTag tag = new CompoundTag();
             tag.putBoolean("lockedPop", instance.isItemLocked(LockAttribute.LOCK_POPULATED));
             tag.putBoolean("lockedEmpty", instance.isItemLocked(LockAttribute.LOCK_EMPTY));
             tag.putBoolean("concealed", instance.isConcealed());
@@ -41,10 +41,10 @@ public class CapabilityDrawerAttributes
         }
 
         @Override
-        public void readNBT (Capability<IDrawerAttributes> capability, IDrawerAttributes instance, Direction side, INBT nbt) {
+        public void readNBT (Capability<IDrawerAttributes> capability, IDrawerAttributes instance, Direction side, Tag nbt) {
             if (instance instanceof INBTSerializable) {
                 @SuppressWarnings("unchecked")
-                INBTSerializable<INBT> serializer = (INBTSerializable)instance;
+                INBTSerializable<Tag> serializer = (INBTSerializable)instance;
                 serializer.deserializeNBT(nbt);
                 return;
             }
@@ -53,7 +53,7 @@ public class CapabilityDrawerAttributes
                 throw new RuntimeException("IDrawerAttributes instance does not implement IDrawerAttributesModifiable");
             IDrawerAttributesModifiable modifiable = (IDrawerAttributesModifiable) instance;
 
-            CompoundNBT tag = (CompoundNBT) nbt;
+            CompoundTag tag = (CompoundTag) nbt;
             modifiable.setItemLocked(LockAttribute.LOCK_POPULATED, tag.getBoolean("lockedPop"));
             modifiable.setItemLocked(LockAttribute.LOCK_EMPTY, tag.getBoolean("lockedEmpty"));
             modifiable.setIsConcealed(tag.getBoolean("concealed"));

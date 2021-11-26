@@ -64,26 +64,26 @@ public class Waila implements IWailaPlugin
 
                         ItemStack stack = drawer.getStoredItemPrototype();
                         if (!stack.isEmpty()) {
-                            IFormattableTextComponent stackName = new StringTextComponent("").append(stack.getDisplayName());
+                            IFormattableTextComponent stackName = new StringTextComponent("").append(stack.getHoverName());
 
                             if (drawer.getStoredItemCount() == Integer.MAX_VALUE) {
-                                name = stackName.appendString("[\u221E]");
+                                name = stackName.append("[\u221E]");
                             }
                             else if (drawer instanceof IFractionalDrawer && ((IFractionalDrawer) drawer).getConversionRate() > 1) {
                                 String text = ((i == 0) ? " [" : " [+") + ((IFractionalDrawer) drawer).getStoredItemRemainder() + "]";
-                                name = stackName.appendString(text);
+                                name = stackName.append(text);
                             }
                             else if (CommonConfig.INTEGRATION.wailaStackRemainder.get()) {
                                 int stacks = drawer.getStoredItemCount() / drawer.getStoredItemStackSize();
                                 int remainder = drawer.getStoredItemCount() - (stacks * drawer.getStoredItemStackSize());
                                 if (stacks > 0 && remainder > 0)
-                                    name = stackName.appendString(" [" + stacks + "x" + drawer.getStoredItemStackSize() + " + " + remainder + "]");
+                                    name = stackName.append(" [" + stacks + "x" + drawer.getStoredItemStackSize() + " + " + remainder + "]");
                                 else if (stacks > 0)
-                                    name = stackName.appendString(" [" + stacks + "x" + drawer.getStoredItemStackSize() + "]");
+                                    name = stackName.append(" [" + stacks + "x" + drawer.getStoredItemStackSize() + "]");
                                 else
-                                    name = stackName.appendString(" [" + remainder + "]");
+                                    name = stackName.append(" [" + remainder + "]");
                             } else
-                                name = stackName.appendString(" [" + drawer.getStoredItemCount() + "]");
+                                name = stackName.append(" [" + drawer.getStoredItemCount() + "]");
                         }
                         currenttip.add(new TranslationTextComponent("tooltip.storagedrawers.waila.drawer", i + 1, name));
                     }
@@ -103,9 +103,9 @@ public class Waila implements IWailaPlugin
             if (config.get(new ResourceLocation(StorageDrawers.MOD_ID, "display.status"))) {
                 String attrib = "";
                 if (attr.isItemLocked(LockAttribute.LOCK_POPULATED))
-                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("tooltip.storagedrawers.waila.locked");
+                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.get("tooltip.storagedrawers.waila.locked");
                 if (attr.isVoid())
-                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("tooltip.storagedrawers.waila.void");
+                    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.get("tooltip.storagedrawers.waila.void");
                 //if (tile.getOwner() != null)
                 //    attrib += (attrib.isEmpty() ? "" : ", ") + I18n.format("storagedrawers.waila.protected");
 

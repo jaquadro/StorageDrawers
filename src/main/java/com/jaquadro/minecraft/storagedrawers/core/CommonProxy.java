@@ -3,14 +3,14 @@ package com.jaquadro.minecraft.storagedrawers.core;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -45,9 +45,9 @@ public class CommonProxy
     public void registerRenderers ()
     { }
 
-    public void updatePlayerInventory (PlayerEntity player) {
-        if (player instanceof ServerPlayerEntity)
-            ((ServerPlayerEntity) player).sendContainerToPlayer(player.container);
+    public void updatePlayerInventory (Player player) {
+        if (player instanceof ServerPlayer)
+            ((ServerPlayer) player).refreshContainer(player.inventoryMenu);
     }
 
     private void playerLeftClick (PlayerInteractEvent.LeftClickBlock event) {
@@ -58,7 +58,7 @@ public class CommonProxy
             if (block instanceof BlockDrawers) {
                 if (event.getPlayer().isCreative()) {
                     if (!((BlockDrawers) block).creativeCanBreakBlock(state, event.getWorld(), pos, event.getPlayer())) {
-                        state.onBlockClicked(event.getWorld(), pos, event.getPlayer());
+                        state.attack(event.getWorld(), pos, event.getPlayer());
                         event.setCanceled(true);
                     }
                 }
@@ -67,8 +67,8 @@ public class CommonProxy
     }
 
     private void playerRightClick (PlayerInteractEvent.RightClickBlock event) {
-        if (event.getHand() == Hand.MAIN_HAND && event.getItemStack().isEmpty()) {
-            TileEntity tile = event.getWorld().getTileEntity(event.getPos());
+        if (event.getHand() == InteractionHand.MAIN_HAND && event.getItemStack().isEmpty()) {
+            BlockEntity tile = event.getWorld().getBlockEntity(event.getPos());
             if (tile instanceof TileEntityDrawers) {
                 event.setUseBlock(Event.Result.ALLOW);
             }

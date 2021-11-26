@@ -2,16 +2,16 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
-import net.minecraft.block.Block;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -27,32 +27,32 @@ public class ItemDrawers extends BlockItem
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation (ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText (ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
         //if (stack.hasTag() && stack.getTag().contains("material")) {
         //    String key = stack.getTag().getString("material");
         //    tooltip.add(new TranslationTextComponent("storagedrawers.material", I18n.format("storagedrawers.material." + key)));
         //}
 
-        ITextComponent textCapacity = new TranslationTextComponent("tooltip.storagedrawers.drawers.capacity", getCapacityForBlock(stack));
-        tooltip.add(new StringTextComponent("").append(textCapacity).mergeStyle(TextFormatting.GRAY));
+        Component textCapacity = new TranslatableComponent("tooltip.storagedrawers.drawers.capacity", getCapacityForBlock(stack));
+        tooltip.add(new TextComponent("").append(textCapacity).withStyle(ChatFormatting.GRAY));
 
         if (stack.hasTag() && stack.getTag().contains("tile")) {
-            ITextComponent textSealed = new TranslationTextComponent("tooltip.storagedrawers.drawers.sealed");
-            tooltip.add(new StringTextComponent("").append(textSealed).mergeStyle(TextFormatting.YELLOW));
+            Component textSealed = new TranslatableComponent("tooltip.storagedrawers.drawers.sealed");
+            tooltip.add(new TextComponent("").append(textSealed).withStyle(ChatFormatting.YELLOW));
         }
 
         //tooltip.add(getDescription().applyTextStyle(TextFormatting.GRAY));
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected ITextComponent getDescription() {
-        return new TranslationTextComponent(this.getTranslationKey() + ".desc");
+    protected Component getDescription() {
+        return new TranslatableComponent(this.getDescriptionId() + ".desc");
     }
 
     private int getCapacityForBlock (@Nonnull ItemStack itemStack) {
-        Block block = Block.getBlockFromItem(itemStack.getItem());
+        Block block = Block.byItem(itemStack.getItem());
         if (block instanceof BlockDrawers) {
             BlockDrawers drawers = (BlockDrawers)block;
             return drawers.getStorageUnits() * CommonConfig.GENERAL.getBaseStackStorage();

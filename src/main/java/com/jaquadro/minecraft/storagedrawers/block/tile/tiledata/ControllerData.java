@@ -1,9 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.util.Constants;
 
 public class ControllerData extends TileDataShim
@@ -11,18 +11,18 @@ public class ControllerData extends TileDataShim
     private BlockPos controllerCoord;
 
     @Override
-    public void read (CompoundNBT tag) {
+    public void read (CompoundTag tag) {
         controllerCoord = null;
         if (tag.contains("Controller", Constants.NBT.TAG_COMPOUND)) {
-            CompoundNBT ctag = tag.getCompound("Controller");
+            CompoundTag ctag = tag.getCompound("Controller");
             controllerCoord = new BlockPos(ctag.getInt("x"), ctag.getInt("y"), ctag.getInt("z"));
         }
     }
 
     @Override
-    public CompoundNBT write (CompoundNBT tag) {
+    public CompoundTag write (CompoundTag tag) {
         if (controllerCoord != null) {
-            CompoundNBT ctag = new CompoundNBT();
+            CompoundTag ctag = new CompoundTag();
             ctag.putInt("x", controllerCoord.getX());
             ctag.putInt("y", controllerCoord.getY());
             ctag.putInt("z", controllerCoord.getZ());
@@ -36,14 +36,14 @@ public class ControllerData extends TileDataShim
         return controllerCoord;
     }
 
-    public TileEntityController getController (TileEntity host) {
+    public TileEntityController getController (BlockEntity host) {
         if (controllerCoord == null)
             return null;
 
-        TileEntity te = host.getWorld().getTileEntity(controllerCoord);
+        BlockEntity te = host.getLevel().getBlockEntity(controllerCoord);
         if (!(te instanceof TileEntityController)) {
             controllerCoord = null;
-            host.markDirty();
+            host.setChanged();
             return null;
         }
 

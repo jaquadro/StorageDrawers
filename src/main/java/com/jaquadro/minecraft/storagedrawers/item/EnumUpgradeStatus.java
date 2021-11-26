@@ -1,8 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
-public enum EnumUpgradeStatus implements IStringSerializable
+public enum EnumUpgradeStatus implements StringRepresentable
 {
     LEVEL1(0, 1, "level1", "level1"),
     LEVEL2(1, 2, "level2", "level2");
@@ -52,7 +52,7 @@ public enum EnumUpgradeStatus implements IStringSerializable
     }
 
     @Override
-    public String getString () {
+    public String getSerializedName () {
         return name;
     }
 

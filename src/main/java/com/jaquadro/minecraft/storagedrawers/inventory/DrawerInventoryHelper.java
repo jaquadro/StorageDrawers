@@ -2,10 +2,10 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import java.util.Random;
 
@@ -13,7 +13,7 @@ public class DrawerInventoryHelper
 {
     private static final Random RANDOM = new Random();
 
-    public static void dropInventoryItems (World world, BlockPos pos, IDrawerGroup group) {
+    public static void dropInventoryItems (Level world, BlockPos pos, IDrawerGroup group) {
         for (int i = 0; i < group.getDrawerCount(); i++) {
             IDrawer drawer = group.getDrawer(i);
             if (!drawer.isEnabled())
@@ -35,7 +35,7 @@ public class DrawerInventoryHelper
         }
     }
 
-    private static void spawnItemStack (World world, double x, double y, double z, ItemStack stack)
+    private static void spawnItemStack (Level world, double x, double y, double z, ItemStack stack)
     {
         float xOff = RANDOM.nextFloat() * 0.8F + 0.1F;
         float yOff = RANDOM.nextFloat() * 0.8F + 0.1F;
@@ -45,13 +45,13 @@ public class DrawerInventoryHelper
             ItemEntity entityitem = new ItemEntity(world, x + xOff, y + yOff, z + zOff, stack.split(RANDOM.nextInt(21) + 10));
 
             float velocity = 0.05F;
-            entityitem.setMotion(
+            entityitem.setDeltaMovement(
                 RANDOM.nextGaussian() * (double)velocity,
                 RANDOM.nextGaussian() * (double)velocity + 0.20000000298023224D,
                 RANDOM.nextGaussian() * (double)velocity
             );
 
-            world.addEntity(entityitem);
+            world.addFreshEntity(entityitem);
         }
     }
 }

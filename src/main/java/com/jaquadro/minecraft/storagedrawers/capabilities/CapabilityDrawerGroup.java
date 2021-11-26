@@ -2,15 +2,17 @@ package com.jaquadro.minecraft.storagedrawers.capabilities;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup.DrawerData;
 
 public class CapabilityDrawerGroup
 {
@@ -24,18 +26,18 @@ public class CapabilityDrawerGroup
     {
         @Nullable
         @Override
-        public INBT writeNBT (Capability<IDrawerGroup> capability, IDrawerGroup instance, Direction side) {
+        public Tag writeNBT (Capability<IDrawerGroup> capability, IDrawerGroup instance, Direction side) {
             if (instance instanceof INBTSerializable)
                 return ((INBTSerializable) instance).serializeNBT();
 
-            return new CompoundNBT();
+            return new CompoundTag();
         }
 
         @Override
-        public void readNBT (Capability<IDrawerGroup> capability, IDrawerGroup instance, Direction side, INBT nbt) {
+        public void readNBT (Capability<IDrawerGroup> capability, IDrawerGroup instance, Direction side, Tag nbt) {
             if (instance instanceof INBTSerializable) {
                 @SuppressWarnings("unchecked")
-                INBTSerializable<INBT> serializer = (INBTSerializable)instance;
+                INBTSerializable<Tag> serializer = (INBTSerializable)instance;
                 serializer.deserializeNBT(nbt);
             }
         }

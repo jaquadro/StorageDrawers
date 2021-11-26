@@ -1,10 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
 import javax.annotation.Nonnull;
 
-public enum EnumKeyType implements IStringSerializable
+public enum EnumKeyType implements StringRepresentable
 {
     DRAWER(0, "drawer"),
     CONCEALMENT(1, "concealment"),
@@ -33,13 +33,13 @@ public enum EnumKeyType implements IStringSerializable
 
     @Override
     @Nonnull
-    public String getString () {
+    public String getSerializedName () {
         return name;
     }
 
     @Override
     public String toString () {
-        return getString();
+        return getSerializedName();
     }
 
     static {

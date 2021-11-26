@@ -1,9 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.api.render;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public interface IRenderLabel
 {
-    void render (TileEntity tileEntity, IDrawerGroup drawerGroup, int slot, float brightness, float partialTickTime);
+    void render (BlockEntity tileEntity, IDrawerGroup drawerGroup, int slot, float brightness, float partialTickTime);
 }

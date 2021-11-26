@@ -3,13 +3,15 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
 
 import java.util.Vector;
+
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class BlockStandardDrawers extends BlockDrawers
 {
@@ -19,11 +21,11 @@ public class BlockStandardDrawers extends BlockDrawers
     //@SideOnly(Side.CLIENT)
     //private StatusModelData[] statusInfo;
 
-    public BlockStandardDrawers (int drawerCount, boolean halfDepth, int storageUnits, Block.Properties properties) {
+    public BlockStandardDrawers (int drawerCount, boolean halfDepth, int storageUnits, BlockBehaviour.Properties properties) {
        super(drawerCount, halfDepth, storageUnits, properties);
     }
 
-    public BlockStandardDrawers (int drawerCount, boolean halfDepth, Block.Properties properties) {
+    public BlockStandardDrawers (int drawerCount, boolean halfDepth, BlockBehaviour.Properties properties) {
         super(drawerCount, halfDepth, calcUnits(drawerCount, halfDepth), properties);
     }
 
@@ -54,7 +56,7 @@ public class BlockStandardDrawers extends BlockDrawers
     }*/
 
     @Override
-    protected int getDrawerSlot (Direction side, Vector3d hit) {
+    protected int getDrawerSlot (Direction side, Vec3 hit) {
         if (getDrawerCount() == 1)
             return 0;
         if (getDrawerCount() == 2)
@@ -67,7 +69,7 @@ public class BlockStandardDrawers extends BlockDrawers
     }
 
     @Override
-    public TileEntityDrawers createTileEntity (BlockState state, IBlockReader world) {
+    public TileEntityDrawers createTileEntity (BlockState state, BlockGetter world) {
         return TileEntityDrawersStandard.createEntity(getDrawerCount());
     }
 }

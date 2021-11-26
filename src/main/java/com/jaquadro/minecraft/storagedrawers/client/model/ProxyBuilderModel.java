@@ -1,24 +1,24 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class ProxyBuilderModel implements IBakedModel
+public abstract class ProxyBuilderModel implements BakedModel
 {
     private static final List<BakedQuad> EMPTY = new ArrayList<BakedQuad>(0);
     private static final List<Object> EMPTY_KEY = new ArrayList<Object>();
 
-    private IBakedModel parent;
-    private IBakedModel proxy;
+    private BakedModel parent;
+    private BakedModel proxy;
     private BlockState stateCache;
     private TextureAtlasSprite iconParticle;
 
@@ -26,7 +26,7 @@ public abstract class ProxyBuilderModel implements IBakedModel
         this.iconParticle = iconParticle;
     }
 
-    public ProxyBuilderModel (IBakedModel parent) {
+    public ProxyBuilderModel (BakedModel parent) {
         this.parent = parent;
     }
 
@@ -42,54 +42,54 @@ public abstract class ProxyBuilderModel implements IBakedModel
     }
 
     @Override
-    public boolean isAmbientOcclusion () {
-        IBakedModel model = getActiveModel();
-        return (model != null) ? model.isAmbientOcclusion() : true;
+    public boolean useAmbientOcclusion () {
+        BakedModel model = getActiveModel();
+        return (model != null) ? model.useAmbientOcclusion() : true;
     }
 
     @Override
     public boolean isGui3d () {
-        IBakedModel model = getActiveModel();
+        BakedModel model = getActiveModel();
         return (model != null) ? model.isGui3d() : false;
     }
 
     @Override
-    public boolean isBuiltInRenderer () {
-        IBakedModel model = getActiveModel();
-        return (model != null) ? model.isBuiltInRenderer() : false;
+    public boolean isCustomRenderer () {
+        BakedModel model = getActiveModel();
+        return (model != null) ? model.isCustomRenderer() : false;
     }
 
     @Override
-    public TextureAtlasSprite getParticleTexture () {
-        IBakedModel model = getActiveModel();
-        return (model != null) ? model.getParticleTexture() : iconParticle;
+    public TextureAtlasSprite getParticleIcon () {
+        BakedModel model = getActiveModel();
+        return (model != null) ? model.getParticleIcon() : iconParticle;
     }
 
     @Override
-    public ItemCameraTransforms getItemCameraTransforms () {
-        IBakedModel model = getActiveModel();
-        return (model != null) ? model.getItemCameraTransforms() : ItemCameraTransforms.DEFAULT;
+    public ItemTransforms getTransforms () {
+        BakedModel model = getActiveModel();
+        return (model != null) ? model.getTransforms() : ItemTransforms.NO_TRANSFORMS;
     }
 
     @Override
-    public ItemOverrideList getOverrides () {
-        IBakedModel model = getActiveModel();
-        return (model != null) ? model.getOverrides() : ItemOverrideList.EMPTY;
+    public ItemOverrides getOverrides () {
+        BakedModel model = getActiveModel();
+        return (model != null) ? model.getOverrides() : ItemOverrides.EMPTY;
     }
 
     @Override
-    public boolean isSideLit () {
-        IBakedModel model = getActiveModel();
-        return (model != null) ? model.isSideLit() : false;
+    public boolean usesBlockLight () {
+        BakedModel model = getActiveModel();
+        return (model != null) ? model.usesBlockLight() : false;
     }
 
     public List<Object> getKey (BlockState state) {
         return EMPTY_KEY;
     }
 
-    protected abstract IBakedModel buildModel (BlockState state, IBakedModel parent);
+    protected abstract BakedModel buildModel (BlockState state, BakedModel parent);
 
-    public final IBakedModel buildModel (BlockState state) {
+    public final BakedModel buildModel (BlockState state) {
         return this.buildModel(state, parent);
     }
 
@@ -101,7 +101,7 @@ public abstract class ProxyBuilderModel implements IBakedModel
             proxy = buildModel(state, parent);
     }
 
-    private IBakedModel getActiveModel () {
+    private BakedModel getActiveModel () {
         return (proxy != null) ? proxy : parent;
     }
 }

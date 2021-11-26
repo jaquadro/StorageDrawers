@@ -3,12 +3,12 @@ package com.jaquadro.minecraft.storagedrawers.capabilities;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.EnumSet;
 
-public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttributesModifiable, INBTSerializable<CompoundNBT>
+public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttributesModifiable, INBTSerializable<CompoundTag>
 {
     private EnumSet<LockAttribute> itemLock = EnumSet.noneOf(LockAttribute.class);
     private boolean isConcealed;
@@ -133,8 +133,8 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
     }
 
     @Override
-    public CompoundNBT serializeNBT () {
-        CompoundNBT tag = new CompoundNBT();
+    public CompoundTag serializeNBT () {
+        CompoundTag tag = new CompoundTag();
 
         tag.putInt("itemLock", LockAttribute.getBitfield(itemLock));
         tag.putBoolean("concealed", isConcealed);
@@ -148,7 +148,7 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
     }
 
     @Override
-    public void deserializeNBT (CompoundNBT nbt) {
+    public void deserializeNBT (CompoundTag nbt) {
         itemLock = LockAttribute.getEnumSet(nbt.getInt("itemLock"));
         isConcealed = nbt.getBoolean("concealed");
         isVoid = nbt.getBoolean("void");

@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.api.capabilities;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
 
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
