@@ -92,7 +92,6 @@
         "north": "#front",
         "east": "#side",
         "south": "#back",
-        "west": "#side",
-        "trim": "#trim"
+        "west": "#side"
     }
 }
