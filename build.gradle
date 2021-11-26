@@ -208,9 +208,11 @@ artifacts {
 
 publishing.publications {
     StorageDrawers(MavenPublication) {
-        groupId = project.group
-        artifactId = project.archivesBaseName
-        version = project.version
+        afterEvaluate {
+            groupId = project.group
+            artifactId = project.archivesBaseName
+            version = project.version
+        }
         artifact sourcesJar
         artifact apiJar
         artifact deobfJar
