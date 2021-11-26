@@ -14,7 +14,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -28,10 +28,8 @@ import java.util.function.Predicate;
 
 public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 {
-    @CapabilityInject(IItemHandler.class)
-    public static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
-    @CapabilityInject(IItemRepository.class)
-    public static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
+    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     private FractionalStorage storage;
     private FractionalDrawer[] slots;
@@ -128,8 +126,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
     private static class FractionalStorage implements INBTSerializable<CompoundNBT>
     {
-        @CapabilityInject(IDrawerAttributes.class)
-        static Capability<IDrawerAttributes> ATTR_CAPABILITY = null;
+        static Capability<IDrawerAttributes> ATTR_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
         private FractionalDrawerGroup group;
         private int slotCount;

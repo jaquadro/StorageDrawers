@@ -13,7 +13,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 
@@ -93,12 +93,9 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
         super.markDirty();
     }
 
-    @CapabilityInject(IItemHandler.class)
-    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
-    @CapabilityInject(IItemRepository.class)
-    static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
-    @CapabilityInject(IDrawerGroup.class)
-    static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
+    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     private final DrawerItemHandler itemHandler = new DrawerItemHandler(this);
     private final ItemRepositoryProxy itemRepository = new ItemRepositoryProxy();

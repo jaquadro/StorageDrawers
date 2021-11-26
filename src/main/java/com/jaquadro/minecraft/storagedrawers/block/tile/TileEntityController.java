@@ -25,7 +25,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.TickPriority;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -37,8 +37,7 @@ import java.util.function.Predicate;
 
 public class TileEntityController extends ChamTileEntity implements IDrawerGroup
 {
-    @CapabilityInject(IDrawerAttributes.class)
-    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     private static final int PRI_LOCKED = 0;
     private static final int PRI_LOCKED_VOID = 1;
@@ -623,12 +622,9 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
         return itemRepository;
     }
 
-    @CapabilityInject(IItemHandler.class)
-    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
-    @CapabilityInject(IItemRepository.class)
-    static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
-    @CapabilityInject(IDrawerGroup.class)
-    static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
+    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     private final DrawerItemHandler itemHandler = new DrawerItemHandler(this);
     private final ItemRepository itemRepository = new ItemRepository(this);

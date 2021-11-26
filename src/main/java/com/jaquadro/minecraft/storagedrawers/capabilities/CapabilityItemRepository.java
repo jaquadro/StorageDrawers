@@ -7,7 +7,6 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -17,8 +16,7 @@ import java.util.function.Predicate;
 
 public class CapabilityItemRepository
 {
-    @CapabilityInject(IItemRepository.class)
-    public static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
+    public static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     public static void register () {
         CapabilityManager.INSTANCE.register(IItemRepository.class, new DefaultStorage(), DefaultImplementation::new);

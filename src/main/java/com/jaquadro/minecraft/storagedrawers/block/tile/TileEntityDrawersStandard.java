@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
@@ -18,8 +18,7 @@ import javax.annotation.Nullable;
 
 public class TileEntityDrawersStandard extends TileEntityDrawers
 {
-    @CapabilityInject(IDrawerAttributes.class)
-    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     private static final String[] GUI_IDS = new String[] {
         null, StorageDrawers.MOD_ID + ":basicDrawers1", StorageDrawers.MOD_ID + ":basicDrawers2", null, StorageDrawers.MOD_ID + ":basicDrawers4"

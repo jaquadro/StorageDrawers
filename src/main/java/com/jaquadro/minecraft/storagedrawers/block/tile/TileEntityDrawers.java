@@ -27,7 +27,7 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -615,8 +615,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         customNameData.setName(name);
     }*/
 
-    @CapabilityInject(IDrawerGroup.class)
-    public static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
+    public static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY= CapabilityManager.get(new CapabilityToken<>(){});
 
     private final LazyOptional<?> capabilityGroup = LazyOptional.of(this::getGroup);
 

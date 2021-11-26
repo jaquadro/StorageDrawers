@@ -26,15 +26,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemKey extends Item
 {
-    @CapabilityInject(IDrawerAttributes.class)
-    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     private final Multimap<Attribute, AttributeModifier> modifiers;
 

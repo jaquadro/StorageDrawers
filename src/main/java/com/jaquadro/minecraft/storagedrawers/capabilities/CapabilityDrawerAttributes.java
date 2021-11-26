@@ -7,7 +7,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -15,8 +14,7 @@ import javax.annotation.Nullable;
 
 public class CapabilityDrawerAttributes
 {
-    @CapabilityInject(IDrawerAttributes.class)
-    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     public static void register () {
         CapabilityManager.INSTANCE.register(IDrawerAttributes.class, new DefaultStorage(), BasicDrawerAttributes::new);

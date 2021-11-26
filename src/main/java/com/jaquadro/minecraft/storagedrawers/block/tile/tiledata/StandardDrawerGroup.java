@@ -12,7 +12,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -25,10 +25,8 @@ import java.util.function.Predicate;
 
 public abstract class StandardDrawerGroup extends TileDataShim implements IDrawerGroup
 {
-    @CapabilityInject(IItemHandler.class)
-    public static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
-    @CapabilityInject(IItemRepository.class)
-    public static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
+    public static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    public static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     private DrawerData[] slots;
     private int[] order;
@@ -146,8 +144,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
 
     public static class DrawerData implements IDrawer, INBTSerializable<CompoundNBT>
     {
-        @CapabilityInject(IDrawerAttributes.class)
-        static Capability<IDrawerAttributes> ATTR_CAPABILITY = null;
+        static Capability<IDrawerAttributes> ATTR_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
         IDrawerAttributes attrs;
         StandardDrawerGroup group;

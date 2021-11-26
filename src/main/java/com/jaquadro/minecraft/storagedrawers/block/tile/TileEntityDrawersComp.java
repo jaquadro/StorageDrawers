@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -29,8 +29,7 @@ import javax.annotation.Nullable;
 
 public class TileEntityDrawersComp extends TileEntityDrawers
 {
-    @CapabilityInject(IDrawerAttributes.class)
-    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     public TileEntityDrawersComp (TileEntityType<?> tileEntityType) {
         super(tileEntityType);
