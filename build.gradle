@@ -179,6 +179,7 @@ processResources {
 }
 
 jar {
+    dependsOn(replaceResources)
     manifest {
         attributes([
             "Specification-Title": "storagedrawers",
@@ -199,19 +200,24 @@ jar {
 jar.finalizedBy('reobfJar')
 
 task deobfJar(type: Jar) {
+    dependsOn(replaceResources)
     from sourceSets.main.output
     classifier = 'deobf'
 }
 
 
-task apiJar(type: Jar, dependsOn: classes) {
+task apiJar(type: Jar) {
+    dependsOn(classes)
+    dependsOn(replaceResources)
     classifier = 'api'
     include 'com/jaquadro/minecraft/storagedrawers/api/**/*'
     from sourceSets.main.allSource
     from sourceSets.main.output
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
+task sourcesJar(type: Jar) {
+    dependsOn(classes)
+    dependsOn(replaceResources)
     classifier = 'sources'
     from sourceSets.main.allJava
 }
