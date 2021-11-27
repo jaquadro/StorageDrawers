@@ -46,8 +46,8 @@ public class CommonProxy
     { }
 
     public void updatePlayerInventory (Player player) {
-        if (player instanceof ServerPlayer)
-            ((ServerPlayer) player).refreshContainer(player.inventoryMenu);
+        // TODO: Update line: if (player instanceof ServerPlayer)
+        // TODO: Update line:     ((ServerPlayer) player).refreshContainer(player.inventoryMenu);
     }
 
     private void playerLeftClick (PlayerInteractEvent.LeftClickBlock event) {
