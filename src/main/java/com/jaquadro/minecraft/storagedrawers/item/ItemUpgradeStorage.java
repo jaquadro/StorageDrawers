@@ -29,7 +29,7 @@ public class ItemUpgradeStorage extends ItemUpgrade
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    protected Component getDescription() {
+    public Component getDescription() {
         int mult = CommonConfig.UPGRADES.getLevelMult(level.getLevel());
         return new TranslatableComponent("item.storagedrawers.storage_upgrade.desc", mult);
     }

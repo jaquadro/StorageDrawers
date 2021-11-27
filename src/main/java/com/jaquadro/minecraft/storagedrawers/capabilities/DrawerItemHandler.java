@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;

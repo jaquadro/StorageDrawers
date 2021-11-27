@@ -16,6 +16,7 @@ import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.ItemCollectionRegistry;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -26,6 +27,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.TickPriority;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -185,20 +187,20 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
         int count = 0;
 
         if (!dumpInventory) {
-            ItemStack currentStack = player.inventory.getSelected();
+            ItemStack currentStack = player.getInventory().getSelected();
             if (!currentStack.isEmpty()) {
                 count = insertItems(currentStack, player.getGameProfile());
                 if (currentStack.getCount() == 0)
-                    player.inventory.setItem(player.inventory.selected, ItemStack.EMPTY);
+                    player.getInventory().setItem(player.getInventory().selected, ItemStack.EMPTY);
             }
         }
         else {
-            for (int i = 0, n = player.inventory.getContainerSize(); i < n; i++) {
-                ItemStack subStack = player.inventory.getItem(i);
+            for (int i = 0, n = player.getInventory().getContainerSize(); i < n; i++) {
+                ItemStack subStack = player.getInventory().getItem(i);
                 if (!subStack.isEmpty()) {
                     count += insertItems(subStack, player.getGameProfile());
                     if (subStack.getCount() == 0)
-                        player.inventory.setItem(i, ItemStack.EMPTY);
+                        player.getInventory().setItem(i, ItemStack.EMPTY);
                 }
             }
 

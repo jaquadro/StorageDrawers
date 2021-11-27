@@ -2,9 +2,9 @@ package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraftforge.common.util.Constants;
 
 public class ControllerData extends TileDataShim
 {
@@ -13,7 +13,7 @@ public class ControllerData extends TileDataShim
     @Override
     public void read (CompoundTag tag) {
         controllerCoord = null;
-        if (tag.contains("Controller", Constants.NBT.TAG_COMPOUND)) {
+        if (tag.contains("Controller", Tag.TAG_COMPOUND)) {
             CompoundTag ctag = tag.getCompound("Controller");
             controllerCoord = new BlockPos(ctag.getInt("x"), ctag.getInt("y"), ctag.getInt("z"));
         }

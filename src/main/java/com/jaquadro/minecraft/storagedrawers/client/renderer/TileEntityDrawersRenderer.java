@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -35,15 +35,17 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityDrawersRenderer extends BlockEntityRenderer<TileEntityDrawers>
+public class TileEntityDrawersRenderer implements BlockEntityRendererProvider<TileEntityDrawers>
 {
     private boolean[] renderAsBlock = new boolean[4];
     private ItemStack[] renderStacks = new ItemStack[4];
 
     private ItemRenderer renderItem;
 
-    public TileEntityDrawersRenderer (BlockEntityRenderDispatcher dispatcher) {
-        super(dispatcher);
+    private BlockEntityRendererProvider.Context context;
+
+    public TileEntityDrawersRenderer (BlockEntityRendererProvider.Context context) {
+        this.context = context;
     }
 
     @Override

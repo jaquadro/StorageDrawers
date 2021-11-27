@@ -3,7 +3,7 @@ package thaumcraft.api.crafting;
 import java.util.HashMap;
 import java.util.List;
 
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;

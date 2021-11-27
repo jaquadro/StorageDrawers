@@ -48,7 +48,7 @@ public class ItemUpgrade extends Item
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected Component getDescription() {
+    public Component getDescription() {
         return new TranslatableComponent(this.getDescriptionId() + ".desc");
     }
 

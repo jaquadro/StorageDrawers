@@ -14,7 +14,6 @@ import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
-import net.minecraft.block.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +30,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.*;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -43,7 +41,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -326,7 +324,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
                 if (!player.isCreative()) {
                     item.shrink(1);
                     if (item.getCount() <= 0)
-                        player.inventory.setItem(player.inventory.selected, ItemStack.EMPTY);
+                        player.getInventory().setItem(player.getInventory().selected, ItemStack.EMPTY);
                 }
 
                 return InteractionResult.SUCCESS;
@@ -483,7 +481,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item.toString());
 
         if (!item.isEmpty()) {
-            if (!playerIn.inventory.add(item)) {
+            if (!playerIn.getInventory().add(item)) {
                 dropItemStack(worldIn, pos.relative(side), playerIn, item);
                 worldIn.sendBlockUpdated(pos, state, state, 3);
             }

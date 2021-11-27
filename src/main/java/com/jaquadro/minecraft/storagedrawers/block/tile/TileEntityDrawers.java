@@ -12,13 +12,16 @@ import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,9 +31,10 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -413,7 +417,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
             return 0;
 
         int count = 0;
-        ItemStack playerStack = player.inventory.getSelected();
+        ItemStack playerStack = player.getInventory().getSelected();
         if (!playerStack.isEmpty())
             count = putItemsIntoSlot(slot, playerStack, playerStack.getCount());
 
@@ -427,12 +431,12 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
 
         int count = 0;
         if (!drawer.isEmpty()) {
-            for (int i = 0, n = player.inventory.getContainerSize(); i < n; i++) {
-                ItemStack subStack = player.inventory.getItem(i);
+            for (int i = 0, n = player.getInventory().getContainerSize(); i < n; i++) {
+                ItemStack subStack = player.getInventory().getItem(i);
                 if (!subStack.isEmpty()) {
                     int subCount = putItemsIntoSlot(slot, subStack, subStack.getCount());
                     if (subCount > 0 && subStack.getCount() == 0)
-                        player.inventory.setItem(i, ItemStack.EMPTY);
+                        player.getInventory().setItem(i, ItemStack.EMPTY);
 
                     count += subCount;
                 }

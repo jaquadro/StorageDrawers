@@ -125,7 +125,7 @@ public class CompactingHelper
         List<ItemStack> candidates = new ArrayList<>();
         Map<ItemStack, Integer> candidatesRate = new HashMap<>();
 
-        for (Recipe<CraftingContainer> recipe : world.getRecipeManager().byType(RecipeType.CRAFTING).values()) {
+        for (Recipe<CraftingContainer> recipe : world.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
             ItemStack output = recipe.getResultItem();
             // TODO: ItemStackOreMatcher.areItemsEqual(stack, output, true)
             if (!ItemStackMatcher.areItemsEqual(stack, output))

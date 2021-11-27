@@ -27,6 +27,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -58,7 +59,7 @@ public class ItemKey extends Item
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected Component getDescription() {
+    public Component getDescription() {
         return new TranslatableComponent(this.getDescriptionId() + ".desc");
     }
 

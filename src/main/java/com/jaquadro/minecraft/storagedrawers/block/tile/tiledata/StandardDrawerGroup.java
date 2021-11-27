@@ -10,11 +10,12 @@ import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -76,7 +77,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         if (!tag.contains("Drawers"))
             return;
 
-        ListTag itemList = tag.getList("Drawers", Constants.NBT.TAG_COMPOUND);
+        ListTag itemList = tag.getList("Drawers", Tag.TAG_COMPOUND);
         for (int i = 0; i < itemList.size(); i++) {
             if (i < slots.length)
                 slots[i].deserializeNBT(itemList.getCompound(i));

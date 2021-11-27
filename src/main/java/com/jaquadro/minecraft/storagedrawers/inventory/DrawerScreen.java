@@ -28,6 +28,7 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
     private static StorageRenderItem storageItemRender;
 
     private final ResourceLocation background;
+    private final Inventory inventory;
 
     public DrawerScreen(ContainerDrawers container, Inventory playerInv, Component name, ResourceLocation bg) {
         super(container, playerInv, name);
@@ -35,6 +36,7 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
         imageWidth = 176;
         imageHeight = 199;
         background = bg;
+        inventory = playerInv;
     }
 
     public static class Slot1 extends DrawerScreen {

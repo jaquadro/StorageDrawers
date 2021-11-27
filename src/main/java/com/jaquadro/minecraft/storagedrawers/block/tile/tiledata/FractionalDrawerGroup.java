@@ -11,12 +11,13 @@ import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -538,7 +539,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
             pooledCount = tag.getInt("Count");
 
-            ListTag itemList = tag.getList("Items", Constants.NBT.TAG_COMPOUND);
+            ListTag itemList = tag.getList("Items", Tag.TAG_COMPOUND);
             for (int i = 0; i < itemList.size(); i++) {
                 CompoundTag slotTag = itemList.getCompound(i);
                 int slot = slotTag.getByte("Slot");

@@ -47,7 +47,7 @@ public class ItemDrawers extends BlockItem
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected Component getDescription() {
+    public Component getDescription() {
         return new TranslatableComponent(this.getDescriptionId() + ".desc");
     }
 

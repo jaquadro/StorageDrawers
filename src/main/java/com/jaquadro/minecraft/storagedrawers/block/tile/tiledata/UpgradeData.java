@@ -7,9 +7,9 @@ import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Mth;
-import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
 
@@ -243,7 +243,7 @@ public class UpgradeData extends TileDataShim
         if (!tag.contains("Upgrades"))
             return;
 
-        ListTag tagList = tag.getList("Upgrades", Constants.NBT.TAG_COMPOUND);
+        ListTag tagList = tag.getList("Upgrades", Tag.TAG_COMPOUND);
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag upgradeTag = tagList.getCompound(i);
 

@@ -44,8 +44,8 @@ public class ChamTileEntity extends BlockEntity implements IForgeTileEntity
     }
 
     @Override
-    public final void load (BlockState state, CompoundTag tag) {
-        super.load(state, tag);
+    public final void load (CompoundTag tag) {
+        super.load(tag);
 
         failureSnapshot = null;
 
@@ -59,7 +59,7 @@ public class ChamTileEntity extends BlockEntity implements IForgeTileEntity
     }
 
     public final void read (CompoundTag tag) {
-        load(null, tag);
+        load(tag);
     }
 
     @Override

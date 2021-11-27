@@ -41,8 +41,8 @@ public class StorageRenderItem extends ItemRenderer
     @Nonnull
     public ItemStack overrideStack;
 
-    public StorageRenderItem (TextureManager texManager, ModelManager modelManager, ItemColors colors) {
-        super(texManager, modelManager, colors);
+    public StorageRenderItem (TextureManager texManager, ModelManager modelManager, ItemColors colors, BlockEntityWithoutLevelRenderer blockEntityRenderer) {
+        super(texManager, modelManager, colors, blockEntityRenderer);
         parent = Minecraft.getInstance().getItemRenderer();
         overrideStack = ItemStack.EMPTY;
     }
@@ -58,13 +58,13 @@ public class StorageRenderItem extends ItemRenderer
     }
 
     @Override
-    public void renderStatic(@Nullable LivingEntity livingEntityIn, ItemStack itemStackIn, ItemTransforms.TransformType transformTypeIn, boolean leftHand, PoseStack matrixStackIn, MultiBufferSource bufferIn, @Nullable Level worldIn, int combinedLightIn, int combinedOverlayIn) {
-        parent.renderStatic(livingEntityIn, itemStackIn, transformTypeIn, leftHand, matrixStackIn, bufferIn, worldIn, combinedLightIn, combinedOverlayIn);
+    public void renderStatic(@Nullable LivingEntity livingEntityIn, ItemStack itemStackIn, ItemTransforms.TransformType transformTypeIn, boolean leftHand, PoseStack matrixStackIn, MultiBufferSource bufferIn, @Nullable Level worldIn, int combinedLightIn, int combinedOverlayIn, int p_174252_) {
+        parent.renderStatic(livingEntityIn, itemStackIn, transformTypeIn, leftHand, matrixStackIn, bufferIn, worldIn, combinedLightIn, combinedOverlayIn, p_174252_);
     }
 
     @Override
-    public void renderStatic(ItemStack itemStackIn, ItemTransforms.TransformType transformTypeIn, int combinedLightIn, int combinedOverlayIn, PoseStack matrixStackIn, MultiBufferSource bufferIn) {
-        parent.renderStatic(itemStackIn, transformTypeIn, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+    public void renderStatic(ItemStack itemStackIn, ItemTransforms.TransformType transformTypeIn, int combinedLightIn, int combinedOverlayIn, PoseStack matrixStackIn, MultiBufferSource bufferIn, int p_174276_) {
+        parent.renderStatic(itemStackIn, transformTypeIn, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, p_174276_);
     }
 
     public void renderQuadList(PoseStack matrixStackIn, VertexConsumer bufferIn, List<BakedQuad> quadsIn, ItemStack itemStackIn, int combinedLightIn, int combinedOverlayIn) {
@@ -72,8 +72,8 @@ public class StorageRenderItem extends ItemRenderer
     }
 
     @Override
-    public BakedModel getModel (@Nonnull ItemStack stack, Level world, LivingEntity entity) {
-        return parent.getModel(stack, world, entity);
+    public BakedModel getModel (@Nonnull ItemStack stack, Level world, LivingEntity entity, int p_174268_) {
+        return parent.getModel(stack, world, entity, p_174268_);
     }
 
     @Override
@@ -87,8 +87,8 @@ public class StorageRenderItem extends ItemRenderer
     }
 
     @Override
-    public void renderAndDecorateItem(@Nullable LivingEntity entityIn, ItemStack itemIn, int x, int y) {
-        parent.renderAndDecorateItem(entityIn, itemIn, x, y);
+    public void renderAndDecorateItem(@Nullable LivingEntity entityIn, ItemStack itemIn, int x, int y, int p_174234_) {
+        parent.renderAndDecorateItem(entityIn, itemIn, x, y, p_174234_);
     }
 
     @Override
@@ -146,20 +146,17 @@ public class StorageRenderItem extends ItemRenderer
                 buffer.endBatch();
             }
 
-            if (item.getItem().showDurabilityBar(item)) {
+            if (item.getItem().isBarVisible(item)) {
                 RenderSystem.disableDepthTest();
                 RenderSystem.disableTexture();
-                RenderSystem.disableAlphaTest();
                 RenderSystem.disableBlend();
                 Tesselator tessellator = Tesselator.getInstance();
                 BufferBuilder bufferbuilder = tessellator.getBuilder();
-                double health = item.getItem().getDurabilityForDisplay(item);
-                int i = Math.round(13.0F - (float)health * 13.0F);
-                int j = item.getItem().getRGBDurabilityForDisplay(item);
+                int barWidth = item.getItem().getBarWidth(item);
+                int j = item.getItem().getBarColor(item);
                 this.draw(bufferbuilder, x + 2, y + 13, 13, 2, 0, 0, 0, 255);
-                this.draw(bufferbuilder, x + 2, y + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
+                this.draw(bufferbuilder, x + 2, y + 13, barWidth, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
                 RenderSystem.enableBlend();
-                RenderSystem.enableAlphaTest();
                 RenderSystem.enableTexture();
                 RenderSystem.enableDepthTest();
             }

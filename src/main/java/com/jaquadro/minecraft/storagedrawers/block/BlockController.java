@@ -20,7 +20,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
 
@@ -50,7 +49,7 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         Direction blockDir = state.getValue(FACING);
         TileEntityController te = getTileEntitySafe(world, pos);
 
-        ItemStack item = player.inventory.getSelected();
+        ItemStack item = player.getInventory().getSelected();
         if (!item.isEmpty() && toggle(world, pos, player, item.getItem()))
             return InteractionResult.SUCCESS;
 
