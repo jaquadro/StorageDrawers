@@ -11,13 +11,15 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import mcp.mobius.waila.api.BlockAccessor;
-import mcp.mobius.waila.api.config.IPluginConfig;
 import mcp.mobius.waila.api.IComponentProvider;
 import mcp.mobius.waila.api.IRegistrar;
 import mcp.mobius.waila.api.ITooltip;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.TooltipPosition;
 import mcp.mobius.waila.api.WailaPlugin;
+import mcp.mobius.waila.api.config.IPluginConfig;
+import mcp.mobius.waila.api.ui.IElement;
+import mcp.mobius.waila.impl.ui.ItemStackElement;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -51,8 +53,8 @@ public class Waila implements IWailaPlugin
     {
         @Override
         @Nonnull
-        public ItemStack getStack (IDataAccessor accessor, IPluginConfig config) {
-            return new ItemStack(accessor.getBlock(), 1);
+        public IElement getIcon (BlockAccessor accessor, IPluginConfig config, IElement currentIcon) {
+            return ItemStackElement.of(new ItemStack(accessor.getBlock()));
         }
 
         @Override
