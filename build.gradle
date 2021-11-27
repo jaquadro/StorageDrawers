@@ -134,12 +134,10 @@ repositories {
         url "https://maven.tterrag.com/"
     }
     maven {
-        name = "HWYLA"
-        url "https://maven.tehnut.info"
-    }
-    maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven"
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 }
 
@@ -154,8 +152,7 @@ dependencies {
     //compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${minecraft_base_version}:${top_version}:api")
     //runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${minecraft_base_version}:${top_version}")
 
-    //compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
-    //runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
 
     //deobfCompile "MineTweaker3:MineTweaker3-API:${mt_version}"
     //deobfCompile "org.ow2.asm:asm-debug-all:5.0.3"
