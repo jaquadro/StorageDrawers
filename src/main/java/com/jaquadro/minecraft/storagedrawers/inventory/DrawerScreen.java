@@ -3,7 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
@@ -97,9 +97,8 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
 
     @Override
     protected void renderBg (PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-        GlStateManager._color4f(1, 1, 1, 1);
-
-        minecraft.getTextureManager().bind(background);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, background);
 
         int guiX = (width - imageWidth) / 2;
         int guiY = (height - imageHeight) / 2;
