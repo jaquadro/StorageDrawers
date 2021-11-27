@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -56,10 +57,6 @@ public class StorageDrawers
     private void setup (final FMLCommonSetupEvent event) {
         MessageHandler.init();
 
-        CapabilityDrawerGroup.register();
-        CapabilityItemRepository.register();
-        CapabilityDrawerAttributes.register();
-
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ModContainers.registerScreens());
 
         compRegistry = new CompTierRegistry();
@@ -97,5 +94,12 @@ public class StorageDrawers
     @SubscribeEvent
     public void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
         //ConfigManager.serverPlayerConfigSettings.remove(event.player.getUniqueID());
+    }
+
+    @SubscribeEvent
+    public void registerCapabilities (RegisterCapabilitiesEvent event) {
+        CapabilityDrawerGroup.register(event);
+        CapabilityItemRepository.register(event);
+        CapabilityDrawerAttributes.register(event);
     }
 }
