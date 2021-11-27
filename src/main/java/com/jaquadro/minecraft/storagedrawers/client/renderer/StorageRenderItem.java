@@ -41,8 +41,8 @@ public class StorageRenderItem extends ItemRenderer
     @Nonnull
     public ItemStack overrideStack;
 
-    public StorageRenderItem (TextureManager texManager, ModelManager modelManager, ItemColors colors, BlockEntityWithoutLevelRenderer blockEntityRenderer) {
-        super(texManager, modelManager, colors, blockEntityRenderer);
+    public StorageRenderItem (TextureManager texManager, ModelManager modelManager, ItemColors colors) {
+        super(texManager, modelManager, colors, null);
         parent = Minecraft.getInstance().getItemRenderer();
         overrideStack = ItemStack.EMPTY;
     }

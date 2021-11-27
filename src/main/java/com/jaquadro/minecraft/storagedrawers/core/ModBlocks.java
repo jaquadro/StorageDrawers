@@ -376,11 +376,11 @@ public class ModBlocks
 
         @SubscribeEvent
         @OnlyIn(Dist.CLIENT)
-        public static void registerModels (ModelBakeEvent event) {
-            ClientRegistry.bindTileEntityRenderer(Tile.STANDARD_DRAWERS_1, TileEntityDrawersRenderer::new);
-            ClientRegistry.bindTileEntityRenderer(Tile.STANDARD_DRAWERS_2, TileEntityDrawersRenderer::new);
-            ClientRegistry.bindTileEntityRenderer(Tile.STANDARD_DRAWERS_4, TileEntityDrawersRenderer::new);
-            ClientRegistry.bindTileEntityRenderer(Tile.FRACTIONAL_DRAWERS_3, TileEntityDrawersRenderer::new);
+        public static void onRegisterRenderers (final EntityRenderersEvent.RegisterRenderers event) {
+            event.registerBlockEntityRenderer(Tile.STANDARD_DRAWERS_1, TileEntityDrawersRenderer::new);
+            event.registerBlockEntityRenderer(Tile.STANDARD_DRAWERS_2, TileEntityDrawersRenderer::new);
+            event.registerBlockEntityRenderer(Tile.STANDARD_DRAWERS_4, TileEntityDrawersRenderer::new);
+            event.registerBlockEntityRenderer(Tile.FRACTIONAL_DRAWERS_3, TileEntityDrawersRenderer::new);
         }
 
         @OnlyIn(Dist.CLIENT)

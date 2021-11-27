@@ -4,15 +4,19 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -30,12 +34,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.Tesselator;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-
 @OnlyIn(Dist.CLIENT)
-public class TileEntityDrawersRenderer implements BlockEntityRendererProvider<TileEntityDrawers>
+public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntityDrawers>
 {
     private boolean[] renderAsBlock = new boolean[4];
     private ItemStack[] renderStacks = new ItemStack[4];
@@ -57,7 +57,10 @@ public class TileEntityDrawersRenderer implements BlockEntityRendererProvider<Ti
         if (world == null)
             return;
 
-        BlockState state = world.getBlockState(tile.getBlockPos());
+        BlockState state = tile.getBlockState();
+        if (state == null)
+            return;
+
         if (!(state.getBlock() instanceof BlockDrawers))
             return;
 
@@ -120,7 +123,7 @@ public class TileEntityDrawersRenderer implements BlockEntityRendererProvider<Ti
             if (distance < 10) {
                 MultiBufferSource.BufferSource txtBuffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
                 for (int i = 0; i < drawerCount; i++) {
-                    String format = CountFormatter.format(this.renderer.getFont(), tile.getGroup().getDrawer(i));
+                    String format = CountFormatter.format(this.context.getFont(), tile.getGroup().getDrawer(i));
                     renderText(format, state, i, matrix, txtBuffer, combinedLight, side, alpha);
                 }
                 txtBuffer.endBatch();
@@ -132,7 +135,7 @@ public class TileEntityDrawersRenderer implements BlockEntityRendererProvider<Ti
         if (text == null || text.isEmpty())
             return;
 
-        Font fontRenderer = this.renderer.getFont();
+        Font fontRenderer = this.context.getFont();
 
         BlockDrawers block = (BlockDrawers)state.getBlock();
         AABB labelGeometry = block.countGeometry[slot];
@@ -184,7 +187,7 @@ public class TileEntityDrawersRenderer implements BlockEntityRendererProvider<Ti
             matrix.scale(16, 16, 16);
 
             //IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
-            BakedModel itemModel = renderItem.getModel(itemStack, null, null);
+            BakedModel itemModel = renderItem.getModel(itemStack, null, null, 0);
             boolean render3D = itemModel.isGui3d(); // itemModel.usesBlockLight();
             finish.accept(buffer);
 
