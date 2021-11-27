@@ -58,6 +58,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -65,7 +66,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
-public abstract class BlockDrawers extends HorizontalDirectionalBlock implements INetworked
+public abstract class BlockDrawers extends HorizontalDirectionalBlock implements INetworked, EntityBlock
 {
 
     // TODO: TE.getModelData()
@@ -613,11 +614,6 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         return super.getExplosionResistance(world, pos, exploder, explosion);
     }*/
 
-    @Override
-    public boolean hasTileEntity (BlockState state) {
-        return true;
-    }
-
     public TileEntityDrawers getTileEntity (BlockGetter blockAccess, BlockPos pos) {
         if (inTileLookup.get())
             return null;
@@ -632,8 +628,8 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     public TileEntityDrawers getTileEntitySafe (Level world, BlockPos pos) {
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile == null) {
-            tile = (TileEntityDrawers) createTileEntity(world.getBlockState(pos), world);
-            world.setBlockEntity(pos, tile);
+            tile = (TileEntityDrawers) newBlockEntity(pos, world.getBlockState(pos));
+            world.setBlockEntity(tile);
         }
 
         return tile;

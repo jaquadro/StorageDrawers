@@ -282,7 +282,7 @@ public class ModBlocks
             return block;
         }
 
-        private static <T extends BlockEntity> void registerTileEntity(RegistryEvent.Register<BlockEntityType<?>> event, String name, Supplier<? extends T> factory, Block... blocks) {
+        private static <T extends BlockEntity> void registerTileEntity(RegistryEvent.Register<BlockEntityType<?>> event, String name, BlockEntityType.BlockEntitySupplier<? extends T> factory, Block... blocks) {
             event.getRegistry().register(BlockEntityType.Builder.of(factory, blocks)
                 .build(null).setRegistryName(new ResourceLocation(StorageDrawers.MOD_ID, name)));
         }

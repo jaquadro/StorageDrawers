@@ -2,25 +2,26 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.TileDataShim;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.common.extensions.IForgeTileEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.extensions.IForgeBlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChamTileEntity extends BlockEntity implements IForgeTileEntity
+public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
 {
     private CompoundTag failureSnapshot;
     private List<TileDataShim> fixedShims;
     private List<TileDataShim> portableShims;
 
-    public ChamTileEntity (BlockEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
+    public ChamTileEntity (BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+        super(tileEntityTypeIn, pos, state);
     }
 
     public boolean hasDataPacket () {

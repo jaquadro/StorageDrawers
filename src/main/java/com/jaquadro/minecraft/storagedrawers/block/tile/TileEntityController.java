@@ -153,13 +153,13 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
     private long lastClickTime;
     private UUID lastClickUUID;
 
-    protected TileEntityController (BlockEntityType<?> tileEntityType) {
-        super(tileEntityType);
+    protected TileEntityController (BlockEntityType<?> tileEntityType, BlockPos pos, BlockState state) {
+        super(tileEntityType, pos, state);
         range = CommonConfig.GENERAL.controllerRange.get();
     }
 
-    public TileEntityController () {
-        this(ModBlocks.Tile.CONTROLLER);
+    public TileEntityController (BlockPos pos, BlockState state) {
+        this(ModBlocks.Tile.CONTROLLER, pos, state);
     }
 
     public void printDebugInfo () {

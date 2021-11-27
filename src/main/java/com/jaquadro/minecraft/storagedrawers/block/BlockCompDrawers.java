@@ -92,8 +92,8 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }*/
 
     @Override
-    public TileEntityDrawers createTileEntity (BlockState state, BlockGetter world) {
-        return new TileEntityDrawersComp.Slot3();
+    public TileEntityDrawers newBlockEntity (BlockPos pos, BlockState state) {
+        return new TileEntityDrawersComp.Slot3(pos, state);
     }
 
     /*@Override

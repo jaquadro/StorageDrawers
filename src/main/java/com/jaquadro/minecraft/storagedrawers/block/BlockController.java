@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +29,7 @@ import java.util.Random;
 
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
-public class BlockController extends HorizontalDirectionalBlock implements INetworked
+public class BlockController extends HorizontalDirectionalBlock implements INetworked, EntityBlock
 {
     public BlockController (BlockBehaviour.Properties properties) {
         super(properties);
@@ -126,13 +127,8 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
     }
 
     @Override
-    public boolean hasTileEntity (BlockState state) {
-        return true;
-    }
-
-    @Override
-    public TileEntityController createTileEntity (BlockState state, BlockGetter world) {
-        return new TileEntityController();
+    public TileEntityController newBlockEntity (BlockPos pos, BlockState state) {
+        return new TileEntityController(pos, state);
     }
 
     public TileEntityController getTileEntity (BlockGetter blockAccess, BlockPos pos) {
@@ -143,8 +139,8 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
     public TileEntityController getTileEntitySafe (Level world, BlockPos pos) {
         TileEntityController tile = getTileEntity(world, pos);
         if (tile == null) {
-            tile = createTileEntity(world.getBlockState(pos), world);
-            world.setBlockEntity(pos, tile);
+            tile = newBlockEntity(pos, world.getBlockState(pos));
+            world.setBlockEntity(tile);
         }
 
         return tile;

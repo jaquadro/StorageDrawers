@@ -31,16 +31,16 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
     private int capacity = 0;
 
-    public TileEntityDrawersStandard (BlockEntityType<?> tileEntityType) {
-        super(tileEntityType);
+    public TileEntityDrawersStandard (BlockEntityType<?> tileEntityType, BlockPos pos, BlockState state) {
+        super(tileEntityType, pos, state);
     }
 
     public static class Slot1 extends TileEntityDrawersStandard
     {
         private GroupData groupData = new GroupData(1);
 
-        public Slot1 () {
-            super(ModBlocks.Tile.STANDARD_DRAWERS_1);
+        public Slot1 (BlockPos pos, BlockState state) {
+            super(ModBlocks.Tile.STANDARD_DRAWERS_1, pos, state);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -61,8 +61,8 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     {
         private GroupData groupData = new GroupData(2);
 
-        public Slot2 () {
-            super(ModBlocks.Tile.STANDARD_DRAWERS_2);
+        public Slot2 (BlockPos pos, BlockState state) {
+            super(ModBlocks.Tile.STANDARD_DRAWERS_2, pos, state);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -83,8 +83,8 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     {
         private GroupData groupData = new GroupData(4);
 
-        public Slot4 () {
-            super(ModBlocks.Tile.STANDARD_DRAWERS_4);
+        public Slot4 (BlockPos pos, BlockState state) {
+            super(ModBlocks.Tile.STANDARD_DRAWERS_4, pos, state);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -101,14 +101,14 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
     }
 
-    public static TileEntityDrawersStandard createEntity (int slotCount) {
+    public static TileEntityDrawersStandard createEntity (int slotCount, BlockPos pos, BlockState state) {
         switch (slotCount) {
             case 1:
-                return new Slot1();
+                return new Slot1(pos, state);
             case 2:
-                return new Slot2();
+                return new Slot2(pos, state);
             case 4:
-                return new Slot4();
+                return new Slot4(pos, state);
             default:
                 return null;
         }

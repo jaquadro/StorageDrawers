@@ -69,7 +69,7 @@ public class BlockStandardDrawers extends BlockDrawers
     }
 
     @Override
-    public TileEntityDrawers createTileEntity (BlockState state, BlockGetter world) {
-        return TileEntityDrawersStandard.createEntity(getDrawerCount());
+    public TileEntityDrawers newBlockEntity (BlockPos pos, BlockState state) {
+        return TileEntityDrawersStandard.createEntity(getDrawerCount(), pos, state);
     }
 }

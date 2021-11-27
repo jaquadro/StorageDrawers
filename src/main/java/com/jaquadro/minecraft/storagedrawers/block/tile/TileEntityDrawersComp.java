@@ -33,16 +33,16 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 {
     static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
-    public TileEntityDrawersComp (BlockEntityType<?> tileEntityType) {
-        super(tileEntityType);
+    public TileEntityDrawersComp (BlockEntityType<?> tileEntityType, BlockPos pos, BlockState state) {
+        super(tileEntityType, pos, state);
     }
 
     public static class Slot3 extends TileEntityDrawersComp
     {
         private GroupData groupData = new GroupData(3);
 
-        public Slot3 () {
-            super(ModBlocks.Tile.FRACTIONAL_DRAWERS_3);
+        public Slot3 (BlockPos pos, BlockState state) {
+            super(ModBlocks.Tile.FRACTIONAL_DRAWERS_3, pos, state);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }

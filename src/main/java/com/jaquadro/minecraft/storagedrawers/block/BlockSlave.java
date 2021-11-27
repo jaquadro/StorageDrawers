@@ -6,13 +6,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
-public class BlockSlave extends Block implements INetworked
+public class BlockSlave extends Block implements INetworked, EntityBlock
 {
     public BlockSlave (BlockBehaviour.Properties properties) {
         super(properties);
@@ -35,13 +36,8 @@ public class BlockSlave extends Block implements INetworked
     }
 
     @Override
-    public boolean hasTileEntity (BlockState state) {
-        return true;
-    }
-
-    @Override
-    public TileEntitySlave createTileEntity (BlockState state, BlockGetter world) {
-        return new TileEntitySlave();
+    public TileEntitySlave newBlockEntity (BlockPos pos, BlockState state) {
+        return new TileEntitySlave(pos, state);
     }
 
     public TileEntitySlave getTileEntity (BlockGetter blockAccess, BlockPos pos) {
@@ -52,8 +48,8 @@ public class BlockSlave extends Block implements INetworked
     public TileEntitySlave getTileEntitySafe (Level world, BlockPos pos) {
         TileEntitySlave tile = getTileEntity(world, pos);
         if (tile == null) {
-            tile = createTileEntity(world.getBlockState(pos), world);
-            world.setBlockEntity(pos, tile);
+            tile = newBlockEntity(pos, world.getBlockState(pos));
+            world.setBlockEntity(tile);
         }
 
         return tile;

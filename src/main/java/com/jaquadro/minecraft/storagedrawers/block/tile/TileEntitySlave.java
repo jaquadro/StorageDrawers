@@ -31,14 +31,14 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
 
     public final ControllerData controllerData = new ControllerData();
 
-    public TileEntitySlave (BlockEntityType<?> tileEntityType) {
-        super(tileEntityType);
+    public TileEntitySlave (BlockEntityType<?> tileEntityType, BlockPos pos, BlockState state) {
+        super(tileEntityType, pos, state);
 
         injectData(controllerData);
     }
 
-    public TileEntitySlave () {
-        this(ModBlocks.Tile.CONTROLLER_SLAVE);
+    public TileEntitySlave (BlockPos pos, BlockState state) {
+        this(ModBlocks.Tile.CONTROLLER_SLAVE, pos, state);
     }
 
     @Override

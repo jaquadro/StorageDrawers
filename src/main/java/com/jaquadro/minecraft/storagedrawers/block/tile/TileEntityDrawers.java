@@ -152,8 +152,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         }
     }
 
-    protected TileEntityDrawers (BlockEntityType<?> tileEntityType) {
-        super(tileEntityType);
+    protected TileEntityDrawers (BlockEntityType<?> tileEntityType, BlockPos pos, BlockState state) {
+        super(tileEntityType, pos, state);
 
         drawerAttributes = new DrawerAttributes();
 
