@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -184,7 +185,7 @@ public class StorageRenderItem extends ItemRenderer
 
     private void draw (BufferBuilder tessellator, int x, int y, int w, int h, int r, int g, int b, int a)
     {
-        tessellator.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
+        tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         tessellator.vertex(x + 0, y + 0, 0).color(r, g, b, a).endVertex();
         tessellator.vertex(x + 0, y + h, 0).color(r, g, b, a).endVertex();
         tessellator.vertex(x + w, y + h, 0).color(r, g, b, a).endVertex();
