@@ -17,15 +17,14 @@ For Developers
 
 #### Building
 
-StorageDrawers is built using `gradle`. To build StorageDrawers, the support library [Chameleon](https://github.com/jaquadro/Chameleon) must be checked out in an adjacent directory. These commands should be enough to get you started:
+StorageDrawers is built using `gradle`. These commands should be enough to get you started:
 
 ```
-git clone https://github.com/jaquadro/Chameleon 
 git clone https://github.com/jaquadro/StorageDrawers
 cd StorageDrawers
-./gradle build
+./gradlew build
 ```
-For development, the `./gradle idea` command will setup a multi-module project for IntelliJ with StorageDrawers and Chameleon
+For development, the `./gradlew idea` command will setup a multi-module project for IntelliJ with StorageDrawers
 
 #### Maven
 
@@ -41,7 +40,6 @@ repositories {
 dependencies {
     deobfCompile "com.jaquadro.minecraft.storagedrawers:StorageDrawers:<VERSION>:api"
     runtime "com.jaquadro.minecraft.storagedrawers:StorageDrawers:<VERSION>"
-    runtime "com.jaquadro.minecraft.chameleon:Chameleon:<VERSION>"
 }
 ```
 An example version is `1.12-5.2.2`. You can [browse the repo](https://dl.bintray.com/jaquadro/dev/com/jaquadro/minecraft/) to see what versions are available.
