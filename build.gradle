@@ -21,8 +21,6 @@ version = "${minecraft_version}-${mod_version}"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
 
-// sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' 
-
 // Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
 java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
@@ -121,9 +119,21 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    mavenCentral {
+        content {
+            excludeGroupByRegex "net\\.minecraftforge.*"
+            excludeGroupByRegex "com\\.mojang.*"
+            excludeGroupByRegex "cpw\\.mods.*"
+            excludeGroupByRegex "mezz\\.jei.*"
+            excludeGroupByRegex "curse\\.maven.*"
+        }
+    }
     maven {
         name = "JEI"
         url "https://dvs1.progwml6.com/files/maven"
+        content {
+            includeGroup "mezz.jei"
+        }
     }
     maven {
         name = "CraftTweaker"
@@ -143,8 +153,6 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
-    //compile chameleon
 
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
