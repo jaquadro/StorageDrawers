@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
@@ -68,12 +69,15 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
 
         upgradeInventory = new InventoryUpgrade(tileEntity);
         Block block = tileEntity.getBlockState().getBlock();
+        IDrawerGroup group = tileEntity.getGroup();
         if (block instanceof BlockDrawers)
             drawerCount = ((BlockDrawers) block).getDrawerCount();
 
         storageSlots = new ArrayList<>();
-        for (int i = 0; i < drawerCount; i++)
-            storageSlots.add(addSlot(new SlotDrawer(this, tileEntity.getGroup(), i, getStorageSlotX(i), getStorageSlotY(i))));
+        for (int i = 0; i < drawerCount; i++) {
+            if (group.getDrawer(i).isEnabled())
+                storageSlots.add(addSlot(new SlotDrawer(this, group, i, getStorageSlotX(i), getStorageSlotY(i))));
+        }
 
         upgradeSlots = new ArrayList<>();
         for (int i = 0; i < 7; i++)
