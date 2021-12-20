@@ -5,68 +5,70 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.EnumSet;
 import java.util.Random;
 
-public class BlockController extends HorizontalBlock implements INetworked
+import net.minecraft.world.level.block.state.BlockBehaviour;
+
+public class BlockController extends HorizontalDirectionalBlock implements INetworked, EntityBlock
 {
-    public BlockController (Block.Properties properties) {
+    public BlockController (BlockBehaviour.Properties properties) {
         super(properties);
     }
 
     @Override
-    protected void fillStateContainer (StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING);
+    protected void createBlockStateDefinition (StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
     }
 
     @Override
-    public BlockState getStateForPlacement (BlockItemUseContext context) {
-        return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+    public BlockState getStateForPlacement (BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public ActionResultType onBlockActivated (BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        Direction blockDir = state.get(HORIZONTAL_FACING);
+    public InteractionResult use (BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        Direction blockDir = state.getValue(FACING);
         TileEntityController te = getTileEntitySafe(world, pos);
 
-        ItemStack item = player.inventory.getCurrentItem();
+        ItemStack item = player.getInventory().getSelected();
         if (!item.isEmpty() && toggle(world, pos, player, item.getItem()))
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
 
-        if (blockDir != hit.getFace())
-            return ActionResultType.CONSUME;
+        if (blockDir != hit.getDirection())
+            return InteractionResult.CONSUME;
 
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             if (CommonConfig.GENERAL.debugTrace.get() && item.isEmpty())
                 te.printDebugInfo();
 
             te.interactPutItemsIntoInventory(player);
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    public boolean toggle (World world, BlockPos pos, PlayerEntity player, Item item) {
-        if (world.isRemote || item == null)
+    public boolean toggle (Level world, BlockPos pos, Player player, Item item) {
+        if (world.isClientSide || item == null)
             return false;
 
         if (item == ModItems.DRAWER_KEY)
@@ -83,8 +85,8 @@ public class BlockController extends HorizontalBlock implements INetworked
         return true;
     }
 
-    public void toggle (World world, BlockPos pos, PlayerEntity player, EnumKeyType keyType) {
-        if (world.isRemote)
+    public void toggle (Level world, BlockPos pos, Player player, EnumKeyType keyType) {
+        if (world.isClientSide)
             return;
 
         TileEntityController te = getTileEntitySafe(world, pos);
@@ -111,8 +113,8 @@ public class BlockController extends HorizontalBlock implements INetworked
     }
 
     @Override
-    public void tick (BlockState state, ServerWorld world, BlockPos pos, Random rand) {
-        if (world.isRemote)
+    public void tick (BlockState state, ServerLevel world, BlockPos pos, Random rand) {
+        if (world.isClientSide)
             return;
 
         TileEntityController te = getTileEntitySafe(world, pos);
@@ -121,29 +123,24 @@ public class BlockController extends HorizontalBlock implements INetworked
 
         te.updateCache();
 
-        world.getPendingBlockTicks().scheduleTick(pos, this, 100);
+        world.getBlockTicks().scheduleTick(pos, this, 100);
     }
 
     @Override
-    public boolean hasTileEntity (BlockState state) {
-        return true;
+    public TileEntityController newBlockEntity (BlockPos pos, BlockState state) {
+        return new TileEntityController(pos, state);
     }
 
-    @Override
-    public TileEntityController createTileEntity (BlockState state, IBlockReader world) {
-        return new TileEntityController();
-    }
-
-    public TileEntityController getTileEntity (IBlockReader blockAccess, BlockPos pos) {
-        TileEntity tile = blockAccess.getTileEntity(pos);
+    public TileEntityController getTileEntity (BlockGetter blockAccess, BlockPos pos) {
+        BlockEntity tile = blockAccess.getBlockEntity(pos);
         return (tile instanceof TileEntityController) ? (TileEntityController) tile : null;
     }
 
-    public TileEntityController getTileEntitySafe (World world, BlockPos pos) {
+    public TileEntityController getTileEntitySafe (Level world, BlockPos pos) {
         TileEntityController tile = getTileEntity(world, pos);
         if (tile == null) {
-            tile = createTileEntity(world.getBlockState(pos), world);
-            world.setTileEntity(pos, tile);
+            tile = newBlockEntity(pos, world.getBlockState(pos));
+            world.setBlockEntity(tile);
         }
 
         return tile;

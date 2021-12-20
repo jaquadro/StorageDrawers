@@ -2,8 +2,8 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class ContainerDrawers1 extends ContainerDrawers
 {
@@ -11,11 +11,11 @@ public class ContainerDrawers1 extends ContainerDrawers
         { 80, 36 }
     };
 
-    public ContainerDrawers1 (int windowId, PlayerInventory playerInv, PacketBuffer data) {
+    public ContainerDrawers1 (int windowId, Inventory playerInv, FriendlyByteBuf data) {
         super(ModContainers.DRAWER_CONTAINER_1, windowId, playerInv, data);
     }
 
-    public ContainerDrawers1 (int windowId, PlayerInventory playerInventory, TileEntityDrawers tileEntity) {
+    public ContainerDrawers1 (int windowId, Inventory playerInventory, TileEntityDrawers tileEntity) {
         super(ModContainers.DRAWER_CONTAINER_1, windowId, playerInventory, tileEntity);
     }
 

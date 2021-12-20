@@ -5,17 +5,19 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class BlockCompDrawers extends BlockDrawers implements INetworked
 {
@@ -24,19 +26,19 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     //@SideOnly(Side.CLIENT)
     //private StatusModelData statusInfo;
 
-    public BlockCompDrawers (int storageUnits, Block.Properties properties) {
+    public BlockCompDrawers (int storageUnits, BlockBehaviour.Properties properties) {
         super(3, false, storageUnits, properties);
-        this.setDefaultState(getDefaultState()
-            .with(SLOTS, EnumCompDrawer.OPEN1));
+        this.registerDefaultState(defaultBlockState()
+            .setValue(SLOTS, EnumCompDrawer.OPEN1));
     }
 
-    public BlockCompDrawers (Block.Properties properties) {
+    public BlockCompDrawers (BlockBehaviour.Properties properties) {
         this(32, properties);
     }
 
     @Override
-    protected void fillStateContainer (StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition (StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(SLOTS);
     }
 
@@ -53,7 +55,7 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }*/
 
     @Override
-    protected int getDrawerSlot (Direction side, Vector3d hit) {
+    protected int getDrawerSlot (Direction side, Vec3 hit) {
         if (hitTop(hit.y))
             return 0;
 
@@ -64,15 +66,15 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }
 
     @Override
-    public void onBlockPlacedBy (World world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
-        super.onBlockPlacedBy(world, pos, state, entity, stack);
+    public void setPlacedBy (Level world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
+        super.setPlacedBy(world, pos, state, entity, stack);
 
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile != null) {
             IDrawerGroup group = tile.getGroup();
             for (int i = group.getDrawerCount() - 1; i >= 0; i--) {
                 if (!group.getDrawer(i).isEmpty()) {
-                    world.setBlockState(pos, state.with(SLOTS, EnumCompDrawer.byOpenSlots(i + 1)), 3);
+                    world.setBlock(pos, state.setValue(SLOTS, EnumCompDrawer.byOpenSlots(i + 1)), 3);
                     break;
                 }
             }
@@ -90,8 +92,8 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }*/
 
     @Override
-    public TileEntityDrawers createTileEntity (BlockState state, IBlockReader world) {
-        return new TileEntityDrawersComp.Slot3();
+    public TileEntityDrawers newBlockEntity (BlockPos pos, BlockState state) {
+        return new TileEntityDrawersComp.Slot3(pos, state);
     }
 
     /*@Override

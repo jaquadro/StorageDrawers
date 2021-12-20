@@ -2,20 +2,20 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
-public class DrawerScreen extends ContainerScreen<ContainerDrawers>
+public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
 {
     private static final ResourceLocation guiTextures1 = new ResourceLocation(StorageDrawers.MOD_ID, "textures/gui/drawers_1.png");
     private static final ResourceLocation guiTextures2 = new ResourceLocation(StorageDrawers.MOD_ID, "textures/gui/drawers_2.png");
@@ -28,35 +28,37 @@ public class DrawerScreen extends ContainerScreen<ContainerDrawers>
     private static StorageRenderItem storageItemRender;
 
     private final ResourceLocation background;
+    private final Inventory inventory;
 
-    public DrawerScreen(ContainerDrawers container, PlayerInventory playerInv, ITextComponent name, ResourceLocation bg) {
+    public DrawerScreen(ContainerDrawers container, Inventory playerInv, Component name, ResourceLocation bg) {
         super(container, playerInv, name);
 
-        xSize = 176;
-        ySize = 199;
+        imageWidth = 176;
+        imageHeight = 199;
         background = bg;
+        inventory = playerInv;
     }
 
     public static class Slot1 extends DrawerScreen {
-        public Slot1(ContainerDrawers container, PlayerInventory playerInv, ITextComponent name) {
+        public Slot1(ContainerDrawers container, Inventory playerInv, Component name) {
             super(container, playerInv, name, guiTextures1);
         }
     }
 
     public static class Slot2 extends DrawerScreen {
-        public Slot2(ContainerDrawers container, PlayerInventory playerInv, ITextComponent name) {
+        public Slot2(ContainerDrawers container, Inventory playerInv, Component name) {
             super(container, playerInv, name, guiTextures2);
         }
     }
 
     public static class Slot4 extends DrawerScreen {
-        public Slot4(ContainerDrawers container, PlayerInventory playerInv, ITextComponent name) {
+        public Slot4(ContainerDrawers container, Inventory playerInv, Component name) {
             super(container, playerInv, name, guiTextures4);
         }
     }
 
     public static class Compacting extends DrawerScreen {
-        public Compacting(ContainerDrawers container, PlayerInventory playerInv, ITextComponent name) {
+        public Compacting(ContainerDrawers container, Inventory playerInv, Component name) {
             super(container, playerInv, name, guiTexturesComp);
         }
     }
@@ -67,45 +69,44 @@ public class DrawerScreen extends ContainerScreen<ContainerDrawers>
 
         if (storageItemRender == null) {
             ItemRenderer defaultRenderItem = minecraft.getItemRenderer();
-            storageItemRender = new StorageRenderItem(minecraft.getTextureManager(), defaultRenderItem.getItemModelMesher().getModelManager(), minecraft.getItemColors());
+            storageItemRender = new StorageRenderItem(minecraft.getTextureManager(), defaultRenderItem.getItemModelShaper().getModelManager(), minecraft.getItemColors());
         }
     }
 
     @Override
-    public void render (MatrixStack stack, int p_render_1_, int p_render_2_, float p_render_3_) {
+    public void render (PoseStack stack, int p_render_1_, int p_render_2_, float p_render_3_) {
         ItemRenderer ri = setItemRender(storageItemRender);
-        container.activeRenderItem = storageItemRender;
+        menu.activeRenderItem = storageItemRender;
 
         this.renderBackground(stack);
         super.render(stack, p_render_1_, p_render_2_, p_render_3_);
-        this.renderHoveredTooltip(stack, p_render_1_, p_render_2_);
+        this.renderTooltip(stack, p_render_1_, p_render_2_);
 
-        container.activeRenderItem = null;
+        menu.activeRenderItem = null;
         storageItemRender.overrideStack = ItemStack.EMPTY;
 
         setItemRender(ri);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer (MatrixStack stack, int mouseX, int mouseY) {
-        this.font.drawString(stack, this.title.getString(), 8.0F, 6.0F, 4210752);
-        this.font.drawString(stack, I18n.format("container.storagedrawers.upgrades"), 8, 75, 4210752);
-        this.font.drawString(stack, this.playerInventory.getDisplayName().getString(), 8, this.ySize - 96 + 2, 4210752);
+    protected void renderLabels (PoseStack stack, int mouseX, int mouseY) {
+        this.font.draw(stack, this.title.getString(), 8.0F, 6.0F, 4210752);
+        this.font.draw(stack, I18n.get("container.storagedrawers.upgrades"), 8, 75, 4210752);
+        this.font.draw(stack, this.inventory.getDisplayName().getString(), 8, this.imageHeight - 96 + 2, 4210752);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer (MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-        GlStateManager.color4f(1, 1, 1, 1);
+    protected void renderBg (PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, background);
 
-        minecraft.getTextureManager().bindTexture(background);
+        int guiX = (width - imageWidth) / 2;
+        int guiY = (height - imageHeight) / 2;
+        blit(stack, guiX, guiY, 0, 0, imageWidth, imageHeight);
 
-        int guiX = (width - xSize) / 2;
-        int guiY = (height - ySize) / 2;
-        blit(stack, guiX, guiY, 0, 0, xSize, ySize);
-
-        List<Slot> storageSlots = container.getStorageSlots();
+        List<Slot> storageSlots = menu.getStorageSlots();
         for (Slot slot : storageSlots) {
-            blit(stack, guiX + slot.xPos, guiY + slot.yPos, smDisabledX, smDisabledY, 16, 16);
+            blit(stack, guiX + slot.x, guiY + slot.y, smDisabledX, smDisabledY, 16, 16);
         }
 
         /*List<Slot> upgradeSlots = container.getUpgradeSlots();
@@ -118,10 +119,10 @@ public class DrawerScreen extends ContainerScreen<ContainerDrawers>
 
 
     @Override
-    protected boolean isPointInRegion (int x, int y, int width, int height, double originX, double originY) {
-        List<Slot> storageSlots = container.getStorageSlots();
+    protected boolean isHovering (int x, int y, int width, int height, double originX, double originY) {
+        List<Slot> storageSlots = menu.getStorageSlots();
         for (Slot slot : storageSlots) {
-            if (slot instanceof SlotStorage && slot.xPos == x && slot.yPos == y)
+            if (slot instanceof SlotStorage && slot.x == x && slot.y == y)
                 return false;
         }
 
@@ -131,7 +132,7 @@ public class DrawerScreen extends ContainerScreen<ContainerDrawers>
                 return false;
         }*/
 
-        return super.isPointInRegion(x, y, width, height, originX, originY);
+        return super.isHovering(x, y, width, height, originX, originY);
     }
 
     private ItemRenderer setItemRender (ItemRenderer renderItem) {

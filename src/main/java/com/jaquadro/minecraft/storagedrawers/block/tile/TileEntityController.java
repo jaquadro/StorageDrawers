@@ -15,17 +15,19 @@ import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.ItemCollectionRegistry;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.TickPriority;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.TickPriority;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -37,8 +39,7 @@ import java.util.function.Predicate;
 
 public class TileEntityController extends ChamTileEntity implements IDrawerGroup
 {
-    @CapabilityInject(IDrawerAttributes.class)
-    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     private static final int PRI_LOCKED = 0;
     private static final int PRI_LOCKED_VOID = 1;
@@ -152,28 +153,28 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
     private long lastClickTime;
     private UUID lastClickUUID;
 
-    protected TileEntityController (TileEntityType<?> tileEntityType) {
-        super(tileEntityType);
+    protected TileEntityController (BlockEntityType<?> tileEntityType, BlockPos pos, BlockState state) {
+        super(tileEntityType, pos, state);
         range = CommonConfig.GENERAL.controllerRange.get();
     }
 
-    public TileEntityController () {
-        this(ModBlocks.Tile.CONTROLLER);
+    public TileEntityController (BlockPos pos, BlockState state) {
+        this(ModBlocks.Tile.CONTROLLER, pos, state);
     }
 
     public void printDebugInfo () {
-        StorageDrawers.log.info("Controller at " + pos.toString());
+        StorageDrawers.log.info("Controller at " + worldPosition.toString());
         StorageDrawers.log.info("  Range: " + range + " blocks");
         StorageDrawers.log.info("  Stored records: " + storage.size() + ", slot list: " + drawerSlots.length);
-        StorageDrawers.log.info("  Ticks since last update: " + (getWorld().getGameTime() - lastUpdateTime));
+        StorageDrawers.log.info("  Ticks since last update: " + (getLevel().getGameTime() - lastUpdateTime));
     }
 
     @Override
-    public void validate () {
-        super.validate();
+    public void clearRemoved () {
+        super.clearRemoved();
 
-        if (!getWorld().getPendingBlockTicks().isTickScheduled(getPos(), ModBlocks.CONTROLLER))
-            getWorld().getPendingBlockTicks().scheduleTick(getPos(), ModBlocks.CONTROLLER, 1, TickPriority.NORMAL);
+        if (!getLevel().getBlockTicks().hasScheduledTick(getBlockPos(), ModBlocks.CONTROLLER))
+            getLevel().getBlockTicks().scheduleTick(getBlockPos(), ModBlocks.CONTROLLER, 1, TickPriority.NORMAL);
     }
 
     @Override
@@ -181,25 +182,25 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
         return !isRemoved();
     }
 
-    public int interactPutItemsIntoInventory (PlayerEntity player) {
-        boolean dumpInventory = getWorld().getGameTime() - lastClickTime < 10 && player.getUniqueID().equals(lastClickUUID);
+    public int interactPutItemsIntoInventory (Player player) {
+        boolean dumpInventory = getLevel().getGameTime() - lastClickTime < 10 && player.getUUID().equals(lastClickUUID);
         int count = 0;
 
         if (!dumpInventory) {
-            ItemStack currentStack = player.inventory.getCurrentItem();
+            ItemStack currentStack = player.getInventory().getSelected();
             if (!currentStack.isEmpty()) {
                 count = insertItems(currentStack, player.getGameProfile());
                 if (currentStack.getCount() == 0)
-                    player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                    player.getInventory().setItem(player.getInventory().selected, ItemStack.EMPTY);
             }
         }
         else {
-            for (int i = 0, n = player.inventory.getSizeInventory(); i < n; i++) {
-                ItemStack subStack = player.inventory.getStackInSlot(i);
+            for (int i = 0, n = player.getInventory().getContainerSize(); i < n; i++) {
+                ItemStack subStack = player.getInventory().getItem(i);
                 if (!subStack.isEmpty()) {
                     count += insertItems(subStack, player.getGameProfile());
                     if (subStack.getCount() == 0)
-                        player.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
+                        player.getInventory().setItem(i, ItemStack.EMPTY);
                 }
             }
 
@@ -207,8 +208,8 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
                 StorageDrawers.proxy.updatePlayerInventory(player);
         }
 
-        lastClickTime = getWorld().getGameTime();
-        lastClickUUID = player.getUniqueID();
+        lastClickTime = getLevel().getGameTime();
+        lastClickUUID = player.getUUID();
 
         return count;
     }
@@ -345,12 +346,12 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
     }
 
     public void updateCache () {
-        lastUpdateTime = getWorld().getGameTime();
+        lastUpdateTime = getLevel().getGameTime();
         int preCount = drawerSlots.length;
 
         resetCache();
 
-        populateNodes(getPos());
+        populateNodes(getBlockPos());
 
         flattenLists();
         drawerSlots = sortSlotRecords(drawerSlotList);
@@ -358,8 +359,8 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
         rebuildPrimaryLookup(drawerPrimaryLookup, drawerSlotList);
 
         if (preCount != drawerSlots.length && (preCount == 0 || drawerSlots.length == 0)) {
-            if (!getWorld().isRemote)
-                markDirty();
+            if (!getLevel().isClientSide)
+                setChanged();
         }
     }
 
@@ -437,7 +438,7 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
         }
     }
 
-    private void updateRecordInfo (BlockPos coord, StorageRecord record, TileEntity te) {
+    private void updateRecordInfo (BlockPos coord, StorageRecord record, BlockEntity te) {
         if (te == null) {
             if (record.storage != null)
                 clearRecordInfo(coord, record);
@@ -465,7 +466,7 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
 
             record.storage = null;
 
-            ((TileEntitySlave) te).bindController(getPos());
+            ((TileEntitySlave) te).bindController(getBlockPos());
         }
         else if (te instanceof TileEntityDrawers) {
             IDrawerGroup group = ((TileEntityDrawers) te).getGroup();
@@ -513,10 +514,10 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
             if (depth > range)
                 continue;
 
-            if (!getWorld().isBlockLoaded(coord))
+            if (!getLevel().hasChunkAt(coord))
                 continue;
 
-            Block block = getWorld().getBlockState(coord).getBlock();
+            Block block = getLevel().getBlockState(coord).getBlock();
             if (!(block instanceof INetworked))
                 continue;
 
@@ -527,15 +528,15 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
             }
 
             if (block instanceof BlockSlave) {
-                ((BlockSlave) block).getTileEntitySafe(getWorld(), coord);
+                ((BlockSlave) block).getTileEntitySafe(getLevel(), coord);
             }
 
-            updateRecordInfo(coord, record, getWorld().getTileEntity(coord));
+            updateRecordInfo(coord, record, getLevel().getBlockEntity(coord));
             record.mark = true;
             record.distance = depth;
 
             BlockPos[] neighbors = new BlockPos[]{
-                coord.west(), coord.east(), coord.south(), coord.north(), coord.up(), coord.down()
+                coord.west(), coord.east(), coord.south(), coord.north(), coord.above(), coord.below()
             };
 
             for (BlockPos n : neighbors) {
@@ -563,9 +564,9 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
         if (group == null || !group.isGroupValid())
             return null;
 
-        if (group instanceof TileEntity) {
-            TileEntity tile = (TileEntity)group;
-            if (tile.isRemoved() || !tile.getPos().equals(record.coord)) {
+        if (group instanceof BlockEntity) {
+            BlockEntity tile = (BlockEntity)group;
+            if (tile.isRemoved() || !tile.getBlockPos().equals(record.coord)) {
                 record.group = null;
                 return null;
             }
@@ -586,10 +587,10 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
     }
 
     @Override
-    public void readFixed (CompoundNBT tag) {
+    public void readFixed (CompoundTag tag) {
         super.readFixed(tag);
 
-        if (getWorld() != null && !getWorld().isRemote)
+        if (getLevel() != null && !getLevel().isClientSide)
             updateCache();
     }
 
@@ -623,12 +624,9 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
         return itemRepository;
     }
 
-    @CapabilityInject(IItemHandler.class)
-    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
-    @CapabilityInject(IItemRepository.class)
-    static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
-    @CapabilityInject(IDrawerGroup.class)
-    static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
+    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     private final DrawerItemHandler itemHandler = new DrawerItemHandler(this);
     private final ItemRepository itemRepository = new ItemRepository(this);

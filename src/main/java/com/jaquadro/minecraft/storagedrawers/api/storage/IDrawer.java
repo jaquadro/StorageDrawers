@@ -1,6 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;

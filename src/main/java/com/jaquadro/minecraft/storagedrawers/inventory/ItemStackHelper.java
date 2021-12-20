@@ -1,8 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 
 import javax.annotation.Nonnull;
 
@@ -54,9 +54,9 @@ public class ItemStackHelper
         if (proto.isEmpty())
             return stack;
 
-        CompoundNBT tag = proto.getTag();
+        CompoundTag tag = proto.getTag();
         if (tag == null) {
-            tag = new CompoundNBT();
+            tag = new CompoundTag();
             proto.setTag(tag);
         }
 
@@ -75,9 +75,9 @@ public class ItemStackHelper
         if (count == 0 || count >= 128) {
             ItemStack stack = proto.copy();
 
-            CompoundNBT tag = stack.getTag();
+            CompoundTag tag = stack.getTag();
             if (tag == null) {
-                tag = new CompoundNBT();
+                tag = new CompoundTag();
                 stack.setTag(tag);
             }
 
@@ -102,7 +102,7 @@ public class ItemStackHelper
     }
 
     public static int decodedCount (@Nonnull ItemStack stack) {
-        CompoundNBT tag = stack.getTag();
+        CompoundTag tag = stack.getTag();
         if (tag != null && tag.contains("__storagedrawers_count"))
             return tag.getInt("__storagedrawers_count");
 
@@ -111,7 +111,7 @@ public class ItemStackHelper
 
     public static ItemStack stripDecoding (@Nonnull ItemStack stack) {
         ItemStack decode = stack.copy();
-        CompoundNBT tag = decode.getTag();
+        CompoundTag tag = decode.getTag();
 
         if (tag != null && tag.contains("__storagedrawers_count")) {
             tag.remove("__storagedrawers_count");
@@ -125,7 +125,7 @@ public class ItemStackHelper
     }
 
     public static boolean isStackEncoded (@Nonnull ItemStack stack) {
-        CompoundNBT tag = stack.getTag();
+        CompoundTag tag = stack.getTag();
         if (tag == null)
             return false;
 
@@ -134,9 +134,9 @@ public class ItemStackHelper
 
     /*static {
         try {
-            itemField = ReflectionHelper.findField(ItemStack.class,  "item", "field_151002_e");
+            itemField = ReflectionHelper.findField(ItemStack.class,  "item", "item");
             itemDamageField = ReflectionHelper.findField(ItemStack.class,"itemDamage", "field_77991_e");
-            stackTagCompoundField = ReflectionHelper.findField(ItemStack.class,"stackTagCompound", "field_77990_d");
+            stackTagCompoundField = ReflectionHelper.findField(ItemStack.class,"stackTagCompound", "tag");
             capabilitiesField = ReflectionHelper.findField(ItemStack.class,"capabilities");
 
             itemField.setAccessible(true);

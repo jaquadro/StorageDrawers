@@ -12,36 +12,37 @@ import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileEntityDrawersComp extends TileEntityDrawers
 {
-    @CapabilityInject(IDrawerAttributes.class)
-    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
-    public TileEntityDrawersComp (TileEntityType<?> tileEntityType) {
-        super(tileEntityType);
+    public TileEntityDrawersComp (BlockEntityType<?> tileEntityType, BlockPos pos, BlockState state) {
+        super(tileEntityType, pos, state);
     }
 
     public static class Slot3 extends TileEntityDrawersComp
     {
         private GroupData groupData = new GroupData(3);
 
-        public Slot3 () {
-            super(ModBlocks.Tile.FRACTIONAL_DRAWERS_3);
+        public Slot3 (BlockPos pos, BlockState state) {
+            super(ModBlocks.Tile.FRACTIONAL_DRAWERS_3, pos, state);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -83,8 +84,8 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         @Override
-        protected World getWorld () {
-            return TileEntityDrawersComp.this.getWorld();
+        protected Level getWorld () {
+            return TileEntityDrawersComp.this.getLevel();
         }
 
         @Override
@@ -94,7 +95,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         protected void log (String message) {
-            if (!getWorld().isRemote && CommonConfig.GENERAL.debugTrace.get())
+            if (!getWorld().isClientSide && CommonConfig.GENERAL.debugTrace.get())
                 StorageDrawers.log.info(message);
         }
 
@@ -105,7 +106,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         protected void onItemChanged () {
-            if (getWorld() != null && !getWorld().isRemote) {
+            if (getWorld() != null && !getWorld().isClientSide) {
                 int usedSlots = 0;
                 for (int slot : getAccessibleDrawerSlots()) {
                     IDrawer drawer = getDrawer(slot);
@@ -114,24 +115,24 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 }
                 usedSlots = Math.max(usedSlots, 1);
 
-                EnumCompDrawer open = getBlockState().get(BlockCompDrawers.SLOTS);
+                EnumCompDrawer open = getBlockState().getValue(BlockCompDrawers.SLOTS);
                 if (open.getOpenSlots() != usedSlots) {
-                    getWorld().setBlockState(pos, getBlockState().with(BlockCompDrawers.SLOTS, EnumCompDrawer.byOpenSlots(usedSlots)), 3);
+                    getWorld().setBlock(worldPosition, getBlockState().setValue(BlockCompDrawers.SLOTS, EnumCompDrawer.byOpenSlots(usedSlots)), 3);
                 }
 
-                markDirty();
+                setChanged();
                 markBlockForUpdate();
             }
         }
 
         @Override
         protected void onAmountChanged () {
-            if (getWorld() != null && !getWorld().isRemote) {
+            if (getWorld() != null && !getWorld().isClientSide) {
                 PacketDistributor.TargetPoint point = new PacketDistributor.TargetPoint(
-                    getPos().getX(), getPos().getY(), getPos().getZ(), 500, getWorld().getDimensionKey());
-                MessageHandler.INSTANCE.send(PacketDistributor.NEAR.with(() -> point), new CountUpdateMessage(getPos(), 0, getPooledCount()));
+                    getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 500, getWorld().dimension());
+                MessageHandler.INSTANCE.send(PacketDistributor.NEAR.with(() -> point), new CountUpdateMessage(getBlockPos(), 0, getPooledCount()));
 
-                markDirty();
+                setChanged();
             }
         }
 
@@ -171,10 +172,10 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     @Override
     @OnlyIn(Dist.CLIENT)
     public void clientUpdateCount (final int slot, final int count) {
-        if (!getWorld().isRemote)
+        if (!getLevel().isClientSide)
             return;
 
-        Minecraft.getInstance().enqueue(() -> TileEntityDrawersComp.this.clientUpdateCountAsync(count));
+        Minecraft.getInstance().tell(() -> TileEntityDrawersComp.this.clientUpdateCountAsync(count));
     }
 
     @OnlyIn(Dist.CLIENT)

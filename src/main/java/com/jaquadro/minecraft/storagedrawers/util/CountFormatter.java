@@ -1,14 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.util;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Font;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class CountFormatter
 {
-    public static String format (FontRenderer font, IDrawer drawer) {
+    public static String format (Font font, IDrawer drawer) {
         return formatApprox(font, drawer);
     }
 
@@ -37,7 +37,7 @@ public class CountFormatter
         return String.valueOf(drawer.getStoredItemCount());
     }
 
-    public static String formatApprox (FontRenderer font, IDrawer drawer) {
+    public static String formatApprox (Font font, IDrawer drawer) {
         if (drawer == null || drawer.isEmpty())
             return "";
 

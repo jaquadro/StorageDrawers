@@ -14,65 +14,81 @@ import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
-import net.minecraft.block.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BlockDrawers extends HorizontalBlock implements INetworked
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+
+public abstract class BlockDrawers extends HorizontalDirectionalBlock implements INetworked, EntityBlock
 {
 
     // TODO: TE.getModelData()
     //public static final IUnlistedProperty<DrawerStateModelData> STATE_MODEL = UnlistedModelData.create(DrawerStateModelData.class);
 
-    private static final VoxelShape AABB_FULL = Block.makeCuboidShape(0, 0, 0, 16, 16, 16);
-    private static final VoxelShape AABB_NORTH_FULL = VoxelShapes.combineAndSimplify(AABB_FULL, Block.makeCuboidShape(1, 1, 0, 15, 15, 1), IBooleanFunction.ONLY_FIRST);
-    private static final VoxelShape AABB_SOUTH_FULL = VoxelShapes.combineAndSimplify(AABB_FULL, Block.makeCuboidShape(1, 1, 15, 15, 15, 16), IBooleanFunction.ONLY_FIRST);
-    private static final VoxelShape AABB_WEST_FULL = VoxelShapes.combineAndSimplify(AABB_FULL, Block.makeCuboidShape(0, 1, 1, 1, 15, 15), IBooleanFunction.ONLY_FIRST);
-    private static final VoxelShape AABB_EAST_FULL = VoxelShapes.combineAndSimplify(AABB_FULL, Block.makeCuboidShape(15, 1, 1, 16, 15, 15), IBooleanFunction.ONLY_FIRST);
-    private static final VoxelShape AABB_NORTH_HALF = Block.makeCuboidShape(0, 0, 8, 16, 16, 16);
-    private static final VoxelShape AABB_SOUTH_HALF = Block.makeCuboidShape(0, 0, 0, 16, 16, 8);
-    private static final VoxelShape AABB_WEST_HALF = Block.makeCuboidShape(8, 0, 0, 16, 16, 16);
-    private static final VoxelShape AABB_EAST_HALF = Block.makeCuboidShape(0, 0, 0, 8, 16, 16);
+    private static final VoxelShape AABB_FULL = Block.box(0, 0, 0, 16, 16, 16);
+    private static final VoxelShape AABB_NORTH_FULL = Shapes.join(AABB_FULL, Block.box(1, 1, 0, 15, 15, 1), BooleanOp.ONLY_FIRST);
+    private static final VoxelShape AABB_SOUTH_FULL = Shapes.join(AABB_FULL, Block.box(1, 1, 15, 15, 15, 16), BooleanOp.ONLY_FIRST);
+    private static final VoxelShape AABB_WEST_FULL = Shapes.join(AABB_FULL, Block.box(0, 1, 1, 1, 15, 15), BooleanOp.ONLY_FIRST);
+    private static final VoxelShape AABB_EAST_FULL = Shapes.join(AABB_FULL, Block.box(15, 1, 1, 16, 15, 15), BooleanOp.ONLY_FIRST);
+    private static final VoxelShape AABB_NORTH_HALF = Block.box(0, 0, 8, 16, 16, 16);
+    private static final VoxelShape AABB_SOUTH_HALF = Block.box(0, 0, 0, 16, 16, 8);
+    private static final VoxelShape AABB_WEST_HALF = Block.box(8, 0, 0, 16, 16, 16);
+    private static final VoxelShape AABB_EAST_HALF = Block.box(0, 0, 0, 8, 16, 16);
 
     private final int drawerCount;
     private final boolean halfDepth;
     private final int storageUnits;
 
-    public final AxisAlignedBB[] slotGeometry;
-    public final AxisAlignedBB[] countGeometry;
-    public final AxisAlignedBB[] labelGeometry;
+    public final AABB[] slotGeometry;
+    public final AABB[] countGeometry;
+    public final AABB[] labelGeometry;
 
     //@SideOnly(Side.CLIENT)
     //private StatusModelData[] statusInfo;
@@ -86,32 +102,32 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         }
     };
 
-    public BlockDrawers (int drawerCount, boolean halfDepth, int storageUnits, Block.Properties properties) {
+    public BlockDrawers (int drawerCount, boolean halfDepth, int storageUnits, BlockBehaviour.Properties properties) {
         super(properties);
-        this.setDefaultState(stateContainer.getBaseState()
-            .with(HORIZONTAL_FACING, Direction.NORTH));
+        this.registerDefaultState(stateDefinition.any()
+            .setValue(FACING, Direction.NORTH));
 
         this.drawerCount = drawerCount;
         this.halfDepth = halfDepth;
         this.storageUnits = storageUnits;
 
-        slotGeometry = new AxisAlignedBB[drawerCount];
-        countGeometry = new AxisAlignedBB[drawerCount];
-        labelGeometry = new AxisAlignedBB[drawerCount];
+        slotGeometry = new AABB[drawerCount];
+        countGeometry = new AABB[drawerCount];
+        labelGeometry = new AABB[drawerCount];
 
         for (int i = 0; i < drawerCount; i++) {
-            slotGeometry[i] = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
-            countGeometry[i] = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
-            labelGeometry[i] = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+            slotGeometry[i] = new AABB(0, 0, 0, 0, 0, 0);
+            countGeometry[i] = new AABB(0, 0, 0, 0, 0, 0);
+            labelGeometry[i] = new AABB(0, 0, 0, 0, 0, 0);
         }
     }
 
     @Override
-    protected void fillStateContainer (StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING);
+    protected void createBlockStateDefinition (StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
     }
 
-    public boolean retrimBlock (World world, BlockPos pos, ItemStack prototype) {
+    public boolean retrimBlock (Level world, BlockPos pos, ItemStack prototype) {
         return false;
     }
 
@@ -152,8 +168,8 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
 
     @Override
-    public VoxelShape getShape (BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        Direction direction = state.get(HORIZONTAL_FACING);
+    public VoxelShape getShape (BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        Direction direction = state.getValue(FACING);
         switch (direction) {
             case EAST:
                 return halfDepth ? AABB_EAST_HALF : AABB_EAST_FULL;
@@ -170,8 +186,8 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
 
     @Override
-    public BlockState getStateForPlacement (BlockItemUseContext context) {
-        return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+    public BlockState getStateForPlacement (BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     /*@Override
@@ -204,20 +220,20 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     }*/
 
     @Override
-    public void onBlockPlacedBy (World world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
+    public void setPlacedBy (Level world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
         if (stack.hasTag() && stack.getTag().contains("tile")) {
             TileEntityDrawers tile = getTileEntity(world, pos);
             if (tile != null)
                 tile.readPortable(stack.getTag().getCompound("tile"));
         }
 
-        if (stack.hasDisplayName()) {
+        if (stack.hasCustomHoverName()) {
             TileEntityDrawers tile = getTileEntity(world, pos);
             //if (tile != null)
             //    tile.setCustomName(stack.getDisplayName());
         }
 
-        if (entity != null && entity.getHeldItemOffhand().getItem() == ModItems.DRAWER_KEY) {
+        if (entity != null && entity.getOffhandItem().getItem() == ModItems.DRAWER_KEY) {
             TileEntityDrawers tile = getTileEntity(world, pos);
             if (tile != null) {
                 IDrawerAttributes _attrs = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(new EmptyDrawerAttributes());
@@ -231,35 +247,35 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     }
 
     @Override
-    public boolean isReplaceable (BlockState state, BlockItemUseContext useContext) {
-        PlayerEntity player = useContext.getPlayer();
+    public boolean canBeReplaced (BlockState state, BlockPlaceContext useContext) {
+        Player player = useContext.getPlayer();
         if (player == null)
-            return super.isReplaceable(state, useContext);
+            return super.canBeReplaced(state, useContext);
 
-        if (useContext.getPlayer().isCreative() && useContext.getHand() == Hand.OFF_HAND) {
+        if (useContext.getPlayer().isCreative() && useContext.getHand() == InteractionHand.OFF_HAND) {
             double blockReachDistance = useContext.getPlayer().getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1;
-            BlockRayTraceResult result = rayTraceEyes(useContext.getWorld(), useContext.getPlayer(), blockReachDistance);
+            BlockHitResult result = rayTraceEyes(useContext.getLevel(), useContext.getPlayer(), blockReachDistance);
 
-            if (result.getType() == RayTraceResult.Type.MISS || result.getFace() != state.get(HORIZONTAL_FACING))
-                useContext.getWorld().setBlockState(useContext.getPos(), Blocks.AIR.getDefaultState(), useContext.getWorld().isRemote ? 11 : 3);
+            if (result.getType() == HitResult.Type.MISS || result.getDirection() != state.getValue(FACING))
+                useContext.getLevel().setBlock(useContext.getClickedPos(), Blocks.AIR.defaultBlockState(), useContext.getLevel().isClientSide ? 11 : 3);
             else
-                onBlockClicked(state, useContext.getWorld(), useContext.getPos(), useContext.getPlayer());
+                attack(state, useContext.getLevel(), useContext.getClickedPos(), useContext.getPlayer());
 
             return false;
         }
 
-        return super.isReplaceable(state, useContext);
+        return super.canBeReplaced(state, useContext);
     }
 
     @Override
-    public ActionResultType onBlockActivated (BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        ItemStack item = player.getHeldItem(hand);
-        if (hand == Hand.OFF_HAND)
-            return ActionResultType.PASS;
+    public InteractionResult use (BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack item = player.getItemInHand(hand);
+        if (hand == InteractionHand.OFF_HAND)
+            return InteractionResult.PASS;
 
-        if (world.isRemote && Util.milliTime() == ignoreEventTime) {
+        if (world.isClientSide && Util.getMillis() == ignoreEventTime) {
             ignoreEventTime = 0;
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         }
 
         TileEntityDrawers tileDrawers = getTileEntitySafe(world, pos);
@@ -275,7 +291,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
         if (!item.isEmpty()) {
             if (item.getItem() instanceof ItemKey)
-                return ActionResultType.PASS;
+                return InteractionResult.PASS;
 
             /*if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
                 if (!retrimBlock(world, pos, item))
@@ -291,28 +307,28 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
             }*/
             if (item.getItem() instanceof ItemUpgrade) {
                 if (!tileDrawers.upgrades().canAddUpgrade(item)) {
-                    if (!world.isRemote)
-                        player.sendStatusMessage(new TranslationTextComponent("message.storagedrawers.cannot_add_upgrade"), true);
+                    if (!world.isClientSide)
+                        player.displayClientMessage(new TranslatableComponent("message.storagedrawers.cannot_add_upgrade"), true);
 
-                    return ActionResultType.PASS;
+                    return InteractionResult.PASS;
                 }
 
                 if (!tileDrawers.upgrades().addUpgrade(item)) {
-                    if (!world.isRemote)
-                        player.sendStatusMessage(new TranslationTextComponent("message.storagedrawers.max_upgrades"), true);
+                    if (!world.isClientSide)
+                        player.displayClientMessage(new TranslatableComponent("message.storagedrawers.max_upgrades"), true);
 
-                    return ActionResultType.PASS;
+                    return InteractionResult.PASS;
                 }
 
-                world.notifyBlockUpdate(pos, state, state, 3);
+                world.sendBlockUpdated(pos, state, state, 3);
 
                 if (!player.isCreative()) {
                     item.shrink(1);
                     if (item.getCount() <= 0)
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                        player.getInventory().setItem(player.getInventory().selected, ItemStack.EMPTY);
                 }
 
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
             /*else if (item.getItem() instanceof ItemPersonalKey) {
                 String securityKey = ((ItemPersonalKey) item.getItem()).getSecurityProviderKey(item.getItemDamage());
@@ -331,7 +347,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 return true;
             }*/
         }
-        else if (item.isEmpty() && player.isSneaking()) {
+        else if (item.isEmpty() && player.isShiftKeyDown()) {
             /*if (tileDrawers.isSealed()) {
                 tileDrawers.setIsSealed(false);
                 return true;
@@ -341,17 +357,17 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 return true;
             }*/
 
-            if (CommonConfig.GENERAL.enableUI.get() && !world.isRemote) {
-                NetworkHooks.openGui((ServerPlayerEntity)player, new INamedContainerProvider()
+            if (CommonConfig.GENERAL.enableUI.get() && !world.isClientSide) {
+                NetworkHooks.openGui((ServerPlayer)player, new MenuProvider()
                 {
                     @Override
-                    public ITextComponent getDisplayName () {
-                        return new TranslationTextComponent(getTranslationKey());
+                    public Component getDisplayName () {
+                        return new TranslatableComponent(getDescriptionId());
                     }
 
                     @Nullable
                     @Override
-                    public Container createMenu (int windowId, PlayerInventory playerInv, PlayerEntity playerEntity) {
+                    public AbstractContainerMenu createMenu (int windowId, Inventory playerInv, Player playerEntity) {
                         if (drawerCount == 1)
                             return new ContainerDrawers1(windowId, playerInv, tileDrawers);
                         else if (drawerCount == 2)
@@ -365,12 +381,12 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
                 }, extraData -> {
                     extraData.writeBlockPos(pos);
                 });
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
 
-        if (state.get(HORIZONTAL_FACING) != hit.getFace())
-            return ActionResultType.PASS;
+        if (state.getValue(FACING) != hit.getDirection())
+            return InteractionResult.PASS;
 
         //if (tileDrawers.isSealed())
         //    return false;
@@ -379,24 +395,24 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         tileDrawers.interactPutItemsIntoSlot(slot, player);
 
         if (item.isEmpty())
-            player.setHeldItem(hand, ItemStack.EMPTY);
+            player.setItemInHand(hand, ItemStack.EMPTY);
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    protected final int getDrawerSlot (BlockRayTraceResult hit) {
-        return getDrawerSlot(hit.getFace(), normalizeHitVec(hit.getHitVec()));
+    protected final int getDrawerSlot (BlockHitResult hit) {
+        return getDrawerSlot(hit.getDirection(), normalizeHitVec(hit.getLocation()));
     }
 
-    private Vector3d normalizeHitVec (Vector3d hit) {
-        return new Vector3d(
+    private Vec3 normalizeHitVec (Vec3 hit) {
+        return new Vec3(
             ((hit.x < 0) ? hit.x - Math.floor(hit.x) : hit.x) % 1,
             ((hit.y < 0) ? hit.y - Math.floor(hit.y) : hit.y) % 1,
             ((hit.z < 0) ? hit.z - Math.floor(hit.z) : hit.z) % 1
         );
     }
 
-    protected int getDrawerSlot (Direction side, Vector3d hit) {
+    protected int getDrawerSlot (Direction side, Vec3 hit) {
         return 0;
     }
 
@@ -419,30 +435,30 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         }
     }
 
-    protected BlockRayTraceResult rayTraceEyes(World world, PlayerEntity player, double length) {
-        Vector3d eyePos = player.getEyePosition(1);
-        Vector3d lookPos = player.getLook(1);
-        Vector3d endPos = eyePos.add(lookPos.x * length, lookPos.y * length, lookPos.z * length);
-        RayTraceContext context = new RayTraceContext(eyePos, endPos, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player);
-        return world.rayTraceBlocks(context);
+    protected BlockHitResult rayTraceEyes(Level world, Player player, double length) {
+        Vec3 eyePos = player.getEyePosition(1);
+        Vec3 lookPos = player.getViewVector(1);
+        Vec3 endPos = eyePos.add(lookPos.x * length, lookPos.y * length, lookPos.z * length);
+        ClipContext context = new ClipContext(eyePos, endPos, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player);
+        return world.clip(context);
     }
 
     @Override
-    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn) {
-        if (worldIn.isRemote)
+    public void attack(BlockState state, Level worldIn, BlockPos pos, Player playerIn) {
+        if (worldIn.isClientSide)
             return;
 
         if (CommonConfig.GENERAL.debugTrace.get())
             StorageDrawers.log.info("onBlockClicked");
 
-        BlockRayTraceResult rayResult = rayTraceEyes(worldIn, playerIn, playerIn.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1);
-        if (rayResult.getType() == RayTraceResult.Type.MISS)
+        BlockHitResult rayResult = rayTraceEyes(worldIn, playerIn, playerIn.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1);
+        if (rayResult.getType() == HitResult.Type.MISS)
             return;
 
-        Direction side = rayResult.getFace();
+        Direction side = rayResult.getDirection();
 
         TileEntityDrawers tileDrawers = getTileEntitySafe(worldIn, pos);
-        if (state.get(HORIZONTAL_FACING) != rayResult.getFace())
+        if (state.getValue(FACING) != rayResult.getDirection())
             return;
 
         //if (tileDrawers.isSealed())
@@ -457,7 +473,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         ItemStack item;
         boolean invertShift = ClientConfig.GENERAL.invertShift.get();
 
-        if (playerIn.isSneaking() != invertShift)
+        if (playerIn.isShiftKeyDown() != invertShift)
             item = tileDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
         else
             item = tileDrawers.takeItemsFromSlot(slot, 1);
@@ -466,26 +482,26 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
             StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item.toString());
 
         if (!item.isEmpty()) {
-            if (!playerIn.inventory.addItemStackToInventory(item)) {
-                dropItemStack(worldIn, pos.offset(side), playerIn, item);
-                worldIn.notifyBlockUpdate(pos, state, state, 3);
+            if (!playerIn.getInventory().add(item)) {
+                dropItemStack(worldIn, pos.relative(side), playerIn, item);
+                worldIn.sendBlockUpdated(pos, state, state, 3);
             }
             else
-                worldIn.playSound(null, pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f, ((worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * .7f + 1) * 2);
+                worldIn.playSound(null, pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, ((worldIn.random.nextFloat() - worldIn.random.nextFloat()) * .7f + 1) * 2);
         }
     }
 
-    private void dropItemStack (World world, BlockPos pos, PlayerEntity player, @Nonnull ItemStack stack) {
+    private void dropItemStack (Level world, BlockPos pos, Player player, @Nonnull ItemStack stack) {
         ItemEntity entity = new ItemEntity(world, pos.getX() + .5f, pos.getY() + .3f, pos.getZ() + .5f, stack);
-        Vector3d motion = entity.getMotion();
-        entity.addVelocity(-motion.x, -motion.y, -motion.z);
-        world.addEntity(entity);
+        Vec3 motion = entity.getDeltaMovement();
+        entity.push(-motion.x, -motion.y, -motion.z);
+        world.addFreshEntity(entity);
     }
 
 
 
     @Override
-    public void onReplaced (BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove (BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         TileEntityDrawers tile = getTileEntity(world, pos);
 
         if (tile != null) {
@@ -502,17 +518,17 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
             //    DrawerInventoryHelper.dropInventoryItems(world, pos, tile.getGroup());
         }
 
-        super.onReplaced(state, world, pos, newState, isMoving);
+        super.onRemove(state, world, pos, newState, isMoving);
     }
 
 
     @Override
-    public boolean removedByPlayer (BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
+    public boolean removedByPlayer (BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (player.isCreative()) {
             if (creativeCanBreakBlock(state, world, pos, player))
-                world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
+                world.setBlock(pos, Blocks.AIR.defaultBlockState(), world.isClientSide ? 11 : 3);
             else
-                onBlockClicked(state, world, pos, player);
+                attack(state, world, pos, player);
 
             return false;
         }
@@ -522,16 +538,16 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
 
     @Override
-    public void harvestBlock (World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
-        super.harvestBlock(worldIn, player, pos, state, te, stack);
+    public void playerDestroy (Level worldIn, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
+        super.playerDestroy(worldIn, player, pos, state, te, stack);
         worldIn.removeBlock(pos, false);
     }
 
-    public boolean creativeCanBreakBlock (BlockState state, World world, BlockPos pos, PlayerEntity player) {
+    public boolean creativeCanBreakBlock (BlockState state, Level world, BlockPos pos, Player player) {
         double blockReachDistance = player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1;
 
-        BlockRayTraceResult rayResult = rayTraceEyes(world, player, blockReachDistance + 1);
-        if (rayResult.getType() == RayTraceResult.Type.MISS || state.get(HORIZONTAL_FACING) != rayResult.getFace())
+        BlockHitResult rayResult = rayTraceEyes(world, player, blockReachDistance + 1);
+        if (rayResult.getType() == HitResult.Type.MISS || state.getValue(FACING) != rayResult.getDirection())
             return true;
         else
             return false;
@@ -540,7 +556,7 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     @Override
     public List<ItemStack> getDrops (BlockState state, LootContext.Builder builder) {
         List<ItemStack> items = new ArrayList<>();
-        items.add(getMainDrop(state, (TileEntityDrawers)builder.get(LootParameters.BLOCK_ENTITY)));
+        items.add(getMainDrop(state, (TileEntityDrawers)builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY)));
         return items;
     }
 
@@ -549,9 +565,9 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         if (tile == null)
             return drop;
 
-        CompoundNBT data = drop.getTag();
+        CompoundTag data = drop.getTag();
         if (data == null)
-            data = new CompoundNBT();
+            data = new CompoundTag();
 
         boolean hasContents = false;
         for (int i = 0; i < tile.getGroup().getDrawerCount(); i++) {
@@ -565,8 +581,8 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         }
 
         if (hasContents) {
-            CompoundNBT tiledata = new CompoundNBT();
-            tile.write(tiledata);
+            CompoundTag tiledata = new CompoundTag();
+            tile.save(tiledata);
 
             tiledata.remove("x");
             tiledata.remove("y");
@@ -598,27 +614,22 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         return super.getExplosionResistance(world, pos, exploder, explosion);
     }*/
 
-    @Override
-    public boolean hasTileEntity (BlockState state) {
-        return true;
-    }
-
-    public TileEntityDrawers getTileEntity (IBlockReader blockAccess, BlockPos pos) {
+    public TileEntityDrawers getTileEntity (BlockGetter blockAccess, BlockPos pos) {
         if (inTileLookup.get())
             return null;
 
         inTileLookup.set(true);
-        TileEntity tile = blockAccess.getTileEntity(pos);
+        BlockEntity tile = blockAccess.getBlockEntity(pos);
         inTileLookup.set(false);
 
         return (tile instanceof TileEntityDrawers) ? (TileEntityDrawers) tile : null;
     }
 
-    public TileEntityDrawers getTileEntitySafe (World world, BlockPos pos) {
+    public TileEntityDrawers getTileEntitySafe (Level world, BlockPos pos) {
         TileEntityDrawers tile = getTileEntity(world, pos);
         if (tile == null) {
-            tile = (TileEntityDrawers) createTileEntity(world.getBlockState(pos), world);
-            world.setTileEntity(pos, tile);
+            tile = (TileEntityDrawers) newBlockEntity(pos, world.getBlockState(pos));
+            world.setBlockEntity(tile);
         }
 
         return tile;
@@ -645,14 +656,14 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean canProvidePower (BlockState state) {
+    public boolean isSignalSource (BlockState state) {
         return true;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public int getWeakPower (BlockState state, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        if (!canProvidePower(state))
+    public int getSignal (BlockState state, BlockGetter blockAccess, BlockPos pos, Direction side) {
+        if (!isSignalSource(state))
             return 0;
 
         TileEntityDrawers tile = getTileEntity(blockAccess, pos);
@@ -664,8 +675,8 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
 
     @Override
     @SuppressWarnings("deprecation")
-    public int getStrongPower (BlockState state, IBlockReader worldIn, BlockPos pos, Direction side) {
-        return (side == Direction.UP) ? getWeakPower(state, worldIn, pos, side) : 0;
+    public int getDirectSignal (BlockState state, BlockGetter worldIn, BlockPos pos, Direction side) {
+        return (side == Direction.UP) ? getSignal(state, worldIn, pos, side) : 0;
     }
 
 

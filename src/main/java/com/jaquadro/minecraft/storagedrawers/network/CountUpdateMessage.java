@@ -5,14 +5,14 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -54,7 +54,7 @@ public class CountUpdateMessage
         }
     }
 
-    public static void encode (CountUpdateMessage msg, PacketBuffer buf) {
+    public static void encode (CountUpdateMessage msg, FriendlyByteBuf buf) {
         buf.writeInt(msg.x);
         buf.writeShort(msg.y);
         buf.writeInt(msg.z);
@@ -69,10 +69,10 @@ public class CountUpdateMessage
     @OnlyIn(Dist.CLIENT)
     private static void handleClient(CountUpdateMessage msg, NetworkEvent.Context ctx) {
         if (!msg.failed) {
-            World world = Minecraft.getInstance().world;
+            Level world = Minecraft.getInstance().level;
             if (world != null) {
                 BlockPos pos = new BlockPos(msg.x, msg.y, msg.z);
-                TileEntity tileEntity = world.getTileEntity(pos);
+                BlockEntity tileEntity = world.getBlockEntity(pos);
                 if (tileEntity instanceof TileEntityDrawers) {
                     ((TileEntityDrawers) tileEntity).clientUpdateCount(msg.slot, msg.count);
                 }

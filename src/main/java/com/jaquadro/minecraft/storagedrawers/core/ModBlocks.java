@@ -9,28 +9,27 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandar
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -38,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ObjectHolder(StorageDrawers.MOD_ID)
 public class ModBlocks
@@ -94,12 +95,12 @@ public class ModBlocks
 
     @ObjectHolder(StorageDrawers.MOD_ID)
     public static final class Tile {
-        public static final TileEntityType<TileEntityDrawersStandard> STANDARD_DRAWERS_1 = null;
-        public static final TileEntityType<TileEntityDrawersStandard> STANDARD_DRAWERS_2 = null;
-        public static final TileEntityType<TileEntityDrawersStandard> STANDARD_DRAWERS_4 = null;
-        public static final TileEntityType<TileEntityDrawersComp> FRACTIONAL_DRAWERS_3 = null;
-        public static final TileEntityType<TileEntityController> CONTROLLER = null;
-        public static final TileEntityType<TileEntitySlave> CONTROLLER_SLAVE = null;
+        public static final BlockEntityType<TileEntityDrawersStandard> STANDARD_DRAWERS_1 = null;
+        public static final BlockEntityType<TileEntityDrawersStandard> STANDARD_DRAWERS_2 = null;
+        public static final BlockEntityType<TileEntityDrawersStandard> STANDARD_DRAWERS_4 = null;
+        public static final BlockEntityType<TileEntityDrawersComp> FRACTIONAL_DRAWERS_3 = null;
+        public static final BlockEntityType<TileEntityController> CONTROLLER = null;
+        public static final BlockEntityType<TileEntitySlave> CONTROLLER_SLAVE = null;
     }
 
     @Mod.EventBusSubscriber(modid = StorageDrawers.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -153,10 +154,10 @@ public class ModBlocks
             registerTrimBlock(event, "dark_oak_trim");
             registerCompactingDrawerBlock(event, "compacting_drawers_3");
 
-            registerBlock(event, "controller", new BlockController(Block.Properties.create(Material.ROCK)
-                .sound(SoundType.STONE).hardnessAndResistance(5)));
-            registerBlock(event, "controller_slave", new BlockSlave(Block.Properties.create(Material.ROCK)
-                .sound(SoundType.STONE).hardnessAndResistance(5)));
+            registerBlock(event, "controller", new BlockController(BlockBehaviour.Properties.of(Material.STONE)
+                .sound(SoundType.STONE).strength(5)));
+            registerBlock(event, "controller_slave", new BlockSlave(BlockBehaviour.Properties.of(Material.STONE)
+                .sound(SoundType.STONE).strength(5)));
 
             /*IForgeRegistry<Block> registry = event.getRegistry();
             ConfigManager config = StorageDrawers.config;
@@ -202,7 +203,7 @@ public class ModBlocks
         }
 
         @SubscribeEvent
-        public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
+        public static void registerTileEntities(RegistryEvent.Register<BlockEntityType<?>> event) {
             registerTileEntity(event, "standard_drawers_1", TileEntityDrawersStandard.Slot1::new,
                 OAK_FULL_DRAWERS_1,
                 OAK_HALF_DRAWERS_1,
@@ -251,22 +252,22 @@ public class ModBlocks
         }
 
         private static Block registerDrawerBlock(RegistryEvent.Register<Block> event, String name, int drawerCount, boolean halfDepth) {
-            return registerBlock(event, name, new BlockStandardDrawers(drawerCount, halfDepth, Block.Properties.create(Material.WOOD)
-                .sound(SoundType.WOOD).hardnessAndResistance(5f)
-                .setSuffocates(Registration::predFalse)
-                .setOpaque(Registration::predFalse)));
+            return registerBlock(event, name, new BlockStandardDrawers(drawerCount, halfDepth, BlockBehaviour.Properties.of(Material.WOOD)
+                .sound(SoundType.WOOD).strength(5f)
+                .isSuffocating(Registration::predFalse)
+                .isRedstoneConductor(Registration::predFalse)));
         }
 
         private static Block registerTrimBlock(RegistryEvent.Register<Block> event, String name) {
-            return registerBlock(event, name, new BlockTrim(Block.Properties.create(Material.WOOD)
-                .sound(SoundType.WOOD).hardnessAndResistance(5f)));
+            return registerBlock(event, name, new BlockTrim(BlockBehaviour.Properties.of(Material.WOOD)
+                .sound(SoundType.WOOD).strength(5f)));
         }
 
         private static Block registerCompactingDrawerBlock(RegistryEvent.Register<Block> event, String name) {
-            return registerBlock(event, name, new BlockCompDrawers(Block.Properties.create(Material.ROCK)
-                .sound(SoundType.STONE).hardnessAndResistance(10f)
-                .setSuffocates(Registration::predFalse)
-                .setOpaque(Registration::predFalse)));
+            return registerBlock(event, name, new BlockCompDrawers(BlockBehaviour.Properties.of(Material.STONE)
+                .sound(SoundType.STONE).strength(10f)
+                .isSuffocating(Registration::predFalse)
+                .isRedstoneConductor(Registration::predFalse)));
         }
 
         private static Block registerBlock(RegistryEvent.Register<Block> event, String name, Block block) {
@@ -281,8 +282,8 @@ public class ModBlocks
             return block;
         }
 
-        private static <T extends TileEntity> void registerTileEntity(RegistryEvent.Register<TileEntityType<?>> event, String name, Supplier<? extends T> factory, Block... blocks) {
-            event.getRegistry().register(TileEntityType.Builder.create(factory, blocks)
+        private static <T extends BlockEntity> void registerTileEntity(RegistryEvent.Register<BlockEntityType<?>> event, String name, BlockEntityType.BlockEntitySupplier<? extends T> factory, Block... blocks) {
+            event.getRegistry().register(BlockEntityType.Builder.of(factory, blocks)
                 .build(null).setRegistryName(new ResourceLocation(StorageDrawers.MOD_ID, name)));
         }
 
@@ -291,9 +292,9 @@ public class ModBlocks
             for (Block block : blockList) {
                 BlockItem itemBlock = null;
                 if (block instanceof BlockDrawers)
-                    itemBlock = new ItemDrawers(block, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS));
+                    itemBlock = new ItemDrawers(block, new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS));
                 else
-                    itemBlock = new BlockItem(block, new Item.Properties().group(ModItemGroup.STORAGE_DRAWERS));
+                    itemBlock = new BlockItem(block, new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS));
 
                 itemBlock.setRegistryName(block.getRegistryName());
                 event.getRegistry().register(itemBlock);
@@ -375,18 +376,18 @@ public class ModBlocks
 
         @SubscribeEvent
         @OnlyIn(Dist.CLIENT)
-        public static void registerModels (ModelBakeEvent event) {
-            ClientRegistry.bindTileEntityRenderer(Tile.STANDARD_DRAWERS_1, TileEntityDrawersRenderer::new);
-            ClientRegistry.bindTileEntityRenderer(Tile.STANDARD_DRAWERS_2, TileEntityDrawersRenderer::new);
-            ClientRegistry.bindTileEntityRenderer(Tile.STANDARD_DRAWERS_4, TileEntityDrawersRenderer::new);
-            ClientRegistry.bindTileEntityRenderer(Tile.FRACTIONAL_DRAWERS_3, TileEntityDrawersRenderer::new);
+        public static void onRegisterRenderers (final EntityRenderersEvent.RegisterRenderers event) {
+            event.registerBlockEntityRenderer(Tile.STANDARD_DRAWERS_1, TileEntityDrawersRenderer::new);
+            event.registerBlockEntityRenderer(Tile.STANDARD_DRAWERS_2, TileEntityDrawersRenderer::new);
+            event.registerBlockEntityRenderer(Tile.STANDARD_DRAWERS_4, TileEntityDrawersRenderer::new);
+            event.registerBlockEntityRenderer(Tile.FRACTIONAL_DRAWERS_3, TileEntityDrawersRenderer::new);
         }
 
         @OnlyIn(Dist.CLIENT)
         public static void bindRenderTypes () {
             for (Block block : blockList) {
                 if (block instanceof BlockDrawers)
-                    RenderTypeLookup.setRenderLayer(block, RenderType.getCutoutMipped());
+                    ItemBlockRenderTypes.setRenderLayer(block, RenderType.cutoutMipped());
             }
         }
 
@@ -423,7 +424,7 @@ public class ModBlocks
             modelRegistry.registerItemVariants(keyButton);*/
         //}
 
-        private static boolean predFalse (BlockState p_235436_0_, IBlockReader p_235436_1_, BlockPos p_235436_2_) {
+        private static boolean predFalse (BlockState p_235436_0_, BlockGetter p_235436_1_, BlockPos p_235436_2_) {
             return false;
         }
     }

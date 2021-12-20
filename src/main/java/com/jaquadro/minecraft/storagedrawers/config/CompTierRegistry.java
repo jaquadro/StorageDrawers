@@ -1,11 +1,11 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -86,8 +86,8 @@ public class CompTierRegistry
         if (parts.length != 3)
             return false;
 
-        ResourceLocation upperResource = ResourceLocation.tryCreate(parts[0]);
-        ResourceLocation lowerResource = ResourceLocation.tryCreate(parts[1]);
+        ResourceLocation upperResource = ResourceLocation.tryParse(parts[0]);
+        ResourceLocation lowerResource = ResourceLocation.tryParse(parts[1]);
         if (upperResource == null || lowerResource == null)
             return false;
 
@@ -134,7 +134,7 @@ public class CompTierRegistry
 
     public boolean unregisterUpperTarget (@Nonnull ItemStack stack) {
         for (Record r : records) {
-            if (ItemStack.areItemStacksEqual(stack, r.upper)) {
+            if (ItemStack.matches(stack, r.upper)) {
                 records.remove(r);
                 return true;
             }
@@ -145,7 +145,7 @@ public class CompTierRegistry
 
     public boolean unregisterLowerTarget (@Nonnull ItemStack stack) {
         for (Record r : records) {
-            if (ItemStack.areItemStacksEqual(stack, r.lower)) {
+            if (ItemStack.matches(stack, r.lower)) {
                 records.remove(r);
                 return true;
             }
@@ -159,7 +159,7 @@ public class CompTierRegistry
             return null;
 
         for (Record r : records) {
-            if (stack.isItemEqual(r.lower) && ItemStack.areItemStackTagsEqual(stack, r.lower))
+            if (stack.sameItem(r.lower) && ItemStack.tagMatches(stack, r.lower))
                 return r;
         }
 
@@ -171,7 +171,7 @@ public class CompTierRegistry
             return null;
 
         for (Record r : records) {
-            if (stack.isItemEqual(r.upper) && ItemStack.areItemStackTagsEqual(stack, r.upper))
+            if (stack.sameItem(r.upper) && ItemStack.tagMatches(stack, r.upper))
                 return r;
         }
 

@@ -12,13 +12,16 @@ import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -27,10 +30,11 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -76,8 +80,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
             }
 
             TileEntityDrawers.this.onAttributeChanged();
-            if (getWorld() != null && !getWorld().isRemote) {
-                markDirty();
+            if (getLevel() != null && !getLevel().isClientSide) {
+                setChanged();
                 markBlockForUpdate();
             }
         }
@@ -127,8 +131,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         @Override
         protected void onUpgradeChanged (ItemStack oldUpgrade, ItemStack newUpgrade) {
 
-            if (getWorld() != null && !getWorld().isRemote) {
-                markDirty();
+            if (getLevel() != null && !getLevel().isClientSide) {
+                setChanged();
                 markBlockForUpdate();
             }
         }
@@ -148,8 +152,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         }
     }
 
-    protected TileEntityDrawers (TileEntityType<?> tileEntityType) {
-        super(tileEntityType);
+    protected TileEntityDrawers (BlockEntityType<?> tileEntityType, BlockPos pos, BlockState state) {
+        super(tileEntityType, pos, state);
 
         drawerAttributes = new DrawerAttributes();
 
@@ -376,9 +380,9 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
 
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.getCount());
 
-        if (isRedstone() && getWorld() != null) {
-            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockState().getBlock());
-            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockState().getBlock());
+        if (isRedstone() && getLevel() != null) {
+            getLevel().updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
+            getLevel().updateNeighborsAt(getBlockPos().below(), getBlockState().getBlock());
         }
 
         // TODO: Reset empty drawer in subclasses
@@ -407,32 +411,32 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         return countAdded;
     }
 
-    public int interactPutCurrentItemIntoSlot (int slot, PlayerEntity player) {
+    public int interactPutCurrentItemIntoSlot (int slot, Player player) {
         IDrawer drawer = getDrawer(slot);
         if (!drawer.isEnabled())
             return 0;
 
         int count = 0;
-        ItemStack playerStack = player.inventory.getCurrentItem();
+        ItemStack playerStack = player.getInventory().getSelected();
         if (!playerStack.isEmpty())
             count = putItemsIntoSlot(slot, playerStack, playerStack.getCount());
 
         return count;
     }
 
-    public int interactPutCurrentInventoryIntoSlot (int slot, PlayerEntity player) {
+    public int interactPutCurrentInventoryIntoSlot (int slot, Player player) {
         IDrawer drawer = getGroup().getDrawer(slot);
         if (!drawer.isEnabled())
             return 0;
 
         int count = 0;
         if (!drawer.isEmpty()) {
-            for (int i = 0, n = player.inventory.getSizeInventory(); i < n; i++) {
-                ItemStack subStack = player.inventory.getStackInSlot(i);
+            for (int i = 0, n = player.getInventory().getContainerSize(); i < n; i++) {
+                ItemStack subStack = player.getInventory().getItem(i);
                 if (!subStack.isEmpty()) {
                     int subCount = putItemsIntoSlot(slot, subStack, subStack.getCount());
                     if (subCount > 0 && subStack.getCount() == 0)
-                        player.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
+                        player.getInventory().setItem(i, ItemStack.EMPTY);
 
                     count += subCount;
                 }
@@ -445,21 +449,21 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         return count;
     }
 
-    public int interactPutItemsIntoSlot (int slot, PlayerEntity player) {
+    public int interactPutItemsIntoSlot (int slot, Player player) {
         int count;
-        if (getWorld().getGameTime() - lastClickTime < 10 && player.getUniqueID().equals(lastClickUUID))
+        if (getLevel().getGameTime() - lastClickTime < 10 && player.getUUID().equals(lastClickUUID))
             count = interactPutCurrentInventoryIntoSlot(slot, player);
         else
             count = interactPutCurrentItemIntoSlot(slot, player);
 
-        lastClickTime = getWorld().getGameTime();
-        lastClickUUID = player.getUniqueID();
+        lastClickTime = getLevel().getGameTime();
+        lastClickUUID = player.getUUID();
 
         return count;
     }
 
     @Override
-    public void readPortable (CompoundNBT tag) {
+    public void readPortable (CompoundTag tag) {
         loading = true;
         super.readPortable(tag);
 
@@ -500,7 +504,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
     }
 
     @Override
-    public CompoundNBT writePortable (CompoundNBT tag) {
+    public CompoundTag writePortable (CompoundTag tag) {
         tag = super.writePortable(tag);
 
         //if (material != null)
@@ -532,30 +536,30 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
     }
 
     @Override
-    public void markDirty () {
-        if (isRedstone() && getWorld() != null) {
-            getWorld().notifyNeighborsOfStateChange(getPos(), getBlockState().getBlock());
-            getWorld().notifyNeighborsOfStateChange(getPos().down(), getBlockState().getBlock());
+    public void setChanged () {
+        if (isRedstone() && getLevel() != null) {
+            getLevel().updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
+            getLevel().updateNeighborsAt(getBlockPos().below(), getBlockState().getBlock());
         }
 
-        super.markDirty();
+        super.setChanged();
     }
 
     protected void syncClientCount (int slot, int count) {
-        if (getWorld() != null && getWorld().isRemote)
+        if (getLevel() != null && getLevel().isClientSide)
             return;
 
         PacketDistributor.TargetPoint point = new PacketDistributor.TargetPoint(
-            getPos().getX(), getPos().getY(), getPos().getZ(), 500, getWorld().getDimensionKey());
-        MessageHandler.INSTANCE.send(PacketDistributor.NEAR.with(() -> point), new CountUpdateMessage(getPos(), slot, count));
+            getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 500, getLevel().dimension());
+        MessageHandler.INSTANCE.send(PacketDistributor.NEAR.with(() -> point), new CountUpdateMessage(getBlockPos(), slot, count));
     }
 
     @OnlyIn(Dist.CLIENT)
     public void clientUpdateCount (final int slot, final int count) {
-        if (!getWorld().isRemote)
+        if (!getLevel().isClientSide)
             return;
 
-        Minecraft.getInstance().enqueue(() -> TileEntityDrawers.this.clientUpdateCountAsync(slot, count));
+        Minecraft.getInstance().tell(() -> TileEntityDrawers.this.clientUpdateCountAsync(slot, count));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -615,8 +619,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         customNameData.setName(name);
     }*/
 
-    @CapabilityInject(IDrawerGroup.class)
-    public static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
+    public static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY= CapabilityManager.get(new CapabilityToken<>(){});
 
     private final LazyOptional<?> capabilityGroup = LazyOptional.of(this::getGroup);
 
@@ -648,7 +651,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
     private void refreshModelData () {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             ModelDataManager.requestModelDataRefresh(this);
-            Minecraft.getInstance().worldRenderer.markBlockRangeForRenderUpdate(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY(), pos.getZ());
+            Minecraft.getInstance().levelRenderer.setBlocksDirty(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
         });
     }
 }

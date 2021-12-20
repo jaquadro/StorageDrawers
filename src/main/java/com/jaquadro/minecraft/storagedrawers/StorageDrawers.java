@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,9 +17,10 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,10 +57,6 @@ public class StorageDrawers
     private void setup (final FMLCommonSetupEvent event) {
         MessageHandler.init();
 
-        CapabilityDrawerGroup.register();
-        CapabilityItemRepository.register();
-        CapabilityDrawerAttributes.register();
-
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ModContainers.registerScreens());
 
         compRegistry = new CompTierRegistry();
@@ -81,7 +79,7 @@ public class StorageDrawers
         ModBlocks.Registration.bindRenderTypes();
     }
 
-    private void onModConfigEvent(final ModConfig.ModConfigEvent event) {
+    private void onModConfigEvent(final ModConfigEvent event) {
         if (event.getConfig().getType() == ModConfig.Type.COMMON)
             CommonConfig.setLoaded();
         if (event.getConfig().getType() == ModConfig.Type.CLIENT)
@@ -96,5 +94,12 @@ public class StorageDrawers
     @SubscribeEvent
     public void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
         //ConfigManager.serverPlayerConfigSettings.remove(event.player.getUniqueID());
+    }
+
+    @SubscribeEvent
+    public void registerCapabilities (RegisterCapabilitiesEvent event) {
+        CapabilityDrawerGroup.register(event);
+        CapabilityItemRepository.register(event);
+        CapabilityDrawerAttributes.register(event);
     }
 }

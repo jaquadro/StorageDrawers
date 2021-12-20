@@ -1,8 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
-public enum EnumUpgradeStorage implements IStringSerializable
+public enum EnumUpgradeStorage implements StringRepresentable
 {
     OBSIDIAN(0, 1, "obsidian", "obsidian"),
     IRON(1, 2, "iron", "iron"),
@@ -55,7 +55,7 @@ public enum EnumUpgradeStorage implements IStringSerializable
     }
 
     @Override
-    public String getString () {
+    public String getSerializedName () {
         return name;
     }
 

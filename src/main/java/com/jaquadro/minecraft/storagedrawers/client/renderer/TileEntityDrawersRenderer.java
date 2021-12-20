@@ -4,26 +4,30 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.block.BlockState;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.settings.GraphicsFanciness;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix3f;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.GraphicsStatus;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -31,27 +35,32 @@ import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDrawers>
+public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntityDrawers>
 {
     private boolean[] renderAsBlock = new boolean[4];
     private ItemStack[] renderStacks = new ItemStack[4];
 
     private ItemRenderer renderItem;
 
-    public TileEntityDrawersRenderer (TileEntityRendererDispatcher dispatcher) {
-        super(dispatcher);
+    private BlockEntityRendererProvider.Context context;
+
+    public TileEntityDrawersRenderer (BlockEntityRendererProvider.Context context) {
+        this.context = context;
     }
 
     @Override
-    public void render (TileEntityDrawers tile, float partialTickTime, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+    public void render (TileEntityDrawers tile, float partialTickTime, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         if (tile == null)
             return;
 
-        World world = tile.getWorld();
+        Level world = tile.getLevel();
         if (world == null)
             return;
 
-        BlockState state = world.getBlockState(tile.getPos());
+        BlockState state = tile.getBlockState();
+        if (state == null)
+            return;
+
         if (!(state.getBlock() instanceof BlockDrawers))
             return;
 
@@ -61,24 +70,24 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         }
 
         renderItem = Minecraft.getInstance().getItemRenderer();
-        Direction side = state.get(BlockDrawers.HORIZONTAL_FACING);
+        Direction side = state.getValue(BlockDrawers.FACING);
 
         Minecraft mc = Minecraft.getInstance();
-        GraphicsFanciness cache = mc.gameSettings.graphicFanciness;
-        mc.gameSettings.graphicFanciness = GraphicsFanciness.FANCY;
+        GraphicsStatus cache = mc.options.graphicsMode;
+        mc.options.graphicsMode = GraphicsStatus.FANCY;
         //renderUpgrades(renderer, tile, state);
 
         if (!tile.getDrawerAttributes().isConcealed())
             renderFastItemSet(tile, state, matrix, buffer, combinedLight, combinedOverlay, side, partialTickTime);
 
-        mc.gameSettings.graphicFanciness = cache;
+        mc.options.graphicsMode = cache;
 
-        matrix.pop();
-        RenderHelper.setupLevelDiffuseLighting(matrix.getLast().getMatrix());
-        matrix.push();
+        matrix.popPose();
+        Lighting.setupLevel(matrix.last().pose());
+        matrix.pushPose();
     }
 
-    private void renderFastItemSet (TileEntityDrawers tile, BlockState state, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, Direction side, float partialTickTime) {
+    private void renderFastItemSet (TileEntityDrawers tile, BlockState state, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Direction side, float partialTickTime) {
         int drawerCount = tile.getGroup().getDrawerCount();
 
         for (int i = 0; i < drawerCount; i++) {
@@ -103,61 +112,61 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         }
 
         if (tile.getDrawerAttributes().isShowingQuantity()) {
-            PlayerEntity player = Minecraft.getInstance().player;
-            BlockPos blockPos = tile.getPos().add(.5, .5, .5);
-            double distance = Math.sqrt(blockPos.distanceSq(player.getPosition()));
+            Player player = Minecraft.getInstance().player;
+            BlockPos blockPos = tile.getBlockPos().offset(.5, .5, .5);
+            double distance = Math.sqrt(blockPos.distSqr(player.blockPosition()));
 
             float alpha = 1;
             if (distance > 4)
                 alpha = Math.max(1f - (float) ((distance - 4) / 6), 0.05f);
 
             if (distance < 10) {
-                IRenderTypeBuffer.Impl txtBuffer = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+                MultiBufferSource.BufferSource txtBuffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
                 for (int i = 0; i < drawerCount; i++) {
-                    String format = CountFormatter.format(this.renderDispatcher.getFontRenderer(), tile.getGroup().getDrawer(i));
+                    String format = CountFormatter.format(this.context.getFont(), tile.getGroup().getDrawer(i));
                     renderText(format, state, i, matrix, txtBuffer, combinedLight, side, alpha);
                 }
-                txtBuffer.finish();
+                txtBuffer.endBatch();
             }
         }
     }
 
-    private void renderText (String text, BlockState state, int slot, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, Direction side, float alpha) {
+    private void renderText (String text, BlockState state, int slot, PoseStack matrix, MultiBufferSource buffer, int combinedLight, Direction side, float alpha) {
         if (text == null || text.isEmpty())
             return;
 
-        FontRenderer fontRenderer = this.renderDispatcher.getFontRenderer();
+        Font fontRenderer = this.context.getFont();
 
         BlockDrawers block = (BlockDrawers)state.getBlock();
-        AxisAlignedBB labelGeometry = block.countGeometry[slot];
-        int textWidth = fontRenderer.getStringWidth(text);
+        AABB labelGeometry = block.countGeometry[slot];
+        int textWidth = fontRenderer.width(text);
 
-        float x = (float)(labelGeometry.minX + labelGeometry.getXSize() / 2);
-        float y = 16f - (float)labelGeometry.minY - (float)labelGeometry.getYSize();
+        float x = (float)(labelGeometry.minX + labelGeometry.getXsize() / 2);
+        float y = 16f - (float)labelGeometry.minY - (float)labelGeometry.getYsize();
         float z = (float)labelGeometry.minZ * .0625f - .01f;
 
-        matrix.push();
+        matrix.pushPose();
 
         alignRendering(matrix, side);
         moveRendering(matrix, .125f, .125f, x, y, z);
 
         int color = (int)(255 * alpha) << 24 | 255 << 16 | 255 << 8 | 255;
-        fontRenderer.renderString(text, -textWidth / 2f, 0.5f, color, false, matrix.getLast().getMatrix(), buffer, false, 0, combinedLight); // 15728880
+        fontRenderer.drawInBatch(text, -textWidth / 2f, 0.5f, color, false, matrix.last().pose(), buffer, false, 0, combinedLight); // 15728880
 
-        matrix.pop();
+        matrix.popPose();
     }
 
-    private void renderFastItem (@Nonnull ItemStack itemStack, TileEntityDrawers tile, BlockState state, int slot, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, Direction side, float partialTickTime) {
+    private void renderFastItem (@Nonnull ItemStack itemStack, TileEntityDrawers tile, BlockState state, int slot, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Direction side, float partialTickTime) {
         BlockDrawers block = (BlockDrawers)state.getBlock();
-        AxisAlignedBB labelGeometry = block.labelGeometry[slot];
+        AABB labelGeometry = block.labelGeometry[slot];
 
-        float scaleX = (float)labelGeometry.getXSize() / 16;
-        float scaleY = (float)labelGeometry.getYSize() / 16;
+        float scaleX = (float)labelGeometry.getXsize() / 16;
+        float scaleY = (float)labelGeometry.getYsize() / 16;
         float moveX = (float)labelGeometry.minX + (8 * scaleX);
         float moveY = 16f - (float)labelGeometry.maxY + (8 * scaleY);
         float moveZ = (float)labelGeometry.minZ * .0625f;
 
-        matrix.push();
+        matrix.pushPose();
 
         alignRendering(matrix, side);
         moveRendering(matrix, scaleX, scaleY, moveX, moveY, moveZ);
@@ -167,9 +176,9 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         //    renderHandler.render(tile, tile.getGroup(), slot, 0, partialTickTime);
         //}
 
-        Consumer<IRenderTypeBuffer> finish = (IRenderTypeBuffer buf) -> {
-            if (buf instanceof IRenderTypeBuffer.Impl)
-                ((IRenderTypeBuffer.Impl) buf).finish();
+        Consumer<MultiBufferSource> finish = (MultiBufferSource buf) -> {
+            if (buf instanceof MultiBufferSource.BufferSource)
+                ((MultiBufferSource.BufferSource) buf).endBatch();
         };
 
         try {
@@ -178,39 +187,39 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
             matrix.scale(16, 16, 16);
 
             //IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
-            IBakedModel itemModel = renderItem.getItemModelWithOverrides(itemStack, null, null);
-            boolean render3D = itemModel.isGui3d(); // itemModel.func_230044_c_();
+            BakedModel itemModel = renderItem.getModel(itemStack, null, null, 0);
+            boolean render3D = itemModel.isGui3d(); // itemModel.usesBlockLight();
             finish.accept(buffer);
 
             if (render3D)
-                RenderHelper.setupGui3DDiffuseLighting();
+                Lighting.setupFor3DItems();
             else
-                RenderHelper.setupGuiFlatDiffuseLighting();
+                Lighting.setupForFlatItems();
 
-            matrix.getLast().getNormal().set(Matrix3f.makeScaleMatrix(1, -1, 1));
-            renderItem.renderItem(itemStack, ItemCameraTransforms.TransformType.GUI, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
+            matrix.last().normal().load(Matrix3f.createScaleMatrix(1, -1, 1));
+            renderItem.render(itemStack, ItemTransforms.TransformType.GUI, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
             finish.accept(buffer);
         }
         catch (Exception e) {
             // Shrug
         }
 
-        matrix.pop();
+        matrix.popPose();
     }
 
     private boolean isItemBlockType (@Nonnull ItemStack itemStack) {
         return itemStack.getItem() instanceof BlockItem; // && renderItem.shouldRenderItemIn3D(itemStack);
     }
 
-    private void alignRendering (MatrixStack matrix, Direction side) {
+    private void alignRendering (PoseStack matrix, Direction side) {
         // Rotate to face the correct direction for the drawer's orientation.
 
         matrix.translate(.5f, .5f, .5f);
-        matrix.rotate(new Quaternion(Vector3f.YP, getRotationYForSide2D(side), true));
+        matrix.mulPose(new Quaternion(Vector3f.YP, getRotationYForSide2D(side), true));
         matrix.translate(-.5f, -.5f, -.5f);
     }
 
-    private void moveRendering (MatrixStack matrix, float scaleX, float scaleY, float offsetX, float offsetY, float offsetZ) {
+    private void moveRendering (PoseStack matrix, float scaleX, float scaleY, float offsetX, float offsetY, float offsetZ) {
         // NOTE: RenderItem expects to be called in a context where Y increases toward the bottom of the screen
         // However, for in-world rendering the opposite is true. So we translate up by 1 along Y, and then flip
         // along Y. Since the item is drawn at the back of the drawer, we also translate by `1-offsetZ` to move

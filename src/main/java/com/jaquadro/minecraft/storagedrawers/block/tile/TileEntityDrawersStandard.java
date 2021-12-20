@@ -6,20 +6,24 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup.DrawerData;
+
 public class TileEntityDrawersStandard extends TileEntityDrawers
 {
-    @CapabilityInject(IDrawerAttributes.class)
-    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = null;
+    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     private static final String[] GUI_IDS = new String[] {
         null, StorageDrawers.MOD_ID + ":basicDrawers1", StorageDrawers.MOD_ID + ":basicDrawers2", null, StorageDrawers.MOD_ID + ":basicDrawers4"
@@ -27,16 +31,16 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
     private int capacity = 0;
 
-    public TileEntityDrawersStandard (TileEntityType<?> tileEntityType) {
-        super(tileEntityType);
+    public TileEntityDrawersStandard (BlockEntityType<?> tileEntityType, BlockPos pos, BlockState state) {
+        super(tileEntityType, pos, state);
     }
 
     public static class Slot1 extends TileEntityDrawersStandard
     {
         private GroupData groupData = new GroupData(1);
 
-        public Slot1 () {
-            super(ModBlocks.Tile.STANDARD_DRAWERS_1);
+        public Slot1 (BlockPos pos, BlockState state) {
+            super(ModBlocks.Tile.STANDARD_DRAWERS_1, pos, state);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -57,8 +61,8 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     {
         private GroupData groupData = new GroupData(2);
 
-        public Slot2 () {
-            super(ModBlocks.Tile.STANDARD_DRAWERS_2);
+        public Slot2 (BlockPos pos, BlockState state) {
+            super(ModBlocks.Tile.STANDARD_DRAWERS_2, pos, state);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -79,8 +83,8 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     {
         private GroupData groupData = new GroupData(4);
 
-        public Slot4 () {
-            super(ModBlocks.Tile.STANDARD_DRAWERS_4);
+        public Slot4 (BlockPos pos, BlockState state) {
+            super(ModBlocks.Tile.STANDARD_DRAWERS_4, pos, state);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -97,14 +101,14 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
     }
 
-    public static TileEntityDrawersStandard createEntity (int slotCount) {
+    public static TileEntityDrawersStandard createEntity (int slotCount, BlockPos pos, BlockState state) {
         switch (slotCount) {
             case 1:
-                return new Slot1();
+                return new Slot1(pos, state);
             case 2:
-                return new Slot2();
+                return new Slot2(pos, state);
             case 4:
-                return new Slot4();
+                return new Slot4(pos, state);
             default:
                 return null;
         }
@@ -163,17 +167,17 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
             DrawerPopulatedEvent event = new DrawerPopulatedEvent(this);
             MinecraftForge.EVENT_BUS.post(event);
 
-            if (getWorld() != null && !getWorld().isRemote) {
-                markDirty();
+            if (getLevel() != null && !getLevel().isClientSide) {
+                setChanged();
                 markBlockForUpdate();
             }
         }
 
         @Override
         protected void onAmountChanged () {
-            if (getWorld() != null && !getWorld().isRemote) {
+            if (getLevel() != null && !getLevel().isClientSide) {
                 syncClientCount(slot, getStoredItemCount());
-                markDirty();
+                setChanged();
             }
         }
     }

@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 public class ItemShroudKey extends ItemKey
 {

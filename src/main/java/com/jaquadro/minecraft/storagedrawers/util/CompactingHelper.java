@@ -3,15 +3,15 @@ package com.jaquadro.minecraft.storagedrawers.util;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -22,7 +22,7 @@ public class CompactingHelper
     private static InventoryLookup lookup2 = new InventoryLookup(2, 2);
     private static InventoryLookup lookup3 = new InventoryLookup(3, 3);
 
-    private World world;
+    private Level world;
 
     public class Result
     {
@@ -45,19 +45,19 @@ public class CompactingHelper
         }
     }
 
-    public CompactingHelper (World world) {
+    public CompactingHelper (Level world) {
         this.world = world;
     }
 
     @Nonnull
     public Result findHigherTier (@Nonnull ItemStack stack) {
         boolean debugTrace = CommonConfig.GENERAL.debugTrace.get();
-        if (!world.isRemote && debugTrace)
+        if (!world.isClientSide && debugTrace)
             StorageDrawers.log.info("Finding ascending candidates for " + stack.toString());
 
         CompTierRegistry.Record record = StorageDrawers.compRegistry.findHigherTier(stack);
         if (record != null) {
-            if (!world.isRemote && debugTrace)
+            if (!world.isClientSide && debugTrace)
                 StorageDrawers.log.info("Found " + record.upper.toString() + " in registry with conv=" + record.convRate);
 
             return new Result(record.upper, record.convRate);
@@ -87,7 +87,7 @@ public class CompactingHelper
                         continue;
 
                     candidates.add(match);
-                    if (!world.isRemote && debugTrace)
+                    if (!world.isClientSide && debugTrace)
                         StorageDrawers.log.info("Found ascending candidate for " + stack.toString() + ": " + match.toString() + " size=" + lookupSize + ", inverse=" + comp.toString());
 
                     break;
@@ -102,7 +102,7 @@ public class CompactingHelper
         if (candidates.size() > 0)
             return new Result(candidates.get(0), lookupSize);
 
-        if (!world.isRemote && debugTrace)
+        if (!world.isClientSide && debugTrace)
             StorageDrawers.log.info("No candidates found");
 
         return new Result(ItemStack.EMPTY, 0);
@@ -111,12 +111,12 @@ public class CompactingHelper
     @Nonnull
     public Result findLowerTier (@Nonnull ItemStack stack) {
         boolean debugTrace = CommonConfig.GENERAL.debugTrace.get();
-        if (!world.isRemote && debugTrace)
+        if (!world.isClientSide && debugTrace)
             StorageDrawers.log.info("Finding descending candidates for " + stack.toString());
 
         CompTierRegistry.Record record = StorageDrawers.compRegistry.findLowerTier(stack);
         if (record != null) {
-            if (!world.isRemote && debugTrace)
+            if (!world.isClientSide && debugTrace)
                 StorageDrawers.log.info("Found " + record.lower.toString() + " in registry with conv=" + record.convRate);
 
             return new Result(record.lower, record.convRate);
@@ -125,8 +125,8 @@ public class CompactingHelper
         List<ItemStack> candidates = new ArrayList<>();
         Map<ItemStack, Integer> candidatesRate = new HashMap<>();
 
-        for (IRecipe<CraftingInventory> recipe : world.getRecipeManager().getRecipes(IRecipeType.CRAFTING).values()) {
-            ItemStack output = recipe.getRecipeOutput();
+        for (Recipe<CraftingContainer> recipe : world.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
+            ItemStack output = recipe.getResultItem();
             // TODO: ItemStackOreMatcher.areItemsEqual(stack, output, true)
             if (!ItemStackMatcher.areItemsEqual(stack, output))
                 continue;
@@ -142,9 +142,9 @@ public class CompactingHelper
                         candidates.add(match);
                         candidatesRate.put(match, recipeSize);
 
-                        if (!world.isRemote && debugTrace)
+                        if (!world.isClientSide && debugTrace)
                             StorageDrawers.log.info("Found descending candidate for " + stack.toString() + ": " + match.toString() + " size=" + recipeSize + ", inverse=" + comp.toString());
-                    } else if (!world.isRemote && debugTrace)
+                    } else if (!world.isClientSide && debugTrace)
                         StorageDrawers.log.info("Back-check failed for " + match.toString() + " size=" + lookupSize + ", inverse=" + comp.toString());
                 }
             }
@@ -159,18 +159,18 @@ public class CompactingHelper
             return new Result(match, candidatesRate.get(match));
         }
 
-        if (!world.isRemote && debugTrace)
+        if (!world.isClientSide && debugTrace)
             StorageDrawers.log.info("No candidates found");
 
         return new Result(ItemStack.EMPTY, 0);
     }
 
-    private List<ItemStack> findAllMatchingRecipes (CraftingInventory crafting) {
+    private List<ItemStack> findAllMatchingRecipes (CraftingContainer crafting) {
         List<ItemStack> candidates = new ArrayList<>();
 
-        for (ICraftingRecipe recipe : world.getRecipeManager().getRecipes(IRecipeType.CRAFTING, crafting, world)) {
+        for (CraftingRecipe recipe : world.getRecipeManager().getRecipesFor(RecipeType.CRAFTING, crafting, world)) {
             if (recipe.matches(crafting, world)) {
-                ItemStack result = recipe.getCraftingResult(crafting);
+                ItemStack result = recipe.assemble(crafting);
                 if (!result.isEmpty())
                     candidates.add(result);
             }
@@ -201,7 +201,7 @@ public class CompactingHelper
             return ItemStack.EMPTY;
 
         Ingredient refIngredient = ingredients.get(0);
-        ItemStack[] refMatchingStacks = refIngredient.getMatchingStacks();
+        ItemStack[] refMatchingStacks = refIngredient.getItems();
         if (refMatchingStacks.length == 0)
             return ItemStack.EMPTY;
 
@@ -228,13 +228,13 @@ public class CompactingHelper
     }
 
     private int setupLookup (InventoryLookup inv, @Nonnull ItemStack stack) {
-        for (int i = 0, n = inv.getSizeInventory(); i < n; i++)
-            inv.setInventorySlotContents(i, stack);
+        for (int i = 0, n = inv.getContainerSize(); i < n; i++)
+            inv.setItem(i, stack);
 
-        return inv.getSizeInventory();
+        return inv.getContainerSize();
     }
 
-    private static class InventoryLookup extends CraftingInventory
+    private static class InventoryLookup extends CraftingContainer
     {
         private ItemStack[] stackList;
 
@@ -247,32 +247,32 @@ public class CompactingHelper
         }
 
         @Override
-        public int getSizeInventory ()
+        public int getContainerSize ()
         {
             return this.stackList.length;
         }
 
         @Override
         @Nonnull
-        public ItemStack getStackInSlot (int slot)
+        public ItemStack getItem (int slot)
         {
-            return slot >= this.getSizeInventory() ? ItemStack.EMPTY : this.stackList[slot];
+            return slot >= this.getContainerSize() ? ItemStack.EMPTY : this.stackList[slot];
         }
 
         @Override
         @Nonnull
-        public ItemStack removeStackFromSlot (int slot) {
+        public ItemStack removeItemNoUpdate (int slot) {
             return ItemStack.EMPTY;
         }
 
         @Override
         @Nonnull
-        public ItemStack decrStackSize (int slot, int count) {
+        public ItemStack removeItem (int slot, int count) {
             return ItemStack.EMPTY;
         }
 
         @Override
-        public void setInventorySlotContents (int slot, @Nonnull ItemStack stack) {
+        public void setItem (int slot, @Nonnull ItemStack stack) {
             stackList[slot] = stack;
         }
     }

@@ -1,8 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
-public enum EnumUpgradeRedstone implements IStringSerializable
+public enum EnumUpgradeRedstone implements StringRepresentable
 {
     COMBINED(0, "combined", "combined"),
     MAX(1, "max", "max"),
@@ -40,7 +40,7 @@ public enum EnumUpgradeRedstone implements IStringSerializable
     }
 
     @Override
-    public String getString () {
+    public String getSerializedName () {
         return name;
     }
 

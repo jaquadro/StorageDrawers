@@ -1,8 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
-public enum EnumUpgradeCreative implements IStringSerializable
+public enum EnumUpgradeCreative implements StringRepresentable
 {
     STORAGE(0, "store", "store"),
     VENDING(1, "vend", "vend");
@@ -39,7 +39,7 @@ public enum EnumUpgradeCreative implements IStringSerializable
     }
 
     @Override
-    public String getString () {
+    public String getSerializedName () {
         return name;
     }
 

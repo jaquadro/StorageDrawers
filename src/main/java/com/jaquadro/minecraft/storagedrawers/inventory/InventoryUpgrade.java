@@ -1,13 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class InventoryUpgrade implements IInventory
+public class InventoryUpgrade implements Container
 {
     private static final int upgradeCapacity = 7;
 
@@ -18,7 +18,7 @@ public class InventoryUpgrade implements IInventory
     }
 
     @Override
-    public int getSizeInventory () {
+    public int getContainerSize () {
         return upgradeCapacity;
     }
 
@@ -34,13 +34,13 @@ public class InventoryUpgrade implements IInventory
 
     @Override
     @Nonnull
-    public ItemStack getStackInSlot (int slot) {
+    public ItemStack getItem (int slot) {
         return tile.upgrades().getUpgrade(slot);
     }
 
     @Override
     @Nonnull
-    public ItemStack decrStackSize (int slot, int count) {
+    public ItemStack removeItem (int slot, int count) {
         ItemStack stack = tile.upgrades().getUpgrade(slot);
         if (count > 0)
             tile.upgrades().setUpgrade(slot, ItemStack.EMPTY);
@@ -50,43 +50,43 @@ public class InventoryUpgrade implements IInventory
 
     @Override
     @Nonnull
-    public ItemStack removeStackFromSlot (int slot) {
+    public ItemStack removeItemNoUpdate (int slot) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setInventorySlotContents (int slot, @Nonnull ItemStack item) {
+    public void setItem (int slot, @Nonnull ItemStack item) {
         tile.upgrades().setUpgrade(slot, item);
     }
 
     @Override
-    public int getInventoryStackLimit () {
+    public int getMaxStackSize () {
         return 1;
     }
 
     @Override
-    public void markDirty () {
-        tile.markDirty();
+    public void setChanged () {
+        tile.setChanged();
     }
 
     @Override
-    public boolean isUsableByPlayer (PlayerEntity player) {
+    public boolean stillValid (Player player) {
         return true;
     }
 
     @Override
-    public void openInventory (PlayerEntity player) { }
+    public void startOpen (Player player) { }
 
     @Override
-    public void closeInventory (PlayerEntity player) { }
+    public void stopOpen (Player player) { }
 
     @Override
-    public boolean isItemValidForSlot (int slot, @Nonnull ItemStack item) {
+    public boolean canPlaceItem (int slot, @Nonnull ItemStack item) {
         return tile.upgrades().canAddUpgrade(item);
     }
 
     @Override
-    public void clear () {
+    public void clearContent () {
 
     }
 

@@ -1,13 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -43,13 +43,13 @@ public class ItemUpgrade extends Item
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation (@Nonnull ItemStack itemStack, @Nullable World world, List<ITextComponent> list, ITooltipFlag advanced) {
-        list.add(new StringTextComponent("").append(getDescription()).mergeStyle(TextFormatting.GRAY));
+    public void appendHoverText (@Nonnull ItemStack itemStack, @Nullable Level world, List<Component> list, TooltipFlag advanced) {
+        list.add(new TextComponent("").append(getDescription()).withStyle(ChatFormatting.GRAY));
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected ITextComponent getDescription() {
-        return new TranslationTextComponent(this.getTranslationKey() + ".desc");
+    public Component getDescription() {
+        return new TranslatableComponent(this.getDescriptionId() + ".desc");
     }
 
     public void setAllowMultiple (boolean allow) {

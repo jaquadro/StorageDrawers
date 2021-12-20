@@ -2,20 +2,20 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class SlotDrawer extends Slot
 {
-    private static IInventory emptyInventory = new EmptyInventory();
+    private static Container emptyInventory = new EmptyInventory();
     private ContainerDrawers container;
     private final IDrawerGroup group;
     private final IDrawer drawer;
@@ -28,43 +28,43 @@ public class SlotDrawer extends Slot
     }
 
     @Override
-    public boolean isItemValid (@Nonnull ItemStack stack) {
+    public boolean mayPlace (@Nonnull ItemStack stack) {
         return !stack.isEmpty() && drawer.canItemBeStored(stack);
     }
 
     @Override
     @Nonnull
-    public ItemStack getStack () {
+    public ItemStack getItem () {
         ItemStack stack = ItemStackHelper.encodeItemStack(drawer.getStoredItemPrototype(), drawer.getStoredItemCount());
         container.setLastAccessedItem(stack);
         return stack;
     }
 
     @Override
-    public void putStack (@Nonnull ItemStack stack) {
+    public void set (@Nonnull ItemStack stack) {
         IDrawer target = drawer.setStoredItem(stack);
         stack = ItemStackHelper.decodeItemStack(stack);
         target.setStoredItemCount(stack.getCount());
     }
 
     @Override
-    public void onSlotChange (@Nonnull ItemStack p_75220_1_, @Nonnull ItemStack p_75220_2_) {
+    public void onQuickCraft (@Nonnull ItemStack p_75220_1_, @Nonnull ItemStack p_75220_2_) {
 
     }
 
     @Override
-    public int getItemStackLimit (@Nonnull ItemStack stack) {
+    public int getMaxStackSize (@Nonnull ItemStack stack) {
         return Math.min(stack.getMaxStackSize(), drawer.getRemainingCapacity());
     }
 
     @Override
-    public boolean canTakeStack (PlayerEntity playerIn) {
+    public boolean mayPickup (Player playerIn) {
         return false;
     }
 
     @Override
     @Nonnull
-    public ItemStack decrStackSize (int amount) {
+    public ItemStack remove (int amount) {
         int withdraw = Math.min(amount, drawer.getStoredItemCount());
         drawer.setStoredItemCount(withdraw);
 
@@ -82,7 +82,7 @@ public class SlotDrawer extends Slot
         return other instanceof SlotDrawer && ((SlotDrawer) other).getDrawerGroup() == group;
     }
 
-    static class EmptyInventory extends Inventory implements ISidedInventory {
+    static class EmptyInventory extends SimpleContainer implements WorldlyContainer {
         public EmptyInventory() {
             super(0);
         }
@@ -91,11 +91,11 @@ public class SlotDrawer extends Slot
             return new int[0];
         }
 
-        public boolean canInsertItem(int index, ItemStack itemStackIn, @Nullable Direction direction) {
+        public boolean canPlaceItemThroughFace(int index, ItemStack itemStackIn, @Nullable Direction direction) {
             return false;
         }
 
-        public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+        public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
             return false;
         }
     }

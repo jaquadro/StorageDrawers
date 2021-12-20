@@ -3,11 +3,14 @@ package com.jaquadro.minecraft.storagedrawers.capabilities;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
 
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
+
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository.DefaultPredicate;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository.ItemRecord;
 
 public class DrawerItemRepository implements IItemRepository
 {

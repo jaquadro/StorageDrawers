@@ -2,25 +2,26 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.TileDataShim;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraftforge.common.extensions.IForgeTileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.extensions.IForgeBlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChamTileEntity extends TileEntity implements IForgeTileEntity
+public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
 {
-    private CompoundNBT failureSnapshot;
+    private CompoundTag failureSnapshot;
     private List<TileDataShim> fixedShims;
     private List<TileDataShim> portableShims;
 
-    public ChamTileEntity (TileEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
+    public ChamTileEntity (BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+        super(tileEntityTypeIn, pos, state);
     }
 
     public boolean hasDataPacket () {
@@ -44,8 +45,8 @@ public class ChamTileEntity extends TileEntity implements IForgeTileEntity
     }
 
     @Override
-    public final void read (BlockState state, CompoundNBT tag) {
-        super.read(state, tag);
+    public final void load (CompoundTag tag) {
+        super.load(tag);
 
         failureSnapshot = null;
 
@@ -58,13 +59,13 @@ public class ChamTileEntity extends TileEntity implements IForgeTileEntity
         }
     }
 
-    public final void read (CompoundNBT tag) {
-        read(null, tag);
+    public final void read (CompoundTag tag) {
+        load(tag);
     }
 
     @Override
-    public final CompoundNBT write (CompoundNBT tag) {
-        super.write(tag);
+    public final CompoundTag save (CompoundTag tag) {
+        super.save(tag);
 
         if (failureSnapshot != null) {
             restoreLoadFailure(tag);
@@ -82,14 +83,14 @@ public class ChamTileEntity extends TileEntity implements IForgeTileEntity
         return tag;
     }
 
-    public void readPortable (CompoundNBT tag) {
+    public void readPortable (CompoundTag tag) {
         if (portableShims != null) {
             for (TileDataShim shim : portableShims)
                 shim.read(tag);
         }
     }
 
-    public CompoundNBT writePortable (CompoundNBT tag) {
+    public CompoundTag writePortable (CompoundTag tag) {
         if (portableShims != null) {
             for (TileDataShim shim : portableShims)
                 tag = shim.write(tag);
@@ -98,14 +99,14 @@ public class ChamTileEntity extends TileEntity implements IForgeTileEntity
         return tag;
     }
 
-    protected void readFixed (CompoundNBT tag) {
+    protected void readFixed (CompoundTag tag) {
         if (fixedShims != null) {
             for (TileDataShim shim : fixedShims)
                 shim.read(tag);
         }
     }
 
-    protected CompoundNBT writeFixed (CompoundNBT tag) {
+    protected CompoundTag writeFixed (CompoundTag tag) {
         if (fixedShims != null) {
             for (TileDataShim shim : fixedShims)
                 tag = shim.write(tag);
@@ -114,13 +115,13 @@ public class ChamTileEntity extends TileEntity implements IForgeTileEntity
         return tag;
     }
 
-    private void trapLoadFailure (Throwable t, CompoundNBT tag) {
+    private void trapLoadFailure (Throwable t, CompoundTag tag) {
         failureSnapshot = tag.copy();
         StorageDrawers.log.error("Tile Load Failure.", t);
     }
 
-    private void restoreLoadFailure (CompoundNBT tag) {
-        for (String key : failureSnapshot.keySet()) {
+    private void restoreLoadFailure (CompoundTag tag) {
+        for (String key : failureSnapshot.getAllKeys()) {
             if (!tag.contains(key))
                 tag.put(key, failureSnapshot.get(key).copy());
         }
@@ -131,26 +132,26 @@ public class ChamTileEntity extends TileEntity implements IForgeTileEntity
     }
 
     @Override
-    public final CompoundNBT getUpdateTag () {
-        CompoundNBT tag = new CompoundNBT();
-        write(tag);
+    public final CompoundTag getUpdateTag () {
+        CompoundTag tag = new CompoundTag();
+        save(tag);
 
         return tag;
     }
 
     @Override
-    public final SUpdateTileEntityPacket getUpdatePacket () {
-        return hasDataPacket() ? new SUpdateTileEntityPacket(getPos(), 0, getUpdateTag()) : null;
+    public final ClientboundBlockEntityDataPacket getUpdatePacket () {
+        return hasDataPacket() ? new ClientboundBlockEntityDataPacket(getBlockPos(), 0, getUpdateTag()) : null;
     }
 
     @Override
-    public final void onDataPacket (NetworkManager net, SUpdateTileEntityPacket pkt) {
-        if (pkt != null && pkt.getNbtCompound() != null)
-            read(pkt.getNbtCompound());
+    public final void onDataPacket (Connection net, ClientboundBlockEntityDataPacket pkt) {
+        if (pkt != null && pkt.getTag() != null)
+            read(pkt.getTag());
 
-        if (dataPacketRequiresRenderUpdate() && getWorld().isRemote) {
-            BlockState state = getWorld().getBlockState(getPos());
-            getWorld().notifyBlockUpdate(getPos(), state, state, 3);
+        if (dataPacketRequiresRenderUpdate() && getLevel().isClientSide) {
+            BlockState state = getLevel().getBlockState(getBlockPos());
+            getLevel().sendBlockUpdated(getBlockPos(), state, state, 3);
         }
     }
 
@@ -158,16 +159,16 @@ public class ChamTileEntity extends TileEntity implements IForgeTileEntity
      * Calls server to sync data with client, update neighbors, and cause a delayed render update.
      */
     public void markBlockForUpdate () {
-        if (getWorld() != null && !getWorld().isRemote) {
-            BlockState state = getWorld().getBlockState(pos);
-            getWorld().notifyBlockUpdate(pos, state, state, 3);
+        if (getLevel() != null && !getLevel().isClientSide) {
+            BlockState state = getLevel().getBlockState(worldPosition);
+            getLevel().sendBlockUpdated(worldPosition, state, state, 3);
         }
     }
 
     public void markBlockForUpdateClient () {
-        if (getWorld() != null && getWorld().isRemote) {
-            BlockState state = getWorld().getBlockState(pos);
-            getWorld().notifyBlockUpdate(pos, state, state, 3);
+        if (getLevel() != null && getLevel().isClientSide) {
+            BlockState state = getLevel().getBlockState(worldPosition);
+            getLevel().sendBlockUpdated(worldPosition, state, state, 3);
         }
     }
 
@@ -176,14 +177,14 @@ public class ChamTileEntity extends TileEntity implements IForgeTileEntity
      * Does not sync tile data or notify neighbors of any state change.
      */
     public void markBlockForRenderUpdate () {
-        if (getWorld() == null)
+        if (getLevel() == null)
             return;
 
         //if (getWorld().isRemote)
         //    getWorld().markBlockRangeForRenderUpdate(pos, pos);
         //else {
-        BlockState state = getWorld().getBlockState(pos);
-        getWorld().notifyBlockUpdate(pos, state, state, 2);
+        BlockState state = getLevel().getBlockState(worldPosition);
+        getLevel().sendBlockUpdated(worldPosition, state, state, 2);
         //}
     }
 }

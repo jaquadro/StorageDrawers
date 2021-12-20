@@ -3,37 +3,37 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
 public class SlotUpgrade extends Slot
 {
-    public SlotUpgrade (IInventory inventory, int index, int x, int y) {
+    public SlotUpgrade (Container inventory, int index, int x, int y) {
         super(inventory, index, x, y);
     }
 
     @Override
-    public boolean isItemValid(@Nonnull ItemStack stack) {
+    public boolean mayPlace(@Nonnull ItemStack stack) {
         if (stack.isEmpty())
             return false;
 
-        if (inventory instanceof InventoryUpgrade)
-            return ((InventoryUpgrade) inventory).canAddUpgrade(stack);
+        if (container instanceof InventoryUpgrade)
+            return ((InventoryUpgrade) container).canAddUpgrade(stack);
 
         return false;
     }
 
     @Override
-    public boolean canTakeStack (PlayerEntity player) {
-        if (inventory instanceof InventoryUpgrade) {
-            ItemStack stack = getStack();
+    public boolean mayPickup (Player player) {
+        if (container instanceof InventoryUpgrade) {
+            ItemStack stack = getItem();
             if (stack.getItem() instanceof ItemUpgradeStorage) {
                 EnumUpgradeStorage upgrade = ((ItemUpgradeStorage)stack.getItem()).level;
-                return ((InventoryUpgrade) inventory).canRemoveStorageUpgrade(getSlotIndex());
+                return ((InventoryUpgrade) container).canRemoveStorageUpgrade(getSlotIndex());
             }
 
             if (player != null && !player.isCreative()) {
@@ -46,6 +46,6 @@ public class SlotUpgrade extends Slot
     }
 
     public boolean canTakeStack () {
-        return canTakeStack(null);
+        return mayPickup(null);
     }
 }

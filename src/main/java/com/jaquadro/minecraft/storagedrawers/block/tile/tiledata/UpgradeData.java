@@ -4,12 +4,12 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifi
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.*;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.util.Mth;
 
 import javax.annotation.Nonnull;
 
@@ -49,7 +49,7 @@ public class UpgradeData extends TileDataShim
 
     @Nonnull
     public ItemStack getUpgrade (int slot) {
-        slot = MathHelper.clamp(slot, 0, upgrades.length - 1);
+        slot = Mth.clamp(slot, 0, upgrades.length - 1);
         return upgrades[slot];
     }
 
@@ -63,7 +63,7 @@ public class UpgradeData extends TileDataShim
     }
 
     public boolean setUpgrade (int slot, @Nonnull ItemStack upgrade) {
-        slot = MathHelper.clamp(slot, 0, upgrades.length - 1);
+        slot = Mth.clamp(slot, 0, upgrades.length - 1);
 
         if (!upgrade.isEmpty()) {
             upgrade = upgrade.copy();
@@ -117,7 +117,7 @@ public class UpgradeData extends TileDataShim
     }
 
     public boolean canRemoveUpgrade (int slot) {
-        slot = MathHelper.clamp(slot, 0, upgrades.length - 1);
+        slot = Mth.clamp(slot, 0, upgrades.length - 1);
         return !upgrades[slot].isEmpty();
     }
 
@@ -236,30 +236,30 @@ public class UpgradeData extends TileDataShim
     }
 
     @Override
-    public void read (CompoundNBT tag) {
+    public void read (CompoundTag tag) {
         for (int i = 0; i < upgrades.length; i++)
             upgrades[i] = ItemStack.EMPTY;
 
         if (!tag.contains("Upgrades"))
             return;
 
-        ListNBT tagList = tag.getList("Upgrades", Constants.NBT.TAG_COMPOUND);
+        ListTag tagList = tag.getList("Upgrades", Tag.TAG_COMPOUND);
         for (int i = 0; i < tagList.size(); i++) {
-            CompoundNBT upgradeTag = tagList.getCompound(i);
+            CompoundTag upgradeTag = tagList.getCompound(i);
 
             int slot = upgradeTag.getByte("Slot");
-            upgrades[slot] = ItemStack.read(upgradeTag);
+            upgrades[slot] = ItemStack.of(upgradeTag);
         }
 
         syncUpgrades();
     }
 
     @Override
-    public CompoundNBT write (CompoundNBT tag) {
-        ListNBT tagList = new ListNBT();
+    public CompoundTag write (CompoundTag tag) {
+        ListTag tagList = new ListTag();
         for (int i = 0; i < upgrades.length; i++) {
             if (!upgrades[i].isEmpty()) {
-                CompoundNBT upgradeTag = upgrades[i].write(new CompoundNBT());
+                CompoundTag upgradeTag = upgrades[i].save(new CompoundTag());
                 upgradeTag.putByte("Slot", (byte)i);
 
                 tagList.add(upgradeTag);

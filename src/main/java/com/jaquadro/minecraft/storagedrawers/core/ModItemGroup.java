@@ -1,17 +1,17 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
 public class ModItemGroup
 {
-    public static final ItemGroup STORAGE_DRAWERS = (new ItemGroup("storagedrawers")
+    public static final CreativeModeTab STORAGE_DRAWERS = (new CreativeModeTab("storagedrawers")
     {
         @Override
         @Nonnull
-        public ItemStack createIcon () {
+        public ItemStack makeIcon () {
             return new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2);
         }
     });

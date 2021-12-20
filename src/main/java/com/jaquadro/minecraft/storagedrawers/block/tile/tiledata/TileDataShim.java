@@ -1,22 +1,22 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public abstract class TileDataShim implements INBTSerializable<CompoundNBT>
+public abstract class TileDataShim implements INBTSerializable<CompoundTag>
 {
-    public abstract void read (CompoundNBT tag);
+    public abstract void read (CompoundTag tag);
 
-    public abstract CompoundNBT write (CompoundNBT tag);
+    public abstract CompoundTag write (CompoundTag tag);
 
     @Override
-    public CompoundNBT serializeNBT () {
-        CompoundNBT tag = new CompoundNBT();
+    public CompoundTag serializeNBT () {
+        CompoundTag tag = new CompoundTag();
         return write(tag);
     }
 
     @Override
-    public void deserializeNBT (CompoundNBT nbt) {
+    public void deserializeNBT (CompoundTag nbt) {
         read(nbt);
     }
 }
