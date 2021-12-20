@@ -253,7 +253,8 @@ public class ModBlocks
 
         private static Block registerDrawerBlock(RegistryEvent.Register<Block> event, String name, int drawerCount, boolean halfDepth) {
             return registerBlock(event, name, new BlockStandardDrawers(drawerCount, halfDepth, BlockBehaviour.Properties.of(Material.WOOD)
-                .sound(SoundType.WOOD).strength(5f)
+                .strength(3.0F, 5.0F)
+                .sound(SoundType.WOOD)
                 .isSuffocating(Registration::predFalse)
                 .isRedstoneConductor(Registration::predFalse)));
         }
