@@ -108,11 +108,11 @@ public class DrawerScreen extends ContainerScreen<ContainerDrawers>
             blit(stack, guiX + slot.xPos, guiY + slot.yPos, smDisabledX, smDisabledY, 16, 16);
         }
 
-        /*List<Slot> upgradeSlots = container.getUpgradeSlots();
+        List<Slot> upgradeSlots = container.getUpgradeSlots();
         for (Slot slot : upgradeSlots) {
             if (slot instanceof SlotUpgrade && !((SlotUpgrade) slot).canTakeStack())
-                blit(guiX + slot.xPos, guiY + slot.yPos, smDisabledX, smDisabledY, 16, 16);
-        }*/
+                blit(stack, guiX + slot.xPos, guiY + slot.yPos, smDisabledX, smDisabledY, 16, 16);
+        }
     }
 
 
