@@ -7,12 +7,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
-}
-
-plugins {
-    id "com.jfrog.bintray" version "1.8.1"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -20,17 +16,11 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-//evaluationDependsOn(":..:Chameleon-${minecraft_base_version}")
-
-//ext {
-//    chameleon = project(":..:Chameleon-${minecraft_base_version}")
-//}
-
 version = "${minecraft_version}-${mod_version}"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StorageDrawers"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' 
+java.toolchain.languageVersion = JavaLanguageVersion.of(8) // Mojang ships Java 8 to end users, so your mod should target Java 8.
 
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
@@ -96,10 +86,6 @@ minecraft {
             }
         }
     }
-
-    //replaceIn "StorageDrawers.java"
-    //replace '@VERSION@', project.version
-    //replace 'required-after:chameleon', "required-after:chameleon@[${chameleon_version},${chameleon_max_version})"
 }
 
 repositories {
@@ -172,10 +158,6 @@ jar {
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
-    //include "com/jaquadro/minecraft/storagedrawers/**"
-    //include "assets/**"
-    //include "mcmod.info"
-    //include "pack.mcmeta"
 }
 
 jar.finalizedBy('reobfJar')
@@ -216,22 +198,5 @@ publishing.publications {
         artifact apiJar
         artifact deobfJar
         artifact jar
-    }
-}
-
-bintrayUpload.dependsOn build
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    publications = ['StorageDrawers']
-    publish = true
-    pkg {
-        repo = 'dev'
-        name = 'storagedrawers'
-        version {
-            name = project.version
-            released = new Date()
-        }
     }
 }
