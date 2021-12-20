@@ -48,22 +48,22 @@ public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
     public final void load (CompoundTag tag) {
         super.load(tag);
 
-        failureSnapshot = null;
+        //failureSnapshot = null;
 
-        try {
+        //try {
             readFixed(tag);
             readPortable(tag);
-        }
-        catch (Throwable t) {
-            trapLoadFailure(t, tag);
-        }
+        //}
+        //catch (Throwable t) {
+        //    trapLoadFailure(t, tag);
+        //}
     }
 
     public final void read (CompoundTag tag) {
         load(tag);
     }
 
-    @Override
+    /*@Override
     public final CompoundTag save (CompoundTag tag) {
         super.save(tag);
 
@@ -81,6 +81,12 @@ public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
         }
 
         return tag;
+    }*/
+
+    @Override
+    protected void saveAdditional (CompoundTag tag) {
+        tag = writeFixed(tag);
+        writePortable(tag);
     }
 
     public void readPortable (CompoundTag tag) {
@@ -133,8 +139,8 @@ public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
 
     @Override
     public final CompoundTag getUpdateTag () {
-        CompoundTag tag = new CompoundTag();
-        save(tag);
+        CompoundTag tag = this.saveWithoutMetadata();
+        //save(tag);
 
         return tag;
     }
