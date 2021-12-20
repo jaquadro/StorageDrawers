@@ -4,7 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.inventory.*;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -23,10 +23,10 @@ public class ModContainers
 
         @SubscribeEvent
         public static void registerContainers (RegistryEvent.Register<MenuType<?>> event) {
-            event.getRegistry().register(IForgeContainerType.create(ContainerDrawers1::new).setRegistryName("drawer_container_1"));
-            event.getRegistry().register(IForgeContainerType.create(ContainerDrawers2::new).setRegistryName("drawer_container_2"));
-            event.getRegistry().register(IForgeContainerType.create(ContainerDrawers4::new).setRegistryName("drawer_container_4"));
-            event.getRegistry().register(IForgeContainerType.create(ContainerDrawersComp::new).setRegistryName("drawer_container_comp"));
+            event.getRegistry().register(IForgeMenuType.create(ContainerDrawers1::new).setRegistryName("drawer_container_1"));
+            event.getRegistry().register(IForgeMenuType.create(ContainerDrawers2::new).setRegistryName("drawer_container_2"));
+            event.getRegistry().register(IForgeMenuType.create(ContainerDrawers4::new).setRegistryName("drawer_container_4"));
+            event.getRegistry().register(IForgeMenuType.create(ContainerDrawersComp::new).setRegistryName("drawer_container_comp"));
         }
     }
 

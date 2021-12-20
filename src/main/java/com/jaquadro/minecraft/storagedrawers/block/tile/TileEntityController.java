@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.TickPriority;
+import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -174,7 +174,7 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
         super.clearRemoved();
 
         if (!getLevel().getBlockTicks().hasScheduledTick(getBlockPos(), ModBlocks.CONTROLLER))
-            getLevel().getBlockTicks().scheduleTick(getBlockPos(), ModBlocks.CONTROLLER, 1, TickPriority.NORMAL);
+            getLevel().scheduleTick(getBlockPos(), ModBlocks.CONTROLLER, 1);
     }
 
     @Override

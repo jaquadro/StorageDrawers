@@ -20,7 +20,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -84,11 +83,6 @@ public class StorageDrawers
             CommonConfig.setLoaded();
         if (event.getConfig().getType() == ModConfig.Type.CLIENT)
             ClientConfig.setLoaded();
-    }
-
-    @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent event) {
-        //HungerStrikeCommand.register(event.getCommandDispatcher());
     }
 
     @SubscribeEvent

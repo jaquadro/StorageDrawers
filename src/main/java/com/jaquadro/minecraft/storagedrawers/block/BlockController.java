@@ -123,7 +123,7 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
 
         te.updateCache();
 
-        world.getBlockTicks().scheduleTick(pos, this, 100);
+        world.scheduleTick(pos, this, 100);
     }
 
     @Override

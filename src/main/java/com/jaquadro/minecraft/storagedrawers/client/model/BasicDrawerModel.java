@@ -23,7 +23,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.common.MinecraftForge;
@@ -84,7 +84,7 @@ public final class BasicDrawerModel
 
             for (Either<Material, String> x : unbakedModel.textureMap.values()) {
                 x.ifLeft((value) -> {
-                    if (value.atlasLocation().equals(event.getMap().location()))
+                    if (value.atlasLocation().equals(event.getAtlas().location()))
                         event.addSprite(value.texture());
                 });
             }
@@ -187,32 +187,32 @@ public final class BasicDrawerModel
         @SubscribeEvent
         public static void registerModels (ModelBakeEvent event) {
             // IUnbakedModel unbaked = event.getModelLoader().getUnbakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"));
-            lockOverlaysFull.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y0, ModelLoader.defaultTextureGetter()));
-            lockOverlaysFull.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y90, ModelLoader.defaultTextureGetter()));
-            lockOverlaysFull.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y180, ModelLoader.defaultTextureGetter()));
-            lockOverlaysFull.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y270, ModelLoader.defaultTextureGetter()));
-            lockOverlaysHalf.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), BlockModelRotation.X0_Y0, ModelLoader.defaultTextureGetter()));
-            lockOverlaysHalf.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), BlockModelRotation.X0_Y90, ModelLoader.defaultTextureGetter()));
-            lockOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), BlockModelRotation.X0_Y180, ModelLoader.defaultTextureGetter()));
-            lockOverlaysHalf.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), BlockModelRotation.X0_Y270, ModelLoader.defaultTextureGetter()));
+            lockOverlaysFull.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter()));
+            lockOverlaysFull.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y90, ForgeModelBakery.defaultTextureGetter()));
+            lockOverlaysFull.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y180, ForgeModelBakery.defaultTextureGetter()));
+            lockOverlaysFull.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y270, ForgeModelBakery.defaultTextureGetter()));
+            lockOverlaysHalf.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter()));
+            lockOverlaysHalf.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), BlockModelRotation.X0_Y90, ForgeModelBakery.defaultTextureGetter()));
+            lockOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), BlockModelRotation.X0_Y180, ForgeModelBakery.defaultTextureGetter()));
+            lockOverlaysHalf.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), BlockModelRotation.X0_Y270, ForgeModelBakery.defaultTextureGetter()));
 
-            voidOverlaysFull.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), BlockModelRotation.X0_Y0, ModelLoader.defaultTextureGetter()));
-            voidOverlaysFull.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), BlockModelRotation.X0_Y90, ModelLoader.defaultTextureGetter()));
-            voidOverlaysFull.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), BlockModelRotation.X0_Y180, ModelLoader.defaultTextureGetter()));
-            voidOverlaysFull.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), BlockModelRotation.X0_Y270, ModelLoader.defaultTextureGetter()));
-            voidOverlaysHalf.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), BlockModelRotation.X0_Y0, ModelLoader.defaultTextureGetter()));
-            voidOverlaysHalf.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), BlockModelRotation.X0_Y90, ModelLoader.defaultTextureGetter()));
-            voidOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), BlockModelRotation.X0_Y180, ModelLoader.defaultTextureGetter()));
-            voidOverlaysHalf.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), BlockModelRotation.X0_Y270, ModelLoader.defaultTextureGetter()));
+            voidOverlaysFull.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter()));
+            voidOverlaysFull.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), BlockModelRotation.X0_Y90, ForgeModelBakery.defaultTextureGetter()));
+            voidOverlaysFull.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), BlockModelRotation.X0_Y180, ForgeModelBakery.defaultTextureGetter()));
+            voidOverlaysFull.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), BlockModelRotation.X0_Y270, ForgeModelBakery.defaultTextureGetter()));
+            voidOverlaysHalf.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter()));
+            voidOverlaysHalf.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), BlockModelRotation.X0_Y90, ForgeModelBakery.defaultTextureGetter()));
+            voidOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), BlockModelRotation.X0_Y180, ForgeModelBakery.defaultTextureGetter()));
+            voidOverlaysHalf.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), BlockModelRotation.X0_Y270, ForgeModelBakery.defaultTextureGetter()));
 
-            shroudOverlaysFull.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), BlockModelRotation.X0_Y0, ModelLoader.defaultTextureGetter()));
-            shroudOverlaysFull.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), BlockModelRotation.X0_Y90, ModelLoader.defaultTextureGetter()));
-            shroudOverlaysFull.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), BlockModelRotation.X0_Y180, ModelLoader.defaultTextureGetter()));
-            shroudOverlaysFull.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), BlockModelRotation.X0_Y270, ModelLoader.defaultTextureGetter()));
-            shroudOverlaysHalf.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), BlockModelRotation.X0_Y0, ModelLoader.defaultTextureGetter()));
-            shroudOverlaysHalf.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), BlockModelRotation.X0_Y90, ModelLoader.defaultTextureGetter()));
-            shroudOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), BlockModelRotation.X0_Y180, ModelLoader.defaultTextureGetter()));
-            shroudOverlaysHalf.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), BlockModelRotation.X0_Y270, ModelLoader.defaultTextureGetter()));
+            shroudOverlaysFull.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter()));
+            shroudOverlaysFull.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), BlockModelRotation.X0_Y90, ForgeModelBakery.defaultTextureGetter()));
+            shroudOverlaysFull.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), BlockModelRotation.X0_Y180, ForgeModelBakery.defaultTextureGetter()));
+            shroudOverlaysFull.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), BlockModelRotation.X0_Y270, ForgeModelBakery.defaultTextureGetter()));
+            shroudOverlaysHalf.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter()));
+            shroudOverlaysHalf.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), BlockModelRotation.X0_Y90, ForgeModelBakery.defaultTextureGetter()));
+            shroudOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), BlockModelRotation.X0_Y180, ForgeModelBakery.defaultTextureGetter()));
+            shroudOverlaysHalf.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), BlockModelRotation.X0_Y270, ForgeModelBakery.defaultTextureGetter()));
 
             if (ModBlocks.OAK_FULL_DRAWERS_1 == null) {
                 StorageDrawers.log.warn("Block objects not set in ModelBakeEvent.  Is your mod environment broken?");
@@ -257,7 +257,7 @@ public final class BasicDrawerModel
             replaceBlock(event, ModBlocks.DARK_OAK_HALF_DRAWERS_4);
             replaceBlock(event, ModBlocks.COMPACTING_DRAWERS_3);
 
-            event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
+            event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter());
         }
 
         public static void replaceBlock(ModelBakeEvent event, BlockDrawers block) {

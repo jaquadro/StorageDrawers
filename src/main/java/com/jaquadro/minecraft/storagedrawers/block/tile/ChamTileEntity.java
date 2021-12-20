@@ -141,7 +141,7 @@ public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
 
     @Override
     public final ClientboundBlockEntityDataPacket getUpdatePacket () {
-        return hasDataPacket() ? new ClientboundBlockEntityDataPacket(getBlockPos(), 0, getUpdateTag()) : null;
+        return hasDataPacket() ? ClientboundBlockEntityDataPacket.create(this) : null;
     }
 
     @Override

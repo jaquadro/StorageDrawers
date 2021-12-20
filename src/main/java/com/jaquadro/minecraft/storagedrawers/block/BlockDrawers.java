@@ -29,7 +29,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -41,7 +40,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,6 +63,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.network.NetworkHooks;
 
 public abstract class BlockDrawers extends HorizontalDirectionalBlock implements INetworked, EntityBlock
 {
@@ -523,7 +522,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 
 
     @Override
-    public boolean removedByPlayer (BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer (BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (player.isCreative()) {
             if (creativeCanBreakBlock(state, world, pos, player))
                 world.setBlock(pos, Blocks.AIR.defaultBlockState(), world.isClientSide ? 11 : 3);
@@ -533,7 +532,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             return false;
         }
 
-        return willHarvest || super.removedByPlayer(state, world, pos, player, false, fluid);
+        return willHarvest || super.onDestroyedByPlayer(state, world, pos, player, false, fluid);
     }
 
 
