@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
 
@@ -71,6 +72,12 @@ public class InventoryUpgrade implements IInventory
 
     @Override
     public boolean isUsableByPlayer (PlayerEntity player) {
+        BlockPos pos = tile.getPos();
+        if (tile.getWorld() == null || tile.getWorld().getTileEntity(pos) != tile)
+            return false;
+        if (player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > 64.0)
+            return false;
+
         return true;
     }
 
