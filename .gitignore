@@ -27,3 +27,8 @@ runtime-1.9/
 build/
 .idea/
 run/
+/bin/
+/.settings/
+/.classpath
+/.project
+*.launch

@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 
 public class UpgradeData extends TileDataShim
 {
-    private final ItemStack[] upgrades;
+    protected final ItemStack[] upgrades;
     private int storageMultiplier;
     private EnumUpgradeStatus statusType;
     private EnumUpgradeRedstone redstoneType;
@@ -51,6 +51,10 @@ public class UpgradeData extends TileDataShim
     public ItemStack getUpgrade (int slot) {
         slot = MathHelper.clamp(slot, 0, upgrades.length - 1);
         return upgrades[slot];
+    }
+
+    public boolean hasEmptySlot() {
+        return getNextUpgradeSlot() != -1;
     }
 
     public boolean addUpgrade (@Nonnull ItemStack upgrade) {
