@@ -28,6 +28,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -167,7 +168,10 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         }
     }
 
-
+    @Override
+    public boolean allowsMovement (BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+        return false;
+    }
 
     @Override
     public BlockState getStateForPlacement (BlockItemUseContext context) {
