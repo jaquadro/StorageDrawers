@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "storagedrawers:blocks/drawers_warped_side"
+    }
+}

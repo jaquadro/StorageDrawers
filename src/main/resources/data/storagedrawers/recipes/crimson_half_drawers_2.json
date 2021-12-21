@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "/X/",
+        "///",
+        "/X/"
+    ],
+    "key": {
+        "/": { "item": "minecraft:crimson_slab" },
+        "X": { "tag": "forge:chests/wooden" }
+    },
+    "result": { "item": "storagedrawers:crimson_half_drawers_2", "count": 2 }
+}
