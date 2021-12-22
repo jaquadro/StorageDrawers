@@ -103,7 +103,9 @@ public final class BasicDrawerModel
                 ModBlocks.BIRCH_FULL_DRAWERS_1,
                 ModBlocks.JUNGLE_FULL_DRAWERS_1,
                 ModBlocks.ACACIA_FULL_DRAWERS_1,
-                ModBlocks.DARK_OAK_FULL_DRAWERS_1);
+                ModBlocks.DARK_OAK_FULL_DRAWERS_1,
+                ModBlocks.CRIMSON_FULL_DRAWERS_1,
+                ModBlocks.WARPED_FULL_DRAWERS_1);
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_2.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_2.json"),
                 ModBlocks.OAK_FULL_DRAWERS_2,
@@ -111,7 +113,9 @@ public final class BasicDrawerModel
                 ModBlocks.BIRCH_FULL_DRAWERS_2,
                 ModBlocks.JUNGLE_FULL_DRAWERS_2,
                 ModBlocks.ACACIA_FULL_DRAWERS_2,
-                ModBlocks.DARK_OAK_FULL_DRAWERS_2);
+                ModBlocks.DARK_OAK_FULL_DRAWERS_2,
+                ModBlocks.CRIMSON_FULL_DRAWERS_2,
+                ModBlocks.WARPED_FULL_DRAWERS_2);
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_4.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_4.json"),
                 ModBlocks.OAK_FULL_DRAWERS_4,
@@ -119,7 +123,9 @@ public final class BasicDrawerModel
                 ModBlocks.BIRCH_FULL_DRAWERS_4,
                 ModBlocks.JUNGLE_FULL_DRAWERS_4,
                 ModBlocks.ACACIA_FULL_DRAWERS_4,
-                ModBlocks.DARK_OAK_FULL_DRAWERS_4);
+                ModBlocks.DARK_OAK_FULL_DRAWERS_4,
+                ModBlocks.CRIMSON_FULL_DRAWERS_4,
+                ModBlocks.WARPED_FULL_DRAWERS_4);
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_1.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_1.json"),
                 ModBlocks.OAK_HALF_DRAWERS_1,
@@ -127,7 +133,9 @@ public final class BasicDrawerModel
                 ModBlocks.BIRCH_HALF_DRAWERS_1,
                 ModBlocks.JUNGLE_HALF_DRAWERS_1,
                 ModBlocks.ACACIA_HALF_DRAWERS_1,
-                ModBlocks.DARK_OAK_HALF_DRAWERS_1);
+                ModBlocks.DARK_OAK_HALF_DRAWERS_1,
+                ModBlocks.CRIMSON_HALF_DRAWERS_1,
+                ModBlocks.WARPED_HALF_DRAWERS_1);
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_2.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_2.json"),
                 ModBlocks.OAK_HALF_DRAWERS_2,
@@ -135,7 +143,9 @@ public final class BasicDrawerModel
                 ModBlocks.BIRCH_HALF_DRAWERS_2,
                 ModBlocks.JUNGLE_HALF_DRAWERS_2,
                 ModBlocks.ACACIA_HALF_DRAWERS_2,
-                ModBlocks.DARK_OAK_HALF_DRAWERS_2);
+                ModBlocks.DARK_OAK_HALF_DRAWERS_2,
+                ModBlocks.CRIMSON_HALF_DRAWERS_2,
+                ModBlocks.WARPED_HALF_DRAWERS_2);
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_4.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_4.json"),
                 ModBlocks.OAK_HALF_DRAWERS_4,
@@ -143,7 +153,9 @@ public final class BasicDrawerModel
                 ModBlocks.BIRCH_HALF_DRAWERS_4,
                 ModBlocks.JUNGLE_HALF_DRAWERS_4,
                 ModBlocks.ACACIA_HALF_DRAWERS_4,
-                ModBlocks.DARK_OAK_HALF_DRAWERS_4);
+                ModBlocks.DARK_OAK_HALF_DRAWERS_4,
+                ModBlocks.CRIMSON_HALF_DRAWERS_4,
+                ModBlocks.WARPED_HALF_DRAWERS_4);
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_icon_area_3.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_count_area_3.json"),
                 ModBlocks.COMPACTING_DRAWERS_3);
@@ -255,6 +267,18 @@ public final class BasicDrawerModel
             replaceBlock(event, ModBlocks.DARK_OAK_HALF_DRAWERS_1);
             replaceBlock(event, ModBlocks.DARK_OAK_HALF_DRAWERS_2);
             replaceBlock(event, ModBlocks.DARK_OAK_HALF_DRAWERS_4);
+            replaceBlock(event, ModBlocks.CRIMSON_FULL_DRAWERS_1);
+            replaceBlock(event, ModBlocks.CRIMSON_FULL_DRAWERS_2);
+            replaceBlock(event, ModBlocks.CRIMSON_FULL_DRAWERS_4);
+            replaceBlock(event, ModBlocks.CRIMSON_HALF_DRAWERS_1);
+            replaceBlock(event, ModBlocks.CRIMSON_HALF_DRAWERS_2);
+            replaceBlock(event, ModBlocks.CRIMSON_HALF_DRAWERS_4);
+            replaceBlock(event, ModBlocks.WARPED_FULL_DRAWERS_1);
+            replaceBlock(event, ModBlocks.WARPED_FULL_DRAWERS_2);
+            replaceBlock(event, ModBlocks.WARPED_FULL_DRAWERS_4);
+            replaceBlock(event, ModBlocks.WARPED_HALF_DRAWERS_1);
+            replaceBlock(event, ModBlocks.WARPED_HALF_DRAWERS_2);
+            replaceBlock(event, ModBlocks.WARPED_HALF_DRAWERS_4);
             replaceBlock(event, ModBlocks.COMPACTING_DRAWERS_3);
 
             event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter());

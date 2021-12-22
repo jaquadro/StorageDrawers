@@ -1,0 +1,9 @@
+{
+    "parent": "storagedrawers:block/full_drawers_orientable",
+    "textures": {
+        "top": "storagedrawers:blocks/drawers_warped_side",
+        "front": "storagedrawers:blocks/drawers_warped_front_1",
+        "side": "storagedrawers:blocks/drawers_warped_side",
+        "trim": "storagedrawers:blocks/drawers_warped_trim"
+    }
+}

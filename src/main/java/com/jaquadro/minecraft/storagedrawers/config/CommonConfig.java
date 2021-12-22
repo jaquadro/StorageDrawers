@@ -56,7 +56,10 @@ public final class CommonConfig
                     "Half-depth drawers hold half those amounts.")
                 .define("baseStackStorage", 4);
             controllerRange = builder
-                .defineInRange("controllerRange", 12, 1, 50);
+                .comment("Controller range defines how far away a drawer can be connected",
+                    "on X, Y, or Z planes.  The default value of 50 gives the controller a very",
+                    "large range, but not beyond the chunk load distance.")
+                .defineInRange("controllerRange", 50, 1, 75);
             enableUI = builder
                 .define("enableUI", true);
             enableSidedInput = builder

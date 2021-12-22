@@ -80,6 +80,18 @@ public class ModBlocks
         DARK_OAK_HALF_DRAWERS_1 = null,
         DARK_OAK_HALF_DRAWERS_2 = null,
         DARK_OAK_HALF_DRAWERS_4 = null,
+        CRIMSON_FULL_DRAWERS_1 = null,
+        CRIMSON_FULL_DRAWERS_2 = null,
+        CRIMSON_FULL_DRAWERS_4 = null,
+        CRIMSON_HALF_DRAWERS_1 = null,
+        CRIMSON_HALF_DRAWERS_2 = null,
+        CRIMSON_HALF_DRAWERS_4 = null,
+        WARPED_FULL_DRAWERS_1 = null,
+        WARPED_FULL_DRAWERS_2 = null,
+        WARPED_FULL_DRAWERS_4 = null,
+        WARPED_HALF_DRAWERS_1 = null,
+        WARPED_HALF_DRAWERS_2 = null,
+        WARPED_HALF_DRAWERS_4 = null,
         COMPACTING_DRAWERS_3 = null;
 
     public static final Block
@@ -88,7 +100,9 @@ public class ModBlocks
         BIRCH_TRIM = null,
         JUNGLE_TRIM = null,
         ACACIA_TRIM = null,
-        DARK_OAK_TRIM = null;
+        DARK_OAK_TRIM = null,
+        CRIMSON_TRIM = null,
+        WARPED_TRIM = null;
 
     public static final BlockController CONTROLLER = null;
     public static final BlockSlave CONTROLLER_SLAVE = null;
@@ -152,6 +166,20 @@ public class ModBlocks
             registerDrawerBlock(event, "dark_oak_half_drawers_2", 2, true);
             registerDrawerBlock(event, "dark_oak_half_drawers_4", 4, true);
             registerTrimBlock(event, "dark_oak_trim");
+            registerDrawerBlock(event, "crimson_full_drawers_1", 1, false);
+            registerDrawerBlock(event, "crimson_full_drawers_2", 2, false);
+            registerDrawerBlock(event, "crimson_full_drawers_4", 4, false);
+            registerDrawerBlock(event, "crimson_half_drawers_1", 1, true);
+            registerDrawerBlock(event, "crimson_half_drawers_2", 2, true);
+            registerDrawerBlock(event, "crimson_half_drawers_4", 4, true);
+            registerTrimBlock(event, "crimson_trim");
+            registerDrawerBlock(event, "warped_full_drawers_1", 1, false);
+            registerDrawerBlock(event, "warped_full_drawers_2", 2, false);
+            registerDrawerBlock(event, "warped_full_drawers_4", 4, false);
+            registerDrawerBlock(event, "warped_half_drawers_1", 1, true);
+            registerDrawerBlock(event, "warped_half_drawers_2", 2, true);
+            registerDrawerBlock(event, "warped_half_drawers_4", 4, true);
+            registerTrimBlock(event, "warped_trim");
             registerCompactingDrawerBlock(event, "compacting_drawers_3");
 
             registerBlock(event, "controller", new BlockController(BlockBehaviour.Properties.of(Material.STONE)
@@ -216,7 +244,11 @@ public class ModBlocks
                 ACACIA_FULL_DRAWERS_1,
                 ACACIA_HALF_DRAWERS_1,
                 DARK_OAK_FULL_DRAWERS_1,
-                DARK_OAK_HALF_DRAWERS_1);
+                DARK_OAK_HALF_DRAWERS_1,
+                CRIMSON_FULL_DRAWERS_1,
+                CRIMSON_HALF_DRAWERS_1,
+                WARPED_FULL_DRAWERS_1,
+                WARPED_HALF_DRAWERS_1);
             
             registerTileEntity(event, "standard_drawers_2", TileEntityDrawersStandard.Slot2::new,
                 OAK_FULL_DRAWERS_2,
@@ -230,7 +262,11 @@ public class ModBlocks
                 ACACIA_FULL_DRAWERS_2,
                 ACACIA_HALF_DRAWERS_2,
                 DARK_OAK_FULL_DRAWERS_2,
-                DARK_OAK_HALF_DRAWERS_2);
+                DARK_OAK_HALF_DRAWERS_2,
+                CRIMSON_FULL_DRAWERS_2,
+                CRIMSON_HALF_DRAWERS_2,
+                WARPED_FULL_DRAWERS_2,
+                WARPED_HALF_DRAWERS_2);
 
             registerTileEntity(event, "standard_drawers_4", TileEntityDrawersStandard.Slot4::new,
                 OAK_FULL_DRAWERS_4,
@@ -244,7 +280,11 @@ public class ModBlocks
                 ACACIA_FULL_DRAWERS_4,
                 ACACIA_HALF_DRAWERS_4,
                 DARK_OAK_FULL_DRAWERS_4,
-                DARK_OAK_HALF_DRAWERS_4);
+                DARK_OAK_HALF_DRAWERS_4,
+                CRIMSON_FULL_DRAWERS_4,
+                CRIMSON_HALF_DRAWERS_4,
+                WARPED_FULL_DRAWERS_4,
+                WARPED_HALF_DRAWERS_4);
 
             registerTileEntity(event, "fractional_drawers_3", TileEntityDrawersComp.Slot3::new, COMPACTING_DRAWERS_3);
             registerTileEntity(event, "controller", TileEntityController::new, CONTROLLER);
@@ -253,7 +293,8 @@ public class ModBlocks
 
         private static Block registerDrawerBlock(RegistryEvent.Register<Block> event, String name, int drawerCount, boolean halfDepth) {
             return registerBlock(event, name, new BlockStandardDrawers(drawerCount, halfDepth, BlockBehaviour.Properties.of(Material.WOOD)
-                .sound(SoundType.WOOD).strength(5f)
+                .strength(3.0F, 5.0F)
+                .sound(SoundType.WOOD)
                 .isSuffocating(Registration::predFalse)
                 .isRedstoneConductor(Registration::predFalse)));
         }

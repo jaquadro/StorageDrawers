@@ -196,7 +196,7 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
             else
                 Lighting.setupForFlatItems();
 
-            matrix.last().normal().load(Matrix3f.createScaleMatrix(1, -1, 1));
+            matrix.last().normal().load(Matrix3f.createScaleMatrix(1, 1, 1));
             renderItem.render(itemStack, ItemTransforms.TransformType.GUI, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
             finish.accept(buffer);
         }

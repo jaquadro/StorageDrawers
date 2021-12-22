@@ -1,5 +1,5 @@
 {
-    "type": "storagedrawers:controller_slace",
+    "type": "storagedrawers:controller_slave",
     "pools": [
         {
             "rolls": 1,
