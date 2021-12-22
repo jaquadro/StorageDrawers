@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -71,6 +72,12 @@ public class InventoryUpgrade implements Container
 
     @Override
     public boolean stillValid (Player player) {
+        BlockPos pos = tile.getBlockPos();
+        if (tile.getLevel() == null || tile.getLevel().getBlockEntity(pos) != tile)
+            return false;
+        if (player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > 64.0)
+            return false;
+
         return true;
     }
 

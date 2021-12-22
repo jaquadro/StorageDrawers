@@ -1,12 +1,12 @@
 {
-    "type": "storagedrawers:controller_slave",
+    "type": "storagedrawers:crimson_trim",
     "pools": [
         {
             "rolls": 1,
             "entries": [
                 {
                     "type": "minecraft:item",
-                    "name": "storagedrawers:controller_slave"
+                    "name": "storagedrawers:crimson_trim"
                 }
             ],
             "conditions": [

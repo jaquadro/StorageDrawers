@@ -150,6 +150,10 @@ public class DrawerItemHandler implements IItemHandler
         if (slotIsVirtual(slot))
             return Integer.MAX_VALUE;
 
+        slot -= 1;
+        int[] order = group.getAccessibleDrawerSlots();
+        slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
+
         IDrawer drawer = group.getDrawer(slot);
         if (!drawer.isEnabled())
             return 0;

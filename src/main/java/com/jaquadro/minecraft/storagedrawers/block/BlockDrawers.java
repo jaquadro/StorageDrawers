@@ -24,12 +24,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -183,7 +183,10 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         }
     }
 
-
+    @Override
+    public boolean isPathfindable (BlockState state, BlockGetter getter, BlockPos pos, PathComputationType type) {
+        return false;
+    }
 
     @Override
     public BlockState getStateForPlacement (BlockPlaceContext context) {
