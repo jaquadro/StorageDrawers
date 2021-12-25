@@ -1,3 +1,4 @@
+/*
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import net.minecraft.util.IStringSerializable;
@@ -74,3 +75,4 @@ public enum EnumUpgradeStatus implements IStringSerializable
         }
     }
 }
+*/

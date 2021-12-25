@@ -17,6 +17,7 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
     private boolean isUnlimitedStorage;
     private boolean isUnlimitedVending;
     private boolean isConversion;
+    private boolean hasFillLevel;
 
     @Override
     public boolean canItemLock (LockAttribute attr) {
@@ -66,6 +67,21 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
     public boolean setIsVoid (boolean state) {
         if (isVoid != state) {
             isVoid = state;
+            onAttributeChanged();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean hasFillLevel () {
+        return hasFillLevel;
+    }
+
+    @Override
+    public boolean setHasFillLevel (boolean state) {
+        if (hasFillLevel != state) {
+            hasFillLevel = state;
             onAttributeChanged();
         }
 

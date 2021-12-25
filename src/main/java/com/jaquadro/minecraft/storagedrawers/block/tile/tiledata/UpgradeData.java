@@ -17,7 +17,7 @@ public class UpgradeData extends TileDataShim
 {
     protected final ItemStack[] upgrades;
     private int storageMultiplier;
-    private EnumUpgradeStatus statusType;
+    // private EnumUpgradeStatus statusType;
     private EnumUpgradeRedstone redstoneType;
 
     // TODO: Do we need to provide these?
@@ -27,6 +27,7 @@ public class UpgradeData extends TileDataShim
     private boolean hasVending;
     private boolean hasConversion;
     private boolean hasIllumination;
+    private boolean hasFillLevel;
 
     private IDrawerAttributesModifiable attrs;
 
@@ -129,9 +130,9 @@ public class UpgradeData extends TileDataShim
         return storageMultiplier;
     }
 
-    public EnumUpgradeStatus getStatusType () {
+    /* public EnumUpgradeStatus getStatusType () {
         return statusType;
-    }
+    } */
 
     public EnumUpgradeRedstone getRedstoneType () {
         return redstoneType;
@@ -171,7 +172,7 @@ public class UpgradeData extends TileDataShim
             return;
 
         syncStorageMultiplier();
-        syncStatusLevel();
+        // syncStatusLevel();
         syncRedstoneLevel();
 
         hasOneStack = false;
@@ -180,6 +181,7 @@ public class UpgradeData extends TileDataShim
         hasVending = false;
         hasConversion = false;
         hasIllumination = false;
+        hasFillLevel = false;
 
         for (ItemStack stack : upgrades) {
             Item item = stack.getItem();
@@ -195,9 +197,12 @@ public class UpgradeData extends TileDataShim
                 hasVending = true;
             else if (item == ModItems.ILLUMINATION_UPGRADE)
                 hasIllumination = true;
+            else if (item == ModItems.FILL_LEVEL_UPGRADE)
+                hasFillLevel = true;
         }
 
         attrs.setIsVoid(hasVoid);
+        attrs.setHasFillLevel(hasFillLevel);
         attrs.setIsDictConvertible(hasConversion);
         attrs.setIsUnlimitedStorage(hasUnlimited);
         attrs.setIsUnlimitedVending(hasVending);
@@ -217,6 +222,7 @@ public class UpgradeData extends TileDataShim
             storageMultiplier = CommonConfig.UPGRADES.getLevelMult(0);
     }
 
+    /*
     private void syncStatusLevel () {
         statusType = null;
 
@@ -226,7 +232,7 @@ public class UpgradeData extends TileDataShim
                 break;
             }
         }
-    }
+    }*/
 
     private void syncRedstoneLevel () {
         redstoneType = null;

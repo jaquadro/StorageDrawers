@@ -50,6 +50,10 @@ public interface IDrawerAttributes
         return false;
     }
 
+    default boolean hasFillLevel() {
+        return false;
+    }
+
     default boolean isUnlimitedStorage () {
         return false;
     }

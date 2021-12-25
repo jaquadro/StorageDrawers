@@ -1,16 +1,22 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.Drawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.settings.GraphicsFanciness;
@@ -18,9 +24,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix3f;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
@@ -66,10 +74,12 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         Minecraft mc = Minecraft.getInstance();
         GraphicsFanciness cache = mc.gameSettings.graphicFanciness;
         mc.gameSettings.graphicFanciness = GraphicsFanciness.FANCY;
-        //renderUpgrades(renderer, tile, state);
 
         if (!tile.getDrawerAttributes().isConcealed())
             renderFastItemSet(tile, state, matrix, buffer, combinedLight, combinedOverlay, side, partialTickTime);
+
+        if (tile.getDrawerAttributes().hasFillLevel())
+            renderIndicator((BlockDrawers)state.getBlock(), tile, matrix, buffer, state.get(BlockDrawers.HORIZONTAL_FACING), combinedLight, combinedOverlay);
 
         mc.gameSettings.graphicFanciness = cache;
 
@@ -177,9 +187,8 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
             matrix.scale(1, -1, 1);
             matrix.scale(16, 16, 16);
 
-            //IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
             IBakedModel itemModel = renderItem.getItemModelWithOverrides(itemStack, null, null);
-            boolean render3D = itemModel.isGui3d(); // itemModel.func_230044_c_();
+            boolean render3D = itemModel.isGui3d();
             finish.accept(buffer);
 
             if (render3D)
@@ -231,111 +240,94 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         return sideRotationY2D[side.ordinal()] * 90;
     }
 
-    /*private void renderUpgrades (ChamRender renderer, TileEntityDrawers tile, IBlockState state) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+    public static final ResourceLocation TEXTURE_IND_1 = new ResourceLocation(StorageDrawers.MOD_ID, "blocks/indicator/indicator_1_on");
+    public static final ResourceLocation TEXTURE_IND_2 = new ResourceLocation(StorageDrawers.MOD_ID, "blocks/indicator/indicator_2_on");
+    public static final ResourceLocation TEXTURE_IND_4 = new ResourceLocation(StorageDrawers.MOD_ID, "blocks/indicator/indicator_4_on");
+    public static final ResourceLocation TEXTURE_IND_COMP = new ResourceLocation(StorageDrawers.MOD_ID, "blocks/indicator/indicator_comp_on");
 
-        GlStateManager.enableAlpha();
+    private void renderIndicator (BlockDrawers block, TileEntityDrawers tile, MatrixStack matrixStack, IRenderTypeBuffer buffer, Direction side, int combinedLight, int combinedOverlay) {
+        int count = (tile instanceof TileEntityDrawersComp) ? 1 : block.getDrawerCount();
 
-        renderIndicator(renderer, tile, state, tile.getDirection(), tile.upgrades().getStatusType());
-        renderTape(renderer, tile, state, tile.getDirection(), tile.isSealed());
-    }*/
+        ResourceLocation resource = TEXTURE_IND_1;
+        if (tile instanceof TileEntityDrawersComp)
+            resource = TEXTURE_IND_COMP;
+        else if (count == 2)
+            resource = TEXTURE_IND_2;
+        else if (count == 4)
+            resource = TEXTURE_IND_4;
 
-    /*private void renderIndicator (ChamRender renderer, TileEntityDrawers tile, IBlockState blockState, int side, EnumUpgradeStatus level) {
-        if (level == null || side < 2 || side > 5)
-            return;
+        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(resource);
+        float u1 = sprite.getMinU();
+        float u2 = sprite.getMaxU();
+        float v1 = sprite.getMinV();
+        float v2 = sprite.getMaxV();
+        float pxW = sprite.getWidth();
+        float pxH = sprite.getHeight();
 
-        BlockDrawers block = (BlockDrawers)blockState.getBlock();
-        StatusModelData statusInfo = block.getStatusInfo(blockState);
-        if (statusInfo == null)
-            return;
+        float unit = 0.0625f;
+        float divU = unit * (u2 - u1);
+        float divV = unit * (v2 - v1);
 
-        double depth = block.isHalfDepth(blockState) ? .5 : 1;
-        int count = (tile instanceof TileEntityDrawersComp) ? 1 : block.getDrawerCount(blockState);
+        matrixStack.push();
 
-        double unit = 0.0625;
-        double frontDepth = statusInfo.getFrontDepth() * unit;
+        alignRendering(matrixStack, side);
 
         for (int i = 0; i < count; i++) {
-            IDrawer drawer = tile.getDrawer(i);
-            if (drawer == null || tile.getDrawerAttributes().isConcealed())
+            IDrawer drawer = tile.getGroup().getDrawer(i);
+            if (drawer == Drawers.DISABLED || tile.getDrawerAttributes().isConcealed())
                 continue;
 
-            TextureAtlasSprite iconOff = Chameleon.instance.iconRegistry.getIcon(statusInfo.getSlot(i).getOffResource(level));
-            TextureAtlasSprite iconOn = Chameleon.instance.iconRegistry.getIcon(statusInfo.getSlot(i).getOnResource(level));
+            AxisAlignedBB bb = block.indGeometry[i];
+            AxisAlignedBB bbbase = block.indBaseGeometry[i];
+            float x1 = unit * (float)bb.minX;
+            float x2 = unit * (float)bb.maxX;
+            float xb2 = unit * (float)bbbase.maxX;
+            float y1 = unit * (float)bb.minY;
+            float y2 = unit * (float)bb.maxY;
+            float yb2 = unit * (float)bbbase.maxY;
+            float z = 1 - (unit * (float)bb.minZ);
 
-            Area2D statusArea = statusInfo.getSlot(i).getStatusArea();
-            Area2D activeArea = statusInfo.getSlot(i).getStatusActiveArea();
+            float su1 = u1 + (float)bb.minX * divU;
+            float su2 = u1 + (float)bb.maxX * divU;
+            float sv1 = v2 - (float)bb.minY * divV;
+            float sv2 = v2 - (float)bb.maxY * divV;
 
-            GlStateManager.enablePolygonOffset();
-            GlStateManager.doPolygonOffset(-1, -1);
+            int stepX = (int)((x2 - xb2) * pxW);
+            int stepY = (int)((y2 - yb2) * pxH);
 
-            renderer.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
-                (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth);
-            renderer.state.setRotateTransform(ChamRender.ZPOS, side);
-            renderer.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconOff, 1, 1, 1);
-            renderer.state.clearRotateTransform();
+            float xCur = (stepX == 0) ? x2 : getIndEnd(tile, i, x1, x2 - xb2, stepX);
+            float xFrac = (x2 == xb2) ? 1 : (xCur - x1) / (x2 - xb2);
+            float uCur = su1 + xFrac * (su2 - su1);
 
-            GlStateManager.doPolygonOffset(-1, -10);
+            float yCur = (stepY == 0) ? y2 : getIndEnd(tile, i, y1, y2 - yb2, stepY);
+            float yFrac = (y2 == yb2) ? 1 : (yCur - y1) / (y2 - yb2);
+            float vCur = sv1 + yFrac * (sv2 - sv1);
 
-            if (level == EnumUpgradeStatus.LEVEL1 && !drawer.isEmpty() && drawer.getRemainingCapacity() == 0) {
-                renderer.setRenderBounds(statusArea.getX() * unit, statusArea.getY() * unit, 0,
-                    (statusArea.getX() + statusArea.getWidth()) * unit, (statusArea.getY() + statusArea.getHeight()) * unit, depth - frontDepth);
-                renderer.state.setRotateTransform(ChamRender.ZPOS, side);
-                renderer.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
-                renderer.state.clearRotateTransform();
+            if (xCur > x1 && yCur > y1) {
+                Matrix4f matrix = matrixStack.getLast().getMatrix();
+                Matrix3f normal = matrixStack.getLast().getNormal();
+                IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+                addQuad(matrix, normal, builder, combinedLight, combinedOverlay, x1, xCur, y1, yCur, z, uCur, su1, sv1, vCur);
             }
-            else if (level == EnumUpgradeStatus.LEVEL2) {
-                int stepX = statusInfo.getSlot(i).getActiveStepsX();
-                int stepY = statusInfo.getSlot(i).getActiveStepsY();
-
-                double indXStart = activeArea.getX();
-                double indXEnd = activeArea.getX() + activeArea.getWidth();
-                double indXCur = (stepX == 0) ? indXEnd : getIndEnd(block, tile, i, indXStart, activeArea.getWidth(), stepX);
-
-                double indYStart = activeArea.getY();
-                double indYEnd = activeArea.getY() + activeArea.getHeight();
-                double indYCur = (stepY == 0) ? indYEnd : getIndEnd(block, tile, i, indYStart, activeArea.getHeight(), stepY);
-
-                if (indXCur > indXStart && indYCur > indYStart) {
-                    indXCur = Math.min(indXCur, indXEnd);
-                    indYCur = Math.min(indYCur, indYEnd);
-
-                    renderer.setRenderBounds(indXStart * unit, indYStart * unit, 0,
-                        indXCur * unit, indYCur * unit, depth - frontDepth);
-                    renderer.state.setRotateTransform(ChamRender.ZPOS, side);
-                    renderer.renderFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconOn, 1, 1, 1);
-                    renderer.state.clearRotateTransform();
-                }
-            }
-
-            GlStateManager.disablePolygonOffset();
         }
-    }*/
 
-    /*private void renderTape (ChamRender renderer, TileEntityDrawers tile, IBlockState blockState, int side, boolean taped) {
-        if (!taped || side < 2 || side > 5)
-            return;
+        matrixStack.pop();
+    }
 
-        BlockDrawers block = (BlockDrawers)blockState.getBlock();
+    public static void addQuad(Matrix4f matrix, Matrix3f normal, IVertexBuilder buffer, int combinedLight, int combinedOverlay, float x1, float x2, float y1, float y2, float z, float u1, float u2, float v1, float v2) {
+        addVertex(matrix, normal, buffer, combinedLight, combinedOverlay, x2, y1, z, u1, v1);
+        addVertex(matrix, normal, buffer, combinedLight, combinedOverlay, x2, y2, z, u1, v2);
+        addVertex(matrix, normal, buffer, combinedLight, combinedOverlay, x1, y2, z, u2, v2);
+        addVertex(matrix, normal, buffer, combinedLight, combinedOverlay, x1, y1, z, u2, v1);
+    }
 
-        double depth = block.isHalfDepth(blockState) ? .5 : 1;
-        TextureAtlasSprite iconTape = Chameleon.instance.iconRegistry.getIcon(DrawerSealedModel.iconTapeCover);
+    private static void addVertex(Matrix4f matrix, Matrix3f normal, IVertexBuilder buffer, int combinedLight, int combinedOverlay, float x, float y, float z, float u, float v) {
+        buffer.pos(matrix, x, y, z).color(1f, 1f, 1f, 1f).tex(u, v).overlay(combinedOverlay).lightmap(combinedLight).normal(normal, 0, 1, 0).endVertex();
+    }
 
-        GlStateManager.enablePolygonOffset();
-        GlStateManager.doPolygonOffset(-1, -1);
-
-        renderer.setRenderBounds(0, 0, 0, 1, 1, depth);
-        renderer.state.setRotateTransform(ChamRender.ZPOS, side);
-        renderer.renderPartialFace(ChamRender.FACE_ZPOS, null, blockState, BlockPos.ORIGIN, iconTape, 0, 0, 1, 1, 1, 1, 1);
-        renderer.state.clearRotateTransform();
-
-        GlStateManager.disablePolygonOffset();
-    }*/
-
-
-    /*private double getIndEnd (BlockDrawers block, TileEntityDrawers tile, int slot, double x, double w, int step) {
-        IDrawer drawer = tile.getDrawer(slot);
-        if (drawer == null)
+    private float getIndEnd (TileEntityDrawers tile, int slot, float x, float w, int step) {
+        IDrawer drawer = tile.getGroup().getDrawer(slot);
+        if (drawer == Drawers.DISABLED)
             return x;
 
         int cap = drawer.getMaxCapacity();
@@ -346,5 +338,5 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         float fillAmt = (float)(step * count / cap) / step;
 
         return x + (w * fillAmt);
-    }*/
+    }
 }

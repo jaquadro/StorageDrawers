@@ -18,7 +18,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CommonProxy
 {
-    public final ResourceLocation iconConcealmentOverlayResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/overlay/shading_concealment");
+    /*public final ResourceLocation iconConcealmentOverlayResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/overlay/shading_concealment");
     public final ResourceLocation iconIndicatorCompOnResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_comp_on");
     public final ResourceLocation iconIndicatorCompOffResource = new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_comp_off");
 
@@ -35,7 +35,7 @@ public class CommonProxy
         new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_2_off"),
         null,
         new ResourceLocation(StorageDrawers.MOD_ID + ":blocks/indicator/indicator_4_off"),
-    };
+    };*/
 
     public CommonProxy () {
         MinecraftForge.EVENT_BUS.addListener(this::playerLeftClick);

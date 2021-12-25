@@ -38,6 +38,7 @@ public class CapabilityDrawerAttributes
             tag.putBoolean("quant", instance.isShowingQuantity());
             tag.putBoolean("unlimited", instance.isUnlimitedStorage());
             tag.putBoolean("vending", instance.isUnlimitedVending());
+            tag.putBoolean("fillLevel", instance.hasFillLevel());
 
             return tag;
         }
@@ -63,6 +64,7 @@ public class CapabilityDrawerAttributes
             modifiable.setIsShowingQuantity(tag.getBoolean("quant"));
             modifiable.setIsUnlimitedStorage(tag.getBoolean("unlimited"));
             modifiable.setIsUnlimitedVending(tag.getBoolean("vending"));
+            modifiable.setHasFillLevel(tag.getBoolean("fillLevel"));
         }
     }
 }

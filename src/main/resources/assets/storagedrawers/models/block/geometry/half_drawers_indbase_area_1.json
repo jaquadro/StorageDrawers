@@ -1,0 +1,12 @@
+{
+    "__comment": "Defines the collapsed 2D area for rendering fill level",
+    "parent": "block/block",
+    "elements": [ {
+        "from": [ 6, 1, 8.98 ],
+        "to": [ 6, 2, 16],
+        "faces": {
+            "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#particle" }
+        },
+        "__comment": "slot 1"
+    } ]
+}

@@ -1,0 +1,12 @@
+{
+    "__comment": "Defines the 2D area for rendering fill level",
+    "parent": "block/block",
+    "elements": [ {
+        "from": [ 6, 1, 0.98 ],
+        "to": [ 10, 2, 16],
+        "faces": {
+            "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#particle" }
+        },
+        "__comment": "slot 1"
+    } ]
+}

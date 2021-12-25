@@ -74,6 +74,8 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
     public final AxisAlignedBB[] slotGeometry;
     public final AxisAlignedBB[] countGeometry;
     public final AxisAlignedBB[] labelGeometry;
+    public final AxisAlignedBB[] indGeometry;
+    public final AxisAlignedBB[] indBaseGeometry;
 
     //@SideOnly(Side.CLIENT)
     //private StatusModelData[] statusInfo;
@@ -99,11 +101,15 @@ public abstract class BlockDrawers extends HorizontalBlock implements INetworked
         slotGeometry = new AxisAlignedBB[drawerCount];
         countGeometry = new AxisAlignedBB[drawerCount];
         labelGeometry = new AxisAlignedBB[drawerCount];
+        indGeometry = new AxisAlignedBB[drawerCount];
+        indBaseGeometry = new AxisAlignedBB[drawerCount];
 
         for (int i = 0; i < drawerCount; i++) {
             slotGeometry[i] = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
             countGeometry[i] = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
             labelGeometry[i] = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+            indGeometry[i] = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+            indBaseGeometry[i] = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
         }
     }
 
