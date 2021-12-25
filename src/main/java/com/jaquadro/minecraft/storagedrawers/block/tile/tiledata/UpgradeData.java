@@ -17,7 +17,6 @@ public class UpgradeData extends TileDataShim
 {
     protected final ItemStack[] upgrades;
     private int storageMultiplier;
-    // private EnumUpgradeStatus statusType;
     private EnumUpgradeRedstone redstoneType;
 
     // TODO: Do we need to provide these?
@@ -130,10 +129,6 @@ public class UpgradeData extends TileDataShim
         return storageMultiplier;
     }
 
-    /* public EnumUpgradeStatus getStatusType () {
-        return statusType;
-    } */
-
     public EnumUpgradeRedstone getRedstoneType () {
         return redstoneType;
     }
@@ -172,7 +167,6 @@ public class UpgradeData extends TileDataShim
             return;
 
         syncStorageMultiplier();
-        // syncStatusLevel();
         syncRedstoneLevel();
 
         hasOneStack = false;
@@ -221,18 +215,6 @@ public class UpgradeData extends TileDataShim
         if (storageMultiplier == 0)
             storageMultiplier = CommonConfig.UPGRADES.getLevelMult(0);
     }
-
-    /*
-    private void syncStatusLevel () {
-        statusType = null;
-
-        for (ItemStack stack : upgrades) {
-            if (stack.getItem() instanceof ItemUpgradeStatus) {
-                statusType = ((ItemUpgradeStatus) stack.getItem()).level;
-                break;
-            }
-        }
-    }*/
 
     private void syncRedstoneLevel () {
         redstoneType = null;
