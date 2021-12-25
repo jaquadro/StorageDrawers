@@ -138,21 +138,35 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         private ItemStackMatcher[] matchers;
         private int pooledCount;
 
+        private ItemStack cacheKey;
+        private ItemStack[] cachedProtoStack;
+        private int[] cachedConvRate;
+        private ItemStackMatcher[] cachedMatchers;
+
         IDrawerAttributes attrs;
 
         public FractionalStorage (FractionalDrawerGroup group, int slotCount) {
+            cacheKey = ItemStack.EMPTY;
+
             this.group = group;
             this.slotCount = slotCount;
 
             protoStack = new ItemStack[slotCount];
             matchers = new ItemStackMatcher[slotCount];
 
+            cachedProtoStack = new ItemStack[slotCount];
+            cachedMatchers = new ItemStackMatcher[slotCount];
+
             for (int i = 0; i < slotCount; i++) {
                 protoStack[i] = ItemStack.EMPTY;
                 matchers[i] = ItemStackMatcher.EMPTY;
+
+                cachedProtoStack[i] = ItemStack.EMPTY;
+                cachedMatchers[i] = ItemStackMatcher.EMPTY;
             }
 
             convRate = new int[slotCount];
+            cachedConvRate = new int[slotCount];
 
             attrs = EmptyDrawerAttributes.EMPTY;
         }
@@ -411,6 +425,14 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             group.onItemChanged();
         }
 
+        private void populateSlotsFromCache() {
+            for (int slot = 0; slot < slotCount; slot++) {
+                protoStack[slot] = cachedProtoStack[slot];
+                convRate[slot] = cachedConvRate[slot];
+                matchers[slot] = cachedMatchers[slot];
+            }
+        }
+
         private void populateSlots (@Nonnull ItemStack itemPrototype) {
             World world = group.getWorld();
             if (world == null) {
@@ -423,6 +445,15 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
                 return;
             }
+
+            // If a drawer cleared and is re-populated with the same initial item, restore that from memory
+            // A drawer emptying and filling with the same item is a common expensive degenerate case
+            if (ItemStackMatcher.areItemsEqual(itemPrototype, cacheKey)) {
+                populateSlotsFromCache();
+                return;
+            }
+
+            cacheKey = itemPrototype;
 
             CompactingHelper compacting = new CompactingHelper(world);
             Stack<CompactingHelper.Result> resultStack = new Stack<>();
@@ -472,6 +503,11 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             protoStack[slot] = itemPrototype;
             convRate[slot] = rate;
             matchers[slot] = new ItemStackMatcher(protoStack[slot]);
+
+            cachedProtoStack[slot] = itemPrototype;
+            cachedConvRate[slot] = rate;
+            cachedMatchers[slot] = matchers[slot];
+
             //matchers[slot] = attrs.isDictConvertible()
             //    ? new ItemStackOreMatcher(protoStack[slot])
             //    : new ItemStackMatcher(protoStack[slot]);
@@ -557,6 +593,18 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 
             // TODO: We should only need to normalize if we had blank items with a conv rate, but this fixes blocks that were saved broken
             normalizeGroup();
+
+            // Check if cache needs to be invalidated
+            if (itemList.size() > 0) {
+                boolean cacheMatch = true;
+                for (int i = 0; i < slotCount; i++) {
+                    cacheMatch &= ItemStackMatcher.areItemsEqual(protoStack[i], cachedProtoStack[i]);
+                    cacheMatch &= convRate[i] == cachedConvRate[i];
+                }
+
+                if (!cacheMatch)
+                    cacheKey = ItemStack.EMPTY;
+            }
         }
 
         public void syncAttributes () {
