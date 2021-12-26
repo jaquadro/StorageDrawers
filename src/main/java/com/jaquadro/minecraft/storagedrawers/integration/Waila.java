@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.integration;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import mcp.mobius.waila.api.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -16,6 +17,9 @@ public class Waila implements IWailaPlugin
 {
     @Override
     public void register (IRegistrar registrar) {
+        if (!ClientConfig.INTEGRATION.enableWaila.get())
+            return;
+
         registerProvider(registrar);
     }
 

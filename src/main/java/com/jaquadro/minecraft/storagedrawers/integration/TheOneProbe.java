@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import mcjty.theoneprobe.api.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,7 +16,9 @@ import java.util.function.Function;
 public class TheOneProbe implements Function<ITheOneProbe, Void> {
     @Override
     public Void apply(ITheOneProbe probe) {
-        probe.registerProvider(new DrawerProbeProvider());
+        if (ClientConfig.INTEGRATION.enableTheOneProbe.get())
+            probe.registerProvider(new DrawerProbeProvider());
+
         return null;
     }
 
