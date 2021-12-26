@@ -1,0 +1,37 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "storagedrawers:birch_full_drawers_1",
+            "storagedrawers:birch_full_drawers_2",
+            "storagedrawers:birch_full_drawers_4",
+            "storagedrawers:birch_half_drawers_1",
+            "storagedrawers:birch_half_drawers_2",
+            "storagedrawers:birch_half_drawers_4"
+        ]
+    },
+    "criteria": {
+        "has_chest": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "tag": "forge:chests/wooden"
+                    }
+                ]
+            }
+        },
+        "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "storagedrawers:birch_full_drawers_1"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_chest",
+            "has_the_recipe"
+        ]
+    ]
+}
