@@ -63,13 +63,16 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         if (!(state.getBlock() instanceof BlockDrawers))
             return;
 
+        Direction side = state.get(BlockDrawers.HORIZONTAL_FACING);
+        if (playerBehindBlock(tile.getPos(), side))
+            return;
+
+        renderItem = Minecraft.getInstance().getItemRenderer();
+
         if (tile.upgrades().hasIlluminationUpgrade()) {
             int blockLight = Math.max(combinedLight % 65536, 208);
             combinedLight = (combinedLight & 0xFFFF0000) | blockLight;
         }
-
-        renderItem = Minecraft.getInstance().getItemRenderer();
-        Direction side = state.get(BlockDrawers.HORIZONTAL_FACING);
 
         Minecraft mc = Minecraft.getInstance();
         GraphicsFanciness cache = mc.gameSettings.graphicFanciness;
@@ -86,6 +89,26 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         matrix.pop();
         RenderHelper.setupLevelDiffuseLighting(matrix.getLast().getMatrix());
         matrix.push();
+    }
+
+    private boolean playerBehindBlock(BlockPos blockPos, Direction facing) {
+        PlayerEntity player = Minecraft.getInstance().player;
+        if (player == null)
+            return false;
+
+        BlockPos playerPos = player.getPosition();
+        switch (facing) {
+            case NORTH:
+                return playerPos.getZ() > blockPos.getZ();
+            case SOUTH:
+                return playerPos.getZ() < blockPos.getZ();
+            case WEST:
+                return playerPos.getX() > blockPos.getX();
+            case EAST:
+                return playerPos.getX() < blockPos.getX();
+            default:
+                return false;
+        }
     }
 
     private void renderFastItemSet (TileEntityDrawers tile, BlockState state, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, Direction side, float partialTickTime) {
