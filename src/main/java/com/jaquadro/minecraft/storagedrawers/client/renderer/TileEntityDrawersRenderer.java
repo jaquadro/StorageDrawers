@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
+import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -67,6 +68,14 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         if (playerBehindBlock(tile.getPos(), side))
             return;
 
+        PlayerEntity player = Minecraft.getInstance().player;
+        BlockPos blockPos = tile.getPos().add(.5, .5, .5);
+        float distance = (float)Math.sqrt(blockPos.distanceSq(player.getPosition()));
+
+        double renderDistance = ClientConfig.RENDER.labelRenderDistance.get();
+        if (renderDistance > 0 && distance > renderDistance)
+            return;
+
         renderItem = Minecraft.getInstance().getItemRenderer();
 
         if (tile.upgrades().hasIlluminationUpgrade()) {
@@ -79,7 +88,7 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         mc.gameSettings.graphicFanciness = GraphicsFanciness.FANCY;
 
         if (!tile.getDrawerAttributes().isConcealed())
-            renderFastItemSet(tile, state, matrix, buffer, combinedLight, combinedOverlay, side, partialTickTime);
+            renderFastItemSet(tile, state, matrix, buffer, combinedLight, combinedOverlay, side, partialTickTime, distance);
 
         if (tile.getDrawerAttributes().hasFillLevel())
             renderIndicator((BlockDrawers)state.getBlock(), tile, matrix, buffer, state.get(BlockDrawers.HORIZONTAL_FACING), combinedLight, combinedOverlay);
@@ -111,7 +120,7 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         }
     }
 
-    private void renderFastItemSet (TileEntityDrawers tile, BlockState state, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, Direction side, float partialTickTime) {
+    private void renderFastItemSet (TileEntityDrawers tile, BlockState state, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, Direction side, float partialTickTime, float distance) {
         int drawerCount = tile.getGroup().getDrawerCount();
 
         for (int i = 0; i < drawerCount; i++) {
@@ -136,15 +145,13 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         }
 
         if (tile.getDrawerAttributes().isShowingQuantity()) {
-            PlayerEntity player = Minecraft.getInstance().player;
-            BlockPos blockPos = tile.getPos().add(.5, .5, .5);
-            double distance = Math.sqrt(blockPos.distanceSq(player.getPosition()));
-
             float alpha = 1;
-            if (distance > 4)
-                alpha = Math.max(1f - (float) ((distance - 4) / 6), 0.05f);
+            double fadeDistance = ClientConfig.RENDER.quantityFadeDistance.get();
+            if (fadeDistance == 0 || distance > fadeDistance)
+                alpha = Math.max(1f - ((distance - 4) / 6), 0.05f);
 
-            if (distance < 10) {
+            double renderDistance = ClientConfig.RENDER.quantityRenderDistance.get();
+            if (renderDistance == 0 || distance < renderDistance) {
                 IRenderTypeBuffer.Impl txtBuffer = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
                 for (int i = 0; i < drawerCount; i++) {
                     String format = CountFormatter.format(this.renderDispatcher.getFontRenderer(), tile.getGroup().getDrawer(i));
