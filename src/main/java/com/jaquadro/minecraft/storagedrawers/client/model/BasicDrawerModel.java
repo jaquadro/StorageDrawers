@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
@@ -12,7 +13,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
-//import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.core.Direction;
@@ -20,13 +20,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.io.IOUtils;
@@ -39,6 +37,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Function;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModel;
@@ -56,6 +55,13 @@ public final class BasicDrawerModel
     private static final Map<Direction, BakedModel> voidOverlaysHalf = new HashMap<>();
     private static final Map<Direction, BakedModel> shroudOverlaysFull = new HashMap<>();
     private static final Map<Direction, BakedModel> shroudOverlaysHalf = new HashMap<>();
+    private static final Map<Direction, BakedModel> indicator1Full = new HashMap<>();
+    private static final Map<Direction, BakedModel> indicator1Half = new HashMap<>();
+    private static final Map<Direction, BakedModel> indicator2Full = new HashMap<>();
+    private static final Map<Direction, BakedModel> indicator2Half = new HashMap<>();
+    private static final Map<Direction, BakedModel> indicator4Full = new HashMap<>();
+    private static final Map<Direction, BakedModel> indicator4Half = new HashMap<>();
+    private static final Map<Direction, BakedModel> indicatorComp = new HashMap<>();
 
     private static boolean geometryDataLoaded = false;
 
@@ -75,6 +81,10 @@ public final class BasicDrawerModel
             loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_lock.json"));
             loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_void.json"));
             loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_shroud.json"));
+            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/compdrawers_indicator.json"));
+            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_indicator_1.json"));
+            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_indicator_2.json"));
+            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_indicator_4.json"));
 
             loadGeometryData();
         }
@@ -98,6 +108,8 @@ public final class BasicDrawerModel
 
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_1.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_1.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_ind_area_1.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_indbase_area_1.json"),
                 ModBlocks.OAK_FULL_DRAWERS_1,
                 ModBlocks.SPRUCE_FULL_DRAWERS_1,
                 ModBlocks.BIRCH_FULL_DRAWERS_1,
@@ -108,6 +120,8 @@ public final class BasicDrawerModel
                 ModBlocks.WARPED_FULL_DRAWERS_1);
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_2.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_2.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_ind_area_2.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_indbase_area_2.json"),
                 ModBlocks.OAK_FULL_DRAWERS_2,
                 ModBlocks.SPRUCE_FULL_DRAWERS_2,
                 ModBlocks.BIRCH_FULL_DRAWERS_2,
@@ -118,6 +132,8 @@ public final class BasicDrawerModel
                 ModBlocks.WARPED_FULL_DRAWERS_2);
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_4.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_4.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_ind_area_4.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_indbase_area_4.json"),
                 ModBlocks.OAK_FULL_DRAWERS_4,
                 ModBlocks.SPRUCE_FULL_DRAWERS_4,
                 ModBlocks.BIRCH_FULL_DRAWERS_4,
@@ -128,6 +144,8 @@ public final class BasicDrawerModel
                 ModBlocks.WARPED_FULL_DRAWERS_4);
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_1.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_1.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_ind_area_1.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_indbase_area_1.json"),
                 ModBlocks.OAK_HALF_DRAWERS_1,
                 ModBlocks.SPRUCE_HALF_DRAWERS_1,
                 ModBlocks.BIRCH_HALF_DRAWERS_1,
@@ -138,6 +156,8 @@ public final class BasicDrawerModel
                 ModBlocks.WARPED_HALF_DRAWERS_1);
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_2.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_2.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_ind_area_2.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_indbase_area_2.json"),
                 ModBlocks.OAK_HALF_DRAWERS_2,
                 ModBlocks.SPRUCE_HALF_DRAWERS_2,
                 ModBlocks.BIRCH_HALF_DRAWERS_2,
@@ -148,6 +168,8 @@ public final class BasicDrawerModel
                 ModBlocks.WARPED_HALF_DRAWERS_2);
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_4.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_4.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_ind_area_4.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_indbase_area_4.json"),
                 ModBlocks.OAK_HALF_DRAWERS_4,
                 ModBlocks.SPRUCE_HALF_DRAWERS_4,
                 ModBlocks.BIRCH_HALF_DRAWERS_4,
@@ -158,6 +180,8 @@ public final class BasicDrawerModel
                 ModBlocks.WARPED_HALF_DRAWERS_4);
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_icon_area_3.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_count_area_3.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_ind_area_3.json"),
+                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_indbase_area_3.json"),
                 ModBlocks.COMPACTING_DRAWERS_3);
         }
 
@@ -176,9 +200,15 @@ public final class BasicDrawerModel
             }
         }
 
-        private static void populateGeometryData(ResourceLocation locationIcon, ResourceLocation locationCount, BlockDrawers... blocks) {
+        private static void populateGeometryData(ResourceLocation locationIcon,
+                                                 ResourceLocation locationCount,
+                                                 ResourceLocation locationInd,
+                                                 ResourceLocation locationIndBase,
+                                                 BlockDrawers... blocks) {
             BlockModel slotInfo = getBlockModel(locationIcon);
             BlockModel countInfo = getBlockModel(locationCount);
+            BlockModel indInfo = getBlockModel(locationInd);
+            BlockModel indBaseInfo = getBlockModel(locationIndBase);
             for (BlockDrawers block : blocks) {
                 if (block == null)
                     continue;
@@ -193,42 +223,44 @@ public final class BasicDrawerModel
                     Vector3f to = countInfo.getElements().get(i).to;
                     block.countGeometry[i] = new AABB(from.x(), from.y(), from.z(), to.x(), to.y(), to.z());
                 }
+                for (int i = 0; i < block.getDrawerCount(); i++) {
+                    Vector3f from = indInfo.getElements().get(i).from;
+                    Vector3f to = indInfo.getElements().get(i).to;
+                    block.indGeometry[i] = new AABB(from.x(), from.y(), from.z(), to.x(), to.y(), to.z());
+                }
+                for (int i = 0; i < block.getDrawerCount(); i++) {
+                    Vector3f from = indBaseInfo.getElements().get(i).from;
+                    Vector3f to = indBaseInfo.getElements().get(i).to;
+                    block.indBaseGeometry[i] = new AABB(from.x(), from.y(), from.z(), to.x(), to.y(), to.z());
+                }
             }
         }
 
         @SubscribeEvent
         public static void registerModels (ModelBakeEvent event) {
-            // IUnbakedModel unbaked = event.getModelLoader().getUnbakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"));
-            lockOverlaysFull.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter()));
-            lockOverlaysFull.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y90, ForgeModelBakery.defaultTextureGetter()));
-            lockOverlaysFull.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y180, ForgeModelBakery.defaultTextureGetter()));
-            lockOverlaysFull.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y270, ForgeModelBakery.defaultTextureGetter()));
-            lockOverlaysHalf.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter()));
-            lockOverlaysHalf.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), BlockModelRotation.X0_Y90, ForgeModelBakery.defaultTextureGetter()));
-            lockOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), BlockModelRotation.X0_Y180, ForgeModelBakery.defaultTextureGetter()));
-            lockOverlaysHalf.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), BlockModelRotation.X0_Y270, ForgeModelBakery.defaultTextureGetter()));
-
-            voidOverlaysFull.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter()));
-            voidOverlaysFull.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), BlockModelRotation.X0_Y90, ForgeModelBakery.defaultTextureGetter()));
-            voidOverlaysFull.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), BlockModelRotation.X0_Y180, ForgeModelBakery.defaultTextureGetter()));
-            voidOverlaysFull.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), BlockModelRotation.X0_Y270, ForgeModelBakery.defaultTextureGetter()));
-            voidOverlaysHalf.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter()));
-            voidOverlaysHalf.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), BlockModelRotation.X0_Y90, ForgeModelBakery.defaultTextureGetter()));
-            voidOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), BlockModelRotation.X0_Y180, ForgeModelBakery.defaultTextureGetter()));
-            voidOverlaysHalf.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), BlockModelRotation.X0_Y270, ForgeModelBakery.defaultTextureGetter()));
-
-            shroudOverlaysFull.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter()));
-            shroudOverlaysFull.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), BlockModelRotation.X0_Y90, ForgeModelBakery.defaultTextureGetter()));
-            shroudOverlaysFull.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), BlockModelRotation.X0_Y180, ForgeModelBakery.defaultTextureGetter()));
-            shroudOverlaysFull.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), BlockModelRotation.X0_Y270, ForgeModelBakery.defaultTextureGetter()));
-            shroudOverlaysHalf.put(Direction.NORTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter()));
-            shroudOverlaysHalf.put(Direction.EAST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), BlockModelRotation.X0_Y90, ForgeModelBakery.defaultTextureGetter()));
-            shroudOverlaysHalf.put(Direction.SOUTH, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), BlockModelRotation.X0_Y180, ForgeModelBakery.defaultTextureGetter()));
-            shroudOverlaysHalf.put(Direction.WEST, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), BlockModelRotation.X0_Y270, ForgeModelBakery.defaultTextureGetter()));
-
             if (ModBlocks.OAK_FULL_DRAWERS_1 == null) {
                 StorageDrawers.log.warn("Block objects not set in ModelBakeEvent.  Is your mod environment broken?");
                 return;
+            }
+
+            for (int i = 0; i < 4; i++) {
+                Direction dir = Direction.from2DDataValue(i);
+                BlockModelRotation rot = BlockModelRotation.by(0, (int)dir.toYRot() + 180);
+                Function<Material, TextureAtlasSprite> texGet = ForgeModelBakery.defaultTextureGetter();
+
+                lockOverlaysFull.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), rot, texGet));
+                lockOverlaysHalf.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), rot, texGet));
+                voidOverlaysFull.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), rot, texGet));
+                voidOverlaysHalf.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), rot, texGet));
+                shroudOverlaysFull.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), rot, texGet));
+                shroudOverlaysHalf.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), rot, texGet));
+                indicator1Full.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_indicator_1"), rot, texGet));
+                indicator1Half.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_indicator_1"), rot, texGet));
+                indicator2Full.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_indicator_2"), rot, texGet));
+                indicator2Half.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_indicator_2"), rot, texGet));
+                indicator4Full.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_indicator_4"), rot, texGet));
+                indicator4Half.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_indicator_4"), rot, texGet));
+                indicatorComp.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/compdrawers_indicator"), rot, texGet));
             }
 
             replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_1);
@@ -281,7 +313,9 @@ public final class BasicDrawerModel
             replaceBlock(event, ModBlocks.WARPED_HALF_DRAWERS_4);
             replaceBlock(event, ModBlocks.COMPACTING_DRAWERS_3);
 
-            event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), BlockModelRotation.X0_Y0, ForgeModelBakery.defaultTextureGetter());
+            //event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
+            //event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
+            //event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
         }
 
         public static void replaceBlock(ModelBakeEvent event, BlockDrawers block) {
@@ -399,24 +433,38 @@ public final class BasicDrawerModel
         protected final Map<Direction, BakedModel> lockOverlay;
         protected final Map<Direction, BakedModel> voidOverlay;
         protected final Map<Direction, BakedModel> shroudOverlay;
+        protected final Map<Direction, BakedModel> indicator1Overlay;
+        protected final Map<Direction, BakedModel> indicator2Overlay;
+        protected final Map<Direction, BakedModel> indicator4Overlay;
+        protected final Map<Direction, BakedModel> indicatorCompOverlay;
 
         public static class FullModel extends Model2 {
             FullModel(BakedModel mainModel) {
-                super(mainModel, lockOverlaysFull, voidOverlaysFull, shroudOverlaysFull);
+                super(mainModel, lockOverlaysFull, voidOverlaysFull, shroudOverlaysFull, indicator1Full, indicator2Full, indicator4Full);
             }
         }
 
         public static class HalfModel extends Model2 {
             HalfModel(BakedModel mainModel) {
-                super(mainModel, lockOverlaysHalf, voidOverlaysHalf, shroudOverlaysHalf);
+                super(mainModel, lockOverlaysHalf, voidOverlaysHalf, shroudOverlaysHalf, indicator1Half, indicator2Half, indicator4Half);
             }
         }
 
-        private Model2(BakedModel mainModel, Map<Direction, BakedModel> lockOverlay, Map<Direction, BakedModel> voidOverlay, Map<Direction, BakedModel> shroudOverlay) {
+        private Model2(BakedModel mainModel,
+                       Map<Direction, BakedModel> lockOverlay,
+                       Map<Direction, BakedModel> voidOverlay,
+                       Map<Direction, BakedModel> shroudOverlay,
+                       Map<Direction, BakedModel> indicator1Overlay,
+                       Map<Direction, BakedModel> indicator2Overlay,
+                       Map<Direction, BakedModel> indicator4Overlay) {
             this.mainModel = mainModel;
             this.lockOverlay = lockOverlay;
             this.voidOverlay = voidOverlay;
             this.shroudOverlay = shroudOverlay;
+            this.indicator1Overlay = indicator1Overlay;
+            this.indicator2Overlay = indicator2Overlay;
+            this.indicator4Overlay = indicator4Overlay;
+            this.indicatorCompOverlay = indicatorComp;
         }
 
         @Override
@@ -428,7 +476,7 @@ public final class BasicDrawerModel
         @Override
         public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
             List<BakedQuad> quads = Lists.newArrayList();
-            quads.addAll(mainModel.getQuads(state, side, rand));
+            quads.addAll(mainModel.getQuads(state, side, rand, extraData));
 
             if (state != null && extraData.hasProperty(TileEntityDrawers.ATTRIBUTES)) {
                 IDrawerAttributes attr = extraData.getData(TileEntityDrawers.ATTRIBUTES);
@@ -440,6 +488,20 @@ public final class BasicDrawerModel
                     quads.addAll(voidOverlay.get(dir).getQuads(state, side, rand, extraData));
                 if (attr.isConcealed())
                     quads.addAll(shroudOverlay.get(dir).getQuads(state, side, rand, extraData));
+                if (attr.hasFillLevel()) {
+                    Block block = state.getBlock();
+                    if (block instanceof BlockCompDrawers)
+                        quads.addAll((indicatorCompOverlay.get(dir).getQuads(state, side, rand, extraData)));
+                    else if (block instanceof BlockDrawers) {
+                        int count = ((BlockDrawers) block).getDrawerCount();
+                        if (count == 1)
+                            quads.addAll((indicator1Overlay.get(dir).getQuads(state, side, rand, extraData)));
+                        else if (count == 2)
+                            quads.addAll((indicator2Overlay.get(dir).getQuads(state, side, rand, extraData)));
+                        else if (count == 4)
+                            quads.addAll((indicator4Overlay.get(dir).getQuads(state, side, rand, extraData)));
+                    }
+                }
             }
 
             return quads;

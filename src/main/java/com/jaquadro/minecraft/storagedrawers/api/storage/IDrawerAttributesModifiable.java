@@ -41,6 +41,10 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
         return false;
     }
 
+    default boolean setHasFillLevel (boolean state) {
+        return false;
+    }
+
     default boolean setIsUnlimitedStorage (boolean state) {
         return false;
     }

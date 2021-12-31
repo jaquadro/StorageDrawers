@@ -1,0 +1,14 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "indicator": "storagedrawers:blocks/indicator/indicator_2_off",
+        "indicatorOn": "storagedrawers:blocks/indicator/indicator_2_on"
+    },
+    "elements": [ {
+        "from": [ 1, 1, 8.99 ],
+        "to": [ 15, 15, 16],
+        "faces": {
+            "north": { "uv": [ 1, 1, 15, 15 ], "texture": "#indicator", "cullface": "north" }
+        }
+    } ]
+}
