@@ -89,6 +89,8 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     public final AABB[] slotGeometry;
     public final AABB[] countGeometry;
     public final AABB[] labelGeometry;
+    public final AABB[] indGeometry;
+    public final AABB[] indBaseGeometry;
 
     //@SideOnly(Side.CLIENT)
     //private StatusModelData[] statusInfo;
@@ -114,11 +116,15 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         slotGeometry = new AABB[drawerCount];
         countGeometry = new AABB[drawerCount];
         labelGeometry = new AABB[drawerCount];
+        indGeometry = new AABB[drawerCount];
+        indBaseGeometry = new AABB[drawerCount];
 
         for (int i = 0; i < drawerCount; i++) {
             slotGeometry[i] = new AABB(0, 0, 0, 0, 0, 0);
             countGeometry[i] = new AABB(0, 0, 0, 0, 0, 0);
             labelGeometry[i] = new AABB(0, 0, 0, 0, 0, 0);
+            indGeometry[i] = new AABB(0, 0, 0, 0, 0, 0);
+            indBaseGeometry[i] = new AABB(0, 0, 0, 0, 0, 0);
         }
     }
 

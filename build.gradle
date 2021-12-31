@@ -157,9 +157,7 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
 
-    //compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${minecraft_base_version}:${top_version}:api")
-    //runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${minecraft_base_version}:${top_version}")
-
+    implementation fg.deobf("curse.maven:the-one-probe-245211:${top_id}")
     implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
 
     //deobfCompile "MineTweaker3:MineTweaker3-API:${mt_version}"

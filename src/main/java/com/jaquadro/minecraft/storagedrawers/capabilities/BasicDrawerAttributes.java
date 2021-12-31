@@ -17,6 +17,7 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
     private boolean isUnlimitedStorage;
     private boolean isUnlimitedVending;
     private boolean isConversion;
+    private boolean hasFillLevel;
 
     @Override
     public boolean canItemLock (LockAttribute attr) {
@@ -66,6 +67,21 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
     public boolean setIsVoid (boolean state) {
         if (isVoid != state) {
             isVoid = state;
+            onAttributeChanged();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean hasFillLevel () {
+        return hasFillLevel;
+    }
+
+    @Override
+    public boolean setHasFillLevel (boolean state) {
+        if (hasFillLevel != state) {
+            hasFillLevel = state;
             onAttributeChanged();
         }
 
@@ -143,6 +159,7 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
         tag.putBoolean("unlimited", isUnlimitedStorage);
         tag.putBoolean("vending", isUnlimitedVending);
         tag.putBoolean("conv", isConversion);
+        tag.putBoolean("fillLevel", hasFillLevel);
 
         return tag;
     }
@@ -156,6 +173,7 @@ public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttribut
         isUnlimitedStorage = nbt.getBoolean("unlimited");
         isUnlimitedVending = nbt.getBoolean("vending");
         isConversion = nbt.getBoolean("conv");
+        hasFillLevel = nbt.getBoolean("fillLevel");
     }
 
     protected void onAttributeChanged () { }
