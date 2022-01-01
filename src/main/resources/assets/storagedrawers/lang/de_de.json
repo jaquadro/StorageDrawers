@@ -107,7 +107,7 @@
     "message.storagedrawers.cannot_add_upgrade": "Diese Erweiterung kann nicht in dieser Schublade installiert werden",
     "message.storagedrawers.max_upgrades": "Diese Schublade kann keine Erweiterungen mehr aufnehmen",
 
-    "tooltip.storagedrawers.drawers.capacity": "Hält %d Stapel per Schublade",
+    "tooltip.storagedrawers.drawers.capacity": "Hält %d Stapel per Fach",
     "tooltip.storagedrawers.drawers.sealed": "Schublade beinhaltet Gegenstände",
     "tooltip.storagedrawers.waila.empty": "<Leer>",
     "tooltip.storagedrawers.waila.drawer": "#%s: %s",
