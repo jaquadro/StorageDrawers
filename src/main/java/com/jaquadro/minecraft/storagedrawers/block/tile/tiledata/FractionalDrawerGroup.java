@@ -472,8 +472,10 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 populateRawSlot(index, result.getStack(), result.getSize());
                 group.log("Picked candidate " + result.getStack().toString() + " with conv=" + result.getSize());
 
-                for (int i = 0; i < index; i++)
+                for (int i = 0; i < index; i++) {
                     convRate[i] *= result.getSize();
+                    cachedConvRate[i] = convRate[i];
+                }
             }
 
             if (index == slotCount)
@@ -490,8 +492,10 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
                 populateRawSlot(index, lookup.getStack(), 1);
                 group.log("Picked candidate " + lookup.getStack().toString() + " with conv=" + lookup.getSize());
 
-                for (int i = 0; i < index; i++)
+                for (int i = 0; i < index; i++) {
                     convRate[i] *= lookup.getSize();
+                    cachedConvRate[i] = convRate[i];
+                }
 
                 lookupTarget = lookup.getStack();
             }
