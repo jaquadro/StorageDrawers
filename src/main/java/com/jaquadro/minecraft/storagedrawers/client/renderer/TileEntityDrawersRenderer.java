@@ -79,7 +79,7 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
 
         Player player = Minecraft.getInstance().player;
         BlockPos blockPos = tile.getBlockPos().offset(.5, .5, .5);
-        float distance = (float)Math.sqrt(blockPos.distSqr(player.position(), true));
+        float distance = (float)Math.sqrt(blockPos.distToCenterSqr(player.position()));
 
         double renderDistance = ClientConfig.RENDER.labelRenderDistance.get();
         if (renderDistance > 0 && distance > renderDistance)
