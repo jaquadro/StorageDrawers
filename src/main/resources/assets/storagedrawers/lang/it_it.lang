@@ -6,7 +6,7 @@ itemGroup.storagedrawersSorting=Storage Drawers - Smistamento
 storagedrawers.container.drawers=Drawers
 storagedrawers.container.compDrawers=Drawers Compattatori
 storagedrawers.container.upgrades=Miglioramenti
-storagedrawers.container.drawer_controller=Controllore dei Drawers
+storagedrawers.container.drawer_controller=Gestore dei Drawers
 storagedrawers.container.unboundSlave=Aiutante non legato
 storagedrawers.container.framingTable=Tavolo di intelaiatura
 
@@ -103,8 +103,8 @@ block.storagedrawers.halfCustom4.name=Drawer Intelaiato 2x2
 block.storagedrawers.customTrim.name=Compensato Intelaiato
 
 block.storagedrawers.compDrawers.name=Drawer Compattatore
-block.storagedrawers.controller.name=Controllore dei Drawers
-block.storagedrawers.controllerSlave.name=Estensore del controllore dei Drawers
+block.storagedrawers.controller.name=Gestore dei Drawers
+block.storagedrawers.controllerSlave.name=Estensore del Gestore dei Drawers
 block.storagedrawers.framingTable.name=Tavolo da Intelaiatura
 
 block.storagedrawers.trim.oak.name=Compensato di Quercia
@@ -163,9 +163,9 @@ storagedrawers.config.blocks.fullDrawers4=Drawer 2x2
 storagedrawers.config.blocks.halfDrawers2=Drawer Compattatore 1x2
 storagedrawers.config.blocks.halfDrawers4=Drawer Compattatore 2x2
 storagedrawers.config.blocks.compDrawers=Drawer Compattatore 
-storagedrawers.config.blocks.controller=Controllore dei Drawer
+storagedrawers.config.blocks.controller=Gestore dei Drawer
 storagedrawers.config.blocks.trim=Compensato
-storagedrawers.config.blocks.controllerSlave=Estensore del controllore dei Drawers
+storagedrawers.config.blocks.controllerSlave=Estensore del Gestore dei Drawers
 
 storagedrawers.config.upgrades=Impostazioni Potenziamenti
 storagedrawers.config.upgrades.tooltip=Configura i potenziamenti individualmente.
@@ -214,7 +214,7 @@ storagedrawers.config.prop.enableTape=Abilita Nastro Adesivo
 storagedrawers.config.prop.enableTape.tooltip=Per muovere i Drawers con il contenuto.
 storagedrawers.config.prop.wailaStackRemainder=WAILA Visualizzazione quantità
 storagedrawers.config.prop.wailaStackRemainder.tooltip=Quali quantità di oggetti sono mostrati nella WAILA.
-storagedrawers.config.prop.controllerRange=Raggio del Controllore
+storagedrawers.config.prop.controllerRange=Raggio del Gestore
 storagedrawers.config.prop.controllerRange.tooltip=Raggio per riconoscere i blocchi del network.
 storagedrawers.config.prop.enableFramedDrawers=Abilita i Drawer telati
 storagedrawers.config.prop.enableFramedDrawers.tooltip=Drawers di materiali personalizzati.
