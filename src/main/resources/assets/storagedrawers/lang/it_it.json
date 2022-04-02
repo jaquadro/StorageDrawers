@@ -55,9 +55,9 @@
     "block.storagedrawers.warped_half_drawers_2": "Mezzo Drawer Distorto 1x2",
     "block.storagedrawers.warped_half_drawers_4": "Mezzo Drawer Distorto 2x2",
     "block.storagedrawers.warped_trim": "Compensato Distorto",
-    "block.storagedrawers.compacting_drawers_3": "Drawer di Compattazione",
-    "block.storagedrawers.controller": "Controllore dei Drawer",
-    "block.storagedrawers.controller_slave": "Estensore del controllore dei Drawers",
+    "block.storagedrawers.compacting_drawers_3": "Drawer Compattatore",
+    "block.storagedrawers.controller": "Gestore dei Drawer",
+    "block.storagedrawers.controller_slave": "Estensore del Gestore dei Drawers",
 
     "config.waila.plugin_storagedrawers": "Storage Drawers",
     "config.waila.plugin_storagedrawers.display.content": "Contenuto slot",
@@ -114,6 +114,6 @@
     "tooltip.storagedrawers.waila.nolimit": "Limite di Stacks: ∞",
     "tooltip.storagedrawers.waila.limit": "Limite di Stacks: %s (x%s)",
     "tooltip.storagedrawers.waila.locked": "Bloccato",
-    "tooltip.storagedrawers.waila.void": "Vacuo",
+    "tooltip.storagedrawers.waila.void": "Vuoto",
     "tooltip.storagedrawers.waila.protected": "Protetto"
 }
