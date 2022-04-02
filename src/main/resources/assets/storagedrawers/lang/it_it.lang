@@ -1,0 +1,246 @@
+#PARSE_ESCAPES
+
+itemGroup.storagedrawers=Storage Drawers
+itemGroup.storagedrawersSorting=Storage Drawers - Smistamento
+
+storagedrawers.container.drawers=Drawers
+storagedrawers.container.compDrawers=Drawers Compattatori
+storagedrawers.container.upgrades=Miglioramenti
+storagedrawers.container.drawer_controller=Controllore dei Drawers
+storagedrawers.container.unboundSlave=Aiutante non legato
+storagedrawers.container.framingTable=Tavolo di intelaiatura
+
+storagedrawers.msg.maxUpgrades=Questo Drawer non può accettare altri miglioramenti.
+storagedrawers.msg.cannotAddUpgrade=Non è possibile aggiungere questo miglioramento in questo Drawer.
+
+# Items
+item.storagedrawers.upgradeTemplate.name=Modello di miglioramento
+item.storagedrawers.upgradeStorage.obsidian.name=Miglioramento dello spazio (I)
+item.storagedrawers.upgradeStorage.iron.name=Miglioramento dello spazio (II)
+item.storagedrawers.upgradeStorage.gold.name=Miglioramento dello spazio (III)
+item.storagedrawers.upgradeStorage.diamond.name=Miglioramento dello spazio (IV)
+item.storagedrawers.upgradeStorage.emerald.name=Miglioramento dello spazio (v)
+item.storagedrawers.upgradeOneStack.name=Depotenziamento dello spazio
+item.storagedrawers.upgradeOneStack.description=Riduce lo spazio di archiviazione ad un solo stack
+item.storagedrawers.upgradeStatus.level1.name=Miglioramento dello stato (I)
+item.storagedrawers.upgradeStatus.level1.description=Mostra tutto lo spazio
+item.storagedrawers.upgradeStatus.level2.name=Miglioramento dello stato (II)
+item.storagedrawers.upgradeStatus.level2.description=Mostra lo stato di riempimento
+item.storagedrawers.upgradeVoid.name=Miglioramento vacuo
+item.storagedrawers.upgradeVoid.description=Distrugge gli oggetti in eccesso.
+item.storagedrawers.upgradeConversion.name=Miglioramento della conversione
+item.storagedrawers.upgradeConversion.description=Converte automaticamente gli oggetti compatibili.
+item.storagedrawers.upgradeCreative.store.name=Miglioramento dello spazio creativo
+item.storagedrawers.upgradeCreative.store.description=Quasi infinita disponibilità dello spazio.
+item.storagedrawers.upgradeCreative.vend.name=Creative Vending Upgrade
+item.storagedrawers.upgradeCreative.vend.description=Miglioramento da distributore in Creativa.
+item.storagedrawers.upgradeRedstone.combined.name=Miglioramento Pietrarossa
+item.storagedrawers.upgradeRedstone.combined.description=Emette un segnale di pietrarossa quando completamente pieno.
+item.storagedrawers.upgradeRedstone.max.name=Miglioramento pietrarossa superiore
+item.storagedrawers.upgradeRedstone.max.description=Emette il segnale riferito allo slot più pieno.
+item.storagedrawers.upgradeRedstone.min.name=Miglioramento pietrarossa inferiore
+item.storagedrawers.upgradeRedstone.min.description=Emette il segnale riferito allo slot meno pieno.
+item.storagedrawers.drawerKey.name=Chiave dei Drawers
+item.storagedrawers.drawerKey.description=Blocca e sblocca i Drawers\nMantieni in mano per bloccare gli oggetti appena piazzati.
+item.storagedrawers.shroudKey.name=Chiave di Occultamento
+item.storagedrawers.shroudKey.description=Mostra o nasconde le etichette degli oggetti.
+item.storagedrawers.quantifyKey.name=Chiave di Quantità
+item.storagedrawers.quantifyKey.description=Mostra o nasconde le etichette delle quantità immagazzinate.
+item.storagedrawers.personalKey.name=Chiave Personale
+item.storagedrawers.personalKey.description=Protegge l'accesso dagli altri giocatori.
+item.storagedrawers.tape.name=Nastro adesivo
+item.storagedrawers.tape.description=Sigilla il Drawer per trasportarlo.
+
+# Blocks
+block.storagedrawers.oak_full_drawers_1=Drawer di quercia 1x1
+block.storagedrawers.oak_full_drawers_2=Drawer di quercia 1x2
+block.storagedrawers.oak_full_drawers_4=Drawer di quercia 2x2
+block.storagedrawers.oak_half_drawers_1=Mezzo Drawer di quercia 1x1
+block.storagedrawers.oak_half_drawers_2=Mezzo Drawer di quercia 1x2
+block.storagedrawers.oak_half_drawers_4=Mezzo Drawer di quercia 2x2
+block.storagedrawers.spruce_full_drawers_1=Drawer di abete 1x1
+block.storagedrawers.spruce_full_drawers_2=Drawer di abete 1x2
+block.storagedrawers.spruce_full_drawers_4=Drawer di abete 2x2
+block.storagedrawers.spruce_half_drawers_1=Mezzo Drawer di abete 1x1
+block.storagedrawers.spruce_half_drawers_2=Mezzo Drawer di abete 1x2
+block.storagedrawers.spruce_half_drawers_4=Mezzo Drawer di abete 2x2
+block.storagedrawers.birch_full_drawers_1=Drawer di betulla 1x1
+block.storagedrawers.birch_full_drawers_2=Drawer di betulla 1x2
+block.storagedrawers.birch_full_drawers_4=Drawer di betulla 2x2
+block.storagedrawers.birch_half_drawers_1=Mezzo Drawer di betulla 1x1
+block.storagedrawers.birch_half_drawers_2=Mezzo Drawer di betulla 1x2
+block.storagedrawers.birch_half_drawers_4=Mezzo Drawer di betulla 2x2
+block.storagedrawers.jungle_full_drawers_1=Drawer della giungla 1x1
+block.storagedrawers.jungle_full_drawers_2=Drawer della giungla 1x2
+block.storagedrawers.jungle_full_drawers_4=Drawer della giungla 2x2
+block.storagedrawers.jungle_half_drawers_1=Mezzo Drawer della giungla 1x1
+block.storagedrawers.jungle_half_drawers_2=Mezzo Drawer della giungla 1x2
+block.storagedrawers.jungle_half_drawers_4=Mezzo Drawer della giungla 2x2
+block.storagedrawers.acacia_full_drawers_1=Drawer di acacia 1x1
+block.storagedrawers.acacia_full_drawers_2=Drawer di acacia 1x2
+block.storagedrawers.acacia_full_drawers_4=Drawer di acacia 2x2
+block.storagedrawers.acacia_half_drawers_1=Mezzo Drawer della acacia 1x1
+block.storagedrawers.acacia_half_drawers_2=Mezzo Drawer della acacia 1x2
+block.storagedrawers.acacia_half_drawers_4=Mezzo Drawer della acacia 2x2
+block.storagedrawers.dark_oak_full_drawers_1=Drawer di quercia scura 1x1
+block.storagedrawers.dark_oak_full_drawers_2=Drawer di quercia scura 1x2
+block.storagedrawers.dark_oak_full_drawers_4=Drawer di quercia scura 2x2
+block.storagedrawers.dark_oak_half_drawers_1=Mezzo Drawer di quercia scura 1x1
+block.storagedrawers.dark_oak_half_drawers_2=Mezzo Drawer di quercia scura 1x2
+block.storagedrawers.dark_oak_half_drawers_4=Mezzo Drawer di quercia scura 2x2
+
+block.storagedrawers.customDrawers.fulldrawers1.name=Drawer Intelaiato
+block.storagedrawers.customDrawers.fulldrawers2.name=Drawer Intelaiato 1x2
+block.storagedrawers.customDrawers.fulldrawers4.name=Drawer Intelaiato 2x2
+block.storagedrawers.customDrawers.halfdrawers2.name=Mezzo Drawer Intelaiato 1x2
+block.storagedrawers.customDrawers.halfdrawers4.name=Mezzo Drawer Intelaiato 2x2
+
+block.storagedrawers.fullCustom1.name=Drawer Intelaiato
+block.storagedrawers.fullCustom2.name=Drawer Intelaiato 1x2
+block.storagedrawers.fullCustom4.name=Drawer Intelaiato 2x2
+block.storagedrawers.halfCustom2.name=Drawer Intelaiato 1x2
+block.storagedrawers.halfCustom4.name=Drawer Intelaiato 2x2
+block.storagedrawers.customTrim.name=Compensato Intelaiato
+
+block.storagedrawers.compDrawers.name=Drawer Compattatore
+block.storagedrawers.controller.name=Controllore dei Drawers
+block.storagedrawers.controllerSlave.name=Estensore del controllore dei Drawers
+block.storagedrawers.framingTable.name=Tavolo da Intelaiatura
+
+block.storagedrawers.trim.oak.name=Compensato di Quercia
+block.storagedrawers.trim.spruce.name=Compensato di Abete 
+block.storagedrawers.trim.birch.name=Compensato di Betulla 
+block.storagedrawers.trim.jungle.name=Compensato della Giungla 
+block.storagedrawers.trim.acacia.name=Compensato di Acacia 
+block.storagedrawers.trim.big_oak.name=Compensato di Quercia Scura 
+
+block.storagedrawers.keyButton.drawer.name=Pulsante chiave del Drawer
+block.storagedrawers.keyButton.concealment.name=Pulsante chiave di occultamento
+block.storagedrawers.keyButton.personal.name=Pulsante chiave personale
+block.storagedrawers.keyButton.quantify.name=Pulsante chiave di Quantità
+
+storagedrawers.drawers.description=Contiene %d stacks per drawer
+storagedrawers.drawers.sealed=Oggetti sigillati all'interno
+storagedrawers.upgrade.description=Aumenta lo spazio di %d volte il valore base
+storagedrawers.controller.description=Interagisce con una serire di Drawer collegati
+storagedrawers.controllerSlave.description=Punto di accesso aggiuntivo per il controller
+
+# Material
+storagedrawers.material=Materiale: %s
+storagedrawers.material.oak=Quercia
+storagedrawers.material.spruce=Abete
+storagedrawers.material.birch=Betulla
+storagedrawers.material.jungle=Giungla
+storagedrawers.material.acacia=Acacia
+storagedrawers.material.dark_oak=Quercia Scura
+
+# Integration
+storagedrawers.waila.empty=<Vuoto>
+storagedrawers.waila.level=Livello miglioramento: %s
+storagedrawers.waila.drawer=#%s: %s
+storagedrawers.waila.limit=Limite di Stack: %s (x%s)
+storagedrawers.waila.nolimit=Limite di Stack: ∞
+storagedrawers.waila.locked=Bloccato
+storagedrawers.waila.void=Vacuo
+storagedrawers.waila.sorting=Smistamento
+storagedrawers.waila.protected=Protetto
+storagedrawers.waila.config.displayContents=Contenuto Slot
+storagedrawers.waila.config.displayStackLimit=Limite Stack
+storagedrawers.waila.config.displayStatus=Stato Miglioramento
+
+# Configuration
+storagedrawers.config.title=Configurazione Storage Drawers
+
+storagedrawers.config.general=Impostazioni generali
+storagedrawers.config.general.tooltip=Questo e quello.
+
+storagedrawers.config.blocks=Impostazioni dei blocchi
+storagedrawers.config.blocks.tooltip=Configura individualmente i singoli blocchi.
+
+storagedrawers.config.blocks.fullDrawers1=Drawer 1x1
+storagedrawers.config.blocks.fullDrawers2=Drawer 1x2
+storagedrawers.config.blocks.fullDrawers4=Drawer 2x2
+storagedrawers.config.blocks.halfDrawers2=Drawer Compattatore 1x2
+storagedrawers.config.blocks.halfDrawers4=Drawer Compattatore 2x2
+storagedrawers.config.blocks.compDrawers=Drawer Compattatore 
+storagedrawers.config.blocks.controller=Controllore dei Drawer
+storagedrawers.config.blocks.trim=Compensato
+storagedrawers.config.blocks.controllerSlave=Estensore del controllore dei Drawers
+
+storagedrawers.config.upgrades=Impostazioni Potenziamenti
+storagedrawers.config.upgrades.tooltip=Configura i potenziamenti individualmente.
+
+storagedrawers.config.upgrades.level2Mult=Moltiplicatore Magazzino (II)
+storagedrawers.config.upgrades.level3Mult=Moltiplicatore Magazzino (III)
+storagedrawers.config.upgrades.level4Mult=Moltiplicatore Magazzino (IV)
+storagedrawers.config.upgrades.level5Mult=Moltiplicatore Magazzino (V)
+storagedrawers.config.upgrades.level6Mult=Moltiplicatore Magazzino (VI)
+
+storagedrawers.config.prop.enableIndicatorUpgrades=Abilita l'Indicatore Miglioramento
+storagedrawers.config.prop.enableStorageUpgrades=Abilita i Potenziamenti del Magazzino
+storagedrawers.config.prop.enableLockUpgrades=Abilita il Bloccaggio dei Drawers
+storagedrawers.config.prop.enableShroudUpgrades=Abilita l'occultamento degli oggetti
+storageDrawers.config.prop.enableQuantifiableUpgrades=Abilita la Visualizzazione delle Quantità
+storagedrawers.config.prop.enablePersonalUpgrades=Abilita la protezione d'Accesso
+storagedrawers.config.prop.enableVoidUpgrades=Abilita il Miglioramento Vacuo
+storagedrawers.config.prop.enableCreativeUpgrades=Abilita il Miglioramento Creativo
+storagedrawers.config.prop.enableRedstoneUpgrades=Abilita il Miglioramento di Pietra Rossa
+storagedrawers.config.prop.enableSortingUpgrades=Abilità il Miglioramento d'Ordinamento
+storagedrawers.config.prop.enableSortingUpgrades.tooltip=Dev'essere caricata la Refined Relocation.
+storagedrawers.config.prop.renderStorageUpgrades=Visualizza i Miglioramenti dei Drawers
+storagedrawers.config.prop.creativeTabVanillaWoods=Pannello creativo Vanilla Woods
+storagedrawers.config.prop.creativeTabVanillaWoods.tooltip=Abilità tutti gli stili di legno Vanilla nel pannello creativo.
+storagedrawers.config.prop.enabled=Abilitato
+storagedrawers.config.prop.enabled.tooltip=Abilita il blocco in gioco.
+storagedrawers.config.prop.baseStorage=Magazzino Base
+storagedrawers.config.prop.baseStorage.tooltip=Numero di stack conservati per Drawer.
+storagedrawers.config.prop.recipeOutput=Prodotto Ricetta
+storagedrawers.config.prop.recipeOutput.tooltip=Numero di oggetti per singola fabbricazione.
+storagedrawers.config.prop.enableDrawerUI=Abilita Drawer UI
+storagedrawers.config.prop.enableDrawerUI.tooltip=Mostra il numero di oggetti e fornisce una gestione dei miglioramenti.
+storagedrawers.config.prop.enableSidedInput=Abilita l'inserimento laterale
+storagedrawers.config.prop.enableSidedInput.tooltip=Altri blocchi possono essere inseriti nel Drawer.
+storagedrawers.config.prop.enableSidedOutput=Abilità l'estrazione laterale
+storagedrawers.config.prop.enableSidedOutput.tooltip=Altri blocchi possono essere estratti dal Drawer.
+storagedrawers.config.prop.enableItemConversion=Abilità la conversione di oggetti
+storagedrawers.config.prop.enableItemConversion.tooltip=I Drawers auto-convertiranno gli oggetti compatibili secondo l'"ore dictionary".
+storagedrawers.config.prop.enableFallbackRecipes=Abilita Ricette Fisse
+storagedrawers.config.prop.enableFallbackRecipes.tooltip=Qualsiasi asse lavorato può produrre drawers in quercia.
+storagedrawers.config.prop.invertShift=Scambia Maiusc
+storagedrawers.config.prop.invertShift.tooltip=Inverte il comportamento del click e dell'accovacciati+click.
+storagedrawers.config.prop.enableDebugLogging=Abilita il log di Debug
+storagedrawers.config.prop.enableDebugLogging.tooltip=Stampa informazioni extra ai log.
+storagedrawers.config.prop.enableTape=Abilita Nastro Adesivo
+storagedrawers.config.prop.enableTape.tooltip=Per muovere i Drawers con il contenuto.
+storagedrawers.config.prop.wailaStackRemainder=WAILA Visualizzazione quantità
+storagedrawers.config.prop.wailaStackRemainder.tooltip=Quali quantità di oggetti sono mostrati nella WAILA.
+storagedrawers.config.prop.controllerRange=Raggio del Controllore
+storagedrawers.config.prop.controllerRange.tooltip=Raggio per riconoscere i blocchi del network.
+storagedrawers.config.prop.enableFramedDrawers=Abilita i Drawer telati
+storagedrawers.config.prop.enableFramedDrawers.tooltip=Drawers di materiali personalizzati.
+storagedrawers.config.prop.defaultQuantify=Quantità Mostrata di Default
+storagedrawers.config.prop.defaultQuantify.tooltip=I Drawer mostrano la quantità quando posizionati.
+
+storagedrawers.config.addons=Addons
+storagedrawers.config.addons.tooltip=Configura impostazioni globali degli addon.
+
+storagedrawers.config.addons.showNEI=Mostra i blocchi nella NEI
+storagedrawers.config.addons.showCreative=Mostra i blocchi nel pannello della creativa
+storagedrawers.config.addons.separateTabs=Separa i pannelli della creativa
+storagedrawers.config.addons.tooltip=Ogni pacchetto mostra il proprio pannello invece di usare quello della Storage Drawers.
+
+storagedrawers.config.integration=Integrazione
+storagedrawers.config.integration.tooltip=Configura l'integrazione con le altre mod.
+
+storagedrawers.config.integration.enableAE2=Abilita l'integrazione con l'Applied Energistics 2
+storagedrawers.config.integration.enableWaila=Abilita l'integrazione con la WAILA
+storagedrawers.config.integration.enableThaumcraft=Abilita l'integrazione con la Thaumcraft
+storagedrawers.config.integration.enableMineTweaker=Abilita l'integrazione con la MineTweaker
+
+storagedrawers.config.registries=Registri
+storagedrawers.config.registries.tooltip=Configura regole di compressione e sostituzioni dell'"ore dictionary".
+
+storagedrawers.config.registries.compRules=Regole di Compressione
+storagedrawers.config.registries.registerExtraCompRules=Registra Regole di Compressione Extra
+storagedrawers.config.registries.oreWhitelist=Ore Dictionary Whitelist
+storagedrawers.config.registries.oreBlacklist=Ore Dictionary Blacklist
