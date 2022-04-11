@@ -72,11 +72,10 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     // TODO: TE.getModelData()
     //public static final IUnlistedProperty<DrawerStateModelData> STATE_MODEL = UnlistedModelData.create(DrawerStateModelData.class);
 
-    private static final VoxelShape AABB_FULL = Block.box(0, 0, 0, 16, 16, 16);
-    private static final VoxelShape AABB_NORTH_FULL = Shapes.join(AABB_FULL, Block.box(1, 1, 0, 15, 15, 1), BooleanOp.ONLY_FIRST);
-    private static final VoxelShape AABB_SOUTH_FULL = Shapes.join(AABB_FULL, Block.box(1, 1, 15, 15, 15, 16), BooleanOp.ONLY_FIRST);
-    private static final VoxelShape AABB_WEST_FULL = Shapes.join(AABB_FULL, Block.box(0, 1, 1, 1, 15, 15), BooleanOp.ONLY_FIRST);
-    private static final VoxelShape AABB_EAST_FULL = Shapes.join(AABB_FULL, Block.box(15, 1, 1, 16, 15, 15), BooleanOp.ONLY_FIRST);
+    private static final VoxelShape AABB_NORTH_FULL = Shapes.join(Shapes.block(), Block.box(1, 1, 0, 15, 15, 1), BooleanOp.ONLY_FIRST);
+    private static final VoxelShape AABB_SOUTH_FULL = Shapes.join(Shapes.block(), Block.box(1, 1, 15, 15, 15, 16), BooleanOp.ONLY_FIRST);
+    private static final VoxelShape AABB_WEST_FULL = Shapes.join(Shapes.block(), Block.box(0, 1, 1, 1, 15, 15), BooleanOp.ONLY_FIRST);
+    private static final VoxelShape AABB_EAST_FULL = Shapes.join(Shapes.block(), Block.box(15, 1, 1, 16, 15, 15), BooleanOp.ONLY_FIRST);
     private static final VoxelShape AABB_NORTH_HALF = Block.box(0, 0, 8, 16, 16, 16);
     private static final VoxelShape AABB_SOUTH_HALF = Block.box(0, 0, 0, 16, 16, 8);
     private static final VoxelShape AABB_WEST_HALF = Block.box(8, 0, 0, 16, 16, 16);
@@ -97,12 +96,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 
     private long ignoreEventTime;
 
-    private static final ThreadLocal<Boolean> inTileLookup = new ThreadLocal<Boolean>() {
-        @Override
-        protected Boolean initialValue () {
-            return false;
-        }
-    };
+    private static final ThreadLocal<Boolean> inTileLookup = ThreadLocal.withInitial(() -> false);
 
     public BlockDrawers (int drawerCount, boolean halfDepth, int storageUnits, BlockBehaviour.Properties properties) {
         super(properties);
@@ -430,18 +424,13 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     }
 
     protected boolean hitLeft (Direction side, double hitX, double hitZ) {
-        switch (side) {
-            case NORTH:
-                return hitX > .5;
-            case SOUTH:
-                return hitX < .5;
-            case WEST:
-                return hitZ < .5;
-            case EAST:
-                return hitZ > .5;
-            default:
-                return true;
-        }
+        return switch (side) {
+            case NORTH -> hitX > .5;
+            case SOUTH -> hitX < .5;
+            case WEST -> hitZ < .5;
+            case EAST -> hitZ > .5;
+            default -> true;
+        };
     }
 
     protected BlockHitResult rayTraceEyes(Level world, Player player, double length) {
@@ -683,5 +672,9 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         return (side == Direction.UP) ? getSignal(state, worldIn, pos, side) : 0;
     }
 
-
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean useShapeForLightOcclusion(BlockState state) {
+        return true;
+    }
 }
