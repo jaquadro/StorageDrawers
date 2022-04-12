@@ -97,7 +97,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
             if (!super.canAddUpgrade(upgrade))
                 return false;
 
-            if (upgrade.getItem() == ModItems.ONE_STACK_UPGRADE) {
+            if (upgrade.getItem() == ModItems.ONE_STACK_UPGRADE.get()) {
                 int lostStackCapacity = upgradeData.getStorageMultiplier() * (getEffectiveDrawerCapacity() - 1);
                 if (!stackCapacityCheck(lostStackCapacity))
                     return false;

@@ -5,29 +5,28 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.EnumSet;
 import java.util.Random;
-
-import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class BlockController extends HorizontalDirectionalBlock implements INetworked, EntityBlock
 {
@@ -71,11 +70,11 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         if (world.isClientSide || item == null)
             return false;
 
-        if (item == ModItems.DRAWER_KEY)
+        if (item == ModItems.DRAWER_KEY.get())
             toggle(world, pos, player, EnumKeyType.DRAWER);
-        else if (item == ModItems.SHROUD_KEY)
+        else if (item == ModItems.SHROUD_KEY.get())
             toggle(world, pos, player, EnumKeyType.CONCEALMENT);
-        else if (item == ModItems.QUANTIFY_KEY)
+        else if (item == ModItems.QUANTIFY_KEY.get())
             toggle(world, pos, player, EnumKeyType.QUANTIFY);
         //else if (item == ModItems.personalKey)
         //    toggle(world, pos, player, EnumKeyType.PERSONAL);

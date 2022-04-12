@@ -179,19 +179,19 @@ public class UpgradeData extends TileDataShim
 
         for (ItemStack stack : upgrades) {
             Item item = stack.getItem();
-            if (item == ModItems.ONE_STACK_UPGRADE)
+            if (item == ModItems.ONE_STACK_UPGRADE.get())
                 hasOneStack = true;
-            else if (item == ModItems.VOID_UPGRADE)
+            else if (item == ModItems.VOID_UPGRADE.get())
                 hasVoid = true;
-            else if (item == ModItems.CONVERSION_UPGRADE)
+            else if (item == ModItems.CONVERSION_UPGRADE.get())
                 hasConversion = true;
-            else if (item == ModItems.CREATIVE_STORAGE_UPGRADE)
+            else if (item == ModItems.CREATIVE_STORAGE_UPGRADE.get())
                 hasUnlimited = true;
-            else if (item == ModItems.CREATIVE_VENDING_UPGRADE)
+            else if (item == ModItems.CREATIVE_VENDING_UPGRADE.get())
                 hasVending = true;
-            else if (item == ModItems.ILLUMINATION_UPGRADE)
+            else if (item == ModItems.ILLUMINATION_UPGRADE.get())
                 hasIllumination = true;
-            else if (item == ModItems.FILL_LEVEL_UPGRADE)
+            else if (item == ModItems.FILL_LEVEL_UPGRADE.get())
                 hasFillLevel = true;
         }
 

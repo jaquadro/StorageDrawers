@@ -6,7 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -23,8 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
-import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository.ItemRecord;
-
 public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
 {
     private static final int[] drawerSlots = new int[]{0};
@@ -38,7 +36,7 @@ public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
     }
 
     public TileEntitySlave (BlockPos pos, BlockState state) {
-        this(ModBlocks.Tile.CONTROLLER_SLAVE, pos, state);
+        this(ModBlockEntities.CONTROLLER_SLAVE.get(), pos, state);
     }
 
     @Override

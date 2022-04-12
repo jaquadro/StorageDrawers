@@ -9,16 +9,23 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.mojang.datafixers.util.Either;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.BlockModelRotation;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -36,16 +43,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
-
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.BlockModelRotation;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 
 public final class BasicDrawerModel
 {
@@ -110,79 +112,37 @@ public final class BasicDrawerModel
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_1.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_ind_area_1.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_indbase_area_1.json"),
-                ModBlocks.OAK_FULL_DRAWERS_1,
-                ModBlocks.SPRUCE_FULL_DRAWERS_1,
-                ModBlocks.BIRCH_FULL_DRAWERS_1,
-                ModBlocks.JUNGLE_FULL_DRAWERS_1,
-                ModBlocks.ACACIA_FULL_DRAWERS_1,
-                ModBlocks.DARK_OAK_FULL_DRAWERS_1,
-                ModBlocks.CRIMSON_FULL_DRAWERS_1,
-                ModBlocks.WARPED_FULL_DRAWERS_1);
+                    ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 1, false).toArray(BlockDrawers[]::new));
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_2.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_2.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_ind_area_2.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_indbase_area_2.json"),
-                ModBlocks.OAK_FULL_DRAWERS_2,
-                ModBlocks.SPRUCE_FULL_DRAWERS_2,
-                ModBlocks.BIRCH_FULL_DRAWERS_2,
-                ModBlocks.JUNGLE_FULL_DRAWERS_2,
-                ModBlocks.ACACIA_FULL_DRAWERS_2,
-                ModBlocks.DARK_OAK_FULL_DRAWERS_2,
-                ModBlocks.CRIMSON_FULL_DRAWERS_2,
-                ModBlocks.WARPED_FULL_DRAWERS_2);
+                    ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 2, false).toArray(BlockDrawers[]::new));
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_4.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_4.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_ind_area_4.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_indbase_area_4.json"),
-                ModBlocks.OAK_FULL_DRAWERS_4,
-                ModBlocks.SPRUCE_FULL_DRAWERS_4,
-                ModBlocks.BIRCH_FULL_DRAWERS_4,
-                ModBlocks.JUNGLE_FULL_DRAWERS_4,
-                ModBlocks.ACACIA_FULL_DRAWERS_4,
-                ModBlocks.DARK_OAK_FULL_DRAWERS_4,
-                ModBlocks.CRIMSON_FULL_DRAWERS_4,
-                ModBlocks.WARPED_FULL_DRAWERS_4);
+                    ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 4, false).toArray(BlockDrawers[]::new));
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_1.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_1.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_ind_area_1.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_indbase_area_1.json"),
-                ModBlocks.OAK_HALF_DRAWERS_1,
-                ModBlocks.SPRUCE_HALF_DRAWERS_1,
-                ModBlocks.BIRCH_HALF_DRAWERS_1,
-                ModBlocks.JUNGLE_HALF_DRAWERS_1,
-                ModBlocks.ACACIA_HALF_DRAWERS_1,
-                ModBlocks.DARK_OAK_HALF_DRAWERS_1,
-                ModBlocks.CRIMSON_HALF_DRAWERS_1,
-                ModBlocks.WARPED_HALF_DRAWERS_1);
+                    ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 1, true).toArray(BlockDrawers[]::new));
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_2.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_2.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_ind_area_2.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_indbase_area_2.json"),
-                ModBlocks.OAK_HALF_DRAWERS_2,
-                ModBlocks.SPRUCE_HALF_DRAWERS_2,
-                ModBlocks.BIRCH_HALF_DRAWERS_2,
-                ModBlocks.JUNGLE_HALF_DRAWERS_2,
-                ModBlocks.ACACIA_HALF_DRAWERS_2,
-                ModBlocks.DARK_OAK_HALF_DRAWERS_2,
-                ModBlocks.CRIMSON_HALF_DRAWERS_2,
-                ModBlocks.WARPED_HALF_DRAWERS_2);
+                    ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 2, true).toArray(BlockDrawers[]::new));
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_4.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_4.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_ind_area_4.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_indbase_area_4.json"),
-                ModBlocks.OAK_HALF_DRAWERS_4,
-                ModBlocks.SPRUCE_HALF_DRAWERS_4,
-                ModBlocks.BIRCH_HALF_DRAWERS_4,
-                ModBlocks.JUNGLE_HALF_DRAWERS_4,
-                ModBlocks.ACACIA_HALF_DRAWERS_4,
-                ModBlocks.DARK_OAK_HALF_DRAWERS_4,
-                ModBlocks.CRIMSON_HALF_DRAWERS_4,
-                ModBlocks.WARPED_HALF_DRAWERS_4);
+                    ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 4, true).toArray(BlockDrawers[]::new));
             populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_icon_area_3.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_count_area_3.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_ind_area_3.json"),
                 new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_indbase_area_3.json"),
-                ModBlocks.COMPACTING_DRAWERS_3);
+                ModBlocks.getBlocksOfType(BlockCompDrawers.class).toArray(BlockDrawers[]::new));
         }
 
         private static BlockModel getBlockModel (ResourceLocation location) {
@@ -263,55 +223,7 @@ public final class BasicDrawerModel
                 indicatorComp.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/compdrawers_indicator"), rot, texGet));
             }
 
-            replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_1);
-            replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_2);
-            replaceBlock(event, ModBlocks.OAK_FULL_DRAWERS_4);
-            replaceBlock(event, ModBlocks.OAK_HALF_DRAWERS_1);
-            replaceBlock(event, ModBlocks.OAK_HALF_DRAWERS_2);
-            replaceBlock(event, ModBlocks.OAK_HALF_DRAWERS_4);
-            replaceBlock(event, ModBlocks.SPRUCE_FULL_DRAWERS_1);
-            replaceBlock(event, ModBlocks.SPRUCE_FULL_DRAWERS_2);
-            replaceBlock(event, ModBlocks.SPRUCE_FULL_DRAWERS_4);
-            replaceBlock(event, ModBlocks.SPRUCE_HALF_DRAWERS_1);
-            replaceBlock(event, ModBlocks.SPRUCE_HALF_DRAWERS_2);
-            replaceBlock(event, ModBlocks.SPRUCE_HALF_DRAWERS_4);
-            replaceBlock(event, ModBlocks.BIRCH_FULL_DRAWERS_1);
-            replaceBlock(event, ModBlocks.BIRCH_FULL_DRAWERS_2);
-            replaceBlock(event, ModBlocks.BIRCH_FULL_DRAWERS_4);
-            replaceBlock(event, ModBlocks.BIRCH_HALF_DRAWERS_1);
-            replaceBlock(event, ModBlocks.BIRCH_HALF_DRAWERS_2);
-            replaceBlock(event, ModBlocks.BIRCH_HALF_DRAWERS_4);
-            replaceBlock(event, ModBlocks.JUNGLE_FULL_DRAWERS_1);
-            replaceBlock(event, ModBlocks.JUNGLE_FULL_DRAWERS_2);
-            replaceBlock(event, ModBlocks.JUNGLE_FULL_DRAWERS_4);
-            replaceBlock(event, ModBlocks.JUNGLE_HALF_DRAWERS_1);
-            replaceBlock(event, ModBlocks.JUNGLE_HALF_DRAWERS_2);
-            replaceBlock(event, ModBlocks.JUNGLE_HALF_DRAWERS_4);
-            replaceBlock(event, ModBlocks.ACACIA_FULL_DRAWERS_1);
-            replaceBlock(event, ModBlocks.ACACIA_FULL_DRAWERS_2);
-            replaceBlock(event, ModBlocks.ACACIA_FULL_DRAWERS_4);
-            replaceBlock(event, ModBlocks.ACACIA_HALF_DRAWERS_1);
-            replaceBlock(event, ModBlocks.ACACIA_HALF_DRAWERS_2);
-            replaceBlock(event, ModBlocks.ACACIA_HALF_DRAWERS_4);
-            replaceBlock(event, ModBlocks.DARK_OAK_FULL_DRAWERS_1);
-            replaceBlock(event, ModBlocks.DARK_OAK_FULL_DRAWERS_2);
-            replaceBlock(event, ModBlocks.DARK_OAK_FULL_DRAWERS_4);
-            replaceBlock(event, ModBlocks.DARK_OAK_HALF_DRAWERS_1);
-            replaceBlock(event, ModBlocks.DARK_OAK_HALF_DRAWERS_2);
-            replaceBlock(event, ModBlocks.DARK_OAK_HALF_DRAWERS_4);
-            replaceBlock(event, ModBlocks.CRIMSON_FULL_DRAWERS_1);
-            replaceBlock(event, ModBlocks.CRIMSON_FULL_DRAWERS_2);
-            replaceBlock(event, ModBlocks.CRIMSON_FULL_DRAWERS_4);
-            replaceBlock(event, ModBlocks.CRIMSON_HALF_DRAWERS_1);
-            replaceBlock(event, ModBlocks.CRIMSON_HALF_DRAWERS_2);
-            replaceBlock(event, ModBlocks.CRIMSON_HALF_DRAWERS_4);
-            replaceBlock(event, ModBlocks.WARPED_FULL_DRAWERS_1);
-            replaceBlock(event, ModBlocks.WARPED_FULL_DRAWERS_2);
-            replaceBlock(event, ModBlocks.WARPED_FULL_DRAWERS_4);
-            replaceBlock(event, ModBlocks.WARPED_HALF_DRAWERS_1);
-            replaceBlock(event, ModBlocks.WARPED_HALF_DRAWERS_2);
-            replaceBlock(event, ModBlocks.WARPED_HALF_DRAWERS_4);
-            replaceBlock(event, ModBlocks.COMPACTING_DRAWERS_3);
+            ModBlocks.getDrawers().forEach(blockDrawers -> replaceBlock(event, blockDrawers));
 
             //event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
             //event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
