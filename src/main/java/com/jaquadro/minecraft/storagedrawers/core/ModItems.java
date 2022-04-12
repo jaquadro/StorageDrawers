@@ -43,9 +43,9 @@ public final class ModItems
             ITEM_REGISTER.register(ro.getId().getPath(), () -> {
                 Block block = ro.get();
                 if (block instanceof BlockDrawers) {
-                    return new ItemDrawers(ro.get(), new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS));
+                    return new ItemDrawers(block, new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS));
                 } else {
-                    return new BlockItem(ro.get(), new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS));
+                    return new BlockItem(block, new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS));
                 }
             });
         }
