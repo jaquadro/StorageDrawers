@@ -1,23 +1,21 @@
 package com.jaquadro.minecraft.storagedrawers.core.recipe;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddUpgradeRecipe extends CustomRecipe
 {
@@ -83,7 +81,7 @@ public class AddUpgradeRecipe extends CustomRecipe
             ret.data.read(ret.drawer.getTag().getCompound("tile"));
 
         for (ItemStack upgrade : ret.upgrades) {
-            if (upgrade.getItem() == ModItems.ONE_STACK_UPGRADE)
+            if (upgrade.getItem() == ModItems.ONE_STACK_UPGRADE.get())
                 return null; //I don't want to dig into finding the stack sizes to check if we can downgrade. So just don't allow this one >.>
             if (!ret.data.hasEmptySlot() || !ret.data.canAddUpgrade(upgrade))
                 return null;

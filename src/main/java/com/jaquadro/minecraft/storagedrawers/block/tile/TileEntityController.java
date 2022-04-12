@@ -4,27 +4,26 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
-
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
+import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
-import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.ItemCollectionRegistry;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.ticks.LevelTickAccess;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -159,7 +158,7 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
     }
 
     public TileEntityController (BlockPos pos, BlockState state) {
-        this(ModBlocks.Tile.CONTROLLER, pos, state);
+        this(ModBlockEntities.CONTROLLER.get(), pos, state);
     }
 
     public void printDebugInfo () {
@@ -173,8 +172,8 @@ public class TileEntityController extends ChamTileEntity implements IDrawerGroup
     public void clearRemoved () {
         super.clearRemoved();
 
-        if (!getLevel().getBlockTicks().hasScheduledTick(getBlockPos(), ModBlocks.CONTROLLER))
-            getLevel().scheduleTick(getBlockPos(), ModBlocks.CONTROLLER, 1);
+        if (!getLevel().getBlockTicks().hasScheduledTick(getBlockPos(), ModBlocks.CONTROLLER.get()))
+            getLevel().scheduleTick(getBlockPos(), ModBlocks.CONTROLLER.get(), 1);
     }
 
     @Override

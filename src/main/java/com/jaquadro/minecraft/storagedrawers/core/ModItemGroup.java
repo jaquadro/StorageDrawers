@@ -12,7 +12,7 @@ public class ModItemGroup
         @Override
         @Nonnull
         public ItemStack makeIcon () {
-            return new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2);
+            return new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2.get());
         }
     });
 }

@@ -8,15 +8,15 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.FractionalDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -41,7 +41,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         private GroupData groupData = new GroupData(3);
 
         public Slot3 (BlockPos pos, BlockState state) {
-            super(ModBlocks.Tile.FRACTIONAL_DRAWERS_3, pos, state);
+            super(ModBlockEntities.FRACTIONAL_DRAWERS_3.get(), pos, state);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }

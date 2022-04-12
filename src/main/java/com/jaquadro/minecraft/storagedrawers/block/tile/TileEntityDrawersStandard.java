@@ -5,11 +5,11 @@ import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -18,8 +18,6 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup.DrawerData;
 
 public class TileEntityDrawersStandard extends TileEntityDrawers
 {
@@ -40,7 +38,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         private GroupData groupData = new GroupData(1);
 
         public Slot1 (BlockPos pos, BlockState state) {
-            super(ModBlocks.Tile.STANDARD_DRAWERS_1, pos, state);
+            super(ModBlockEntities.STANDARD_DRAWERS_1.get(), pos, state);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -62,7 +60,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         private GroupData groupData = new GroupData(2);
 
         public Slot2 (BlockPos pos, BlockState state) {
-            super(ModBlocks.Tile.STANDARD_DRAWERS_2, pos, state);
+            super(ModBlockEntities.STANDARD_DRAWERS_2.get(), pos, state);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
@@ -84,7 +82,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         private GroupData groupData = new GroupData(4);
 
         public Slot4 (BlockPos pos, BlockState state) {
-            super(ModBlocks.Tile.STANDARD_DRAWERS_4, pos, state);
+            super(ModBlockEntities.STANDARD_DRAWERS_4.get(), pos, state);
             groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
