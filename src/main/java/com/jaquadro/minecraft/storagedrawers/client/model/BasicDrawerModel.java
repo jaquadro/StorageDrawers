@@ -75,7 +75,7 @@ public final class BasicDrawerModel
             //if (event.getMap() != Minecraft.getInstance().getTextureMap())
             //    return;
 
-            if (ModBlocks.OAK_FULL_DRAWERS_1 == null) {
+            if (!ModBlocks.OAK_FULL_DRAWERS_1.isPresent()) {
                 StorageDrawers.log.warn("Block objects not set in TextureStitchEvent.  Is your mod environment broken?");
                 return;
             }
@@ -198,7 +198,7 @@ public final class BasicDrawerModel
 
         @SubscribeEvent
         public static void registerModels (ModelBakeEvent event) {
-            if (ModBlocks.OAK_FULL_DRAWERS_1 == null) {
+            if (!ModBlocks.OAK_FULL_DRAWERS_1.isPresent()) {
                 StorageDrawers.log.warn("Block objects not set in ModelBakeEvent.  Is your mod environment broken?");
                 return;
             }
