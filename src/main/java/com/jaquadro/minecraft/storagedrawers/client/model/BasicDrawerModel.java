@@ -80,13 +80,13 @@ public final class BasicDrawerModel
                 return;
             }
 
-            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_lock.json"));
-            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_void.json"));
-            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_shroud.json"));
-            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/compdrawers_indicator.json"));
-            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_indicator_1.json"));
-            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_indicator_2.json"));
-            loadUnbakedModel(event, new ResourceLocation(StorageDrawers.MOD_ID, "models/block/full_drawers_indicator_4.json"));
+            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_lock.json"));
+            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_void.json"));
+            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_shroud.json"));
+            loadUnbakedModel(event, StorageDrawers.rl("models/block/compdrawers_indicator.json"));
+            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_indicator_1.json"));
+            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_indicator_2.json"));
+            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_indicator_4.json"));
 
             loadGeometryData();
         }
@@ -108,40 +108,40 @@ public final class BasicDrawerModel
 
             geometryDataLoaded = true;
 
-            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_1.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_1.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_ind_area_1.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_indbase_area_1.json"),
+            populateGeometryData(StorageDrawers.rl("models/block/geometry/full_drawers_icon_area_1.json"),
+                StorageDrawers.rl("models/block/geometry/full_drawers_count_area_1.json"),
+                StorageDrawers.rl("models/block/geometry/full_drawers_ind_area_1.json"),
+                StorageDrawers.rl("models/block/geometry/full_drawers_indbase_area_1.json"),
                     ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 1, false).toArray(BlockDrawers[]::new));
-            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_2.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_2.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_ind_area_2.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_indbase_area_2.json"),
+            populateGeometryData(StorageDrawers.rl("models/block/geometry/full_drawers_icon_area_2.json"),
+                StorageDrawers.rl("models/block/geometry/full_drawers_count_area_2.json"),
+                StorageDrawers.rl("models/block/geometry/full_drawers_ind_area_2.json"),
+                StorageDrawers.rl("models/block/geometry/full_drawers_indbase_area_2.json"),
                     ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 2, false).toArray(BlockDrawers[]::new));
-            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_icon_area_4.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_count_area_4.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_ind_area_4.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/full_drawers_indbase_area_4.json"),
+            populateGeometryData(StorageDrawers.rl("models/block/geometry/full_drawers_icon_area_4.json"),
+                StorageDrawers.rl("models/block/geometry/full_drawers_count_area_4.json"),
+                StorageDrawers.rl("models/block/geometry/full_drawers_ind_area_4.json"),
+                StorageDrawers.rl("models/block/geometry/full_drawers_indbase_area_4.json"),
                     ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 4, false).toArray(BlockDrawers[]::new));
-            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_1.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_1.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_ind_area_1.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_indbase_area_1.json"),
+            populateGeometryData(StorageDrawers.rl("models/block/geometry/half_drawers_icon_area_1.json"),
+                StorageDrawers.rl("models/block/geometry/half_drawers_count_area_1.json"),
+                StorageDrawers.rl("models/block/geometry/half_drawers_ind_area_1.json"),
+                StorageDrawers.rl("models/block/geometry/half_drawers_indbase_area_1.json"),
                     ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 1, true).toArray(BlockDrawers[]::new));
-            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_2.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_2.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_ind_area_2.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_indbase_area_2.json"),
+            populateGeometryData(StorageDrawers.rl("models/block/geometry/half_drawers_icon_area_2.json"),
+                StorageDrawers.rl("models/block/geometry/half_drawers_count_area_2.json"),
+                StorageDrawers.rl("models/block/geometry/half_drawers_ind_area_2.json"),
+                StorageDrawers.rl("models/block/geometry/half_drawers_indbase_area_2.json"),
                     ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 2, true).toArray(BlockDrawers[]::new));
-            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_icon_area_4.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_count_area_4.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_ind_area_4.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/half_drawers_indbase_area_4.json"),
+            populateGeometryData(StorageDrawers.rl("models/block/geometry/half_drawers_icon_area_4.json"),
+                StorageDrawers.rl("models/block/geometry/half_drawers_count_area_4.json"),
+                StorageDrawers.rl("models/block/geometry/half_drawers_ind_area_4.json"),
+                StorageDrawers.rl("models/block/geometry/half_drawers_indbase_area_4.json"),
                     ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 4, true).toArray(BlockDrawers[]::new));
-            populateGeometryData(new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_icon_area_3.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_count_area_3.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_ind_area_3.json"),
-                new ResourceLocation(StorageDrawers.MOD_ID, "models/block/geometry/comp_drawers_indbase_area_3.json"),
+            populateGeometryData(StorageDrawers.rl("models/block/geometry/comp_drawers_icon_area_3.json"),
+                StorageDrawers.rl("models/block/geometry/comp_drawers_count_area_3.json"),
+                StorageDrawers.rl("models/block/geometry/comp_drawers_ind_area_3.json"),
+                StorageDrawers.rl("models/block/geometry/comp_drawers_indbase_area_3.json"),
                 ModBlocks.getBlocksOfType(BlockCompDrawers.class).toArray(BlockDrawers[]::new));
         }
 
@@ -208,26 +208,26 @@ public final class BasicDrawerModel
                 BlockModelRotation rot = BlockModelRotation.by(0, (int)dir.toYRot() + 180);
                 Function<Material, TextureAtlasSprite> texGet = ForgeModelBakery.defaultTextureGetter();
 
-                lockOverlaysFull.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), rot, texGet));
-                lockOverlaysHalf.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_lock"), rot, texGet));
-                voidOverlaysFull.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), rot, texGet));
-                voidOverlaysHalf.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_void"), rot, texGet));
-                shroudOverlaysFull.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), rot, texGet));
-                shroudOverlaysHalf.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_shroud"), rot, texGet));
-                indicator1Full.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_indicator_1"), rot, texGet));
-                indicator1Half.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_indicator_1"), rot, texGet));
-                indicator2Full.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_indicator_2"), rot, texGet));
-                indicator2Half.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_indicator_2"), rot, texGet));
-                indicator4Full.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_indicator_4"), rot, texGet));
-                indicator4Half.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/half_drawers_indicator_4"), rot, texGet));
-                indicatorComp.put(dir, event.getModelLoader().bake(new ResourceLocation(StorageDrawers.MOD_ID, "block/compdrawers_indicator"), rot, texGet));
+                lockOverlaysFull.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/full_drawers_lock"), rot, texGet));
+                lockOverlaysHalf.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/half_drawers_lock"), rot, texGet));
+                voidOverlaysFull.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/full_drawers_void"), rot, texGet));
+                voidOverlaysHalf.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/half_drawers_void"), rot, texGet));
+                shroudOverlaysFull.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/full_drawers_shroud"), rot, texGet));
+                shroudOverlaysHalf.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/half_drawers_shroud"), rot, texGet));
+                indicator1Full.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/full_drawers_indicator_1"), rot, texGet));
+                indicator1Half.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/half_drawers_indicator_1"), rot, texGet));
+                indicator2Full.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/full_drawers_indicator_2"), rot, texGet));
+                indicator2Half.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/half_drawers_indicator_2"), rot, texGet));
+                indicator4Full.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/full_drawers_indicator_4"), rot, texGet));
+                indicator4Half.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/half_drawers_indicator_4"), rot, texGet));
+                indicatorComp.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/compdrawers_indicator"), rot, texGet));
             }
 
             ModBlocks.getDrawers().forEach(blockDrawers -> replaceBlock(event, blockDrawers));
 
-            //event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_lock"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
-            //event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_void"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
-            //event.getModelLoader().getBakedModel(new ResourceLocation(StorageDrawers.MOD_ID, "block/full_drawers_shroud"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
+            //event.getModelLoader().getBakedModel(StorageDrawers.rl("block/full_drawers_lock"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
+            //event.getModelLoader().getBakedModel(StorageDrawers.rl("block/full_drawers_void"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
+            //event.getModelLoader().getBakedModel(StorageDrawers.rl("block/full_drawers_shroud"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
         }
 
         public static void replaceBlock(ModelBakeEvent event, BlockDrawers block) {

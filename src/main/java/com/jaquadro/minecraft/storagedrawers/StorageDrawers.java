@@ -10,6 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.AddUpgradeRecipe;
 import com.jaquadro.minecraft.storagedrawers.integration.TheOneProbe;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -116,5 +117,9 @@ public class StorageDrawers
         CapabilityDrawerGroup.register(event);
         CapabilityItemRepository.register(event);
         CapabilityDrawerAttributes.register(event);
+    }
+
+    public static ResourceLocation rl(String path) {
+        return new ResourceLocation(MOD_ID, path);
     }
 }
