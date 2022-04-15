@@ -21,9 +21,6 @@ public class ClientEventBusSubscriber {
 
     @SubscribeEvent
     public static void registerEntityRenderers(RegisterRenderers event) {
-        event.registerBlockEntityRenderer(ModBlockEntities.STANDARD_DRAWERS_1.get(), TileEntityDrawersRenderer::new);
-        event.registerBlockEntityRenderer(ModBlockEntities.STANDARD_DRAWERS_2.get(), TileEntityDrawersRenderer::new);
-        event.registerBlockEntityRenderer(ModBlockEntities.STANDARD_DRAWERS_4.get(), TileEntityDrawersRenderer::new);
-        event.registerBlockEntityRenderer(ModBlockEntities.FRACTIONAL_DRAWERS_3.get(), TileEntityDrawersRenderer::new);
+        ModBlockEntities.getBlockEntityTypesWithRenderers().forEach(ro -> event.registerBlockEntityRenderer(ro.get(), TileEntityDrawersRenderer::new));
     }
 }
