@@ -12,11 +12,11 @@ public class ContainerDrawersComp extends ContainerDrawers
     };
 
     public ContainerDrawersComp (int windowId, Inventory playerInventory, FriendlyByteBuf packet) {
-        super(ModContainers.DRAWER_CONTAINER_COMP, windowId, playerInventory, packet);
+        super(ModContainers.DRAWER_CONTAINER_COMP.get(), windowId, playerInventory, packet);
     }
 
     public ContainerDrawersComp (int windowId, Inventory playerInventory, TileEntityDrawers tile) {
-        super(ModContainers.DRAWER_CONTAINER_COMP, windowId, playerInventory, tile);
+        super(ModContainers.DRAWER_CONTAINER_COMP.get(), windowId, playerInventory, tile);
     }
 
     @Override
