@@ -55,21 +55,26 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
     public void render (@NotNull TileEntityDrawers tile, float partialTickTime, @NotNull PoseStack matrix, @NotNull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 
         Player player = Minecraft.getInstance().player;
-        if (player == null) return;
+        if (player == null)
+            return;
 
         Level world = tile.getLevel();
-        if (world == null) return;
+        if (world == null)
+            return;
 
         BlockState state = tile.getBlockState();
-        if (!(state.getBlock() instanceof BlockDrawers)) return;
+        if (!(state.getBlock() instanceof BlockDrawers))
+            return;
 
         Direction side = state.getValue(BlockDrawers.FACING);
-        if (playerBehindBlock(tile.getBlockPos(), side)) return;
+        if (playerBehindBlock(tile.getBlockPos(), side))
+            return;
 
         float distance = (float)Math.sqrt(tile.getBlockPos().distToCenterSqr(player.position()));
 
         double renderDistance = ClientConfig.RENDER.labelRenderDistance.get();
-        if (renderDistance > 0 && distance > renderDistance) return;
+        if (renderDistance > 0 && distance > renderDistance)
+            return;
 
         itemRenderer = Minecraft.getInstance().getItemRenderer();
 
@@ -91,7 +96,8 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
 
     private boolean playerBehindBlock(BlockPos blockPos, Direction facing) {
         Player player = Minecraft.getInstance().player;
-        if (player == null) return false;
+        if (player == null)
+            return false;
 
         BlockPos playerPos = player.blockPosition();
         return switch (facing) {
