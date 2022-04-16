@@ -8,7 +8,6 @@ import mcp.mobius.waila.api.*;
 import mcp.mobius.waila.api.config.IPluginConfig;
 import mcp.mobius.waila.api.ui.IElement;
 import mcp.mobius.waila.impl.ui.ItemStackElement;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -27,9 +26,9 @@ public class Waila implements IWailaPlugin
     private void registerProvider(IRegistrar registrar) {
         WailaDrawer provider = new WailaDrawer();
 
-        registrar.addConfig(new ResourceLocation(StorageDrawers.MOD_ID, "display.content"), true);
-        registrar.addConfig(new ResourceLocation(StorageDrawers.MOD_ID, "display.stacklimit"), true);
-        registrar.addConfig(new ResourceLocation(StorageDrawers.MOD_ID, "display.status"), true);
+        registrar.addConfig(StorageDrawers.rl("display.content"), true);
+        registrar.addConfig(StorageDrawers.rl("display.stacklimit"), true);
+        registrar.addConfig(StorageDrawers.rl("display.status"), true);
         registrar.registerComponentProvider(provider, TooltipPosition.BODY, BlockDrawers.class);
     }
 
@@ -46,9 +45,9 @@ public class Waila implements IWailaPlugin
             TileEntityDrawers tile = (TileEntityDrawers) accessor.getBlockEntity();
 
             DrawerOverlay overlay = new DrawerOverlay();
-            overlay.showContent = config.get(new ResourceLocation(StorageDrawers.MOD_ID, "display.content"));
-            overlay.showStackLimit = config.get(new ResourceLocation(StorageDrawers.MOD_ID, "display.stacklimit"));
-            overlay.showStatus = config.get(new ResourceLocation(StorageDrawers.MOD_ID, "display.status"));
+            overlay.showContent = config.get(StorageDrawers.rl("display.content"));
+            overlay.showStackLimit = config.get(StorageDrawers.rl("display.stacklimit"));
+            overlay.showStatus = config.get(StorageDrawers.rl("display.status"));
 
             currenttip.addAll(overlay.getOverlay(tile));
         }

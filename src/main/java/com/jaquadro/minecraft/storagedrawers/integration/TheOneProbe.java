@@ -25,7 +25,7 @@ public class TheOneProbe implements Function<ITheOneProbe, Void> {
     private static class DrawerProbeProvider implements IProbeInfoProvider {
         @Override
         public ResourceLocation getID() {
-            return new ResourceLocation(StorageDrawers.MOD_ID, "drawerprobe");
+            return StorageDrawers.rl("drawerprobe");
         }
 
         @Override

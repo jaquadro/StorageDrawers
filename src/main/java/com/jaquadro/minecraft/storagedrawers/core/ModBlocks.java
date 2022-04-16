@@ -121,7 +121,7 @@ public final class ModBlocks
         BLOCK_REGISTER.register(bus);
     }
 
-    public static <T extends Block> Stream<T> getBlocksOfType(Class<T> blockClass) {
+    public static <B extends Block> Stream<B> getBlocksOfType(Class<B> blockClass) {
         return BLOCK_REGISTER.getEntries()
                 .stream()
                 .filter(RegistryObject::isPresent)
@@ -134,12 +134,12 @@ public final class ModBlocks
         return getBlocksOfType(BlockDrawers.class);
     }
 
-    public static <T extends BlockDrawers> Stream<T> getDrawersOfTypeAndSize(Class<T> drawerClass, int size) {
+    public static <B extends BlockDrawers> Stream<B> getDrawersOfTypeAndSize(Class<B> drawerClass, int size) {
         return getBlocksOfType(drawerClass)
                 .filter(blockStandardDrawers -> blockStandardDrawers.getDrawerCount() == size);
     }
 
-    public static <T extends BlockDrawers> Stream<T> getDrawersOfTypeAndSizeAndDepth(Class<T> drawerClass, int size, boolean halfDepth) {
+    public static <B extends BlockDrawers> Stream<B> getDrawersOfTypeAndSizeAndDepth(Class<B> drawerClass, int size, boolean halfDepth) {
         return getDrawersOfTypeAndSize(drawerClass, size)
                 .filter(blockStandardDrawers -> blockStandardDrawers.isHalfDepth() == halfDepth);
     }

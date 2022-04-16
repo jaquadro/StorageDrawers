@@ -17,10 +17,10 @@ import java.util.List;
 
 public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
 {
-    private static final ResourceLocation guiTextures1 = new ResourceLocation(StorageDrawers.MOD_ID, "textures/gui/drawers_1.png");
-    private static final ResourceLocation guiTextures2 = new ResourceLocation(StorageDrawers.MOD_ID, "textures/gui/drawers_2.png");
-    private static final ResourceLocation guiTextures4 = new ResourceLocation(StorageDrawers.MOD_ID, "textures/gui/drawers_4.png");
-    private static final ResourceLocation guiTexturesComp = new ResourceLocation(StorageDrawers.MOD_ID, "textures/gui/drawers_comp.png");
+    private static final ResourceLocation guiTextures1 = StorageDrawers.rl("textures/gui/drawers_1.png");
+    private static final ResourceLocation guiTextures2 = StorageDrawers.rl("textures/gui/drawers_2.png");
+    private static final ResourceLocation guiTextures4 = StorageDrawers.rl("textures/gui/drawers_4.png");
+    private static final ResourceLocation guiTexturesComp = StorageDrawers.rl("textures/gui/drawers_comp.png");
 
     private static final int smDisabledX = 176;
     private static final int smDisabledY = 0;
