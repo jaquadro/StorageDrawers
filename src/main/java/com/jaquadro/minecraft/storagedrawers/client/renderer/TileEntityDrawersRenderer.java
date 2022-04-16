@@ -188,16 +188,20 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
         matrix.scale(1, -1, 1);
         matrix.scale(16, 16, 16);
 
-        BakedModel itemModel = itemRenderer.getModel(itemStack, null, null, 0);
-        boolean render3D = itemModel.isGui3d(); // itemModel.usesBlockLight();
+        try {
+            BakedModel itemModel = itemRenderer.getModel(itemStack, null, null, 0);
+            boolean render3D = itemModel.isGui3d(); // itemModel.usesBlockLight();
 
-        if (render3D)
-            Lighting.setupFor3DItems();
-        else
-            Lighting.setupForFlatItems();
+            if (render3D)
+                Lighting.setupFor3DItems();
+            else
+                Lighting.setupForFlatItems();
 
-        matrix.last().normal().load(Matrix3f.createScaleMatrix(1, 1, 1));
-        itemRenderer.render(itemStack, ItemTransforms.TransformType.GUI, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
+            matrix.last().normal().load(Matrix3f.createScaleMatrix(1, 1, 1));
+            itemRenderer.render(itemStack, ItemTransforms.TransformType.GUI, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
+        } catch (Exception e) {
+            // Shrug
+        }
 
         matrix.popPose();
     }
