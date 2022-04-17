@@ -20,7 +20,7 @@ public class ClientEventBusSubscriber {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
         ModBlocks.getDrawers().forEach(blockDrawers -> ItemBlockRenderTypes.setRenderLayer(blockDrawers, RenderType.cutoutMipped()));
-        event.enqueueWork(()-> {
+        event.enqueueWork(() -> {
             /*
             I'd like to do this registration in bulk as well, but I'm hesitant to put
             client-only code in common classes like ModContainers (memorizing screen types).
