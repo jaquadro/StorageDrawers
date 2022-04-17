@@ -12,11 +12,11 @@ public class ContainerDrawers2 extends ContainerDrawers
     };
 
     public ContainerDrawers2 (int windowId, Inventory playerInv, FriendlyByteBuf data) {
-        super(ModContainers.DRAWER_CONTAINER_2, windowId, playerInv, data);
+        super(ModContainers.DRAWER_CONTAINER_2.get(), windowId, playerInv, data);
     }
 
     public ContainerDrawers2 (int windowId, Inventory playerInventory, TileEntityDrawers tileEntity) {
-        super(ModContainers.DRAWER_CONTAINER_2, windowId, playerInventory, tileEntity);
+        super(ModContainers.DRAWER_CONTAINER_2.get(), windowId, playerInventory, tileEntity);
     }
 
     @Override

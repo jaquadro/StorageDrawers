@@ -4,6 +4,9 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.TileEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
+import com.jaquadro.minecraft.storagedrawers.inventory.DrawerScreen;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
@@ -17,6 +20,17 @@ public class ClientEventBusSubscriber {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
         ModBlocks.getDrawers().forEach(blockDrawers -> ItemBlockRenderTypes.setRenderLayer(blockDrawers, RenderType.cutoutMipped()));
+        event.enqueueWork(() -> {
+            /*
+            I'd like to do this registration in bulk as well, but I'm hesitant to put
+            client-only code in common classes like ModContainers (memorizing screen types).
+            BERs at least all have the same renderer.
+            */
+            MenuScreens.register(ModContainers.DRAWER_CONTAINER_1.get(), DrawerScreen.Slot1::new);
+            MenuScreens.register(ModContainers.DRAWER_CONTAINER_2.get(), DrawerScreen.Slot2::new);
+            MenuScreens.register(ModContainers.DRAWER_CONTAINER_4.get(), DrawerScreen.Slot4::new);
+            MenuScreens.register(ModContainers.DRAWER_CONTAINER_COMP.get(), DrawerScreen.Compacting::new);
+        });
     }
 
     @SubscribeEvent
