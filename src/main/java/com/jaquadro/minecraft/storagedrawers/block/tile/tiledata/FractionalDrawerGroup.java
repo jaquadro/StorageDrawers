@@ -36,12 +36,10 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
     private final FractionalDrawer[] slots;
     private final int[] order;
 
-    private final LazyOptional<IItemHandler> itemHandler;
-    private final LazyOptional<IItemRepository> itemRepository;
+    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new DrawerItemHandler(this));
+    private final LazyOptional<IItemRepository> itemRepository = LazyOptional.of(() -> new DrawerItemRepository(this));
 
     public FractionalDrawerGroup (int slotCount) {
-        itemHandler = LazyOptional.of(() -> new DrawerItemHandler(this));
-        itemRepository = LazyOptional.of(() -> new DrawerItemRepository(this));
 
         storage = new FractionalStorage(this, slotCount);
 
@@ -123,6 +121,13 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
     protected void onItemChanged () { }
 
     protected void onAmountChanged () { }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        itemHandler.invalidate();
+        itemRepository.invalidate();
+    }
 
     private static class FractionalStorage implements INBTSerializable<CompoundTag>
     {
