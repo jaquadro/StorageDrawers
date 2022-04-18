@@ -1,8 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import net.minecraft.util.StringRepresentable;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public enum EnumKeyType implements StringRepresentable
 {
@@ -32,7 +31,7 @@ public enum EnumKeyType implements StringRepresentable
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public String getSerializedName () {
         return name;
     }

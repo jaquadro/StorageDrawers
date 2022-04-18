@@ -1,25 +1,17 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.core.Direction;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersStandard;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.BlockGetter;
-
-import java.util.Vector;
-
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BlockStandardDrawers extends BlockDrawers
 {
-    //public static final EnumProperty<EnumBasicDrawer> BLOCK = EnumProperty.create("block", EnumBasicDrawer.class);
-
-
-    //@SideOnly(Side.CLIENT)
-    //private StatusModelData[] statusInfo;
 
     public BlockStandardDrawers (int drawerCount, boolean halfDepth, int storageUnits, BlockBehaviour.Properties properties) {
        super(drawerCount, halfDepth, storageUnits, properties);
@@ -33,43 +25,32 @@ public class BlockStandardDrawers extends BlockDrawers
         return halfDepth ? 4 / drawerCount : 8 / drawerCount;
     }
 
-    /*@Override
-    @SideOnly(Side.CLIENT)
-    public void initDynamic () {
-        statusInfo = new StatusModelData[EnumBasicDrawer.values().length];
-        for (EnumBasicDrawer type : EnumBasicDrawer.values()) {
-            ResourceLocation location = new ResourceLocation(StorageDrawers.MOD_ID + ":models/dynamic/basicDrawers_" + type.getName() + ".json");
-            statusInfo[type.getMetadata()] = new StatusModelData(type.getDrawerCount(), location);
-        }
-    }
-
     @Override
-    @SideOnly(Side.CLIENT)
-    public StatusModelData getStatusInfo (IBlockState state) {
-        if (state != null) {
-            EnumBasicDrawer info = state.getValue(BLOCK);
-            if (info != null)
-                return statusInfo[info.getMetadata()];
-        }
+    protected int getDrawerSlot (Direction correctSide, @NotNull Vec3 normalizedHit) {
+        if (!hitAny(correctSide, normalizedHit))
+            return super.getDrawerSlot(correctSide, normalizedHit);
 
-        return null;
-    }*/
-
-    @Override
-    protected int getDrawerSlot (Direction side, Vec3 hit) {
         if (getDrawerCount() == 1)
             return 0;
-        if (getDrawerCount() == 2)
-            return hitTop(hit.y) ? 0 : 1;
 
-        if (hitLeft(side, hit.x, hit.z))
-            return hitTop(hit.y) ? 0 : 2;
-        else
-            return hitTop(hit.y) ? 1 : 3;
+        boolean hitTop = hitTop(normalizedHit);
+
+        if (getDrawerCount() == 2)
+            return hitTop ? 0 : 1;
+
+        if (getDrawerCount() == 4) {
+            if (hitLeft(correctSide, normalizedHit))
+                return hitTop ? 0 : 2;
+            else
+                return hitTop ? 1 : 3;
+        }
+
+        return super.getDrawerSlot(correctSide, normalizedHit);
     }
 
     @Override
-    public TileEntityDrawers newBlockEntity (BlockPos pos, BlockState state) {
-        return TileEntityDrawersStandard.createEntity(getDrawerCount(), pos, state);
+    @Nullable
+    public BlockEntityDrawers newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
+        return BlockEntityDrawersStandard.createEntity(getDrawerCount(), pos, state);
     }
 }

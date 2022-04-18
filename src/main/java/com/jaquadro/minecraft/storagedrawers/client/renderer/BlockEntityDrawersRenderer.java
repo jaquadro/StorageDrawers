@@ -4,8 +4,8 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.Drawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
 import com.mojang.blaze3d.platform.Lighting;
@@ -39,7 +39,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntityDrawers>
+public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEntityDrawers>
 {
     private final ItemStack[] renderStacks = new ItemStack[4];
 
@@ -47,30 +47,30 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
 
     private final BlockEntityRendererProvider.Context context;
 
-    public TileEntityDrawersRenderer (BlockEntityRendererProvider.Context context) {
+    public BlockEntityDrawersRenderer(BlockEntityRendererProvider.Context context) {
         this.context = context;
     }
 
     @Override
-    public void render (@NotNull TileEntityDrawers tile, float partialTickTime, @NotNull PoseStack matrix, @NotNull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+    public void render (@NotNull BlockEntityDrawers blockEntityDrawers, float partialTickTime, @NotNull PoseStack matrix, @NotNull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 
         Player player = Minecraft.getInstance().player;
         if (player == null)
             return;
 
-        Level world = tile.getLevel();
-        if (world == null)
+        Level level = blockEntityDrawers.getLevel();
+        if (level == null)
             return;
 
-        BlockState state = tile.getBlockState();
+        BlockState state = blockEntityDrawers.getBlockState();
         if (!(state.getBlock() instanceof BlockDrawers))
             return;
 
         Direction side = state.getValue(BlockDrawers.FACING);
-        if (playerBehindBlock(tile.getBlockPos(), side))
+        if (playerBehindBlock(blockEntityDrawers.getBlockPos(), side))
             return;
 
-        float distance = (float)Math.sqrt(tile.getBlockPos().distToCenterSqr(player.position()));
+        float distance = (float)Math.sqrt(blockEntityDrawers.getBlockPos().distToCenterSqr(player.position()));
 
         double renderDistance = ClientConfig.RENDER.labelRenderDistance.get();
         if (renderDistance > 0 && distance > renderDistance)
@@ -78,16 +78,16 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
 
         itemRenderer = Minecraft.getInstance().getItemRenderer();
 
-        if (tile.upgrades().hasIlluminationUpgrade()) {
+        if (blockEntityDrawers.upgrades().hasIlluminationUpgrade()) {
             int blockLight = Math.max(combinedLight % 65536, 208);
             combinedLight = (combinedLight & 0xFFFF0000) | blockLight;
         }
 
-        if (!tile.getDrawerAttributes().isConcealed())
-            renderFastItemSet(tile, state, matrix, buffer, combinedLight, combinedOverlay, side, partialTickTime, distance);
+        if (!blockEntityDrawers.getDrawerAttributes().isConcealed())
+            renderFastItemSet(blockEntityDrawers, state, matrix, buffer, combinedLight, combinedOverlay, side, partialTickTime, distance);
 
-        if (tile.getDrawerAttributes().hasFillLevel())
-            renderIndicator((BlockDrawers)state.getBlock(), tile, matrix, buffer, state.getValue(BlockDrawers.FACING), combinedLight, combinedOverlay);
+        if (blockEntityDrawers.getDrawerAttributes().hasFillLevel())
+            renderIndicator((BlockDrawers)state.getBlock(), blockEntityDrawers, matrix, buffer, state.getValue(BlockDrawers.FACING), combinedLight, combinedOverlay);
 
         matrix.popPose();
         Lighting.setupLevel(matrix.last().pose());
@@ -109,12 +109,12 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
         };
     }
 
-    private void renderFastItemSet (TileEntityDrawers tile, BlockState state, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Direction side, float partialTickTime, float distance) {
-        int drawerCount = tile.getGroup().getDrawerCount();
+    private void renderFastItemSet (BlockEntityDrawers blockEntityDrawers, BlockState state, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Direction side, float partialTickTime, float distance) {
+        int drawerCount = blockEntityDrawers.getGroup().getDrawerCount();
 
         for (int i = 0; i < drawerCount; i++) {
             renderStacks[i] = ItemStack.EMPTY;
-            IDrawer drawer = tile.getGroup().getDrawer(i);
+            IDrawer drawer = blockEntityDrawers.getGroup().getDrawer(i);
             if (!drawer.isEnabled() || drawer.isEmpty())
                 continue;
 
@@ -128,7 +128,7 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
                 renderFastItem(itemStack, state, i, matrix, buffer, combinedLight, combinedOverlay, side);
         }
 
-        if (tile.getDrawerAttributes().isShowingQuantity()) {
+        if (blockEntityDrawers.getDrawerAttributes().isShowingQuantity()) {
             float alpha = 1;
             double fadeDistance = ClientConfig.RENDER.quantityFadeDistance.get();
             if (fadeDistance == 0 || distance > fadeDistance)
@@ -137,7 +137,7 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
             double renderDistance = ClientConfig.RENDER.quantityRenderDistance.get();
             if (renderDistance == 0 || distance < renderDistance) {
                 for (int i = 0; i < drawerCount; i++) {
-                    String format = CountFormatter.format(this.context.getFont(), tile.getGroup().getDrawer(i));
+                    String format = CountFormatter.format(this.context.getFont(), blockEntityDrawers.getGroup().getDrawer(i));
                     renderText(format, state, i, matrix, buffer, combinedLight, side, alpha);
                 }
             }
@@ -240,11 +240,11 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
     public static final ResourceLocation TEXTURE_IND_4 = StorageDrawers.rl("blocks/indicator/indicator_4_on");
     public static final ResourceLocation TEXTURE_IND_COMP = StorageDrawers.rl("blocks/indicator/indicator_comp_on");
 
-    private void renderIndicator (BlockDrawers block, TileEntityDrawers tile, PoseStack matrixStack, MultiBufferSource buffer, Direction side, int combinedLight, int combinedOverlay) {
-        int count = (tile instanceof TileEntityDrawersComp) ? 1 : block.getDrawerCount();
+    private void renderIndicator (BlockDrawers block, BlockEntityDrawers blockEntityDrawers, PoseStack matrixStack, MultiBufferSource buffer, Direction side, int combinedLight, int combinedOverlay) {
+        int count = (blockEntityDrawers instanceof BlockEntityDrawersComp) ? 1 : block.getDrawerCount();
 
         ResourceLocation resource = TEXTURE_IND_1;
-        if (tile instanceof TileEntityDrawersComp)
+        if (blockEntityDrawers instanceof BlockEntityDrawersComp)
             resource = TEXTURE_IND_COMP;
         else if (count == 2)
             resource = TEXTURE_IND_2;
@@ -268,8 +268,8 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
         alignRendering(matrixStack, side);
 
         for (int i = 0; i < count; i++) {
-            IDrawer drawer = tile.getGroup().getDrawer(i);
-            if (drawer == Drawers.DISABLED || tile.getDrawerAttributes().isConcealed())
+            IDrawer drawer = blockEntityDrawers.getGroup().getDrawer(i);
+            if (drawer == Drawers.DISABLED || blockEntityDrawers.getDrawerAttributes().isConcealed())
                 continue;
 
             AABB bb = block.indGeometry[i];
@@ -290,11 +290,11 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
             int stepX = (int)((x2 - xb2) * pxW);
             int stepY = (int)((y2 - yb2) * pxH);
 
-            float xCur = (stepX == 0) ? x2 : getIndEnd(tile, i, x1, x2 - xb2, stepX);
+            float xCur = (stepX == 0) ? x2 : getIndEnd(blockEntityDrawers, i, x1, x2 - xb2, stepX);
             float xFrac = (x2 == xb2) ? 1 : (xCur - x1) / (x2 - xb2);
             float uCur = su1 + xFrac * (su2 - su1);
 
-            float yCur = (stepY == 0) ? y2 : getIndEnd(tile, i, y1, y2 - yb2, stepY);
+            float yCur = (stepY == 0) ? y2 : getIndEnd(blockEntityDrawers, i, y1, y2 - yb2, stepY);
             float yFrac = (y2 == yb2) ? 1 : (yCur - y1) / (y2 - yb2);
             float vCur = sv1 + yFrac * (sv2 - sv1);
 
@@ -320,8 +320,8 @@ public class TileEntityDrawersRenderer implements BlockEntityRenderer<TileEntity
         buffer.vertex(matrix, x, y, z).color(1f, 1f, 1f, 1f).uv(u, v).overlayCoords(combinedOverlay).uv2(combinedLight).normal(normal, 0, 1, 0).endVertex();
     }
 
-    private float getIndEnd (TileEntityDrawers tile, int slot, float x, float w, int step) {
-        IDrawer drawer = tile.getGroup().getDrawer(slot);
+    private float getIndEnd (BlockEntityDrawers blockEntityDrawers, int slot, float x, float w, int step) {
+        IDrawer drawer = blockEntityDrawers.getGroup().getDrawer(slot);
         if (drawer == Drawers.DISABLED)
             return x;
 

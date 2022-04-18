@@ -1,44 +1,38 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.*;
 import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.ItemModelShaper;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
-
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 
 @OnlyIn(Dist.CLIENT)
 public class StorageRenderItem extends ItemRenderer
 {
-    private ItemRenderer parent;
+    private final ItemRenderer parent;
 
-    @Nonnull
+    @NotNull
     public ItemStack overrideStack;
 
     public StorageRenderItem (TextureManager texManager, ModelManager modelManager, ItemColors colors) {
@@ -48,56 +42,58 @@ public class StorageRenderItem extends ItemRenderer
     }
 
     @Override
+    @NotNull
     public ItemModelShaper getItemModelShaper () {
         return parent.getItemModelShaper();
     }
 
     @Override
-    public void render(ItemStack itemStackIn, ItemTransforms.TransformType transformTypeIn, boolean leftHand, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn, BakedModel modelIn) {
+    public void render(@NotNull ItemStack itemStackIn, ItemTransforms.@NotNull TransformType transformTypeIn, boolean leftHand, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn, @NotNull BakedModel modelIn) {
         parent.render(itemStackIn, transformTypeIn, leftHand, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, modelIn);
     }
 
     @Override
-    public void renderStatic(@Nullable LivingEntity livingEntityIn, ItemStack itemStackIn, ItemTransforms.TransformType transformTypeIn, boolean leftHand, PoseStack matrixStackIn, MultiBufferSource bufferIn, @Nullable Level worldIn, int combinedLightIn, int combinedOverlayIn, int p_174252_) {
+    public void renderStatic(@Nullable LivingEntity livingEntityIn, @NotNull ItemStack itemStackIn, ItemTransforms.@NotNull TransformType transformTypeIn, boolean leftHand, @NotNull PoseStack matrixStackIn, MultiBufferSource bufferIn, @Nullable Level worldIn, int combinedLightIn, int combinedOverlayIn, int p_174252_) {
         parent.renderStatic(livingEntityIn, itemStackIn, transformTypeIn, leftHand, matrixStackIn, bufferIn, worldIn, combinedLightIn, combinedOverlayIn, p_174252_);
     }
 
     @Override
-    public void renderStatic(ItemStack itemStackIn, ItemTransforms.TransformType transformTypeIn, int combinedLightIn, int combinedOverlayIn, PoseStack matrixStackIn, MultiBufferSource bufferIn, int p_174276_) {
+    public void renderStatic(@NotNull ItemStack itemStackIn, ItemTransforms.@NotNull TransformType transformTypeIn, int combinedLightIn, int combinedOverlayIn, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int p_174276_) {
         parent.renderStatic(itemStackIn, transformTypeIn, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, p_174276_);
     }
 
-    public void renderQuadList(PoseStack matrixStackIn, VertexConsumer bufferIn, List<BakedQuad> quadsIn, ItemStack itemStackIn, int combinedLightIn, int combinedOverlayIn) {
+    public void renderQuadList(@NotNull PoseStack matrixStackIn, @NotNull VertexConsumer bufferIn, @NotNull List<BakedQuad> quadsIn, @NotNull ItemStack itemStackIn, int combinedLightIn, int combinedOverlayIn) {
         parent.renderQuadList(matrixStackIn, bufferIn, quadsIn, itemStackIn, combinedLightIn, combinedOverlayIn);
     }
 
     @Override
-    public BakedModel getModel (@Nonnull ItemStack stack, Level world, LivingEntity entity, int p_174268_) {
+    @NotNull
+    public BakedModel getModel (@NotNull ItemStack stack, Level world, LivingEntity entity, int p_174268_) {
         return parent.getModel(stack, world, entity, p_174268_);
     }
 
     @Override
-    public void renderGuiItem (@Nonnull ItemStack stack, int x, int y) {
+    public void renderGuiItem (@NotNull ItemStack stack, int x, int y) {
         parent.renderGuiItem(stack, x, y);
     }
 
     @Override
-    public void renderAndDecorateItem (@Nonnull ItemStack stack, int xPosition, int yPosition) {
+    public void renderAndDecorateItem (@NotNull ItemStack stack, int xPosition, int yPosition) {
         parent.renderAndDecorateItem(stack, xPosition, yPosition);
     }
 
     @Override
-    public void renderAndDecorateItem(@Nullable LivingEntity entityIn, ItemStack itemIn, int x, int y, int p_174234_) {
+    public void renderAndDecorateItem(@NotNull LivingEntity entityIn, @NotNull ItemStack itemIn, int x, int y, int p_174234_) {
         parent.renderAndDecorateItem(entityIn, itemIn, x, y, p_174234_);
     }
 
     @Override
-    public void renderGuiItemDecorations (Font fr, @Nonnull ItemStack stack, int xPosition, int yPosition) {
+    public void renderGuiItemDecorations (@NotNull Font fr, @NotNull ItemStack stack, int xPosition, int yPosition) {
         parent.renderGuiItemDecorations(fr, stack, xPosition, yPosition);
     }
 
     @Override
-    public void renderGuiItemDecorations (Font font, @Nonnull ItemStack item, int x, int y, String text)
+    public void renderGuiItemDecorations (@NotNull Font font, @NotNull ItemStack item, int x, int y, String text)
     {
         if (item != overrideStack) {
             super.renderGuiItemDecorations(font, item, x, y, text);
@@ -178,7 +174,7 @@ public class StorageRenderItem extends ItemRenderer
     }
 
     @Override
-    public void onResourceManagerReload (ResourceManager p_195410_1_) {
+    public void onResourceManagerReload (@NotNull ResourceManager p_195410_1_) {
         parent.onResourceManagerReload(p_195410_1_);
     }
 

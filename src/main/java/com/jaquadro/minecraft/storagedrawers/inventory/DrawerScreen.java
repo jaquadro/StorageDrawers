@@ -2,16 +2,17 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -67,14 +68,14 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
     protected void init () {
         super.init();
 
-        if (storageItemRender == null) {
+        if (storageItemRender == null && minecraft != null) {
             ItemRenderer defaultRenderItem = minecraft.getItemRenderer();
             storageItemRender = new StorageRenderItem(minecraft.getTextureManager(), defaultRenderItem.getItemModelShaper().getModelManager(), minecraft.getItemColors());
         }
     }
 
     @Override
-    public void render (PoseStack stack, int p_render_1_, int p_render_2_, float p_render_3_) {
+    public void render (@NotNull PoseStack stack, int p_render_1_, int p_render_2_, float p_render_3_) {
         ItemRenderer ri = setItemRender(storageItemRender);
         menu.activeRenderItem = storageItemRender;
 
@@ -89,14 +90,14 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
     }
 
     @Override
-    protected void renderLabels (PoseStack stack, int mouseX, int mouseY) {
+    protected void renderLabels (@NotNull PoseStack stack, int mouseX, int mouseY) {
         this.font.draw(stack, this.title.getString(), 8.0F, 6.0F, 4210752);
         this.font.draw(stack, I18n.get("container.storagedrawers.upgrades"), 8, 75, 4210752);
         this.font.draw(stack, this.inventory.getDisplayName().getString(), 8, this.imageHeight - 96 + 2, 4210752);
     }
 
     @Override
-    protected void renderBg (PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg (@NotNull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, background);
 

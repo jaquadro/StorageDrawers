@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
 
 public enum EnumUpgradeRedstone implements StringRepresentable
 {
@@ -40,6 +41,7 @@ public enum EnumUpgradeRedstone implements StringRepresentable
     }
 
     @Override
+    @NotNull
     public String getSerializedName () {
         return name;
     }

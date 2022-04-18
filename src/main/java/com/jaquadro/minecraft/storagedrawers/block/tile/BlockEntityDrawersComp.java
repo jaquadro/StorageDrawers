@@ -24,21 +24,20 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-public class TileEntityDrawersComp extends TileEntityDrawers
+public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
 {
     static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
-    public TileEntityDrawersComp (BlockEntityType<?> tileEntityType, BlockPos pos, BlockState state) {
-        super(tileEntityType, pos, state);
+    public BlockEntityDrawersComp(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+        super(blockEntityType, pos, state);
     }
 
-    public static class Slot3 extends TileEntityDrawersComp
+    public static class Slot3 extends BlockEntityDrawersComp
     {
-        private GroupData groupData = new GroupData(3);
+        private final GroupData groupData = new GroupData(3);
 
         public Slot3 (BlockPos pos, BlockState state) {
             super(ModBlockEntities.FRACTIONAL_DRAWERS_3.get(), pos, state);
@@ -47,6 +46,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
         }
 
         @Override
+        @NotNull
         public IDrawerGroup getGroup () {
             return groupData;
         }
@@ -59,17 +59,11 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     }
 
     @Override
-    public IDrawerGroup getGroup () {
-        return null;
-    }
-
-    @Override
     protected boolean emptySlotCanBeCleared (int slot) {
         if (slot != 0)
             return false;
 
-        if (getGroup() instanceof FractionalDrawerGroup) {
-            FractionalDrawerGroup fracGroup = (FractionalDrawerGroup)getGroup();
+        if (getGroup() instanceof FractionalDrawerGroup fracGroup) {
             return !getGroup().getDrawer(0).isEmpty() && fracGroup.getPooledCount() == 0;
         }
 
@@ -84,12 +78,12 @@ public class TileEntityDrawersComp extends TileEntityDrawers
 
         @Override
         protected Level getWorld () {
-            return TileEntityDrawersComp.this.getLevel();
+            return BlockEntityDrawersComp.this.getLevel();
         }
 
         @Override
         public boolean isGroupValid () {
-            return TileEntityDrawersComp.this.isGroupValid();
+            return BlockEntityDrawersComp.this.isGroupValid();
         }
 
         @Override
@@ -109,7 +103,7 @@ public class TileEntityDrawersComp extends TileEntityDrawers
                 int usedSlots = 0;
                 for (int slot : getAccessibleDrawerSlots()) {
                     IDrawer drawer = getDrawer(slot);
-                    if (drawer != null && !drawer.isEmpty())
+                    if (!drawer.isEmpty())
                         usedSlots += 1;
                 }
                 usedSlots = Math.max(usedSlots, 1);
@@ -135,15 +129,21 @@ public class TileEntityDrawersComp extends TileEntityDrawers
             }
         }
 
-        private final LazyOptional<?> capabilityAttributes = LazyOptional.of(TileEntityDrawersComp.this::getDrawerAttributes);
+        private final LazyOptional<?> capabilityAttributes = LazyOptional.of(BlockEntityDrawersComp.this::getDrawerAttributes);
 
-        @Nonnull
         @Override
-        public <T> LazyOptional<T> getCapability (@Nonnull Capability<T> capability, @Nullable Direction facing) {
-            if (capability == TileEntityDrawersComp.DRAWER_ATTRIBUTES_CAPABILITY)
+        @NotNull
+        public <T> LazyOptional<T> getCapability (@NotNull Capability<T> capability, @Nullable Direction facing) {
+            if (capability == BlockEntityDrawersComp.DRAWER_ATTRIBUTES_CAPABILITY)
                 return capabilityAttributes.cast();
 
             return super.getCapability(capability, facing);
+        }
+
+        @Override
+        public void invalidateCaps() {
+            super.invalidateCaps();
+            capabilityAttributes.invalidate();
         }
     }
 
@@ -171,10 +171,10 @@ public class TileEntityDrawersComp extends TileEntityDrawers
     @Override
     @OnlyIn(Dist.CLIENT)
     public void clientUpdateCount (final int slot, final int count) {
-        if (!getLevel().isClientSide)
+        if (getLevel() == null || !getLevel().isClientSide)
             return;
 
-        Minecraft.getInstance().tell(() -> TileEntityDrawersComp.this.clientUpdateCountAsync(count));
+        Minecraft.getInstance().tell(() -> BlockEntityDrawersComp.this.clientUpdateCountAsync(count));
     }
 
     @OnlyIn(Dist.CLIENT)

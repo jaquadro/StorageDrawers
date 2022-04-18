@@ -3,26 +3,26 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
+import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,34 +35,34 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
     private static final int UpgradeX = 26;
     private static final int UpgradeY = 86;
 
-    private Container upgradeInventory;
+    private final Container upgradeInventory;
 
-    private List<Slot> storageSlots;
-    private List<Slot> upgradeSlots;
-    private List<Slot> playerSlots;
-    private List<Slot> hotbarSlots;
+    private final List<Slot> storageSlots;
+    private final List<Slot> upgradeSlots;
+    private final List<Slot> playerSlots;
+    private final List<Slot> hotbarSlots;
 
     @OnlyIn(Dist.CLIENT)
     public StorageRenderItem activeRenderItem;
 
-    private boolean isRemote;
+    private final boolean isRemote;
 
     public ContainerDrawers (@Nullable MenuType<?> type, int windowId, Inventory playerInv, FriendlyByteBuf data) {
-        this(type, windowId, playerInv, getTileEntity(playerInv, data.readBlockPos()));
+        this(type, windowId, playerInv, getBlockEntity(playerInv, data.readBlockPos()));
     }
 
-    protected static TileEntityDrawers getTileEntity (Inventory playerInv, BlockPos pos) {
-        Level world = playerInv.player.getCommandSenderWorld();
-        BlockEntity tile = world.getBlockEntity(pos);
-        if (!(tile instanceof TileEntityDrawers))
-            StorageDrawers.log.error("Expected a drawers tile entity at " + pos.toString());
+    protected static BlockEntityDrawers getBlockEntity(Inventory playerInv, BlockPos pos) {
+        Level level = playerInv.player.getCommandSenderWorld();
+        BlockEntityDrawers blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityDrawers.class);
+        if (blockEntity == null)
+            StorageDrawers.log.error("Expected a drawers tile entity at " + pos);
         else
-            return (TileEntityDrawers)tile;
+            return blockEntity;
 
         return null;
     }
 
-    public ContainerDrawers (@Nullable MenuType<?> type, int windowId, Inventory playerInventory, TileEntityDrawers tileEntity) {
+    public ContainerDrawers (@Nullable MenuType<?> type, int windowId, Inventory playerInventory, BlockEntityDrawers tileEntity) {
         super(type, windowId);
 
         int drawerCount = 0;
@@ -118,13 +118,13 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
     }
 
     @Override
-    public boolean stillValid (Player player) {
+    public boolean stillValid (@NotNull Player player) {
         return upgradeInventory.stillValid(player);
     }
 
     @Override
-    @Nonnull
-    public ItemStack quickMoveStack (Player player, int slotIndex) {
+    @NotNull
+    public ItemStack quickMoveStack (@NotNull Player player, int slotIndex) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = slots.get(slotIndex);
 
@@ -138,7 +138,7 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
         int hotbarStart = hotbarSlots.get(0).index;
         int hotbarEnd = hotbarSlots.get(hotbarSlots.size() - 1).index + 1;
 
-        if (slot != null && slot.hasItem()) {
+        if (slot.hasItem()) {
             ItemStack slotStack = slot.getItem();
             itemStack = slotStack.copy();
 
@@ -156,10 +156,10 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
                     slotStack1.setCount(1);
 
                     if (!moveItemStackTo(slotStack1, upgradeStart, upgradeEnd, false)) {
-                        if (slotIndex >= inventoryStart && slotIndex < hotbarStart) {
+                        if (slotIndex < hotbarStart) {
                             if (!moveItemStackTo(slotStack, hotbarStart, hotbarEnd, false))
                                 return ItemStack.EMPTY;
-                        } else if (slotIndex >= hotbarStart && slotIndex < hotbarEnd && !moveItemStackTo(slotStack, inventoryStart, hotbarStart, false))
+                        } else if (!moveItemStackTo(slotStack, inventoryStart, hotbarStart, false))
                             return ItemStack.EMPTY;
                     }
                     else {
@@ -172,10 +172,10 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
                         slot.onTake(player, slotStack);
                         return ItemStack.EMPTY;
                     }
-                } else if (slotIndex >= inventoryStart && slotIndex < hotbarStart) {
+                } else if (slotIndex < hotbarStart) {
                     if (!moveItemStackTo(slotStack, hotbarStart, hotbarEnd, false))
                         return ItemStack.EMPTY;
-                } else if (slotIndex >= hotbarStart && slotIndex < hotbarEnd && !moveItemStackTo(slotStack, inventoryStart, hotbarStart, false))
+                } else if (!moveItemStackTo(slotStack, inventoryStart, hotbarStart, false))
                     return ItemStack.EMPTY;
             }
 

@@ -7,11 +7,11 @@ import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -19,26 +19,23 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
-public abstract class StandardDrawerGroup extends TileDataShim implements IDrawerGroup
+public abstract class StandardDrawerGroup extends BlockEntityDataShim implements IDrawerGroup
 {
     public static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
     public static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
-    private DrawerData[] slots;
-    private int[] order;
+    private final DrawerData[] slots;
+    private final int[] order;
 
-    private final LazyOptional<IItemHandler> itemHandler;
-    private final LazyOptional<IItemRepository> itemRepository;
+    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new DrawerItemHandler(this));
+    private final LazyOptional<IItemRepository> itemRepository = LazyOptional.of(() -> new DrawerItemRepository(this));
 
     public StandardDrawerGroup (int slotCount) {
-        itemHandler = LazyOptional.of(() -> new DrawerItemHandler(this));
-        itemRepository = LazyOptional.of(() -> new DrawerItemRepository(this));
-
         slots = new DrawerData[slotCount];
         for (int i = 0; i < slotCount; i++)
             slots[i] = createDrawer(i);
@@ -57,7 +54,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         return slots.length;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawer getDrawer (int slot) {
         if (slot < 0 || slot >= slots.length)
@@ -66,7 +63,6 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         return slots[slot];
     }
 
-    @Nonnull
     @Override
     public int[] getAccessibleDrawerSlots () {
         return order;
@@ -98,9 +94,9 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         return tag;
     }
 
-    @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability (@Nonnull Capability<T> capability, @Nullable Direction facing) {
+    @NotNull
+    public <T> LazyOptional<T> getCapability (@NotNull Capability<T> capability, @Nullable Direction facing) {
         if (capability == ITEM_HANDLER_CAPABILITY)
             return itemHandler.cast();
         if (capability == ITEM_REPOSITORY_CAPABILITY)
@@ -109,7 +105,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         return LazyOptional.empty();
     }
 
-    @Nonnull
+    @NotNull
     protected abstract DrawerData createDrawer (int slot);
 
     public void syncAttributes () {
@@ -143,6 +139,13 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
     }
 
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        itemHandler.invalidate();
+        itemRepository.invalidate();
+    }
+
     public static class DrawerData implements IDrawer, INBTSerializable<CompoundTag>
     {
         static Capability<IDrawerAttributes> ATTR_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
@@ -150,7 +153,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         IDrawerAttributes attrs;
         StandardDrawerGroup group;
 
-        @Nonnull
+        @NotNull
         private ItemStack protoStack;
         private int count;
         private ItemStackMatcher matcher;
@@ -167,18 +170,18 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
 
         @Override
-        @Nonnull
+        @NotNull
         public ItemStack getStoredItemPrototype () {
             return protoStack;
         }
 
         @Override
-        @Nonnull
-        public IDrawer setStoredItem (@Nonnull ItemStack itemPrototype) {
+        @NotNull
+        public IDrawer setStoredItem (@NotNull ItemStack itemPrototype) {
             return setStoredItem(itemPrototype, true);
         }
 
-        protected IDrawer setStoredItem (@Nonnull ItemStack itemPrototype, boolean notify) {
+        protected IDrawer setStoredItem (@NotNull ItemStack itemPrototype, boolean notify) {
             if (ItemStackHelper.isStackEncoded(itemPrototype))
                 itemPrototype = ItemStackHelper.decodeItemStackPrototype(itemPrototype);
 
@@ -207,7 +210,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
             return this;
         }
 
-        protected IDrawer setStoredItemRaw (@Nonnull ItemStack itemPrototype) {
+        protected IDrawer setStoredItemRaw (@NotNull ItemStack itemPrototype) {
             itemPrototype = ItemStackHelper.getItemPrototype(itemPrototype);
             protoStack = itemPrototype;
             protoStack.setCount(1);
@@ -295,7 +298,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
 
         @Override
-        public int getMaxCapacity (@Nonnull ItemStack itemPrototype) {
+        public int getMaxCapacity (@NotNull ItemStack itemPrototype) {
             if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
@@ -306,7 +309,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
 
         @Override
-        public int getAcceptingMaxCapacity (@Nonnull ItemStack itemPrototype) {
+        public int getAcceptingMaxCapacity (@NotNull ItemStack itemPrototype) {
             if (attrs.isVoid())
                 return Integer.MAX_VALUE;
 
@@ -336,7 +339,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
 
         @Override
-        public boolean canItemBeStored (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+        public boolean canItemBeStored (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
             if (protoStack.isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
                 return true;
 
@@ -346,7 +349,7 @@ public abstract class StandardDrawerGroup extends TileDataShim implements IDrawe
         }
 
         @Override
-        public boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+        public boolean canItemBeExtracted (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
             if (protoStack.isEmpty())
                 return false;
 

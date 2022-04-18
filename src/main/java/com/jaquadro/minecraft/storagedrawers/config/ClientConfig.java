@@ -14,7 +14,7 @@ public class ClientConfig
     public static final ForgeConfigSpec spec = BUILDER.build();
 
     private static boolean loaded = false;
-    private static List<Runnable> loadActions = new ArrayList<>();
+    private static final List<Runnable> loadActions = new ArrayList<>();
 
     public static void setLoaded() {
         if (!loaded)

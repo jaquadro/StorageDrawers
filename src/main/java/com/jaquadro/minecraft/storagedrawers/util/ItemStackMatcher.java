@@ -1,25 +1,24 @@
 package com.jaquadro.minecraft.storagedrawers.util;
 
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemStackMatcher
 {
     public static ItemStackMatcher EMPTY = new ItemStackMatcher(ItemStack.EMPTY);
 
-    @Nonnull
+    @NotNull
     protected ItemStack stack;
 
-    public ItemStackMatcher (@Nonnull ItemStack stack) {
+    public ItemStackMatcher (@NotNull ItemStack stack) {
         this.stack = stack;
     }
 
-    public boolean matches (@Nonnull ItemStack stack) {
+    public boolean matches (@NotNull ItemStack stack) {
         return areItemsEqual(this.stack, stack);
     }
 
-    public static boolean areItemsEqual (@Nonnull ItemStack stack1, @Nonnull ItemStack stack2) {
+    public static boolean areItemsEqual (@NotNull ItemStack stack1, @NotNull ItemStack stack2) {
         if (!stack1.sameItem(stack2))
             return false;
 

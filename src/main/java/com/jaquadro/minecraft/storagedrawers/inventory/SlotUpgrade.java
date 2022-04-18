@@ -3,12 +3,11 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class SlotUpgrade extends Slot
 {
@@ -17,7 +16,7 @@ public class SlotUpgrade extends Slot
     }
 
     @Override
-    public boolean mayPlace(@Nonnull ItemStack stack) {
+    public boolean mayPlace(@NotNull ItemStack stack) {
         if (stack.isEmpty())
             return false;
 
@@ -28,7 +27,7 @@ public class SlotUpgrade extends Slot
     }
 
     @Override
-    public boolean mayPickup (Player player) {
+    public boolean mayPickup (@NotNull Player player) {
         if (container instanceof InventoryUpgrade) {
             ItemStack stack = getItem();
             if (stack.getItem() instanceof ItemUpgradeStorage) {
@@ -36,9 +35,8 @@ public class SlotUpgrade extends Slot
                 return ((InventoryUpgrade) container).canRemoveStorageUpgrade(getSlotIndex());
             }
 
-            if (player != null && !player.isCreative()) {
-                if (stack.getItem() == ModItems.CREATIVE_STORAGE_UPGRADE.get() || stack.getItem() == ModItems.CREATIVE_VENDING_UPGRADE.get())
-                    return false;
+            if (!player.isCreative()) {
+                return stack.getItem() != ModItems.CREATIVE_STORAGE_UPGRADE.get() && stack.getItem() != ModItems.CREATIVE_VENDING_UPGRADE.get();
             }
         }
 

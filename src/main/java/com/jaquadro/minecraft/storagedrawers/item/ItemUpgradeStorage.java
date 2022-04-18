@@ -1,15 +1,15 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
-import net.minecraft.world.item.Item;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemUpgradeStorage extends ItemUpgrade
 {
-    private static int storageGroupId;
+    private static final int storageGroupId;
     static {
         storageGroupId = ItemUpgrade.getNextGroupId();
     }

@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
@@ -15,27 +14,20 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-public class TileEntityDrawersStandard extends TileEntityDrawers
+public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
 {
     static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
-    private static final String[] GUI_IDS = new String[] {
-        null, StorageDrawers.MOD_ID + ":basicDrawers1", StorageDrawers.MOD_ID + ":basicDrawers2", null, StorageDrawers.MOD_ID + ":basicDrawers4"
-    };
-
-    private int capacity = 0;
-
-    public TileEntityDrawersStandard (BlockEntityType<?> tileEntityType, BlockPos pos, BlockState state) {
-        super(tileEntityType, pos, state);
+    public BlockEntityDrawersStandard(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+        super(blockEntityType, pos, state);
     }
 
-    public static class Slot1 extends TileEntityDrawersStandard
+    public static class Slot1 extends BlockEntityDrawersStandard
     {
-        private GroupData groupData = new GroupData(1);
+        private final GroupData groupData = new GroupData(1);
 
         public Slot1 (BlockPos pos, BlockState state) {
             super(ModBlockEntities.STANDARD_DRAWERS_1.get(), pos, state);
@@ -44,6 +36,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
 
         @Override
+        @NotNull
         public IDrawerGroup getGroup () {
             return groupData;
         }
@@ -55,9 +48,9 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
     }
 
-    public static class Slot2 extends TileEntityDrawersStandard
+    public static class Slot2 extends BlockEntityDrawersStandard
     {
-        private GroupData groupData = new GroupData(2);
+        private final GroupData groupData = new GroupData(2);
 
         public Slot2 (BlockPos pos, BlockState state) {
             super(ModBlockEntities.STANDARD_DRAWERS_2.get(), pos, state);
@@ -66,6 +59,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
 
         @Override
+        @NotNull
         public IDrawerGroup getGroup () {
             return groupData;
         }
@@ -77,9 +71,9 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
     }
 
-    public static class Slot4 extends TileEntityDrawersStandard
+    public static class Slot4 extends BlockEntityDrawersStandard
     {
-        private GroupData groupData = new GroupData(4);
+        private final GroupData groupData = new GroupData(4);
 
         public Slot4 (BlockPos pos, BlockState state) {
             super(ModBlockEntities.STANDARD_DRAWERS_4.get(), pos, state);
@@ -88,6 +82,7 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
 
         @Override
+        @NotNull
         public IDrawerGroup getGroup () {
             return groupData;
         }
@@ -99,33 +94,24 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
         }
     }
 
-    public static TileEntityDrawersStandard createEntity (int slotCount, BlockPos pos, BlockState state) {
-        switch (slotCount) {
-            case 1:
-                return new Slot1(pos, state);
-            case 2:
-                return new Slot2(pos, state);
-            case 4:
-                return new Slot4(pos, state);
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public IDrawerGroup getGroup () {
-        return null;
+    public static BlockEntityDrawersStandard createEntity (int slotCount, BlockPos pos, BlockState state) {
+        return switch (slotCount) {
+            case 1 -> new Slot1(pos, state);
+            case 2 -> new Slot2(pos, state);
+            case 4 -> new Slot4(pos, state);
+            default -> null;
+        };
     }
 
     private class GroupData extends StandardDrawerGroup
     {
-        private final LazyOptional<?> attributesHandler = LazyOptional.of(TileEntityDrawersStandard.this::getDrawerAttributes);
+        private final LazyOptional<?> attributesHandler = LazyOptional.of(BlockEntityDrawersStandard.this::getDrawerAttributes);
 
         public GroupData (int slotCount) {
             super(slotCount);
         }
 
-        @Nonnull
+        @NotNull
         @Override
         protected DrawerData createDrawer (int slot) {
             return new StandardDrawerData(this, slot);
@@ -133,22 +119,28 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
 
         @Override
         public boolean isGroupValid () {
-            return TileEntityDrawersStandard.this.isGroupValid();
+            return BlockEntityDrawersStandard.this.isGroupValid();
         }
 
-        @Nonnull
         @Override
-        public <T> LazyOptional<T> getCapability (@Nonnull Capability<T> capability, @Nullable Direction facing) {
-            if (capability == TileEntityDrawersStandard.DRAWER_ATTRIBUTES_CAPABILITY)
+        @NotNull
+        public <T> LazyOptional<T> getCapability (@NotNull Capability<T> capability, @Nullable Direction facing) {
+            if (capability == BlockEntityDrawersStandard.DRAWER_ATTRIBUTES_CAPABILITY)
                 return attributesHandler.cast();
 
             return super.getCapability(capability, facing);
+        }
+
+        @Override
+        public void invalidateCaps() {
+            super.invalidateCaps();
+            attributesHandler.invalidate();
         }
     }
 
     private class StandardDrawerData extends StandardDrawerGroup.DrawerData
     {
-        private int slot;
+        private final int slot;
 
         public StandardDrawerData (StandardDrawerGroup group, int slot) {
             super(group);

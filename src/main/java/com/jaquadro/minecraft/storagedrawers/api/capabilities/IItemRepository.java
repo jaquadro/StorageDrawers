@@ -1,9 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.api.capabilities;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 /**
@@ -23,7 +23,7 @@ public interface IItemRepository
 
      * @return A list of zero or more items in the inventory.
      */
-    @Nonnull
+    @NotNull
     NonNullList<ItemRecord> getAllItems ();
 
     /**
@@ -35,11 +35,11 @@ public interface IItemRepository
      * @return The remaining ItemStack that was not inserted.  If the entire stack was accepted, returns
      * ItemStack.EMPTY instead.
      */
-    @Nonnull
-    ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate, Predicate<ItemStack> predicate);
+    @NotNull
+    ItemStack insertItem (@NotNull ItemStack stack, boolean simulate, Predicate<ItemStack> predicate);
 
-    @Nonnull
-    default ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate) {
+    @NotNull
+    default ItemStack insertItem (@NotNull ItemStack stack, boolean simulate) {
         return insertItem(stack, simulate, null);
     }
 
@@ -54,11 +54,11 @@ public interface IItemRepository
      * @param predicate See interface notes about predicates.  Passing null specifies default matching.
      * @return ItemStack extracted from the inventory, or ItemStack.EMPTY if nothing could be extracted.
      */
-    @Nonnull
-    ItemStack extractItem (@Nonnull ItemStack stack, int amount, boolean simulate, Predicate<ItemStack> predicate);
+    @NotNull
+    ItemStack extractItem (@NotNull ItemStack stack, int amount, boolean simulate, Predicate<ItemStack> predicate);
 
-    @Nonnull
-    default ItemStack extractItem (@Nonnull ItemStack stack, int amount, boolean simulate) {
+    @NotNull
+    default ItemStack extractItem (@NotNull ItemStack stack, int amount, boolean simulate) {
         return extractItem(stack, amount, simulate, null);
     }
 
@@ -69,12 +69,12 @@ public interface IItemRepository
      * @param predicate See interface notes about predicates.  Passing null specifies default matching.
      * @return The number of stored matching items.  A value of Integer.MAX_VALUE may indicate an infinite item source.
      */
-    default int getStoredItemCount (@Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
+    default int getStoredItemCount (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
         ItemStack amount = extractItem(stack, Integer.MAX_VALUE, true, predicate);
         return amount.getCount();
     }
 
-    default int getStoredItemCount (@Nonnull ItemStack stack) {
+    default int getStoredItemCount (@NotNull ItemStack stack) {
         return getStoredItemCount(stack, null);
     }
 
@@ -86,14 +86,14 @@ public interface IItemRepository
      * @param predicate See interface notes about predicates.  Passing null specifies default matching.
      * @return The available remaining space for matching items.
      */
-    default int getRemainingItemCapacity (@Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
+    default int getRemainingItemCapacity (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
         stack = stack.copy();
         stack.setCount(Integer.MAX_VALUE);
         ItemStack remainder = insertItem(stack, true, predicate);
         return Integer.MAX_VALUE - remainder.getCount();
     }
 
-    default int getRemainingItemCapacity (@Nonnull ItemStack stack) {
+    default int getRemainingItemCapacity (@NotNull ItemStack stack) {
         return getRemainingItemCapacity(stack, null);
     }
 
@@ -105,14 +105,14 @@ public interface IItemRepository
      * @param predicate See interface notes about predicates.  Passing null specifies default matching.
      * @return The total capacity for matching items.
      */
-    default int getItemCapacity (@Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
-        long capacity = getStoredItemCount(stack, predicate) + getRemainingItemCapacity(stack, predicate);
+    default int getItemCapacity (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
+        long capacity = (long) getStoredItemCount(stack, predicate) + getRemainingItemCapacity(stack, predicate);
         if (capacity > Integer.MAX_VALUE)
             return Integer.MAX_VALUE;
         return (int)capacity;
     }
 
-    default int getItemCapacity (@Nonnull ItemStack stack) {
+    default int getItemCapacity (@NotNull ItemStack stack) {
         return getItemCapacity(stack, null);
     }
 
@@ -124,11 +124,11 @@ public interface IItemRepository
      */
     class ItemRecord
     {
-        @Nonnull
+        @NotNull
         public final ItemStack itemPrototype;
         public final int count;
 
-        public ItemRecord (@Nonnull ItemStack itemPrototype, int count) {
+        public ItemRecord (@NotNull ItemStack itemPrototype, int count) {
             this.itemPrototype = itemPrototype;
             this.count = count;
         }

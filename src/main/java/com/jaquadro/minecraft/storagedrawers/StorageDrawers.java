@@ -18,7 +18,6 @@ import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -39,9 +38,6 @@ public class StorageDrawers
     public static final String MOD_ID = "storagedrawers";
     public static final Api api = new Api();
     public static Logger log = LogManager.getLogger();
-
-    public static CommonProxy proxy;
-
     //public static ConfigManager config;
     public static CompTierRegistry compRegistry;
     //public static OreDictRegistry oreDictRegistry;
@@ -54,8 +50,6 @@ public class StorageDrawers
     public static final RegistryObject<RecipeSerializer<AddUpgradeRecipe>> UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_upgrade", () -> new SimpleRecipeSerializer<>(AddUpgradeRecipe::new));
 
     public StorageDrawers () {
-        proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
-
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.spec);
 

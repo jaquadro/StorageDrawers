@@ -8,11 +8,11 @@ import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.CompactingHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -21,20 +21,20 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Stack;
 import java.util.function.Predicate;
 
-public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
+public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawerGroup
 {
     static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
     static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
-    private FractionalStorage storage;
-    private FractionalDrawer[] slots;
-    private int[] order;
+    private final FractionalStorage storage;
+    private final FractionalDrawer[] slots;
+    private final int[] order;
 
     private final LazyOptional<IItemHandler> itemHandler;
     private final LazyOptional<IItemRepository> itemRepository;
@@ -63,7 +63,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         return slots.length;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IFractionalDrawer getDrawer (int slot) {
         if (slot < 0 || slot >= slots.length)
@@ -72,7 +72,6 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         return slots[slot];
     }
 
-    @Nonnull
     @Override
     public int[] getAccessibleDrawerSlots () {
         return order;
@@ -98,9 +97,9 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         return tag;
     }
 
-    @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability (@Nonnull Capability<T> capability, @Nullable Direction facing) {
+    @NotNull
+    public <T> LazyOptional<T> getCapability (@NotNull Capability<T> capability, @Nullable Direction facing) {
         if (capability == ITEM_HANDLER_CAPABILITY)
             return itemHandler.cast();
         if (capability == ITEM_REPOSITORY_CAPABILITY)
@@ -129,17 +128,17 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
     {
         static Capability<IDrawerAttributes> ATTR_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
-        private FractionalDrawerGroup group;
-        private int slotCount;
-        private ItemStack[] protoStack;
-        private int[] convRate;
-        private ItemStackMatcher[] matchers;
+        private final FractionalDrawerGroup group;
+        private final int slotCount;
+        private final ItemStack[] protoStack;
+        private final int[] convRate;
+        private final ItemStackMatcher[] matchers;
         private int pooledCount;
 
         private ItemStack cacheKey;
-        private ItemStack[] cachedProtoStack;
-        private int[] cachedConvRate;
-        private ItemStackMatcher[] cachedMatchers;
+        private final ItemStack[] cachedProtoStack;
+        private final int[] cachedConvRate;
+        private final ItemStackMatcher[] cachedMatchers;
 
         IDrawerAttributes attrs;
 
@@ -184,12 +183,12 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             }
         }
 
-        @Nonnull
+        @NotNull
         public ItemStack getStack (int slot) {
             return protoStack[slot];
         }
 
-        @Nonnull
+        @NotNull
         public ItemStack baseStack () {
             return protoStack[0];
         }
@@ -198,7 +197,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             return convRate[0];
         }
 
-        public IFractionalDrawer setStoredItem (int slot, @Nonnull ItemStack itemPrototype) {
+        public IFractionalDrawer setStoredItem (int slot, @NotNull ItemStack itemPrototype) {
             itemPrototype = ItemStackHelper.getItemPrototype(itemPrototype);
             if (itemPrototype.isEmpty()) {
                 reset();
@@ -305,7 +304,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             return baseStack().getItem().getItemStackLimit(baseStack()) * group.getStackCapacity() * (baseRate() / convRate[slot]);
         }
 
-        public int getMaxCapacity (int slot, @Nonnull ItemStack itemPrototype) {
+        public int getMaxCapacity (int slot, @NotNull ItemStack itemPrototype) {
             if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending()) {
                 if (convRate[slot] == 0)
                     return Integer.MAX_VALUE;
@@ -325,7 +324,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             return 0;
         }
 
-        public int getAcceptingMaxCapacity (int slot, @Nonnull ItemStack itemPrototype) {
+        public int getAcceptingMaxCapacity (int slot, @NotNull ItemStack itemPrototype) {
             if (attrs.isVoid())
                 return Integer.MAX_VALUE;
 
@@ -369,7 +368,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             return !protoStack[slot].isEmpty();
         }
 
-        public boolean canItemBeStored (int slot, @Nonnull ItemStack itemPrototype, Predicate<ItemStack> predicate) {
+        public boolean canItemBeStored (int slot, @NotNull ItemStack itemPrototype, Predicate<ItemStack> predicate) {
             if (protoStack[slot].isEmpty() && protoStack[0].isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
                 return true;
 
@@ -378,7 +377,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             return predicate.test(protoStack[slot]);
         }
 
-        public boolean canItemBeExtracted (int slot, @Nonnull ItemStack itemPrototype, Predicate<ItemStack> predicate) {
+        public boolean canItemBeExtracted (int slot, @NotNull ItemStack itemPrototype, Predicate<ItemStack> predicate) {
             if (protoStack[slot].isEmpty())
                 return false;
 
@@ -431,7 +430,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             }
         }
 
-        private void populateSlots (@Nonnull ItemStack itemPrototype) {
+        private void populateSlots (@NotNull ItemStack itemPrototype) {
             Level world = group.getWorld();
             if (world == null) {
                 protoStack[0] = itemPrototype;
@@ -456,7 +455,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             CompactingHelper compacting = new CompactingHelper(world);
             Stack<CompactingHelper.Result> resultStack = new Stack<>();
 
-            @Nonnull ItemStack lookupTarget = itemPrototype;
+            @NotNull ItemStack lookupTarget = itemPrototype;
             for (int i = 0; i < slotCount - 1; i++) {
                 CompactingHelper.Result lookup = compacting.findHigherTier(lookupTarget);
                 if (lookup.getStack().isEmpty())
@@ -501,7 +500,7 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
             }
         }
 
-        private void populateRawSlot (int slot, @Nonnull ItemStack itemPrototype, int rate) {
+        private void populateRawSlot (int slot, @NotNull ItemStack itemPrototype, int rate) {
             protoStack[slot] = itemPrototype;
             convRate[slot] = rate;
             matchers[slot] = new ItemStackMatcher(protoStack[slot]);
@@ -621,25 +620,26 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         }
     }
 
-    private static class FractionalDrawer implements IFractionalDrawer
-    {
-        private FractionalStorage storage;
-        private int slot;
+    private static class FractionalDrawer implements IFractionalDrawer {
+        private final FractionalStorage storage;
+        private final int slot;
 
-        public FractionalDrawer (FractionalStorage storage, int slot) {
+        private FractionalDrawer(
+                FractionalStorage storage,
+                int slot) {
             this.storage = storage;
             this.slot = slot;
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public ItemStack getStoredItemPrototype () {
+        public ItemStack getStoredItemPrototype() {
             return storage.getStack(slot);
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public IDrawer setStoredItem (@Nonnull ItemStack itemPrototype) {
+        public IDrawer setStoredItem(@NotNull ItemStack itemPrototype) {
             if (ItemStackHelper.isStackEncoded(itemPrototype))
                 itemPrototype = ItemStackHelper.decodeItemStackPrototype(itemPrototype);
 
@@ -647,77 +647,77 @@ public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
         }
 
         @Override
-        public int getStoredItemCount () {
+        public int getStoredItemCount() {
             return storage.getStoredCount(slot);
         }
 
         @Override
-        public void setStoredItemCount (int amount) {
+        public void setStoredItemCount(int amount) {
             storage.setStoredItemCount(slot, amount);
         }
 
         @Override
-        public int adjustStoredItemCount (int amount) {
+        public int adjustStoredItemCount(int amount) {
             return storage.adjustStoredItemCount(slot, amount);
         }
 
         @Override
-        public int getMaxCapacity () {
+        public int getMaxCapacity() {
             return storage.getMaxCapacity(slot);
         }
 
         @Override
-        public int getMaxCapacity (@Nonnull ItemStack itemPrototype) {
+        public int getMaxCapacity(@NotNull ItemStack itemPrototype) {
             return storage.getMaxCapacity(slot, itemPrototype);
         }
 
         @Override
-        public int getAcceptingMaxCapacity (@Nonnull ItemStack itemPrototype) {
+        public int getAcceptingMaxCapacity(@NotNull ItemStack itemPrototype) {
             return storage.getAcceptingMaxCapacity(slot, itemPrototype);
         }
 
         @Override
-        public int getRemainingCapacity () {
+        public int getRemainingCapacity() {
             return storage.getRemainingCapacity(slot);
         }
 
         @Override
-        public int getAcceptingRemainingCapacity () {
+        public int getAcceptingRemainingCapacity() {
             return storage.getAcceptingRemainingCapacity(slot);
         }
 
         @Override
-        public boolean canItemBeStored (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+        public boolean canItemBeStored(@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
             return storage.canItemBeStored(slot, itemPrototype, matchPredicate);
         }
 
         @Override
-        public boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+        public boolean canItemBeExtracted(@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
             return storage.canItemBeExtracted(slot, itemPrototype, matchPredicate);
         }
 
         @Override
-        public boolean isEmpty () {
+        public boolean isEmpty() {
             return storage.isEmpty(slot);
         }
 
         @Override
-        public boolean isEnabled () {
+        public boolean isEnabled() {
             return storage.isEnabled(slot);
         }
 
         @Override
-        public int getConversionRate () {
+        public int getConversionRate() {
             return storage.getConversionRate(slot);
         }
 
         @Override
-        public int getStoredItemRemainder () {
+        public int getStoredItemRemainder() {
             return storage.getStoredItemRemainder(slot);
         }
 
         @Override
-        public boolean isSmallestUnit () {
+        public boolean isSmallestUnit() {
             return storage.isSmallestUnit(slot);
         }
     }

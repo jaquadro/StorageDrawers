@@ -1,10 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemStackHelper
 {
@@ -14,7 +13,7 @@ public class ItemStackHelper
     //private static Field stackTagCompoundField;
     //private static Field capabilitiesField;
 
-    public static Item getTrueItem (@Nonnull ItemStack stack) {
+    public static Item getTrueItem (@NotNull ItemStack stack) {
         //if (!initialized)
             return stack.getItem();
 
@@ -25,8 +24,8 @@ public class ItemStackHelper
         }*/
     }
 
-    @Nonnull
-    public static ItemStack getItemPrototype (@Nonnull ItemStack stack) {
+    @NotNull
+    public static ItemStack getItemPrototype (@NotNull ItemStack stack) {
         //if (!initialized)
             return stack.copy();
 
@@ -45,8 +44,8 @@ public class ItemStackHelper
         }*/
     }
 
-    @Nonnull
-    public static ItemStack encodeItemStack (@Nonnull ItemStack stack) {
+    @NotNull
+    public static ItemStack encodeItemStack (@NotNull ItemStack stack) {
         if (!stack.isEmpty())
             return stack;
 
@@ -65,7 +64,7 @@ public class ItemStackHelper
         return proto;
     }
 
-    public static ItemStack encodeItemStack (@Nonnull ItemStack proto, int count) {
+    public static ItemStack encodeItemStack (@NotNull ItemStack proto, int count) {
         if (!proto.isEmpty() && count > 0 && count < 128) {
             ItemStack stack = proto.copy();
             stack.setCount(count);
@@ -88,20 +87,20 @@ public class ItemStackHelper
         return proto.copy();
     }
 
-    public static ItemStack decodeItemStack (@Nonnull ItemStack stack) {
+    public static ItemStack decodeItemStack (@NotNull ItemStack stack) {
         int count = ItemStackHelper.decodedCount(stack);
         ItemStack decode = ItemStackHelper.stripDecoding(stack);
         decode.setCount(count);
         return decode;
     }
 
-    public static ItemStack decodeItemStackPrototype (@Nonnull ItemStack stack) {
+    public static ItemStack decodeItemStackPrototype (@NotNull ItemStack stack) {
         ItemStack decode = ItemStackHelper.stripDecoding(stack);
         decode.setCount(1);
         return decode;
     }
 
-    public static int decodedCount (@Nonnull ItemStack stack) {
+    public static int decodedCount (@NotNull ItemStack stack) {
         CompoundTag tag = stack.getTag();
         if (tag != null && tag.contains("__storagedrawers_count"))
             return tag.getInt("__storagedrawers_count");
@@ -109,7 +108,7 @@ public class ItemStackHelper
         return stack.getCount();
     }
 
-    public static ItemStack stripDecoding (@Nonnull ItemStack stack) {
+    public static ItemStack stripDecoding (@NotNull ItemStack stack) {
         ItemStack decode = stack.copy();
         CompoundTag tag = decode.getTag();
 
@@ -124,7 +123,7 @@ public class ItemStackHelper
         return decode;
     }
 
-    public static boolean isStackEncoded (@Nonnull ItemStack stack) {
+    public static boolean isStackEncoded (@NotNull ItemStack stack) {
         CompoundTag tag = stack.getTag();
         if (tag == null)
             return false;

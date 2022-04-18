@@ -11,9 +11,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +24,13 @@ public class AddUpgradeRecipe extends CustomRecipe
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level world) {
+    public boolean matches(@NotNull CraftingContainer inv, @NotNull Level world) {
         return findContext(inv) != null;
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
+    @NotNull
+    public ItemStack assemble(@NotNull CraftingContainer inv) {
         Context ctx = findContext(inv);
         if (ctx == null)
             return ItemStack.EMPTY;
@@ -67,7 +68,7 @@ public class AddUpgradeRecipe extends CustomRecipe
 
         ret.data = new UpgradeData(7) { //Hard coded to 7 as the only use is TileEntityDrawers$DrawerUpgradeData
             @Override
-            public boolean setUpgrade(int slot, @Nonnull ItemStack upgrade) { //Override this to bypass a lot of the complex logic
+            public boolean setUpgrade(int slot, @NotNull ItemStack upgrade) { //Override this to bypass a lot of the complex logic
                 if (upgrade.isEmpty())
                     return false;
                 upgrade = upgrade.copy();
@@ -97,6 +98,7 @@ public class AddUpgradeRecipe extends CustomRecipe
     }
 
     @Override
+    @NotNull
     public RecipeSerializer<?> getSerializer() {
         return StorageDrawers.UPGRADE_RECIPE_SERIALIZER.get();
     }

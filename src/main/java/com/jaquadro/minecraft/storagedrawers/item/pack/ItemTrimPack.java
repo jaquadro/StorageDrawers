@@ -6,7 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.block.pack.BlockTrimPack;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemTrimPack extends ItemTrim
 {

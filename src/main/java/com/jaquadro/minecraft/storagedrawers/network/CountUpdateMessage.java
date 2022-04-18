@@ -1,14 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.network;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -24,7 +24,7 @@ public class CountUpdateMessage
     private int slot;
     private int count;
 
-    private boolean failed;
+    private final boolean failed;
 
     public CountUpdateMessage (BlockPos pos, int slot, int count) {
         this.x = pos.getX();
@@ -72,9 +72,9 @@ public class CountUpdateMessage
             Level world = Minecraft.getInstance().level;
             if (world != null) {
                 BlockPos pos = new BlockPos(msg.x, msg.y, msg.z);
-                BlockEntity tileEntity = world.getBlockEntity(pos);
-                if (tileEntity instanceof TileEntityDrawers) {
-                    ((TileEntityDrawers) tileEntity).clientUpdateCount(msg.slot, msg.count);
+                BlockEntity blockEntity = world.getBlockEntity(pos);
+                if (blockEntity instanceof BlockEntityDrawers) {
+                    ((BlockEntityDrawers) blockEntity).clientUpdateCount(msg.slot, msg.count);
                 }
             }
         }

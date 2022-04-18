@@ -1,18 +1,18 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemUpgrade extends Item
@@ -20,7 +20,7 @@ public class ItemUpgrade extends Item
     private static int nextGroupId = 0;
 
     private boolean allowMultiple;
-    private int groupId;
+    private final int groupId;
 
     public ItemUpgrade (Item.Properties properties) {
         this(properties, getNextGroupId());
@@ -43,11 +43,12 @@ public class ItemUpgrade extends Item
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText (@Nonnull ItemStack itemStack, @Nullable Level world, List<Component> list, TooltipFlag advanced) {
+    public void appendHoverText (@NotNull ItemStack itemStack, @Nullable Level world, List<Component> list, TooltipFlag advanced) {
         list.add(new TextComponent("").append(getDescription()).withStyle(ChatFormatting.GRAY));
     }
 
     @OnlyIn(Dist.CLIENT)
+    @NotNull
     public Component getDescription() {
         return new TranslatableComponent(this.getDescriptionId() + ".desc");
     }

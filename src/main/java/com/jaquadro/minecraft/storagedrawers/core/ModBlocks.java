@@ -136,12 +136,12 @@ public final class ModBlocks
 
     public static <B extends BlockDrawers> Stream<B> getDrawersOfTypeAndSize(Class<B> drawerClass, int size) {
         return getBlocksOfType(drawerClass)
-                .filter(blockStandardDrawers -> blockStandardDrawers.getDrawerCount() == size);
+                .filter(blockDrawers -> blockDrawers.getDrawerCount() == size);
     }
 
     public static <B extends BlockDrawers> Stream<B> getDrawersOfTypeAndSizeAndDepth(Class<B> drawerClass, int size, boolean halfDepth) {
         return getDrawersOfTypeAndSize(drawerClass, size)
-                .filter(blockStandardDrawers -> blockStandardDrawers.isHalfDepth() == halfDepth);
+                .filter(blockDrawers -> blockDrawers.isHalfDepth() == halfDepth);
     }
 
     private static boolean predFalse (BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {

@@ -1,21 +1,21 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class InventoryUpgrade implements Container
 {
     private static final int upgradeCapacity = 7;
 
-    private TileEntityDrawers tile;
+    private final BlockEntityDrawers blockEntityDrawers;
 
-    public InventoryUpgrade (TileEntityDrawers tileEntity) {
-        tile = tileEntity;
+    public InventoryUpgrade (BlockEntityDrawers blockEntityDrawers) {
+        this.blockEntityDrawers = blockEntityDrawers;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class InventoryUpgrade implements Container
     @Override
     public boolean isEmpty () {
         for (int i = 0; i < upgradeCapacity; i++) {
-            if (!tile.upgrades().getUpgrade(i).isEmpty())
+            if (!blockEntityDrawers.upgrades().getUpgrade(i).isEmpty())
                 return false;
         }
 
@@ -34,30 +34,30 @@ public class InventoryUpgrade implements Container
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public ItemStack getItem (int slot) {
-        return tile.upgrades().getUpgrade(slot);
+        return blockEntityDrawers.upgrades().getUpgrade(slot);
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public ItemStack removeItem (int slot, int count) {
-        ItemStack stack = tile.upgrades().getUpgrade(slot);
+        ItemStack stack = blockEntityDrawers.upgrades().getUpgrade(slot);
         if (count > 0)
-            tile.upgrades().setUpgrade(slot, ItemStack.EMPTY);
+            blockEntityDrawers.upgrades().setUpgrade(slot, ItemStack.EMPTY);
 
         return stack;
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public ItemStack removeItemNoUpdate (int slot) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setItem (int slot, @Nonnull ItemStack item) {
-        tile.upgrades().setUpgrade(slot, item);
+    public void setItem (int slot, @NotNull ItemStack item) {
+        blockEntityDrawers.upgrades().setUpgrade(slot, item);
     }
 
     @Override
@@ -67,29 +67,26 @@ public class InventoryUpgrade implements Container
 
     @Override
     public void setChanged () {
-        tile.setChanged();
+        blockEntityDrawers.setChanged();
     }
 
     @Override
-    public boolean stillValid (Player player) {
-        BlockPos pos = tile.getBlockPos();
-        if (tile.getLevel() == null || tile.getLevel().getBlockEntity(pos) != tile)
+    public boolean stillValid (@NotNull Player player) {
+        BlockPos pos = blockEntityDrawers.getBlockPos();
+        if (blockEntityDrawers.getLevel() == null || blockEntityDrawers.getLevel().getBlockEntity(pos) != blockEntityDrawers)
             return false;
-        if (player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > 64.0)
-            return false;
-
-        return true;
+        return !(player.distanceToSqr(Vec3.atCenterOf(pos)) > 64.0);
     }
 
     @Override
-    public void startOpen (Player player) { }
+    public void startOpen (@NotNull Player player) { }
 
     @Override
-    public void stopOpen (Player player) { }
+    public void stopOpen (@NotNull Player player) { }
 
     @Override
-    public boolean canPlaceItem (int slot, @Nonnull ItemStack item) {
-        return tile.upgrades().canAddUpgrade(item);
+    public boolean canPlaceItem (int slot, @NotNull ItemStack item) {
+        return blockEntityDrawers.upgrades().canAddUpgrade(item);
     }
 
     @Override
@@ -97,11 +94,11 @@ public class InventoryUpgrade implements Container
 
     }
 
-    public boolean canAddUpgrade (@Nonnull ItemStack item) {
-        return tile.upgrades().canAddUpgrade(item);
+    public boolean canAddUpgrade (@NotNull ItemStack item) {
+        return blockEntityDrawers.upgrades().canAddUpgrade(item);
     }
 
     public boolean canRemoveStorageUpgrade (int slot) {
-        return tile.upgrades().canRemoveUpgrade(slot);
+        return blockEntityDrawers.upgrades().canRemoveUpgrade(slot);
     }
 }

@@ -1,12 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,8 @@ import java.util.Random;
 
 public abstract class ProxyBuilderModel implements BakedModel
 {
-    private static final List<BakedQuad> EMPTY = new ArrayList<BakedQuad>(0);
-    private static final List<Object> EMPTY_KEY = new ArrayList<Object>();
+    private static final List<BakedQuad> EMPTY = new ArrayList<>(0);
+    private static final List<Object> EMPTY_KEY = new ArrayList<>();
 
     private BakedModel parent;
     private BakedModel proxy;
@@ -31,7 +32,8 @@ public abstract class ProxyBuilderModel implements BakedModel
     }
 
     @Override
-    public List<BakedQuad> getQuads (BlockState state, Direction side, Random rand) {
+    @NotNull
+    public List<BakedQuad> getQuads (BlockState state, Direction side, @NotNull Random rand) {
         if (proxy == null || stateCache != state)
             setProxy(state);
 
@@ -44,34 +46,37 @@ public abstract class ProxyBuilderModel implements BakedModel
     @Override
     public boolean useAmbientOcclusion () {
         BakedModel model = getActiveModel();
-        return (model != null) ? model.useAmbientOcclusion() : true;
+        return model == null || model.useAmbientOcclusion();
     }
 
     @Override
     public boolean isGui3d () {
         BakedModel model = getActiveModel();
-        return (model != null) ? model.isGui3d() : false;
+        return model != null && model.isGui3d();
     }
 
     @Override
     public boolean isCustomRenderer () {
         BakedModel model = getActiveModel();
-        return (model != null) ? model.isCustomRenderer() : false;
+        return model != null && model.isCustomRenderer();
     }
 
     @Override
+    @NotNull
     public TextureAtlasSprite getParticleIcon () {
         BakedModel model = getActiveModel();
         return (model != null) ? model.getParticleIcon() : iconParticle;
     }
 
     @Override
+    @NotNull
     public ItemTransforms getTransforms () {
         BakedModel model = getActiveModel();
         return (model != null) ? model.getTransforms() : ItemTransforms.NO_TRANSFORMS;
     }
 
     @Override
+    @NotNull
     public ItemOverrides getOverrides () {
         BakedModel model = getActiveModel();
         return (model != null) ? model.getOverrides() : ItemOverrides.EMPTY;
@@ -80,7 +85,7 @@ public abstract class ProxyBuilderModel implements BakedModel
     @Override
     public boolean usesBlockLight () {
         BakedModel model = getActiveModel();
-        return (model != null) ? model.usesBlockLight() : false;
+        return model != null && model.usesBlockLight();
     }
 
     public List<Object> getKey (BlockState state) {

@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.capabilities;
 
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import net.minecraft.nbt.CompoundTag;
@@ -8,7 +7,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.EnumSet;
 
-public class BasicDrawerAttributes implements IDrawerAttributes, IDrawerAttributesModifiable, INBTSerializable<CompoundTag>
+public class BasicDrawerAttributes implements IDrawerAttributesModifiable, INBTSerializable<CompoundTag>
 {
     private EnumSet<LockAttribute> itemLock = EnumSet.noneOf(LockAttribute.class);
     private boolean isConcealed;

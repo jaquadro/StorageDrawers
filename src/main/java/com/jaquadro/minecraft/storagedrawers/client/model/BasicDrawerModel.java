@@ -6,7 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.mojang.datafixers.util.Either;
 import com.mojang.math.Vector3f;
@@ -35,9 +35,9 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -301,7 +301,8 @@ public final class BasicDrawerModel
         }
 
         @Override
-        public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, Random rand) {
+        @NotNull
+        public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand) {
             List<BakedQuad> quads = Lists.newArrayList();
             quads.addAll(mainModel.getQuads(state, side, rand));
             for (BakedModel model : models)
@@ -330,11 +331,13 @@ public final class BasicDrawerModel
         }
 
         @Override
+        @NotNull
         public TextureAtlasSprite getParticleIcon () {
             return mainModel.getParticleIcon();
         }
 
         @Override
+        @NotNull
         public ItemOverrides getOverrides () {
             return mainModel.getOverrides();
         }
@@ -384,14 +387,14 @@ public final class BasicDrawerModel
             return mainModel.usesBlockLight();
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
+        public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
             List<BakedQuad> quads = Lists.newArrayList();
             quads.addAll(mainModel.getQuads(state, side, rand, extraData));
 
-            if (state != null && extraData.hasProperty(TileEntityDrawers.ATTRIBUTES)) {
-                IDrawerAttributes attr = extraData.getData(TileEntityDrawers.ATTRIBUTES);
+            if (state != null && extraData.hasProperty(BlockEntityDrawers.ATTRIBUTES)) {
+                IDrawerAttributes attr = extraData.getData(BlockEntityDrawers.ATTRIBUTES);
                 Direction dir = state.getValue(BlockDrawers.FACING);
 
                 if (attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED))
@@ -435,11 +438,13 @@ public final class BasicDrawerModel
         }
 
         @Override
+        @NotNull
         public TextureAtlasSprite getParticleIcon () {
             return mainModel.getParticleIcon();
         }
 
         @Override
+        @NotNull
         public ItemOverrides getOverrides () {
             return mainModel.getOverrides();
         }
@@ -506,7 +511,7 @@ public final class BasicDrawerModel
         }
 
         @Override
-        public IBakedModel handleItemState (IBakedModel parent, @Nonnull ItemStack stack, World world, EntityLivingBase entity) {
+        public IBakedModel handleItemState (IBakedModel parent, @NotNull ItemStack stack, World world, EntityLivingBase entity) {
             if (stack.isEmpty())
                 return parent;
 

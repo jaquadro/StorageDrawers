@@ -1,27 +1,28 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.TileDataShim;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.BlockEntityDataShim;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.extensions.IForgeBlockEntity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
+public class BaseBlockEntity extends BlockEntity
 {
     private CompoundTag failureSnapshot;
-    private List<TileDataShim> fixedShims;
-    private List<TileDataShim> portableShims;
+    private List<BlockEntityDataShim> fixedShims;
+    private List<BlockEntityDataShim> portableShims;
 
-    public ChamTileEntity (BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
-        super(tileEntityTypeIn, pos, state);
+    public BaseBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+        super(blockEntityType, pos, state);
     }
 
     public boolean hasDataPacket () {
@@ -32,20 +33,20 @@ public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
         return false;
     }
 
-    public void injectData (TileDataShim shim) {
+    public void injectData (BlockEntityDataShim shim) {
         if (fixedShims == null)
-            fixedShims = new ArrayList<TileDataShim>();
+            fixedShims = new ArrayList<>();
         fixedShims.add(shim);
     }
 
-    public void injectPortableData (TileDataShim shim) {
+    public void injectPortableData (BlockEntityDataShim shim) {
         if (portableShims == null)
-            portableShims = new ArrayList<TileDataShim>();
+            portableShims = new ArrayList<>();
         portableShims.add(shim);
     }
 
     @Override
-    public final void load (CompoundTag tag) {
+    public final void load (@NotNull CompoundTag tag) {
         super.load(tag);
 
         //failureSnapshot = null;
@@ -84,21 +85,21 @@ public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
     }*/
 
     @Override
-    protected void saveAdditional (CompoundTag tag) {
+    protected void saveAdditional (@NotNull CompoundTag tag) {
         tag = writeFixed(tag);
         writePortable(tag);
     }
 
     public void readPortable (CompoundTag tag) {
         if (portableShims != null) {
-            for (TileDataShim shim : portableShims)
+            for (BlockEntityDataShim shim : portableShims)
                 shim.read(tag);
         }
     }
 
     public CompoundTag writePortable (CompoundTag tag) {
         if (portableShims != null) {
-            for (TileDataShim shim : portableShims)
+            for (BlockEntityDataShim shim : portableShims)
                 tag = shim.write(tag);
         }
 
@@ -107,14 +108,14 @@ public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
 
     protected void readFixed (CompoundTag tag) {
         if (fixedShims != null) {
-            for (TileDataShim shim : fixedShims)
+            for (BlockEntityDataShim shim : fixedShims)
                 shim.read(tag);
         }
     }
 
     protected CompoundTag writeFixed (CompoundTag tag) {
         if (fixedShims != null) {
-            for (TileDataShim shim : fixedShims)
+            for (BlockEntityDataShim shim : fixedShims)
                 tag = shim.write(tag);
         }
 
@@ -138,11 +139,10 @@ public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
     }
 
     @Override
+    @NotNull
     public final CompoundTag getUpdateTag () {
-        CompoundTag tag = this.saveWithoutMetadata();
         //save(tag);
-
-        return tag;
+        return this.saveWithoutMetadata();
     }
 
     @Override
@@ -155,9 +155,9 @@ public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
         if (pkt != null && pkt.getTag() != null)
             read(pkt.getTag());
 
-        if (dataPacketRequiresRenderUpdate() && getLevel().isClientSide) {
+        if (getLevel() != null && getLevel().isClientSide && dataPacketRequiresRenderUpdate()) {
             BlockState state = getLevel().getBlockState(getBlockPos());
-            getLevel().sendBlockUpdated(getBlockPos(), state, state, 3);
+            getLevel().sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
         }
     }
 
@@ -167,14 +167,14 @@ public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
     public void markBlockForUpdate () {
         if (getLevel() != null && !getLevel().isClientSide) {
             BlockState state = getLevel().getBlockState(worldPosition);
-            getLevel().sendBlockUpdated(worldPosition, state, state, 3);
+            getLevel().sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
         }
     }
 
     public void markBlockForUpdateClient () {
         if (getLevel() != null && getLevel().isClientSide) {
             BlockState state = getLevel().getBlockState(worldPosition);
-            getLevel().sendBlockUpdated(worldPosition, state, state, 3);
+            getLevel().sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
         }
     }
 
@@ -190,7 +190,16 @@ public class ChamTileEntity extends BlockEntity implements IForgeBlockEntity
         //    getWorld().markBlockRangeForRenderUpdate(pos, pos);
         //else {
         BlockState state = getLevel().getBlockState(worldPosition);
-        getLevel().sendBlockUpdated(worldPosition, state, state, 2);
+        getLevel().sendBlockUpdated(worldPosition, state, state, Block.UPDATE_CLIENTS);
         //}
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        if (fixedShims != null)
+            fixedShims.forEach(BlockEntityDataShim::invalidateCaps);
+        if (portableShims != null)
+            portableShims.forEach(BlockEntityDataShim::invalidateCaps);
     }
 }

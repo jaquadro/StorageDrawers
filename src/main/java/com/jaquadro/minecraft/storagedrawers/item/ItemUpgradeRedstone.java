@@ -4,7 +4,7 @@ import net.minecraft.world.item.Item;
 
 public class ItemUpgradeRedstone extends ItemUpgrade
 {
-    private static int redstoneGroupId;
+    private static final int redstoneGroupId;
     static {
         redstoneGroupId = ItemUpgrade.getNextGroupId();
     }

@@ -2,9 +2,10 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -14,16 +15,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -45,22 +45,25 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
     }
 
     @Override
-    public InteractionResult use (BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    @NotNull
+    public InteractionResult use (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         Direction blockDir = state.getValue(FACING);
-        TileEntityController te = getTileEntitySafe(world, pos);
+        BlockEntityController blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);
+        if (blockEntity == null)
+            return InteractionResult.FAIL;
 
         ItemStack item = player.getInventory().getSelected();
-        if (!item.isEmpty() && toggle(world, pos, player, item.getItem()))
+        if (!item.isEmpty() && toggle(level, pos, player, item.getItem()))
             return InteractionResult.SUCCESS;
 
         if (blockDir != hit.getDirection())
             return InteractionResult.CONSUME;
 
-        if (!world.isClientSide) {
+        if (!level.isClientSide) {
             if (CommonConfig.GENERAL.debugTrace.get() && item.isEmpty())
-                te.printDebugInfo();
+                blockEntity.printDebugInfo();
 
-            te.interactPutItemsIntoInventory(player);
+            blockEntity.interactPutItemsIntoInventory(player);
         }
 
         return InteractionResult.SUCCESS;
@@ -84,24 +87,19 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         return true;
     }
 
-    public void toggle (Level world, BlockPos pos, Player player, EnumKeyType keyType) {
-        if (world.isClientSide)
+    public void toggle (@NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull EnumKeyType keyType) {
+        if (level.isClientSide)
             return;
 
-        TileEntityController te = getTileEntitySafe(world, pos);
-        if (te == null)
+        BlockEntityController blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);
+        if (blockEntity == null)
             return;
 
         switch (keyType) {
-            case DRAWER:
-                te.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());
-                break;
-            case CONCEALMENT:
-                te.toggleShroud(player.getGameProfile());
-                break;
-            case QUANTIFY:
-                te.toggleQuantified(player.getGameProfile());
-                break;
+            case DRAWER -> blockEntity.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());
+            case CONCEALMENT -> blockEntity.toggleShroud(player.getGameProfile());
+            case QUANTIFY -> blockEntity.toggleQuantified(player.getGameProfile());
+
             //case PERSONAL:
             //    String securityKey = ModItems.personalKey.getSecurityProviderKey(0);
             //    ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
@@ -112,36 +110,21 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
     }
 
     @Override
-    public void tick (BlockState state, ServerLevel world, BlockPos pos, Random rand) {
+    public void tick (@NotNull BlockState state, @NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull Random rand) {
         if (world.isClientSide)
             return;
 
-        TileEntityController te = getTileEntitySafe(world, pos);
-        if (te == null)
+        BlockEntityController blockEntity = WorldUtils.getBlockEntity(world, pos, BlockEntityController.class);
+        if (blockEntity == null)
             return;
 
-        te.updateCache();
+        blockEntity.updateCache();
 
         world.scheduleTick(pos, this, 100);
     }
 
     @Override
-    public TileEntityController newBlockEntity (BlockPos pos, BlockState state) {
-        return new TileEntityController(pos, state);
-    }
-
-    public TileEntityController getTileEntity (BlockGetter blockAccess, BlockPos pos) {
-        BlockEntity tile = blockAccess.getBlockEntity(pos);
-        return (tile instanceof TileEntityController) ? (TileEntityController) tile : null;
-    }
-
-    public TileEntityController getTileEntitySafe (Level world, BlockPos pos) {
-        TileEntityController tile = getTileEntity(world, pos);
-        if (tile == null) {
-            tile = newBlockEntity(pos, world.getBlockState(pos));
-            world.setBlockEntity(tile);
-        }
-
-        return tile;
+    public BlockEntityController newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
+        return new BlockEntityController(pos, state);
     }
 }

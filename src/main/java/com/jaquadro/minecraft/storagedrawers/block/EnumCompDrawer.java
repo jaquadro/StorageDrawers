@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGeometry;
 import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
 
 public enum EnumCompDrawer implements IDrawerGeometry, StringRepresentable
 {
@@ -56,6 +57,7 @@ public enum EnumCompDrawer implements IDrawerGeometry, StringRepresentable
     }
 
     @Override
+    @NotNull
     public String getSerializedName () {
         return name;
     }
