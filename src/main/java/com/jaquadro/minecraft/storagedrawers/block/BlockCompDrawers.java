@@ -41,7 +41,7 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     @Override
     protected int getDrawerSlot (Direction correctSide, @NotNull Vec3 normalizedHit) {
         if (!hitAny(correctSide, normalizedHit))
-            return -1;
+            return super.getDrawerSlot(correctSide, normalizedHit);
 
         if (hitTop(normalizedHit))
             return 0;
