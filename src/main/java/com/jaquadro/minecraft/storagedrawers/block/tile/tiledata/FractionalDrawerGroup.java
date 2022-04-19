@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Stack;
 import java.util.function.Predicate;
 
-public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawerGroup
+public class FractionalDrawerGroup extends TileDataShim implements IDrawerGroup
 {
     static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
     static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});

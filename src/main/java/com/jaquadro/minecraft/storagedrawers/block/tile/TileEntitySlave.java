@@ -23,19 +23,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
+public class TileEntitySlave extends ChamTileEntity implements IDrawerGroup
 {
     private static final int[] drawerSlots = new int[]{0};
 
     public final ControllerData controllerData = new ControllerData();
 
-    public BlockEntitySlave(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+    public TileEntitySlave(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
 
         injectData(controllerData);
     }
 
-    public BlockEntitySlave(BlockPos pos, BlockState state) {
+    public TileEntitySlave(BlockPos pos, BlockState state) {
         this(ModBlockEntities.CONTROLLER_SLAVE.get(), pos, state);
     }
 
@@ -53,13 +53,13 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
         return controllerData.getCoord();
     }
 
-    public BlockEntityController getController () {
+    public TileEntityController getController () {
         return controllerData.getController(this);
     }
 
     @Override
     public int[] getAccessibleDrawerSlots () {
-        BlockEntityController controller = getController();
+        TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getBlockPos()))
             return drawerSlots;
 
@@ -68,7 +68,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
 
     @Override
     public int getDrawerCount () {
-        BlockEntityController controller = getController();
+        TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getBlockPos()))
             return 0;
 
@@ -78,7 +78,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
     @Override
     @NotNull
     public IDrawer getDrawer (int slot) {
-        BlockEntityController controller = getController();
+        TileEntityController controller = getController();
         if (controller == null || !controller.isValidSlave(getBlockPos()))
             return Drawers.DISABLED;
 
@@ -87,7 +87,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
 
     @Override
     public void setChanged () {
-        BlockEntityController controller = getController();
+        TileEntityController controller = getController();
         if (controller != null && controller.isValidSlave(getBlockPos()))
             controller.setChanged();
 
@@ -123,7 +123,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
         @NotNull
         @Override
         public NonNullList<ItemRecord> getAllItems () {
-            BlockEntityController controller = getController();
+            TileEntityController controller = getController();
             if (controller == null || !controller.isValidSlave(getBlockPos()))
                 return NonNullList.create();
 
@@ -133,7 +133,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
         @NotNull
         @Override
         public ItemStack insertItem (@NotNull ItemStack stack, boolean simulate, Predicate<ItemStack> predicate) {
-            BlockEntityController controller = getController();
+            TileEntityController controller = getController();
             if (controller == null || !controller.isValidSlave(getBlockPos()))
                 return stack;
 
@@ -143,7 +143,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
         @NotNull
         @Override
         public ItemStack extractItem (@NotNull ItemStack stack, int amount, boolean simulate, Predicate<ItemStack> predicate) {
-            BlockEntityController controller = getController();
+            TileEntityController controller = getController();
             if (controller == null || !controller.isValidSlave(getBlockPos()))
                 return ItemStack.EMPTY;
 
@@ -152,7 +152,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
 
         @Override
         public int getStoredItemCount (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
-            BlockEntityController controller = getController();
+            TileEntityController controller = getController();
             if (controller == null || !controller.isValidSlave(getBlockPos()))
                 return 0;
 
@@ -161,7 +161,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
 
         @Override
         public int getRemainingItemCapacity (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
-            BlockEntityController controller = getController();
+            TileEntityController controller = getController();
             if (controller == null || !controller.isValidSlave(getBlockPos()))
                 return 0;
 
@@ -170,7 +170,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
 
         @Override
         public int getItemCapacity (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
-            BlockEntityController controller = getController();
+            TileEntityController controller = getController();
             if (controller == null || !controller.isValidSlave(getBlockPos()))
                 return 0;
 

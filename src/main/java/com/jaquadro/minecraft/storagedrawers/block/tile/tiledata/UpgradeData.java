@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-public class UpgradeData extends BlockEntityDataShim
+public class UpgradeData extends TileDataShim
 {
     protected final ItemStack[] upgrades;
     private int storageMultiplier;

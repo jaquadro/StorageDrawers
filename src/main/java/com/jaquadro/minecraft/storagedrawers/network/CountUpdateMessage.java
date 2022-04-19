@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.network;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import net.minecraft.client.Minecraft;
@@ -73,8 +73,8 @@ public class CountUpdateMessage
             if (world != null) {
                 BlockPos pos = new BlockPos(msg.x, msg.y, msg.z);
                 BlockEntity blockEntity = world.getBlockEntity(pos);
-                if (blockEntity instanceof BlockEntityDrawers) {
-                    ((BlockEntityDrawers) blockEntity).clientUpdateCount(msg.slot, msg.count);
+                if (blockEntity instanceof TileEntityDrawers) {
+                    ((TileEntityDrawers) blockEntity).clientUpdateCount(msg.slot, msg.count);
                 }
             }
         }

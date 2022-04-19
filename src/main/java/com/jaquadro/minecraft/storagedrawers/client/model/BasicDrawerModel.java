@@ -6,7 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.mojang.datafixers.util.Either;
 import com.mojang.math.Vector3f;
@@ -393,8 +393,8 @@ public final class BasicDrawerModel
             List<BakedQuad> quads = Lists.newArrayList();
             quads.addAll(mainModel.getQuads(state, side, rand, extraData));
 
-            if (state != null && extraData.hasProperty(BlockEntityDrawers.ATTRIBUTES)) {
-                IDrawerAttributes attr = extraData.getData(BlockEntityDrawers.ATTRIBUTES);
+            if (state != null && extraData.hasProperty(TileEntityDrawers.ATTRIBUTES)) {
+                IDrawerAttributes attr = extraData.getData(TileEntityDrawers.ATTRIBUTES);
                 Direction dir = state.getValue(BlockDrawers.FACING);
 
                 if (attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED))

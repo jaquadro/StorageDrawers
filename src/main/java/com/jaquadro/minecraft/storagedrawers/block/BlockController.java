@@ -2,7 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
@@ -48,8 +48,8 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
     @NotNull
     public InteractionResult use (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         Direction blockDir = state.getValue(FACING);
-        BlockEntityController blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);
-        if (blockEntity == null)
+        TileEntityController tileEntityController = WorldUtils.getBlockEntity(level, pos, TileEntityController.class);
+        if (tileEntityController == null)
             return InteractionResult.FAIL;
 
         ItemStack item = player.getInventory().getSelected();
@@ -61,9 +61,9 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
 
         if (!level.isClientSide) {
             if (CommonConfig.GENERAL.debugTrace.get() && item.isEmpty())
-                blockEntity.printDebugInfo();
+                tileEntityController.printDebugInfo();
 
-            blockEntity.interactPutItemsIntoInventory(player);
+            tileEntityController.interactPutItemsIntoInventory(player);
         }
 
         return InteractionResult.SUCCESS;
@@ -91,14 +91,14 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         if (level.isClientSide)
             return;
 
-        BlockEntityController blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);
-        if (blockEntity == null)
+        TileEntityController tileEntityController = WorldUtils.getBlockEntity(level, pos, TileEntityController.class);
+        if (tileEntityController == null)
             return;
 
         switch (keyType) {
-            case DRAWER -> blockEntity.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());
-            case CONCEALMENT -> blockEntity.toggleShroud(player.getGameProfile());
-            case QUANTIFY -> blockEntity.toggleQuantified(player.getGameProfile());
+            case DRAWER -> tileEntityController.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());
+            case CONCEALMENT -> tileEntityController.toggleShroud(player.getGameProfile());
+            case QUANTIFY -> tileEntityController.toggleQuantified(player.getGameProfile());
 
             //case PERSONAL:
             //    String securityKey = ModItems.personalKey.getSecurityProviderKey(0);
@@ -114,17 +114,17 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         if (world.isClientSide)
             return;
 
-        BlockEntityController blockEntity = WorldUtils.getBlockEntity(world, pos, BlockEntityController.class);
-        if (blockEntity == null)
+        TileEntityController tileEntityController = WorldUtils.getBlockEntity(world, pos, TileEntityController.class);
+        if (tileEntityController == null)
             return;
 
-        blockEntity.updateCache();
+        tileEntityController.updateCache();
 
         world.scheduleTick(pos, this, 100);
     }
 
     @Override
-    public BlockEntityController newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
-        return new BlockEntityController(pos, state);
+    public TileEntityController newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
+        return new TileEntityController(pos, state);
     }
 }

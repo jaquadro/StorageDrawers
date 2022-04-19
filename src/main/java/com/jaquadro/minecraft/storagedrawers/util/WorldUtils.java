@@ -8,12 +8,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class WorldUtils {
     private WorldUtils() {}
 
-    public static BlockHitResult rayTraceEyes(Level level, Player player, BlockPos blockPos) {
+    @NotNull
+    public static BlockHitResult rayTraceEyes(@NotNull Level level, @NotNull Player player, @NotNull BlockPos blockPos) {
         Vec3 eyePos = player.getEyePosition(1);
         Vec3 lookVector = player.getViewVector(1);
         Vec3 endPos = eyePos.add(lookVector.scale(eyePos.distanceTo(Vec3.atCenterOf(blockPos)) + 1));
@@ -22,7 +24,7 @@ public final class WorldUtils {
     }
 
     @Nullable
-    public static <BE extends BlockEntity> BE getBlockEntity(BlockGetter level, BlockPos blockPos, Class<BE> blockEntityClass) {
+    public static <BE extends BlockEntity> BE getBlockEntity(@NotNull BlockGetter level, @NotNull BlockPos blockPos, @NotNull Class<BE> blockEntityClass) {
         if (level instanceof Level && !((Level) level).isLoaded(blockPos))
             return null;
 

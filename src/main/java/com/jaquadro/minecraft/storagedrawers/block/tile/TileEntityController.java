@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class BlockEntityController extends BaseBlockEntity implements IDrawerGroup
+public class TileEntityController extends ChamTileEntity implements IDrawerGroup
 {
     public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
@@ -153,12 +153,12 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     private long lastClickTime;
     private UUID lastClickUUID;
 
-    protected BlockEntityController(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+    protected TileEntityController(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
         range = CommonConfig.GENERAL.controllerRange.get();
     }
 
-    public BlockEntityController(BlockPos pos, BlockState state) {
+    public TileEntityController(BlockPos pos, BlockState state) {
         this(ModBlockEntities.CONTROLLER.get(), pos, state);
     }
 
@@ -446,7 +446,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             return;
         }
 
-        if (blockEntity instanceof BlockEntityController) {
+        if (blockEntity instanceof TileEntityController) {
             if (record.storage == null && record.invStorageSize > 0)
                 return;
 
@@ -455,9 +455,9 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
             record.storage = null;
         }
-        else if (blockEntity instanceof BlockEntitySlave) {
+        else if (blockEntity instanceof TileEntitySlave) {
             if (record.storage == null && record.invStorageSize == 0) {
-                if (((BlockEntitySlave) blockEntity).getController() == this)
+                if (((TileEntitySlave) blockEntity).getController() == this)
                     return;
             }
 
@@ -466,10 +466,10 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
             record.storage = null;
 
-            ((BlockEntitySlave) blockEntity).bindController(getBlockPos());
+            ((TileEntitySlave) blockEntity).bindController(getBlockPos());
         }
-        else if (blockEntity instanceof BlockEntityDrawers) {
-            IDrawerGroup group = ((BlockEntityDrawers) blockEntity).getGroup();
+        else if (blockEntity instanceof TileEntityDrawers) {
+            IDrawerGroup group = ((TileEntityDrawers) blockEntity).getGroup();
             if (record.storage == group)
                 return;
 
@@ -530,7 +530,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             }
 
             if (block instanceof BlockSlave) {
-                WorldUtils.getBlockEntity(getLevel(), coord, BlockEntitySlave.class);
+                WorldUtils.getBlockEntity(getLevel(), coord, TileEntitySlave.class);
             }
 
             updateRecordInfo(coord, record, getLevel().getBlockEntity(coord));

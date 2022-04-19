@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.BlockEntityDataShim;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.TileDataShim;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -15,13 +15,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseBlockEntity extends BlockEntity
+public class ChamTileEntity extends BlockEntity
 {
     private CompoundTag failureSnapshot;
-    private List<BlockEntityDataShim> fixedShims;
-    private List<BlockEntityDataShim> portableShims;
+    private List<TileDataShim> fixedShims;
+    private List<TileDataShim> portableShims;
 
-    public BaseBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+    public ChamTileEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
     }
 
@@ -33,13 +33,13 @@ public class BaseBlockEntity extends BlockEntity
         return false;
     }
 
-    public void injectData (BlockEntityDataShim shim) {
+    public void injectData (TileDataShim shim) {
         if (fixedShims == null)
             fixedShims = new ArrayList<>();
         fixedShims.add(shim);
     }
 
-    public void injectPortableData (BlockEntityDataShim shim) {
+    public void injectPortableData (TileDataShim shim) {
         if (portableShims == null)
             portableShims = new ArrayList<>();
         portableShims.add(shim);
@@ -92,14 +92,14 @@ public class BaseBlockEntity extends BlockEntity
 
     public void readPortable (CompoundTag tag) {
         if (portableShims != null) {
-            for (BlockEntityDataShim shim : portableShims)
+            for (TileDataShim shim : portableShims)
                 shim.read(tag);
         }
     }
 
     public CompoundTag writePortable (CompoundTag tag) {
         if (portableShims != null) {
-            for (BlockEntityDataShim shim : portableShims)
+            for (TileDataShim shim : portableShims)
                 tag = shim.write(tag);
         }
 
@@ -108,14 +108,14 @@ public class BaseBlockEntity extends BlockEntity
 
     protected void readFixed (CompoundTag tag) {
         if (fixedShims != null) {
-            for (BlockEntityDataShim shim : fixedShims)
+            for (TileDataShim shim : fixedShims)
                 shim.read(tag);
         }
     }
 
     protected CompoundTag writeFixed (CompoundTag tag) {
         if (fixedShims != null) {
-            for (BlockEntityDataShim shim : fixedShims)
+            for (TileDataShim shim : fixedShims)
                 tag = shim.write(tag);
         }
 
@@ -198,8 +198,8 @@ public class BaseBlockEntity extends BlockEntity
     public void invalidateCaps() {
         super.invalidateCaps();
         if (fixedShims != null)
-            fixedShims.forEach(BlockEntityDataShim::invalidateCaps);
+            fixedShims.forEach(TileDataShim::invalidateCaps);
         if (portableShims != null)
-            portableShims.forEach(BlockEntityDataShim::invalidateCaps);
+            portableShims.forEach(TileDataShim::invalidateCaps);
     }
 }

@@ -27,15 +27,15 @@ import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
+public abstract class TileEntityDrawersComp extends TileEntityDrawers
 {
     static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
-    public BlockEntityDrawersComp(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+    public TileEntityDrawersComp(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
     }
 
-    public static class Slot3 extends BlockEntityDrawersComp
+    public static class Slot3 extends TileEntityDrawersComp
     {
         private final GroupData groupData = new GroupData(3);
 
@@ -78,12 +78,12 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
 
         @Override
         protected Level getWorld () {
-            return BlockEntityDrawersComp.this.getLevel();
+            return TileEntityDrawersComp.this.getLevel();
         }
 
         @Override
         public boolean isGroupValid () {
-            return BlockEntityDrawersComp.this.isGroupValid();
+            return TileEntityDrawersComp.this.isGroupValid();
         }
 
         @Override
@@ -129,12 +129,12 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
             }
         }
 
-        private final LazyOptional<?> capabilityAttributes = LazyOptional.of(BlockEntityDrawersComp.this::getDrawerAttributes);
+        private final LazyOptional<?> capabilityAttributes = LazyOptional.of(TileEntityDrawersComp.this::getDrawerAttributes);
 
         @Override
         @NotNull
         public <T> LazyOptional<T> getCapability (@NotNull Capability<T> capability, @Nullable Direction facing) {
-            if (capability == BlockEntityDrawersComp.DRAWER_ATTRIBUTES_CAPABILITY)
+            if (capability == TileEntityDrawersComp.DRAWER_ATTRIBUTES_CAPABILITY)
                 return capabilityAttributes.cast();
 
             return super.getCapability(capability, facing);
@@ -174,7 +174,7 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
         if (getLevel() == null || !getLevel().isClientSide)
             return;
 
-        Minecraft.getInstance().tell(() -> BlockEntityDrawersComp.this.clientUpdateCountAsync(count));
+        Minecraft.getInstance().tell(() -> TileEntityDrawersComp.this.clientUpdateCountAsync(count));
     }
 
     @OnlyIn(Dist.CLIENT)

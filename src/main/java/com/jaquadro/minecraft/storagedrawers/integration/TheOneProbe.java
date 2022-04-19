@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import mcjty.theoneprobe.api.*;
@@ -30,10 +30,10 @@ public class TheOneProbe implements Function<ITheOneProbe, Void> {
 
         @Override
         public void addProbeInfo(ProbeMode probeMode, IProbeInfo probe, Player player, Level world, BlockState blockState, IProbeHitData data) {
-            BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(world, data.getPos(), BlockEntityDrawers.class);
-            if (blockEntityDrawers != null) {
+            TileEntityDrawers tileEntityDrawers = WorldUtils.getBlockEntity(world, data.getPos(), TileEntityDrawers.class);
+            if (tileEntityDrawers != null) {
                 DrawerOverlay overlay = new DrawerOverlay();
-                for (Component component : overlay.getOverlay(blockEntityDrawers)) {
+                for (Component component : overlay.getOverlay(tileEntityDrawers)) {
                     probe.text(component);
                 }
             }

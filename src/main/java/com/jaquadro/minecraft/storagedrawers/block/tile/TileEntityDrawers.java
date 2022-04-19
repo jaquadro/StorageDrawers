@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup /* IProtectable, INameable */
+public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawerGroup /* IProtectable, INameable */
 {
     public static final ModelProperty<IDrawerAttributes> ATTRIBUTES = new ModelProperty<>();
     //public static final ModelProperty<Boolean> ITEM_LOCKED = new ModelProperty<>();
@@ -70,16 +70,16 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     {
         @Override
         protected void onAttributeChanged () {
-            if (!loading && !BlockEntityDrawers.this.drawerAttributes.isItemLocked(LockAttribute.LOCK_POPULATED)) {
-                for (int slot = 0; slot < BlockEntityDrawers.this.getGroup().getDrawerCount(); slot++) {
-                    if (BlockEntityDrawers.this.emptySlotCanBeCleared(slot)) {
-                        IDrawer drawer = BlockEntityDrawers.this.getGroup().getDrawer(slot);
+            if (!loading && !TileEntityDrawers.this.drawerAttributes.isItemLocked(LockAttribute.LOCK_POPULATED)) {
+                for (int slot = 0; slot < TileEntityDrawers.this.getGroup().getDrawerCount(); slot++) {
+                    if (TileEntityDrawers.this.emptySlotCanBeCleared(slot)) {
+                        IDrawer drawer = TileEntityDrawers.this.getGroup().getDrawer(slot);
                         drawer.setStoredItem(ItemStack.EMPTY);
                     }
                 }
             }
 
-            BlockEntityDrawers.this.onAttributeChanged();
+            TileEntityDrawers.this.onAttributeChanged();
             if (getLevel() != null && !getLevel().isClientSide) {
                 setChanged();
                 markBlockForUpdate();
@@ -150,7 +150,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         }
     }
 
-    protected BlockEntityDrawers(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+    protected TileEntityDrawers(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
 
         drawerAttributes = new DrawerAttributes();
@@ -201,7 +201,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     }
 
     protected boolean emptySlotCanBeCleared (int slot) {
-        IDrawer drawer = BlockEntityDrawers.this.getGroup().getDrawer(slot);
+        IDrawer drawer = TileEntityDrawers.this.getGroup().getDrawer(slot);
         return !drawer.isEmpty() && drawer.getStoredItemCount() == 0;
     }
 
@@ -557,7 +557,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         if (getLevel() == null || !getLevel().isClientSide)
             return;
 
-        Minecraft.getInstance().tell(() -> BlockEntityDrawers.this.clientUpdateCountAsync(slot, count));
+        Minecraft.getInstance().tell(() -> TileEntityDrawers.this.clientUpdateCountAsync(slot, count));
     }
 
     @OnlyIn(Dist.CLIENT)
