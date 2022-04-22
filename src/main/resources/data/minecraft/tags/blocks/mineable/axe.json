@@ -42,6 +42,20 @@
         "storagedrawers:dark_oak_half_drawers_1",
         "storagedrawers:dark_oak_half_drawers_2",
         "storagedrawers:dark_oak_half_drawers_4",
-        "storagedrawers:dark_oak_trim"
+        "storagedrawers:dark_oak_trim",
+        "storagedrawers:crimson_full_drawers_1",
+        "storagedrawers:crimson_full_drawers_2",
+        "storagedrawers:crimson_full_drawers_4",
+        "storagedrawers:crimson_half_drawers_1",
+        "storagedrawers:crimson_half_drawers_2",
+        "storagedrawers:crimson_half_drawers_4",
+        "storagedrawers:crimson_trim",
+        "storagedrawers:warped_full_drawers_1",
+        "storagedrawers:warped_full_drawers_2",
+        "storagedrawers:warped_full_drawers_4",
+        "storagedrawers:warped_half_drawers_1",
+        "storagedrawers:warped_half_drawers_2",
+        "storagedrawers:warped_half_drawers_4",
+        "storagedrawers:warped_trim"
     ]
 }
