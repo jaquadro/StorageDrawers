@@ -3,7 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
@@ -166,13 +166,13 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 
     @Override
     public void setPlacedBy (@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity entity, @NotNull ItemStack stack) {
-        TileEntityDrawers tileEntityDrawers = WorldUtils.getBlockEntity(world, pos, TileEntityDrawers.class);
-        if (tileEntityDrawers == null)
+        BlockEntityDrawers blockEntity = WorldUtils.getBlockEntity(world, pos, BlockEntityDrawers.class);
+        if (blockEntity == null)
             return;
 
         CompoundTag tag = stack.getTagElement("tile");
         if (tag != null) {
-            tileEntityDrawers.readPortable(tag);
+            blockEntity.readPortable(tag);
         }
 
 //        if (stack.hasCustomHoverName()) {
@@ -180,7 +180,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 //        }
 
         if (entity != null && entity.getOffhandItem().getItem() == ModItems.DRAWER_KEY.get()) {
-            IDrawerAttributes _attrs = tileEntityDrawers.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(new EmptyDrawerAttributes());
+            IDrawerAttributes _attrs = blockEntity.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(new EmptyDrawerAttributes());
             if (_attrs instanceof IDrawerAttributesModifiable attrs) {
                 attrs.setItemLocked(LockAttribute.LOCK_EMPTY, true);
                 attrs.setItemLocked(LockAttribute.LOCK_POPULATED, true);
@@ -200,8 +200,8 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             return InteractionResult.PASS;
         }
 
-        TileEntityDrawers tileEntityDrawers = WorldUtils.getBlockEntity(level, pos, TileEntityDrawers.class);
-        if (tileEntityDrawers == null)
+        BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(level, pos, BlockEntityDrawers.class);
+        if (blockEntityDrawers == null)
             return InteractionResult.FAIL;
 
         //if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
@@ -218,14 +218,14 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
                 return InteractionResult.PASS;
 
             if (item.getItem() instanceof ItemUpgrade) {
-                if (!tileEntityDrawers.upgrades().canAddUpgrade(item)) {
+                if (!blockEntityDrawers.upgrades().canAddUpgrade(item)) {
                     if (!level.isClientSide)
                         player.displayClientMessage(new TranslatableComponent("message.storagedrawers.cannot_add_upgrade"), true);
 
                     return InteractionResult.PASS;
                 }
 
-                if (!tileEntityDrawers.upgrades().addUpgrade(item)) {
+                if (!blockEntityDrawers.upgrades().addUpgrade(item)) {
                     if (!level.isClientSide)
                         player.displayClientMessage(new TranslatableComponent("message.storagedrawers.max_upgrades"), true);
 
@@ -266,13 +266,13 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
                     @Override
                     public AbstractContainerMenu createMenu (int windowId, @NotNull Inventory playerInv, @NotNull Player playerEntity) {
                         if (drawerCount == 1)
-                            return new ContainerDrawers1(windowId, playerInv, tileEntityDrawers);
+                            return new ContainerDrawers1(windowId, playerInv, blockEntityDrawers);
                         else if (drawerCount == 2)
-                            return new ContainerDrawers2(windowId, playerInv, tileEntityDrawers);
+                            return new ContainerDrawers2(windowId, playerInv, blockEntityDrawers);
                         else if (drawerCount == 4)
-                            return new ContainerDrawers4(windowId, playerInv, tileEntityDrawers);
+                            return new ContainerDrawers4(windowId, playerInv, blockEntityDrawers);
                         else if (drawerCount == 3 && BlockDrawers.this instanceof BlockCompDrawers)
-                            return new ContainerDrawersComp(windowId, playerInv, tileEntityDrawers);
+                            return new ContainerDrawersComp(windowId, playerInv, blockEntityDrawers);
                         return null;
                     }
                 }, extraData -> extraData.writeBlockPos(pos));
@@ -286,7 +286,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         if (slot < 0)
             return InteractionResult.PASS;
 
-        tileEntityDrawers.interactPutItemsIntoSlot(slot, player);
+        blockEntityDrawers.interactPutItemsIntoSlot(slot, player);
 
         if (item.isEmpty())
             player.setItemInHand(hand, ItemStack.EMPTY);
@@ -350,8 +350,8 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         if (!(state.getBlock() instanceof BlockDrawers))
             return false;
 
-        TileEntityDrawers tileEntityDrawers = WorldUtils.getBlockEntity(level, blockPos, TileEntityDrawers.class);
-        if (tileEntityDrawers == null)
+        BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(level, blockPos, BlockEntityDrawers.class);
+        if (blockEntityDrawers == null)
             return false;
 
         BlockHitResult hit = WorldUtils.rayTraceEyes(level, player, blockPos);
@@ -367,15 +367,15 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         if (slot < 0)
             return false;
 
-        IDrawer drawer = tileEntityDrawers.getDrawer(slot);
+        IDrawer drawer = blockEntityDrawers.getDrawer(slot);
 
         ItemStack item;
         boolean invertShift = ClientConfig.GENERAL.invertShift.get();
 
         if (player.isShiftKeyDown() != invertShift)
-            item = tileEntityDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
+            item = blockEntityDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
         else
-            item = tileEntityDrawers.takeItemsFromSlot(slot, 1);
+            item = blockEntityDrawers.takeItemsFromSlot(slot, 1);
 
         if (CommonConfig.GENERAL.debugTrace.get())
             StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item);
@@ -402,11 +402,11 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     @NotNull
     public List<ItemStack> getDrops (@NotNull BlockState state, LootContext.Builder builder) {
         List<ItemStack> items = new ArrayList<>();
-        items.add(getMainDrop(state, (TileEntityDrawers)builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY)));
+        items.add(getMainDrop(state, (BlockEntityDrawers)builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY)));
         return items;
     }
 
-    protected ItemStack getMainDrop (BlockState state, TileEntityDrawers tile) {
+    protected ItemStack getMainDrop (BlockState state, BlockEntityDrawers tile) {
         ItemStack drop = new ItemStack(this);
         if (tile == null)
             return drop;
@@ -448,11 +448,11 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         if (!isSignalSource(state))
             return 0;
 
-        TileEntityDrawers tileEntityDrawers = WorldUtils.getBlockEntity(blockAccess, pos, TileEntityDrawers.class);
-        if (tileEntityDrawers == null || !tileEntityDrawers.isRedstone())
+        BlockEntityDrawers blockEntity = WorldUtils.getBlockEntity(blockAccess, pos, BlockEntityDrawers.class);
+        if (blockEntity == null || !blockEntity.isRedstone())
             return 0;
 
-        return tileEntityDrawers.getRedstoneLevel();
+        return blockEntity.getRedstoneLevel();
     }
 
     @Override

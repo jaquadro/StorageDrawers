@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersStandard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -50,7 +50,7 @@ public class BlockStandardDrawers extends BlockDrawers
 
     @Override
     @Nullable
-    public TileEntityDrawers newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
-        return TileEntityDrawersStandard.createEntity(getDrawerCount(), pos, state);
+    public BlockEntityDrawers newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
+        return BlockEntityDrawersStandard.createEntity(getDrawerCount(), pos, state);
     }
 }

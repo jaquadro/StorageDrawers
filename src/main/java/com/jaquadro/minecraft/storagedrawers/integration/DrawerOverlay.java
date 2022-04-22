@@ -2,7 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import net.minecraft.network.chat.Component;
@@ -21,7 +21,7 @@ public class DrawerOverlay {
     public boolean showStackRemainder = CommonConfig.INTEGRATION.wailaStackRemainder.get();
     public boolean respectQuantifyKey = CommonConfig.INTEGRATION.wailaRespectQuantifyKey.get();
 
-    public List<Component> getOverlay(final TileEntityDrawers tile) {
+    public List<Component> getOverlay(final BlockEntityDrawers tile) {
         final List<Component> result = new ArrayList<>();
 
         final IDrawerAttributes attr = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY, null).orElse(EmptyDrawerAttributes.EMPTY);
@@ -32,7 +32,7 @@ public class DrawerOverlay {
         return result;
     }
 
-    private void addContent(final List<Component> result, final TileEntityDrawers tile, final IDrawerAttributes attr) {
+    private void addContent(final List<Component> result, final BlockEntityDrawers tile, final IDrawerAttributes attr) {
         if (!this.showContent || attr.isConcealed()) return;
         final boolean showCounts = !this.respectQuantifyKey || attr.isShowingQuantity();
 
@@ -74,7 +74,7 @@ public class DrawerOverlay {
 
     }
 
-    private void addStackLimit(List<Component> result, TileEntityDrawers tile, IDrawerAttributes attr) {
+    private void addStackLimit(List<Component> result, BlockEntityDrawers tile, IDrawerAttributes attr) {
         if (!this.showStackLimit) return;
 
         if (attr.isUnlimitedStorage() || tile.getDrawerAttributes().isUnlimitedVending())
@@ -86,7 +86,7 @@ public class DrawerOverlay {
         }
     }
 
-    private void addStatus(List<Component> result, TileEntityDrawers tile, IDrawerAttributes attr) {
+    private void addStatus(List<Component> result, BlockEntityDrawers tile, IDrawerAttributes attr) {
         if (!this.showStatus) return;
 
         List<MutableComponent> attribs = new ArrayList<>();

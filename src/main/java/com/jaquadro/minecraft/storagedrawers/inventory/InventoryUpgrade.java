@@ -1,6 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
@@ -12,10 +12,10 @@ public class InventoryUpgrade implements Container
 {
     private static final int upgradeCapacity = 7;
 
-    private final TileEntityDrawers tileEntityDrawers;
+    private final BlockEntityDrawers blockEntityDrawers;
 
-    public InventoryUpgrade (TileEntityDrawers tileEntityDrawers) {
-        this.tileEntityDrawers = tileEntityDrawers;
+    public InventoryUpgrade (BlockEntityDrawers blockEntityDrawers) {
+        this.blockEntityDrawers = blockEntityDrawers;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class InventoryUpgrade implements Container
     @Override
     public boolean isEmpty () {
         for (int i = 0; i < upgradeCapacity; i++) {
-            if (!tileEntityDrawers.upgrades().getUpgrade(i).isEmpty())
+            if (!blockEntityDrawers.upgrades().getUpgrade(i).isEmpty())
                 return false;
         }
 
@@ -36,15 +36,15 @@ public class InventoryUpgrade implements Container
     @Override
     @NotNull
     public ItemStack getItem (int slot) {
-        return tileEntityDrawers.upgrades().getUpgrade(slot);
+        return blockEntityDrawers.upgrades().getUpgrade(slot);
     }
 
     @Override
     @NotNull
     public ItemStack removeItem (int slot, int count) {
-        ItemStack stack = tileEntityDrawers.upgrades().getUpgrade(slot);
+        ItemStack stack = blockEntityDrawers.upgrades().getUpgrade(slot);
         if (count > 0)
-            tileEntityDrawers.upgrades().setUpgrade(slot, ItemStack.EMPTY);
+            blockEntityDrawers.upgrades().setUpgrade(slot, ItemStack.EMPTY);
 
         return stack;
     }
@@ -57,7 +57,7 @@ public class InventoryUpgrade implements Container
 
     @Override
     public void setItem (int slot, @NotNull ItemStack item) {
-        tileEntityDrawers.upgrades().setUpgrade(slot, item);
+        blockEntityDrawers.upgrades().setUpgrade(slot, item);
     }
 
     @Override
@@ -67,13 +67,13 @@ public class InventoryUpgrade implements Container
 
     @Override
     public void setChanged () {
-        tileEntityDrawers.setChanged();
+        blockEntityDrawers.setChanged();
     }
 
     @Override
     public boolean stillValid (@NotNull Player player) {
-        BlockPos pos = tileEntityDrawers.getBlockPos();
-        if (tileEntityDrawers.getLevel() == null || tileEntityDrawers.getLevel().getBlockEntity(pos) != tileEntityDrawers)
+        BlockPos pos = blockEntityDrawers.getBlockPos();
+        if (blockEntityDrawers.getLevel() == null || blockEntityDrawers.getLevel().getBlockEntity(pos) != blockEntityDrawers)
             return false;
         return !(player.distanceToSqr(Vec3.atCenterOf(pos)) > 64.0);
     }
@@ -86,7 +86,7 @@ public class InventoryUpgrade implements Container
 
     @Override
     public boolean canPlaceItem (int slot, @NotNull ItemStack item) {
-        return tileEntityDrawers.upgrades().canAddUpgrade(item);
+        return blockEntityDrawers.upgrades().canAddUpgrade(item);
     }
 
     @Override
@@ -95,10 +95,10 @@ public class InventoryUpgrade implements Container
     }
 
     public boolean canAddUpgrade (@NotNull ItemStack item) {
-        return tileEntityDrawers.upgrades().canAddUpgrade(item);
+        return blockEntityDrawers.upgrades().canAddUpgrade(item);
     }
 
     public boolean canRemoveStorageUpgrade (int slot) {
-        return tileEntityDrawers.upgrades().canRemoveUpgrade(slot);
+        return blockEntityDrawers.upgrades().canRemoveUpgrade(slot);
     }
 }

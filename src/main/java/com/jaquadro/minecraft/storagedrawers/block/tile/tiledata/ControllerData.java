@@ -1,12 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class ControllerData extends TileDataShim
+public class ControllerData extends BlockEntityDataShim
 {
     private BlockPos controllerCoord;
 
@@ -36,20 +36,20 @@ public class ControllerData extends TileDataShim
         return controllerCoord;
     }
 
-    public TileEntityController getController (BlockEntity host) {
+    public BlockEntityController getController (BlockEntity host) {
         if (controllerCoord == null)
             return null;
         if (host.getLevel() == null)
             return null;
 
         BlockEntity blockEntity = host.getLevel().getBlockEntity(controllerCoord);
-        if (!(blockEntity instanceof TileEntityController)) {
+        if (!(blockEntity instanceof BlockEntityController)) {
             controllerCoord = null;
             host.setChanged();
             return null;
         }
 
-        return (TileEntityController)blockEntity;
+        return (BlockEntityController)blockEntity;
     }
 
     public boolean bindCoord (BlockPos pos) {

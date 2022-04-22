@@ -2,7 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import mcp.mobius.waila.api.*;
 import mcp.mobius.waila.api.config.IPluginConfig;
@@ -41,14 +41,14 @@ public class Waila implements IWailaPlugin
 
         @Override
         public void appendTooltip (ITooltip currenttip, BlockAccessor accessor, IPluginConfig config) {
-            TileEntityDrawers tileEntityDrawers = (TileEntityDrawers) accessor.getBlockEntity();
+            BlockEntityDrawers blockEntityDrawers = (BlockEntityDrawers) accessor.getBlockEntity();
 
             DrawerOverlay overlay = new DrawerOverlay();
             overlay.showContent = config.get(StorageDrawers.rl("display.content"));
             overlay.showStackLimit = config.get(StorageDrawers.rl("display.stacklimit"));
             overlay.showStatus = config.get(StorageDrawers.rl("display.status"));
 
-            currenttip.addAll(overlay.getOverlay(tileEntityDrawers));
+            currenttip.addAll(overlay.getOverlay(blockEntityDrawers));
         }
     }
 }

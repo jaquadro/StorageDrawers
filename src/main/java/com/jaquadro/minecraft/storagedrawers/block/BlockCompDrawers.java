@@ -2,8 +2,8 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -56,9 +56,9 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     public void setPlacedBy (@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, LivingEntity entity, @NotNull ItemStack stack) {
         super.setPlacedBy(world, pos, state, entity, stack);
 
-        TileEntityDrawersComp tileEntityDrawersComp = WorldUtils.getBlockEntity(world, pos, TileEntityDrawersComp.class);
-        if (tileEntityDrawersComp != null) {
-            IDrawerGroup group = tileEntityDrawersComp.getGroup();
+        BlockEntityDrawersComp blockEntity = WorldUtils.getBlockEntity(world, pos, BlockEntityDrawersComp.class);
+        if (blockEntity != null) {
+            IDrawerGroup group = blockEntity.getGroup();
             for (int i = group.getDrawerCount() - 1; i >= 0; i--) {
                 if (!group.getDrawer(i).isEmpty()) {
                     world.setBlock(pos, state.setValue(SLOTS, EnumCompDrawer.byOpenSlots(i + 1)), 3);
@@ -69,7 +69,7 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }
 
     @Override
-    public TileEntityDrawers newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
-        return new TileEntityDrawersComp.Slot3(pos, state);
+    public BlockEntityDrawers newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
+        return new BlockEntityDrawersComp.Slot3(pos, state);
     }
 }

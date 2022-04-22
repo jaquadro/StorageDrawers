@@ -3,7 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
@@ -51,18 +51,18 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
         this(type, windowId, playerInv, getBlockEntity(playerInv, data.readBlockPos()));
     }
 
-    protected static TileEntityDrawers getBlockEntity(Inventory playerInv, BlockPos pos) {
+    protected static BlockEntityDrawers getBlockEntity(Inventory playerInv, BlockPos pos) {
         Level level = playerInv.player.getCommandSenderWorld();
-        TileEntityDrawers tileEntityDrawers = WorldUtils.getBlockEntity(level, pos, TileEntityDrawers.class);
-        if (tileEntityDrawers == null)
+        BlockEntityDrawers blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityDrawers.class);
+        if (blockEntity == null)
             StorageDrawers.log.error("Expected a drawers tile entity at " + pos);
         else
-            return tileEntityDrawers;
+            return blockEntity;
 
         return null;
     }
 
-    public ContainerDrawers (@Nullable MenuType<?> type, int windowId, Inventory playerInventory, TileEntityDrawers tileEntity) {
+    public ContainerDrawers (@Nullable MenuType<?> type, int windowId, Inventory playerInventory, BlockEntityDrawers tileEntity) {
         super(type, windowId);
 
         int drawerCount = 0;

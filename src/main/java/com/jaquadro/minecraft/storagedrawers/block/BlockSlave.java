@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntitySlave;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -19,11 +19,11 @@ public class BlockSlave extends Block implements INetworked, EntityBlock
     }
 
     public void toggle (Level world, BlockPos pos, Player player, EnumKeyType keyType) {
-        TileEntitySlave tileEntitySlave = WorldUtils.getBlockEntity(world, pos, TileEntitySlave.class);
-        if (tileEntitySlave == null)
+        BlockEntitySlave blockEntity = WorldUtils.getBlockEntity(world, pos, BlockEntitySlave.class);
+        if (blockEntity == null)
             return;
 
-        BlockPos controllerPos = tileEntitySlave.getControllerPos();
+        BlockPos controllerPos = blockEntity.getControllerPos();
         if (controllerPos == null)
             return;
 
@@ -34,7 +34,7 @@ public class BlockSlave extends Block implements INetworked, EntityBlock
     }
 
     @Override
-    public TileEntitySlave newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
-        return new TileEntitySlave(pos, state);
+    public BlockEntitySlave newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
+        return new BlockEntitySlave(pos, state);
     }
 }

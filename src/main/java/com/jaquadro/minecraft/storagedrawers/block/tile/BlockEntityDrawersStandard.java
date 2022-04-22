@@ -17,15 +17,15 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class TileEntityDrawersStandard extends TileEntityDrawers
+public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
 {
     static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
-    public TileEntityDrawersStandard(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+    public BlockEntityDrawersStandard(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
     }
 
-    public static class Slot1 extends TileEntityDrawersStandard
+    public static class Slot1 extends BlockEntityDrawersStandard
     {
         private final GroupData groupData = new GroupData(1);
 
@@ -48,7 +48,7 @@ public abstract class TileEntityDrawersStandard extends TileEntityDrawers
         }
     }
 
-    public static class Slot2 extends TileEntityDrawersStandard
+    public static class Slot2 extends BlockEntityDrawersStandard
     {
         private final GroupData groupData = new GroupData(2);
 
@@ -71,7 +71,7 @@ public abstract class TileEntityDrawersStandard extends TileEntityDrawers
         }
     }
 
-    public static class Slot4 extends TileEntityDrawersStandard
+    public static class Slot4 extends BlockEntityDrawersStandard
     {
         private final GroupData groupData = new GroupData(4);
 
@@ -94,7 +94,7 @@ public abstract class TileEntityDrawersStandard extends TileEntityDrawers
         }
     }
 
-    public static TileEntityDrawersStandard createEntity (int slotCount, BlockPos pos, BlockState state) {
+    public static BlockEntityDrawersStandard createEntity (int slotCount, BlockPos pos, BlockState state) {
         return switch (slotCount) {
             case 1 -> new Slot1(pos, state);
             case 2 -> new Slot2(pos, state);
@@ -105,7 +105,7 @@ public abstract class TileEntityDrawersStandard extends TileEntityDrawers
 
     private class GroupData extends StandardDrawerGroup
     {
-        private final LazyOptional<?> attributesHandler = LazyOptional.of(TileEntityDrawersStandard.this::getDrawerAttributes);
+        private final LazyOptional<?> attributesHandler = LazyOptional.of(BlockEntityDrawersStandard.this::getDrawerAttributes);
 
         public GroupData (int slotCount) {
             super(slotCount);
@@ -119,13 +119,13 @@ public abstract class TileEntityDrawersStandard extends TileEntityDrawers
 
         @Override
         public boolean isGroupValid () {
-            return TileEntityDrawersStandard.this.isGroupValid();
+            return BlockEntityDrawersStandard.this.isGroupValid();
         }
 
         @Override
         @NotNull
         public <T> LazyOptional<T> getCapability (@NotNull Capability<T> capability, @Nullable Direction facing) {
-            if (capability == TileEntityDrawersStandard.DRAWER_ATTRIBUTES_CAPABILITY)
+            if (capability == BlockEntityDrawersStandard.DRAWER_ATTRIBUTES_CAPABILITY)
                 return attributesHandler.cast();
 
             return super.getCapability(capability, facing);
