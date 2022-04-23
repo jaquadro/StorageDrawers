@@ -460,7 +460,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             CompactingHelper compacting = new CompactingHelper(world);
             Stack<CompactingHelper.Result> resultStack = new Stack<>();
 
-            @NotNull ItemStack lookupTarget = itemPrototype;
+            ItemStack lookupTarget = itemPrototype;
             for (int i = 0; i < slotCount - 1; i++) {
                 CompactingHelper.Result lookup = compacting.findHigherTier(lookupTarget);
                 if (lookup.getStack().isEmpty())
@@ -490,18 +490,19 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             lookupTarget = itemPrototype;
             for (; index < slotCount; index++) {
                 CompactingHelper.Result lookup = compacting.findLowerTier(lookupTarget);
-                if (lookup.getStack().isEmpty())
-                    break;
+                ItemStack itemStack = lookup.getStack();
+                if (!itemStack.isEmpty()) {
+                    populateRawSlot(index, itemStack, 1);
+                    group.log("Picked candidate " + itemStack + " with conv=" + lookup.getSize());
 
-                populateRawSlot(index, lookup.getStack(), 1);
-                group.log("Picked candidate " + lookup.getStack().toString() + " with conv=" + lookup.getSize());
-
-                for (int i = 0; i < index; i++) {
-                    convRate[i] *= lookup.getSize();
-                    cachedConvRate[i] = convRate[i];
+                    for (int i = 0; i < index; i++) {
+                        convRate[i] *= lookup.getSize();
+                        cachedConvRate[i] = convRate[i];
+                    }
+                } else {
+                    populateRawSlot(index, ItemStack.EMPTY, 0);
                 }
-
-                lookupTarget = lookup.getStack();
+                lookupTarget = itemStack;
             }
         }
 
