@@ -618,7 +618,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
     public static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY= CapabilityManager.get(new CapabilityToken<>(){});
 
-    private final LazyOptional<?> capabilityGroup = LazyOptional.of(this::getGroup);
+    private final LazyOptional<IDrawerGroup> capabilityGroup = LazyOptional.of(this::getGroup);
 
     @Override
     @NotNull
@@ -649,5 +649,11 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             ModelDataManager.requestModelDataRefresh(this);
             Minecraft.getInstance().levelRenderer.setBlocksDirty(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
         });
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        capabilityGroup.invalidate();
     }
 }

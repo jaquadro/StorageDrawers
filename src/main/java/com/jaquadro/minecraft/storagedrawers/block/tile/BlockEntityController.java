@@ -631,9 +631,9 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     private final DrawerItemHandler itemHandler = new DrawerItemHandler(this);
     private final ItemRepository itemRepository = new ItemRepository(this);
 
-    private final LazyOptional<?> capabilityItemHandler = LazyOptional.of(() -> itemHandler);
-    private final LazyOptional<?> capabilityItemRepository = LazyOptional.of(() -> itemRepository);
-    private final LazyOptional<?> capabilityGroup = LazyOptional.of(() -> this);
+    private final LazyOptional<IItemHandler> capabilityItemHandler = LazyOptional.of(() -> itemHandler);
+    private final LazyOptional<IItemRepository> capabilityItemRepository = LazyOptional.of(() -> itemRepository);
+    private final LazyOptional<IDrawerGroup> capabilityGroup = LazyOptional.of(() -> this);
 
     @Override
     @NotNull
@@ -646,6 +646,14 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             return capabilityGroup.cast();
 
         return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        capabilityItemHandler.invalidate();
+        capabilityItemRepository.invalidate();
+        capabilityGroup.invalidate();
     }
 
     private class ItemRepository extends DrawerItemRepository

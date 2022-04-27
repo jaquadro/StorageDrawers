@@ -105,7 +105,7 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
 
     private class GroupData extends StandardDrawerGroup
     {
-        private final LazyOptional<?> attributesHandler = LazyOptional.of(BlockEntityDrawersStandard.this::getDrawerAttributes);
+        private final LazyOptional<IDrawerAttributes> attributesHandler = LazyOptional.of(BlockEntityDrawersStandard.this::getDrawerAttributes);
 
         public GroupData (int slotCount) {
             super(slotCount);

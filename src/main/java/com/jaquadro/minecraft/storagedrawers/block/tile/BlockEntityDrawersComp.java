@@ -129,7 +129,7 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
             }
         }
 
-        private final LazyOptional<?> capabilityAttributes = LazyOptional.of(BlockEntityDrawersComp.this::getDrawerAttributes);
+        private final LazyOptional<IDrawerAttributes> capabilityAttributes = LazyOptional.of(BlockEntityDrawersComp.this::getDrawerAttributes);
 
         @Override
         @NotNull
