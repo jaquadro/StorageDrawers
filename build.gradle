@@ -92,23 +92,32 @@ repositories {
     maven {
         name = "JEI"
         url "https://dvs1.progwml6.com/files/maven"
+        content {
+            includeGroup 'mezz.jei'
+        }
     }
-    maven {
-        name = "CraftTweaker"
-        url "https://maven.blamejared.com/"
-    }
+//    maven {
+//        name = "CraftTweaker"
+//        url "https://maven.blamejared.com/"
+//    }
     maven {
         name 'TOP'
         url "https://maven.tterrag.com/"
+        content {
+            includeGroup 'mcjty.theoneprobe'
+        }
     }
     maven {
         name = "HWYLA"
         url "https://maven.tehnut.info"
+        content {
+            includeGroup 'mcp.mobius.waila'
+        }
     }
-    maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven"
-    }
+//    maven {
+//        name = "CurseForge"
+//        url = "https://minecraft.curseforge.com/api/maven"
+//    }
 }
 
 dependencies {
