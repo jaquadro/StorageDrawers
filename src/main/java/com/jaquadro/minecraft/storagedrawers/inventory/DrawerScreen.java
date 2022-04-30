@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
@@ -112,7 +113,7 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
 
         List<Slot> upgradeSlots = menu.getUpgradeSlots();
         for (Slot slot : upgradeSlots) {
-            if (slot instanceof SlotUpgrade && !((SlotUpgrade) slot).canTakeStack())
+            if (slot instanceof SlotUpgrade && !((SlotUpgrade) slot).canTakeStack(Minecraft.getInstance().player))
                 blit(stack, guiX + slot.x, guiY + slot.y, smDisabledX, smDisabledY, 16, 16);
         }
     }

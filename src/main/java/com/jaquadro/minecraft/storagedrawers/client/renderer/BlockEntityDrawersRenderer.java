@@ -8,7 +8,6 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
@@ -29,6 +28,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -89,9 +89,6 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
         if (blockEntityDrawers.getDrawerAttributes().hasFillLevel())
             renderIndicator((BlockDrawers)state.getBlock(), blockEntityDrawers, matrix, buffer, state.getValue(BlockDrawers.FACING), combinedLight, combinedOverlay);
 
-        matrix.popPose();
-        Lighting.setupLevel(matrix.last().pose());
-        matrix.pushPose();
     }
 
     private boolean playerBehindBlock(BlockPos blockPos, Direction facing) {
@@ -144,6 +141,8 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
         }
     }
 
+    private static final int TEXT_COLOR_TRANSPARENT = FastColor.ARGB32.color(0, 255, 255, 255);
+
     private void renderText (String text, BlockState state, int slot, PoseStack matrix, MultiBufferSource buffer, int combinedLight, Direction side, float alpha) {
         if (text == null || text.isEmpty())
             return;
@@ -161,10 +160,12 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
         matrix.pushPose();
 
         alignRendering(matrix, side);
-        moveRendering(matrix, .125f, .125f, x, y, z);
+        matrix.translate(x / 16, 1 - y / 16, 1 - z);
+        // Text is rendered upside-down and flipped by default, so Y needs to be inverted
+        matrix.scale(1/128f, -1/128f, 1);
 
-        int color = (int)(255 * alpha) << 24 | 255 << 16 | 255 << 8 | 255;
-        fontRenderer.drawInBatch(text, -textWidth / 2f, 0.5f, color, false, matrix.last().pose(), buffer, false, 0, combinedLight); // 15728880
+        int color = (int)(255 * alpha) << 24 | TEXT_COLOR_TRANSPARENT;
+        fontRenderer.drawInBatch(text, -textWidth / 2f, 0, color, false, matrix.last().pose(), buffer, false, 0, combinedLight); // 15728880
 
         matrix.popPose();
     }
@@ -177,27 +178,16 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
         float scaleY = (float)labelGeometry.getYsize() / 16;
         float moveX = (float)labelGeometry.minX + (8 * scaleX);
         float moveY = 16f - (float)labelGeometry.maxY + (8 * scaleY);
-        float moveZ = (float)labelGeometry.minZ * .0625f;
+        float moveZ = (float)labelGeometry.minZ * .0625f - 0.0025f;
 
         matrix.pushPose();
 
         alignRendering(matrix, side);
-        moveRendering(matrix, scaleX, scaleY, moveX, moveY, moveZ);
-
-        matrix.translate(0, 0, 100f);
-        matrix.scale(1, -1, 1);
-        matrix.scale(16, 16, 16);
+        matrix.translate(moveX / 16, 1 - moveY / 16, 1 - moveZ);
+        matrix.mulPoseMatrix(Matrix4f.createScaleMatrix(scaleX, scaleY, 0.001f));
 
         try {
             BakedModel itemModel = itemRenderer.getModel(itemStack, null, null, 0);
-            boolean render3D = itemModel.isGui3d(); // itemModel.usesBlockLight();
-
-            if (render3D)
-                Lighting.setupFor3DItems();
-            else
-                Lighting.setupForFlatItems();
-
-            matrix.last().normal().load(Matrix3f.createScaleMatrix(1, 1, 1));
             itemRenderer.render(itemStack, ItemTransforms.TransformType.GUI, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
         } catch (Exception e) {
             // Shrug
@@ -209,25 +199,25 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
     private void alignRendering (PoseStack matrix, Direction side) {
         // Rotate to face the correct direction for the drawer's orientation.
 
-        matrix.translate(.5f, .5f, .5f);
-        matrix.mulPose(new Quaternion(Vector3f.YP, getRotationYForSide2D(side), true));
-        matrix.translate(-.5f, -.5f, -.5f);
+        matrix.translate(.5f, 0, .5f);
+        matrix.mulPoseMatrix(new Matrix4f(new Quaternion(Vector3f.YP, getRotationYForSide2D(side), true)));
+        matrix.translate(-.5f, 0, -.5f);
     }
 
-    private void moveRendering (PoseStack matrix, float scaleX, float scaleY, float offsetX, float offsetY, float offsetZ) {
-        // NOTE: RenderItem expects to be called in a context where Y increases toward the bottom of the screen
-        // However, for in-world rendering the opposite is true. So we translate up by 1 along Y, and then flip
-        // along Y. Since the item is drawn at the back of the drawer, we also translate by `1-offsetZ` to move
-        // it to the front.
-
-        // The 0.00001 for the Z-scale both flattens the item and negates the 32.0 Z-scale done by RenderItem.
-
-        matrix.translate(0, 1, 1-offsetZ);
-        matrix.scale(1 / 16f, -1 / 16f, 0.00005f);
-
-        matrix.translate(offsetX, offsetY, 0);
-        matrix.scale(scaleX, scaleY, 1);
-    }
+//    private void moveRendering (PoseStack matrix, float scaleX, float scaleY, float offsetX, float offsetY, float offsetZ) {
+//        // NOTE: RenderItem expects to be called in a context where Y increases toward the bottom of the screen
+//        // However, for in-world rendering the opposite is true. So we translate up by 1 along Y, and then flip
+//        // along Y. Since the item is drawn at the back of the drawer, we also translate by `1-offsetZ` to move
+//        // it to the front.
+//
+//        // The 0.00001 for the Z-scale both flattens the item and negates the 32.0 Z-scale done by RenderItem.
+//
+//        matrix.translate(0, 1, 1-offsetZ);
+//        matrix.scale(1 / 16f, -1 / 16f, 0.00005f);
+//
+//        matrix.translate(offsetX, offsetY, 0);
+//        matrix.scale(scaleX, scaleY, 1);
+//    }
 
     private static final float[] sideRotationY2D = { 0, 0, 2, 0, 3, 1 };
 

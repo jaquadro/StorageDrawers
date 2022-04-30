@@ -53,7 +53,7 @@ public class StorageRenderItem extends ItemRenderer
     }
 
     @Override
-    public void renderStatic(@Nullable LivingEntity livingEntityIn, @NotNull ItemStack itemStackIn, ItemTransforms.@NotNull TransformType transformTypeIn, boolean leftHand, @NotNull PoseStack matrixStackIn, MultiBufferSource bufferIn, @Nullable Level worldIn, int combinedLightIn, int combinedOverlayIn, int p_174252_) {
+    public void renderStatic(@Nullable LivingEntity livingEntityIn, @NotNull ItemStack itemStackIn, ItemTransforms.@NotNull TransformType transformTypeIn, boolean leftHand, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, @Nullable Level worldIn, int combinedLightIn, int combinedOverlayIn, int p_174252_) {
         parent.renderStatic(livingEntityIn, itemStackIn, transformTypeIn, leftHand, matrixStackIn, bufferIn, worldIn, combinedLightIn, combinedOverlayIn, p_174252_);
     }
 
