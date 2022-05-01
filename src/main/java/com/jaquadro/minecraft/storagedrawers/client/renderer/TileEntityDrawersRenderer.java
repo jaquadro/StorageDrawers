@@ -26,6 +26,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix3f;
@@ -83,21 +84,11 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
             combinedLight = (combinedLight & 0xFFFF0000) | blockLight;
         }
 
-        Minecraft mc = Minecraft.getInstance();
-        GraphicsFanciness cache = mc.gameSettings.graphicFanciness;
-        mc.gameSettings.graphicFanciness = GraphicsFanciness.FANCY;
-
         if (!tile.getDrawerAttributes().isConcealed())
             renderFastItemSet(tile, state, matrix, buffer, combinedLight, combinedOverlay, side, partialTickTime, distance);
 
         if (tile.getDrawerAttributes().hasFillLevel())
             renderIndicator((BlockDrawers)state.getBlock(), tile, matrix, buffer, state.get(BlockDrawers.HORIZONTAL_FACING), combinedLight, combinedOverlay);
-
-        mc.gameSettings.graphicFanciness = cache;
-
-        matrix.pop();
-        RenderHelper.setupLevelDiffuseLighting(matrix.getLast().getMatrix());
-        matrix.push();
     }
 
     private boolean playerBehindBlock(BlockPos blockPos, Direction facing) {
@@ -152,12 +143,10 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
 
             double renderDistance = ClientConfig.RENDER.quantityRenderDistance.get();
             if (renderDistance == 0 || distance < renderDistance) {
-                IRenderTypeBuffer.Impl txtBuffer = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
                 for (int i = 0; i < drawerCount; i++) {
                     String format = CountFormatter.format(this.renderDispatcher.getFontRenderer(), tile.getGroup().getDrawer(i));
-                    renderText(format, state, i, matrix, txtBuffer, combinedLight, side, alpha);
+                    renderText(format, state, i, matrix, buffer, combinedLight, side, alpha);
                 }
-                txtBuffer.finish();
             }
         }
     }
@@ -179,13 +168,21 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         matrix.push();
 
         alignRendering(matrix, side);
-        moveRendering(matrix, .125f, .125f, x, y, z);
+        matrix.translate(x / 16, 1 - y / 16, 1 - z);
+        matrix.scale(1 / 128f, -1 / 128f, 1);
 
         int color = (int)(255 * alpha) << 24 | 255 << 16 | 255 << 8 | 255;
-        fontRenderer.renderString(text, -textWidth / 2f, 0.5f, color, false, matrix.getLast().getMatrix(), buffer, false, 0, combinedLight); // 15728880
+        fontRenderer.renderString(text, -textWidth / 2f, 0, color, false, matrix.getLast().getMatrix(), buffer, false, 0, combinedLight); // 15728880
 
         matrix.pop();
     }
+
+    private static final Quaternion ITEM_LIGHT_ROTATION_3D = Util.make(() -> {
+        Quaternion quaternion = new Quaternion(Vector3f.XP, -15f, true);
+        quaternion.multiply(new Quaternion(Vector3f.YP, 15f, true));
+        return quaternion;
+    });
+    private static final Quaternion ITEM_LIGHT_ROTATION_FLAT = new Quaternion(Vector3f.XP, -45f, true);
 
     private void renderFastItem (@Nonnull ItemStack itemStack, TileEntityDrawers tile, BlockState state, int slot, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, Direction side, float partialTickTime) {
         BlockDrawers block = (BlockDrawers)state.getBlock();
@@ -195,40 +192,24 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
         float scaleY = (float)labelGeometry.getYSize() / 16;
         float moveX = (float)labelGeometry.minX + (8 * scaleX);
         float moveY = 16f - (float)labelGeometry.maxY + (8 * scaleY);
-        float moveZ = (float)labelGeometry.minZ * .0625f;
+        float moveZ = (float)labelGeometry.minZ * .0625f - 0.0025f;
 
         matrix.push();
 
-        alignRendering(matrix, side);
-        moveRendering(matrix, scaleX, scaleY, moveX, moveY, moveZ);
-
-        //List<IRenderLabel> renderHandlers = StorageDrawers.renderRegistry.getRenderHandlers();
-        //for (IRenderLabel renderHandler : renderHandlers) {
-        //    renderHandler.render(tile, tile.getGroup(), slot, 0, partialTickTime);
-        //}
-
-        Consumer<IRenderTypeBuffer> finish = (IRenderTypeBuffer buf) -> {
-            if (buf instanceof IRenderTypeBuffer.Impl)
-                ((IRenderTypeBuffer.Impl) buf).finish();
-        };
-
         try {
-            matrix.translate(0, 0, 100f);
-            matrix.scale(1, -1, 1);
-            matrix.scale(16, 16, 16);
+            alignRendering(matrix, side);
+            matrix.translate(moveX / 16, 1 - moveY / 16, 1 - moveZ);
+            matrix.getLast().getMatrix().mul(Matrix4f.makeScale(scaleX, scaleY, 0.001f));
 
             IBakedModel itemModel = renderItem.getItemModelWithOverrides(itemStack, null, null);
             boolean render3D = itemModel.isGui3d();
-            finish.accept(buffer);
 
             if (render3D)
-                RenderHelper.setupGui3DDiffuseLighting();
+                matrix.getLast().getNormal().mul(ITEM_LIGHT_ROTATION_3D);
             else
-                RenderHelper.setupGuiFlatDiffuseLighting();
+                matrix.getLast().getNormal().mul(ITEM_LIGHT_ROTATION_FLAT);
 
-            matrix.getLast().getNormal().set(Matrix3f.makeScaleMatrix(1, -1, 1));
             renderItem.renderItem(itemStack, ItemCameraTransforms.TransformType.GUI, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
-            finish.accept(buffer);
         }
         catch (Exception e) {
             // Shrug
@@ -244,24 +225,9 @@ public class TileEntityDrawersRenderer extends TileEntityRenderer<TileEntityDraw
     private void alignRendering (MatrixStack matrix, Direction side) {
         // Rotate to face the correct direction for the drawer's orientation.
 
-        matrix.translate(.5f, .5f, .5f);
-        matrix.rotate(new Quaternion(Vector3f.YP, getRotationYForSide2D(side), true));
-        matrix.translate(-.5f, -.5f, -.5f);
-    }
-
-    private void moveRendering (MatrixStack matrix, float scaleX, float scaleY, float offsetX, float offsetY, float offsetZ) {
-        // NOTE: RenderItem expects to be called in a context where Y increases toward the bottom of the screen
-        // However, for in-world rendering the opposite is true. So we translate up by 1 along Y, and then flip
-        // along Y. Since the item is drawn at the back of the drawer, we also translate by `1-offsetZ` to move
-        // it to the front.
-
-        // The 0.00001 for the Z-scale both flattens the item and negates the 32.0 Z-scale done by RenderItem.
-
-        matrix.translate(0, 1, 1-offsetZ);
-        matrix.scale(1 / 16f, -1 / 16f, 0.00005f);
-
-        matrix.translate(offsetX, offsetY, 0);
-        matrix.scale(scaleX, scaleY, 1);
+        matrix.translate(.5f, 0, .5f);
+        matrix.getLast().getMatrix().mul(new Matrix4f(new Quaternion(Vector3f.YP, getRotationYForSide2D(side), true)));
+        matrix.translate(-.5f, 0, -.5f);
     }
 
     private static final float[] sideRotationY2D = { 0, 0, 2, 0, 3, 1 };
