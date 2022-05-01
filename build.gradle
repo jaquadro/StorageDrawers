@@ -161,6 +161,7 @@ dependencies {
 
     implementation fg.deobf("curse.maven:the-one-probe-245211:${top_id}")
     implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
+//    implementation fg.deobf("curse.maven:spark-361579:3670050")
 
     //deobfCompile "MineTweaker3:MineTweaker3-API:${mt_version}"
     //deobfCompile "org.ow2.asm:asm-debug-all:5.0.3"

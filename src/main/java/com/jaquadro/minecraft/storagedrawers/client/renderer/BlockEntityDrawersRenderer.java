@@ -14,6 +14,7 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -170,6 +171,13 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
         matrix.popPose();
     }
 
+    private static final Quaternion ITEM_LIGHT_ROTATION_3D = Util.make(() -> {
+        Quaternion quaternion = new Quaternion(Vector3f.XP, -15f, true);
+        quaternion.mul(new Quaternion(Vector3f.YP, 15f, true));
+        return quaternion;
+    });
+    private static final Quaternion ITEM_LIGHT_ROTATION_FLAT = new Quaternion(Vector3f.XP, -45f, true);
+
     private void renderFastItem(@NotNull ItemStack itemStack, BlockState state, int slot, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Direction side) {
         BlockDrawers block = (BlockDrawers)state.getBlock();
         AABB labelGeometry = block.labelGeometry[slot];
@@ -188,6 +196,12 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
 
         try {
             BakedModel itemModel = itemRenderer.getModel(itemStack, null, null, 0);
+
+            if (itemModel.isGui3d())
+                matrix.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
+            else
+                matrix.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+
             itemRenderer.render(itemStack, ItemTransforms.TransformType.GUI, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
         } catch (Exception e) {
             // Shrug
