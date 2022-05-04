@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -16,12 +17,13 @@ public class CommonEventBusSubscriber {
     @SubscribeEvent
     public static void playerLeftClick (@NotNull PlayerInteractEvent.LeftClickBlock event) {
         BlockPos pos = event.getPos();
-        BlockState state = event.getWorld().getBlockState(pos);
+        Level level = event.getWorld();
+        BlockState state = level.getBlockState(pos);
         Block block = state.getBlock();
         if (block instanceof BlockDrawers blockDrawers) {
             Player player = event.getPlayer();
             if (player.isCreative()) {
-                event.setCanceled(blockDrawers.interactTakeItems(state, event.getWorld(), pos, player));
+                event.setCanceled(blockDrawers.interactTakeItems(state, level, pos, player));
             }
         }
     }

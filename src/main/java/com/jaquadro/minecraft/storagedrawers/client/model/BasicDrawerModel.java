@@ -142,7 +142,7 @@ public final class BasicDrawerModel
                 StorageDrawers.rl("models/block/geometry/comp_drawers_count_area_3.json"),
                 StorageDrawers.rl("models/block/geometry/comp_drawers_ind_area_3.json"),
                 StorageDrawers.rl("models/block/geometry/comp_drawers_indbase_area_3.json"),
-                ModBlocks.getBlocksOfType(BlockCompDrawers.class).toArray(BlockDrawers[]::new));
+                    ModBlocks.getDrawersOfType(BlockCompDrawers.class).toArray(BlockDrawers[]::new));
         }
 
         private static BlockModel getBlockModel (ResourceLocation location) {

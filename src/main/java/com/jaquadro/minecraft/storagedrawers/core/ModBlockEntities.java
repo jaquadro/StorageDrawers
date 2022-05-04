@@ -25,8 +25,8 @@ public final class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<BlockEntityDrawersStandard>> STANDARD_DRAWERS_2 = registerDrawerBlockEntityType("standard_drawers_2", BlockEntityDrawersStandard.Slot2::new, BlockStandardDrawers.class, 2);
     public static final RegistryObject<BlockEntityType<BlockEntityDrawersStandard>> STANDARD_DRAWERS_4 = registerDrawerBlockEntityType("standard_drawers_4", BlockEntityDrawersStandard.Slot4::new, BlockStandardDrawers.class, 4);
     public static final RegistryObject<BlockEntityType<BlockEntityDrawersComp>> FRACTIONAL_DRAWERS_3 = registerDrawerBlockEntityType("fractional_drawers_3", BlockEntityDrawersComp.Slot3::new, BlockCompDrawers.class, 3);
-    public static final RegistryObject<BlockEntityType<BlockEntityController>> CONTROLLER = registerBlockEntityType("controller", BlockEntityController::new, BlockController.class);
-    public static final RegistryObject<BlockEntityType<BlockEntitySlave>> CONTROLLER_SLAVE = registerBlockEntityType("controller_slave", BlockEntitySlave::new, BlockSlave.class);
+    public static final RegistryObject<BlockEntityType<BlockEntityController>> CONTROLLER = registerBlockEntityType("controller", BlockEntityController::new, ModBlocks.getControllers());
+    public static final RegistryObject<BlockEntityType<BlockEntitySlave>> CONTROLLER_SLAVE = registerBlockEntityType("controller_slave", BlockEntitySlave::new, ModBlocks.getControllerSlaves());
 
     private ModBlockEntities() {}
 
@@ -34,10 +34,6 @@ public final class ModBlockEntities {
         RegistryObject<BlockEntityType<BE>> ro = registerBlockEntityType(name, blockEntitySupplier, ModBlocks.getDrawersOfTypeAndSize(drawerBlockClass, size));
         BLOCK_ENTITY_TYPES_WITH_RENDERERS.add(ro);
         return ro;
-    }
-
-    private static <BE extends BaseBlockEntity, B extends Block> RegistryObject<BlockEntityType<BE>> registerBlockEntityType(String name, BlockEntitySupplier<BE> blockEntitySupplier, Class<B> blockClass) {
-        return registerBlockEntityType(name, blockEntitySupplier, ModBlocks.getBlocksOfType(blockClass));
     }
 
     private static <BE extends BaseBlockEntity, B extends Block> RegistryObject<BlockEntityType<BE>> registerBlockEntityType(String name, BlockEntitySupplier<BE> blockEntitySupplier, Stream<B> blockStream) {
