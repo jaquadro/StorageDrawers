@@ -1,21 +1,20 @@
 package com.jaquadro.minecraft.storagedrawers.capabilities;
 
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
-import com.jaquadro.minecraft.storagedrawers.api.storage.*;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.items.IItemHandler;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class DrawerItemHandler implements IItemHandler
 {
     public static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
-    private IDrawerGroup group;
+    private final IDrawerGroup group;
 
     public DrawerItemHandler (IDrawerGroup group) {
         this.group = group;
@@ -29,7 +28,7 @@ public class DrawerItemHandler implements IItemHandler
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public ItemStack getStackInSlot (int slot) {
         if (!group.isGroupValid())
             return ItemStack.EMPTY;
@@ -51,8 +50,8 @@ public class DrawerItemHandler implements IItemHandler
     }
 
     @Override
-    @Nonnull
-    public ItemStack insertItem (int slot, @Nonnull ItemStack stack, boolean simulate) {
+    @NotNull
+    public ItemStack insertItem (int slot, @NotNull ItemStack stack, boolean simulate) {
         if (!group.isGroupValid())
             return stack;
 
@@ -82,8 +81,8 @@ public class DrawerItemHandler implements IItemHandler
         return insertItemInternal(orderedSlot, stack, simulate);
     }
 
-    @Nonnull
-    private ItemStack insertItemFullScan (@Nonnull ItemStack stack, boolean simulate) {
+    @NotNull
+    private ItemStack insertItemFullScan (@NotNull ItemStack stack, boolean simulate) {
         IItemRepository itemRepo = group.getCapability(ITEM_REPOSITORY_CAPABILITY, null).orElse(null);
         if (itemRepo != null)
             return itemRepo.insertItem(stack, simulate);
@@ -97,8 +96,8 @@ public class DrawerItemHandler implements IItemHandler
         return stack;
     }
 
-    @Nonnull
-    private ItemStack insertItemInternal (int slot, @Nonnull ItemStack stack, boolean simulate) {
+    @NotNull
+    private ItemStack insertItemInternal (int slot, @NotNull ItemStack stack, boolean simulate) {
         IDrawer drawer = group.getDrawer(slot);
         if (!drawer.canItemBeStored(stack))
             return stack;
@@ -120,7 +119,7 @@ public class DrawerItemHandler implements IItemHandler
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public ItemStack extractItem (int slot, int amount, boolean simulate) {
         if (!group.isGroupValid())
             return ItemStack.EMPTY;
@@ -135,7 +134,7 @@ public class DrawerItemHandler implements IItemHandler
         if (!drawer.isEnabled() || drawer.isEmpty() || drawer.getStoredItemCount() == 0)
             return ItemStack.EMPTY;
 
-        @Nonnull ItemStack prototype = drawer.getStoredItemPrototype();
+        @NotNull ItemStack prototype = drawer.getStoredItemPrototype();
         int remaining = (simulate)
             ? Math.max(amount - drawer.getStoredItemCount(), 0)
             : drawer.adjustStoredItemCount(-amount);
@@ -165,7 +164,7 @@ public class DrawerItemHandler implements IItemHandler
 
     @Override
     // TODO: Implement proper
-    public boolean isItemValid (int slot, @Nonnull ItemStack stack) {
+    public boolean isItemValid (int slot, @NotNull ItemStack stack) {
         return true;
     }
 
@@ -173,7 +172,7 @@ public class DrawerItemHandler implements IItemHandler
         return slot == 0;
     }
 
-    private ItemStack stackResult (@Nonnull ItemStack stack, int amount) {
+    private ItemStack stackResult (@NotNull ItemStack stack, int amount) {
         ItemStack result = stack.copy();
         result.setCount(amount);
         return result;

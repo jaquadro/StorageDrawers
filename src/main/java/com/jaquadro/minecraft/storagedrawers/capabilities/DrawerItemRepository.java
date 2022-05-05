@@ -3,14 +3,11 @@ package com.jaquadro.minecraft.storagedrawers.capabilities;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Predicate;
-
-import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository.DefaultPredicate;
-import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository.ItemRecord;
 
 public class DrawerItemRepository implements IItemRepository
 {
@@ -20,7 +17,7 @@ public class DrawerItemRepository implements IItemRepository
         this.group = group;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public NonNullList<ItemRecord> getAllItems () {
         NonNullList<ItemRecord> records = NonNullList.create();
@@ -39,9 +36,9 @@ public class DrawerItemRepository implements IItemRepository
         return records;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack insertItem (@Nonnull ItemStack stack, boolean simulate, Predicate<ItemStack> predicate) {
+    public ItemStack insertItem (@NotNull ItemStack stack, boolean simulate, Predicate<ItemStack> predicate) {
         int amount = stack.getCount();
 
         for (int slot : group.getAccessibleDrawerSlots()) {
@@ -66,9 +63,9 @@ public class DrawerItemRepository implements IItemRepository
         return stackResult(stack, amount);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack extractItem (@Nonnull ItemStack stack, int amount, boolean simulate, Predicate<ItemStack> predicate) {
+    public ItemStack extractItem (@NotNull ItemStack stack, int amount, boolean simulate, Predicate<ItemStack> predicate) {
         int remaining = amount;
 
         for (int slot : group.getAccessibleDrawerSlots()) {
@@ -92,7 +89,7 @@ public class DrawerItemRepository implements IItemRepository
     }
 
     @Override
-    public int getStoredItemCount (@Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
+    public int getStoredItemCount (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
         long count = 0;
         for (int slot : group.getAccessibleDrawerSlots()) {
             IDrawer drawer = group.getDrawer(slot);
@@ -108,7 +105,7 @@ public class DrawerItemRepository implements IItemRepository
     }
 
     @Override
-    public int getRemainingItemCapacity (@Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
+    public int getRemainingItemCapacity (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
         long remainder = 0;
         for (int slot : group.getAccessibleDrawerSlots()) {
             IDrawer drawer = group.getDrawer(slot);
@@ -124,7 +121,7 @@ public class DrawerItemRepository implements IItemRepository
     }
 
     @Override
-    public int getItemCapacity (@Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
+    public int getItemCapacity (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
         long capacity = 0;
         for (int slot : group.getAccessibleDrawerSlots()) {
             IDrawer drawer = group.getDrawer(slot);
@@ -139,29 +136,21 @@ public class DrawerItemRepository implements IItemRepository
         return (int)capacity;
     }
 
-    protected boolean testPredicateInsert (IDrawer drawer, @Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
-        if (predicate instanceof DefaultPredicate) {
-            if (!drawer.canItemBeStored(stack) && !predicate.test(drawer.getStoredItemPrototype()))
-                return false;
-        }
-        else if (!drawer.canItemBeStored(stack, predicate))
-            return false;
-
-        return true;
+    protected boolean testPredicateInsert (IDrawer drawer, @NotNull ItemStack stack, Predicate<ItemStack> predicate) {
+        if (predicate instanceof DefaultPredicate)
+            return drawer.canItemBeStored(stack) || predicate.test(drawer.getStoredItemPrototype());
+        else
+            return drawer.canItemBeStored(stack, predicate);
     }
 
-    protected boolean testPredicateExtract (IDrawer drawer, @Nonnull ItemStack stack, Predicate<ItemStack> predicate) {
-        if (predicate instanceof DefaultPredicate) {
-            if (!drawer.canItemBeExtracted(stack) && !predicate.test(drawer.getStoredItemPrototype()))
-                return false;
-        }
-        else if (!drawer.canItemBeStored(stack, predicate))
-            return false;
-
-        return true;
+    protected boolean testPredicateExtract (IDrawer drawer, @NotNull ItemStack stack, Predicate<ItemStack> predicate) {
+        if (predicate instanceof DefaultPredicate)
+            return drawer.canItemBeExtracted(stack) || predicate.test(drawer.getStoredItemPrototype());
+        else
+            return drawer.canItemBeStored(stack, predicate);
     }
 
-    protected ItemStack stackResult (@Nonnull ItemStack stack, int amount) {
+    protected ItemStack stackResult (@NotNull ItemStack stack, int amount) {
         ItemStack result = stack.copy();
         result.setCount(amount);
         return result;

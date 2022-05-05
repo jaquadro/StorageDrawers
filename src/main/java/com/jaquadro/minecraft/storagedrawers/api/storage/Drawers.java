@@ -1,8 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage;
 
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 public class Drawers
@@ -12,15 +12,15 @@ public class Drawers
 
     private static class DisabledDrawer implements IDrawer
     {
-        @Nonnull
+        @NotNull
         @Override
         public ItemStack getStoredItemPrototype () {
             return ItemStack.EMPTY;
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public IDrawer setStoredItem (@Nonnull ItemStack itemPrototype) {
+        public IDrawer setStoredItem (@NotNull ItemStack itemPrototype) {
             return this;
         }
 
@@ -35,7 +35,7 @@ public class Drawers
         }
 
         @Override
-        public int getMaxCapacity (@Nonnull ItemStack itemPrototype) {
+        public int getMaxCapacity (@NotNull ItemStack itemPrototype) {
             return 0;
         }
 
@@ -45,12 +45,12 @@ public class Drawers
         }
 
         @Override
-        public boolean canItemBeStored (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+        public boolean canItemBeStored (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
             return false;
         }
 
         @Override
-        public boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+        public boolean canItemBeExtracted (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
             return false;
         }
 

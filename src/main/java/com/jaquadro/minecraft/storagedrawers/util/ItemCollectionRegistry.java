@@ -6,7 +6,7 @@ import java.util.*;
 
 public class ItemCollectionRegistry<E>
 {
-    private Map<Item, Collection<E>> registry;
+    private final Map<Item, Collection<E>> registry;
 
     public ItemCollectionRegistry () {
         this.registry = new HashMap<>();

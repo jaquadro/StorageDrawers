@@ -4,7 +4,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 public final class CommonConfig
 {
@@ -15,7 +14,7 @@ public final class CommonConfig
     public static final ForgeConfigSpec spec = BUILDER.build();
 
     private static boolean loaded = false;
-    private static List<Runnable> loadActions = new ArrayList<>();
+    private static final List<Runnable> loadActions = new ArrayList<>();
 
     public static void setLoaded() {
         if (!loaded)
@@ -143,14 +142,14 @@ public final class CommonConfig
             if (!isLoaded())
                 return 1;
 
-            switch (level) {
-                case 1: return level1Mult.get();
-                case 2: return level2Mult.get();
-                case 3: return level3Mult.get();
-                case 4: return level4Mult.get();
-                case 5: return level5Mult.get();
-                default: return 1;
-            }
+            return switch (level) {
+                case 1 -> level1Mult.get();
+                case 2 -> level2Mult.get();
+                case 3 -> level3Mult.get();
+                case 4 -> level4Mult.get();
+                case 5 -> level5Mult.get();
+                default -> 1;
+            };
         }
     }
 }

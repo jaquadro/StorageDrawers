@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class SecurityRegistry
 {
-    private Map<String, ISecurityProvider> registry = new HashMap<String, ISecurityProvider>();
+    private final Map<String, ISecurityProvider> registry = new HashMap<>();
 
     public void registerProvider (ISecurityProvider provider) {
         registry.put(provider.getProviderID(), provider);

@@ -4,9 +4,8 @@ import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface IDrawerGroup extends ICapabilityProvider
 {
@@ -18,13 +17,12 @@ public interface IDrawerGroup extends ICapabilityProvider
     /**
      * Gets the drawer at the given slot within this group.
      */
-    @Nonnull
+    @NotNull
     IDrawer getDrawer (int slot);
 
     /**
      * Gets the list of available drawer slots in priority order.
      */
-    @Nonnull
     int[] getAccessibleDrawerSlots ();
 
     /**
@@ -34,9 +32,9 @@ public interface IDrawerGroup extends ICapabilityProvider
         return true;
     };
 
-    @Nonnull
     @Override
-    default <T> LazyOptional<T> getCapability (@Nonnull final Capability<T> cap, final @Nullable Direction side) {
+    @NotNull
+    default <T> LazyOptional<T> getCapability (@NotNull final Capability<T> cap, final @Nullable Direction side) {
         return LazyOptional.empty();
     }
 }

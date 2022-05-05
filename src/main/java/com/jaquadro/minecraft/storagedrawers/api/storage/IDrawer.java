@@ -1,8 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage;
 
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 public interface IDrawer
@@ -13,7 +13,7 @@ public interface IDrawer
      *
      * To emphasize, DO NOT MODIFY THE ITEM STACK RETURNED BY THIS METHOD.
      */
-    @Nonnull
+    @NotNull
     ItemStack getStoredItemPrototype ();
 
     /**
@@ -22,8 +22,8 @@ public interface IDrawer
      * @param itemPrototype An ItemStack representing the type, metadata, and tags of the item to store.
      * @return The IDrawer actually set with the prototype.  Some drawer groups can redirect a set operation to another member.
      */
-    @Nonnull
-    IDrawer setStoredItem (@Nonnull ItemStack itemPrototype);
+    @NotNull
+    IDrawer setStoredItem (@NotNull ItemStack itemPrototype);
 
     /**
      * Sets the type of the stored item and initializes it to the given amount.  Any existing item will be replaced.
@@ -32,8 +32,8 @@ public interface IDrawer
      * @param amount The amount of items stored in this drawer.
      * @return The IDrawer actually set with the prototype.  Some drawer groups can redirect a set operation to another member.
      */
-    @Nonnull
-    default IDrawer setStoredItem (@Nonnull ItemStack itemPrototype, int amount) {
+    @NotNull
+    default IDrawer setStoredItem (@NotNull ItemStack itemPrototype, int amount) {
         IDrawer drawer = setStoredItem(itemPrototype);
         drawer.setStoredItemCount(amount);
         return drawer;
@@ -87,7 +87,7 @@ public interface IDrawer
      *
      * @param itemPrototype The item type to query.  Pass the empty stack to get the max capacity for an empty slot.
      */
-    int getMaxCapacity (@Nonnull ItemStack itemPrototype);
+    int getMaxCapacity (@NotNull ItemStack itemPrototype);
 
     /**
      * Gets the maximum number of items that would be accepted for storage by this drawer.
@@ -95,7 +95,7 @@ public interface IDrawer
      * Because a drawer may be able to handle items in excess of its full capacity, this value may be larger than
      * the result of getMaxCapacity().
      */
-    default int getAcceptingMaxCapacity (@Nonnull ItemStack itemPrototype) {
+    default int getAcceptingMaxCapacity (@NotNull ItemStack itemPrototype) {
         return getMaxCapacity(itemPrototype);
     }
 
@@ -118,7 +118,7 @@ public interface IDrawer
      * Gets the max stack size of the item type stored in this drawer.
      */
     default int getStoredItemStackSize () {
-        @Nonnull ItemStack protoStack = getStoredItemPrototype();
+        @NotNull ItemStack protoStack = getStoredItemPrototype();
         if (protoStack.isEmpty())
             return 0;
 
@@ -135,9 +135,9 @@ public interface IDrawer
      * @param matchPredicate    A custom predicate for testing the stored ItemStack for equivalence.
      * @return
      */
-    boolean canItemBeStored (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate);
+    boolean canItemBeStored (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate);
 
-    default boolean canItemBeStored (@Nonnull ItemStack itemPrototype) {
+    default boolean canItemBeStored (@NotNull ItemStack itemPrototype) {
         return canItemBeStored(itemPrototype, null);
     }
 
@@ -151,9 +151,9 @@ public interface IDrawer
      * @param itemPrototype     An ItemStack representing the type, metadata, and tags of an item.
      * @param matchPredicate    A custom predicate for testing the stored ItemStack for equivalence.
      */
-    boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate);
+    boolean canItemBeExtracted (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate);
 
-    default boolean canItemBeExtracted (@Nonnull ItemStack itemPrototype) {
+    default boolean canItemBeExtracted (@NotNull ItemStack itemPrototype) {
         return canItemBeExtracted(itemPrototype, null);
     }
 

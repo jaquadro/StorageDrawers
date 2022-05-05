@@ -2,21 +2,22 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemDrawers extends BlockItem
@@ -27,7 +28,7 @@ public class ItemDrawers extends BlockItem
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText (ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText (@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
         //if (stack.hasTag() && stack.getTag().contains("material")) {
@@ -38,7 +39,8 @@ public class ItemDrawers extends BlockItem
         Component textCapacity = new TranslatableComponent("tooltip.storagedrawers.drawers.capacity", getCapacityForBlock(stack));
         tooltip.add(new TextComponent("").append(textCapacity).withStyle(ChatFormatting.GRAY));
 
-        if (stack.hasTag() && stack.getTag().contains("tile")) {
+        CompoundTag tag = stack.getTagElement("tile");
+        if (tag != null) {
             Component textSealed = new TranslatableComponent("tooltip.storagedrawers.drawers.sealed");
             tooltip.add(new TextComponent("").append(textSealed).withStyle(ChatFormatting.YELLOW));
         }
@@ -47,15 +49,15 @@ public class ItemDrawers extends BlockItem
     }
 
     @OnlyIn(Dist.CLIENT)
+    @NotNull
     public Component getDescription() {
         return new TranslatableComponent(this.getDescriptionId() + ".desc");
     }
 
-    private int getCapacityForBlock (@Nonnull ItemStack itemStack) {
+    private int getCapacityForBlock (@NotNull ItemStack itemStack) {
         Block block = Block.byItem(itemStack.getItem());
-        if (block instanceof BlockDrawers) {
-            BlockDrawers drawers = (BlockDrawers)block;
-            return drawers.getStorageUnits() * CommonConfig.GENERAL.getBaseStackStorage();
+        if (block instanceof BlockDrawers blockDrawers) {
+            return blockDrawers.getStorageUnits() * CommonConfig.GENERAL.getBaseStackStorage();
         }
 
         return 0;

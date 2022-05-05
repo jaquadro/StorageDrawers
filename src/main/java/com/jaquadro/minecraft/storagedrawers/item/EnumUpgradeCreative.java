@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
 
 public enum EnumUpgradeCreative implements StringRepresentable
 {
@@ -39,6 +40,7 @@ public enum EnumUpgradeCreative implements StringRepresentable
     }
 
     @Override
+    @NotNull
     public String getSerializedName () {
         return name;
     }

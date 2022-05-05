@@ -1,36 +1,36 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompTierRegistry
 {
-    public class Record {
-        @Nonnull
+    public static class Record {
+        @NotNull
         public final ItemStack upper;
-        @Nonnull
+        @NotNull
         public final ItemStack lower;
         public final int convRate;
 
-        public Record (@Nonnull ItemStack upper, @Nonnull ItemStack lower, int convRate) {
+        public Record (@NotNull ItemStack upper, @NotNull ItemStack lower, int convRate) {
             this.upper = upper;
             this.lower = lower;
             this.convRate = convRate;
         }
     }
 
-    private List<Record> records = new ArrayList<Record>();
-    private List<String> pendingRules = new ArrayList<String>();
+    private final List<Record> records = new ArrayList<>();
+    private List<String> pendingRules = new ArrayList<>();
     private boolean initialized;
 
     public CompTierRegistry () { }
@@ -63,7 +63,7 @@ public class CompTierRegistry
         pendingRules = null;
     }
 
-    public boolean register (@Nonnull ItemStack upper, @Nonnull ItemStack lower, int convRate) {
+    public boolean register (@NotNull ItemStack upper, @NotNull ItemStack lower, int convRate) {
         if (upper.isEmpty() || lower.isEmpty())
             return false;
 
@@ -132,7 +132,7 @@ public class CompTierRegistry
         }
     }
 
-    public boolean unregisterUpperTarget (@Nonnull ItemStack stack) {
+    public boolean unregisterUpperTarget (@NotNull ItemStack stack) {
         for (Record r : records) {
             if (ItemStack.matches(stack, r.upper)) {
                 records.remove(r);
@@ -143,7 +143,7 @@ public class CompTierRegistry
         return false;
     }
 
-    public boolean unregisterLowerTarget (@Nonnull ItemStack stack) {
+    public boolean unregisterLowerTarget (@NotNull ItemStack stack) {
         for (Record r : records) {
             if (ItemStack.matches(stack, r.lower)) {
                 records.remove(r);
@@ -154,7 +154,7 @@ public class CompTierRegistry
         return false;
     }
 
-    public Record findHigherTier (@Nonnull ItemStack stack) {
+    public Record findHigherTier (@NotNull ItemStack stack) {
         if (stack.isEmpty())
             return null;
 
@@ -166,7 +166,7 @@ public class CompTierRegistry
         return null;
     }
 
-    public Record findLowerTier (@Nonnull ItemStack stack) {
+    public Record findLowerTier (@NotNull ItemStack stack) {
         if (stack.isEmpty())
             return null;
 

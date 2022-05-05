@@ -1,8 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.storage.*;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
@@ -21,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelDataManager;
@@ -34,13 +35,13 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawerGroup /* IProtectable, INameable */
+public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup /* IProtectable, INameable */
 {
     public static final ModelProperty<IDrawerAttributes> ATTRIBUTES = new ModelProperty<>();
     //public static final ModelProperty<Boolean> ITEM_LOCKED = new ModelProperty<>();
@@ -49,7 +50,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
 
     //private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
     //private MaterialData materialData = new MaterialData();
-    private UpgradeData upgradeData = new DrawerUpgradeData();
+    private final UpgradeData upgradeData = new DrawerUpgradeData();
 
     //public final ControllerData controllerData = new ControllerData();
 
@@ -59,7 +60,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
     //private UUID owner;
     //private String securityKey;
 
-    private IDrawerAttributesModifiable drawerAttributes;
+    private final IDrawerAttributesModifiable drawerAttributes;
 
     private long lastClickTime;
     private UUID lastClickUUID;
@@ -69,16 +70,16 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
     {
         @Override
         protected void onAttributeChanged () {
-            if (!loading && !TileEntityDrawers.this.drawerAttributes.isItemLocked(LockAttribute.LOCK_POPULATED)) {
-                for (int slot = 0; slot < TileEntityDrawers.this.getGroup().getDrawerCount(); slot++) {
-                    if (TileEntityDrawers.this.emptySlotCanBeCleared(slot)) {
-                        IDrawer drawer = TileEntityDrawers.this.getGroup().getDrawer(slot);
+            if (!loading && !BlockEntityDrawers.this.drawerAttributes.isItemLocked(LockAttribute.LOCK_POPULATED)) {
+                for (int slot = 0; slot < BlockEntityDrawers.this.getGroup().getDrawerCount(); slot++) {
+                    if (BlockEntityDrawers.this.emptySlotCanBeCleared(slot)) {
+                        IDrawer drawer = BlockEntityDrawers.this.getGroup().getDrawer(slot);
                         drawer.setStoredItem(ItemStack.EMPTY);
                     }
                 }
             }
 
-            TileEntityDrawers.this.onAttributeChanged();
+            BlockEntityDrawers.this.onAttributeChanged();
             if (getLevel() != null && !getLevel().isClientSide) {
                 setChanged();
                 markBlockForUpdate();
@@ -93,14 +94,13 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         }
 
         @Override
-        public boolean canAddUpgrade (@Nonnull ItemStack upgrade) {
+        public boolean canAddUpgrade (@NotNull ItemStack upgrade) {
             if (!super.canAddUpgrade(upgrade))
                 return false;
 
             if (upgrade.getItem() == ModItems.ONE_STACK_UPGRADE.get()) {
                 int lostStackCapacity = upgradeData.getStorageMultiplier() * (getEffectiveDrawerCapacity() - 1);
-                if (!stackCapacityCheck(lostStackCapacity))
-                    return false;
+                return stackCapacityCheck(lostStackCapacity);
             }
 
             return true;
@@ -120,8 +120,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
                     storageMult--;
 
                 int addedStackCapacity = storageMult * getEffectiveDrawerCapacity();
-                if (!stackCapacityCheck(addedStackCapacity))
-                    return false;
+                return stackCapacityCheck(addedStackCapacity);
             }
 
             return true;
@@ -151,8 +150,8 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         }
     }
 
-    protected TileEntityDrawers (BlockEntityType<?> tileEntityType, BlockPos pos, BlockState state) {
-        super(tileEntityType, pos, state);
+    protected BlockEntityDrawers(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+        super(blockEntityType, pos, state);
 
         drawerAttributes = new DrawerAttributes();
 
@@ -164,8 +163,10 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         //injectData(controllerData);
     }
 
+    @NotNull
     public abstract IDrawerGroup getGroup ();
 
+    @NotNull
     public IDrawerAttributes getDrawerAttributes () {
         return drawerAttributes;
     }
@@ -200,7 +201,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
     }
 
     protected boolean emptySlotCanBeCleared (int slot) {
-        IDrawer drawer = TileEntityDrawers.this.getGroup().getDrawer(slot);
+        IDrawer drawer = BlockEntityDrawers.this.getGroup().getDrawer(slot);
         return !drawer.isEmpty() && drawer.getStoredItemCount() == 0;
     }
 
@@ -292,16 +293,11 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         if (type == null)
             return 0;
 
-        switch (type) {
-            case COMBINED:
-                return getCombinedRedstoneLevel();
-            case MAX:
-                return getMaxRedstoneLevel();
-            case MIN:
-                return getMinRedstoneLevel();
-            default:
-                return 0;
-        }
+        return switch (type) {
+            case COMBINED -> getCombinedRedstoneLevel();
+            case MAX -> getMaxRedstoneLevel();
+            case MIN -> getMinRedstoneLevel();
+        };
     }
 
     protected int getCombinedRedstoneLevel () {
@@ -368,7 +364,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         return (int)Math.ceil(maxRatio * 14);
     }
 
-    @Nonnull
+    @NotNull
     public ItemStack takeItemsFromSlot (int slot, int count) {
         IDrawer drawer = getGroup().getDrawer(slot);
         if (!drawer.isEnabled() || drawer.isEmpty())
@@ -389,7 +385,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         return stack;
     }
 
-    public int putItemsIntoSlot (int slot, @Nonnull ItemStack stack, int count) {
+    public int putItemsIntoSlot (int slot, @NotNull ItemStack stack, int count) {
         IDrawer drawer = getGroup().getDrawer(slot);
         if (!drawer.isEnabled())
             return 0;
@@ -442,13 +438,16 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
             }
         }
 
-        if (count > 0)
-            StorageDrawers.proxy.updatePlayerInventory(player);
+//        if (count > 0)
+//            StorageDrawers.proxy.updatePlayerInventory(player);
 
         return count;
     }
 
     public int interactPutItemsIntoSlot (int slot, Player player) {
+        if (getLevel() == null)
+            return 0;
+
         int count;
         if (getLevel().getGameTime() - lastClickTime < 10 && player.getUUID().equals(lastClickUUID))
             count = interactPutCurrentInventoryIntoSlot(slot, player);
@@ -555,10 +554,10 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
 
     @OnlyIn(Dist.CLIENT)
     public void clientUpdateCount (final int slot, final int count) {
-        if (!getLevel().isClientSide)
+        if (getLevel() == null || !getLevel().isClientSide)
             return;
 
-        Minecraft.getInstance().tell(() -> TileEntityDrawers.this.clientUpdateCountAsync(slot, count));
+        Minecraft.getInstance().tell(() -> BlockEntityDrawers.this.clientUpdateCountAsync(slot, count));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -585,14 +584,13 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         return getGroup().getDrawerCount();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     @Deprecated
     public IDrawer getDrawer (int slot) {
         return getGroup().getDrawer(slot);
     }
 
-    @Nonnull
     @Override
     @Deprecated
     public int[] getAccessibleDrawerSlots () {
@@ -620,13 +618,12 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
 
     public static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY= CapabilityManager.get(new CapabilityToken<>(){});
 
-    private final LazyOptional<?> capabilityGroup = LazyOptional.of(this::getGroup);
+    private final LazyOptional<IDrawerGroup> capabilityGroup = LazyOptional.of(this::getGroup);
 
-    @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
+    @NotNull
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing)
     {
-        IDrawerGroup group = getGroup();
         if (capability == DRAWER_GROUP_CAPABILITY)
             return capabilityGroup.cast();
 
@@ -637,7 +634,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
         return super.getCapability(capability, facing);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IModelData getModelData () {
         return new ModelDataMap.Builder()
@@ -652,5 +649,11 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements IDrawe
             ModelDataManager.requestModelDataRefresh(this);
             Minecraft.getInstance().levelRenderer.setBlocksDirty(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
         });
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        capabilityGroup.invalidate();
     }
 }

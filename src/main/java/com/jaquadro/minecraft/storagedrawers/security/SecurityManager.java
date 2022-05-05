@@ -6,7 +6,7 @@ import com.mojang.authlib.GameProfile;
 
 public class SecurityManager
 {
-    private static ISecurityProvider defaultProvider = new DefaultSecurityProvider();
+    private static final ISecurityProvider defaultProvider = new DefaultSecurityProvider();
 
     public static boolean hasOwnership (GameProfile profile, IProtectable target) {
         if (target == null || profile == null)

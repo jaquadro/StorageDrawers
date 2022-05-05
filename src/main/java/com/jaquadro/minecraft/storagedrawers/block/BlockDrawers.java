@@ -3,7 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
@@ -14,6 +14,7 @@ import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
+import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,17 +35,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -56,12 +53,10 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,12 +85,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     public final AABB[] indGeometry;
     public final AABB[] indBaseGeometry;
 
-    //@SideOnly(Side.CLIENT)
-    //private StatusModelData[] statusInfo;
-
     private long ignoreEventTime;
-
-    private static final ThreadLocal<Boolean> inTileLookup = ThreadLocal.withInitial(() -> false);
 
     public BlockDrawers (int drawerCount, boolean halfDepth, int storageUnits, BlockBehaviour.Properties properties) {
         super(properties);
@@ -147,27 +137,9 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         return storageUnits;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void initDynamic () { }
-
-    /*@OnlyIn(Dist.CLIENT)
-    public StatusModelData getStatusInfo (BlockState state) {
-        return null;
-    }*/
-
-    /*@Override
-    public BlockRenderLayer getRenderLayer () {
-        return BlockRenderLayer.CUTOUT_MIPPED;
-    }*/
-
-    //@Override
-    //public boolean canRenderInLayer (IBlockState state, BlockRenderLayer layer) {
-    //    return layer == BlockRenderLayer.CUTOUT_MIPPED || layer == BlockRenderLayer.TRANSLUCENT;
-    //}
-
-
     @Override
-    public VoxelShape getShape (BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    @NotNull
+    public VoxelShape getShape (@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         Direction direction = state.getValue(FACING);
         switch (direction) {
             case EAST:
@@ -183,7 +155,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     }
 
     @Override
-    public boolean isPathfindable (BlockState state, BlockGetter getter, BlockPos pos, PathComputationType type) {
+    public boolean isPathfindable (@NotNull BlockState state, @NotNull BlockGetter getter, @NotNull BlockPos pos, @NotNull PathComputationType type) {
         return false;
     }
 
@@ -192,95 +164,45 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
-    /*@Override
-    public void onBlockAdded (World world, BlockPos pos, IBlockState state) {
-        if (!world.isRemote) {
-            IBlockState blockNorth = world.getBlockState(pos.north());
-            IBlockState blockSouth = world.getBlockState(pos.south());
-            IBlockState blockWest = world.getBlockState(pos.west());
-            IBlockState blockEast = world.getBlockState(pos.east());
-
-            EnumFacing facing = state.getValue(FACING);
-
-            if (facing == EnumFacing.NORTH && blockNorth.isFullBlock() && !blockSouth.isFullBlock())
-                facing = EnumFacing.SOUTH;
-            if (facing == EnumFacing.SOUTH && blockSouth.isFullBlock() && !blockNorth.isFullBlock())
-                facing = EnumFacing.NORTH;
-            if (facing == EnumFacing.WEST && blockWest.isFullBlock() && !blockEast.isFullBlock())
-                facing = EnumFacing.EAST;
-            if (facing == EnumFacing.EAST && blockEast.isFullBlock() && !blockWest.isFullBlock())
-                facing = EnumFacing.WEST;
-
-            TileEntityDrawers tile = getTileEntitySafe(world, pos);
-            tile.setDirection(facing.ordinal());
-            tile.markDirty();
-
-            world.setBlockState(pos, state.withProperty(FACING, facing));
-        }
-
-        super.onBlockAdded(world, pos, state);
-    }*/
-
     @Override
-    public void setPlacedBy (Level world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
-        if (stack.hasTag() && stack.getTag().contains("tile")) {
-            TileEntityDrawers tile = getTileEntity(world, pos);
-            if (tile != null)
-                tile.readPortable(stack.getTag().getCompound("tile"));
+    public void setPlacedBy (@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity entity, @NotNull ItemStack stack) {
+        BlockEntityDrawers blockEntity = WorldUtils.getBlockEntity(world, pos, BlockEntityDrawers.class);
+        if (blockEntity == null)
+            return;
+
+        CompoundTag tag = stack.getTagElement("tile");
+        if (tag != null) {
+            blockEntity.readPortable(tag);
         }
 
-        if (stack.hasCustomHoverName()) {
-            TileEntityDrawers tile = getTileEntity(world, pos);
-            //if (tile != null)
-            //    tile.setCustomName(stack.getDisplayName());
-        }
+//        if (stack.hasCustomHoverName()) {
+//            //    blockEntity.setCustomName(stack.getDisplayName());
+//        }
 
         if (entity != null && entity.getOffhandItem().getItem() == ModItems.DRAWER_KEY.get()) {
-            TileEntityDrawers tile = getTileEntity(world, pos);
-            if (tile != null) {
-                IDrawerAttributes _attrs = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(new EmptyDrawerAttributes());
-                if (_attrs instanceof IDrawerAttributesModifiable) {
-                    IDrawerAttributesModifiable attrs = (IDrawerAttributesModifiable) _attrs;
-                    attrs.setItemLocked(LockAttribute.LOCK_EMPTY, true);
-                    attrs.setItemLocked(LockAttribute.LOCK_POPULATED, true);
-                }
+            IDrawerAttributes _attrs = blockEntity.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(new EmptyDrawerAttributes());
+            if (_attrs instanceof IDrawerAttributesModifiable attrs) {
+                attrs.setItemLocked(LockAttribute.LOCK_EMPTY, true);
+                attrs.setItemLocked(LockAttribute.LOCK_POPULATED, true);
             }
         }
     }
 
     @Override
-    public boolean canBeReplaced (BlockState state, BlockPlaceContext useContext) {
-        Player player = useContext.getPlayer();
-        if (player == null)
-            return super.canBeReplaced(state, useContext);
-
-        if (useContext.getPlayer().isCreative() && useContext.getHand() == InteractionHand.OFF_HAND) {
-            double blockReachDistance = useContext.getPlayer().getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1;
-            BlockHitResult result = rayTraceEyes(useContext.getLevel(), useContext.getPlayer(), blockReachDistance);
-
-            if (result.getType() == HitResult.Type.MISS || result.getDirection() != state.getValue(FACING))
-                useContext.getLevel().setBlock(useContext.getClickedPos(), Blocks.AIR.defaultBlockState(), useContext.getLevel().isClientSide ? 11 : 3);
-            else
-                attack(state, useContext.getLevel(), useContext.getClickedPos(), useContext.getPlayer());
-
-            return false;
-        }
-
-        return super.canBeReplaced(state, useContext);
-    }
-
-    @Override
-    public InteractionResult use (BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    @NotNull
+    public InteractionResult use (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         ItemStack item = player.getItemInHand(hand);
         if (hand == InteractionHand.OFF_HAND)
             return InteractionResult.PASS;
 
-        if (world.isClientSide && Util.getMillis() == ignoreEventTime) {
+        if (level.isClientSide && Util.getMillis() == ignoreEventTime) {
             ignoreEventTime = 0;
             return InteractionResult.PASS;
         }
 
-        TileEntityDrawers tileDrawers = getTileEntitySafe(world, pos);
+        BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(level, pos, BlockEntityDrawers.class);
+        if (blockEntityDrawers == null)
+            return InteractionResult.FAIL;
 
         //if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
         //    return false;
@@ -295,34 +217,22 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             if (item.getItem() instanceof ItemKey)
                 return InteractionResult.PASS;
 
-            /*if (item.getItem() instanceof ItemTrim && player.isSneaking()) {
-                if (!retrimBlock(world, pos, item))
-                    return false;
-
-                if (!player.capabilities.isCreativeMode) {
-                    item.shrink(1);
-                    if (item.getCount() <= 0)
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
-                }
-
-                return true;
-            }*/
             if (item.getItem() instanceof ItemUpgrade) {
-                if (!tileDrawers.upgrades().canAddUpgrade(item)) {
-                    if (!world.isClientSide)
+                if (!blockEntityDrawers.upgrades().canAddUpgrade(item)) {
+                    if (!level.isClientSide)
                         player.displayClientMessage(new TranslatableComponent("message.storagedrawers.cannot_add_upgrade"), true);
 
                     return InteractionResult.PASS;
                 }
 
-                if (!tileDrawers.upgrades().addUpgrade(item)) {
-                    if (!world.isClientSide)
+                if (!blockEntityDrawers.upgrades().addUpgrade(item)) {
+                    if (!level.isClientSide)
                         player.displayClientMessage(new TranslatableComponent("message.storagedrawers.max_upgrades"), true);
 
                     return InteractionResult.PASS;
                 }
 
-                world.sendBlockUpdated(pos, state, state, 3);
+                level.sendBlockUpdated(pos, state, state, 3);
 
                 if (!player.isCreative()) {
                     item.shrink(1);
@@ -332,22 +242,6 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 
                 return InteractionResult.SUCCESS;
             }
-            /*else if (item.getItem() instanceof ItemPersonalKey) {
-                String securityKey = ((ItemPersonalKey) item.getItem()).getSecurityProviderKey(item.getItemDamage());
-                ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
-
-                if (tileDrawers.getOwner() == null) {
-                    tileDrawers.setOwner(player.getPersistentID());
-                    tileDrawers.setSecurityProvider(provider);
-                }
-                else if (SecurityManager.hasOwnership(player.getGameProfile(), tileDrawers)) {
-                    tileDrawers.setOwner(null);
-                    tileDrawers.setSecurityProvider(null);
-                }
-                else
-                    return false;
-                return true;
-            }*/
         }
         else if (item.isEmpty() && player.isShiftKeyDown()) {
             /*if (tileDrawers.isSealed()) {
@@ -359,42 +253,40 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
                 return true;
             }*/
 
-            if (CommonConfig.GENERAL.enableUI.get() && !world.isClientSide) {
+            if (CommonConfig.GENERAL.enableUI.get() && !level.isClientSide) {
                 NetworkHooks.openGui((ServerPlayer)player, new MenuProvider()
                 {
                     @Override
+                    @NotNull
                     public Component getDisplayName () {
                         return new TranslatableComponent(getDescriptionId());
                     }
 
                     @Nullable
                     @Override
-                    public AbstractContainerMenu createMenu (int windowId, Inventory playerInv, Player playerEntity) {
+                    public AbstractContainerMenu createMenu (int windowId, @NotNull Inventory playerInv, @NotNull Player playerEntity) {
                         if (drawerCount == 1)
-                            return new ContainerDrawers1(windowId, playerInv, tileDrawers);
+                            return new ContainerDrawers1(windowId, playerInv, blockEntityDrawers);
                         else if (drawerCount == 2)
-                            return new ContainerDrawers2(windowId, playerInv, tileDrawers);
+                            return new ContainerDrawers2(windowId, playerInv, blockEntityDrawers);
                         else if (drawerCount == 4)
-                            return new ContainerDrawers4(windowId, playerInv, tileDrawers);
+                            return new ContainerDrawers4(windowId, playerInv, blockEntityDrawers);
                         else if (drawerCount == 3 && BlockDrawers.this instanceof BlockCompDrawers)
-                            return new ContainerDrawersComp(windowId, playerInv, tileDrawers);
+                            return new ContainerDrawersComp(windowId, playerInv, blockEntityDrawers);
                         return null;
                     }
-                }, extraData -> {
-                    extraData.writeBlockPos(pos);
-                });
+                }, extraData -> extraData.writeBlockPos(pos));
                 return InteractionResult.SUCCESS;
             }
         }
-
-        if (state.getValue(FACING) != hit.getDirection())
-            return InteractionResult.PASS;
-
         //if (tileDrawers.isSealed())
         //    return false;
 
-        int slot = getDrawerSlot(hit);
-        tileDrawers.interactPutItemsIntoSlot(slot, player);
+        int slot = getDrawerSlot(state, hit);
+        if (slot < 0)
+            return InteractionResult.PASS;
+
+        blockEntityDrawers.interactPutItemsIntoSlot(slot, player);
 
         if (item.isEmpty())
             player.setItemInHand(hand, ItemStack.EMPTY);
@@ -402,11 +294,15 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         return InteractionResult.SUCCESS;
     }
 
-    protected final int getDrawerSlot (BlockHitResult hit) {
+    protected final int getDrawerSlot (@NotNull BlockState state, @NotNull BlockHitResult hit) {
+        Direction side = hit.getDirection();
+        if (state.getValue(FACING) != side)
+            return -1;
         return getDrawerSlot(hit.getDirection(), normalizeHitVec(hit.getLocation()));
     }
 
-    private Vec3 normalizeHitVec (Vec3 hit) {
+    @NotNull
+    private static Vec3 normalizeHitVec (@NotNull Vec3 hit) {
         return new Vec3(
             ((hit.x < 0) ? hit.x - Math.floor(hit.x) : hit.x) % 1,
             ((hit.y < 0) ? hit.y - Math.floor(hit.y) : hit.y) % 1,
@@ -414,150 +310,103 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         );
     }
 
-    protected int getDrawerSlot (Direction side, Vec3 hit) {
-        return 0;
+    protected int getDrawerSlot (Direction correctSide, @NotNull Vec3 normalizedHit) {
+        return -1;
     }
 
-    protected boolean hitTop (double hitY) {
-        return hitY > .5;
+    protected boolean hitAny(Direction side, Vec3 normalizedHit) {
+        if (side == Direction.NORTH || side == Direction.SOUTH) {
+            return .0625 < normalizedHit.x && normalizedHit.x < .9375 && .0625 < normalizedHit.y && normalizedHit.y < .9375;
+        }
+        else if (side == Direction.EAST || side == Direction.WEST) {
+            return .0625 < normalizedHit.z && normalizedHit.z < .9375 && .0625 < normalizedHit.y && normalizedHit.y < .9375;
+        }
+        return false;
     }
 
-    protected boolean hitLeft (Direction side, double hitX, double hitZ) {
+    protected boolean hitTop (@NotNull Vec3 normalizedHit) {
+        return normalizedHit.y > .5;
+    }
+
+    protected boolean hitLeft (Direction side, @NotNull Vec3 normalizedHit) {
         return switch (side) {
-            case NORTH -> hitX > .5;
-            case SOUTH -> hitX < .5;
-            case WEST -> hitZ < .5;
-            case EAST -> hitZ > .5;
+            case NORTH -> normalizedHit.x > .5;
+            case SOUTH -> normalizedHit.x < .5;
+            case WEST -> normalizedHit.z < .5;
+            case EAST -> normalizedHit.z > .5;
             default -> true;
         };
     }
 
-    protected BlockHitResult rayTraceEyes(Level world, Player player, double length) {
-        Vec3 eyePos = player.getEyePosition(1);
-        Vec3 lookPos = player.getViewVector(1);
-        Vec3 endPos = eyePos.add(lookPos.x * length, lookPos.y * length, lookPos.z * length);
-        ClipContext context = new ClipContext(eyePos, endPos, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player);
-        return world.clip(context);
+    @Override
+    public void attack(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player playerIn) {
+        interactTakeItems(state, worldIn, pos, playerIn);
     }
 
-    @Override
-    public void attack(BlockState state, Level worldIn, BlockPos pos, Player playerIn) {
-        if (worldIn.isClientSide)
-            return;
-
+    public boolean interactTakeItems(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player) {
         if (CommonConfig.GENERAL.debugTrace.get())
             StorageDrawers.log.info("onBlockClicked");
 
-        BlockHitResult rayResult = rayTraceEyes(worldIn, playerIn, playerIn.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1);
-        if (rayResult.getType() == HitResult.Type.MISS)
-            return;
+        if (!(state.getBlock() instanceof BlockDrawers))
+            return false;
 
-        Direction side = rayResult.getDirection();
+        BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(level, blockPos, BlockEntityDrawers.class);
+        if (blockEntityDrawers == null)
+            return false;
 
-        TileEntityDrawers tileDrawers = getTileEntitySafe(worldIn, pos);
-        if (state.getValue(FACING) != rayResult.getDirection())
-            return;
+        BlockHitResult hit = WorldUtils.rayTraceEyes(level, player, blockPos);
+        if (hit.getType() != HitResult.Type.BLOCK)
+            return false;
+        if (!hit.getBlockPos().equals(blockPos))
+            return false;
 
-        //if (tileDrawers.isSealed())
-        //    return;
+        if (level.getBlockState(blockPos) != state)
+            return false;
 
-        //if (!SecurityManager.hasAccess(playerIn.getGameProfile(), tileDrawers))
-        //    return;
+        int slot = getDrawerSlot(state, hit);
+        if (slot < 0)
+            return false;
 
-        int slot = getDrawerSlot(rayResult);
-        IDrawer drawer = tileDrawers.getDrawer(slot);
+        IDrawer drawer = blockEntityDrawers.getDrawer(slot);
 
         ItemStack item;
         boolean invertShift = ClientConfig.GENERAL.invertShift.get();
 
-        if (playerIn.isShiftKeyDown() != invertShift)
-            item = tileDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
+        if (player.isShiftKeyDown() != invertShift)
+            item = blockEntityDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
         else
-            item = tileDrawers.takeItemsFromSlot(slot, 1);
+            item = blockEntityDrawers.takeItemsFromSlot(slot, 1);
 
         if (CommonConfig.GENERAL.debugTrace.get())
-            StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item.toString());
+            StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item);
 
         if (!item.isEmpty()) {
-            if (!playerIn.getInventory().add(item)) {
-                dropItemStack(worldIn, pos.relative(side), playerIn, item);
-                worldIn.sendBlockUpdated(pos, state, state, 3);
+            if (!player.getInventory().add(item)) {
+                dropItemStack(level, blockPos.relative(hit.getDirection()), player, item);
+                level.sendBlockUpdated(blockPos, state, state, Block.UPDATE_ALL);
             }
             else
-                worldIn.playSound(null, pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, ((worldIn.random.nextFloat() - worldIn.random.nextFloat()) * .7f + 1) * 2);
+                level.playSound(null, blockPos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, ((level.random.nextFloat() - level.random.nextFloat()) * .7f + 1) * 2);
         }
+        return true;
     }
 
-    private void dropItemStack (Level world, BlockPos pos, Player player, @Nonnull ItemStack stack) {
+    private void dropItemStack (@NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull ItemStack stack) {
         ItemEntity entity = new ItemEntity(world, pos.getX() + .5f, pos.getY() + .3f, pos.getZ() + .5f, stack);
         Vec3 motion = entity.getDeltaMovement();
         entity.push(-motion.x, -motion.y, -motion.z);
         world.addFreshEntity(entity);
     }
 
-
-
     @Override
-    public void onRemove (BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        TileEntityDrawers tile = getTileEntity(world, pos);
-
-        if (tile != null) {
-            /*for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {
-                ItemStack stack = tile.upgrades().getUpgrade(i);
-                if (!stack.isEmpty()) {
-                    if (stack.getItem() instanceof ItemUpgradeCreative)
-                        continue;
-                    spawnAsEntity(world, pos, stack);
-                }
-            }*/
-
-            //if (!tile.getDrawerAttributes().isUnlimitedVending())
-            //    DrawerInventoryHelper.dropInventoryItems(world, pos, tile.getGroup());
-        }
-
-        super.onRemove(state, world, pos, newState, isMoving);
-    }
-
-
-    @Override
-    public boolean onDestroyedByPlayer (BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        if (player.isCreative()) {
-            if (creativeCanBreakBlock(state, world, pos, player))
-                world.setBlock(pos, Blocks.AIR.defaultBlockState(), world.isClientSide ? 11 : 3);
-            else
-                attack(state, world, pos, player);
-
-            return false;
-        }
-
-        return willHarvest || super.onDestroyedByPlayer(state, world, pos, player, false, fluid);
-    }
-
-
-    @Override
-    public void playerDestroy (Level worldIn, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
-        super.playerDestroy(worldIn, player, pos, state, te, stack);
-        worldIn.removeBlock(pos, false);
-    }
-
-    public boolean creativeCanBreakBlock (BlockState state, Level world, BlockPos pos, Player player) {
-        double blockReachDistance = player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1;
-
-        BlockHitResult rayResult = rayTraceEyes(world, player, blockReachDistance + 1);
-        if (rayResult.getType() == HitResult.Type.MISS || state.getValue(FACING) != rayResult.getDirection())
-            return true;
-        else
-            return false;
-    }
-
-    @Override
-    public List<ItemStack> getDrops (BlockState state, LootContext.Builder builder) {
+    @NotNull
+    public List<ItemStack> getDrops (@NotNull BlockState state, LootContext.Builder builder) {
         List<ItemStack> items = new ArrayList<>();
-        items.add(getMainDrop(state, (TileEntityDrawers)builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY)));
+        items.add(getMainDrop(state, (BlockEntityDrawers)builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY)));
         return items;
     }
 
-    protected ItemStack getMainDrop (BlockState state, TileEntityDrawers tile) {
+    protected ItemStack getMainDrop (BlockState state, BlockEntityDrawers tile) {
         ItemStack drop = new ItemStack(this);
         if (tile == null)
             return drop;
@@ -569,7 +418,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         boolean hasContents = false;
         for (int i = 0; i < tile.getGroup().getDrawerCount(); i++) {
             IDrawer drawer = tile.getGroup().getDrawer(i);
-            if (drawer != null && !drawer.isEmpty())
+            if (!drawer.isEmpty())
                 hasContents = true;
         }
         for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {
@@ -587,93 +436,32 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         return drop;
     }
 
-    /*@Override
-    public float getExplosionResistance (World world, BlockPos pos, Entity exploder, Explosion explosion) {
-        TileEntityDrawers tile = getTileEntity(world, pos);
-        if (tile != null) {
-            for (int slot = 0; slot < 5; slot++) {
-                ItemStack stack = tile.upgrades().getUpgrade(slot);
-                if (stack.isEmpty() || !(stack.getItem() instanceof ItemUpgradeStorage))
-                    continue;
-
-                if (EnumUpgradeStorage.byMetadata(stack.getMetadata()) != EnumUpgradeStorage.OBSIDIAN)
-                    continue;
-
-                return 1000;
-            }
-        }
-
-        return super.getExplosionResistance(world, pos, exploder, explosion);
-    }*/
-
-    public TileEntityDrawers getTileEntity (BlockGetter blockAccess, BlockPos pos) {
-        if (inTileLookup.get())
-            return null;
-
-        inTileLookup.set(true);
-        BlockEntity tile = blockAccess.getBlockEntity(pos);
-        inTileLookup.set(false);
-
-        return (tile instanceof TileEntityDrawers) ? (TileEntityDrawers) tile : null;
-    }
-
-    public TileEntityDrawers getTileEntitySafe (Level world, BlockPos pos) {
-        TileEntityDrawers tile = getTileEntity(world, pos);
-        if (tile == null) {
-            tile = (TileEntityDrawers) newBlockEntity(pos, world.getBlockState(pos));
-            world.setBlockEntity(tile);
-        }
-
-        return tile;
-    }
-
-    /*@Override
-    @SideOnly(Side.CLIENT)
-    public boolean addHitEffects (IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
-        if (getDirection(worldObj, target.getBlockPos()) == target.sideHit)
-            return true;
-
-        return super.addHitEffects(state, worldObj, target, manager);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean addDestroyEffects (World world, BlockPos pos, ParticleManager manager) {
-        //TileEntityDrawers tile = getTileEntity(world, pos);
-        //if (tile != null && !tile.getWillDestroy())
-        //    return true;
-
-        return super.addDestroyEffects(world, pos, manager);
-    }*/
-
     @Override
     @SuppressWarnings("deprecation")
-    public boolean isSignalSource (BlockState state) {
+    public boolean isSignalSource (@NotNull BlockState state) {
         return true;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public int getSignal (BlockState state, BlockGetter blockAccess, BlockPos pos, Direction side) {
+    public int getSignal (@NotNull BlockState state, @NotNull BlockGetter blockAccess, @NotNull BlockPos pos, @NotNull Direction side) {
         if (!isSignalSource(state))
             return 0;
 
-        TileEntityDrawers tile = getTileEntity(blockAccess, pos);
-        if (tile == null || !tile.isRedstone())
+        BlockEntityDrawers blockEntity = WorldUtils.getBlockEntity(blockAccess, pos, BlockEntityDrawers.class);
+        if (blockEntity == null || !blockEntity.isRedstone())
             return 0;
 
-        return tile.getRedstoneLevel();
+        return blockEntity.getRedstoneLevel();
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public int getDirectSignal (BlockState state, BlockGetter worldIn, BlockPos pos, Direction side) {
+    public int getDirectSignal (@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull Direction side) {
         return (side == Direction.UP) ? getSignal(state, worldIn, pos, side) : 0;
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public boolean useShapeForLightOcclusion(BlockState state) {
+    public boolean useShapeForLightOcclusion(@NotNull BlockState state) {
         return true;
     }
 }

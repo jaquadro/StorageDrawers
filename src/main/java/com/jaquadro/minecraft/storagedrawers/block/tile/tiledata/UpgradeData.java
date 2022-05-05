@@ -3,17 +3,21 @@ package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import com.jaquadro.minecraft.storagedrawers.item.*;
+import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeRedstone;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import java.util.Arrays;
 
-public class UpgradeData extends TileDataShim
+public class UpgradeData extends BlockEntityDataShim
 {
     protected final ItemStack[] upgrades;
     private int storageMultiplier;
@@ -32,8 +36,7 @@ public class UpgradeData extends TileDataShim
 
     public UpgradeData (int slotCount) {
         upgrades = new ItemStack[slotCount];
-        for (int i = 0; i < upgrades.length; i++)
-            upgrades[i] = ItemStack.EMPTY;
+        Arrays.fill(upgrades, ItemStack.EMPTY);
 
         syncStorageMultiplier();
     }
@@ -47,7 +50,7 @@ public class UpgradeData extends TileDataShim
         return upgrades.length;
     }
 
-    @Nonnull
+    @NotNull
     public ItemStack getUpgrade (int slot) {
         slot = Mth.clamp(slot, 0, upgrades.length - 1);
         return upgrades[slot];
@@ -57,7 +60,7 @@ public class UpgradeData extends TileDataShim
         return getNextUpgradeSlot() != -1;
     }
 
-    public boolean addUpgrade (@Nonnull ItemStack upgrade) {
+    public boolean addUpgrade (@NotNull ItemStack upgrade) {
         int slot = getNextUpgradeSlot();
         if (slot == -1)
             return false;
@@ -66,7 +69,7 @@ public class UpgradeData extends TileDataShim
         return true;
     }
 
-    public boolean setUpgrade (int slot, @Nonnull ItemStack upgrade) {
+    public boolean setUpgrade (int slot, @NotNull ItemStack upgrade) {
         slot = Mth.clamp(slot, 0, upgrades.length - 1);
 
         if (!upgrade.isEmpty()) {
@@ -95,13 +98,12 @@ public class UpgradeData extends TileDataShim
         return true;
     }
 
-    public boolean canAddUpgrade (@Nonnull ItemStack upgrade) {
+    public boolean canAddUpgrade (@NotNull ItemStack upgrade) {
         if (upgrade.isEmpty())
             return false;
-        if (!(upgrade.getItem() instanceof ItemUpgrade))
+        if (!(upgrade.getItem() instanceof ItemUpgrade candidate))
             return false;
 
-        ItemUpgrade candidate = (ItemUpgrade)upgrade.getItem();
         if (candidate.getAllowMultiple())
             return true;
 
@@ -109,10 +111,9 @@ public class UpgradeData extends TileDataShim
             if (stack.isEmpty())
                 continue;
 
-            if (!(stack.getItem() instanceof ItemUpgrade))
+            if (!(stack.getItem() instanceof ItemUpgrade reference))
                 continue;
 
-            ItemUpgrade reference = (ItemUpgrade)stack.getItem();
             if (candidate.getUpgradeGroup() == reference.getUpgradeGroup())
                 return false;
         }
@@ -229,8 +230,7 @@ public class UpgradeData extends TileDataShim
 
     @Override
     public void read (CompoundTag tag) {
-        for (int i = 0; i < upgrades.length; i++)
-            upgrades[i] = ItemStack.EMPTY;
+        Arrays.fill(upgrades, ItemStack.EMPTY);
 
         if (!tag.contains("Upgrades"))
             return;

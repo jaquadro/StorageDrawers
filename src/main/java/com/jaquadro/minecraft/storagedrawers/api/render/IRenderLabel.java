@@ -5,5 +5,5 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public interface IRenderLabel
 {
-    void render (BlockEntity tileEntity, IDrawerGroup drawerGroup, int slot, float brightness, float partialTickTime);
+    void render (BlockEntity blockEntity, IDrawerGroup drawerGroup, int slot, float brightness, float partialTickTime);
 }
