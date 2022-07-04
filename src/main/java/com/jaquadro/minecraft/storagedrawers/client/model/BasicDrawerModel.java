@@ -23,6 +23,7 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -46,7 +47,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Function;
 
 public final class BasicDrawerModel
@@ -149,14 +149,13 @@ public final class BasicDrawerModel
             Resource iresource = null;
             Reader reader = null;
             try {
-                iresource = Minecraft.getInstance().getResourceManager().getResource(location);
-                reader = new InputStreamReader(iresource.getInputStream(), StandardCharsets.UTF_8);
+                iresource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(location);
+                reader = new InputStreamReader(iresource.open(), StandardCharsets.UTF_8);
                 return BlockModel.fromStream(reader);
             } catch (IOException e) {
                 return null;
             } finally {
                 IOUtils.closeQuietly(reader);
-                IOUtils.closeQuietly((Closeable)iresource);
             }
         }
 
@@ -302,7 +301,7 @@ public final class BasicDrawerModel
 
         @Override
         @NotNull
-        public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand) {
+        public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand) {
             List<BakedQuad> quads = Lists.newArrayList();
             quads.addAll(mainModel.getQuads(state, side, rand));
             for (BakedModel model : models)
@@ -389,7 +388,7 @@ public final class BasicDrawerModel
 
         @NotNull
         @Override
-        public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
+        public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull IModelData extraData) {
             List<BakedQuad> quads = Lists.newArrayList();
             quads.addAll(mainModel.getQuads(state, side, rand, extraData));
 

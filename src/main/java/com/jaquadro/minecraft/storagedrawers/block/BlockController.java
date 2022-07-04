@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +27,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
-import java.util.Random;
 
 public class BlockController extends HorizontalDirectionalBlock implements INetworked, EntityBlock
 {
@@ -110,7 +110,7 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
     }
 
     @Override
-    public void tick (@NotNull BlockState state, @NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull Random rand) {
+    public void tick (@NotNull BlockState state, @NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull RandomSource rand) {
         if (world.isClientSide)
             return;
 

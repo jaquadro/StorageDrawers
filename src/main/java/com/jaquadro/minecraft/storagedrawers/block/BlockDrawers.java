@@ -20,7 +20,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -220,14 +219,14 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             if (item.getItem() instanceof ItemUpgrade) {
                 if (!blockEntityDrawers.upgrades().canAddUpgrade(item)) {
                     if (!level.isClientSide)
-                        player.displayClientMessage(new TranslatableComponent("message.storagedrawers.cannot_add_upgrade"), true);
+                        player.displayClientMessage(Component.translatable("message.storagedrawers.cannot_add_upgrade"), true);
 
                     return InteractionResult.PASS;
                 }
 
                 if (!blockEntityDrawers.upgrades().addUpgrade(item)) {
                     if (!level.isClientSide)
-                        player.displayClientMessage(new TranslatableComponent("message.storagedrawers.max_upgrades"), true);
+                        player.displayClientMessage(Component.translatable("message.storagedrawers.max_upgrades"), true);
 
                     return InteractionResult.PASS;
                 }
@@ -259,7 +258,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
                     @Override
                     @NotNull
                     public Component getDisplayName () {
-                        return new TranslatableComponent(getDescriptionId());
+                        return Component.translatable(getDescriptionId());
                     }
 
                     @Nullable

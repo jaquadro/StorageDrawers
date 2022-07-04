@@ -4,34 +4,31 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
-import mcp.mobius.waila.api.*;
-import mcp.mobius.waila.api.config.IPluginConfig;
-import mcp.mobius.waila.api.ui.IElement;
-import mcp.mobius.waila.impl.ui.ItemStackElement;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import snownee.jade.api.*;
+import snownee.jade.api.config.IPluginConfig;
+import snownee.jade.api.ui.IElement;
+import snownee.jade.impl.ui.ItemStackElement;
 
 @WailaPlugin(StorageDrawers.MOD_ID)
 public class Waila implements IWailaPlugin
 {
     @Override
-    public void register (IRegistrar registrar) {
+    public void registerClient (IWailaClientRegistration registration) {
         if (!ClientConfig.INTEGRATION.enableWaila.get())
             return;
 
-        registerProvider(registrar);
-    }
+        registration.addConfig(StorageDrawers.rl("display.content"), true);
+        registration.addConfig(StorageDrawers.rl("display.stacklimit"), true);
+        registration.addConfig(StorageDrawers.rl("display.status"), true);
 
-    private void registerProvider(IRegistrar registrar) {
         WailaDrawer provider = new WailaDrawer();
-
-        registrar.addConfig(StorageDrawers.rl("display.content"), true);
-        registrar.addConfig(StorageDrawers.rl("display.stacklimit"), true);
-        registrar.addConfig(StorageDrawers.rl("display.status"), true);
-        registrar.registerComponentProvider(provider, TooltipPosition.BODY, BlockDrawers.class);
+        registration.registerBlockComponent(provider, BlockDrawers.class);
     }
 
-    public static class WailaDrawer implements IComponentProvider
+    public static class WailaDrawer implements IBlockComponentProvider
     {
         @Override
         @NotNull
@@ -49,6 +46,11 @@ public class Waila implements IWailaPlugin
             overlay.showStatus = config.get(StorageDrawers.rl("display.status"));
 
             currenttip.addAll(overlay.getOverlay(blockEntityDrawers));
+        }
+
+        @Override
+        public ResourceLocation getUid () {
+            return null;
         }
     }
 }

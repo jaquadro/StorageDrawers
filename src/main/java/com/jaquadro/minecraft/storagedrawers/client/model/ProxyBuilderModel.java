@@ -6,12 +6,12 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public abstract class ProxyBuilderModel implements BakedModel
 {
@@ -33,7 +33,7 @@ public abstract class ProxyBuilderModel implements BakedModel
 
     @Override
     @NotNull
-    public List<BakedQuad> getQuads (BlockState state, Direction side, @NotNull Random rand) {
+    public List<BakedQuad> getQuads (BlockState state, Direction side, @NotNull RandomSource rand) {
         if (proxy == null || stateCache != state)
             setProxy(state);
 

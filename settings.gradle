@@ -1,4 +1,6 @@
-rootProject.name = "StorageDrawers-${minecraft_base_version}"
-
-//include '..:Chameleon'
-//project(':..:Chameleon').name = "Chameleon-${minecraft_base_version}"
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url = 'https://maven.minecraftforge.net/' }
+    }
+}

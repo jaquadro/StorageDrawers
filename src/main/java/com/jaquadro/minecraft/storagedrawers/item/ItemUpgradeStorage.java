@@ -2,7 +2,6 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -33,6 +32,6 @@ public class ItemUpgradeStorage extends ItemUpgrade
     @NotNull
     public Component getDescription() {
         int mult = CommonConfig.UPGRADES.getLevelMult(level.getLevel());
-        return new TranslatableComponent("item.storagedrawers.storage_upgrade.desc", mult);
+        return Component.translatable("item.storagedrawers.storage_upgrade.desc", mult);
     }
 }

@@ -45,10 +45,10 @@
     "block.storagedrawers.controller": "Controlador de Gaveta",
     "block.storagedrawers.controller_slave": "Escravo do Controlador de Gaveta",
 
-    "config.waila.plugin_storagedrawers": "Storage Drawers",
-    "config.waila.plugin_storagedrawers.display.content": "Conteúdo do slot",
-    "config.waila.plugin_storagedrawers.display.stacklimit": "Limite de Stack",
-    "config.waila.plugin_storagedrawers.display.status": "Status de Upgrade",
+    "config.jade.plugin_storagedrawers": "Storage Drawers",
+    "config.jade.plugin_storagedrawers.display.content": "Conteúdo do slot",
+    "config.jade.plugin_storagedrawers.display.stacklimit": "Limite de Stack",
+    "config.jade.plugin_storagedrawers.display.status": "Status de Upgrade",
 
     "container.storagedrawers.upgrades": "Upgrades",
 

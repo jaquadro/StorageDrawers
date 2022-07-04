@@ -9,8 +9,6 @@ import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -57,13 +55,13 @@ public class ItemKey extends Item
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText (@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TextComponent("").append(getDescription()).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.literal("").append(getDescription()).withStyle(ChatFormatting.GRAY));
     }
 
     @OnlyIn(Dist.CLIENT)
     @NotNull
     public Component getDescription() {
-        return new TranslatableComponent(this.getDescriptionId() + ".desc");
+        return Component.translatable(this.getDescriptionId() + ".desc");
     }
 
     @Override

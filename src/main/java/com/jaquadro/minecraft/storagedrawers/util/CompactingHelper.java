@@ -12,6 +12,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -181,10 +182,10 @@ public class CompactingHelper
 
     @NotNull
     private ItemStack findMatchingModCandidate (@NotNull ItemStack reference, List<ItemStack> candidates) {
-        ResourceLocation referenceName = reference.getItem().getRegistryName();
+        ResourceLocation referenceName = ForgeRegistries.ITEMS.getKey(reference.getItem());
         if (referenceName != null) {
             for (ItemStack candidate : candidates) {
-                ResourceLocation matchName = candidate.getItem().getRegistryName();
+                ResourceLocation matchName = ForgeRegistries.ITEMS.getKey(candidate.getItem());
                 if (matchName != null) {
                     if (referenceName.getNamespace().equals(matchName.getPath()))
                         return candidate;

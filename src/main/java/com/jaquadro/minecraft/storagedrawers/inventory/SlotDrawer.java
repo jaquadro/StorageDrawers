@@ -47,6 +47,11 @@ public class SlotDrawer extends Slot
     }
 
     @Override
+    public void initialize (@NotNull ItemStack stack) {
+        set(stack);
+    }
+
+    @Override
     public void onQuickCraft (@NotNull ItemStack p_75220_1_, @NotNull ItemStack p_75220_2_) {
 
     }

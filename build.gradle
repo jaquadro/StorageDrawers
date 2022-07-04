@@ -1,23 +1,7 @@
-buildscript {
-    repositories {
-        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7.+'
-    }
-}
-
 plugins {
-    id "com.jfrog.bintray" version "1.8.1"
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '5.1.+'
 }
-
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'idea'
-apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
 
 version = "${minecraft_version}-${mod_version}"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -26,7 +10,7 @@ archivesBaseName = "StorageDrawers"
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
     // The mappings can be changed at any time and must be in the following format.
     // Channel:   Version:
@@ -61,6 +45,9 @@ minecraft {
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'debug'
 
+	    // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'forge.enabledGameTestNamespaces', 'storagedrawers'
+
             mods {
                 storagedrawers {
                     source sourceSets.main
@@ -82,6 +69,28 @@ minecraft {
             // You can set various levels here.
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'debug'
+
+	    // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'forge.enabledGameTestNamespaces', 'storagedrawers'
+
+            mods {
+                storagedrawers {
+                    source sourceSets.main
+                }
+            }
+        }
+
+	// This run config launches GameTestServer and runs all registered gametests, then exits.
+        // By default, the server will crash when no gametests are provided.
+        // The gametest system is also enabled by default for other run configs under the /test command.
+        gameTestServer {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+
+            property 'forge.enabledGameTestNamespaces', 'storagedrawers'
 
             mods {
                 storagedrawers {
@@ -156,8 +165,8 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     implementation fg.deobf("curse.maven:the-one-probe-245211:${top_id}")
     implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
@@ -189,18 +198,14 @@ jar {
     manifest {
         attributes([
             "Specification-Title": "storagedrawers",
-            "Specification-Vendor": "Justin Aquadro",
+            "Specification-Vendor": "Texelsaur",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": project.jar.archiveVersion,
-            "Implementation-Vendor" :"Justin Aquadro",
+            "Implementation-Vendor" :"Texelsaur",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
-    //include "com/jaquadro/minecraft/storagedrawers/**"
-    //include "assets/**"
-    //include "mcmod.info"
-    //include "pack.mcmeta"
 }
 
 jar.finalizedBy('reobfJar')
@@ -251,19 +256,7 @@ publishing.publications {
     }
 }
 
-bintrayUpload.dependsOn build
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    publications = ['StorageDrawers']
-    publish = true
-    pkg {
-        repo = 'dev'
-        name = 'storagedrawers'
-        version {
-            name = project.jar.archiveVersion
-            released = new Date()
-        }
-    }
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
+

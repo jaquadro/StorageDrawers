@@ -5,8 +5,6 @@ import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -36,13 +34,13 @@ public class ItemDrawers extends BlockItem
         //    tooltip.add(new TranslationTextComponent("storagedrawers.material", I18n.format("storagedrawers.material." + key)));
         //}
 
-        Component textCapacity = new TranslatableComponent("tooltip.storagedrawers.drawers.capacity", getCapacityForBlock(stack));
-        tooltip.add(new TextComponent("").append(textCapacity).withStyle(ChatFormatting.GRAY));
+        Component textCapacity = Component.translatable("tooltip.storagedrawers.drawers.capacity", getCapacityForBlock(stack));
+        tooltip.add(Component.literal("").append(textCapacity).withStyle(ChatFormatting.GRAY));
 
         CompoundTag tag = stack.getTagElement("tile");
         if (tag != null) {
-            Component textSealed = new TranslatableComponent("tooltip.storagedrawers.drawers.sealed");
-            tooltip.add(new TextComponent("").append(textSealed).withStyle(ChatFormatting.YELLOW));
+            Component textSealed = Component.translatable("tooltip.storagedrawers.drawers.sealed");
+            tooltip.add(Component.literal("").append(textSealed).withStyle(ChatFormatting.YELLOW));
         }
 
         //tooltip.add(getDescription().applyTextStyle(TextFormatting.GRAY));
@@ -51,7 +49,7 @@ public class ItemDrawers extends BlockItem
     @OnlyIn(Dist.CLIENT)
     @NotNull
     public Component getDescription() {
-        return new TranslatableComponent(this.getDescriptionId() + ".desc");
+        return Component.translatable(this.getDescriptionId() + ".desc");
     }
 
     private int getCapacityForBlock (@NotNull ItemStack itemStack) {

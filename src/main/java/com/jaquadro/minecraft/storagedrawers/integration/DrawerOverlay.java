@@ -7,8 +7,6 @@ import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttrib
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -42,11 +40,11 @@ public class DrawerOverlay {
             if (!drawer.isEnabled())
                 continue;
 
-            Component name = new TranslatableComponent("tooltip.storagedrawers.waila.empty");
+            Component name = Component.translatable("tooltip.storagedrawers.waila.empty");
 
             final ItemStack stack = drawer.getStoredItemPrototype();
             if (!stack.isEmpty()) {
-                final MutableComponent stackName = new TranslatableComponent("").append(stack.getDisplayName());
+                final MutableComponent stackName = Component.translatable("").append(stack.getDisplayName());
 
                 if (showCounts) {
                     if (drawer.getStoredItemCount() == Integer.MAX_VALUE) {
@@ -69,7 +67,7 @@ public class DrawerOverlay {
                     name = stackName;
                 }
             }
-            result.add(new TranslatableComponent("tooltip.storagedrawers.waila.drawer", i + 1, name));
+            result.add(Component.translatable("tooltip.storagedrawers.waila.drawer", i + 1, name));
         }
 
     }
@@ -78,11 +76,11 @@ public class DrawerOverlay {
         if (!this.showStackLimit) return;
 
         if (attr.isUnlimitedStorage() || tile.getDrawerAttributes().isUnlimitedVending())
-            result.add(new TranslatableComponent("tooltip.storagedrawers.waila.nolimit"));
+            result.add(Component.translatable("tooltip.storagedrawers.waila.nolimit"));
         else {
             int multiplier = tile.upgrades().getStorageMultiplier();
             int limit = tile.getEffectiveDrawerCapacity() * multiplier;
-            result.add(new TranslatableComponent("tooltip.storagedrawers.waila.limit", limit, multiplier));
+            result.add(Component.translatable("tooltip.storagedrawers.waila.limit", limit, multiplier));
         }
     }
 
@@ -91,14 +89,14 @@ public class DrawerOverlay {
 
         List<MutableComponent> attribs = new ArrayList<>();
         if (attr.isItemLocked(LockAttribute.LOCK_POPULATED))
-            attribs.add(new TranslatableComponent("tooltip.storagedrawers.waila.locked"));
+            attribs.add(Component.translatable("tooltip.storagedrawers.waila.locked"));
         if (attr.isVoid())
-            attribs.add(new TranslatableComponent("tooltip.storagedrawers.waila.void"));
+            attribs.add(Component.translatable("tooltip.storagedrawers.waila.void"));
         //if (tile.getOwner() != null)
         //    attribs.add(new TranslationTextComponent("tooltip.storagedrawers.waila.protected"));
 
         if (!attribs.isEmpty())
             result.add(attribs.stream().reduce((a, b) ->
-                    a.append(new TextComponent(", ")).append(b)).get());
+                    a.append(Component.literal(", ")).append(b)).get());
     }
 }

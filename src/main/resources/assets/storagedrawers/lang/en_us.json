@@ -59,10 +59,10 @@
     "block.storagedrawers.controller": "Drawer Controller",
     "block.storagedrawers.controller_slave": "Drawer Controller Slave",
 
-    "config.waila.plugin_storagedrawers": "Storage Drawers",
-    "config.waila.plugin_storagedrawers.display.content": "Slot Contents",
-    "config.waila.plugin_storagedrawers.display.stacklimit": "Stack Limit",
-    "config.waila.plugin_storagedrawers.display.status": "Upgrade Status",
+    "config.jade.plugin_storagedrawers": "Storage Drawers",
+    "config.jade.plugin_storagedrawers.display.content": "Slot Contents",
+    "config.jade.plugin_storagedrawers.display.stacklimit": "Stack Limit",
+    "config.jade.plugin_storagedrawers.display.status": "Upgrade Status",
 
     "container.storagedrawers.upgrades": "Upgrades",
 
