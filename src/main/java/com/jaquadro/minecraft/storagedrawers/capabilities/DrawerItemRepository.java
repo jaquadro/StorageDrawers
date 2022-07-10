@@ -9,9 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository.DefaultPredicate;
-import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository.ItemRecord;
-
 public class DrawerItemRepository implements IItemRepository
 {
     protected IDrawerGroup group;
