@@ -396,12 +396,29 @@ public final class BasicDrawerModel
                                          @NotNull RandomSource rand,
                                          @NotNull ModelData extraData,
                                          @Nullable RenderType type) {
-            List<BakedQuad> mainQuads = mainModel.getQuads(state, side, rand, extraData, type);
-            if (state == null || !extraData.has(BlockEntityDrawers.ATTRIBUTES)) {
+            List<BakedQuad> mainQuads;
+            if (state != null) {
+                ChunkRenderTypeSet renderTypes = mainModel.getRenderTypes(state, rand, extraData);
+                if (renderTypes.contains(type)) {
+                    mainQuads = mainModel.getQuads(state, side, rand, extraData, type);
+                } else {
+                    mainQuads = Collections.emptyList();
+                }
+            } else {
                 // NB: getting here for item renders (state == null) implies that the caller has not
                 // respected #getRenderPasses, since if they had this method wouldn't be called.
                 // If that's the case, then we might as well return the main quads that they're looking
                 // for anyway.
+                return mainModel.getQuads(null, side, rand, extraData, type);
+            }
+
+            if (!extraData.has(BlockEntityDrawers.ATTRIBUTES)) {
+                // Nothing to render.
+                return mainQuads;
+            }
+
+            if (!(type == null || type == RenderType.cutoutMipped())) {
+                // Don't render in the wrong layer.
                 return mainQuads;
             }
 
