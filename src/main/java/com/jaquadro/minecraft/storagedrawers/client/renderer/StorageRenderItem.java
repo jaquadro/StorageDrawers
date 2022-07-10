@@ -27,6 +27,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+
 @OnlyIn(Dist.CLIENT)
 public class StorageRenderItem extends ItemRenderer
 {

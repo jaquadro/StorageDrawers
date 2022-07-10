@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository.ItemRecord;
+
 public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
 {
     private static final int[] drawerSlots = new int[]{0};
