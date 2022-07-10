@@ -16,7 +16,10 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.*;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.BlockModelRotation;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -41,10 +44,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 public final class BasicDrawerModel
@@ -396,38 +396,39 @@ public final class BasicDrawerModel
                                          @NotNull RandomSource rand,
                                          @NotNull ModelData extraData,
                                          @Nullable RenderType type) {
-            List<BakedQuad> quads = new ArrayList<>();
-            if (state != null) {
-                // for items the main model is done in a separate pass anyway
-                quads.addAll(mainModel.getQuads(state, side, rand, extraData, type));
+            List<BakedQuad> mainQuads = mainModel.getQuads(state, side, rand, extraData, type);
+            if (state == null || !extraData.has(BlockEntityDrawers.ATTRIBUTES)) {
+                // NB: getting here for item renders (state == null) implies that the caller has not
+                // respected #getRenderPasses, since if they had this method wouldn't be called.
+                // If that's the case, then we might as well return the main quads that they're looking
+                // for anyway.
+                return mainQuads;
             }
 
-            if (state != null && extraData.has(BlockEntityDrawers.ATTRIBUTES)) {
-                IDrawerAttributes attr = extraData.get(BlockEntityDrawers.ATTRIBUTES);
-                Direction dir = state.getValue(BlockDrawers.FACING);
+            List<BakedQuad> quads = new ArrayList<>(mainQuads);
+            IDrawerAttributes attr = extraData.get(BlockEntityDrawers.ATTRIBUTES);
+            Direction dir = state.getValue(BlockDrawers.FACING);
 
-                if (attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED))
-                    quads.addAll(lockOverlay.get(dir).getQuads(state, side, rand, extraData, type));
-                if (attr.isVoid())
-                    quads.addAll(voidOverlay.get(dir).getQuads(state, side, rand, extraData, type));
-                if (attr.isConcealed())
-                    quads.addAll(shroudOverlay.get(dir).getQuads(state, side, rand, extraData, type));
-                if (attr.hasFillLevel()) {
-                    Block block = state.getBlock();
-                    if (block instanceof BlockCompDrawers)
-                        quads.addAll((indicatorCompOverlay.get(dir).getQuads(state, side, rand, extraData, type)));
-                    else if (block instanceof BlockDrawers) {
-                        int count = ((BlockDrawers) block).getDrawerCount();
-                        if (count == 1)
-                            quads.addAll((indicator1Overlay.get(dir).getQuads(state, side, rand, extraData, type)));
-                        else if (count == 2)
-                            quads.addAll((indicator2Overlay.get(dir).getQuads(state, side, rand, extraData, type)));
-                        else if (count == 4)
-                            quads.addAll((indicator4Overlay.get(dir).getQuads(state, side, rand, extraData, type)));
-                    }
+            if (attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED))
+                quads.addAll(lockOverlay.get(dir).getQuads(state, side, rand, extraData, type));
+            if (attr.isVoid())
+                quads.addAll(voidOverlay.get(dir).getQuads(state, side, rand, extraData, type));
+            if (attr.isConcealed())
+                quads.addAll(shroudOverlay.get(dir).getQuads(state, side, rand, extraData, type));
+            if (attr.hasFillLevel()) {
+                Block block = state.getBlock();
+                if (block instanceof BlockCompDrawers)
+                    quads.addAll((indicatorCompOverlay.get(dir).getQuads(state, side, rand, extraData, type)));
+                else if (block instanceof BlockDrawers) {
+                    int count = ((BlockDrawers) block).getDrawerCount();
+                    if (count == 1)
+                        quads.addAll((indicator1Overlay.get(dir).getQuads(state, side, rand, extraData, type)));
+                    else if (count == 2)
+                        quads.addAll((indicator2Overlay.get(dir).getQuads(state, side, rand, extraData, type)));
+                    else if (count == 4)
+                        quads.addAll((indicator4Overlay.get(dir).getQuads(state, side, rand, extraData, type)));
                 }
             }
-
             return quads;
         }
 
@@ -476,13 +477,14 @@ public final class BasicDrawerModel
         @NotNull
         @Override
         public List<RenderType> getRenderTypes(@NotNull ItemStack itemStack, boolean fabulous) {
-            return List.of(RenderType.cutoutMipped());
+            return Collections.emptyList();
         }
 
         @NotNull
         @Override
         public List<BakedModel> getRenderPasses(@NotNull ItemStack itemStack, boolean fabulous) {
-            return List.of(mainModel, this);
+            // we don't render anything extra for items, so just pass through to the main model
+            return mainModel.getRenderPasses(itemStack, fabulous);
         }
     }
 
