@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
-import com.google.common.collect.Lists;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
@@ -11,6 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.mojang.datafixers.util.Either;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModel;
@@ -24,29 +24,27 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.event.ModelEvent.BakingCompleted;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ForgeModelBakery;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 public final class BasicDrawerModel
@@ -196,7 +194,7 @@ public final class BasicDrawerModel
         }
 
         @SubscribeEvent
-        public static void registerModels (ModelBakeEvent event) {
+        public static void registerModels (BakingCompleted event) {
             if (!ModBlocks.OAK_FULL_DRAWERS_1.isPresent()) {
                 StorageDrawers.log.warn("Block objects not set in ModelBakeEvent.  Is your mod environment broken?");
                 return;
@@ -205,31 +203,31 @@ public final class BasicDrawerModel
             for (int i = 0; i < 4; i++) {
                 Direction dir = Direction.from2DDataValue(i);
                 BlockModelRotation rot = BlockModelRotation.by(0, (int)dir.toYRot() + 180);
-                Function<Material, TextureAtlasSprite> texGet = ForgeModelBakery.defaultTextureGetter();
+                Function<Material, TextureAtlasSprite> texGet = event.getModelBakery().getAtlasSet()::getSprite;
 
-                lockOverlaysFull.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/full_drawers_lock"), rot, texGet));
-                lockOverlaysHalf.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/half_drawers_lock"), rot, texGet));
-                voidOverlaysFull.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/full_drawers_void"), rot, texGet));
-                voidOverlaysHalf.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/half_drawers_void"), rot, texGet));
-                shroudOverlaysFull.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/full_drawers_shroud"), rot, texGet));
-                shroudOverlaysHalf.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/half_drawers_shroud"), rot, texGet));
-                indicator1Full.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/full_drawers_indicator_1"), rot, texGet));
-                indicator1Half.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/half_drawers_indicator_1"), rot, texGet));
-                indicator2Full.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/full_drawers_indicator_2"), rot, texGet));
-                indicator2Half.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/half_drawers_indicator_2"), rot, texGet));
-                indicator4Full.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/full_drawers_indicator_4"), rot, texGet));
-                indicator4Half.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/half_drawers_indicator_4"), rot, texGet));
-                indicatorComp.put(dir, event.getModelLoader().bake(StorageDrawers.rl("block/compdrawers_indicator"), rot, texGet));
+                lockOverlaysFull.put(dir, event.getModelBakery().bake(StorageDrawers.rl("block/full_drawers_lock"), rot, texGet));
+                lockOverlaysHalf.put(dir, event.getModelBakery().bake(StorageDrawers.rl("block/half_drawers_lock"), rot, texGet));
+                voidOverlaysFull.put(dir, event.getModelBakery().bake(StorageDrawers.rl("block/full_drawers_void"), rot, texGet));
+                voidOverlaysHalf.put(dir, event.getModelBakery().bake(StorageDrawers.rl("block/half_drawers_void"), rot, texGet));
+                shroudOverlaysFull.put(dir, event.getModelBakery().bake(StorageDrawers.rl("block/full_drawers_shroud"), rot, texGet));
+                shroudOverlaysHalf.put(dir, event.getModelBakery().bake(StorageDrawers.rl("block/half_drawers_shroud"), rot, texGet));
+                indicator1Full.put(dir, event.getModelBakery().bake(StorageDrawers.rl("block/full_drawers_indicator_1"), rot, texGet));
+                indicator1Half.put(dir, event.getModelBakery().bake(StorageDrawers.rl("block/half_drawers_indicator_1"), rot, texGet));
+                indicator2Full.put(dir, event.getModelBakery().bake(StorageDrawers.rl("block/full_drawers_indicator_2"), rot, texGet));
+                indicator2Half.put(dir, event.getModelBakery().bake(StorageDrawers.rl("block/half_drawers_indicator_2"), rot, texGet));
+                indicator4Full.put(dir, event.getModelBakery().bake(StorageDrawers.rl("block/full_drawers_indicator_4"), rot, texGet));
+                indicator4Half.put(dir, event.getModelBakery().bake(StorageDrawers.rl("block/half_drawers_indicator_4"), rot, texGet));
+                indicatorComp.put(dir, event.getModelBakery().bake(StorageDrawers.rl("block/compdrawers_indicator"), rot, texGet));
             }
 
             ModBlocks.getDrawers().forEach(blockDrawers -> replaceBlock(event, blockDrawers));
 
-            //event.getModelLoader().getBakedModel(StorageDrawers.rl("block/full_drawers_lock"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
-            //event.getModelLoader().getBakedModel(StorageDrawers.rl("block/full_drawers_void"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
-            //event.getModelLoader().getBakedModel(StorageDrawers.rl("block/full_drawers_shroud"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
+            //event.getModelBakery().getBakedModel(StorageDrawers.rl("block/full_drawers_lock"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
+            //event.getModelBakery().getBakedModel(StorageDrawers.rl("block/full_drawers_void"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
+            //event.getModelBakery().getBakedModel(StorageDrawers.rl("block/full_drawers_shroud"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
         }
 
-        public static void replaceBlock(ModelBakeEvent event, BlockDrawers block) {
+        public static void replaceBlock(BakingCompleted event, BlockDrawers block) {
             for (BlockState state : block.getStateDefinition().getPossibleStates()) {
                 ModelResourceLocation modelResource = BlockModelShaper.stateToModelLocation(state);
                 BakedModel parentModel = event.getModelManager().getModel(modelResource);
@@ -240,9 +238,9 @@ public final class BasicDrawerModel
                     continue;
 
                 if (block.isHalfDepth())
-                    event.getModelRegistry().put(modelResource, new Model2.HalfModel(parentModel));
+                    event.getModels().put(modelResource, new Model2.HalfModel(parentModel));
                 else
-                    event.getModelRegistry().put(modelResource, new Model2.FullModel(parentModel));
+                    event.getModels().put(modelResource, new Model2.FullModel(parentModel));
             }
         }
 
@@ -290,7 +288,7 @@ public final class BasicDrawerModel
         }*/
     }
 
-    public static class MergedModel implements BakedModel {
+    public static class MergedModel implements IDynamicBakedModel {
         protected final BakedModel mainModel;
         protected final BakedModel[] models;
 
@@ -301,11 +299,16 @@ public final class BasicDrawerModel
 
         @Override
         @NotNull
-        public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand) {
-            List<BakedQuad> quads = Lists.newArrayList();
-            quads.addAll(mainModel.getQuads(state, side, rand));
+        public List<BakedQuad> getQuads (@Nullable BlockState state,
+                                         @Nullable Direction side,
+                                         @NotNull RandomSource rand,
+                                         @NotNull ModelData data,
+                                         @Nullable RenderType type) {
+            List<BakedQuad> quads = new ArrayList<>(
+                    mainModel.getQuads(state, side, rand, data, type)
+            );
             for (BakedModel model : models)
-                quads.addAll(model.getQuads(state, side, rand));
+                quads.addAll(model.getQuads(state, side, rand, data, type));
             return quads;
         }
 
@@ -388,36 +391,61 @@ public final class BasicDrawerModel
 
         @NotNull
         @Override
-        public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull IModelData extraData) {
-            List<BakedQuad> quads = Lists.newArrayList();
-            quads.addAll(mainModel.getQuads(state, side, rand, extraData));
-
-            if (state != null && extraData.hasProperty(BlockEntityDrawers.ATTRIBUTES)) {
-                IDrawerAttributes attr = extraData.getData(BlockEntityDrawers.ATTRIBUTES);
-                Direction dir = state.getValue(BlockDrawers.FACING);
-
-                if (attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED))
-                    quads.addAll(lockOverlay.get(dir).getQuads(state, side, rand, extraData));
-                if (attr.isVoid())
-                    quads.addAll(voidOverlay.get(dir).getQuads(state, side, rand, extraData));
-                if (attr.isConcealed())
-                    quads.addAll(shroudOverlay.get(dir).getQuads(state, side, rand, extraData));
-                if (attr.hasFillLevel()) {
-                    Block block = state.getBlock();
-                    if (block instanceof BlockCompDrawers)
-                        quads.addAll((indicatorCompOverlay.get(dir).getQuads(state, side, rand, extraData)));
-                    else if (block instanceof BlockDrawers) {
-                        int count = ((BlockDrawers) block).getDrawerCount();
-                        if (count == 1)
-                            quads.addAll((indicator1Overlay.get(dir).getQuads(state, side, rand, extraData)));
-                        else if (count == 2)
-                            quads.addAll((indicator2Overlay.get(dir).getQuads(state, side, rand, extraData)));
-                        else if (count == 4)
-                            quads.addAll((indicator4Overlay.get(dir).getQuads(state, side, rand, extraData)));
-                    }
+        public List<BakedQuad> getQuads (@Nullable BlockState state,
+                                         @Nullable Direction side,
+                                         @NotNull RandomSource rand,
+                                         @NotNull ModelData extraData,
+                                         @Nullable RenderType type) {
+            List<BakedQuad> mainQuads;
+            if (state != null) {
+                ChunkRenderTypeSet renderTypes = mainModel.getRenderTypes(state, rand, extraData);
+                if (renderTypes.contains(type)) {
+                    mainQuads = mainModel.getQuads(state, side, rand, extraData, type);
+                } else {
+                    mainQuads = Collections.emptyList();
                 }
+            } else {
+                // NB: getting here for item renders (state == null) implies that the caller has not
+                // respected #getRenderPasses, since if they had this method wouldn't be called.
+                // If that's the case, then we might as well return the main quads that they're looking
+                // for anyway.
+                return mainModel.getQuads(null, side, rand, extraData, type);
             }
 
+            if (!extraData.has(BlockEntityDrawers.ATTRIBUTES)) {
+                // Nothing to render.
+                return mainQuads;
+            }
+
+            if (!(type == null || type == RenderType.cutoutMipped())) {
+                // Don't render in the wrong layer.
+                return mainQuads;
+            }
+
+            List<BakedQuad> quads = new ArrayList<>(mainQuads);
+            IDrawerAttributes attr = extraData.get(BlockEntityDrawers.ATTRIBUTES);
+            Direction dir = state.getValue(BlockDrawers.FACING);
+
+            if (attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED))
+                quads.addAll(lockOverlay.get(dir).getQuads(state, side, rand, extraData, type));
+            if (attr.isVoid())
+                quads.addAll(voidOverlay.get(dir).getQuads(state, side, rand, extraData, type));
+            if (attr.isConcealed())
+                quads.addAll(shroudOverlay.get(dir).getQuads(state, side, rand, extraData, type));
+            if (attr.hasFillLevel()) {
+                Block block = state.getBlock();
+                if (block instanceof BlockCompDrawers)
+                    quads.addAll((indicatorCompOverlay.get(dir).getQuads(state, side, rand, extraData, type)));
+                else if (block instanceof BlockDrawers) {
+                    int count = ((BlockDrawers) block).getDrawerCount();
+                    if (count == 1)
+                        quads.addAll((indicator1Overlay.get(dir).getQuads(state, side, rand, extraData, type)));
+                    else if (count == 2)
+                        quads.addAll((indicator2Overlay.get(dir).getQuads(state, side, rand, extraData, type)));
+                    else if (count == 4)
+                        quads.addAll((indicator4Overlay.get(dir).getQuads(state, side, rand, extraData, type)));
+                }
+            }
             return quads;
         }
 
@@ -444,8 +472,36 @@ public final class BasicDrawerModel
 
         @Override
         @NotNull
+        public TextureAtlasSprite getParticleIcon(@NotNull ModelData data) {
+            return mainModel.getParticleIcon(data);
+        }
+
+        @Override
+        @NotNull
         public ItemOverrides getOverrides () {
             return mainModel.getOverrides();
+        }
+
+        @NotNull
+        @Override
+        public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
+            return ChunkRenderTypeSet.union(
+                    ChunkRenderTypeSet.of(RenderType.cutoutMipped()),
+                    mainModel.getRenderTypes(state, rand, data)
+            );
+        }
+
+        @NotNull
+        @Override
+        public List<RenderType> getRenderTypes(@NotNull ItemStack itemStack, boolean fabulous) {
+            return Collections.emptyList();
+        }
+
+        @NotNull
+        @Override
+        public List<BakedModel> getRenderPasses(@NotNull ItemStack itemStack, boolean fabulous) {
+            // we don't render anything extra for items, so just pass through to the main model
+            return mainModel.getRenderPasses(itemStack, fabulous);
         }
     }
 

@@ -25,15 +25,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -636,19 +633,12 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
     @NotNull
     @Override
-    public IModelData getModelData () {
-        return new ModelDataMap.Builder()
-            .withInitial(ATTRIBUTES, drawerAttributes).build();
-            /*.withInitial(ITEM_LOCKED, drawerAttributes.isItemLocked(LockAttribute.LOCK_EMPTY))
-            .withInitial(SHROUDED, drawerAttributes.isConcealed())
-            .withInitial(VOIDING, drawerAttributes.isVoid()).build();*/
-    }
-
-    private void refreshModelData () {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            ModelDataManager.requestModelDataRefresh(this);
-            Minecraft.getInstance().levelRenderer.setBlocksDirty(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
-        });
+    public ModelData getModelData () {
+        return ModelData.builder()
+            .with(ATTRIBUTES, drawerAttributes).build();
+            /*.with(ITEM_LOCKED, drawerAttributes.isItemLocked(LockAttribute.LOCK_EMPTY))
+            .with(SHROUDED, drawerAttributes.isConcealed())
+            .with(VOIDING, drawerAttributes.isVoid()).build();*/
     }
 
     @Override
