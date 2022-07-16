@@ -305,7 +305,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             if (itemPrototype.isEmpty())
                 return 64 * getStackCapacity();
 
-            return itemPrototype.getItem().getItemStackLimit(itemPrototype) * getStackCapacity();
+            return itemPrototype.getItem().getMaxStackSize(itemPrototype) * getStackCapacity();
         }
 
         @Override

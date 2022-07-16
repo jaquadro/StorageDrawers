@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public final class ModBlockEntities {
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, StorageDrawers.MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, StorageDrawers.MOD_ID);
 
     private static final Set<RegistryObject<? extends BlockEntityType<? extends BlockEntityDrawers>>> BLOCK_ENTITY_TYPES_WITH_RENDERERS = new HashSet<>();
 

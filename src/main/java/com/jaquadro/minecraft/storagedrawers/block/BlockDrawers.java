@@ -253,7 +253,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             }*/
 
             if (CommonConfig.GENERAL.enableUI.get() && !level.isClientSide) {
-                NetworkHooks.openGui((ServerPlayer)player, new MenuProvider()
+                NetworkHooks.openScreen((ServerPlayer)player, new MenuProvider()
                 {
                     @Override
                     @NotNull

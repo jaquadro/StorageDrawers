@@ -17,11 +17,11 @@ public class CommonEventBusSubscriber {
     @SubscribeEvent
     public static void playerLeftClick (@NotNull PlayerInteractEvent.LeftClickBlock event) {
         BlockPos pos = event.getPos();
-        Level level = event.getWorld();
+        Level level = event.getLevel();
         BlockState state = level.getBlockState(pos);
         Block block = state.getBlock();
         if (block instanceof BlockDrawers blockDrawers) {
-            Player player = event.getPlayer();
+            Player player = event.getEntity();
             if (player.isCreative()) {
                 event.setCanceled(blockDrawers.interactTakeItems(state, level, pos, player));
             }

@@ -12,7 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModContainers
 {
-    public static final DeferredRegister<MenuType<?>> CONTAINERS_REGISTER = DeferredRegister.create(ForgeRegistries.CONTAINERS, StorageDrawers.MOD_ID);
+    public static final DeferredRegister<MenuType<?>> CONTAINERS_REGISTER = DeferredRegister.create(ForgeRegistries.MENU_TYPES, StorageDrawers.MOD_ID);
 
     public static final RegistryObject<MenuType<ContainerDrawers1>> DRAWER_CONTAINER_1 = registerContainer("drawer_container_1", ContainerDrawers1::new);
     public static final RegistryObject<MenuType<ContainerDrawers2>> DRAWER_CONTAINER_2 = registerContainer("drawer_container_2", ContainerDrawers2::new);
