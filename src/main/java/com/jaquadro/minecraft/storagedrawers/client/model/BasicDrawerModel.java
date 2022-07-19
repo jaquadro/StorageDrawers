@@ -399,7 +399,7 @@ public final class BasicDrawerModel
             List<BakedQuad> mainQuads;
             if (state != null) {
                 ChunkRenderTypeSet renderTypes = mainModel.getRenderTypes(state, rand, extraData);
-                if (renderTypes.contains(type)) {
+                if (type == null || renderTypes.contains(type)) {
                     mainQuads = mainModel.getQuads(state, side, rand, extraData, type);
                 } else {
                     mainQuads = Collections.emptyList();
