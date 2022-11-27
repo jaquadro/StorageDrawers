@@ -57,6 +57,12 @@ public final class ModBlocks
         DARK_OAK_HALF_DRAWERS_1 = registerWoodenDrawerBlock("dark_oak_half_drawers_1", 1, true),
         DARK_OAK_HALF_DRAWERS_2 = registerWoodenDrawerBlock("dark_oak_half_drawers_2", 2, true),
         DARK_OAK_HALF_DRAWERS_4 = registerWoodenDrawerBlock("dark_oak_half_drawers_4", 4, true),
+        MANGROVE_FULL_DRAWERS_1 = registerWoodenDrawerBlock("mangrove_full_drawers_1", 1, false),
+        MANGROVE_FULL_DRAWERS_2 = registerWoodenDrawerBlock("mangrove_full_drawers_2", 2, false),
+        MANGROVE_FULL_DRAWERS_4 = registerWoodenDrawerBlock("mangrove_full_drawers_4", 4, false),
+        MANGROVE_HALF_DRAWERS_1 = registerWoodenDrawerBlock("mangrove_half_drawers_1", 1, true),
+        MANGROVE_HALF_DRAWERS_2 = registerWoodenDrawerBlock("mangrove_half_drawers_2", 2, true),
+        MANGROVE_HALF_DRAWERS_4 = registerWoodenDrawerBlock("mangrove_half_drawers_4", 4, true),
         CRIMSON_FULL_DRAWERS_1 = registerWoodenDrawerBlock("crimson_full_drawers_1", 1, false),
         CRIMSON_FULL_DRAWERS_2 = registerWoodenDrawerBlock("crimson_full_drawers_2", 2, false),
         CRIMSON_FULL_DRAWERS_4 = registerWoodenDrawerBlock("crimson_full_drawers_4", 4, false),
@@ -79,6 +85,7 @@ public final class ModBlocks
         JUNGLE_TRIM = registerTrimBlock("jungle_trim"),
         ACACIA_TRIM = registerTrimBlock("acacia_trim"),
         DARK_OAK_TRIM = registerTrimBlock("dark_oak_trim"),
+        MANGROVE_TRIM = registerTrimBlock("mangrove_trim"),
         CRIMSON_TRIM = registerTrimBlock("crimson_trim"),
         WARPED_TRIM = registerTrimBlock("warped_trim");
 
