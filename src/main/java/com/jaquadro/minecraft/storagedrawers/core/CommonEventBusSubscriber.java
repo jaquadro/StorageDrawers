@@ -2,11 +2,15 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
+import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -23,7 +27,16 @@ public class CommonEventBusSubscriber {
         if (block instanceof BlockDrawers blockDrawers) {
             Player player = event.getEntity();
             if (player.isCreative()) {
-                event.setCanceled(blockDrawers.interactTakeItems(state, level, pos, player));
+                BlockHitResult hit = WorldUtils.rayTraceEyes(level, player, pos);
+                if (hit.getType() == HitResult.Type.BLOCK) {
+                    boolean invertClick = ClientConfig.GENERAL.invertClick.get();
+                    if (!invertClick)
+                        event.setCanceled(blockDrawers.interactTakeItems(state, level, pos, player, hit));
+                    else if (hit.getBlockPos().equals(pos))
+                        blockDrawers.insertOrApplyItem(state, level, pos, player, hit);
+
+                    event.setCanceled(true);
+                }
             }
         }
     }

@@ -35,6 +35,7 @@ public class ClientConfig
 
     public static class General {
         public final ForgeConfigSpec.ConfigValue<Boolean> invertShift;
+        public final ForgeConfigSpec.ConfigValue<Boolean> invertClick;
 
         public General(ForgeConfigSpec.Builder builder) {
             builder.push("General");
@@ -42,6 +43,9 @@ public class ClientConfig
             invertShift = builder
                 .comment("Invert the behavior of the shift key for extracting items")
                 .define("invertShift", false);
+            invertClick = builder
+                .comment("Invert left and right click action on drawers")
+                .define("invertClick", false);
 
             builder.pop();
         }

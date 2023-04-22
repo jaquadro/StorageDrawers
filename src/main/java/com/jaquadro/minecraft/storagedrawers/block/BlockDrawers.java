@@ -187,112 +187,6 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         }
     }
 
-    @Override
-    @NotNull
-    public InteractionResult use (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-        ItemStack item = player.getItemInHand(hand);
-        if (hand == InteractionHand.OFF_HAND)
-            return InteractionResult.PASS;
-
-        if (level.isClientSide && Util.getMillis() == ignoreEventTime) {
-            ignoreEventTime = 0;
-            return InteractionResult.PASS;
-        }
-
-        BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(level, pos, BlockEntityDrawers.class);
-        if (blockEntityDrawers == null)
-            return InteractionResult.FAIL;
-
-        //if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
-        //    return false;
-
-        if (CommonConfig.GENERAL.debugTrace.get()) {
-            StorageDrawers.log.info("BlockDrawers.onBlockActivated");
-            StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item.toString());
-        }
-
-
-        if (!item.isEmpty()) {
-            if (item.getItem() instanceof ItemKey)
-                return InteractionResult.PASS;
-
-            if (item.getItem() instanceof ItemUpgrade) {
-                if (!blockEntityDrawers.upgrades().canAddUpgrade(item)) {
-                    if (!level.isClientSide)
-                        player.displayClientMessage(Component.translatable("message.storagedrawers.cannot_add_upgrade"), true);
-
-                    return InteractionResult.PASS;
-                }
-
-                if (!blockEntityDrawers.upgrades().addUpgrade(item)) {
-                    if (!level.isClientSide)
-                        player.displayClientMessage(Component.translatable("message.storagedrawers.max_upgrades"), true);
-
-                    return InteractionResult.PASS;
-                }
-
-                level.sendBlockUpdated(pos, state, state, 3);
-
-                if (!player.isCreative()) {
-                    item.shrink(1);
-                    if (item.getCount() <= 0)
-                        player.getInventory().setItem(player.getInventory().selected, ItemStack.EMPTY);
-                }
-
-                return InteractionResult.SUCCESS;
-            }
-        }
-        else if (item.isEmpty() && player.isShiftKeyDown()) {
-            /*if (tileDrawers.isSealed()) {
-                tileDrawers.setIsSealed(false);
-                return true;
-            }
-            else if (StorageDrawers.config.cache.enableDrawerUI) {
-                player.openGui(StorageDrawers.instance, GuiHandler.drawersGuiID, world, pos.getX(), pos.getY(), pos.getZ());
-                return true;
-            }*/
-
-            if (CommonConfig.GENERAL.enableUI.get() && !level.isClientSide) {
-                NetworkHooks.openScreen((ServerPlayer)player, new MenuProvider()
-                {
-                    @Override
-                    @NotNull
-                    public Component getDisplayName () {
-                        return Component.translatable(getDescriptionId());
-                    }
-
-                    @Nullable
-                    @Override
-                    public AbstractContainerMenu createMenu (int windowId, @NotNull Inventory playerInv, @NotNull Player playerEntity) {
-                        if (drawerCount == 1)
-                            return new ContainerDrawers1(windowId, playerInv, blockEntityDrawers);
-                        else if (drawerCount == 2)
-                            return new ContainerDrawers2(windowId, playerInv, blockEntityDrawers);
-                        else if (drawerCount == 4)
-                            return new ContainerDrawers4(windowId, playerInv, blockEntityDrawers);
-                        else if (drawerCount == 3 && BlockDrawers.this instanceof BlockCompDrawers)
-                            return new ContainerDrawersComp(windowId, playerInv, blockEntityDrawers);
-                        return null;
-                    }
-                }, extraData -> extraData.writeBlockPos(pos));
-                return InteractionResult.SUCCESS;
-            }
-        }
-        //if (tileDrawers.isSealed())
-        //    return false;
-
-        int slot = getDrawerSlot(state, hit);
-        if (slot < 0)
-            return InteractionResult.PASS;
-
-        blockEntityDrawers.interactPutItemsIntoSlot(slot, player);
-
-        if (item.isEmpty())
-            player.setItemInHand(hand, ItemStack.EMPTY);
-
-        return InteractionResult.SUCCESS;
-    }
-
     protected final int getDrawerSlot (@NotNull BlockState state, @NotNull BlockHitResult hit) {
         Direction side = hit.getDirection();
         if (state.getValue(FACING) != side)
@@ -338,11 +232,138 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     }
 
     @Override
-    public void attack(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player playerIn) {
-        interactTakeItems(state, worldIn, pos, playerIn);
+    @NotNull
+    public InteractionResult use (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        ItemStack item = player.getItemInHand(hand);
+        if (hand == InteractionHand.OFF_HAND)
+            return InteractionResult.PASS;
+
+        if (level.isClientSide && Util.getMillis() == ignoreEventTime) {
+            ignoreEventTime = 0;
+            return InteractionResult.PASS;
+        }
+
+        boolean invertClick = ClientConfig.GENERAL.invertClick.get();
+        if (!invertClick)
+            return insertOrApplyItem(state, level, pos, player, hit);
+
+        interactTakeItems(state, level, pos, player, hit);
+        return InteractionResult.SUCCESS;
     }
 
-    public boolean interactTakeItems(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player) {
+    @Override
+    public void attack(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player) {
+        BlockHitResult hit = WorldUtils.rayTraceEyes(level, player, blockPos);
+        if (hit.getType() != HitResult.Type.BLOCK)
+            return;
+        if (!hit.getBlockPos().equals(blockPos))
+            return;
+
+        boolean invertClick = ClientConfig.GENERAL.invertClick.get();
+        if (invertClick)
+            insertOrApplyItem(state, level, blockPos, player, hit);
+        else
+            interactTakeItems(state, level, blockPos, player, hit);
+    }
+
+    public InteractionResult insertOrApplyItem(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit) {
+        ItemStack item = player.getItemInHand(InteractionHand.MAIN_HAND);
+
+        BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(level, blockPos, BlockEntityDrawers.class);
+        if (blockEntityDrawers == null)
+            return InteractionResult.FAIL;
+
+        //if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
+        //    return false;
+
+        if (CommonConfig.GENERAL.debugTrace.get()) {
+            StorageDrawers.log.info("BlockDrawers.onBlockActivated");
+            StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item.toString());
+        }
+
+
+        if (!item.isEmpty()) {
+            if (item.getItem() instanceof ItemKey)
+                return InteractionResult.PASS;
+
+            if (item.getItem() instanceof ItemUpgrade) {
+                if (!blockEntityDrawers.upgrades().canAddUpgrade(item)) {
+                    if (!level.isClientSide)
+                        player.displayClientMessage(Component.translatable("message.storagedrawers.cannot_add_upgrade"), true);
+
+                    return InteractionResult.PASS;
+                }
+
+                if (!blockEntityDrawers.upgrades().addUpgrade(item)) {
+                    if (!level.isClientSide)
+                        player.displayClientMessage(Component.translatable("message.storagedrawers.max_upgrades"), true);
+
+                    return InteractionResult.PASS;
+                }
+
+                level.sendBlockUpdated(blockPos, state, state, 3);
+
+                if (!player.isCreative()) {
+                    item.shrink(1);
+                    if (item.getCount() <= 0)
+                        player.getInventory().setItem(player.getInventory().selected, ItemStack.EMPTY);
+                }
+
+                return InteractionResult.SUCCESS;
+            }
+        }
+        else if (item.isEmpty() && player.isShiftKeyDown()) {
+            /*if (tileDrawers.isSealed()) {
+                tileDrawers.setIsSealed(false);
+                return true;
+            }
+            else if (StorageDrawers.config.cache.enableDrawerUI) {
+                player.openGui(StorageDrawers.instance, GuiHandler.drawersGuiID, world, pos.getX(), pos.getY(), pos.getZ());
+                return true;
+            }*/
+
+            if (CommonConfig.GENERAL.enableUI.get() && !level.isClientSide) {
+                NetworkHooks.openScreen((ServerPlayer)player, new MenuProvider()
+                {
+                    @Override
+                    @NotNull
+                    public Component getDisplayName () {
+                        return Component.translatable(getDescriptionId());
+                    }
+
+                    @Nullable
+                    @Override
+                    public AbstractContainerMenu createMenu (int windowId, @NotNull Inventory playerInv, @NotNull Player playerEntity) {
+                        if (drawerCount == 1)
+                            return new ContainerDrawers1(windowId, playerInv, blockEntityDrawers);
+                        else if (drawerCount == 2)
+                            return new ContainerDrawers2(windowId, playerInv, blockEntityDrawers);
+                        else if (drawerCount == 4)
+                            return new ContainerDrawers4(windowId, playerInv, blockEntityDrawers);
+                        else if (drawerCount == 3 && BlockDrawers.this instanceof BlockCompDrawers)
+                            return new ContainerDrawersComp(windowId, playerInv, blockEntityDrawers);
+                        return null;
+                    }
+                }, extraData -> extraData.writeBlockPos(blockPos));
+                return InteractionResult.SUCCESS;
+            }
+        }
+        //if (tileDrawers.isSealed())
+        //    return false;
+
+        int slot = getDrawerSlot(state, hit);
+        if (slot < 0)
+            return InteractionResult.PASS;
+
+        blockEntityDrawers.interactPutItemsIntoSlot(slot, player);
+
+        if (item.isEmpty())
+            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+
+        return InteractionResult.SUCCESS;
+    }
+
+    public boolean interactTakeItems(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit) {
         if (CommonConfig.GENERAL.debugTrace.get())
             StorageDrawers.log.info("onBlockClicked");
 
@@ -351,12 +372,6 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 
         BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(level, blockPos, BlockEntityDrawers.class);
         if (blockEntityDrawers == null)
-            return false;
-
-        BlockHitResult hit = WorldUtils.rayTraceEyes(level, player, blockPos);
-        if (hit.getType() != HitResult.Type.BLOCK)
-            return false;
-        if (!hit.getBlockPos().equals(blockPos))
             return false;
 
         if (level.getBlockState(blockPos) != state)
