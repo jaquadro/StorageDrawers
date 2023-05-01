@@ -1,12 +1,16 @@
 buildscript {
     repositories {
-        jcenter()
         maven {
-            url = "http://files.minecraftforge.net/maven"
+            // url = 'https://maven.cleanroommc.com'
+            url = 'https://maven.minecraftforge.net'
         }
+        maven {
+            url = 'https://repo.spongepowered.org/maven'
+        }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'com.anatawa12.forge:ForgeGradle:2.3-1.0.7'
     }
 }
 
@@ -19,12 +23,6 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'idea'
 apply plugin: 'net.minecraftforge.gradle.forge'
-
-evaluationDependsOn(":..:Chameleon-${minecraft_base_version}")
-
-ext {
-    chameleon = project(":..:Chameleon-${minecraft_base_version}")
-}
 
 version = "${minecraft_version}-${mod_version}"
 group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -45,15 +43,9 @@ compileJava {
 }
 
 minecraft {
-    version = chameleon.forge_version
-    runDir = "runtime"
-
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not allways work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = chameleon.forge_mappings
+    version = '1.12.2-14.23.5.2847'
+    runDir = 'run'
+    mappings = 'stable_39'
 
     replaceIn "StorageDrawers.java"
     replace '@VERSION@', project.version
@@ -86,26 +78,22 @@ repositories {
     }
     maven { // HWYLA
         name = "HWYLA repo"
-        url "http://tehnut.info/maven"
+        url = "https://github.com/TehNut/temporary-maven-thing/raw/master/maven"
     }
     maven {
         name = "CurseForge"
         url = "https://minecraft.curseforge.com/api/maven"
     }
+    maven {
+        url "https://cursemaven.com"
+    }
 }
 
 dependencies {
-    compile chameleon
-
-    compileOnly "mezz.jei:jei_${minecraft_version}:${jei_version}:api"
-    runtime "mezz.jei:jei_${minecraft_version}:${jei_version}"
-
-    compileOnly "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
-    runtime "mcp.mobius.waila:Hwyla:${hwyla_version}"
-
-    //deobfCompile "MineTweaker3:MineTweaker3-API:${mt_version}"
-    //deobfCompile "org.ow2.asm:asm-debug-all:5.0.3"
-}
+    deobfCompile "curse.maven:chameleon-230497:2450900"
+    deobfCompile "curse.maven:jei-238222:4393461"
+    deobfCompile "mcp.mobius.waila:Hwyla:${hwyla_version}_${minecraft_version}"
+    deobfCompile "curse.maven:the-one-probe-245211:2667280"}
 
 processResources
 {
