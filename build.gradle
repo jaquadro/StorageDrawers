@@ -43,9 +43,9 @@ compileJava {
 }
 
 minecraft {
-    version = '1.12.2-14.23.5.2847'
+    version = '1.12.2-14.23.0.2491'
     runDir = 'run'
-    mappings = 'stable_39'
+    mappings = 'snapshot_20170925'
 
     replaceIn "StorageDrawers.java"
     replace '@VERSION@', project.version
