@@ -1,16 +1,12 @@
 buildscript {
     repositories {
+        jcenter()
         maven {
-            // url = 'https://maven.cleanroommc.com'
-            url = 'https://maven.minecraftforge.net'
+            url = "http://files.minecraftforge.net/maven"
         }
-        maven {
-            url = 'https://repo.spongepowered.org/maven'
-        }
-        mavenCentral()
     }
     dependencies {
-        classpath 'com.anatawa12.forge:ForgeGradle:2.3-1.0.7'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 
