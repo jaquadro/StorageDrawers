@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         maven {
-            // url = 'https://maven.cleanroommc.com'
             url = 'https://maven.minecraftforge.net'
         }
         maven {
