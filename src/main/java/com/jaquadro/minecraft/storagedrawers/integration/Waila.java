@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IFractionalDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
@@ -16,6 +17,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -73,6 +75,7 @@ public class Waila extends IntegrationModule
         }
         catch (Exception e) {
             // Oh well, we couldn't hook the waila config
+            StorageDrawers.log.error("Failed to hook the Waila Config. Could not add in custom Storage Drawers related configs.");
         }
     }
 
@@ -81,12 +84,20 @@ public class Waila extends IntegrationModule
         @Override
         @Nonnull
         public ItemStack getWailaStack (IWailaDataAccessor accessor, IWailaConfigHandler config) {
-            NonNullList<ItemStack> drops = NonNullList.create();
-            accessor.getBlock().getDrops(drops, accessor.getWorld(), accessor.getPosition(), accessor.getBlockState(), 0);
-            if (drops.size() == 0)
-                return ItemStack.EMPTY;
+            Block block = accessor.getBlock();
+            // Only replace info if it needs to (trim or drawers). Else, leave it, some other mod might change it.
+            if (!(block instanceof BlockDrawers)){
+                if (block instanceof BlockTrim){
+                    NonNullList<ItemStack> drops = NonNullList.create();
+                    accessor.getBlock().getDrops(drops, accessor.getWorld(), accessor.getPosition(), accessor.getBlockState(), 0);
+                    if (drops.size() == 0)
+                        return ItemStack.EMPTY;
 
-            return drops.get(0);
+                    return drops.get(0);
+                }
+                return ItemStack.EMPTY;
+            }
+            return ((BlockDrawers) accessor.getBlock()).getWailaTOPBlock(accessor.getWorld(), accessor.getPosition(), accessor.getBlockState());
         }
 
         @Override
