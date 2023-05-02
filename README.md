@@ -25,7 +25,7 @@ git clone https://github.com/jaquadro/StorageDrawers
 cd StorageDrawers
 ./gradle build
 ```
-For development, the `./gradle idea` command will setup a multi-module project for IntelliJ with StorageDrawers and Chameleon
+For development, the `./gradle setupDecompWorkspace` command will setup the Dev Environment you need to develop and contribute to Storage Drawers.
 
 #### Maven
 
