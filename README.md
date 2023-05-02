@@ -29,22 +29,23 @@ For development, the `./gradle setupDecompWorkspace` command will setup the Dev 
 
 #### Maven
 
-StorageDrawers builds and API are now available on a maven repo.  Add the following to your mod's build.gradle:
+StorageDrawers builds and API are now accessed via [CurseMaven](https://www.cursemaven.com/).  Add the following to your mod's build.gradle:
 ```
 repositories {
     maven {
-        name = "storagedrawers"
-        url = "https://dl.bintray.com/jaquadro/dev/"
+        name = "Cursemaven"
+        url "https://cursemaven.com"
     }
 }
 
 dependencies {
-    deobfCompile "com.jaquadro.minecraft.storagedrawers:StorageDrawers:<VERSION>:api"
-    runtime "com.jaquadro.minecraft.storagedrawers:StorageDrawers:<VERSION>"
-    runtime "com.jaquadro.minecraft.chameleon:Chameleon:<VERSION>"
+    deobfCompile "curse.maven:storage-drawers-223852:<storage_drawers_file-id>"
+    deobfCompile "curse.maven:chameleon-230497:<chameleon_file_id>"
 }
 ```
-An example version is `1.12-5.2.2`. You can [browse the repo](https://dl.bintray.com/jaquadro/dev/com/jaquadro/minecraft/) to see what versions are available.
+To find the file id, go to your desired version of [Storage Drawers](https://www.curseforge.com/minecraft/mc-mods/storage-drawers) and [Chameleon](https://www.curseforge.com/minecraft/mc-mods/chameleon), and click on the download page of the file. Once you are on the page, the file ID will be at the end of the URL.
+
+The File ID of the newest Storage Drawers version is `2952606`, and the File ID of the newest Chameleon version is `2450900`.
 
 Reporting Bugs
 --------------
