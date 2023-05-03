@@ -92,7 +92,7 @@ dependencies {
     deobfCompile "curse.maven:chameleon-230497:2450900"
     deobfCompile "curse.maven:jei-238222:4393461"
     deobfCompile "mcp.mobius.waila:Hwyla:${hwyla_version}_${minecraft_version}"
-    deobfCompile "curse.maven:the-one-probe-245211:2667280"}
+    deobfCompile "curse.maven:the-one-probe-245211:2667280"
 
 processResources
 {
