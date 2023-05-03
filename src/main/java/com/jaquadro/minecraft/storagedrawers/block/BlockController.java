@@ -7,7 +7,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;

@@ -40,6 +40,9 @@ minecraft {
     mcVersion = '1.12.2'
     extraRunJvmArguments.add("-ea:${project.group}")
 
+    mcpMappingChannel = "snapshot"
+    mcpMappingVersion = "20170925"
+
     useDependencyAccessTransformers = true
 
     injectedTags.put("VERSION", project.version)
