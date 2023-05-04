@@ -83,7 +83,7 @@
     "item.storagedrawers.fill_level_upgrade.desc": "Показує, наскільки заповнене сховище",
     "item.storagedrawers.illumination_upgrade": "Покращення освітлення",
     "item.storagedrawers.illumination_upgrade.desc": "Підсвічує етикетки шухляд у темряві",
-    "item.storagedrawers.redstone_upgrade": "Редстоунове покрадення",
+    "item.storagedrawers.redstone_upgrade": "Редстоунове покращення",
     "item.storagedrawers.redstone_upgrade.desc": "Випромінює сигнал за загальним вмістом",
     "item.storagedrawers.min_redstone_upgrade": "Мін. редстоунове покращення",
     "item.storagedrawers.min_redstone_upgrade.desc": "Випромінює сигнал за найменш заповненим слотом",
