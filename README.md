@@ -6,45 +6,44 @@ A mod adding compartmental storage for Minecraft Forge
 For Players
 -----------
 
-StorageDrawers may be downloaded from any of the following sites:
+StorageDrawers is recommended to be downloaded on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/storage-drawers). Make sure you select the newest 1.12 version.
 
-- [Minecraft Forums](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2198533-storage-drawers-v1-10-7-v3-5-0-v4-0-0-updated-nov)
-- [Curse.com](https://mods.curse.com/mc-mods/minecraft/223852-storage-drawers)
-- [Github Releases](https://github.com/jaquadro/StorageDrawers/releases)
+You will also need Chameleon, in order to run StorageDrawers. You can download this from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/chameleon).
+
 
 For Developers
 --------------
 
-#### Building
+#### Building and Developing
 
-StorageDrawers is built using `gradle`. To build StorageDrawers, the support library [Chameleon](https://github.com/jaquadro/Chameleon) must be checked out in an adjacent directory. These commands should be enough to get you started:
+StorageDrawers is built using `gradle`. Follow these commands to get a development environment setup:
 
 ```
-git clone https://github.com/jaquadro/Chameleon 
 git clone https://github.com/jaquadro/StorageDrawers
 cd StorageDrawers
-./gradle build
+./gradle setupDecompWorkspace
 ```
-For development, the `./gradle idea` command will setup a multi-module project for IntelliJ with StorageDrawers and Chameleon
+You can build the mod with `./gradle build`, whilst in the project folder. We recommend opening up the project in IDEA, and using the gradle window on your right to do this.
 
 #### Maven
 
-StorageDrawers builds and API are now available on a maven repo.  Add the following to your mod's build.gradle:
+StorageDrawers builds and API are now accessed via [CurseMaven](https://www.cursemaven.com/).  Add the following to your mod's build.gradle:
 ```
 repositories {
     maven {
-        name = "storagedrawers"
-        url = "https://dl.bintray.com/jaquadro/dev/"
+        name = "Cursemaven"
+        url "https://cursemaven.com"
     }
 }
 
 dependencies {
-    deobfCompile "com.jaquadro.minecraft.storagedrawers:StorageDrawers:<VERSION>:api"
-    runtime "com.jaquadro.minecraft.storagedrawers:StorageDrawers:<VERSION>"
-    runtime "com.jaquadro.minecraft.chameleon:Chameleon:<VERSION>"
+    deobfCompile "curse.maven:storage-drawers-223852:<storage_drawers_file-id>"
+    deobfCompile "curse.maven:chameleon-230497:<chameleon_file_id>"
 }
 ```
-An example version is `1.12-5.2.2`. You can [browse the repo](https://dl.bintray.com/jaquadro/dev/com/jaquadro/minecraft/) to see what versions are available.
+To find the file id, go to your desired version of [Storage Drawers](https://www.curseforge.com/minecraft/mc-mods/storage-drawers) and [Chameleon](https://www.curseforge.com/minecraft/mc-mods/chameleon), and click on the download page of the file. Once you are on the page, the file ID will be at the end of the URL.
+
+The File ID of the newest Storage Drawers version is `2952606`, and the File ID of the newest Chameleon version is `2450900`.
 
 Reporting Bugs
 --------------
