@@ -16,14 +16,14 @@ For Developers
 
 #### Building and Developing
 
-StorageDrawers is built using `gradle`. Follow these commands to get a development environment setup:
+These commands should help you setup a development environment:
 
 ```
 git clone https://github.com/jaquadro/StorageDrawers
 cd StorageDrawers
 ./gradle setupDecompWorkspace
 ```
-You can build the mod with `./gradle build`, whilst in the project folder. We recommend opening up the project in IDEA, and using the gradle window on your right to do this.
+You can build StorageDrawers with `./gradle build`, whilst in the project folder. We recommend opening up the project in IDEA, and using the gradle window on your right to do this.
 
 #### Maven
 
