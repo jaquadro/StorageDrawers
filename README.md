@@ -8,7 +8,7 @@ For Players
 
 StorageDrawers is recommended to be downloaded on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/storage-drawers). Make sure you select the newest 1.12 version.
 
-You will also need Chameleon, in order to run StorageDrawers. You can download this from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/chameleon).
+You will also need Chameleon, in order to run StorageDrawers. You can also download this from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/chameleon).
 
 
 For Developers
