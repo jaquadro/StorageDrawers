@@ -68,11 +68,32 @@ repositories {
 }
 
 dependencies {
+    // Hard deps
     implementation rfg.deobf("curse.maven:chameleon-230497:${chameleon_file_id}")
-    compileOnly rfg.deobf("curse.maven:jei-238222:${jei_file_id}")
-    compileOnly rfg.deobf("curse.maven:thaumcraft-223628:${thaumcraft_file_id}")
-    compileOnly rfg.deobf("curse.maven:hwyla-253449:${hwyla_file_id}")
-    compileOnly rfg.deobf("curse.maven:the-one-probe-245211:${top_file_id}")
+
+    // Soft deps
+    if (project.debug_jei.toBoolean()) {
+        implementation rfg.deobf("curse.maven:jei-238222:${jei_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:jei-238222:${jei_file_id}")
+    }
+    if (project.debug_thaumcraft.toBoolean()) {
+        // Thaumcraft needs baubles as dep
+        runtimeOnly rfg.deobf("curse.maven:baubles-227083:${baubles_file_id}")
+        implementation rfg.deobf("curse.maven:thaumcraft-223628:${thaumcraft_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:thaumcraft-223628:${thaumcraft_file_id}")
+    }
+    if (project.debug_waila.toBoolean()) {
+        implementation rfg.deobf("curse.maven:hwyla-253449:${hwyla_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:hwyla-253449:${hwyla_file_id}")
+    }
+    if (project.debug_top.toBoolean()) {
+        implementation rfg.deobf("curse.maven:the-one-probe-245211:${top_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:the-one-probe-245211:${top_file_id}")
+    }
 }
 
 processResources {
@@ -115,20 +136,23 @@ idea {
     module { inheritOutputDirs = true }
     project { settings {
         runConfigurations {
-            "1. Run Client"(Gradle) {
+            "1. Setup Workspace"(Gradle) {
+                taskNames = ["setupDecompWorkspace"]
+            }
+            "2. Build Jars"(Gradle) {
+                taskNames = ["build"]
+            }
+            "3. Run Client"(Gradle) {
                 taskNames = ["runClient"]
             }
-            "2. Run Server"(Gradle) {
+            "4. Run Server"(Gradle) {
                 taskNames = ["runServer"]
             }
-            "3. Run Obfuscated Client"(Gradle) {
+            "5. Run Obfuscated Client"(Gradle) {
                 taskNames = ["runObfClient"]
             }
-            "4. Run Obfuscated Server"(Gradle) {
+            "6. Run Obfuscated Server"(Gradle) {
                 taskNames = ["runObfServer"]
-            }
-            "5. Build Jars"(Gradle) {
-                taskNames = ["build"]
             }
         }
         compiler.javac {
