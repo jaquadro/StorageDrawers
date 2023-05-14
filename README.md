@@ -17,31 +17,30 @@ For Developers
 
 StorageDrawers's buildscripts use [CleanroomMC's TemplateDevEnv](https://github.com/CleanroomMC/TemplateDevEnv/tree/master) as a base.
 
-#### Building and Developing
+### Building and Developing
 
-These commands should help you setup a development environment:
+#### With IntelliJ IDEA
+Simply clone this project, and load it in IntelliJ IDEA. Then, select the `setupWorkspace` configuration, and run it. 
+Then, refresh your gradle. This will set up a development environment for you.
 
-```
-git clone https://github.com/jaquadro/StorageDrawers
-cd StorageDrawers
-./gradle setupDecompWorkspace
-```
+Once loaded in IntelliJ IDEA, you can use the other preset run configurations to:
+- Build Storage Drawers
+- Run Dev Client
+- Run Dev Server
+- Run Dev Obfuscated Client
+- Run Dev Obfuscated Server
 
-Once loaded in IntelliJ, you can use the preset run configurations to:
-- Run Client
-- Run Server
-- Run Obfuscated Client
-- Run Obfuscated Server
-- Build Jars
+#### Without IntelliJ IDEA
+If you don't have IntelliJ IDEA, simply clone the project, and run `./gradle setupDecompWorkspace` to setup a development environment. 
 
-Of course, you can do the same in command line. The commands for each, respectively, are:
-- `./gradle runClient`
-- `./gradle runServer`
-- `./gradle runObfClient`
-- `./gradle runObfServer`
-- `./gradle build`
+Then, you can use the following commands:
+- `./gradle build` - Builds Storage Drawers
+- `./gradle runClient` - Runs a Dev Client
+- `./gradle runServer` - Runs a Dev Server
+- `./gradle runObfClient` - Runs a Dev Obfuscated Client
+- `./gradle runObfServer` - Runs a Dev Obfuscated Server
 
-#### Maven
+### Maven
 
 StorageDrawers builds and API are now accessed via [CurseMaven](https://www.cursemaven.com/).  Add the following to your mod's build.gradle:
 ```
