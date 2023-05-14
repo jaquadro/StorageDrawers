@@ -10,6 +10,7 @@ StorageDrawers is recommended to be downloaded on [CurseForge](https://www.curse
 
 You will also need Chameleon, in order to run StorageDrawers. This can also be downloaded from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/chameleon).
 
+There's also a discord community for Texel's mods: https://discord.gg/8WtpQfy
 
 For Developers
 --------------
