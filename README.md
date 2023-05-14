@@ -14,6 +14,8 @@ You will also need Chameleon, in order to run StorageDrawers. You can download t
 For Developers
 --------------
 
+StorageDrawers's buildscripts use [CleanroomMC's TemplateDevEnv](https://github.com/CleanroomMC/TemplateDevEnv/tree/master) as a base.
+
 #### Building and Developing
 
 These commands should help you setup a development environment:
@@ -23,7 +25,20 @@ git clone https://github.com/jaquadro/StorageDrawers
 cd StorageDrawers
 ./gradle setupDecompWorkspace
 ```
-You can build StorageDrawers with `./gradle build`, whilst in the project folder. We recommend opening up the project in IDEA, and using the gradle window on your right to do this.
+
+Once loaded in IntelliJ, you can use the preset run configurations to:
+- Run Client
+- Run Server
+- Run Obfuscated Client
+- Run Obfuscated Server
+- Build Jars
+
+Of course, you can do the same in command line. The commands for each, respectively, are:
+- `./gradle runClient`
+- `./gradle runServer`
+- `./gradle runObfClient`
+- `./gradle runObfServer`
+- `./gradle build`
 
 #### Maven
 
