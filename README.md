@@ -15,7 +15,7 @@ There's also a discord community for Texel's mods: https://discord.gg/8WtpQfy
 For Developers
 --------------
 
-StorageDrawers's buildscripts use [CleanroomMC's TemplateDevEnv](https://github.com/CleanroomMC/TemplateDevEnv/tree/master) as a base.
+StorageDrawers's buildscripts uses [CleanroomMC's TemplateDevEnv](https://github.com/CleanroomMC/TemplateDevEnv/tree/master) as a base.
 
 ### Building and Developing
 
