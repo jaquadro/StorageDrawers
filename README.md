@@ -20,7 +20,7 @@ StorageDrawers's buildscripts uses [CleanroomMC's TemplateDevEnv's](https://gith
 ### Building and Developing
 
 #### With IntelliJ IDEA
-Simply clone this project, and load it in IntelliJ IDEA. Then, select the `setupWorkspace` configuration, and run it. 
+Simply clone this project, and load it in IntelliJ IDEA. Then, select the `setupWorkspace` run configuration, and run it. 
 Then, refresh your gradle. This will set up a development environment for you.
 
 Once loaded in IntelliJ IDEA, you can use the other preset run configurations to:
@@ -31,14 +31,18 @@ Once loaded in IntelliJ IDEA, you can use the other preset run configurations to
 - Run Dev Obfuscated Server
 
 #### Without IntelliJ IDEA
-If you don't have IntelliJ IDEA, simply clone the project, and run `./gradle setupDecompWorkspace` to setup a development environment. 
+If you don't have IntelliJ IDEA, simply clone the project, and run `./gradlew setupDecompWorkspace` to setup a development environment. 
 
 Then, you can use the following commands:
-- `./gradle build` - Builds Storage Drawers
-- `./gradle runClient` - Runs a Dev Client
-- `./gradle runServer` - Runs a Dev Server
-- `./gradle runObfClient` - Runs a Dev Obfuscated Client
-- `./gradle runObfServer` - Runs a Dev Obfuscated Server
+- `./gradlew build` - Builds Storage Drawers
+- `./gradlew runClient` - Runs a Dev Client
+- `./gradlew runServer` - Runs a Dev Server
+- `./gradlew runObfClient` - Runs a Dev Obfuscated Client
+- `./gradlew runObfServer` - Runs a Dev Obfuscated Server
+
+#### Other useful tips
+ - You do not need to worry about what java version you have set as your default. The buildscript will automatically download Zulu's Java 8. Simply do the steps above, and maybe change your editor's JDK to a version of Java 8, and you'll be ready to go!
+ - In `gradle.properties`, you can edit the `debug_modid` variables at the bottom. This allows you to include those soft dependencies into your development clients and servers. Make sure to run the `setupWorkpace` run configuration or the commmand `./gradlew setupDecompWorkpace`, and refresh your gradle!
 
 ### Maven
 
