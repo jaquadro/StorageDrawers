@@ -21,13 +21,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.IEssentiaContainerItem;
 import thaumcraft.api.aspects.AspectList;
+import thaumcraft.api.aspects.IEssentiaContainerItem;
 import thaumcraft.api.blocks.BlocksTC;
 import thaumcraft.api.items.ItemsTC;
+
+import java.util.Objects;
 
 public class Thaumcraft extends IntegrationModule
 {
@@ -51,8 +52,8 @@ public class Thaumcraft extends IntegrationModule
             Item.getItemFromBlock(BlocksTC.jarVoid),
         };
 
-        StorageDrawersApi.instance().renderRegistry().registerPreLabelRenderHandler(new LabelRenderHandler());
-        StorageDrawersApi.instance().wailaRegistry().registerTooltipHandler(new WailaTooltipHandler());
+        Objects.requireNonNull(StorageDrawersApi.instance()).renderRegistry().registerPreLabelRenderHandler(new LabelRenderHandler());
+        Objects.requireNonNull(StorageDrawersApi.instance()).wailaRegistry().registerTooltipHandler(new WailaTooltipHandler());
     }
 
     @Override

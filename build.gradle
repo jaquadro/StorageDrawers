@@ -70,9 +70,9 @@ repositories {
 dependencies {
     compileOnly rfg.deobf("curse.maven:chameleon-230497:${chameleon_file_id}")
     compileOnly rfg.deobf("curse.maven:jei-238222:${jei_file_id}")
+    compileOnly rfg.deobf("curse.maven:thaumcraft-223628:${thaumcraft_file_id}")
     compileOnly rfg.deobf("curse.maven:hwyla-253449:${hwyla_file_id}")
     compileOnly rfg.deobf("curse.maven:the-one-probe-245211:${top_file_id}")
-
 }
 
 processResources {
