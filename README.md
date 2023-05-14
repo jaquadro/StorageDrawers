@@ -20,7 +20,7 @@ StorageDrawers's buildscripts uses [CleanroomMC's TemplateDevEnv's](https://gith
 ### Building and Developing
 
 #### With IntelliJ IDEA
-Simply clone this project, and load it in IntelliJ IDEA. Then, select the `setupWorkspace` run configuration, and run it. 
+Simply clone this project, using the `Clone In IDEA` button at the top. Then, once background tasks to load gradle have been completed, select the `setupWorkspace` run configuration, and run it. 
 Then, refresh your gradle. This will set up a development environment for you.
 
 Once loaded in IntelliJ IDEA, you can use the other preset run configurations to:
@@ -31,7 +31,7 @@ Once loaded in IntelliJ IDEA, you can use the other preset run configurations to
 - Run Dev Obfuscated Server
 
 #### Without IntelliJ IDEA
-If you don't have IntelliJ IDEA, simply clone the project, and run `./gradlew setupDecompWorkspace` to setup a development environment. 
+If you don't have IntelliJ IDEA, simply clone the project with `git clone https://github.com/jaquadro/StorageDrawers`, go into the project folder in the command line, with `cd StorageDrawers`, and run `./gradlew setupDecompWorkspace` to setup a development environment. 
 
 Then, you can use the following commands:
 - `./gradlew build` - Builds Storage Drawers
