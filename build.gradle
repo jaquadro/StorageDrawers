@@ -98,6 +98,17 @@ jar {
     from(provider{ configurations.embed.collect {it.isDirectory() ? it : zipTree(it)} })
 }
 
+tasks.register('apiJar', Jar) {
+    from sourceSets.main.allSource
+    from sourceSets.main.output
+    include 'com/jaquadro/minecraft/storagedrawers/api/**/*'
+    archiveClassifier = "api"
+}
+
+artifacts {
+    archives apiJar
+}
+
 idea {
     module { inheritOutputDirs = true }
     project { settings {
