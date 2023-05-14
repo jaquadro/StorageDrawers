@@ -96,6 +96,8 @@ jar {
     }
     // Add all embedded dependencies into the jar
     from(provider{ configurations.embed.collect {it.isDirectory() ? it : zipTree(it)} })
+
+    archiveClassifier = "deobf"
 }
 
 tasks.register('apiJar', Jar) {
