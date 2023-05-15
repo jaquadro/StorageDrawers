@@ -84,20 +84,23 @@ public class Waila extends IntegrationModule
         @Override
         @Nonnull
         public ItemStack getWailaStack (IWailaDataAccessor accessor, IWailaConfigHandler config) {
-            Block block = accessor.getBlock();
             // Only replace info if it needs to (trim or drawers). Else, leave it, some other mod might change it.
-            if (!(block instanceof BlockDrawers)){
-                if (block instanceof BlockTrim){
-                    NonNullList<ItemStack> drops = NonNullList.create();
-                    accessor.getBlock().getDrops(drops, accessor.getWorld(), accessor.getPosition(), accessor.getBlockState(), 0);
-                    if (drops.size() == 0)
-                        return ItemStack.EMPTY;
+            // Returning ItemStack.EMPTY tells Hwyla that an override is not required.
 
-                    return drops.get(0);
-                }
-                return ItemStack.EMPTY;
+            Block block = accessor.getBlock();
+
+            if ((block instanceof BlockDrawers))
+                return ((BlockDrawers) accessor.getBlock()).getWailaTOPBlock(accessor.getWorld(), accessor.getPosition(), accessor.getBlockState());
+
+            if (block instanceof BlockTrim){
+                List<ItemStack> drops = ((BlockTrim) block).getDrops(accessor.getWorld(), accessor.getPosition(), accessor.getBlockState(), 0);
+                if (drops == null || drops.isEmpty())
+                    return ItemStack.EMPTY;
+
+                return drops.get(0);
             }
-            return ((BlockDrawers) accessor.getBlock()).getWailaTOPBlock(accessor.getWorld(), accessor.getPosition(), accessor.getBlockState());
+
+            return ItemStack.EMPTY;
         }
 
         @Override
