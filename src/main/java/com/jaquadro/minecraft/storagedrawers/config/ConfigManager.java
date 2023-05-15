@@ -75,6 +75,7 @@ public class ConfigManager
         public boolean enableTape;
         public boolean enableFallbackRecipes;
         public boolean enableFramedDrawers;
+        public boolean consumeDecorateBlocks;
         public boolean invertShift;
         public boolean invertClick;
         public boolean debugTrace;
@@ -152,6 +153,9 @@ public class ConfigManager
         cache.enableFallbackRecipes = config.get(Configuration.CATEGORY_GENERAL, "enableFallbackRecipes", true).setLanguageKey(LANG_PREFIX + "prop.enableFallbackRecipes").setRequiresMcRestart(true).getBoolean();
         cache.enableFramedDrawers = config.get(Configuration.CATEGORY_GENERAL, "enableFramedDrawers", true).setLanguageKey(LANG_PREFIX + "prop.enableFramedDrawers").setRequiresMcRestart(true).getBoolean();
         cache.stackRemainderWaila = !config.get(Configuration.CATEGORY_GENERAL, "wailaStackRemainder", "stack + remainder", null, new String[]{"exact", "stack + remainder"}).setLanguageKey(LANG_PREFIX + "prop.wailaStackRemainder").getString().equals("exact");
+        cache.consumeDecorateBlocks = config.get(Configuration.CATEGORY_GENERAL, "consumeDecorateBlocks", true,
+                "Changes whether blocks used to decorate framed blocks in the framing table gets consumed. Leave true to consume blocks.")
+                .setLanguageKey(LANG_PREFIX + "prop.consumeDecorateBlocks").getBoolean();
         cache.invertShift = config.get(Configuration.CATEGORY_GENERAL, "invertShift", false,
             "Inverts how shift works with drawers. If this is true, shifting will only give one item, where regular clicks will give a full stack. Leave false for default behavior.")
             .setLanguageKey(LANG_PREFIX + "prop.invertShift").getBoolean();
