@@ -197,6 +197,7 @@ storagedrawers.config.integration.tooltip=Konfiguriere Integration mit anderen M
 
 storagedrawers.config.integration.enableAE2=Erlaube Applied Energistics 2 Integration
 storagedrawers.config.integration.enableWaila=Erlaube WAILA Integration
+storagedrawers.config.integration.enableWaila=Erlaube TOP Integration
 storagedrawers.config.integration.enableThaumcraft=Erlaube Thaumcraft Integration
 storagedrawers.config.integration.enableMineTweaker=Erlaube MineTweaker Integration
 

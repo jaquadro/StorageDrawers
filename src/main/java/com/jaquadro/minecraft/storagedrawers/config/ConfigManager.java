@@ -70,6 +70,7 @@ public class ConfigManager
         public boolean enableSidedOutput;
         public boolean enableItemConversion;
         public boolean enableWailaIntegration;
+        public boolean enableTOPIntegration;
         public boolean enableThaumcraftIntegration;
         public boolean enableMineTweakerIntegration;
         public boolean enableTape;
@@ -165,8 +166,15 @@ public class ConfigManager
         cache.keepContentsOnBreak = config.get(Configuration.CATEGORY_GENERAL, "keepContentsOnBreak", true).setLanguageKey(LANG_PREFIX + "prop.keepContentsOnBreak").getBoolean();
 
         //cache.enableAE2Integration = config.get(sectionIntegration.getQualifiedName(), "enableAE2", true).setLanguageKey(LANG_PREFIX + "integration.enableAE2").setRequiresMcRestart(true).getBoolean();
-        cache.enableWailaIntegration = config.get(sectionIntegration.getQualifiedName(), "enableWaila", true).setLanguageKey(LANG_PREFIX + "integration.enableWaila").setRequiresMcRestart(true).getBoolean();
-        cache.enableThaumcraftIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThaumcraft", true).setLanguageKey(LANG_PREFIX + "integration.enableThaumcraft").setRequiresMcRestart(true).getBoolean();
+        cache.enableWailaIntegration = config.get(sectionIntegration.getQualifiedName(), "enableWaila", true,
+                "Whether to enable What Am I Looking At integration, overriding default displayed blocks, and adding several Storage Drawers related options to the config. Warning: Turning this off will make Waila display some Storage Drawers blocks incorrectly.")
+                .setLanguageKey(LANG_PREFIX + "integration.enableWaila").setRequiresMcRestart(true).getBoolean();
+        cache.enableTOPIntegration = config.get(sectionIntegration.getQualifiedName(), "enableTOP", true,
+                "Whether to enable The One Probe integration, overriding default displayed blocks. Warning: Turning this off will make TOP display some Storage Drawers blocks incorrectly.")
+                .setLanguageKey(LANG_PREFIX + "integration.enableTOP").setRequiresMcRestart(true).getBoolean();
+        cache.enableThaumcraftIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThaumcraft", true,
+                "Whether to enable Thaumcraft integration, adding icons on drawers if the item stored has an Aspect.")
+                .setLanguageKey(LANG_PREFIX + "integration.enableThaumcraft").setRequiresMcRestart(true).getBoolean();
         cache.enableMineTweakerIntegration = config.get(sectionIntegration.getQualifiedName(), "enableMineTweaker", true).setLanguageKey(LANG_PREFIX + "integration.enableMineTweaker").setRequiresMcRestart(true).getBoolean();
 
         cache.compRules = config.getStringList("compactingRules", sectionRegistries.getQualifiedName(), new String[] { "minecraft:clay, minecraft:clay_ball, 4" }, "Items should be in form domain:item or domain:item:meta.", null, LANG_PREFIX + "registries.compRules");

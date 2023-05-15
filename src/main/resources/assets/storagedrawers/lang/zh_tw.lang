@@ -156,6 +156,7 @@ storagedrawers.config.integration.tooltip=設定本模組與其它模組之間�
 
 storagedrawers.config.integration.enableAE2=允許關聯應用能源2
 storagedrawers.config.integration.enableWaila=允許關聯WAILA顯示
+storagedrawers.config.integration.enableTOP=允许关联TOP
 storagedrawers.config.integration.enableThaumcraft=允許關聯秘術時代
 storagedrawers.config.integration.enableMineTweaker=允許關聯MineTweaker
 item.storagedrawers.personalKey.description=禁止其他玩家使用抽屜

@@ -103,4 +103,7 @@ storagedrawers.config.integration=Integracja
 storagedrawers.config.integration.tooltip=Konfiguruj integrację z innymi modami.
 
 storagedrawers.config.integration.enableAE2=Włącz integrację z Applied Energistics 2
-storagedrawers.config.integration.enableWaila=Włącz integrację z What Am I Looking At
+storagedrawers.config.integration.enableWaila=Włącz integrację z WAILA
+storagedrawers.config.integration.enableTOP=Włącz integrację z TOP
+storagedrawers.config.integration.enableThaumcraft=Włącz integrację z Thaumcraft
+storagedrawers.config.integration.enableMineTweaker=Włącz integrację z MineTweaker
