@@ -18,7 +18,7 @@ public class TOP {
         ITheOneProbe TOP = TheOneProbe.theOneProbeImp;
         TOP.registerBlockDisplayOverride(new DrawerLogoProvider());
     }
-    public static class DrawerLogoProvider implements IBlockDisplayOverride {
+    private static class DrawerLogoProvider implements IBlockDisplayOverride {
         @Override
         public boolean overrideStandardInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer entityPlayer, World world, IBlockState blockState, IProbeHitData probeHitData) {
             // Returns false if no override is needed
