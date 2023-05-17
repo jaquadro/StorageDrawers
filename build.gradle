@@ -24,7 +24,7 @@ java {
     }
     // Generate sources and javadocs jars when building and publishing
     withSourcesJar()
-    withJavadocJar()
+    // withJavadocJar() Not Needed
 }
 
 tasks.withType(JavaCompile).configureEach {
