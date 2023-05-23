@@ -187,6 +187,7 @@ storagedrawers.config.integration.tooltip=Настройки интеграци�
 
 storagedrawers.config.integration.enableAE2=Включить интеграцию с Applied Energistics 2
 storagedrawers.config.integration.enableWaila=Включить интеграцию с WAILA
+storagedrawers.config.integration.enableTOP=Включить интеграцию с TOP
 storagedrawers.config.integration.enableThaumcraft=Включить интеграцию с Thaumcraft
 storagedrawers.config.integration.enableMineTweaker=Включить интеграцию с MineTweaker
 storagedrawers.config.integration.enableRefinedRelocation=Включить интеграцию с Refined Relocation

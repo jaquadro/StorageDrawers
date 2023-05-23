@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.chameleon.integration.IntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.core.TOP;
 import net.minecraftforge.fml.common.Loader;
 
 public class LocalIntegrationRegistry
@@ -14,6 +15,8 @@ public class LocalIntegrationRegistry
             reg.add(new Waila());
         if (Loader.isModLoaded("thaumcraft") && StorageDrawers.config.cache.enableThaumcraftIntegration)
             reg.add(new Thaumcraft());
+        if (Loader.isModLoaded("theoneprobe") && StorageDrawers.config.cache.enableTOPIntegration)
+            TOP.registerProviders();
         //if (Loader.isModLoaded("appliedenergistics2") && StorageDrawers.config.cache.enableAE2Integration)
         //    reg.add(new AppliedEnergistics());
         //if (Loader.isModLoaded("crafttweaker") && StorageDrawers.config.cache.enableMineTweakerIntegration)
