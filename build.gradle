@@ -1,183 +1,171 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            url = "http://files.minecraftforge.net/maven"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
-}
+import com.gtnewhorizons.retrofuturagradle.mcp.ReobfuscatedJar
+import org.jetbrains.gradle.ext.Gradle
 
 plugins {
-    id "com.jfrog.bintray" version "1.7"
+    id("java")
+    id("java-library")
+    id("maven-publish")
+    id("eclipse")
+    id("org.jetbrains.gradle.plugin.idea-ext") version "$idea_ext_version"
+    id("com.gtnewhorizons.retrofuturagradle") version "$rfg_version"
+    id("com.matthewprenger.cursegradle") version "$curseforge_gradle_version"
 }
 
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-apply plugin: 'idea'
-apply plugin: 'net.minecraftforge.gradle.forge'
+version = project.mod_version
+group = project.mod_group
+archivesBaseName = project.archives_base_name
 
-evaluationDependsOn(":..:Chameleon-${minecraft_base_version}")
-
-ext {
-    chameleon = project(":..:Chameleon-${minecraft_base_version}")
+// Set the toolchain version to decouple the Java we run Gradle with from the Java used to compile and run the mod
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+        // Azul covers the most platforms for Java 8 toolchains, crucially including MacOS arm64
+        vendor.set(org.gradle.jvm.toolchain.JvmVendorSpec.AZUL)
+    }
+    // Generate sources and javadocs jars when building and publishing
+    withSourcesJar()
+    // withJavadocJar() Not Needed
 }
 
-version = "${minecraft_version}-${mod_version}"
-group= "com.jaquadro.minecraft.storagedrawers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "StorageDrawers"
-
-idea {
-  module.iml.withXml {
-    def atts = it.asNode().component.content.sourceFolder
-      .find { it.@url == 'file://$MODULE_DIR$/resources' }
-      .attributes()
-    atts.put('type', 'java-resource')
-  }
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
 }
 
-sourceCompatibility = targetCompatibility = "1.8"
-compileJava {
-    sourceCompatibility = targetCompatibility = "1.8"
+configurations {
+    embed
+    implementation.extendsFrom(embed)
 }
 
 minecraft {
-    version = chameleon.forge_version
-    runDir = "runtime"
+    mcVersion = '1.12.2'
+    extraRunJvmArguments.add("-ea:${project.group}")
 
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not allways work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = chameleon.forge_mappings
+    mcpMappingChannel = "snapshot"
+    mcpMappingVersion = "20170925"
 
-    replaceIn "StorageDrawers.java"
-    replace '@VERSION@', project.version
-    replace 'required-after:chameleon', "required-after:chameleon@[${chameleon_version},${chameleon_max_version})"
+    useDependencyAccessTransformers = true
+
+    injectedTags.put("VERSION", project.version)
 }
 
-sourceSets.main {
-    java {
-        srcDirs project.projectDir.getPath() + '/src'
-    }
-    resources {
-        srcDirs project.projectDir.getPath() + '/resources'
-    }
-}
-
-sourceSets.api {
-    java {
-        srcDirs project.projectDir.getPath() + '/api'
-    }
+// Generate a my.project.Tags class with the version number as a field
+tasks.injectTags.configure {
+    outputClassName.set("${project.group}.Tags")
 }
 
 repositories {
-    maven { // JEI
-        name = "JEI repo"
-        url "http://dvs1.progwml6.com/files/maven"
-    }
-    maven { // CraftTweaker
-        name = "jared maven"
-        url "http://maven.blamejared.com/"
-    }
-    maven { // HWYLA
-        name = "HWYLA repo"
-        url "http://tehnut.info/maven"
-    }
     maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven"
+        url = 'https://maven.cleanroommc.com'
     }
+    maven { url = "https://repo.spongepowered.org/maven" }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    mavenLocal() // Must be last for caching to work
 }
 
 dependencies {
-    compile chameleon
+    // Hard deps
+    implementation rfg.deobf("curse.maven:chameleon-230497:${chameleon_file_id}")
 
-    compileOnly "mezz.jei:jei_${minecraft_version}:${jei_version}:api"
-    runtime "mezz.jei:jei_${minecraft_version}:${jei_version}"
-
-    compileOnly "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
-    runtime "mcp.mobius.waila:Hwyla:${hwyla_version}"
-
-    //deobfCompile "MineTweaker3:MineTweaker3-API:${mt_version}"
-    //deobfCompile "org.ow2.asm:asm-debug-all:5.0.3"
+    // Soft deps
+    if (project.debug_jei.toBoolean()) {
+        implementation rfg.deobf("curse.maven:jei-238222:${jei_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:jei-238222:${jei_file_id}")
+    }
+    if (project.debug_thaumcraft.toBoolean()) {
+        // Thaumcraft needs baubles as dep
+        runtimeOnly rfg.deobf("curse.maven:baubles-227083:${baubles_file_id}")
+        implementation rfg.deobf("curse.maven:thaumcraft-223628:${thaumcraft_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:thaumcraft-223628:${thaumcraft_file_id}")
+    }
+    if (project.debug_waila.toBoolean()) {
+        implementation rfg.deobf("curse.maven:hwyla-253449:${hwyla_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:hwyla-253449:${hwyla_file_id}")
+    }
+    if (project.debug_top.toBoolean()) {
+        implementation rfg.deobf("curse.maven:the-one-probe-245211:${top_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:the-one-probe-245211:${top_file_id}")
+    }
 }
 
-processResources
-{
+processResources {
     // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft.version
     // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
+    filesMatching(['mcmod.info', 'pack.mcmeta']) { fcd ->
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        fcd.expand (
+                'version': project.version,
+                'mcversion': project.minecraft.version
+        )
     }
 }
 
 jar {
-    include "com/jaquadro/minecraft/storagedrawers/**"
-    include "assets/**"
-    include "mcmod.info"
-    include "pack.mcmeta"
+    manifest {
+        def attribute_map = [:]
+        attributes(attribute_map)
+    }
+    // Add all embedded dependencies into the jar
+    from(provider{ configurations.embed.collect {it.isDirectory() ? it : zipTree(it)} })
+
+    archiveClassifier = "deobf"
 }
 
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    classifier = 'deobf'
-}
-
-task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
+tasks.register('apiJar', Jar) {
     from sourceSets.main.allSource
     from sourceSets.main.output
     include 'com/jaquadro/minecraft/storagedrawers/api/**/*'
-    classifier 'api'
+    archiveClassifier = "api"
 }
 
 artifacts {
-    archives deobfJar
     archives apiJar
-    archives sourceJar
-    archives jar
 }
 
-publishing.publications {
-    StorageDrawers(MavenPublication) {
-        groupId = project.group
-        artifactId = project.archivesBaseName
-        version = project.version
-        artifact deobfJar
-        artifact sourceJar
-        artifact apiJar
-        artifact jar
-    }
-}
-
-bintrayUpload.dependsOn build
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    publications = ['StorageDrawers']
-    publish = true
-    pkg {
-        repo = 'dev'
-        name = 'storagedrawers'
-        version {
-            name = project.version
-            released = new Date()
+idea {
+    module { inheritOutputDirs = true }
+    project { settings {
+        runConfigurations {
+            "1. Setup Workspace"(Gradle) {
+                taskNames = ["setupDecompWorkspace"]
+            }
+            "2. Build Jars"(Gradle) {
+                taskNames = ["build"]
+            }
+            "3. Run Client"(Gradle) {
+                taskNames = ["runClient"]
+            }
+            "4. Run Server"(Gradle) {
+                taskNames = ["runServer"]
+            }
+            "5. Run Obfuscated Client"(Gradle) {
+                taskNames = ["runObfClient"]
+            }
+            "6. Run Obfuscated Server"(Gradle) {
+                taskNames = ["runObfServer"]
+            }
         }
-    }
+        compiler.javac {
+            afterEvaluate {
+                javacAdditionalOptions = "-encoding utf8"
+                moduleJavacAdditionalOptions = [
+                        (project.name + ".main"): tasks.compileJava.options.compilerArgs.collect { '"' + it + '"' }.join(' ')
+                ]
+            }
+        }
+    }}
+}
+
+tasks.named("processIdeaSettings").configure {
+    dependsOn("injectTags")
 }
