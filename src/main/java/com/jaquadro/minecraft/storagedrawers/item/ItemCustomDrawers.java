@@ -67,22 +67,33 @@ public class ItemCustomDrawers extends ItemDrawers
         if (!(item instanceof ItemCustomDrawers))
             return ItemStack.EMPTY;
 
-        NBTTagCompound tag = new NBTTagCompound();
-
-        if (!matSide.isEmpty())
-            tag.setTag("MatS", getMaterialTag(matSide));
-
-        if (!matTrim.isEmpty())
-            tag.setTag("MatT", getMaterialTag(matTrim));
-
-        if (!matFront.isEmpty())
-            tag.setTag("MatF", getMaterialTag(matFront));
+        NBTTagCompound tag = setCompoundMaterials(matSide, matTrim, matFront, new NBTTagCompound());
 
         ItemStack stack = new ItemStack(item, count, block.getMetaFromState(blockState));
         if (!tag.hasNoTags())
             stack.setTagCompound(tag);
 
         return stack;
+    }
+
+    /**
+     * @param matSide The ItemStack to use has the side material
+     * @param matTrim The ItemStack to use has the side material
+     * @param matFront The ItemStack to use has the side material
+     * @param compoundIn The NBTTagCompound to set the tags in. If no existing compound is needed, simply insert a new one.
+     */
+
+    public static NBTTagCompound setCompoundMaterials (ItemStack matSide, ItemStack matTrim, ItemStack matFront, NBTTagCompound compoundIn) {
+        if (!matSide.isEmpty())
+            compoundIn.setTag("MatS", getMaterialTag(matSide));
+
+        if (!matTrim.isEmpty())
+            compoundIn.setTag("MatT", getMaterialTag(matTrim));
+
+        if (!matFront.isEmpty())
+            compoundIn.setTag("MatF", getMaterialTag(matFront));
+
+        return compoundIn;
     }
 
     private static NBTTagCompound getMaterialTag (@Nonnull ItemStack mat) {
