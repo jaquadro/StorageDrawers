@@ -67,7 +67,8 @@ public class ItemCustomDrawers extends ItemDrawers
         if (!(item instanceof ItemCustomDrawers))
             return ItemStack.EMPTY;
 
-        NBTTagCompound tag = setCompoundMaterials(matSide, matTrim, matFront, new NBTTagCompound());
+        // No need to override, it is a new tag compound
+        NBTTagCompound tag = setCompoundMaterials(matSide, matTrim, matFront, new NBTTagCompound(), false);
 
         ItemStack stack = new ItemStack(item, count, block.getMetaFromState(blockState));
         if (!tag.hasNoTags())
@@ -81,9 +82,17 @@ public class ItemCustomDrawers extends ItemDrawers
      * @param matTrim The ItemStack to use has the side material
      * @param matFront The ItemStack to use has the side material
      * @param compoundIn The NBTTagCompound to set the tags in. If no existing compound is needed, simply insert a new one.
+     * @param override This will override any existing data in the provided tag, related to matSide, matTrim and matFront.
+     *                 If this is false, if any of the given ItemStacks are empty, then the decoration specified by that ItemStack
+     *                 will not be changed. Otherwise, if it is true, than that decoration will be set to none.
      */
 
-    public static NBTTagCompound setCompoundMaterials (ItemStack matSide, ItemStack matTrim, ItemStack matFront, NBTTagCompound compoundIn) {
+    public static NBTTagCompound setCompoundMaterials (ItemStack matSide, ItemStack matTrim, ItemStack matFront, NBTTagCompound compoundIn, boolean override) {
+        if (override){
+            compoundIn.removeTag("MatS");
+            compoundIn.removeTag("MatT");
+            compoundIn.removeTag("MatF");
+        }
         if (!matSide.isEmpty())
             compoundIn.setTag("MatS", getMaterialTag(matSide));
 

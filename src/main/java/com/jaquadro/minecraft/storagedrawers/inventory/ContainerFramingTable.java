@@ -88,15 +88,17 @@ public class ContainerFramingTable extends Container
                 IBlockState state = block.getStateFromMeta(target.getMetadata());
                 if (!matSide.isEmpty()) {
                     ItemStack result = ItemCustomDrawers.makeItemStack(state, 1, matSide, matTrim, matFront);
-                    NBTTagCompound compound = result.getTagCompound();
+                    NBTTagCompound resultCompound = result.getTagCompound();
                     /*
                     Note that custom sides are stored in two places: outside the compound tag `tile`, of which
                     defines what it looks like in inventory, and in the tag `tile`, of which determines what it looks
                     like once placed.
                      */
                     if (target.hasTagCompound() && target.getTagCompound().hasKey("tile")) {
-                        compound.setTag("tile", ItemCustomDrawers.setCompoundMaterials(matSide, matTrim, matFront, compound.getCompoundTag("tile")));
-                        result.setTagCompound(compound);
+                        // Override existing not changed decorations to none
+                        resultCompound.setTag("tile", ItemCustomDrawers.setCompoundMaterials(matSide, matTrim, matFront,
+                                target.getTagCompound().getCompoundTag("tile"), true));
+                        result.setTagCompound(resultCompound);
                     }
                     craftResult.setInventorySlotContents(0, result);
                     return;
