@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
@@ -15,6 +16,7 @@ import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -55,7 +57,7 @@ public class ContainerFramingTable extends Container
         materialSideSlot = addSlotToContainer(new SlotRestricted(tableInventory, 1, MaterialSideX, MaterialSideY));
         materialTrimSlot = addSlotToContainer(new SlotRestricted(tableInventory, 2, MaterialTrimX, MaterialTrimY));
         materialFrontSlot = addSlotToContainer(new SlotRestricted(tableInventory, 3, MaterialFrontX, MaterialFrontY));
-        outputSlot = addSlotToContainer(new SlotCraftResult(inventory.player, tableInventory, craftResult, new int[] { 0, 1, 2, 3 }, 4, OutputX, OutputY));
+        outputSlot = addSlotToContainer(new FramingSlotResult(inventory.player, tableInventory, craftResult, new int[] { 0, 1, 2, 3 }, 0, 4, OutputX, OutputY));
 
         playerSlots = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -171,5 +173,34 @@ public class ContainerFramingTable extends Container
         }
 
         return itemStack;
+    }
+
+    /**
+     * A special Slot Craft Result class, which respects the config of `consumeDecorateBlocks`.
+     */
+    public static class FramingSlotResult extends SlotCraftResult {
+        private final IInventory inputInventory;
+        private final int alwaysConsumeSlot;
+        public FramingSlotResult(EntityPlayer player, IInventory inputInventory, IInventory inventory, int[] inputSlots, int alwaysConsumeSlot, int slot, int x, int y) {
+            super(player, inputInventory, inventory, inputSlots, slot, x, y);
+
+            this.inputInventory = inputInventory;
+            this.alwaysConsumeSlot = alwaysConsumeSlot;
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack onTake(EntityPlayer player, @Nonnull ItemStack stack) {
+            if (StorageDrawers.config.cache.consumeDecorateBlocks)
+                return super.onTake(player, stack);
+
+            FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack, inputInventory);
+            onCrafting(stack);
+
+            // Only decrease stack size of Drawer/Trim slot
+            inputInventory.decrStackSize(alwaysConsumeSlot, 1);
+
+            return stack;
+        }
     }
 }

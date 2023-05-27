@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.BlockFramingTable;
 import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
+import com.jaquadro.minecraft.storagedrawers.inventory.SlotCraftResult;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nonnull;
 
@@ -55,8 +57,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
     @Override
     @Nonnull
     public ItemStack decrStackSize (int slot, int count) {
-        // If consume decorate blocks is off, we still need to check if the slot is 0 (aka drawer/trim slot)
-        if (!tableItemStacks[slot].isEmpty() && (StorageDrawers.config.cache.consumeDecorateBlocks || slot == 0)) {
+        if (!tableItemStacks[slot].isEmpty()) {
             if (tableItemStacks[slot].getCount() <= count) {
                 ItemStack stack = tableItemStacks[slot];
                 tableItemStacks[slot] = ItemStack.EMPTY;
