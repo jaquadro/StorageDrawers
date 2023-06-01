@@ -11,7 +11,7 @@ plugins {
     id("com.matthewprenger.cursegradle") version "$curseforge_gradle_version"
 }
 
-version = project.mod_version
+version = "${minecraft_version}-${mod_version}"
 group = project.mod_group
 archivesBaseName = project.archives_base_name
 
