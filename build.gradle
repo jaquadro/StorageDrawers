@@ -94,6 +94,11 @@ dependencies {
     } else {
         compileOnly rfg.deobf("curse.maven:the-one-probe-245211:${top_file_id}")
     }
+
+    // Addons
+    if (project.addon_framedcompactdrawers.toBoolean()) {
+        runtimeOnly rfg.deobf("curse.maven:framed-compacting-drawers-376351:${framedcompactdrawers_file_id}")
+    }
 }
 
 processResources {
