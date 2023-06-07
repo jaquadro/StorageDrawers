@@ -1,10 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IFrameable;
 import com.jaquadro.minecraft.storagedrawers.block.BlockFramingTable;
-import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
-import com.jaquadro.minecraft.storagedrawers.inventory.SlotCraftResult;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +15,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nonnull;
 
@@ -178,8 +174,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
         if (stack.isEmpty())
             return false;
 
-        Block block = Block.getBlockFromItem(stack.getItem());
-        return block instanceof BlockDrawersCustom || block instanceof BlockTrimCustom;
+        return stack.getItem() instanceof IFrameable;
     }
 
     public static boolean isItemValidMaterial (@Nonnull ItemStack stack) {

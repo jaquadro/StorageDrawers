@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.base.Function;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IFrameable;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -16,7 +17,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ItemCustomDrawers extends ItemDrawers
+public class ItemCustomDrawers extends ItemDrawers implements IFrameable
 {
     private Function nameFunction;
 
@@ -88,7 +89,7 @@ public class ItemCustomDrawers extends ItemDrawers
      */
 
     public static NBTTagCompound setCompoundMaterials (ItemStack matSide, ItemStack matTrim, ItemStack matFront, NBTTagCompound compoundIn, boolean override) {
-        if (override){
+        if (override) {
             compoundIn.removeTag("MatS");
             compoundIn.removeTag("MatT");
             compoundIn.removeTag("MatF");
@@ -113,5 +114,28 @@ public class ItemCustomDrawers extends ItemDrawers
         mat.writeToNBT(itag);
 
         return itag;
+    }
+
+    @Override
+    public ItemStack decorate(ItemStack input, ItemStack matSide, ItemStack matTrim, ItemStack matFront) {
+        IBlockState state = Block.getBlockFromItem(input.getItem()).getStateFromMeta(input.getMetadata());
+
+        ItemStack result = ItemCustomDrawers.makeItemStack(state, 1, matSide, matTrim, matFront);
+        NBTTagCompound resultCompound = result.getTagCompound();
+
+        /*
+        Note that custom sides are stored in two places: outside the compound tag `tile`, of which
+        defines what it looks like in inventory, and in the tag `tile`, of which determines what it looks
+        like once placed.
+         */
+
+        if (input.hasTagCompound() && input.getTagCompound().hasKey("tile")) {
+            // Override existing not changed decorations to none
+            resultCompound.setTag("tile", ItemCustomDrawers.setCompoundMaterials(matSide, matTrim, matFront,
+                    input.getTagCompound().getCompoundTag("tile"), true));
+
+            result.setTagCompound(resultCompound);
+        }
+        return result;
     }
 }

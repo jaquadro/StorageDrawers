@@ -1,13 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
-import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IFrameable;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
-import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemCustomTrim;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -15,7 +10,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nonnull;
@@ -54,6 +48,7 @@ public class ContainerFramingTable extends Container
         tableInventory = new InventoryContainerProxy(tileEntity, this);
 
         inputSlot = addSlotToContainer(new SlotRestricted(tableInventory, 0, InputX, InputY));
+
         materialSideSlot = addSlotToContainer(new SlotRestricted(tableInventory, 1, MaterialSideX, MaterialSideY));
         materialTrimSlot = addSlotToContainer(new SlotRestricted(tableInventory, 2, MaterialTrimX, MaterialTrimY));
         materialFrontSlot = addSlotToContainer(new SlotRestricted(tableInventory, 3, MaterialFrontX, MaterialFrontY));
@@ -79,39 +74,13 @@ public class ContainerFramingTable extends Container
 
     @Override
     public void onCraftMatrixChanged (IInventory inventory) {
-        ItemStack target = tableInventory.getStackInSlot(inputSlot.getSlotIndex());
+        ItemStack input = tableInventory.getStackInSlot(inputSlot.getSlotIndex());
         ItemStack matSide = tableInventory.getStackInSlot(materialSideSlot.getSlotIndex());
         ItemStack matTrim = tableInventory.getStackInSlot(materialTrimSlot.getSlotIndex());
         ItemStack matFront = tableInventory.getStackInSlot(materialFrontSlot.getSlotIndex());
 
-        if (!target.isEmpty()) {
-            Block block = Block.getBlockFromItem(target.getItem());
-            if (block instanceof BlockDrawersCustom) {
-                IBlockState state = block.getStateFromMeta(target.getMetadata());
-                if (!matSide.isEmpty()) {
-                    ItemStack result = ItemCustomDrawers.makeItemStack(state, 1, matSide, matTrim, matFront);
-                    NBTTagCompound resultCompound = result.getTagCompound();
-                    /*
-                    Note that custom sides are stored in two places: outside the compound tag `tile`, of which
-                    defines what it looks like in inventory, and in the tag `tile`, of which determines what it looks
-                    like once placed.
-                     */
-                    if (target.hasTagCompound() && target.getTagCompound().hasKey("tile")) {
-                        // Override existing not changed decorations to none
-                        resultCompound.setTag("tile", ItemCustomDrawers.setCompoundMaterials(matSide, matTrim, matFront,
-                                target.getTagCompound().getCompoundTag("tile"), true));
-                        result.setTagCompound(resultCompound);
-                    }
-                    craftResult.setInventorySlotContents(0, result);
-                    return;
-                }
-            }
-            else if (block instanceof BlockTrimCustom) {
-                if (!matSide.isEmpty()) {
-                    craftResult.setInventorySlotContents(0, ItemCustomTrim.makeItemStack(block, 1, matSide, matTrim));
-                    return;
-                }
-            }
+        if (!input.isEmpty() && input.getItem() instanceof IFrameable && !matSide.isEmpty()) {
+            craftResult.setInventorySlotContents(0, ((IFrameable) input.getItem()).decorate(input, matSide, matTrim, matFront));
         }
 
         craftResult.setInventorySlotContents(0, ItemStack.EMPTY);
