@@ -55,6 +55,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public abstract class BlockDrawers extends BlockContainer implements INetworked
 {
@@ -581,7 +582,39 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
 
     @Override
     public ItemStack getPickBlock (IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-        return getMainDrop(world, pos, state);
+        ItemStack drop = getMainDrop(world, pos, state);
+
+        // If no tile data was written. Note that hasTagCompound returns false if the tag compound is null.
+        if (!drop.hasTagCompound() || !Objects.requireNonNull(drop.getTagCompound()).hasKey("tile"))
+            return drop;
+
+        // Remove tile data
+        NBTTagCompound compound = drop.getTagCompound();
+        compound.removeTag("tile");
+        drop.setTagCompound(compound);
+
+        return drop;
+    }
+
+    public ItemStack getWailaTOPBlock(World world, BlockPos pos, IBlockState state) {
+        ItemStack drop = getMainDrop(world, pos, state);
+
+        // If no tile data was written. Note that hasTagCompound returns false if the tag compound is null.
+        if (!drop.hasTagCompound() || !Objects.requireNonNull(drop.getTagCompound()).hasKey("tile"))
+            return drop;
+
+        TileEntityDrawers tile = (TileEntityDrawers) world.getTileEntity(pos);
+
+        // If we don't need to remove tile data
+        if (tile != null && tile.isSealed())
+            return drop;
+
+        // Remove tile data
+        NBTTagCompound compound = drop.getTagCompound();
+        compound.removeTag("tile");
+        drop.setTagCompound(compound);
+
+        return drop;
     }
 
     @Override

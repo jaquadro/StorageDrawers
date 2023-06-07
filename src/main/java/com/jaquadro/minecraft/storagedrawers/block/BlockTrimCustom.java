@@ -9,11 +9,13 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
@@ -58,6 +60,11 @@ public class BlockTrimCustom extends BlockTrim implements ITileEntityProvider
             return ItemCustomTrim.makeItemStack(this, 1, ItemStack.EMPTY, ItemStack.EMPTY);
 
         return ItemCustomTrim.makeItemStack(this, 1, tile.material().getSide(), tile.material().getTrim());
+    }
+
+    @Override
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        return getMainDrop(world, pos, state);
     }
 
     @Override

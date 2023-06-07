@@ -106,3 +106,6 @@ storagedrawers.config.integration.tooltip=Configure integration with other mods.
 
 storagedrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integration
 storagedrawers.config.integration.enableWaila=Enable WAILA Integration
+storagedrawers.config.integration.enableTOP=Enable TOP Integration
+storagedrawers.config.integration.enableThaumcraft=Enable Thaumcraft Integration
+storagedrawers.config.integration.enableMineTweaker=Enable MineTweaker Integration
