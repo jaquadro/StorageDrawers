@@ -162,7 +162,7 @@ public class ContainerFramingTable extends Container
         @Nonnull
         @Override
         public ItemStack onTake(EntityPlayer player, @Nonnull ItemStack stack) {
-            if (StorageDrawers.config.cache.consumeDecorateBlocks)
+            if (StorageDrawers.config.cache.consumeDecorationItems)
                 return super.onTake(player, stack);
 
             FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack, inputInventory);

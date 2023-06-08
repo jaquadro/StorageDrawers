@@ -93,13 +93,14 @@ public class ModBlocks
             }
 
             if (config.cache.enableFramedDrawers) {
-                registry.registerAll(
-                    new BlockFramingTable("framingtable", StorageDrawers.MOD_ID + ".framingTable"),
-                    new BlockDrawersCustom("customdrawers", StorageDrawers.MOD_ID + ".customDrawers"),
-                    new BlockTrimCustom("customtrim", StorageDrawers.MOD_ID + ".customTrim")
-                );
-
-                GameRegistry.registerTileEntity(TileEntityFramingTable.class, StorageDrawers.MOD_ID + ":framingtable");
+                registry.register(new BlockDrawersCustom("customdrawers", StorageDrawers.MOD_ID + ".customDrawers"));
+            }
+            if (config.cache.enableFramedTrims) {
+                registry.register(new BlockTrimCustom("customtrim", StorageDrawers.MOD_ID + ".customTrim"));
+                GameRegistry.registerTileEntity(TileEntityTrim.class, StorageDrawers.MOD_ID + ":trim");
+            }
+            if (config.cache.enableFramingTable) {
+                registry.register(new BlockFramingTable("framingtable", StorageDrawers.MOD_ID + ".framingTable"));
                 GameRegistry.registerTileEntity(TileEntityTrim.class, StorageDrawers.MOD_ID + ":trim");
             }
         }
@@ -124,11 +125,13 @@ public class ModBlocks
                 registry.register(new ItemTrim(trim).setRegistryName(trim.getRegistryName()));
 
             if (config.cache.enableFramedDrawers) {
-                registry.registerAll(
-                    new ItemFramingTable(framingTable).setRegistryName(framingTable.getRegistryName()),
-                    new ItemCustomDrawers(customDrawers).setRegistryName(customDrawers.getRegistryName()),
-                    new ItemCustomTrim(customTrim).setRegistryName(customTrim.getRegistryName())
-                );
+                registry.register(new ItemCustomDrawers(customDrawers).setRegistryName(customDrawers.getRegistryName()));
+            }
+            if (config.cache.enableFramedTrims) {
+                registry.register(new ItemCustomTrim(customTrim).setRegistryName(customTrim.getRegistryName()));
+            }
+            if (config.cache.enableFramingTable) {
+                registry.register(new ItemFramingTable(framingTable).setRegistryName(framingTable.getRegistryName()));
             }
 
             for (String key : new String[] { "drawerBasic" })
