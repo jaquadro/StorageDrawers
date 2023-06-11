@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.core;
+package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import mcjty.theoneprobe.TheOneProbe;

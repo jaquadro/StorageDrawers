@@ -2,7 +2,6 @@ package com.jaquadro.minecraft.storagedrawers.integration;
 
 import com.jaquadro.minecraft.chameleon.integration.IntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.core.TOP;
 import net.minecraftforge.fml.common.Loader;
 
 public class LocalIntegrationRegistry
