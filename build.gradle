@@ -13,7 +13,7 @@ plugins {
 
 version = "${minecraft_version}-${mod_version}"
 group = project.mod_group
-archivesBaseName = project.archives_base_name
+archivesBaseName = project.output_jar_name
 
 // Set the toolchain version to decouple the Java we run Gradle with from the Java used to compile and run the mod
 java {
@@ -40,17 +40,21 @@ minecraft {
     mcVersion = '1.12.2'
     extraRunJvmArguments.add("-ea:${project.group}")
 
+    // MCP Mappings
     mcpMappingChannel = "snapshot"
     mcpMappingVersion = "20170925"
 
+    // Set username here, the UUID will be looked up automatically
+    username = "Developer"
+
     useDependencyAccessTransformers = true
 
-    injectedTags.put("VERSION", project.version)
+    injectedTags.put("VERSION", project.mod_version)
 }
 
-// Generate a my.project.Tags class with the version number as a field
+// Generate a group.archives_base_name.Tags class with the version number as a field
 tasks.injectTags.configure {
-    outputClassName.set("${project.group}.Tags")
+    outputClassName.set("${project.group}.${project.archives_base_name}.Tags")
 }
 
 repositories {
@@ -98,13 +102,13 @@ dependencies {
 
 processResources {
     // this will ensure that this task is redone when the versions change.
-    inputs.property 'version', project.version
+    inputs.property 'version', project.mod_version
     inputs.property 'mcversion', project.minecraft.version
     // replace stuff in mcmod.info, nothing else
     filesMatching(['mcmod.info', 'pack.mcmeta']) { fcd ->
         // replace version and mcversion
         fcd.expand (
-                'version': project.version,
+                'version': project.mod_version,
                 'mcversion': project.minecraft.version
         )
     }
@@ -133,37 +137,41 @@ artifacts {
 }
 
 idea {
-    module { inheritOutputDirs = true }
-    project { settings {
-        runConfigurations {
-            "1. Setup Workspace"(Gradle) {
-                taskNames = ["setupDecompWorkspace"]
+    module {
+        inheritOutputDirs = true
+    }
+    project {
+        settings {
+            runConfigurations {
+                "1. Setup Workspace"(Gradle) {
+                    taskNames = ["setupDecompWorkspace"]
+                }
+                "2. Build Jars"(Gradle) {
+                    taskNames = ["build"]
+                }
+                "3. Run Client"(Gradle) {
+                    taskNames = ["runClient"]
+                }
+                "4. Run Server"(Gradle) {
+                    taskNames = ["runServer"]
+                }
+                "5. Run Obfuscated Client"(Gradle) {
+                    taskNames = ["runObfClient"]
+                }
+                "6. Run Obfuscated Server"(Gradle) {
+                    taskNames = ["runObfServer"]
+                }
             }
-            "2. Build Jars"(Gradle) {
-                taskNames = ["build"]
-            }
-            "3. Run Client"(Gradle) {
-                taskNames = ["runClient"]
-            }
-            "4. Run Server"(Gradle) {
-                taskNames = ["runServer"]
-            }
-            "5. Run Obfuscated Client"(Gradle) {
-                taskNames = ["runObfClient"]
-            }
-            "6. Run Obfuscated Server"(Gradle) {
-                taskNames = ["runObfServer"]
+            compiler.javac {
+                afterEvaluate {
+                    javacAdditionalOptions = "-encoding utf8"
+                    moduleJavacAdditionalOptions = [
+                            (project.name + ".main"): tasks.compileJava.options.compilerArgs.collect { '"' + it + '"' }.join(' ')
+                    ]
+                }
             }
         }
-        compiler.javac {
-            afterEvaluate {
-                javacAdditionalOptions = "-encoding utf8"
-                moduleJavacAdditionalOptions = [
-                        (project.name + ".main"): tasks.compileJava.options.compilerArgs.collect { '"' + it + '"' }.join(' ')
-                ]
-            }
-        }
-    }}
+    }
 }
 
 tasks.named("processIdeaSettings").configure {
