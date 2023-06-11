@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.google.common.base.Function;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EnumBasicDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IFrameable;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -16,7 +17,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ItemCustomDrawers extends ItemDrawers
+public class ItemCustomDrawers extends ItemDrawers implements IFrameable
 {
     private Function nameFunction;
 
@@ -67,22 +68,42 @@ public class ItemCustomDrawers extends ItemDrawers
         if (!(item instanceof ItemCustomDrawers))
             return ItemStack.EMPTY;
 
-        NBTTagCompound tag = new NBTTagCompound();
-
-        if (!matSide.isEmpty())
-            tag.setTag("MatS", getMaterialTag(matSide));
-
-        if (!matTrim.isEmpty())
-            tag.setTag("MatT", getMaterialTag(matTrim));
-
-        if (!matFront.isEmpty())
-            tag.setTag("MatF", getMaterialTag(matFront));
+        // No need to override, it is a new tag compound
+        NBTTagCompound tag = setCompoundMaterials(matSide, matTrim, matFront, new NBTTagCompound(), false);
 
         ItemStack stack = new ItemStack(item, count, block.getMetaFromState(blockState));
         if (!tag.hasNoTags())
             stack.setTagCompound(tag);
 
         return stack;
+    }
+
+    /**
+     * @param matSide The ItemStack to use has the side material
+     * @param matTrim The ItemStack to use has the side material
+     * @param matFront The ItemStack to use has the side material
+     * @param compoundIn The NBTTagCompound to set the tags in. If no existing compound is needed, simply insert a new one.
+     * @param override This will override any existing data in the provided tag, related to matSide, matTrim and matFront.
+     *                 If this is false, if any of the given ItemStacks are empty, then the decoration specified by that ItemStack
+     *                 will not be changed. Otherwise, if it is true, than that decoration will be set to none.
+     */
+
+    public static NBTTagCompound setCompoundMaterials (ItemStack matSide, ItemStack matTrim, ItemStack matFront, NBTTagCompound compoundIn, boolean override) {
+        if (override) {
+            compoundIn.removeTag("MatS");
+            compoundIn.removeTag("MatT");
+            compoundIn.removeTag("MatF");
+        }
+        if (!matSide.isEmpty())
+            compoundIn.setTag("MatS", getMaterialTag(matSide));
+
+        if (!matTrim.isEmpty())
+            compoundIn.setTag("MatT", getMaterialTag(matTrim));
+
+        if (!matFront.isEmpty())
+            compoundIn.setTag("MatF", getMaterialTag(matFront));
+
+        return compoundIn;
     }
 
     private static NBTTagCompound getMaterialTag (@Nonnull ItemStack mat) {
@@ -93,5 +114,28 @@ public class ItemCustomDrawers extends ItemDrawers
         mat.writeToNBT(itag);
 
         return itag;
+    }
+
+    @Override
+    public ItemStack decorate(ItemStack input, ItemStack matSide, ItemStack matTrim, ItemStack matFront) {
+        IBlockState state = Block.getBlockFromItem(input.getItem()).getStateFromMeta(input.getMetadata());
+
+        ItemStack result = ItemCustomDrawers.makeItemStack(state, 1, matSide, matTrim, matFront);
+        NBTTagCompound resultCompound = result.getTagCompound();
+
+        /*
+        Note that custom sides are stored in two places: outside the compound tag `tile`, of which
+        defines what it looks like in inventory, and in the tag `tile`, of which determines what it looks
+        like once placed.
+         */
+
+        if (input.hasTagCompound() && input.getTagCompound().hasKey("tile")) {
+            // Override existing not changed decorations to none
+            resultCompound.setTag("tile", ItemCustomDrawers.setCompoundMaterials(matSide, matTrim, matFront,
+                    input.getTagCompound().getCompoundTag("tile"), true));
+
+            result.setTagCompound(resultCompound);
+        }
+        return result;
     }
 }

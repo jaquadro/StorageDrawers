@@ -76,6 +76,9 @@ public class ConfigManager
         public boolean enableTape;
         public boolean enableFallbackRecipes;
         public boolean enableFramedDrawers;
+        public boolean enableFramedTrims;
+        public boolean enableFramingTable;
+        public boolean consumeDecorationItems;
         public boolean invertShift;
         public boolean invertClick;
         public boolean debugTrace;
@@ -116,6 +119,7 @@ public class ConfigManager
     public final ConfigSection sectionBlocksController = new ConfigSection(blockSections, sectionBlocks, "controller", "blocks.controller");
     public final ConfigSection sectionBlocksTrim = new ConfigSection(blockSections, sectionBlocks, "trim", "blocks.trim");
     public final ConfigSection sectionBlocksSlave = new ConfigSection(blockSections, sectionBlocks, "controllerslave", "blocks.controllerSlave");
+    public final ConfigSection sectionFramedBlocks = new ConfigSection(blockSections, sectionBlocks, "framedblocks", "blocks.framedBlocks");
 
     public Map<String, ConfigSection> blockSectionsMap = new HashMap<String, ConfigSection>();
 
@@ -151,7 +155,6 @@ public class ConfigManager
         cache.enableSidedOutput = config.get(Configuration.CATEGORY_GENERAL, "enableSidedOutput", true).setLanguageKey(LANG_PREFIX + "prop.enableSidedOutput").getBoolean();
         cache.enableItemConversion = config.get(Configuration.CATEGORY_GENERAL, "enableItemConversion", true).setLanguageKey(LANG_PREFIX + "prop.enableItemConversion").getBoolean();
         cache.enableFallbackRecipes = config.get(Configuration.CATEGORY_GENERAL, "enableFallbackRecipes", true).setLanguageKey(LANG_PREFIX + "prop.enableFallbackRecipes").setRequiresMcRestart(true).getBoolean();
-        cache.enableFramedDrawers = config.get(Configuration.CATEGORY_GENERAL, "enableFramedDrawers", true).setLanguageKey(LANG_PREFIX + "prop.enableFramedDrawers").setRequiresMcRestart(true).getBoolean();
         cache.stackRemainderWaila = !config.get(Configuration.CATEGORY_GENERAL, "wailaStackRemainder", "stack + remainder", null, new String[]{"exact", "stack + remainder"}).setLanguageKey(LANG_PREFIX + "prop.wailaStackRemainder").getString().equals("exact");
         cache.invertShift = config.get(Configuration.CATEGORY_GENERAL, "invertShift", false,
             "Inverts how shift works with drawers. If this is true, shifting will only give one item, where regular clicks will give a full stack. Leave false for default behavior.")
@@ -232,6 +235,13 @@ public class ConfigManager
         config.get(sectionBlocksTrim.getQualifiedName(), "recipeOutput", 4).setLanguageKey(LANG_PREFIX + "prop.recipeOutput").setRequiresMcRestart(true);
 
         config.get(sectionBlocksSlave.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
+
+        cache.enableFramedDrawers = config.get(sectionFramedBlocks.getQualifiedName(), "enableFramedDrawers", true).setLanguageKey(LANG_PREFIX + "framedBlocks.enableFramedDrawers").setRequiresMcRestart(true).getBoolean();
+        cache.enableFramedTrims = config.get(sectionFramedBlocks.getQualifiedName(), "enableFramedTrims", true).setLanguageKey(LANG_PREFIX + "framedBlocks.enableFramedTrims").setRequiresMcRestart(true).getBoolean();
+        cache.enableFramingTable = config.get(sectionFramedBlocks.getQualifiedName(), "enableFramingTable", true).setLanguageKey(LANG_PREFIX + "framedBlocks.enableFramingTable").setRequiresMcRestart(true).getBoolean();
+        cache.consumeDecorationItems = config.get(sectionFramedBlocks.getQualifiedName(), "consumeDecorationItems", true,
+                "Changes whether items used for decoration in the Framing Table gets consumed. Leave true to consume items (default behaviour).")
+                .setLanguageKey(LANG_PREFIX + "framedBlocks.consumeDecorationItems").getBoolean();
 
         cache.level2Mult = config.get(sectionUpgrades.getQualifiedName(), "level2Mult", 2).setLanguageKey(LANG_PREFIX + "upgrades.level2Mult").setRequiresWorldRestart(true).getInt();
         cache.level3Mult = config.get(sectionUpgrades.getQualifiedName(), "level3Mult", 4).setLanguageKey(LANG_PREFIX + "upgrades.level3Mult").setRequiresWorldRestart(true).getInt();

@@ -135,6 +135,17 @@ storagedrawers.config.blocks.compDrawers=Compacting Drawer
 storagedrawers.config.blocks.controller=Drawer Controller
 storagedrawers.config.blocks.trim=Trim
 storagedrawers.config.blocks.controllerSlave=Controller Slave
+storagedrawers.config.blocks.framedBlocks=Framed Blocks
+storagedrawers.config.blocks.framedBlocks.tooltip=Configure individual framed blocks.
+
+storagedrawers.config.framedBlocks.enableFramedDrawers=Enable Framed Drawers
+storagedrawers.config.framedBlocks.enableFramedDrawers.tooltip=Drawers with custom materials.
+storagedrawers.config.framedBlocks.enableFramedTrims=Enable Framed Trims
+storagedrawers.config.framedBlocks.enableFramedTrims.tooltip=Trims with custom materials.
+storagedrawers.config.framedBlocks.enableFramingTable=Enable Framing Table
+storagedrawers.config.framedBlocks.enableFramingTable.tooltip=A block used to set the materials of the Framed Drawer and Framed Trim, as well as other addon blocks.
+storagedrawers.config.framedBlocks.consumeDecorationItems=Consume Decoration Items
+storagedrawers.config.framedBlocks.consumeDecorationItems.tooltip=Changes whether items used for decoration in the Framing Table gets consumed. Leave true to consume items (default behaviour).
 
 storagedrawers.config.upgrades=Upgrade Settings
 storagedrawers.config.upgrades.tooltip=Configure individual storage upgrades.
@@ -187,8 +198,6 @@ storagedrawers.config.prop.wailaStackRemainder=WAILA amount presentation
 storagedrawers.config.prop.wailaStackRemainder.tooltip=How item amounts are displayed by WAILA.
 storagedrawers.config.prop.controllerRange=Controller Range
 storagedrawers.config.prop.controllerRange.tooltip=Range for detecting networked blocks.
-storagedrawers.config.prop.enableFramedDrawers=Enable Framed Drawers
-storagedrawers.config.prop.enableFramedDrawers.tooltip=Drawers with custom materials.
 storagedrawers.config.prop.defaultQuantify=Quantity Visible by Default
 storagedrawers.config.prop.defaultQuantify.tooltip=Drawers display quantity numbers when placed.
 storagedrawers.config.prop.keepContentsOnBreak=Keep Contents on Break

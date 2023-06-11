@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IFrameable;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityTrim;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -14,7 +15,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemCustomTrim extends ItemBlock
+public class ItemCustomTrim extends ItemBlock implements IFrameable
 {
     public ItemCustomTrim (Block block) {
         super(block);
@@ -65,5 +66,10 @@ public class ItemCustomTrim extends ItemBlock
         mat.writeToNBT(itag);
 
         return itag;
+    }
+
+    @Override
+    public ItemStack decorate(ItemStack input, ItemStack matSide, ItemStack matTrim, ItemStack matFront) {
+        return ItemCustomTrim.makeItemStack(Block.getBlockFromItem(input.getItem()), 1, matSide, matTrim);
     }
 }

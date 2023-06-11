@@ -56,6 +56,11 @@ public class BlockDrawersCustom extends BlockStandardDrawers
     }
 
     @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
     public BlockType retrimType () {
         return null;
     }
