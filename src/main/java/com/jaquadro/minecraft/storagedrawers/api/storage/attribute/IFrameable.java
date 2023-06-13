@@ -12,7 +12,7 @@ public interface IFrameable {
      * @param matSide ItemStack to use as the decoration on `side`
      * @param matTrim ItemStack to use as the decoration on `trim`
      * @param matFront ItemStack to use as the decoration on `front`
-     * @return The ItemStack to put in the output slot of the Framing Table
+     * @return The ItemStack to put or display in the output slot of the Framing Table
      */
     ItemStack decorate(ItemStack input, ItemStack matSide, ItemStack matTrim, ItemStack matFront);
 }
