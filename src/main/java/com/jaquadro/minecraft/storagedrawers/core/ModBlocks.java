@@ -101,7 +101,7 @@ public class ModBlocks
             }
             if (config.cache.enableFramingTable) {
                 registry.register(new BlockFramingTable("framingtable", StorageDrawers.MOD_ID + ".framingTable"));
-                GameRegistry.registerTileEntity(TileEntityTrim.class, StorageDrawers.MOD_ID + ":trim");
+                GameRegistry.registerTileEntity(TileEntityFramingTable.class, StorageDrawers.MOD_ID + ":framingtable");
             }
         }
 

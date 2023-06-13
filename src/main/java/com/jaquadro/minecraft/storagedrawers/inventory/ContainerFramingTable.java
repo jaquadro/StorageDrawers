@@ -52,6 +52,7 @@ public class ContainerFramingTable extends Container
         materialSideSlot = addSlotToContainer(new SlotRestricted(tableInventory, 1, MaterialSideX, MaterialSideY));
         materialTrimSlot = addSlotToContainer(new SlotRestricted(tableInventory, 2, MaterialTrimX, MaterialTrimY));
         materialFrontSlot = addSlotToContainer(new SlotRestricted(tableInventory, 3, MaterialFrontX, MaterialFrontY));
+
         outputSlot = addSlotToContainer(new FramingSlotResult(inventory.player, tableInventory, craftResult, new int[] { 0, 1, 2, 3 }, 0, 4, OutputX, OutputY));
 
         playerSlots = new ArrayList<>();
@@ -81,7 +82,7 @@ public class ContainerFramingTable extends Container
 
         if (!input.isEmpty() && input.getItem() instanceof IFrameable && !matSide.isEmpty()) {
             craftResult.setInventorySlotContents(0, ((IFrameable) input.getItem())
-                    .decorate(input.copy(), matSide.copy(), matTrim.copy(), matFront.copy()));
+                    .decorate(input, matSide, matTrim, matFront));
             return;
         }
 
