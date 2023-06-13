@@ -82,7 +82,7 @@ public class ContainerFramingTable extends Container
 
         if (!input.isEmpty() && input.getItem() instanceof IFrameable && !matSide.isEmpty()) {
             craftResult.setInventorySlotContents(0, ((IFrameable) input.getItem())
-                    .decorate(input, matSide, matTrim, matFront));
+                    .decorate(input.copy(), matSide.copy(), matTrim.copy(), matFront.copy()));
             return;
         }
 
