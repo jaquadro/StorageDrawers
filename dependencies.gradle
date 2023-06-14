@@ -1,5 +1,3 @@
-//file:noinspection DependencyNotationArgument
-// TODO remove when fixed in RFG ^
 /*
  * Add your dependencies here. Common configurations:
  *  - implementation("group:name:version:classifier"): if you need this for internal implementation details of the mod.
@@ -22,5 +20,35 @@
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
+    // Hard deps
+    implementation rfg.deobf("curse.maven:chameleon-230497:${chameleon_file_id}")
 
+    // Soft deps (JEI and TOP can be automatically added, but we do it this way to add the debug option)
+    if (project.debug_jei.toBoolean()) {
+        implementation rfg.deobf("curse.maven:jei-238222:${jei_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:jei-238222:${jei_file_id}")
+    }
+    if (project.debug_thaumcraft.toBoolean()) {
+        // Thaumcraft needs baubles as dep
+        runtimeOnly rfg.deobf("curse.maven:baubles-227083:${baubles_file_id}")
+        implementation rfg.deobf("curse.maven:thaumcraft-223628:${thaumcraft_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:thaumcraft-223628:${thaumcraft_file_id}")
+    }
+    if (project.debug_waila.toBoolean()) {
+        implementation rfg.deobf("curse.maven:hwyla-253449:${hwyla_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:hwyla-253449:${hwyla_file_id}")
+    }
+    if (project.debug_top.toBoolean()) {
+        implementation rfg.deobf("curse.maven:the-one-probe-245211:${top_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:the-one-probe-245211:${top_file_id}")
+    }
+
+    // Addons
+    if (project.addon_framedcompactdrawers.toBoolean()) {
+        runtimeOnly rfg.deobf("curse.maven:framed-compacting-drawers-376351:${framedcompactdrawers_file_id}")
+    }
 }

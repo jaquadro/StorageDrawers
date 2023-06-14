@@ -264,7 +264,13 @@ if (!modVersion) {
     }
 }
 
-version = modVersion
+if (includeMCVersionJar.toBoolean()){
+    version = "${minecraftVersion}-${modVersion}"
+}
+else {
+    version = modVersion
+}
+
 group = modGroup
 archivesBaseName = modArchivesBaseName
 
@@ -583,14 +589,20 @@ jar {
 }
 
 // Create API library jar
-tasks.register('apiJar', Jar) {
-    archiveClassifier.set 'api'
-    from(sourceSets.main.java) {
-        include "${modGroupPath}/${apiPackagePath}/**"
+if (apiPackage) {
+    tasks.register('apiJar', Jar) {
+        archiveClassifier.set 'api'
+        from(sourceSets.main.java) {
+            include "${modGroupPath}/${apiPackagePath}/**"
+        }
+
+        from(sourceSets.main.output) {
+            include "${modGroupPath}/${apiPackagePath}/**"
+        }
     }
 
-    from(sourceSets.main.output) {
-        include "${modGroupPath}/${apiPackagePath}/**"
+    artifacts {
+        archives apiJar
     }
 }
 

@@ -1,0 +1,25 @@
+// Change Dev Jar Name to DeObf
+jar {
+    archiveClassifier.set "deobf"
+}
+
+// Change mappings
+minecraft {
+    mcpMappingChannel.set "snapshot"
+    mcpMappingVersion.set "20170925"
+}
+
+/*
+// The default api jar task doesn't run on build
+tasks.register('apiJarCustom', Jar) {
+    from sourceSets.main.allSource
+    from sourceSets.main.output
+    include 'com/jaquadro/minecraft/storagedrawers/api/*'
+
+    archiveClassifier.set "api"
+}
+
+artifacts {
+    archives apiJarCustom
+}
+*/
