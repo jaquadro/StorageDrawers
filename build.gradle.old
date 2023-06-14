@@ -1,0 +1,184 @@
+import com.gtnewhorizons.retrofuturagradle.mcp.ReobfuscatedJar
+import org.jetbrains.gradle.ext.Gradle
+
+plugins {
+    id("java")
+    id("java-library")
+    id("maven-publish")
+    id("eclipse")
+    id("org.jetbrains.gradle.plugin.idea-ext") version "$idea_ext_version"
+    id("com.gtnewhorizons.retrofuturagradle") version "$rfg_version"
+    id("com.matthewprenger.cursegradle") version "$curseforge_gradle_version"
+}
+
+version = "${minecraft_version}-${mod_version}"
+group = project.mod_group
+archivesBaseName = project.output_jar_name
+
+// Set the toolchain version to decouple the Java we run Gradle with from the Java used to compile and run the mod
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+        // Azul covers the most platforms for Java 8 toolchains, crucially including MacOS arm64
+        vendor.set(org.gradle.jvm.toolchain.JvmVendorSpec.AZUL)
+    }
+    // Generate sources and javadocs jars when building and publishing
+    withSourcesJar()
+    // withJavadocJar() Not Needed
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+configurations {
+    embed
+    implementation.extendsFrom(embed)
+}
+
+minecraft {
+    mcVersion = '1.12.2'
+    extraRunJvmArguments.add("-ea:${project.group}")
+
+    // MCP Mappings
+    mcpMappingChannel = "snapshot"
+    mcpMappingVersion = "20170925"
+
+    // Set username here, the UUID will be looked up automatically
+    username = "Developer"
+
+    useDependencyAccessTransformers = true
+
+    injectedTags.put("VERSION", project.mod_version)
+}
+
+// Generate a group.archives_base_name.Tags class with the version number as a field
+tasks.injectTags.configure {
+    outputClassName.set("${project.group}.${project.archives_base_name}.Tags")
+}
+
+repositories {
+    maven {
+        url = 'https://maven.cleanroommc.com'
+    }
+    maven { url = "https://repo.spongepowered.org/maven" }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    mavenLocal() // Must be last for caching to work
+}
+
+dependencies {
+    // Hard deps
+    implementation rfg.deobf("curse.maven:chameleon-230497:${chameleon_file_id}")
+
+    // Soft deps
+    if (project.debug_jei.toBoolean()) {
+        implementation rfg.deobf("curse.maven:jei-238222:${jei_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:jei-238222:${jei_file_id}")
+    }
+    if (project.debug_thaumcraft.toBoolean()) {
+        // Thaumcraft needs baubles as dep
+        runtimeOnly rfg.deobf("curse.maven:baubles-227083:${baubles_file_id}")
+        implementation rfg.deobf("curse.maven:thaumcraft-223628:${thaumcraft_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:thaumcraft-223628:${thaumcraft_file_id}")
+    }
+    if (project.debug_waila.toBoolean()) {
+        implementation rfg.deobf("curse.maven:hwyla-253449:${hwyla_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:hwyla-253449:${hwyla_file_id}")
+    }
+    if (project.debug_top.toBoolean()) {
+        implementation rfg.deobf("curse.maven:the-one-probe-245211:${top_file_id}")
+    } else {
+        compileOnly rfg.deobf("curse.maven:the-one-probe-245211:${top_file_id}")
+    }
+
+    // Addons
+    if (project.addon_framedcompactdrawers.toBoolean()) {
+        runtimeOnly rfg.deobf("curse.maven:framed-compacting-drawers-376351:${framedcompactdrawers_file_id}")
+    }
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property 'version', project.mod_version
+    inputs.property 'mcversion', project.minecraft.version
+    // replace stuff in mcmod.info, nothing else
+    filesMatching(['mcmod.info', 'pack.mcmeta']) { fcd ->
+        // replace version and mcversion
+        fcd.expand (
+                'version': project.mod_version,
+                'mcversion': project.minecraft.version
+        )
+    }
+}
+
+jar {
+    manifest {
+        def attribute_map = [:]
+        attributes(attribute_map)
+    }
+    // Add all embedded dependencies into the jar
+    from(provider{ configurations.embed.collect {it.isDirectory() ? it : zipTree(it)} })
+
+    archiveClassifier = "deobf"
+}
+
+tasks.register('apiJar', Jar) {
+    from sourceSets.main.allSource
+    from sourceSets.main.output
+    include 'com/jaquadro/minecraft/storagedrawers/api/**/*'
+    archiveClassifier = "api"
+}
+
+artifacts {
+    archives apiJar
+}
+
+idea {
+    module {
+        inheritOutputDirs = true
+    }
+    project {
+        settings {
+            runConfigurations {
+                "1. Setup Workspace"(Gradle) {
+                    taskNames = ["setupDecompWorkspace"]
+                }
+                "2. Build Jars"(Gradle) {
+                    taskNames = ["build"]
+                }
+                "3. Run Client"(Gradle) {
+                    taskNames = ["runClient"]
+                }
+                "4. Run Server"(Gradle) {
+                    taskNames = ["runServer"]
+                }
+                "5. Run Obfuscated Client"(Gradle) {
+                    taskNames = ["runObfClient"]
+                }
+                "6. Run Obfuscated Server"(Gradle) {
+                    taskNames = ["runObfServer"]
+                }
+            }
+            compiler.javac {
+                afterEvaluate {
+                    javacAdditionalOptions = "-encoding utf8"
+                    moduleJavacAdditionalOptions = [
+                            (project.name + ".main"): tasks.compileJava.options.compilerArgs.collect { '"' + it + '"' }.join(' ')
+                    ]
+                }
+            }
+        }
+    }
+}
+
+tasks.named("processIdeaSettings").configure {
+    dependsOn("injectTags")
+}

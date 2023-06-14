@@ -30,15 +30,15 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 
 // This will stop erroring once you run the build task once.
-@Mod(modid = StorageDrawers.MOD_ID, name = StorageDrawers.MOD_NAME, version = Tags.VERSION,
+@Mod(modid = Tags.MODID, name = Tags.MODNAME, version = Tags.VERSION,
     dependencies = "required-after:forge@[14.21.0.2362,);required-after:chameleon;after:waila;",
     guiFactory = StorageDrawers.SOURCE_PATH + "core.ModGuiFactory",
     acceptedMinecraftVersions = "[1.12,1.13)")
 public class StorageDrawers
 {
-    public static final String MOD_ID = "storagedrawers";
-    public static final String MOD_NAME = "Storage Drawers";
-    public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers.";
+    public static final String MOD_ID = Tags.MODID;
+    public static final String MOD_NAME = Tags.MODNAME;
+    public static final String SOURCE_PATH = "com.jaquadro.minecraft.storagedrawers";
 
     public static final Api api = new Api();
 
