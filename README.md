@@ -15,7 +15,7 @@ There's also a discord community for Texel's mods: https://discord.gg/8WtpQfy
 For Developers
 --------------
 
-StorageDrawers's buildscripts uses [CleanroomMC's TemplateDevEnv's](https://github.com/CleanroomMC/TemplateDevEnv/tree/master) as a base.
+StorageDrawers's buildscript comes from [GTCEu's 1.12.2 Buildscripts.](https://github.com/GregTechCEu/Buildscripts).
 
 ### Building and Developing
 
@@ -29,6 +29,14 @@ Once loaded in IntelliJ IDEA, you can use the other preset run configurations to
 - Run Dev Server
 - Run Dev Obfuscated Client
 - Run Dev Obfuscated Server
+
+**Configuring Jabel**
+
+With IntelliJ IDEA, you should also configure your project to give you proper warnings for using Jabel. 
+
+Jabel is a tool which allows features found in higher versions of Java to be used in Java 8 programs, whilst still compiling into Java 8 Bytecode. However, this only supports language features not APIs. 
+
+Thus, you must follow the steps listed [here](https://github.com/GregTechCEu/Buildscripts/blob/master/docs/jabel.md) to give proper warnings on what you can and can't use.
 
 #### Without IntelliJ IDEA
 If you don't have IntelliJ IDEA, simply clone the project with `git clone https://github.com/jaquadro/StorageDrawers`, go into the project folder in the command line, with `cd StorageDrawers`, and run `./gradlew setupDecompWorkspace` to setup a development environment. 

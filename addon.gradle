@@ -4,10 +4,12 @@ jar {
 }
 
 // Change mappings
+/*
 minecraft {
     mcpMappingChannel.set "snapshot"
     mcpMappingVersion.set "20170925"
 }
+*/
 
 /*
 // The default api jar task doesn't run on build
