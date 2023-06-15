@@ -106,14 +106,10 @@ public class BlockStandardDrawers extends BlockDrawers
     @SuppressWarnings("deprecation")
     public boolean isOpaqueCube (IBlockState state) {
         try {
-            switch (state.getValue(BLOCK)) {
-                case FULL1:
-                case FULL2:
-                case FULL4:
-                    return true;
-                default:
-                    return false;
-            }
+            return switch (state.getValue(BLOCK)) {
+                case FULL1, FULL2, FULL4 -> true;
+                default -> false;
+            };
         }
         catch (Exception e) {
             return true;
@@ -123,13 +119,13 @@ public class BlockStandardDrawers extends BlockDrawers
     @Override
     public boolean doesSideBlockRendering (IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
         switch (state.getValue(BLOCK)) {
-            case FULL1:
-            case FULL2:
-            case FULL4:
+            case FULL1, FULL2, FULL4 -> {
                 return true;
-            default:
+            }
+            default -> {
                 TileEntityDrawers tile = getTileEntity(world, pos);
                 return (tile != null && tile.getDirection() == face.getOpposite().getIndex());
+            }
         }
     }
 
@@ -137,15 +133,15 @@ public class BlockStandardDrawers extends BlockDrawers
     @SuppressWarnings("deprecation")
     public boolean shouldSideBeRendered (IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
         switch (blockState.getValue(BLOCK)) {
-            case FULL1:
-            case FULL2:
-            case FULL4:
+            case FULL1, FULL2, FULL4 -> {
                 return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
-            default:
+            }
+            default -> {
                 TileEntityDrawers tile = getTileEntity(blockAccess, pos);
                 if (tile != null && tile.getDirection() == side.getIndex())
                     return true;
                 return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
+            }
         }
     }
 

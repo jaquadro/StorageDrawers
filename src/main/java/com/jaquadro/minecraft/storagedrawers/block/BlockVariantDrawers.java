@@ -76,7 +76,6 @@ public class BlockVariantDrawers extends BlockStandardDrawers
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public IBlockState getActualState (IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         TileEntityDrawers tile = getTileEntity(worldIn, pos);
         if (tile == null)
@@ -116,9 +115,9 @@ public class BlockVariantDrawers extends BlockStandardDrawers
         return true;
     }
 
-    private BlockPlanks.EnumType translateMaterial (String materal) {
+    private BlockPlanks.EnumType translateMaterial (String material) {
         for (BlockPlanks.EnumType type : BlockPlanks.EnumType.values()) {
-            if (materal.equals(type.getName()))
+            if (material.equals(type.getName()))
                 return type;
         }
 

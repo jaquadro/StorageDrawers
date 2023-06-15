@@ -45,7 +45,7 @@ public class TileEntityKeyButton extends ChamTileEntity
         setPowered(false);
 
         if (tag.hasKey("dir"))
-            this.facing = EnumFacing.getFront(tag.getInteger("dir"));
+            this.facing = EnumFacing.byIndex(tag.getInteger("dir"));
         if (tag.hasKey("powered"))
             this.powered = tag.getBoolean("powered");
     }

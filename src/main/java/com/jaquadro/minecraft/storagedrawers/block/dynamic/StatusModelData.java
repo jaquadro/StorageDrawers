@@ -141,25 +141,19 @@ public class StatusModelData
         }
 
         public ResourceLocation getOnResource (EnumUpgradeStatus status) {
-            switch (status.getLevel()) {
-                case 1:
-                    return level1On;
-                case 2:
-                    return level2On;
-                default:
-                    return null;
-            }
+            return switch (status.getLevel()) {
+                case 1 -> level1On;
+                case 2 -> level2On;
+                default -> null;
+            };
         }
 
         public ResourceLocation getOffResource (EnumUpgradeStatus status) {
-            switch (status.getLevel()) {
-                case 1:
-                    return level1Off;
-                case 2:
-                    return level2Off;
-                default:
-                    return null;
-            }
+            return switch (status.getLevel()) {
+                case 1 -> level1Off;
+                case 2 -> level2Off;
+                default -> null;
+            };
         }
 
         private Area2D readArea (JsonObject object, String keyStart, String keyStop) {

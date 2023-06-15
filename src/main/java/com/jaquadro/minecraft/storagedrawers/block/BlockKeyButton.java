@@ -53,7 +53,7 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
         super(Material.CIRCUITS);
 
         setHardness(5);
-        setUnlocalizedName(blockName);
+        setTranslationKey(blockName);
         setRegistryName(registryName);
         setSoundType(SoundType.STONE);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
@@ -90,7 +90,7 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
     }
 
     @Override
-    public BlockRenderLayer getBlockLayer () {
+    public BlockRenderLayer getRenderLayer () {
         return BlockRenderLayer.CUTOUT_MIPPED;
     }
 
@@ -158,22 +158,15 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
         EnumFacing facing = state.getValue(FACING);
         boolean powered = state.getValue(POWERED);
 
-        switch (facing) {
-            case EAST:
-                return powered ? AABB_EAST_ON : AABB_EAST_OFF;
-            case WEST:
-                return powered ? AABB_WEST_ON : AABB_WEST_OFF;
-            case SOUTH:
-                return powered ? AABB_SOUTH_ON : AABB_SOUTH_OFF;
-            case NORTH:
-                return powered ? AABB_NORTH_ON : AABB_NORTH_OFF;
-            case UP:
-                return powered ? AABB_UP_ON : AABB_UP_OFF;
-            case DOWN:
-                return powered ? AABB_DOWN_ON : AABB_DOWN_OFF;
-        }
+        return switch (facing) {
+            case EAST -> powered ? AABB_EAST_ON : AABB_EAST_OFF;
+            case WEST -> powered ? AABB_WEST_ON : AABB_WEST_OFF;
+            case SOUTH -> powered ? AABB_SOUTH_ON : AABB_SOUTH_OFF;
+            case NORTH -> powered ? AABB_NORTH_ON : AABB_NORTH_OFF;
+            case UP -> powered ? AABB_UP_ON : AABB_UP_OFF;
+            case DOWN -> powered ? AABB_DOWN_ON : AABB_DOWN_OFF;
+        };
 
-        return NULL_AABB;
     }
 
     @Override
@@ -194,12 +187,10 @@ public class BlockKeyButton extends Block implements ITileEntityProvider
 
         BlockPos targetPos = pos.offset(state.getValue(FACING).getOpposite());
         Block target = worldIn.getBlockState(targetPos).getBlock();
-        if (target instanceof BlockController) {
-            BlockController controller = (BlockController)target;
+        if (target instanceof BlockController controller) {
             controller.toggle(worldIn, targetPos, playerIn, state.getValue(VARIANT));
         }
-        else if (target instanceof BlockSlave) {
-            BlockSlave slave = (BlockSlave)target;
+        else if (target instanceof BlockSlave slave) {
             slave.toggle(worldIn, targetPos, playerIn, state.getValue(VARIANT));
         }
 

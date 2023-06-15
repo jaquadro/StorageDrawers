@@ -35,7 +35,7 @@ public class BlockController extends BlockContainer implements INetworked
     public BlockController (String registryName, String blockName) {
         super(Material.ROCK);
 
-        setUnlocalizedName(blockName);
+        setTranslationKey(blockName);
         setRegistryName(registryName);
         this.useNeighborBrightness = true;
 
@@ -150,21 +150,15 @@ public class BlockController extends BlockContainer implements INetworked
             return;
 
         switch (keyType) {
-            case DRAWER:
-                te.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());
-                break;
-            case CONCEALMENT:
-                te.toggleShroud(player.getGameProfile());
-                break;
-            case QUANTIFY:
-                te.toggleQuantified(player.getGameProfile());
-                break;
-            case PERSONAL:
+            case DRAWER ->
+                    te.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());
+            case CONCEALMENT -> te.toggleShroud(player.getGameProfile());
+            case QUANTIFY -> te.toggleQuantified(player.getGameProfile());
+            case PERSONAL -> {
                 String securityKey = ModItems.personalKey.getSecurityProviderKey(0);
                 ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
-
                 te.toggleProtection(player.getGameProfile(), provider);
-                break;
+            }
         }
     }
 
@@ -190,7 +184,7 @@ public class BlockController extends BlockContainer implements INetworked
     @Override
     @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta (int meta) {
-        EnumFacing facing = EnumFacing.getFront(meta);
+        EnumFacing facing = EnumFacing.byIndex(meta);
         if (facing.getAxis() == EnumFacing.Axis.Y)
             facing = EnumFacing.NORTH;
 

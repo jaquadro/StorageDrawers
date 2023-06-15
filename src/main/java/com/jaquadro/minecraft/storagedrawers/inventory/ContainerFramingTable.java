@@ -79,8 +79,8 @@ public class ContainerFramingTable extends Container
         ItemStack matTrim = tableInventory.getStackInSlot(materialTrimSlot.getSlotIndex());
         ItemStack matFront = tableInventory.getStackInSlot(materialFrontSlot.getSlotIndex());
 
-        if (!input.isEmpty() && input.getItem() instanceof IFrameable && !matSide.isEmpty()) {
-            craftResult.setInventorySlotContents(0, ((IFrameable) input.getItem())
+        if (!input.isEmpty() && input.getItem() instanceof IFrameable frameable && !matSide.isEmpty()) {
+            craftResult.setInventorySlotContents(0, frameable
                     .decorate(input.copy(), matSide.copy(), matTrim.copy(), matFront.copy()));
             return;
         }

@@ -50,6 +50,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -92,7 +93,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
         setSoundType(SoundType.WOOD);
-        setUnlocalizedName(blockName);
+        setTranslationKey(blockName);
         setRegistryName(registryName);
         setLightOpacity(255);
 
@@ -122,7 +123,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
 
     public EnumFacing getDirection (IBlockAccess blockAccess, BlockPos pos) {
         TileEntityDrawers tile = getTileEntity(blockAccess, pos);
-        return (tile != null) ? EnumFacing.getFront(tile.getDirection()) : EnumFacing.NORTH;
+        return (tile != null) ? EnumFacing.byIndex(tile.getDirection()) : EnumFacing.NORTH;
     }
 
     @SideOnly(Side.CLIENT)
@@ -139,7 +140,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
     }
 
     @Override
-    public BlockRenderLayer getBlockLayer () {
+    public @NotNull BlockRenderLayer getRenderLayer () {
         return BlockRenderLayer.CUTOUT_MIPPED;
     }
 
@@ -153,15 +154,19 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
     public AxisAlignedBB getBoundingBox (IBlockState state, IBlockAccess blockAccess, BlockPos pos) {
         TileEntityDrawers tile = getTileEntity(blockAccess, pos);
         if (tile != null && isHalfDepth(state)) {
-            switch (EnumFacing.getFront(tile.getDirection())) {
-                case NORTH:
+            switch (EnumFacing.byIndex(tile.getDirection())) {
+                case NORTH -> {
                     return AABB_NORTH_HALF;
-                case SOUTH:
+                }
+                case SOUTH -> {
                     return AABB_SOUTH_HALF;
-                case WEST:
+                }
+                case WEST -> {
                     return AABB_WEST_HALF;
-                case EAST:
+                }
+                case EAST -> {
                     return AABB_EAST_HALF;
+                }
             }
         }
 
@@ -390,18 +395,13 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
     }
 
     protected boolean hitLeft (int side, float hitX, float hitZ) {
-        switch (side) {
-            case 2:
-                return hitX > .5;
-            case 3:
-                return hitX < .5;
-            case 4:
-                return hitZ < .5;
-            case 5:
-                return hitZ > .5;
-            default:
-                return true;
-        }
+        return switch (side) {
+            case 2 -> hitX > .5;
+            case 3 -> hitX < .5;
+            case 4 -> hitZ < .5;
+            case 5 -> hitZ > .5;
+            default -> true;
+        };
     }
 
     public void extractItem(World worldIn, BlockPos pos, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
@@ -714,7 +714,7 @@ public abstract class BlockDrawers extends BlockContainer implements INetworked
         if (tile == null)
             return state;
 
-        EnumFacing facing = EnumFacing.getFront(tile.getDirection());
+        EnumFacing facing = EnumFacing.byIndex(tile.getDirection());
         if (facing.getAxis() == EnumFacing.Axis.Y)
             facing = EnumFacing.NORTH;
 

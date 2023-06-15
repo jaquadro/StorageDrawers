@@ -17,7 +17,7 @@ public class StorageDrawersApi
     public static IStorageDrawersApi instance () {
         if (instance == null) {
             try {
-                Class<?> classApi = Class.forName( "com.jaquadro.minecraft.storagedrawers.core.Api" );
+                Class classApi = Class.forName( "com.jaquadro.minecraft.storagedrawers.core.Api" );
                 instance = (IStorageDrawersApi) classApi.getField("instance").get(null);
             }
             catch (Throwable t) {
