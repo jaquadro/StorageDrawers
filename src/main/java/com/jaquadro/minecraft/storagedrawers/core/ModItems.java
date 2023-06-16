@@ -50,7 +50,7 @@ public class ModItems
             IForgeRegistry<Item> itemRegistry = event.getRegistry();
             ConfigManager config = StorageDrawers.config;
 
-            itemRegistry.register(new Item().setUnlocalizedName(makeName("upgradeTemplate")).setRegistryName("upgrade_template").setCreativeTab(ModCreativeTabs.tabStorageDrawers));
+            itemRegistry.register(new Item().setTranslationKey(makeName("upgradeTemplate")).setRegistryName("upgrade_template").setCreativeTab(ModCreativeTabs.tabStorageDrawers));
 
             if (config.cache.enableStorageUpgrades) {
                 itemRegistry.register(new ItemUpgradeStorage("upgrade_storage", makeName("upgradeStorage")));
