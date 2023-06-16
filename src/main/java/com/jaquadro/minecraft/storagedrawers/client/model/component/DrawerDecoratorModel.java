@@ -49,7 +49,7 @@ public class DrawerDecoratorModel implements IBakedModel
         this.dir = dir;
         this.modelData = modelData;
 
-        this.renderLayers = new HashSet<BlockRenderLayer>();
+        this.renderLayers = new HashSet<>();
         this.renderLayers.add(BlockRenderLayer.CUTOUT_MIPPED);
     }
 
@@ -149,10 +149,9 @@ public class DrawerDecoratorModel implements IBakedModel
     }
 
     private void buildShroudGeometry (ChamRender renderer) {
-        if (!(blockState.getBlock() instanceof BlockDrawers))
+        if (!(blockState.getBlock() instanceof BlockDrawers block))
             return;
 
-        BlockDrawers block = (BlockDrawers)blockState.getBlock();
         StatusModelData data = block.getStatusInfo(blockState);
         int count = drawer.getDrawerCount();
         double depth = drawer.isHalfDepth() ? .5 : 1;

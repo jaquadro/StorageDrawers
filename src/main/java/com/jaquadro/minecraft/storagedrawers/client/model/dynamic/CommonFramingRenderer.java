@@ -152,7 +152,7 @@ public class CommonFramingRenderer
 
         renderer.setRenderBounds(xStart, 0, 0, xStart + unit2, unit2, 1);
         for (int i = 0; i < 6; i++)
-            renderer.renderFace(EnumFacing.getFront(i), blockAccess, state, pos, icon);
+            renderer.renderFace(EnumFacing.byIndex(i), blockAccess, state, pos, icon);
 
         for (int i = 0; i < 2; i++)
             renderer.state.clearUVRotation(i);
@@ -168,11 +168,11 @@ public class CommonFramingRenderer
 
         renderer.setRenderBounds(xStart, unit2, unit2, xStart + unit2, 1 - unit2, unit2 + unit2);
         for (int i = 2; i < 6; i++)
-            renderer.renderFace(EnumFacing.getFront(i), blockAccess, state, pos, icon);
+            renderer.renderFace(EnumFacing.byIndex(i), blockAccess, state, pos, icon);
 
         renderer.setRenderBounds(xStart, unit2, 1 - unit2 - unit2, xStart + unit2, 1 - unit2, 1 - unit2);
         for (int i = 2; i < 6; i++)
-            renderer.renderFace(EnumFacing.getFront(i), blockAccess, state, pos, icon);
+            renderer.renderFace(EnumFacing.byIndex(i), blockAccess, state, pos, icon);
 
         for (int i = 2; i < 6; i++)
             renderer.state.clearUVRotation(i);
@@ -190,11 +190,11 @@ public class CommonFramingRenderer
 
         renderer.setRenderBounds(xStart, unit4, unit2, xStop, unit4 + unit2, unit2 + unit2);
         for (int i = 0; i < 4; i++)
-            renderer.renderFace(EnumFacing.getFront(i), blockAccess, state, pos, icon);
+            renderer.renderFace(EnumFacing.byIndex(i), blockAccess, state, pos, icon);
 
         renderer.setRenderBounds(xStart, unit4, 1 - unit2 - unit2, xStop, unit4 + unit2, 1 - unit2);
         for (int i = 0; i < 4; i++)
-            renderer.renderFace(EnumFacing.getFront(i), blockAccess, state, pos, icon);
+            renderer.renderFace(EnumFacing.byIndex(i), blockAccess, state, pos, icon);
 
         for (int i = 0; i < 2; i++)
             renderer.state.clearUVRotation(i);

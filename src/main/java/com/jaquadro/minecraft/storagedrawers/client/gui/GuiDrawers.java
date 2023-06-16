@@ -49,18 +49,13 @@ public class GuiDrawers extends GuiContainer
     }
 
     private static Container getContainer (InventoryPlayer inventory, TileEntityDrawers tile) {
-        switch (tile.getDrawerCount()) {
-            case 1:
-                return new ContainerDrawers1(inventory, tile);
-            case 2:
-                return new ContainerDrawers2(inventory, tile);
-            case 3:
-                return new ContainerDrawersComp(inventory, tile);
-            case 4:
-                return new ContainerDrawers4(inventory, tile);
-            default:
-                return null;
-        }
+        return switch (tile.getDrawerCount()) {
+            case 1 -> new ContainerDrawers1(inventory, tile);
+            case 2 -> new ContainerDrawers2(inventory, tile);
+            case 3 -> new ContainerDrawersComp(inventory, tile);
+            case 4 -> new ContainerDrawers4(inventory, tile);
+            default -> null;
+        };
     }
 
     @Override
@@ -107,8 +102,7 @@ public class GuiDrawers extends GuiContainer
         int guiY = (height - ySize) / 2;
         drawTexturedModalRect(guiX, guiY, 0, 0, xSize, ySize);
 
-        if (inventorySlots instanceof ContainerDrawers) {
-            ContainerDrawers container = (ContainerDrawers) inventorySlots;
+        if (inventorySlots instanceof ContainerDrawers container) {
             List<Slot> storageSlots = container.getStorageSlots();
             for (Slot slot : storageSlots) {
                 drawTexturedModalRect(guiX + slot.xPos, guiY + slot.yPos, smDisabledX, smDisabledY, 16, 16);
@@ -124,8 +118,7 @@ public class GuiDrawers extends GuiContainer
 
     @Override
     protected boolean isPointInRegion (int x, int y, int width, int height, int originX, int originY) {
-        if (inventorySlots instanceof ContainerDrawers) {
-            ContainerDrawers container = (ContainerDrawers) inventorySlots;
+        if (inventorySlots instanceof ContainerDrawers container) {
             List<Slot> storageSlots = container.getStorageSlots();
             for (Slot slot : storageSlots) {
                 if (slot instanceof SlotStorage && slot.xPos == x && slot.yPos == y)

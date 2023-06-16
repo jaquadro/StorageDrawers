@@ -84,7 +84,7 @@ public class TileEntityFramingRenderer extends TileEntitySpecialRenderer<TileEnt
         try {
             Minecraft.getMinecraft().getRenderItem().renderItem(item, ItemCameraTransforms.TransformType.FIXED);
         }
-        catch (Exception e) { }
+        catch (Exception ignored) { }
 
         GL11.glPopMatrix();
     }

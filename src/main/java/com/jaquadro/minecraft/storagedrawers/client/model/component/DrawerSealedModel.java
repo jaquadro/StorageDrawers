@@ -21,10 +21,9 @@ public class DrawerSealedModel extends WrappedChamModel
 
     @Override
     protected void renderMippedLayer (ChamRender renderer, IBlockState state, Object... args) {
-        if (!(state.getBlock() instanceof BlockDrawers))
+        if (!(state.getBlock() instanceof BlockDrawers block))
             return;
 
-        BlockDrawers block = (BlockDrawers) state.getBlock();
         float depth = block.isHalfDepth(state) ? .5f : 1f;
         TextureAtlasSprite iconTape = Chameleon.instance.iconRegistry.getIcon(iconTapeCover);
 

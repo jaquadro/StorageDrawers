@@ -68,8 +68,7 @@ public class CustomTrimModel extends ChamModel
     private TextureAtlasSprite iconParticle;
 
     public static CustomTrimModel fromBlock (IBlockState state) {
-        if (state instanceof IExtendedBlockState) {
-            IExtendedBlockState xstate = (IExtendedBlockState) state;
+        if (state instanceof IExtendedBlockState xstate) {
             MaterialModelData matModel = xstate.getValue(BlockTrimCustom.MAT_MODEL);
 
             if (matModel != null) {
@@ -160,7 +159,7 @@ public class CustomTrimModel extends ChamModel
     private static class ItemHandler extends ItemOverrideList
     {
         public ItemHandler () {
-            super(ImmutableList.<ItemOverride>of());
+            super(ImmutableList.of());
         }
 
         @Override
