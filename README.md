@@ -49,7 +49,7 @@ Then, you can use the following commands:
 - `./gradlew runObfServer` - Runs a Dev Obfuscated Server
 
 #### Other useful tips
- - You do not need to worry about what java version you have set as your default. The buildscript will automatically download Zulu's Java 8. Simply do the steps above, and maybe change your editor's JDK to a version of Java 8, and you'll be ready to go!
+ - You do not need to worry about what java version you have set as your default. The buildscript will automatically download Zulu's Java 8 for building, and Zulu's Java 17 as a SDK. Simply do the steps above, and maybe change your editor's JDK to a version of Java 17, and you'll be ready to go! Your editor may also be able to do the steps listed [here](https://github.com/GregTechCEu/Buildscripts/blob/master/docs/jabel.md), although they are written for IntelliJ IDEA.
  - In `gradle.properties`, you can edit the `debug_modid` variables at the bottom. This allows you to include those soft dependencies into your development clients and servers. Make sure to run the `setupWorkpace` run configuration or the commmand `./gradlew setupDecompWorkpace`, and refresh your gradle!
 
 ### Maven
