@@ -160,7 +160,7 @@ public class OreDictRegistry
         if (item == null)
             return null;
 
-        return item.getRegistryName().getResourceDomain();
+        return item.getRegistryName().getNamespace();
     }
 
     private boolean isValidForEquiv (String oreName) {

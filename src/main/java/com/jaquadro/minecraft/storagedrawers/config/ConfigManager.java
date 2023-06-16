@@ -290,13 +290,13 @@ public class ConfigManager
     }
 
     public int getStorageUpgradeMultiplier (int level) {
-        switch (level) {
-            case 2: return cache.level2Mult;
-            case 3: return cache.level3Mult;
-            case 4: return cache.level4Mult;
-            case 5: return cache.level5Mult;
-            case 6: return cache.level6Mult;
-            default: return 1;
-        }
+        return switch (level) {
+            case 2 -> cache.level2Mult;
+            case 3 -> cache.level3Mult;
+            case 4 -> cache.level4Mult;
+            case 5 -> cache.level5Mult;
+            case 6 -> cache.level6Mult;
+            default -> 1;
+        };
     }
 }

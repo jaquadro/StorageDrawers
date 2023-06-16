@@ -16,7 +16,7 @@ public class ModConfigGui extends GuiConfig
     }
 
     private static List<IConfigElement> getConfigElements () {
-        List<IConfigElement> list = new ArrayList<IConfigElement>();
+        List<IConfigElement> list = new ArrayList<>();
 
         for (ConfigManager.ConfigSection section : StorageDrawers.config.sections)
             list.add(new ConfigElement(section.getCategory()));
