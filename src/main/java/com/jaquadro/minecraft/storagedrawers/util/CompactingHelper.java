@@ -161,8 +161,7 @@ public class CompactingHelper
     private List<ItemStack> findAllMatchingRecipes (InventoryCrafting crafting) {
         List<ItemStack> candidates = new ArrayList<>();
 
-        for (Object aRecipeList : CraftingManager.REGISTRY) {
-            IRecipe recipe = (IRecipe) aRecipeList;
+        for (IRecipe recipe : CraftingManager.REGISTRY) {
             if (recipe.matches(crafting, world)) {
                 ItemStack result = recipe.getCraftingResult(crafting);
                 if (!result.isEmpty())
@@ -180,7 +179,7 @@ public class CompactingHelper
             for (ItemStack candidate : candidates) {
                 ResourceLocation matchName = candidate.getItem().getRegistryName();
                 if (matchName != null) {
-                    if (referenceName.getResourceDomain().equals(matchName.getResourceDomain()))
+                    if (referenceName.getNamespace().equals(matchName.getNamespace()))
                         return candidate;
                 }
             }
@@ -236,8 +235,7 @@ public class CompactingHelper
             super(null, width, height);
 
             stackList = new ItemStack[width * height];
-            for (int i = 0; i < stackList.length; i++)
-                stackList[i] = ItemStack.EMPTY;
+            Arrays.fill(stackList, ItemStack.EMPTY);
         }
 
         @Override

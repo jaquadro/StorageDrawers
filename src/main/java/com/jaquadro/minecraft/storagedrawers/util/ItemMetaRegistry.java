@@ -23,7 +23,7 @@ public class ItemMetaRegistry<E>
     public void register (Item item, int meta, E entry) {
         Map<Integer, E> metamap = registry.get(item);
         if (metamap == null) {
-            metamap = new HashMap<Integer, E>();
+            metamap = new HashMap<>();
             registry.put(item, metamap);
         }
 
@@ -74,7 +74,7 @@ public class ItemMetaRegistry<E>
     public Set<Map.Entry<Integer, E>> entrySet (Item item) {
         Map<Integer, E> metamap = registry.get(item);
         if (metamap == null) {
-            metamap = new HashMap<Integer, E>();
+            metamap = new HashMap<>();
             registry.put(item, metamap);
         }
 
