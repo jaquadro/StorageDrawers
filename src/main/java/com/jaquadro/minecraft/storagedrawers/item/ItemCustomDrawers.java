@@ -39,8 +39,8 @@ public class ItemCustomDrawers extends ItemDrawers implements IFrameable
     }
 
     @Override
-    public String getUnlocalizedName (@Nonnull ItemStack stack) {
-        return super.getUnlocalizedName() + "." + nameFunction.apply(stack);
+    public String getTranslationKey (@Nonnull ItemStack stack) {
+        return super.getTranslationKey() + "." + nameFunction.apply(stack);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ItemCustomDrawers extends ItemDrawers implements IFrameable
         NBTTagCompound tag = setCompoundMaterials(matSide, matTrim, matFront, new NBTTagCompound(), false);
 
         ItemStack stack = new ItemStack(item, count, block.getMetaFromState(blockState));
-        if (!tag.hasNoTags())
+        if (!tag.isEmpty())
             stack.setTagCompound(tag);
 
         return stack;

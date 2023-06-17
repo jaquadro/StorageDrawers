@@ -9,7 +9,7 @@ public class ItemDrawerKey extends ItemKey
 {
     public ItemDrawerKey (String registryName, String unlocalizedName) {
         setRegistryName(registryName);
-        setUnlocalizedName(unlocalizedName);
+        setTranslationKey(unlocalizedName);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setMaxDamage(0);
     }

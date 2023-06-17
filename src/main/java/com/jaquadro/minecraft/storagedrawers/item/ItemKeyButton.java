@@ -32,8 +32,8 @@ public class ItemKeyButton extends ItemMultiTexture implements IItemMeshMapper, 
     }
 
     @Override
-    public String getUnlocalizedName (@Nonnull ItemStack itemStack) {
-        return super.getUnlocalizedName() + "." + EnumKeyType.byMetadata(itemStack.getMetadata()).getName();
+    public String getTranslationKey (@Nonnull ItemStack itemStack) {
+        return super.getTranslationKey() + "." + EnumKeyType.byMetadata(itemStack.getMetadata()).getName();
     }
 
     @Override
@@ -57,10 +57,10 @@ public class ItemKeyButton extends ItemMultiTexture implements IItemMeshMapper, 
     @Override
     public List<ResourceLocation> getItemVariants () {
         ResourceLocation location = ForgeRegistries.ITEMS.getKey(this);
-        List<ResourceLocation> variants = new ArrayList<ResourceLocation>();
+        List<ResourceLocation> variants = new ArrayList<>();
 
         for (EnumKeyType keyType : EnumKeyType.values())
-            variants.add(new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + '_' + keyType.getName()));
+            variants.add(new ResourceLocation(location.getNamespace(), location.getPath() + '_' + keyType.getName()));
 
         return variants;
     }

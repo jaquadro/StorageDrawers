@@ -94,20 +94,14 @@ public class ItemDrawers extends ItemBlock
 
         if (block instanceof BlockStandardDrawers) {
             EnumBasicDrawer info = EnumBasicDrawer.byMetadata(itemStack.getMetadata());
-            switch (info) {
-                case FULL1:
-                    return config.getBlockBaseStorage("fulldrawers1");
-                case FULL2:
-                    return config.getBlockBaseStorage("fulldrawers2");
-                case FULL4:
-                    return config.getBlockBaseStorage("fulldrawers4");
-                case HALF2:
-                    return config.getBlockBaseStorage("halfdrawers2");
-                case HALF4:
-                    return config.getBlockBaseStorage("halfdrawers4");
-                default:
-                    return 0;
-            }
+            return switch (info) {
+                case FULL1 -> config.getBlockBaseStorage("fulldrawers1");
+                case FULL2 -> config.getBlockBaseStorage("fulldrawers2");
+                case FULL4 -> config.getBlockBaseStorage("fulldrawers4");
+                case HALF2 -> config.getBlockBaseStorage("halfdrawers2");
+                case HALF4 -> config.getBlockBaseStorage("halfdrawers4");
+                default -> 0;
+            };
         }
         else if (block == ModBlocks.compDrawers) {
             return config.getBlockBaseStorage("compDrawers");

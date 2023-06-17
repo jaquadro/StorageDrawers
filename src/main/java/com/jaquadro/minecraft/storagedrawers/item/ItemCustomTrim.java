@@ -52,7 +52,7 @@ public class ItemCustomTrim extends ItemBlock implements IFrameable
             tag.setTag("MatT", getMaterialTag(matTrim));
 
         ItemStack stack = new ItemStack(item, count, 0);
-        if (!tag.hasNoTags())
+        if (!tag.isEmpty())
             stack.setTagCompound(tag);
 
         return stack;

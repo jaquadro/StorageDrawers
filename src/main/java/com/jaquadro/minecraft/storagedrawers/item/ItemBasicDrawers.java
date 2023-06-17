@@ -50,8 +50,8 @@ public class ItemBasicDrawers extends ItemDrawers implements IItemMeshResolver, 
     }
 
     @Override
-    public String getUnlocalizedName (@Nonnull ItemStack stack) {
-        return super.getUnlocalizedName() + "." + nameFunction.apply(stack);
+    public String getTranslationKey (@Nonnull ItemStack stack) {
+        return super.getTranslationKey() + "." + nameFunction.apply(stack);
     }
 
     @Override
@@ -65,11 +65,11 @@ public class ItemBasicDrawers extends ItemDrawers implements IItemMeshResolver, 
     @Override
     public List<ResourceLocation> getItemVariants () {
         ResourceLocation location = ForgeRegistries.ITEMS.getKey(this);
-        List<ResourceLocation> variants = new ArrayList<ResourceLocation>();
+        List<ResourceLocation> variants = new ArrayList<>();
 
         for (EnumBasicDrawer type : EnumBasicDrawer.values())
             for (BlockPlanks.EnumType material : BlockPlanks.EnumType.values())
-                variants.add(new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + '_' + type.getName() + '_' + material.getName()));
+                variants.add(new ResourceLocation(location.getNamespace(), location.getPath() + '_' + type.getName() + '_' + material.getName()));
 
         return variants;
     }

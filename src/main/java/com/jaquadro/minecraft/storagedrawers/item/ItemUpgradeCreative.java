@@ -20,8 +20,8 @@ public class ItemUpgradeCreative extends ItemUpgrade implements IItemMeshMapper
     }
 
     @Override
-    public String getUnlocalizedName (ItemStack itemStack) {
-        return super.getUnlocalizedName() + "." + EnumUpgradeCreative.byMetadata(itemStack.getMetadata()).getUnlocalizedName();
+    public String getTranslationKey (ItemStack itemStack) {
+        return super.getTranslationKey() + "." + EnumUpgradeCreative.byMetadata(itemStack.getMetadata()).getUnlocalizedName();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ItemUpgradeCreative extends ItemUpgrade implements IItemMeshMapper
 
     @Override
     public List<Pair<ItemStack, ModelResourceLocation>> getMeshMappings () {
-        List<Pair<ItemStack, ModelResourceLocation>> mappings = new ArrayList<Pair<ItemStack, ModelResourceLocation>>();
+        List<Pair<ItemStack, ModelResourceLocation>> mappings = new ArrayList<>();
 
         for (EnumUpgradeCreative type : EnumUpgradeCreative.values()) {
             ModelResourceLocation location = new ModelResourceLocation(getRegistryName().toString() + '_' + type.getName(), "inventory");

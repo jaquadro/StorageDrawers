@@ -26,7 +26,7 @@ public class ItemTape extends Item
 {
     public ItemTape (String registryName, String unlocalizedName) {
         setRegistryName(registryName);
-        setUnlocalizedName(unlocalizedName);
+        setTranslationKey(unlocalizedName);
         setMaxStackSize(1);
         setMaxDamage(8);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
@@ -35,7 +35,7 @@ public class ItemTape extends Item
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation (@Nonnull ItemStack itemStack, @Nullable World world, List<String> list, ITooltipFlag advanced) {
-        String name = getUnlocalizedName(itemStack);
+        String name = getTranslationKey(itemStack);
         list.add(I18n.format(name + ".description"));
     }
 
@@ -52,8 +52,7 @@ public class ItemTape extends Item
                 return EnumActionResult.FAIL;
         }
 
-        if (tile instanceof ISealable) {
-            ISealable tileseal = (ISealable) tile;
+        if (tile instanceof ISealable tileseal) {
             if (tileseal.isSealed())
                 return EnumActionResult.FAIL;
 

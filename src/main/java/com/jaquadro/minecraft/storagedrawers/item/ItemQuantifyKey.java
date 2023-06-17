@@ -7,7 +7,7 @@ public class ItemQuantifyKey extends ItemKey
 {
     public ItemQuantifyKey (String registryName, String unlocalizedName) {
         setRegistryName(registryName);
-        setUnlocalizedName(unlocalizedName);
+        setTranslationKey(unlocalizedName);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setMaxDamage(0);
     }

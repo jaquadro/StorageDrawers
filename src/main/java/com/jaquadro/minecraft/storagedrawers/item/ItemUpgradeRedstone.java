@@ -21,8 +21,8 @@ public class ItemUpgradeRedstone extends ItemUpgrade implements IItemMeshMapper
     }
 
     @Override
-    public String getUnlocalizedName (@Nonnull ItemStack itemStack) {
-        return super.getUnlocalizedName() + "." + EnumUpgradeRedstone.byMetadata(itemStack.getMetadata()).getUnlocalizedName();
+    public String getTranslationKey (@Nonnull ItemStack itemStack) {
+        return super.getTranslationKey() + "." + EnumUpgradeRedstone.byMetadata(itemStack.getMetadata()).getUnlocalizedName();
     }
 
     @Override

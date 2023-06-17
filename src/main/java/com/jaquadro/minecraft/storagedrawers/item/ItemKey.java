@@ -34,7 +34,7 @@ public class ItemKey extends Item
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation (@Nonnull ItemStack itemStack, @Nullable World world, List<String> list, ITooltipFlag advanced) {
-        String name = getUnlocalizedName(itemStack);
+        String name = getTranslationKey(itemStack);
         list.add(I18n.format(name + ".description"));
     }
 
@@ -61,10 +61,10 @@ public class ItemKey extends Item
             return EnumActionResult.PASS;
 
         IDrawerAttributes attrs = tile.getCapability(DRAWER_ATTRIBUTES_CAPABILITY, null);
-        if (!(attrs instanceof IDrawerAttributesModifiable))
+        if (!(attrs instanceof IDrawerAttributesModifiable modifiable))
             return EnumActionResult.PASS;
 
-        handleDrawerAttributes((IDrawerAttributesModifiable)attrs);
+        handleDrawerAttributes(modifiable);
 
         return EnumActionResult.SUCCESS;
     }
