@@ -1,11 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.client.renderer;
 
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IFrameable;
 import com.jaquadro.minecraft.storagedrawers.block.BlockFramingTable;
-import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
-import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemCustomTrim;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -32,23 +29,20 @@ public class TileEntityFramingRenderer extends TileEntitySpecialRenderer<TileEnt
         if (!state.getValue(BlockFramingTable.RIGHT_SIDE))
             return;
 
-        ItemStack target = tile.getStackInSlot(0);
-        if (!target.isEmpty()) {
-            Block block = Block.getBlockFromItem(target.getItem());
-            IBlockState blockState = block.getStateFromMeta(target.getMetadata());
-            if (block instanceof BlockDrawersCustom) {
-                ItemStack result = ItemCustomDrawers.makeItemStack(blockState, 1, tile.getStackInSlot(1), tile.getStackInSlot(2), tile.getStackInSlot(3));
-                renderSlot(tile, x, y, z, result, 1f, .5f, .25f, -.5f);
-            }
-            else if (block instanceof BlockTrimCustom) {
-                ItemStack result = ItemCustomTrim.makeItemStack(block, 1, tile.getStackInSlot(1), tile.getStackInSlot(2));
-                renderSlot(tile, x, y, z, result, 1f, .5f, .25f, -.5f);
-            }
+        // Get each slot's contents
+        ItemStack input = tile.getStackInSlot(0);
+        ItemStack matSide = tile.getStackInSlot(1);
+        ItemStack matTrim = tile.getStackInSlot(2);
+        ItemStack matFront = tile.getStackInSlot(3);
+
+        if (!input.isEmpty() && input.getItem() instanceof IFrameable && !matSide.isEmpty()) {
+            ItemStack result = ((IFrameable) input.getItem()).decorate(input, matSide, matTrim, matFront);
+            renderSlot(tile, x, y, z, result, 1f, .5f, .25f, -.5f);
         }
 
-        renderSlot(tile, x, y, z, tile.getStackInSlot(1), .575f, .5f + .65f, .15f, .225f - .5f);
-        renderSlot(tile, x, y, z, tile.getStackInSlot(2), .575f, .5f - .65f, .15f, .225f - .5f);
-        renderSlot(tile, x, y, z, tile.getStackInSlot(3), .575f, .5f + .65f, .15f, -.225f - .5f);
+        renderSlot(tile, x, y, z, matSide, .575f, .5f + .65f, .15f, .225f - .5f);
+        renderSlot(tile, x, y, z, matTrim, .575f, .5f - .65f, .15f, .225f - .5f);
+        renderSlot(tile, x, y, z, matFront, .575f, .5f + .65f, .15f, -.225f - .5f);
     }
 
     private void renderSlot (TileEntityFramingTable tileTable, double x, double y, double z, ItemStack item, float scale, float tx, float ty, float tz) {
