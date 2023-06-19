@@ -1,8 +1,9 @@
-//version: 1686205143
+//version: 1687160402
 /*
  * DO NOT CHANGE THIS FILE!
  * Also, you may replace this file at any time if there is an update available.
  * Please check https://github.com/GregTechCEu/Buildscripts/blob/master/build.gradle for updates.
+ * You can also run ./gradlew updateBuildScript to update your buildscript.
  */
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
@@ -589,20 +590,14 @@ jar {
 }
 
 // Create API library jar
-if (apiPackage) {
-    tasks.register('apiJar', Jar) {
-        archiveClassifier.set 'api'
-        from(sourceSets.main.java) {
-            include "${modGroupPath}/${apiPackagePath}/**"
-        }
-
-        from(sourceSets.main.output) {
-            include "${modGroupPath}/${apiPackagePath}/**"
-        }
+tasks.register('apiJar', Jar) {
+    archiveClassifier.set 'api'
+    from(sourceSets.main.java) {
+        include "${modGroupPath}/${apiPackagePath}/**"
     }
 
-    artifacts {
-        archives apiJar
+    from(sourceSets.main.output) {
+        include "${modGroupPath}/${apiPackagePath}/**"
     }
 }
 
@@ -688,24 +683,28 @@ idea {
                 '1. Setup Workspace'(Gradle) {
                     taskNames = ['setupDecompWorkspace']
                 }
-                '2. Build Jars'(Gradle) {
-                    taskNames = ['build']
-                }
-                '3. Run Client'(Gradle) {
+                '2. Run Client'(Gradle) {
                     taskNames = ['runClient']
                 }
-                '4. Run Server'(Gradle) {
+                '3. Run Server'(Gradle) {
                     taskNames = ['runServer']
                 }
-                '5. Run Obfuscated Client'(Gradle) {
+                '4. Run Obfuscated Client'(Gradle) {
                     taskNames = ['runObfClient']
                 }
-                '6. Run Obfuscated Server'(Gradle) {
+                '5. Run Obfuscated Server'(Gradle) {
                     taskNames = ['runObfServer']
                 }
                 if (enableSpotless.toBoolean()) {
-                    "7. Apply Spotless"(Gradle) {
+                    '6. Apply Spotless'(Gradle) {
                         taskNames = ["spotlessApply"]
+                    }
+                    '7. Build Jars'(Gradle) {
+                        taskNames = ['build']
+                    }
+                } else {
+                    '6. Build Jars'(Gradle) {
+                        taskNames = ['build']
                     }
                 }
                 'Update Buildscript'(Gradle) {
