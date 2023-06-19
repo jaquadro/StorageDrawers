@@ -7,11 +7,12 @@ import net.minecraft.item.ItemStack;
  */
 public interface IFrameable {
     /**
+     * The provided ItemStacks are copies. Do whatever you want with them.
      * @param input The input ItemStack of which you can copy relevant NBT from (used for things like copying tile nbt from old framed drawer)
      * @param matSide ItemStack to use as the decoration on `side`
      * @param matTrim ItemStack to use as the decoration on `trim`
      * @param matFront ItemStack to use as the decoration on `front`
-     * @return The ItemStack to put in the output slot of the Framing Table
+     * @return The ItemStack to put or display in the output slot of the Framing Table
      */
     ItemStack decorate(ItemStack input, ItemStack matSide, ItemStack matTrim, ItemStack matFront);
 }
