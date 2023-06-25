@@ -14,10 +14,10 @@
         "iconAreaTo": [ 16, 16 ],
         "iconSize": [ 2, 2 ],
         "textures": {
-            "level1Off": "storagedrawers:blocks/indicator/indicator_comp_off",
-            "level1On": "storagedrawers:blocks/indicator/indicator_comp_on",
-            "level2Off": "storagedrawers:blocks/indicator/indicator_comp_off",
-            "level2On": "storagedrawers:blocks/indicator/indicator_comp_on"
+            "level1Off": "storagedrawers:block/indicator/indicator_comp_off",
+            "level1On": "storagedrawers:block/indicator/indicator_comp_on",
+            "level2Off": "storagedrawers:block/indicator/indicator_comp_off",
+            "level2On": "storagedrawers:block/indicator/indicator_comp_on"
         }
     }, {
         "statusAreaFrom": [ 0, 0 ],

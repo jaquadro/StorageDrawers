@@ -8,6 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -19,8 +20,8 @@ import java.util.List;
 
 public class AddUpgradeRecipe extends CustomRecipe
 {
-    public AddUpgradeRecipe(ResourceLocation name) {
-        super(name);
+    public AddUpgradeRecipe(ResourceLocation name, CraftingBookCategory cat) {
+        super(name, cat);
     }
 
     @Override

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "storagedrawers:items/tape_roll"
+        "layer0": "storagedrawers:item/tape_roll"
     }
 }

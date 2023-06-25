@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "storagedrawers:items/upgrade_conversion"
+        "layer0": "storagedrawers:item/upgrade_conversion"
     }
 }

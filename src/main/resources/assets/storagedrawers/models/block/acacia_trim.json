@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "storagedrawers:blocks/drawers_acacia_side"
+        "all": "storagedrawers:block/drawers_acacia_side"
     }
 }

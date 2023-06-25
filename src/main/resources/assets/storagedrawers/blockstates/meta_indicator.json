@@ -1,0 +1,28 @@
+{
+    "variants": {
+        "facing=north,half=false,slots=1": { "model": "storagedrawers:block/full_drawers_indicator_1" },
+        "facing=east,half=false,slots=1": { "model": "storagedrawers:block/full_drawers_indicator_1", "y": 90 },
+        "facing=south,half=false,slots=1": { "model": "storagedrawers:block/full_drawers_indicator_1", "y": 180 },
+        "facing=west,half=false,slots=1": { "model": "storagedrawers:block/full_drawers_indicator_1", "y": 270 },
+        "facing=north,half=true,slots=1": { "model": "storagedrawers:block/half_drawers_indicator_1" },
+        "facing=east,half=true,slots=1": { "model": "storagedrawers:block/half_drawers_indicator_1", "y": 90 },
+        "facing=south,half=true,slots=1": { "model": "storagedrawers:block/half_drawers_indicator_1", "y": 180 },
+        "facing=west,half=true,slots=1": { "model": "storagedrawers:block/half_drawers_indicator_1", "y": 270 },
+        "facing=north,half=false,slots=2": { "model": "storagedrawers:block/full_drawers_indicator_2" },
+        "facing=east,half=false,slots=2": { "model": "storagedrawers:block/full_drawers_indicator_2", "y": 90 },
+        "facing=south,half=false,slots=2": { "model": "storagedrawers:block/full_drawers_indicator_2", "y": 180 },
+        "facing=west,half=false,slots=2": { "model": "storagedrawers:block/full_drawers_indicator_2", "y": 270 },
+        "facing=north,half=true,slots=2": { "model": "storagedrawers:block/half_drawers_indicator_2" },
+        "facing=east,half=true,slots=2": { "model": "storagedrawers:block/half_drawers_indicator_2", "y": 90 },
+        "facing=south,half=true,slots=2": { "model": "storagedrawers:block/half_drawers_indicator_2", "y": 180 },
+        "facing=west,half=true,slots=2": { "model": "storagedrawers:block/half_drawers_indicator_2", "y": 270 },
+        "facing=north,half=false,slots=4": { "model": "storagedrawers:block/full_drawers_indicator_4" },
+        "facing=east,half=false,slots=4": { "model": "storagedrawers:block/full_drawers_indicator_4", "y": 90 },
+        "facing=south,half=false,slots=4": { "model": "storagedrawers:block/full_drawers_indicator_4", "y": 180 },
+        "facing=west,half=false,slots=4": { "model": "storagedrawers:block/full_drawers_indicator_4", "y": 270 },
+        "facing=north,half=true,slots=4": { "model": "storagedrawers:block/half_drawers_indicator_4" },
+        "facing=east,half=true,slots=4": { "model": "storagedrawers:block/half_drawers_indicator_4", "y": 90 },
+        "facing=south,half=true,slots=4": { "model": "storagedrawers:block/half_drawers_indicator_4", "y": 180 },
+        "facing=west,half=true,slots=4": { "model": "storagedrawers:block/half_drawers_indicator_4", "y": 270 }
+    }
+}

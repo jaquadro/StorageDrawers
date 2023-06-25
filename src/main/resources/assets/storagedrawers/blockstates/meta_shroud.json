@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "facing=north,half=false": { "model": "storagedrawers:block/full_drawers_shroud" },
+        "facing=east,half=false": { "model": "storagedrawers:block/full_drawers_shroud", "y": 90 },
+        "facing=south,half=false": { "model": "storagedrawers:block/full_drawers_shroud", "y": 180 },
+        "facing=west,half=false": { "model": "storagedrawers:block/full_drawers_shroud", "y": 270 },
+        "facing=north,half=true": { "model": "storagedrawers:block/half_drawers_shroud" },
+        "facing=east,half=true": { "model": "storagedrawers:block/half_drawers_shroud", "y": 90 },
+        "facing=south,half=true": { "model": "storagedrawers:block/half_drawers_shroud", "y": 180 },
+        "facing=west,half=true": { "model": "storagedrawers:block/half_drawers_shroud", "y": 270 }
+    }
+}

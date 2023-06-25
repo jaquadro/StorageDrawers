@@ -12,7 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.integration.TheOneProbe;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -47,7 +47,7 @@ public class StorageDrawers
     //public static SecurityRegistry securityRegistry;
 
     private static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MOD_ID);
-    public static final RegistryObject<RecipeSerializer<AddUpgradeRecipe>> UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_upgrade", () -> new SimpleRecipeSerializer<>(AddUpgradeRecipe::new));
+    public static final RegistryObject<RecipeSerializer<AddUpgradeRecipe>> UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_upgrade", () -> new SimpleCraftingRecipeSerializer<>(AddUpgradeRecipe::new));
 
     public StorageDrawers () {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
@@ -63,6 +63,7 @@ public class StorageDrawers
         bus.addListener(this::setup);
         bus.addListener(this::onModQueueEvent);
         bus.addListener(this::onModConfigEvent);
+        bus.addListener(ModItems::creativeModeTabRegister);
 
         RECIPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 

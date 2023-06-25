@@ -10,11 +10,6 @@ import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -23,6 +18,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -38,6 +34,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 @OnlyIn(Dist.CLIENT)
 public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEntityDrawers>
@@ -171,12 +169,16 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
         matrix.popPose();
     }
 
-    private static final Quaternion ITEM_LIGHT_ROTATION_3D = Util.make(() -> {
-        Quaternion quaternion = new Quaternion(Vector3f.XP, -15f, true);
-        quaternion.mul(new Quaternion(Vector3f.YP, 15f, true));
-        return quaternion;
-    });
-    private static final Quaternion ITEM_LIGHT_ROTATION_FLAT = new Quaternion(Vector3f.XP, -45f, true);
+    private static final Matrix3f ITEM_LIGHT_ROTATION_3D = (new Matrix3f()).rotationYXZ(.261799f, -.261799f, 0);
+    /*Util.make(() -> {
+        Matrix4f mat = (new Matrix4f()).rotationYXZ(.261799f, -.261799f, 0);
+        return mat;
+        //Quaternionf quaternion = new Quaternionf(Vector3f.XP, -15f, true);
+        //quaternion.mul(new Quaternionf(Vector3f.YP, 15f, true));
+        //return quaternion;
+    });*/
+    private static final Matrix3f ITEM_LIGHT_ROTATION_FLAT = (new Matrix3f()).rotationYXZ(0, -.785398f, 0);
+    //new Quaternionf(Vector3f.XP, -45f, true);
 
     private void renderFastItem(@NotNull ItemStack itemStack, BlockState state, int slot, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Direction side) {
         BlockDrawers block = (BlockDrawers)state.getBlock();
@@ -192,7 +194,7 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
 
         alignRendering(matrix, side);
         matrix.translate(moveX / 16, 1 - moveY / 16, 1 - moveZ);
-        matrix.mulPoseMatrix(Matrix4f.createScaleMatrix(scaleX, scaleY, 0.001f));
+        matrix.mulPoseMatrix((new Matrix4f()).scale(scaleX, scaleY, 0.001f));
 
         try {
             BakedModel itemModel = itemRenderer.getModel(itemStack, null, null, 0);
@@ -214,7 +216,7 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
         // Rotate to face the correct direction for the drawer's orientation.
 
         matrix.translate(.5f, 0, .5f);
-        matrix.mulPoseMatrix(new Matrix4f(new Quaternion(Vector3f.YP, getRotationYForSide2D(side), true)));
+        matrix.mulPoseMatrix((new Matrix4f()).rotateYXZ(getRotationYForSide2D(side), 0, 0));
         matrix.translate(-.5f, 0, -.5f);
     }
 
@@ -236,13 +238,13 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
     private static final float[] sideRotationY2D = { 0, 0, 2, 0, 3, 1 };
 
     private float getRotationYForSide2D (Direction side) {
-        return sideRotationY2D[side.ordinal()] * 90;
+        return sideRotationY2D[side.ordinal()] * 90 * (float)Math.PI / 180f;
     }
 
-    public static final ResourceLocation TEXTURE_IND_1 = StorageDrawers.rl("blocks/indicator/indicator_1_on");
-    public static final ResourceLocation TEXTURE_IND_2 = StorageDrawers.rl("blocks/indicator/indicator_2_on");
-    public static final ResourceLocation TEXTURE_IND_4 = StorageDrawers.rl("blocks/indicator/indicator_4_on");
-    public static final ResourceLocation TEXTURE_IND_COMP = StorageDrawers.rl("blocks/indicator/indicator_comp_on");
+    public static final ResourceLocation TEXTURE_IND_1 = StorageDrawers.rl("block/indicator/indicator_1_on");
+    public static final ResourceLocation TEXTURE_IND_2 = StorageDrawers.rl("block/indicator/indicator_2_on");
+    public static final ResourceLocation TEXTURE_IND_4 = StorageDrawers.rl("block/indicator/indicator_4_on");
+    public static final ResourceLocation TEXTURE_IND_COMP = StorageDrawers.rl("block/indicator/indicator_comp_on");
 
     private void renderIndicator (BlockDrawers block, BlockEntityDrawers blockEntityDrawers, PoseStack matrixStack, MultiBufferSource buffer, Direction side, int combinedLight, int combinedOverlay) {
         int count = (blockEntityDrawers instanceof BlockEntityDrawersComp) ? 1 : block.getDrawerCount();
@@ -256,12 +258,13 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
             resource = TEXTURE_IND_4;
 
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(resource);
+        SpriteContents contents = sprite.contents();
         float u1 = sprite.getU0();
         float u2 = sprite.getU1();
         float v1 = sprite.getV0();
         float v2 = sprite.getV1();
-        float pxW = sprite.getWidth();
-        float pxH = sprite.getHeight();
+        float pxW = contents.width();
+        float pxH = contents.height();
 
         float unit = 0.0625f;
         float divU = unit * (u2 - u1);

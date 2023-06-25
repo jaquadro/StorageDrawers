@@ -152,7 +152,7 @@ repositories {
     }
     maven {
         name 'TOP'
-        url "https://maven.tterrag.com/"
+        url "https://maven.k-4u.nl"
     }
     maven {
         url "https://cursemaven.com"
@@ -165,11 +165,13 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    //compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    implementation fg.deobf("curse.maven:jei-238222:${jei_id}")
     // JEI not yet updated for 41.0.64
     // runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     implementation fg.deobf("curse.maven:the-one-probe-245211:${top_id}")
+    //implementation fg.deobf("mcjty.theoneprobe:theoneprobe:1.19.3-7.0.0-2")
     // compileOnly since not yet updated for 41.0.64
     compileOnly fg.deobf("curse.maven:jade-324717:${jade_id}")
 

@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north,half=false": { "model": "storagedrawers:block/compdrawers_indicator" },
+        "facing=east,half=false": { "model": "storagedrawers:block/compdrawers_indicator", "y": 90 },
+        "facing=south,half=false": { "model": "storagedrawers:block/compdrawers_indicator", "y": 180 },
+        "facing=west,half=false": { "model": "storagedrawers:block/compdrawers_indicator", "y": 270 }
+    }
+}

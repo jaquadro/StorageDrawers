@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "storagedrawers:blocks/drawers_crimson_side"
+        "all": "storagedrawers:block/drawers_crimson_side"
     }
 }

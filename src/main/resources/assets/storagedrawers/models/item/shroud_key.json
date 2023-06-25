@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "storagedrawers:items/drawer_key_shroud"
+        "layer0": "storagedrawers:item/drawer_key_shroud"
     }
 }

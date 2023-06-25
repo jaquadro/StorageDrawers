@@ -1,9 +1,9 @@
 {
     "parent": "storagedrawers:block/full_drawers_orientable",
     "textures": {
-        "top": "storagedrawers:blocks/drawers_comp_side",
-        "front": "storagedrawers:blocks/drawers_comp_front_1",
-        "side": "storagedrawers:blocks/drawers_comp_side_2",
-        "trim": "storagedrawers:blocks/drawers_comp_trim"
+        "top": "storagedrawers:block/drawers_comp_side",
+        "front": "storagedrawers:block/drawers_comp_front_1",
+        "side": "storagedrawers:block/drawers_comp_side_2",
+        "trim": "storagedrawers:block/drawers_comp_trim"
     }
 }

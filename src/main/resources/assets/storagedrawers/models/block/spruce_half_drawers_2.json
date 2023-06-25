@@ -1,10 +1,10 @@
 {
     "parent": "storagedrawers:block/half_drawers_orientable",
     "textures": {
-        "top": "storagedrawers:blocks/drawers_spruce_side",
-        "front": "storagedrawers:blocks/drawers_spruce_front_2",
-        "back": "storagedrawers:blocks/drawers_spruce_side",
-        "side": "storagedrawers:blocks/drawers_spruce_side",
-        "trim": "storagedrawers:blocks/drawers_spruce_trim"
+        "top": "storagedrawers:block/drawers_spruce_side",
+        "front": "storagedrawers:block/drawers_spruce_front_2",
+        "back": "storagedrawers:block/drawers_spruce_side",
+        "side": "storagedrawers:block/drawers_spruce_side",
+        "trim": "storagedrawers:block/drawers_spruce_trim"
     }
 }

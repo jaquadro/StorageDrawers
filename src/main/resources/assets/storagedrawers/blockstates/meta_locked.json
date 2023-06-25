@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "facing=north,half=false": { "model": "storagedrawers:block/full_drawers_lock" },
+        "facing=east,half=false": { "model": "storagedrawers:block/full_drawers_lock", "y": 90 },
+        "facing=south,half=false": { "model": "storagedrawers:block/full_drawers_lock", "y": 180 },
+        "facing=west,half=false": { "model": "storagedrawers:block/full_drawers_lock", "y": 270 },
+        "facing=north,half=true": { "model": "storagedrawers:block/half_drawers_lock" },
+        "facing=east,half=true": { "model": "storagedrawers:block/half_drawers_lock", "y": 90 },
+        "facing=south,half=true": { "model": "storagedrawers:block/half_drawers_lock", "y": 180 },
+        "facing=west,half=true": { "model": "storagedrawers:block/half_drawers_lock", "y": 270 }
+    }
+}

@@ -2,6 +2,8 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.*;
+import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMeta;
+import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMetaSized;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -85,6 +87,13 @@ public final class ModBlocks
     public static final RegistryObject<BlockController> CONTROLLER = registerControllerBlock("controller");
     public static final RegistryObject<BlockSlave> CONTROLLER_SLAVE = registerControllerSlaveBlock("controller_slave");
 
+    public static final RegistryObject<BlockMeta>
+        META_LOCKED = registerMetaBlock("meta_locked"),
+        META_VOID = registerMetaBlock("meta_void"),
+        META_SHROUD = registerMetaBlock("meta_shroud"),
+        META_INDICATOR = registerSizedMetaBlock("meta_indicator"),
+        META_COMP_INDICATOR = registerMetaBlock("meta_comp_indicator");
+
     private ModBlocks() {}
 
     private static RegistryObject<BlockStandardDrawers> registerWoodenDrawerBlock(String name, int drawerCount, boolean halfDepth) {
@@ -105,6 +114,14 @@ public final class ModBlocks
 
     private static RegistryObject<BlockSlave> registerControllerSlaveBlock(String name) {
         return BLOCK_REGISTER.register(name, () -> new BlockSlave(getStoneBlockProperties()));
+    }
+
+    private static RegistryObject<BlockMeta> registerMetaBlock(String name) {
+        return BLOCK_REGISTER.register(name, () -> new BlockMeta(Properties.of(Material.AIR)));
+    }
+
+    private static RegistryObject<BlockMeta> registerSizedMetaBlock(String name) {
+        return BLOCK_REGISTER.register(name, () -> new BlockMetaSized(Properties.of(Material.AIR)));
     }
 
     private static Properties getWoodenBlockProperties() {

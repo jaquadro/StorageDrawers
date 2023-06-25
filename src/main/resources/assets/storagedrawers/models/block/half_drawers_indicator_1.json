@@ -1,8 +1,8 @@
 {
     "parent": "block/block",
     "textures": {
-        "indicator": "storagedrawers:blocks/indicator/indicator_1_off",
-        "indicatorOn": "storagedrawers:blocks/indicator/indicator_1_on"
+        "indicator": "storagedrawers:block/indicator/indicator_1_off",
+        "indicatorOn": "storagedrawers:block/indicator/indicator_1_on"
     },
     "elements": [ {
         "from": [ 1, 1, 8.99 ],

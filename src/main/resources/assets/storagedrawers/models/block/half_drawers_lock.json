@@ -1,7 +1,7 @@
 {
     "parent": "block/block",
     "textures": {
-        "lock": "storagedrawers:blocks/indicator/lock_icon"
+        "lock": "storagedrawers:block/indicator/lock_icon"
     },
     "elements": [ {
         "from": [ 7.5, 15, 7.98 ],
