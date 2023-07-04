@@ -107,6 +107,8 @@ public class ItemCustomDrawers extends ItemDrawers implements IFrameable
     }
 
     private static NBTTagCompound getMaterialTag (@Nonnull ItemStack mat) {
+        // These two lines are no longer needed when called via `IFrameable.decorate`,
+        // but may still be needed via `makeItemStack` call
         mat = mat.copy();
         mat.setCount(1);
 

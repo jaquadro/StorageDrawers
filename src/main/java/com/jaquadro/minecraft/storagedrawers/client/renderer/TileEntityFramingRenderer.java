@@ -30,13 +30,18 @@ public class TileEntityFramingRenderer extends TileEntitySpecialRenderer<TileEnt
             return;
 
         // Get each slot's contents
-        ItemStack input = tile.getStackInSlot(0);
-        ItemStack matSide = tile.getStackInSlot(1);
-        ItemStack matTrim = tile.getStackInSlot(2);
-        ItemStack matFront = tile.getStackInSlot(3);
+        ItemStack input = tile.getStackInSlot(0).copy();
+        ItemStack matSide = tile.getStackInSlot(1).copy();
+        ItemStack matTrim = tile.getStackInSlot(2).copy();
+        ItemStack matFront = tile.getStackInSlot(3).copy();
 
-        if (!input.isEmpty() && input.getItem() instanceof IFrameable && !matSide.isEmpty()) {
-            ItemStack result = ((IFrameable) input.getItem()).decorate(input, matSide, matTrim, matFront);
+        input.setCount(1);
+        matSide.setCount(1);
+        matTrim.setCount(1);
+        matFront.setCount(1);
+
+        if (!input.isEmpty() && input.getItem() instanceof IFrameable frameable && !matSide.isEmpty()) {
+            ItemStack result = frameable.decorate(input, matSide, matTrim, matFront);
             renderSlot(tile, x, y, z, result, 1f, .5f, .25f, -.5f);
         }
 
