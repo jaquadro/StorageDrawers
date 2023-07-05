@@ -1,3 +1,5 @@
+//file:noinspection DependencyNotationArgument
+
 dependencies {
     // Hard deps
     implementation rfg.deobf("curse.maven:chameleon-230497:${chameleon_file_id}")
