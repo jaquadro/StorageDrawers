@@ -1,13 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nonnull;
@@ -91,7 +88,12 @@ public class InventoryUpgrade implements IInventory
 
     @Override
     public boolean isUsableByPlayer (EntityPlayer player) {
-        return true;
+        BlockPos pos = tile.getPos();
+
+        if (tile.getWorld().getTileEntity(pos) != tile)
+            return false;
+
+        return player.getDistanceSq(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5) <= 64;
     }
 
     @Override
