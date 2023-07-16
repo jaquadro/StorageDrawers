@@ -17,6 +17,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 public class TileEntityFramingTable extends TileEntity implements IInventory
 {
@@ -195,8 +196,7 @@ public class TileEntityFramingTable extends TileEntity implements IInventory
 
         NBTTagList itemList = tag.getTagList("Items", 10);
         tableItemStacks = new ItemStack[getSizeInventory()];
-        for (int i = 0; i < tableItemStacks.length; i++)
-            tableItemStacks[i] = ItemStack.EMPTY;
+        Arrays.fill(tableItemStacks, ItemStack.EMPTY);
 
         for (int i = 0; i < itemList.tagCount(); i++) {
             NBTTagCompound item = itemList.getCompoundTagAt(i);

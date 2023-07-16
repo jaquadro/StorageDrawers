@@ -135,7 +135,6 @@ public class FramingTableModel extends ChamModel
         return transform;
     }
 
-    @SuppressWarnings("deprecation")
     public static class ItemModel extends FramingTableModel
     {
         public ItemModel (@Nonnull ItemStack stack) {

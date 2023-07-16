@@ -43,7 +43,7 @@ public class BlockTrim extends Block implements INetworked
     public BlockTrim (String registryName, String name) {
         super(Material.WOOD);
 
-        setUnlocalizedName(name);
+        setTranslationKey(name);
         setRegistryName(registryName);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);

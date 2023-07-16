@@ -114,10 +114,9 @@ public class CustomDrawerModel extends ChamModel
     private TextureAtlasSprite iconParticle;
 
     public static IBakedModel fromBlock (IBlockState state) {
-        if (!(state instanceof IExtendedBlockState))
+        if (!(state instanceof IExtendedBlockState xstate))
             return new CustomDrawerModel(state, false);
 
-        IExtendedBlockState xstate = (IExtendedBlockState) state;
         DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
         MaterialModelData matModel = xstate.getValue(BlockDrawersCustom.MAT_MODEL);
         if (stateModel == null || matModel == null)
@@ -240,10 +239,9 @@ public class CustomDrawerModel extends ChamModel
         protected IBakedModel buildModel (IBlockState state, IBakedModel parent) {
             try {
                 IBakedModel mainModel = CustomDrawerModel.fromBlock(state);
-                if (!(state instanceof IExtendedBlockState))
+                if (!(state instanceof IExtendedBlockState xstate))
                     return mainModel;
 
-                IExtendedBlockState xstate = (IExtendedBlockState) state;
                 DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
 
                 try {

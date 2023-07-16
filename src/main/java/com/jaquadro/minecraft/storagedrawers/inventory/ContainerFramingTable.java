@@ -75,14 +75,19 @@ public class ContainerFramingTable extends Container
 
     @Override
     public void onCraftMatrixChanged (IInventory inventory) {
-        ItemStack input = tableInventory.getStackInSlot(inputSlot.getSlotIndex());
-        ItemStack matSide = tableInventory.getStackInSlot(materialSideSlot.getSlotIndex());
-        ItemStack matTrim = tableInventory.getStackInSlot(materialTrimSlot.getSlotIndex());
-        ItemStack matFront = tableInventory.getStackInSlot(materialFrontSlot.getSlotIndex());
+        ItemStack input = tableInventory.getStackInSlot(inputSlot.getSlotIndex()).copy();
+        ItemStack matSide = tableInventory.getStackInSlot(materialSideSlot.getSlotIndex()).copy();
+        ItemStack matTrim = tableInventory.getStackInSlot(materialTrimSlot.getSlotIndex()).copy();
+        ItemStack matFront = tableInventory.getStackInSlot(materialFrontSlot.getSlotIndex()).copy();
 
-        if (!input.isEmpty() && input.getItem() instanceof IFrameable && !matSide.isEmpty()) {
-            craftResult.setInventorySlotContents(0, ((IFrameable) input.getItem())
-                    .decorate(input.copy(), matSide.copy(), matTrim.copy(), matFront.copy()));
+        input.setCount(1);
+        matSide.setCount(1);
+        matTrim.setCount(1);
+        matFront.setCount(1);
+
+        if (!input.isEmpty() && input.getItem() instanceof IFrameable frameable && !matSide.isEmpty()) {
+            craftResult.setInventorySlotContents(0, frameable
+                    .decorate(input, matSide, matTrim, matFront));
             return;
         }
 

@@ -29,7 +29,7 @@ public class ItemTrim extends ItemMultiTexture implements IItemMeshMapper, IItem
             @Override
             @Nonnull
             public String apply (@Nonnull ItemStack input) {
-                return BlockPlanks.EnumType.byMetadata(input.getMetadata()).getUnlocalizedName();
+                return BlockPlanks.EnumType.byMetadata(input.getMetadata()).getTranslationKey();
             }
         });
     }
@@ -49,10 +49,10 @@ public class ItemTrim extends ItemMultiTexture implements IItemMeshMapper, IItem
     @Override
     public List<ResourceLocation> getItemVariants () {
         ResourceLocation location = ForgeRegistries.ITEMS.getKey(this);
-        List<ResourceLocation> variants = new ArrayList<ResourceLocation>();
+        List<ResourceLocation> variants = new ArrayList<>();
 
         for (BlockPlanks.EnumType woodType : BlockPlanks.EnumType.values())
-            variants.add(new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + '_' + woodType.getName()));
+            variants.add(new ResourceLocation(location.getNamespace(), location.getPath() + '_' + woodType.getName()));
 
         return variants;
     }

@@ -40,8 +40,7 @@ public class CommandDebug extends CommandBase
 
         if (args[0].equals("simulate")) {
             Entity e = sender.getCommandSenderEntity();
-            if (e instanceof EntityPlayerMP) {
-                EntityPlayerMP mp = (EntityPlayerMP) e;
+            if (e instanceof EntityPlayerMP mp) {
                 simulateOp(server, mp, Arrays.copyOfRange(args, 1, args.length));
             }
         }

@@ -22,7 +22,7 @@ public class BlockSlave extends BlockContainer implements INetworked
 
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(5f);
-        setUnlocalizedName(blockName);
+        setTranslationKey(blockName);
         setRegistryName(registryName);
         setSoundType(SoundType.STONE);
     }

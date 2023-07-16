@@ -21,8 +21,8 @@ public class ItemUpgradeStatus extends ItemUpgrade implements IItemMeshMapper
     }
 
     @Override
-    public String getUnlocalizedName (@Nonnull ItemStack itemStack) {
-        return super.getUnlocalizedName() + "." + EnumUpgradeStatus.byMetadata(itemStack.getMetadata()).getUnlocalizedName();
+    public String getTranslationKey (@Nonnull ItemStack itemStack) {
+        return super.getTranslationKey() + "." + EnumUpgradeStatus.byMetadata(itemStack.getMetadata()).getUnlocalizedName();
     }
 
     @Override

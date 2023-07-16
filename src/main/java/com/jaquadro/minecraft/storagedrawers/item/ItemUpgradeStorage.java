@@ -27,8 +27,8 @@ public class ItemUpgradeStorage extends ItemUpgrade implements IItemMeshMapper
     }
 
     @Override
-    public String getUnlocalizedName (@Nonnull ItemStack itemStack) {
-        return super.getUnlocalizedName() + "." + EnumUpgradeStorage.byMetadata(itemStack.getMetadata()).getUnlocalizedName();
+    public String getTranslationKey (@Nonnull ItemStack itemStack) {
+        return super.getTranslationKey() + "." + EnumUpgradeStorage.byMetadata(itemStack.getMetadata()).getUnlocalizedName();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ItemUpgradeStorage extends ItemUpgrade implements IItemMeshMapper
 
     @Override
     public List<Pair<ItemStack, ModelResourceLocation>> getMeshMappings () {
-        List<Pair<ItemStack, ModelResourceLocation>> mappings = new ArrayList<Pair<ItemStack, ModelResourceLocation>>();
+        List<Pair<ItemStack, ModelResourceLocation>> mappings = new ArrayList<>();
 
         for (EnumUpgradeStorage type : EnumUpgradeStorage.values()) {
             ModelResourceLocation location = new ModelResourceLocation(getRegistryName().toString() + '_' + type.getName(), "inventory");

@@ -87,8 +87,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ISeala
 
             if (upgrade.getItem() == ModItems.upgradeOneStack) {
                 int lostStackCapacity = upgradeData.getStorageMultiplier() * (getEffectiveDrawerCapacity() - 1);
-                if (!stackCapacityCheck(lostStackCapacity))
-                    return false;
+                return stackCapacityCheck(lostStackCapacity);
             }
 
             return true;
@@ -108,8 +107,7 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ISeala
                     storageMult--;
 
                 int addedStackCapacity = storageMult * getEffectiveDrawerCapacity();
-                if (!stackCapacityCheck(addedStackCapacity))
-                    return false;
+                return stackCapacityCheck(addedStackCapacity);
             }
 
             return true;
@@ -281,16 +279,12 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ISeala
         if (type == null)
             return 0;
 
-        switch (type) {
-            case COMBINED:
-                return getCombinedRedstoneLevel();
-            case MAX:
-                return getMaxRedstoneLevel();
-            case MIN:
-                return getMinRedstoneLevel();
-            default:
-                return 0;
-        }
+        return switch (type) {
+            case COMBINED -> getCombinedRedstoneLevel();
+            case MAX -> getMaxRedstoneLevel();
+            case MIN -> getMinRedstoneLevel();
+            default -> 0;
+        };
     }
 
     protected int getCombinedRedstoneLevel () {

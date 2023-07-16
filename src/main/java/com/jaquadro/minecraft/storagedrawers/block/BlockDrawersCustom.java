@@ -129,7 +129,7 @@ public class BlockDrawersCustom extends BlockStandardDrawers
         if (tile == null)
             return state;
 
-        EnumFacing facing = EnumFacing.getFront(tile.getDirection());
+        EnumFacing facing = EnumFacing.byIndex(tile.getDirection());
         if (facing.getAxis() == EnumFacing.Axis.Y)
             facing = EnumFacing.NORTH;
 

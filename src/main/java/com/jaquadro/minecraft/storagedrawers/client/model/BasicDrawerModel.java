@@ -90,10 +90,9 @@ public final class BasicDrawerModel
                 EnumBasicDrawer drawer = state.getValue(BlockStandardDrawers.BLOCK);
                 EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
-                if (!(state instanceof IExtendedBlockState))
+                if (!(state instanceof IExtendedBlockState xstate))
                     return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
 
-                IExtendedBlockState xstate = (IExtendedBlockState)state;
                 DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
 
                 if (!DrawerDecoratorModel.shouldHandleState(stateModel))
@@ -114,7 +113,7 @@ public final class BasicDrawerModel
         @Override
         public List<Object> getKey (IBlockState state) {
             try {
-                List<Object> key = new ArrayList<Object>();
+                List<Object> key = new ArrayList<>();
                 IExtendedBlockState xstate = (IExtendedBlockState)state;
                 key.add(xstate.getValue(BlockDrawers.STATE_MODEL));
 

@@ -138,16 +138,12 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
     }
 
     public static TileEntityDrawersStandard createEntity (int slotCount) {
-        switch (slotCount) {
-            case 1:
-                return new Slot1();
-            case 2:
-                return new Slot2();
-            case 4:
-                return new Slot4();
-            default:
-                return null;
-        }
+        return switch (slotCount) {
+            case 1 -> new Slot1();
+            case 2 -> new Slot2();
+            case 4 -> new Slot4();
+            default -> null;
+        };
     }
 
     @Override
@@ -169,23 +165,12 @@ public class TileEntityDrawersStandard extends TileEntityDrawers
             ConfigManager config = StorageDrawers.config;
 
             switch (type) {
-                case FULL1:
-                    capacity = config.getBlockBaseStorage("fulldrawers1");
-                    break;
-                case FULL2:
-                    capacity = config.getBlockBaseStorage("fulldrawers2");
-                    break;
-                case FULL4:
-                    capacity = config.getBlockBaseStorage("fulldrawers4");
-                    break;
-                case HALF2:
-                    capacity = config.getBlockBaseStorage("halfdrawers2");
-                    break;
-                case HALF4:
-                    capacity = config.getBlockBaseStorage("halfdrawers4");
-                    break;
-                default:
-                    capacity = 1;
+                case FULL1 -> capacity = config.getBlockBaseStorage("fulldrawers1");
+                case FULL2 -> capacity = config.getBlockBaseStorage("fulldrawers2");
+                case FULL4 -> capacity = config.getBlockBaseStorage("fulldrawers4");
+                case HALF2 -> capacity = config.getBlockBaseStorage("halfdrawers2");
+                case HALF4 -> capacity = config.getBlockBaseStorage("halfdrawers4");
+                default -> capacity = 1;
             }
 
             if (capacity <= 0)

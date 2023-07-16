@@ -49,7 +49,7 @@ public class BlockFramingTable extends BlockContainer
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setHardness(2.5f);
         setSoundType(SoundType.WOOD);
-        setUnlocalizedName(blockName);
+        setTranslationKey(blockName);
         setRegistryName(registryName);
 
         setDefaultState(blockState.getBaseState().withProperty(RIGHT_SIDE, true)
@@ -148,7 +148,7 @@ public class BlockFramingTable extends BlockContainer
 
     @Override
     @SuppressWarnings("deprecation")
-    public EnumPushReaction getMobilityFlag (IBlockState state) {
+    public EnumPushReaction getPushReaction (IBlockState state) {
         return EnumPushReaction.DESTROY;
     }
 
@@ -187,7 +187,7 @@ public class BlockFramingTable extends BlockContainer
     @Override
     @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta (int meta) {
-        EnumFacing side = EnumFacing.getFront(meta & 0x7);
+        EnumFacing side = EnumFacing.byIndex(meta & 0x7);
         if (side.getAxis() == EnumFacing.Axis.Y)
             side = EnumFacing.NORTH;
 

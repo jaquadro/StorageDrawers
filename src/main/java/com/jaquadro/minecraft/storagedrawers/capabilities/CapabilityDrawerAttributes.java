@@ -27,8 +27,8 @@ public class CapabilityDrawerAttributes
         @Nullable
         @Override
         public NBTBase writeNBT (Capability<IDrawerAttributes> capability, IDrawerAttributes instance, EnumFacing side) {
-            if (instance instanceof INBTSerializable)
-                return ((INBTSerializable) instance).serializeNBT();
+            if (instance instanceof INBTSerializable serializable)
+                return serializable.serializeNBT();
 
             NBTTagCompound tag = new NBTTagCompound();
             tag.setBoolean("lockedPop", instance.isItemLocked(LockAttribute.LOCK_POPULATED));
@@ -44,18 +44,17 @@ public class CapabilityDrawerAttributes
 
         @Override
         public void readNBT (Capability<IDrawerAttributes> capability, IDrawerAttributes instance, EnumFacing side, NBTBase nbt) {
-            if (instance instanceof INBTSerializable) {
+            if (instance instanceof INBTSerializable serializable) {
                 @SuppressWarnings("unchecked")
-                INBTSerializable<NBTBase> serializer = (INBTSerializable)instance;
+                INBTSerializable<NBTBase> serializer = serializable;
                 serializer.deserializeNBT(nbt);
                 return;
             }
 
-            if (!(instance instanceof IDrawerAttributesModifiable))
+            if (!(instance instanceof IDrawerAttributesModifiable modifiable))
                 throw new RuntimeException("IDrawerAttributes instance does not implement IDrawerAttributesModifiable");
-            IDrawerAttributesModifiable modifiable = (IDrawerAttributesModifiable) instance;
 
-            NBTTagCompound tag = (NBTTagCompound)nbt;
+            NBTTagCompound tag = (NBTTagCompound) nbt;
             modifiable.setItemLocked(LockAttribute.LOCK_POPULATED, tag.getBoolean("lockedPop"));
             modifiable.setItemLocked(LockAttribute.LOCK_EMPTY, tag.getBoolean("lockedEmpty"));
             modifiable.setIsConcealed(tag.getBoolean("concealed"));

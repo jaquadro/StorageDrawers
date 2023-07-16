@@ -229,8 +229,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
             if (record.storage == null)
                 continue;
 
-            if (record.storage instanceof IProtectable) {
-                IProtectable protectable = (IProtectable)record.storage;
+            if (record.storage instanceof IProtectable protectable) {
                 if (!SecurityManager.hasOwnership(profile, protectable))
                     continue;
 
@@ -377,7 +376,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
         indexSlotRecords(records);
 
         List<SlotRecord> copied = new ArrayList<>(records);
-        Collections.sort(copied, slotRecordComparator);
+        copied.sort(slotRecordComparator);
 
         int[] slotMap = new int[copied.size()];
         for (int i = 0; i < slotMap.length; i++)
@@ -563,8 +562,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
         if (group == null)
             return null;
 
-        if (group instanceof TileEntity) {
-            TileEntity tile = (TileEntity)group;
+        if (group instanceof TileEntity tile) {
             if (tile.isInvalid() || !tile.getPos().equals(record.coord)) {
                 record.group = null;
                 return null;

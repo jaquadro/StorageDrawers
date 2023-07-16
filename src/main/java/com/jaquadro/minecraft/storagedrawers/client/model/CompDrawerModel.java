@@ -73,10 +73,9 @@ public final class CompDrawerModel
                 EnumCompDrawer drawer = (EnumCompDrawer)state.getValue(BlockCompDrawers.SLOTS);
                 EnumFacing dir = state.getValue(BlockDrawers.FACING);
 
-                if (!(state instanceof IExtendedBlockState))
+                if (!(state instanceof IExtendedBlockState xstate))
                     return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
 
-                IExtendedBlockState xstate = (IExtendedBlockState)state;
                 DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
 
                 if (!DrawerDecoratorModel.shouldHandleState(stateModel))

@@ -78,14 +78,14 @@ public class ItemCompDrawers extends ItemBlock implements IItemMeshMapper, IItem
         List<ResourceLocation> variants = new ArrayList<ResourceLocation>();
 
         for (EnumCompDrawer type : EnumCompDrawer.values())
-            variants.add(new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + '_' + type.getName()));
+            variants.add(new ResourceLocation(location.getNamespace(), location.getPath() + '_' + type.getName()));
 
         return variants;
     }
 
     @Override
     public List<Pair<ItemStack, ModelResourceLocation>> getMeshMappings () {
-        List<Pair<ItemStack, ModelResourceLocation>> mappings = new ArrayList<Pair<ItemStack, ModelResourceLocation>>();
+        List<Pair<ItemStack, ModelResourceLocation>> mappings = new ArrayList<>();
 
         for (EnumCompDrawer type : EnumCompDrawer.values()) {
             ModelResourceLocation location = new ModelResourceLocation(StorageDrawers.MOD_ID + ":compDrawers_" + type.getName(), "inventory");

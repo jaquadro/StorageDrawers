@@ -15,7 +15,7 @@ There's also a discord community for Texel's mods: https://discord.gg/8WtpQfy
 For Developers
 --------------
 
-StorageDrawers's buildscripts uses [CleanroomMC's TemplateDevEnv's](https://github.com/CleanroomMC/TemplateDevEnv/tree/master) as a base.
+StorageDrawers's buildscript comes from [GTCEu's 1.12.2 Buildscripts.](https://github.com/GregTechCEu/Buildscripts).
 
 ### Building and Developing
 
@@ -30,6 +30,14 @@ Once loaded in IntelliJ IDEA, you can use the other preset run configurations to
 - Run Dev Obfuscated Client
 - Run Dev Obfuscated Server
 
+**Configuring Jabel**
+
+With IntelliJ IDEA, you should also configure your project to give you proper warnings for using Jabel. 
+
+Jabel is a tool which allows features found in higher versions of Java to be used in Java 8 programs, whilst still compiling into Java 8 Bytecode. However, this only supports language features not APIs. 
+
+Thus, you must follow the steps listed [here](https://github.com/GregTechCEu/Buildscripts/blob/master/docs/jabel.md) to give proper warnings on what you can and can't use.
+
 #### Without IntelliJ IDEA
 If you don't have IntelliJ IDEA, simply clone the project with `git clone https://github.com/jaquadro/StorageDrawers`, go into the project folder in the command line, with `cd StorageDrawers`, and run `./gradlew setupDecompWorkspace` to setup a development environment. 
 
@@ -41,7 +49,7 @@ Then, you can use the following commands:
 - `./gradlew runObfServer` - Runs a Dev Obfuscated Server
 
 #### Other useful tips
- - You do not need to worry about what java version you have set as your default. The buildscript will automatically download Zulu's Java 8. Simply do the steps above, and maybe change your editor's JDK to a version of Java 8, and you'll be ready to go!
+ - You do not need to worry about what java version you have set as your default. The buildscript will automatically download Zulu's Java 8 for building, and Zulu's Java 17 as a SDK. Simply do the steps above, and maybe change your editor's JDK to a version of Java 17, and you'll be ready to go! Your editor may also be able to do the steps listed [here](https://github.com/GregTechCEu/Buildscripts/blob/master/docs/jabel.md), although they are written for IntelliJ IDEA.
  - In `gradle.properties`, you can edit the `debug_modid` variables at the bottom. This allows you to include those soft dependencies into your development clients and servers. Make sure to run the `setupWorkpace` run configuration or the commmand `./gradlew setupDecompWorkpace`, and refresh your gradle!
 
 ### Maven

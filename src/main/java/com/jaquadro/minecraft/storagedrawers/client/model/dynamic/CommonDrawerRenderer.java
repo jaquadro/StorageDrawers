@@ -71,7 +71,7 @@ public class CommonDrawerRenderer
                 renderHelper.targetFaceGroup(true);
                 panelRenderer.renderFacePanel(dir, world, state, pos, 0, 0, depth, 1, 1, 1);
             }
-            else if (dir == ChamRender.FACE_ZNEG && depth == 0)
+            else if (depth == 0)
                 renderHelper.targetFaceGroup(true);
 
             panelRenderer.renderFaceTrim(dir, world, state, pos, 0, 0, depth, 1, 1, 1);

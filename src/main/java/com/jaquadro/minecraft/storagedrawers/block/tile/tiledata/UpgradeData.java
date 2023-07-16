@@ -15,6 +15,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 public class UpgradeData extends TileDataShim
 {
@@ -34,8 +35,7 @@ public class UpgradeData extends TileDataShim
 
     public UpgradeData (int slotCount) {
         upgrades = new ItemStack[slotCount];
-        for (int i = 0; i < upgrades.length; i++)
-            upgrades[i] = ItemStack.EMPTY;
+        Arrays.fill(upgrades, ItemStack.EMPTY);
 
         syncStorageMultiplier();
     }
@@ -96,10 +96,9 @@ public class UpgradeData extends TileDataShim
     public boolean canAddUpgrade (@Nonnull ItemStack upgrade) {
         if (upgrade.isEmpty())
             return false;
-        if (!(upgrade.getItem() instanceof ItemUpgrade))
+        if (!(upgrade.getItem() instanceof ItemUpgrade candidate))
             return false;
 
-        ItemUpgrade candidate = (ItemUpgrade)upgrade.getItem();
         if (candidate.getAllowMultiple())
             return true;
 
@@ -107,10 +106,9 @@ public class UpgradeData extends TileDataShim
             if (stack.isEmpty())
                 continue;
 
-            if (!(stack.getItem() instanceof ItemUpgrade))
+            if (!(stack.getItem() instanceof ItemUpgrade reference))
                 continue;
 
-            ItemUpgrade reference = (ItemUpgrade)stack.getItem();
             if (candidate == reference)
                 return false;
         }
@@ -236,8 +234,7 @@ public class UpgradeData extends TileDataShim
 
     @Override
     public void readFromNBT (NBTTagCompound tag) {
-        for (int i = 0; i < upgrades.length; i++)
-            upgrades[i] = ItemStack.EMPTY;
+        Arrays.fill(upgrades, ItemStack.EMPTY);
 
         if (!tag.hasKey("Upgrades"))
             return;

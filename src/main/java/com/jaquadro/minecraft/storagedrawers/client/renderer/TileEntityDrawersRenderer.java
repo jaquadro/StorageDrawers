@@ -68,7 +68,7 @@ public class TileEntityDrawersRenderer extends TileEntitySpecialRenderer<TileEnt
 
         renderItem = Minecraft.getMinecraft().getRenderItem();
 
-        EnumFacing side = EnumFacing.getFront(tile.getDirection());
+        EnumFacing side = EnumFacing.byIndex(tile.getDirection());
         int ambLight = getWorld().getCombinedLight(tile.getPos().offset(side), 0);
         int lu = ambLight % 65536;
         int lv = ambLight / 65536;

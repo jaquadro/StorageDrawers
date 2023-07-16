@@ -27,19 +27,18 @@ public class CapabilityDrawerGroup
         @Nullable
         @Override
         public NBTBase writeNBT (Capability<IDrawerGroup> capability, IDrawerGroup instance, EnumFacing side) {
-            if (instance instanceof INBTSerializable)
-                return ((INBTSerializable) instance).serializeNBT();
+            if (instance instanceof INBTSerializable serializable)
+                return serializable.serializeNBT();
 
             return new NBTTagCompound();
         }
 
         @Override
         public void readNBT (Capability<IDrawerGroup> capability, IDrawerGroup instance, EnumFacing side, NBTBase nbt) {
-            if (instance instanceof INBTSerializable) {
+            if (instance instanceof INBTSerializable serializable) {
                 @SuppressWarnings("unchecked")
-                INBTSerializable<NBTBase> serializer = (INBTSerializable)instance;
+                INBTSerializable<NBTBase> serializer = serializable;
                 serializer.deserializeNBT(nbt);
-                return;
             }
         }
     }

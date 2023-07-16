@@ -16,7 +16,7 @@ public final class ModCreativeTabs
         @Override
         @Nonnull
         @SideOnly(Side.CLIENT)
-        public ItemStack getTabIconItem () {
+        public ItemStack createIcon() {
             return new ItemStack(Item.getItemFromBlock(ModBlocks.basicDrawers), 1, 1);
         }
     };

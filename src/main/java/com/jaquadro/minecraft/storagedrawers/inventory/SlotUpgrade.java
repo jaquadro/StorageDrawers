@@ -37,8 +37,7 @@ public class SlotUpgrade extends Slot
             }
 
             if (player != null) {
-                if (stack.getItem() == ModItems.upgradeCreative && !player.capabilities.isCreativeMode)
-                    return false;
+                return stack.getItem() != ModItems.upgradeCreative || player.capabilities.isCreativeMode;
             }
         }
 

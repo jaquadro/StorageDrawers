@@ -19,7 +19,7 @@ public class ItemUpgrade extends Item
 
     public ItemUpgrade (String registryName, String unlocalizedName) {
         setRegistryName(registryName);
-        setUnlocalizedName(unlocalizedName);
+        setTranslationKey(unlocalizedName);
         setCreativeTab(ModCreativeTabs.tabStorageDrawers);
         setMaxDamage(0);
     }
@@ -27,7 +27,7 @@ public class ItemUpgrade extends Item
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation (@Nonnull ItemStack itemStack, @Nullable World world, List<String> list, ITooltipFlag advanced) {
-        String name = getUnlocalizedName(itemStack);
+        String name = getTranslationKey(itemStack);
         list.add(I18n.format(name + ".description"));
     }
 
