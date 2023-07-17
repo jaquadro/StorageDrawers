@@ -2,7 +2,6 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -21,19 +20,23 @@ public class SlotUpgrade extends Slot
         if (stack.isEmpty())
             return false;
 
-        if (inventory instanceof InventoryUpgrade)
-            return ((InventoryUpgrade) inventory).canAddUpgrade(stack);
+        if (inventory instanceof InventoryUpgrade inventoryUpgrade) {
+            if (getStack().isEmpty())
+                return inventoryUpgrade.canAddUpgrade(stack);
+            else
+                return inventoryUpgrade.canSwapUpgrade(getSlotIndex(), stack);
+        }
 
         return false;
     }
 
     @Override
     public boolean canTakeStack (EntityPlayer player) {
-        if (inventory instanceof InventoryUpgrade) {
+        if (inventory instanceof InventoryUpgrade inventoryUpgrade) {
             ItemStack stack = getStack();
             if (stack.getItem() == ModItems.upgradeStorage) {
                 EnumUpgradeStorage upgrade = EnumUpgradeStorage.byMetadata(stack.getMetadata());
-                return ((InventoryUpgrade) inventory).canRemoveStorageUpgrade(getSlotIndex());
+                return inventoryUpgrade.canRemoveStorageUpgrade(getSlotIndex());
             }
 
             if (player != null) {

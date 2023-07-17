@@ -134,4 +134,8 @@ public class InventoryUpgrade implements IInventory
     public boolean canRemoveStorageUpgrade (int slot) {
         return tile.upgrades().canRemoveUpgrade(slot);
     }
+
+    public boolean canSwapUpgrade (int slot, @Nonnull ItemStack item) {
+        return tile.upgrades().canSwapUpgrade(slot, item);
+    }
 }
