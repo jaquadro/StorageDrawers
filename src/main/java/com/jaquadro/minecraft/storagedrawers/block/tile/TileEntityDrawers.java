@@ -1,11 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-import com.jaquadro.minecraft.chameleon.block.ChamLockableTileEntity;
 import com.jaquadro.minecraft.chameleon.block.ChamTileEntity;
 import com.jaquadro.minecraft.chameleon.block.tiledata.CustomNameData;
-import com.jaquadro.minecraft.chameleon.block.tiledata.LockableData;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.*;
@@ -14,7 +11,6 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
@@ -27,7 +23,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -35,7 +30,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -111,6 +106,40 @@ public abstract class TileEntityDrawers extends ChamTileEntity implements ISeala
             }
 
             return true;
+        }
+
+        @Override
+        public boolean canSwapUpgrade(int slot, @NotNull ItemStack add) {
+            if (!canRemoveUpgrade(slot) || !canAddUpgrade(add))
+                return false;
+
+            // Check if slot upgrade was a downgrade (everything can be put instead of downgrade)
+            ItemStack upgrade = getUpgrade(slot);
+            if (upgrade.getItem() == ModItems.upgradeOneStack)
+                return true;
+
+            // Slot Upgrade is a normal upgrade, as it failed the previous check. Checking if new is a normal upgrade...
+            // If both upgrades, then because of the RemoveUpgrade check, it is fine, so return true
+            if (add.getItem() == ModItems.upgradeStorage) {
+                return true;
+            }
+
+            // New item is a downgrade
+            int currentUpgradeMult = upgradeData.getStorageMultiplier();
+            int storageLevel = EnumUpgradeStorage.byMetadata(upgrade.getMetadata()).getLevel();
+            int storageMult = StorageDrawers.config.getStorageUpgradeMultiplier(storageLevel);
+
+            // The below first calculates the amount of stacks to remove if the multiplier stayed the same, then adds the removed multiplier,
+            // which results in the amount of stacks (storage) to remove. The addition would be multiplied by
+            // the stacks to scale to, but in this case, that is 1.
+
+            // We need the below removed stacks calculation to be less than or equal to
+            // currentUpgradeMult * getEffectiveDrawerCapacity - 1, as otherwise, the calculated stacks to remove will be equal
+            // to the current max stack size of the drawer, which will result in a calculation of 0 stacks.
+
+            int removedStacks = Math.min(currentUpgradeMult * getEffectiveDrawerCapacity() - 1,
+                    currentUpgradeMult * (getEffectiveDrawerCapacity() - 1) + storageMult);
+            return stackCapacityCheck(removedStacks);
         }
 
         @Override

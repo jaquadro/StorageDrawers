@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -119,6 +118,17 @@ public class UpgradeData extends TileDataShim
     public boolean canRemoveUpgrade (int slot) {
         slot = MathHelper.clamp(slot, 0, upgrades.length - 1);
         return !upgrades[slot].isEmpty();
+    }
+
+
+    /**
+     * A util method, to see if the upgrades can be swapped
+     * @param slot The slot where the upgrade is being removed
+     * @param add The ItemStack of the upgrade being added
+     * @return Whether the upgrades can be swapped
+     */
+    public boolean canSwapUpgrade (int slot, @Nonnull ItemStack add) {
+        return canAddUpgrade(add) && canRemoveUpgrade(slot);
     }
 
     public int getStorageMultiplier () {
