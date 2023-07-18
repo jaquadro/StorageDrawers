@@ -110,7 +110,7 @@ public class GuiDrawers extends GuiContainer
 
             List<Slot> upgradeSlots = container.getUpgradeSlots();
             for (Slot slot : upgradeSlots) {
-                if (slot instanceof SlotUpgrade && !((SlotUpgrade) slot).canTakeStack())
+                if (slot instanceof SlotUpgrade upgrade && !upgrade.canTakeStack())
                     drawTexturedModalRect(guiX + slot.xPos, guiY + slot.yPos, smDisabledX, smDisabledY, 16, 16);
             }
         }
@@ -127,7 +127,7 @@ public class GuiDrawers extends GuiContainer
 
             List<Slot> upgradeSlots = container.getUpgradeSlots();
             for (Slot slot : upgradeSlots) {
-                if (slot instanceof SlotUpgrade && !((SlotUpgrade) slot).canTakeStack() && slot.xPos == x && slot.yPos == y)
+                if (slot instanceof SlotUpgrade upgrade && !upgrade.canTakeStack() && slot.xPos == x && slot.yPos == y)
                     return false;
             }
         }
