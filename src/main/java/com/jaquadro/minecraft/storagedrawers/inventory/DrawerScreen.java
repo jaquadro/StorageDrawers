@@ -71,7 +71,7 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
 
         if (storageItemRender == null && minecraft != null) {
             ItemRenderer defaultRenderItem = minecraft.getItemRenderer();
-            storageItemRender = new StorageRenderItem(minecraft.getTextureManager(), defaultRenderItem.getItemModelShaper().getModelManager(), minecraft.getItemColors());
+            storageItemRender = new StorageRenderItem(minecraft, minecraft.getTextureManager(), defaultRenderItem.getItemModelShaper().getModelManager(), minecraft.getItemColors());
         }
     }
 

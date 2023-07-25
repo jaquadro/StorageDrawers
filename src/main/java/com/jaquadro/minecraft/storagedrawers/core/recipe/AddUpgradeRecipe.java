@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +32,7 @@ public class AddUpgradeRecipe extends CustomRecipe
 
     @Override
     @NotNull
-    public ItemStack assemble(@NotNull CraftingContainer inv) {
+    public ItemStack assemble(@NotNull CraftingContainer inv, RegistryAccess access) {
         Context ctx = findContext(inv);
         if (ctx == null)
             return ItemStack.EMPTY;

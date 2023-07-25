@@ -20,8 +20,12 @@ public class SlotUpgrade extends Slot
         if (stack.isEmpty())
             return false;
 
-        if (container instanceof InventoryUpgrade)
-            return ((InventoryUpgrade) container).canAddUpgrade(stack);
+        if (container instanceof InventoryUpgrade inventoryUpgrade) {
+            if (getItem().isEmpty())
+                return inventoryUpgrade.canAddUpgrade(stack);
+            else
+                return inventoryUpgrade.canSwapUpgrade(getSlotIndex(), stack);
+        }
 
         return false;
     }
@@ -36,10 +40,10 @@ public class SlotUpgrade extends Slot
     }
 
     public boolean canTakeStack (@Nullable Player player) {
-        if (container instanceof InventoryUpgrade) {
+        if (container instanceof InventoryUpgrade inventoryUpgrade) {
             ItemStack stack = getItem();
             if (stack.getItem() instanceof ItemUpgradeStorage) {
-                return ((InventoryUpgrade) container).canRemoveStorageUpgrade(getSlotIndex());
+                return inventoryUpgrade.canRemoveStorageUpgrade(getSlotIndex());
             }
 
             if (player != null && !player.isCreative()) {

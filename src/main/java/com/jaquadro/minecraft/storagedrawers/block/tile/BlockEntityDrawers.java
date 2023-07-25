@@ -124,6 +124,40 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         }
 
         @Override
+        public boolean canSwapUpgrade(int slot, @NotNull ItemStack add) {
+            if (!canRemoveUpgrade(slot) || !canAddUpgrade(add))
+                return false;
+
+            // Check if slot upgrade was a downgrade (everything can be put instead of downgrade)
+            ItemStack upgrade = getUpgrade(slot);
+            if (upgrade.getItem() == ModItems.ONE_STACK_UPGRADE.get())
+                return true;
+
+            // Slot Upgrade is a normal upgrade, as it failed the previous check. Checking if new is a normal upgrade...
+            // If both upgrades, then because of the RemoveUpgrade check, it is fine, so return true
+            if (add.getItem() instanceof ItemUpgradeStorage) {
+                return true;
+            }
+
+            // New item is a downgrade
+            int currentUpgradeMult = upgradeData.getStorageMultiplier();
+            int storageLevel = ((ItemUpgradeStorage) upgrade.getItem()).level.getLevel();
+            int storageMult = CommonConfig.UPGRADES.getLevelMult(storageLevel);
+
+            // The below first calculates the amount of stacks to remove if the multiplier stayed the same, then adds the removed multiplier,
+            // which results in the amount of stacks (storage) to remove. The addition would be multiplied by
+            // the stacks to scale to, but in this case, that is 1.
+
+            // We need the below removed stacks calculation to be less than or equal to
+            // currentUpgradeMult * getEffectiveDrawerCapacity - 1, as otherwise, the calculated stacks to remove will be equal
+            // to the current max stack size of the drawer, which will result in a calculation of 0 stacks.
+
+            int removedStacks = Math.min(currentUpgradeMult * getEffectiveDrawerCapacity() - 1,
+                currentUpgradeMult * (getEffectiveDrawerCapacity() - 1) + storageMult);
+            return stackCapacityCheck(removedStacks);
+        }
+
+        @Override
         protected void onUpgradeChanged (ItemStack oldUpgrade, ItemStack newUpgrade) {
 
             if (getLevel() != null && !getLevel().isClientSide) {

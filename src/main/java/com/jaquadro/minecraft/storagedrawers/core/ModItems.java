@@ -63,7 +63,7 @@ public final class ModItems
         MAIN = event.registerCreativeModeTab(new ResourceLocation(StorageDrawers.MOD_ID, "storagedrawers"), builder -> builder
             .icon(() -> new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2.get()))
             .title(Component.translatable("storagedrawers"))
-            .displayItems((features, output, hasPermissions) -> {
+            .displayItems((params, output) -> {
                 ITEM_REGISTER.getEntries().forEach((reg) -> {
                     output.accept(new ItemStack(reg.get()));
                 });

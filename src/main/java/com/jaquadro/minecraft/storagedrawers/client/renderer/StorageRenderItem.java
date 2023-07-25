@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,6 +19,7 @@ import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,8 +37,8 @@ public class StorageRenderItem extends ItemRenderer
     @NotNull
     public ItemStack overrideStack;
 
-    public StorageRenderItem (TextureManager texManager, ModelManager modelManager, ItemColors colors) {
-        super(texManager, modelManager, colors, null);
+    public StorageRenderItem (Minecraft mc, TextureManager texManager, ModelManager modelManager, ItemColors colors) {
+        super(mc, texManager, modelManager, colors, null);
         parent = Minecraft.getInstance().getItemRenderer();
         overrideStack = ItemStack.EMPTY;
     }
@@ -48,18 +50,18 @@ public class StorageRenderItem extends ItemRenderer
     }
 
     @Override
-    public void render(@NotNull ItemStack itemStackIn, ItemTransforms.@NotNull TransformType transformTypeIn, boolean leftHand, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn, @NotNull BakedModel modelIn) {
-        parent.render(itemStackIn, transformTypeIn, leftHand, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, modelIn);
+    public void render(@NotNull ItemStack itemStackIn, ItemDisplayContext displayContext, boolean leftHand, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn, @NotNull BakedModel modelIn) {
+        parent.render(itemStackIn, displayContext, leftHand, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, modelIn);
     }
 
     @Override
-    public void renderStatic(@Nullable LivingEntity livingEntityIn, @NotNull ItemStack itemStackIn, ItemTransforms.@NotNull TransformType transformTypeIn, boolean leftHand, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, @Nullable Level worldIn, int combinedLightIn, int combinedOverlayIn, int p_174252_) {
-        parent.renderStatic(livingEntityIn, itemStackIn, transformTypeIn, leftHand, matrixStackIn, bufferIn, worldIn, combinedLightIn, combinedOverlayIn, p_174252_);
+    public void renderStatic(@Nullable LivingEntity livingEntityIn, @NotNull ItemStack itemStackIn, ItemDisplayContext displayContext, boolean leftHand, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, @Nullable Level worldIn, int combinedLightIn, int combinedOverlayIn, int p_174252_) {
+        parent.renderStatic(livingEntityIn, itemStackIn, displayContext, leftHand, matrixStackIn, bufferIn, worldIn, combinedLightIn, combinedOverlayIn, p_174252_);
     }
 
     @Override
-    public void renderStatic(@NotNull ItemStack itemStackIn, ItemTransforms.@NotNull TransformType transformTypeIn, int combinedLightIn, int combinedOverlayIn, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int p_174276_) {
-        parent.renderStatic(itemStackIn, transformTypeIn, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, p_174276_);
+    public void renderStatic(@NotNull ItemStack itemStackIn, ItemDisplayContext displayContext, int combinedLightIn, int combinedOverlayIn, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, @Nullable Level worldIn, int p_174276_) {
+        parent.renderStatic(itemStackIn, displayContext, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, worldIn, p_174276_);
     }
 
     public void renderQuadList(@NotNull PoseStack matrixStackIn, @NotNull VertexConsumer bufferIn, @NotNull List<BakedQuad> quadsIn, @NotNull ItemStack itemStackIn, int combinedLightIn, int combinedOverlayIn) {
@@ -73,30 +75,30 @@ public class StorageRenderItem extends ItemRenderer
     }
 
     @Override
-    public void renderGuiItem (@NotNull ItemStack stack, int x, int y) {
-        parent.renderGuiItem(stack, x, y);
+    public void renderGuiItem (PoseStack poseStack, @NotNull ItemStack stack, int x, int y) {
+        parent.renderGuiItem(poseStack, stack, x, y);
     }
 
     @Override
-    public void renderAndDecorateItem (@NotNull ItemStack stack, int xPosition, int yPosition) {
-        parent.renderAndDecorateItem(stack, xPosition, yPosition);
+    public void renderAndDecorateItem (PoseStack poseStack, @NotNull ItemStack stack, int xPosition, int yPosition) {
+        parent.renderAndDecorateItem(poseStack, stack, xPosition, yPosition);
     }
 
     @Override
-    public void renderAndDecorateItem(@NotNull LivingEntity entityIn, @NotNull ItemStack itemIn, int x, int y, int p_174234_) {
-        parent.renderAndDecorateItem(entityIn, itemIn, x, y, p_174234_);
+    public void renderAndDecorateItem(PoseStack poseStack, @NotNull LivingEntity entityIn, @NotNull ItemStack itemIn, int x, int y, int p_174234_) {
+        parent.renderAndDecorateItem(poseStack, entityIn, itemIn, x, y, p_174234_);
     }
 
     @Override
-    public void renderGuiItemDecorations (@NotNull Font fr, @NotNull ItemStack stack, int xPosition, int yPosition) {
-        parent.renderGuiItemDecorations(fr, stack, xPosition, yPosition);
+    public void renderGuiItemDecorations (PoseStack poseStack, @NotNull Font fr, @NotNull ItemStack stack, int xPosition, int yPosition) {
+        parent.renderGuiItemDecorations(poseStack, fr, stack, xPosition, yPosition);
     }
 
     @Override
-    public void renderGuiItemDecorations (@NotNull Font font, @NotNull ItemStack item, int x, int y, String text)
+    public void renderGuiItemDecorations (PoseStack poseStack, @NotNull Font font, @NotNull ItemStack item, int x, int y, String text)
     {
         if (item != overrideStack) {
-            super.renderGuiItemDecorations(font, item, x, y, text);
+            super.renderGuiItemDecorations(poseStack, font, item, x, y, text);
             return;
         }
 
@@ -115,7 +117,7 @@ public class StorageRenderItem extends ItemRenderer
             if (ItemStackHelper.isStackEncoded(item))
                 stackSize = 0;
 
-            PoseStack matrixstack = new PoseStack();
+            poseStack.pushPose();
             if (stackSize >= 0 || text != null) {
                 if (stackSize >= 100000000)
                     text = (text == null) ? String.format("%.0fM", stackSize / 1000000f) : text;
@@ -135,25 +137,21 @@ public class StorageRenderItem extends ItemRenderer
                 if (stackSize == 0)
                     color = (255 << 16) | (96 << 8) | (96);
 
-                matrixstack.scale(scale, scale, 1);
-                matrixstack.translate(0.0D, 0.0D, (double) (this.blitOffset + 200.0F));
+                poseStack.scale(scale, scale, 1);
+                poseStack.translate(0.0D, 0.0D, 200.0F);
                 MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-                font.drawInBatch(text, textX, textY, color, true, matrixstack.last().pose(), buffer, false, 0, 15728880);
+                font.drawInBatch(text, textX, textY, color, true, poseStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, 15728880);
                 buffer.endBatch();
             }
 
             if (item.getItem().isBarVisible(item)) {
                 RenderSystem.disableDepthTest();
-                RenderSystem.disableTexture();
-                RenderSystem.disableBlend();
-                Tesselator tessellator = Tesselator.getInstance();
-                BufferBuilder bufferbuilder = tessellator.getBuilder();
                 int barWidth = item.getItem().getBarWidth(item);
                 int j = item.getItem().getBarColor(item);
-                this.draw(bufferbuilder, x + 2, y + 13, 13, 2, 0, 0, 0, 255);
-                this.draw(bufferbuilder, x + 2, y + 13, barWidth, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
-                RenderSystem.enableBlend();
-                RenderSystem.enableTexture();
+                int x1 = x + 2;
+                int y1 = y + 13;
+                GuiComponent.fill(poseStack, x1, y1, x1 + 13, y1 + 2, -16777216);
+                GuiComponent.fill(poseStack, x1, y1, x1 + barWidth, y1 + 1, 1 | -16777216);
                 RenderSystem.enableDepthTest();
             }
 
@@ -161,15 +159,13 @@ public class StorageRenderItem extends ItemRenderer
             float f3 = clientplayerentity == null ? 0.0F : clientplayerentity.getCooldowns().getCooldownPercent(item.getItem(), Minecraft.getInstance().getFrameTime());
             if (f3 > 0.0F) {
                 RenderSystem.disableDepthTest();
-                RenderSystem.disableTexture();
-                RenderSystem.enableBlend();
-                RenderSystem.defaultBlendFunc();
-                Tesselator tessellator1 = Tesselator.getInstance();
-                BufferBuilder bufferbuilder1 = tessellator1.getBuilder();
-                this.draw(bufferbuilder1, x, y + Mth.floor(16.0F * (1.0F - f3)), 16, Mth.ceil(16.0F * f3), 255, 255, 255, 127);
-                RenderSystem.enableTexture();
+                int y1 = y + Mth.floor(16.0F * (1.0F - f3));
+                int y2 = y1 + Mth.ceil(16.0f * f3);
+                GuiComponent.fill(poseStack, x, y1, x + 16, y2, Integer.MAX_VALUE);
                 RenderSystem.enableDepthTest();
             }
+
+            poseStack.popPose();
         }
     }
 

@@ -27,6 +27,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -164,7 +165,7 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
         matrix.scale(1/128f, -1/128f, 1);
 
         int color = (int)(255 * alpha) << 24 | TEXT_COLOR_TRANSPARENT;
-        fontRenderer.drawInBatch(text, -textWidth / 2f, 0, color, false, matrix.last().pose(), buffer, false, 0, combinedLight); // 15728880
+        fontRenderer.drawInBatch(text, -textWidth / 2f, 0, color, false, matrix.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, combinedLight); // 15728880
 
         matrix.popPose();
     }
@@ -204,7 +205,7 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
             else
                 matrix.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
 
-            itemRenderer.render(itemStack, ItemTransforms.TransformType.GUI, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
+            itemRenderer.render(itemStack, ItemDisplayContext.GUI, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
         } catch (Exception e) {
             // Shrug
         }

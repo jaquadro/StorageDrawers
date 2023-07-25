@@ -127,7 +127,7 @@ public class CompactingHelper
         Map<ItemStack, Integer> candidatesRate = new HashMap<>();
 
         for (Recipe<CraftingContainer> recipe : world.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
-            ItemStack output = recipe.getResultItem();
+            ItemStack output = recipe.getResultItem(world.registryAccess());
             // TODO: ItemStackOreMatcher.areItemsEqual(stack, output, true)
             if (!ItemStackMatcher.areItemsEqual(stack, output))
                 continue;
@@ -171,7 +171,7 @@ public class CompactingHelper
 
         for (CraftingRecipe recipe : world.getRecipeManager().getRecipesFor(RecipeType.CRAFTING, crafting, world)) {
             if (recipe.matches(crafting, world)) {
-                ItemStack result = recipe.assemble(crafting);
+                ItemStack result = recipe.assemble(crafting, world.registryAccess());
                 if (!result.isEmpty())
                     candidates.add(result);
             }
