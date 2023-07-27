@@ -1,27 +1,25 @@
 modLoader="javafml"
-loaderVersion="[${loader_version},)"
+loaderVersion="${loader_version_range}"
 issueTrackerURL="https://github.com/jaquadro/StorageDrawers/issues"
 displayURL="https://minecraft.curseforge.com/projects/storagedrawers"
-authors="Texelsaur"
-license="MIT"
+authors="${mod_authors}"
+license="${mod_license}"
 
 [[mods]]
-    modId="storagedrawers"
-    version="${version}"
-    displayName="Storage Drawers"
-    description='''
-    Multi-drawer storage blocks for quick storage and retrieval.
-    '''
+    modId="${mod_id}"
+    version="${mod_version}"
+    displayName="${mod_name}"
+    description='''${mod_description}'''
 
-[[dependencies.storagedrawers]]
+[[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
-    versionRange="[${mc_version},]"
+    versionRange="${minecraft_version_range}"
     side="BOTH"
 
-[[dependencies.storagedrawers]]
+[[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true
-    versionRange="[${forge_version},)"
+    versionRange="${forge_version_range}"
     ordering="NONE"
     side="BOTH"

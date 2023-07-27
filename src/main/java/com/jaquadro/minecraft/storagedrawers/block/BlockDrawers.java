@@ -42,7 +42,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -414,7 +414,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 
     @Override
     @NotNull
-    public List<ItemStack> getDrops (@NotNull BlockState state, LootContext.Builder builder) {
+    public List<ItemStack> getDrops (@NotNull BlockState state, LootParams.Builder builder) {
         List<ItemStack> items = new ArrayList<>();
         items.add(getMainDrop(state, (BlockEntityDrawers)builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY)));
         return items;

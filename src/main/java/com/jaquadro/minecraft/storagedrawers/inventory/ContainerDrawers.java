@@ -4,7 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
+import com.jaquadro.minecraft.storagedrawers.client.gui.StorageGuiGraphics;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
@@ -43,7 +43,7 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
     private final List<Slot> hotbarSlots;
 
     @OnlyIn(Dist.CLIENT)
-    public StorageRenderItem activeRenderItem;
+    public StorageGuiGraphics activeGuiGraphics;
 
     private final boolean isRemote;
 
@@ -97,8 +97,8 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
     }
 
     public void setLastAccessedItem (ItemStack stack) {
-        if (isRemote && activeRenderItem != null)
-            activeRenderItem.overrideStack = stack;
+        if (isRemote && activeGuiGraphics != null)
+            activeGuiGraphics.overrideStack = stack;
     }
 
     protected int getStorageSlotX (int slot) {

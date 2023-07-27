@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -117,15 +116,15 @@ public final class ModBlocks
     }
 
     private static RegistryObject<BlockMeta> registerMetaBlock(String name) {
-        return BLOCK_REGISTER.register(name, () -> new BlockMeta(Properties.of(Material.AIR)));
+        return BLOCK_REGISTER.register(name, () -> new BlockMeta(Properties.of().air()));
     }
 
     private static RegistryObject<BlockMeta> registerSizedMetaBlock(String name) {
-        return BLOCK_REGISTER.register(name, () -> new BlockMetaSized(Properties.of(Material.AIR)));
+        return BLOCK_REGISTER.register(name, () -> new BlockMetaSized(Properties.of().air()));
     }
 
     private static Properties getWoodenBlockProperties() {
-        return Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(3f, 4f);
+        return Properties.of().sound(SoundType.WOOD).strength(3f, 4f);
     }
 
     private static Properties getWoodenDrawerBlockProperties() {
@@ -133,7 +132,7 @@ public final class ModBlocks
     }
 
     private static Properties getStoneBlockProperties() {
-        return Properties.of(Material.STONE).sound(SoundType.STONE).strength(4f, 5f);
+        return Properties.of().sound(SoundType.STONE).strength(4f, 5f);
     }
 
     private static Properties getStoneDrawerBlockProperties() {

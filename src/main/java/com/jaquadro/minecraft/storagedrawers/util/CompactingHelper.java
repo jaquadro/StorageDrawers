@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -235,7 +236,7 @@ public class CompactingHelper
         return inv.getContainerSize();
     }
 
-    private static class InventoryLookup extends CraftingContainer
+    private static class InventoryLookup extends TransientCraftingContainer
     {
         private final ItemStack[] stackList;
 

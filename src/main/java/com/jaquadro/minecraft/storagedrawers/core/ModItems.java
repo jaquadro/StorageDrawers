@@ -3,24 +3,26 @@ package com.jaquadro.minecraft.storagedrawers.core;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.*;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 public final class ModItems
 {
     public static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, StorageDrawers.MOD_ID);
 
-    private static CreativeModeTab MAIN;
+    private static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, new ResourceLocation(StorageDrawers.MOD_ID, "storagedrawers"));
 
     public static final RegistryObject<Item>
         OBSIDIAN_STORAGE_UPGRADE = ITEM_REGISTER.register("obsidian_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.OBSIDIAN, new Item.Properties())),
@@ -59,14 +61,16 @@ public final class ModItems
         ITEM_REGISTER.register(bus);
     }
 
-    public static void creativeModeTabRegister(CreativeModeTabEvent.Register event) {
-        MAIN = event.registerCreativeModeTab(new ResourceLocation(StorageDrawers.MOD_ID, "storagedrawers"), builder -> builder
-            .icon(() -> new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2.get()))
-            .title(Component.translatable("storagedrawers"))
-            .displayItems((params, output) -> {
-                ITEM_REGISTER.getEntries().forEach((reg) -> {
-                    output.accept(new ItemStack(reg.get()));
-                });
-            }));
+    public static void creativeModeTabRegister(RegisterEvent event) {
+        event.register(Registries.CREATIVE_MODE_TAB, helper -> {
+            helper.register(MAIN, CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2.get()))
+                .title(Component.translatable("storagedrawers"))
+                .displayItems((params, output) -> {
+                    ITEM_REGISTER.getEntries().forEach((reg) -> {
+                        output.accept(new ItemStack(reg.get()));
+                    });
+                })
+                .build());
+        });
     }
 }

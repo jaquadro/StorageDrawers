@@ -19,9 +19,9 @@ public class ItemStackMatcher
     }
 
     public static boolean areItemsEqual (@NotNull ItemStack stack1, @NotNull ItemStack stack2) {
-        if (!stack1.sameItem(stack2))
+        if (stack1.isEmpty() || !ItemStack.isSameItem(stack1, stack2))
             return false;
 
-        return ItemStack.tagMatches(stack1, stack2);
+        return ItemStack.isSameItemSameTags(stack1, stack2);
     }
 }

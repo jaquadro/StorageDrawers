@@ -1,19 +1,18 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.client.renderer.StorageRenderItem;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.jaquadro.minecraft.storagedrawers.client.gui.StorageGuiGraphics;
+import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
     private static final int smDisabledX = 176;
     private static final int smDisabledY = 0;
 
-    private static StorageRenderItem storageItemRender;
+    private static StorageGuiGraphics storageGuiGraphics;
 
     private final ResourceLocation background;
     private final Inventory inventory;
@@ -69,52 +68,43 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
     protected void init () {
         super.init();
 
-        if (storageItemRender == null && minecraft != null) {
-            ItemRenderer defaultRenderItem = minecraft.getItemRenderer();
-            storageItemRender = new StorageRenderItem(minecraft, minecraft.getTextureManager(), defaultRenderItem.getItemModelShaper().getModelManager(), minecraft.getItemColors());
+        if (storageGuiGraphics == null && minecraft != null) {
+            storageGuiGraphics = new StorageGuiGraphics(minecraft, MultiBufferSource.immediate(Tesselator.getInstance().getBuilder()));
         }
     }
 
     @Override
-    public void render (@NotNull PoseStack stack, int p_render_1_, int p_render_2_, float p_render_3_) {
-        ItemRenderer ri = setItemRender(storageItemRender);
-        menu.activeRenderItem = storageItemRender;
+    public void render (GuiGraphics graphics, int x, int y, float f) {
+        menu.activeGuiGraphics = storageGuiGraphics;
 
-        this.renderBackground(stack);
-        super.render(stack, p_render_1_, p_render_2_, p_render_3_);
-        this.renderTooltip(stack, p_render_1_, p_render_2_);
+        super.render(storageGuiGraphics, x, y, f);
 
-        menu.activeRenderItem = null;
-        storageItemRender.overrideStack = ItemStack.EMPTY;
-
-        setItemRender(ri);
+        menu.activeGuiGraphics = null;
+        storageGuiGraphics.overrideStack = ItemStack.EMPTY;
     }
 
     @Override
-    protected void renderLabels (@NotNull PoseStack stack, int mouseX, int mouseY) {
-        this.font.draw(stack, this.title.getString(), 8.0F, 6.0F, 4210752);
-        this.font.draw(stack, I18n.get("container.storagedrawers.upgrades"), 8, 75, 4210752);
-        this.font.draw(stack, this.inventory.getDisplayName().getString(), 8, this.imageHeight - 96 + 2, 4210752);
+    protected void renderLabels (GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.drawString(this.font, this.title, 8, 6, 4210752, false);
+        graphics.drawString(this.font, I18n.get("container.storagedrawers.upgrades"), 8, 75, 4210752, false);
+        graphics.drawString(this.font, this.inventory.getDisplayName().getString(), 8, this.imageHeight - 96 + 2, 4210752, false);
     }
 
     @Override
-    protected void renderBg (@NotNull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, background);
-
+    protected void renderBg (GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         int guiX = (width - imageWidth) / 2;
         int guiY = (height - imageHeight) / 2;
-        blit(stack, guiX, guiY, 0, 0, imageWidth, imageHeight);
+        graphics.blit(background, guiX, guiY, 0, 0, imageWidth, imageHeight);
 
         List<Slot> storageSlots = menu.getStorageSlots();
         for (Slot slot : storageSlots) {
-            blit(stack, guiX + slot.x, guiY + slot.y, smDisabledX, smDisabledY, 16, 16);
+            graphics.blit(background, guiX + slot.x, guiY + slot.y, smDisabledX, smDisabledY, 16, 16);
         }
 
         List<Slot> upgradeSlots = menu.getUpgradeSlots();
         for (Slot slot : upgradeSlots) {
             if (slot instanceof SlotUpgrade && !((SlotUpgrade) slot).canTakeStack(Minecraft.getInstance().player))
-                blit(stack, guiX + slot.x, guiY + slot.y, smDisabledX, smDisabledY, 16, 16);
+                graphics.blit(background, guiX + slot.x, guiY + slot.y, smDisabledX, smDisabledY, 16, 16);
         }
     }
 
@@ -135,12 +125,5 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
         }*/
 
         return super.isHovering(x, y, width, height, originX, originY);
-    }
-
-    private ItemRenderer setItemRender (ItemRenderer renderItem) {
-        ItemRenderer prev = itemRenderer;
-        itemRenderer = renderItem;
-
-        return prev;
     }
 }
