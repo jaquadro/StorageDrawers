@@ -32,10 +32,11 @@ public class CommonEventBusSubscriber {
                     boolean invertClick = ClientConfig.GENERAL.invertClick.get();
                     if (!invertClick)
                         event.setCanceled(blockDrawers.interactTakeItems(state, level, pos, player, hit));
-                    else if (hit.getBlockPos().equals(pos))
-                        blockDrawers.insertOrApplyItem(state, level, pos, player, hit);
-
-                    event.setCanceled(true);
+                    else {
+                        if (hit.getBlockPos().equals(pos))
+                            blockDrawers.insertOrApplyItem(state, level, pos, player, hit);
+                        event.setCanceled(true);
+                    }
                 }
             }
         }

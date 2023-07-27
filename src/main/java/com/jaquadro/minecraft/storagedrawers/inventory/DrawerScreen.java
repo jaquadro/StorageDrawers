@@ -81,6 +81,8 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
 
         menu.activeGuiGraphics = null;
         storageGuiGraphics.overrideStack = ItemStack.EMPTY;
+
+        this.renderTooltip(graphics, x, y);
     }
 
     @Override
