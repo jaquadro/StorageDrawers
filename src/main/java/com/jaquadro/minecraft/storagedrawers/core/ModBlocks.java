@@ -15,11 +15,15 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 public final class ModBlocks
 {
     public static final DeferredRegister<Block> BLOCK_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCKS, StorageDrawers.MOD_ID);
+
+    public static final List<String> EXCLUDE_ITEMS = new ArrayList<>();
 
     public static final RegistryObject<BlockStandardDrawers>
         OAK_FULL_DRAWERS_1 = registerWoodenDrawerBlock("oak_full_drawers_1", 1, false),
@@ -116,10 +120,12 @@ public final class ModBlocks
     }
 
     private static RegistryObject<BlockMeta> registerMetaBlock(String name) {
+        EXCLUDE_ITEMS.add(name);
         return BLOCK_REGISTER.register(name, () -> new BlockMeta(Properties.of().air()));
     }
 
     private static RegistryObject<BlockMeta> registerSizedMetaBlock(String name) {
+        EXCLUDE_ITEMS.add(name);
         return BLOCK_REGISTER.register(name, () -> new BlockMetaSized(Properties.of().air()));
     }
 

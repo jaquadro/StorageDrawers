@@ -195,8 +195,8 @@ public class UpgradeData extends BlockEntityDataShim
                 hasOneStack = true;
             else if (item == ModItems.VOID_UPGRADE.get())
                 hasVoid = true;
-            else if (item == ModItems.CONVERSION_UPGRADE.get())
-                hasConversion = true;
+            //else if (item == ModItems.CONVERSION_UPGRADE.get())
+            //    hasConversion = true;
             else if (item == ModItems.CREATIVE_STORAGE_UPGRADE.get())
                 hasUnlimited = true;
             else if (item == ModItems.CREATIVE_VENDING_UPGRADE.get())
