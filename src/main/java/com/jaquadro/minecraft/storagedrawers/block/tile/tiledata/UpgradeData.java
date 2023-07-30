@@ -165,6 +165,15 @@ public class UpgradeData extends BlockEntityDataShim
         return hasIllumination;
     }
 
+    public boolean hasPortabilityUpgrade() {
+        for (ItemStack stack : upgrades) {
+            if (stack.getItem() == ModItems.PORTABILITY_UPGRADE.get())
+                return true;
+        }
+
+        return false;
+    }
+
     private int getNextUpgradeSlot () {
         for (int i = 0; i < upgrades.length; i++) {
             if (upgrades[i].isEmpty())
@@ -191,6 +200,7 @@ public class UpgradeData extends BlockEntityDataShim
 
         for (ItemStack stack : upgrades) {
             Item item = stack.getItem();
+
             if (item == ModItems.ONE_STACK_UPGRADE.get())
                 hasOneStack = true;
             else if (item == ModItems.VOID_UPGRADE.get())
