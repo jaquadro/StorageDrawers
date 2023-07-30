@@ -32,7 +32,6 @@ public class UpgradeData extends BlockEntityDataShim
     private boolean hasConversion;
     private boolean hasIllumination;
     private boolean hasFillLevel;
-    private boolean hasPortability;
 
     private IDrawerAttributesModifiable attrs;
 
@@ -167,7 +166,12 @@ public class UpgradeData extends BlockEntityDataShim
     }
 
     public boolean hasPortabilityUpgrade() {
-        return hasPortability;
+        for (ItemStack stack : upgrades) {
+            if (stack.getItem() == ModItems.PORTABILITY_UPGRADE.get())
+                return true;
+        }
+
+        return false;
     }
 
     private int getNextUpgradeSlot () {
@@ -193,10 +197,10 @@ public class UpgradeData extends BlockEntityDataShim
         hasConversion = false;
         hasIllumination = false;
         hasFillLevel = false;
-        hasPortability = false;
 
         for (ItemStack stack : upgrades) {
             Item item = stack.getItem();
+
             if (item == ModItems.ONE_STACK_UPGRADE.get())
                 hasOneStack = true;
             else if (item == ModItems.VOID_UPGRADE.get())
@@ -211,8 +215,6 @@ public class UpgradeData extends BlockEntityDataShim
                 hasIllumination = true;
             else if (item == ModItems.FILL_LEVEL_UPGRADE.get())
                 hasFillLevel = true;
-            else if (item == ModItems.PORTABILITY_UPGRADE.get())
-                hasPortability = true;
         }
 
         attrs.setIsVoid(hasVoid);
