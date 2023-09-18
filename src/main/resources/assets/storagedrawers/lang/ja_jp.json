@@ -94,7 +94,7 @@
     "item.storagedrawers.max_redstone_upgrade.desc": "ブロック内の最も収納量の多い箪笥の収納量に応じてレッドストーン信号を出力します。",
     "item.storagedrawers.upgrade_template": "箪笥強化ベース",
     "item.storagedrawers.drawer_key": "箪笥鍵",
-    "item.storagedrawers.drawer_key.desc": "箪笥に鍵をかけたり、開けたりします。\n新規設置した箪笥に使用する場合、オフハンドに保持します。",
+    "item.storagedrawers.drawer_key.desc": "箪笥の収納アイテムを固定・解除します。\n何も収納していない箪笥に使用する場合、オフハンドに保持します。",
     "item.storagedrawers.shroud_key": "隠蔽鍵",
     "item.storagedrawers.shroud_key.desc": "収納アイテムのラベルを表示したり隠したりします。",
     "item.storagedrawers.quantify_key": "定量化鍵",
