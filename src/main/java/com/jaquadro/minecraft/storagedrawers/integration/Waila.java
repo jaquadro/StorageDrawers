@@ -13,7 +13,7 @@ import snownee.jade.api.ui.IElement;
 import snownee.jade.impl.ui.ItemStackElement;
 
 @WailaPlugin(StorageDrawers.MOD_ID)
-public class Waila implements IWailaPlugin
+public class Waila implements IWailaPlugin, IBlockComponentProvider
 {
     @Override
     public void registerClient (IWailaClientRegistration registration) {
@@ -24,33 +24,29 @@ public class Waila implements IWailaPlugin
         registration.addConfig(StorageDrawers.rl("display.stacklimit"), true);
         registration.addConfig(StorageDrawers.rl("display.status"), true);
 
-        WailaDrawer provider = new WailaDrawer();
-        registration.registerBlockComponent(provider, BlockDrawers.class);
+        registration.registerBlockComponent(this, BlockDrawers.class);
     }
 
-    public static class WailaDrawer implements IBlockComponentProvider
-    {
-        @Override
-        @NotNull
-        public IElement getIcon (BlockAccessor accessor, IPluginConfig config, IElement currentIcon) {
-            return ItemStackElement.of(new ItemStack(accessor.getBlock()));
-        }
+    @Override
+    @NotNull
+    public IElement getIcon (BlockAccessor accessor, IPluginConfig config, IElement currentIcon) {
+        return ItemStackElement.of(new ItemStack(accessor.getBlock()));
+    }
 
-        @Override
-        public void appendTooltip (ITooltip currenttip, BlockAccessor accessor, IPluginConfig config) {
-            BlockEntityDrawers blockEntityDrawers = (BlockEntityDrawers) accessor.getBlockEntity();
+    @Override
+    public void appendTooltip (ITooltip currenttip, BlockAccessor accessor, IPluginConfig config) {
+        BlockEntityDrawers blockEntityDrawers = (BlockEntityDrawers) accessor.getBlockEntity();
 
-            DrawerOverlay overlay = new DrawerOverlay();
-            overlay.showContent = config.get(StorageDrawers.rl("display.content"));
-            overlay.showStackLimit = config.get(StorageDrawers.rl("display.stacklimit"));
-            overlay.showStatus = config.get(StorageDrawers.rl("display.status"));
+        DrawerOverlay overlay = new DrawerOverlay();
+        overlay.showContent = config.get(StorageDrawers.rl("display.content"));
+        overlay.showStackLimit = config.get(StorageDrawers.rl("display.stacklimit"));
+        overlay.showStatus = config.get(StorageDrawers.rl("display.status"));
 
-            currenttip.addAll(overlay.getOverlay(blockEntityDrawers));
-        }
+        currenttip.addAll(overlay.getOverlay(blockEntityDrawers));
+    }
 
-        @Override
-        public ResourceLocation getUid () {
-            return StorageDrawers.rl("wailadrawer");
-        }
+    @Override
+    public ResourceLocation getUid () {
+        return StorageDrawers.rl("wailadrawer");
     }
 }
