@@ -50,7 +50,7 @@ public class Waila implements IWailaPlugin
 
         @Override
         public ResourceLocation getUid () {
-            return null;
+            return StorageDrawers.rl("wailadrawer");
         }
     }
 }
