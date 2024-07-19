@@ -5,6 +5,6 @@
         "front": "storagedrawers:blocks/drawers_warped_front_2",
         "back": "storagedrawers:blocks/drawers_warped_side",
         "side": "storagedrawers:blocks/drawers_warped_side_v",
-        "trim": "storagedrawers:blocks/drawers_warped_trim"
+        "trim": "storagedrawers:blocks/drawers_warped_side"
     }
 }

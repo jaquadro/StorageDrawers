@@ -48,6 +48,12 @@
         "storagedrawers:warped_full_drawers_4",
         "storagedrawers:warped_half_drawers_1",
         "storagedrawers:warped_half_drawers_2",
-        "storagedrawers:warped_half_drawers_4"
+        "storagedrawers:warped_half_drawers_4",
+        "storagedrawers:mangrove_full_drawers_1",
+        "storagedrawers:mangrove_full_drawers_2",
+        "storagedrawers:mangrove_full_drawers_4",
+        "storagedrawers:mangrove_half_drawers_1",
+        "storagedrawers:mangrove_half_drawers_2",
+        "storagedrawers:mangrove_half_drawers_4"
     ]
 }
