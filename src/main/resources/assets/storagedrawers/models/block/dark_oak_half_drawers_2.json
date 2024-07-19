@@ -5,6 +5,6 @@
         "front": "storagedrawers:blocks/drawers_dark_oak_front_2",
         "back": "storagedrawers:blocks/drawers_dark_oak_side",
         "side": "storagedrawers:blocks/drawers_dark_oak_side_v",
-        "trim": "storagedrawers:blocks/drawers_dark_oak_trim"
+        "trim": "storagedrawers:blocks/drawers_dark_oak_side"
     }
 }

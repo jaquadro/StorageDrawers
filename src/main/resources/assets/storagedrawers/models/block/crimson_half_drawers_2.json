@@ -5,6 +5,6 @@
         "front": "storagedrawers:blocks/drawers_crimson_front_2",
         "back": "storagedrawers:blocks/drawers_crimson_side",
         "side": "storagedrawers:blocks/drawers_crimson_side_v",
-        "trim": "storagedrawers:blocks/drawers_crimson_trim"
+        "trim": "storagedrawers:blocks/drawers_crimson_side"
     }
 }

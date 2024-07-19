@@ -5,6 +5,6 @@
         "front": "storagedrawers:blocks/drawers_jungle_front_4",
         "back": "storagedrawers:blocks/drawers_jungle_side",
         "side": "storagedrawers:blocks/drawers_jungle_side_v",
-        "trim": "storagedrawers:blocks/drawers_jungle_trim"
+        "trim": "storagedrawers:blocks/drawers_jungle_side"
     }
 }

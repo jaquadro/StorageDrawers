@@ -68,7 +68,13 @@ public final class ModBlocks
         WARPED_FULL_DRAWERS_4 = registerWoodenDrawerBlock("warped_full_drawers_4", 4, false),
         WARPED_HALF_DRAWERS_1 = registerWoodenDrawerBlock("warped_half_drawers_1", 1, true),
         WARPED_HALF_DRAWERS_2 = registerWoodenDrawerBlock("warped_half_drawers_2", 2, true),
-        WARPED_HALF_DRAWERS_4 = registerWoodenDrawerBlock("warped_half_drawers_4", 4, true);
+        WARPED_HALF_DRAWERS_4 = registerWoodenDrawerBlock("warped_half_drawers_4", 4, true),
+        MANGROVE_FULL_DRAWERS_1 = registerWoodenDrawerBlock("mangrove_full_drawers_1", 1, false),
+        MANGROVE_FULL_DRAWERS_2 = registerWoodenDrawerBlock("mangrove_full_drawers_2", 2, false),
+        MANGROVE_FULL_DRAWERS_4 = registerWoodenDrawerBlock("mangrove_full_drawers_4", 4, false),
+        MANGROVE_HALF_DRAWERS_1 = registerWoodenDrawerBlock("mangrove_half_drawers_1", 1, true),
+        MANGROVE_HALF_DRAWERS_2 = registerWoodenDrawerBlock("mangrove_half_drawers_2", 2, true),
+        MANGROVE_HALF_DRAWERS_4 = registerWoodenDrawerBlock("mangrove_half_drawers_4", 4, true);
 
     public static final RegistryObject<BlockCompDrawers> COMPACTING_DRAWERS_3 = registerCompactingDrawerBlock("compacting_drawers_3");
 
@@ -80,7 +86,8 @@ public final class ModBlocks
         ACACIA_TRIM = registerTrimBlock("acacia_trim"),
         DARK_OAK_TRIM = registerTrimBlock("dark_oak_trim"),
         CRIMSON_TRIM = registerTrimBlock("crimson_trim"),
-        WARPED_TRIM = registerTrimBlock("warped_trim");
+        WARPED_TRIM = registerTrimBlock("warped_trim"),
+        MANGROVE_TRIM = registerTrimBlock("mangrove_trim");
 
     public static final RegistryObject<BlockController> CONTROLLER = registerControllerBlock("controller");
     public static final RegistryObject<BlockSlave> CONTROLLER_SLAVE = registerControllerSlaveBlock("controller_slave");
