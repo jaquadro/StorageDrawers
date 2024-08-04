@@ -7,7 +7,6 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
-import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
@@ -24,15 +23,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ChunkRenderTypeSet;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.ModelEvent.BakingCompleted;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.ChunkRenderTypeSet;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent;
+import net.neoforged.neoforge.client.model.IDynamicBakedModel;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +41,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.function.Function;
 
 public final class BasicDrawerModel
 {
@@ -67,11 +64,11 @@ public final class BasicDrawerModel
     public static class Register // extends DefaultRegister
     {
         @SubscribeEvent
-        public static void registerTextures (TextureStitchEvent event) {
+        public static void registerTextures (TextureAtlasStitchedEvent event) {
             //if (event.getMap() != Minecraft.getInstance().getTextureMap())
             //    return;
 
-            if (!ModBlocks.OAK_FULL_DRAWERS_1.isPresent()) {
+            if (!ModBlocks.OAK_FULL_DRAWERS_1.isBound()) {
                 StorageDrawers.log.warn("Block objects not set in TextureStitchEvent.  Is your mod environment broken?");
                 return;
             }
@@ -196,7 +193,7 @@ public final class BasicDrawerModel
         @SubscribeEvent
         //public static void registerModels (BakingCompleted event) {
         public static void registerModels(ModelEvent.ModifyBakingResult event) {
-            if (!ModBlocks.OAK_FULL_DRAWERS_1.isPresent()) {
+            if (!ModBlocks.OAK_FULL_DRAWERS_1.isBound()) {
                 StorageDrawers.log.warn("Block objects not set in ModelBakeEvent.  Is your mod environment broken?");
                 return;
             }

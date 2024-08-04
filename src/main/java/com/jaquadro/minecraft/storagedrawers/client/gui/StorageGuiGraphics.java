@@ -85,7 +85,7 @@ public class StorageGuiGraphics extends GuiGraphics
             }
 
             this.pose().popPose();
-            net.minecraftforge.client.ItemDecoratorHandler.of(item).render(this, font, item, x, y);
+            net.neoforged.neoforge.client.ItemDecoratorHandler.of(item).render(this, font, item, x, y);
         }
     }
 }

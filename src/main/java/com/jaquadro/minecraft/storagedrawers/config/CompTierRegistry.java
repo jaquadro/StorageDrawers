@@ -1,13 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -115,13 +115,10 @@ public class CompTierRegistry
             return false;
 
         ResourceLocation upperResource = new ResourceLocation(parts[0]);
-        Item upperItem = ForgeRegistries.ITEMS.getValue(upperResource);
+        Item upperItem = BuiltInRegistries.ITEM.get(upperResource);
 
         ResourceLocation lowerResource = new ResourceLocation(parts[1]);
-        Item lowerItem = ForgeRegistries.ITEMS.getValue(lowerResource);
-
-        if (upperItem == null || lowerItem == null)
-            return false;
+        Item lowerItem = BuiltInRegistries.ITEM.get(lowerResource);
 
         try {
             int conv = Integer.parseInt(parts[2]);

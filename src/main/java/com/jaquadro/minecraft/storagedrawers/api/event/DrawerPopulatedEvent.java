@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.api.event;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 /**
  * This event is called when a drawer has been bound to a new item.  This is

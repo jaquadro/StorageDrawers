@@ -4,16 +4,13 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -127,18 +124,18 @@ public class CompactingHelper
         List<ItemStack> candidates = new ArrayList<>();
         Map<ItemStack, Integer> candidatesRate = new HashMap<>();
 
-        for (Recipe<CraftingContainer> recipe : world.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
-            ItemStack output = recipe.getResultItem(world.registryAccess());
+        for (var recipe : world.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
+            ItemStack output = recipe.value().getResultItem(world.registryAccess());
             // TODO: ItemStackOreMatcher.areItemsEqual(stack, output, true)
             if (!ItemStackMatcher.areItemsEqual(stack, output))
                 continue;
 
-            @NotNull ItemStack match = tryMatch(stack, recipe.getIngredients());
+            @NotNull ItemStack match = tryMatch(stack, recipe.value().getIngredients());
             if (!match.isEmpty()) {
                 int lookupSize = setupLookup(lookup1, output);
                 List<ItemStack> compMatches = findAllMatchingRecipes(lookup1);
                 for (ItemStack comp : compMatches) {
-                    int recipeSize = recipe.getIngredients().size();
+                    int recipeSize = recipe.value().getIngredients().size();
                     // TODO: ItemStackOreMatcher.areItemsEqual(match, comp, true)
                     if (ItemStackMatcher.areItemsEqual(match, comp) && comp.getCount() == recipeSize) {
                         candidates.add(match);
@@ -170,9 +167,9 @@ public class CompactingHelper
     private List<ItemStack> findAllMatchingRecipes (CraftingContainer crafting) {
         List<ItemStack> candidates = new ArrayList<>();
 
-        for (CraftingRecipe recipe : world.getRecipeManager().getRecipesFor(RecipeType.CRAFTING, crafting, world)) {
-            if (recipe.matches(crafting, world)) {
-                ItemStack result = recipe.assemble(crafting, world.registryAccess());
+        for (RecipeHolder<CraftingRecipe> recipe : world.getRecipeManager().getRecipesFor(RecipeType.CRAFTING, crafting, world)) {
+            if (recipe.value().matches(crafting, world)) {
+                ItemStack result = recipe.value().assemble(crafting, world.registryAccess());
                 if (!result.isEmpty())
                     candidates.add(result);
             }
@@ -183,10 +180,10 @@ public class CompactingHelper
 
     @NotNull
     private ItemStack findMatchingModCandidate (@NotNull ItemStack reference, List<ItemStack> candidates) {
-        ResourceLocation referenceName = ForgeRegistries.ITEMS.getKey(reference.getItem());
+        ResourceLocation referenceName = BuiltInRegistries.ITEM.getKey(reference.getItem());
         if (referenceName != null) {
             for (ItemStack candidate : candidates) {
-                ResourceLocation matchName = ForgeRegistries.ITEMS.getKey(candidate.getItem());
+                ResourceLocation matchName = BuiltInRegistries.ITEM.getKey(candidate.getItem());
                 if (matchName != null) {
                     if (referenceName.getNamespace().equals(matchName.getPath()))
                         return candidate;

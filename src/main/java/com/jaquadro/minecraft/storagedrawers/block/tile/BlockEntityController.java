@@ -6,7 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
+import com.jaquadro.minecraft.storagedrawers.block.BlockControllerIO;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
@@ -25,12 +25,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.capabilities.CapabilityManager;
+import net.neoforged.neoforge.common.capabilities.CapabilityToken;
+import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -334,7 +334,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         drawerSlotList.clear();
     }
 
-    public boolean isValidSlave (BlockPos coord) {
+    public boolean isValidIO (BlockPos coord) {
         StorageRecord record = storage.get(coord);
         if (record == null || !record.mark)
             return false;
@@ -455,9 +455,9 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
             record.storage = null;
         }
-        else if (blockEntity instanceof BlockEntitySlave) {
+        else if (blockEntity instanceof BlockEntityControllerIO) {
             if (record.storage == null && record.invStorageSize == 0) {
-                if (((BlockEntitySlave) blockEntity).getController() == this)
+                if (((BlockEntityControllerIO) blockEntity).getController() == this)
                     return;
             }
 
@@ -466,7 +466,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
             record.storage = null;
 
-            ((BlockEntitySlave) blockEntity).bindController(getBlockPos());
+            ((BlockEntityControllerIO) blockEntity).bindController(getBlockPos());
         }
         else if (blockEntity instanceof BlockEntityDrawers) {
             IDrawerGroup group = ((BlockEntityDrawers) blockEntity).getGroup();
@@ -529,8 +529,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                 storage.put(coord, record);
             }
 
-            if (block instanceof BlockSlave) {
-                WorldUtils.getBlockEntity(getLevel(), coord, BlockEntitySlave.class);
+            if (block instanceof BlockControllerIO) {
+                WorldUtils.getBlockEntity(getLevel(), coord, BlockEntityControllerIO.class);
             }
 
             updateRecordInfo(coord, record, getLevel().getBlockEntity(coord));

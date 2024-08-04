@@ -1,17 +1,17 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import net.neoforged.neoforge.common.ModConfigSpec;
+
 public class ClientConfig
 {
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
     public static final General GENERAL = new General(BUILDER);
     public static final Render RENDER = new Render(BUILDER);
     public static final Integration INTEGRATION = new Integration(BUILDER);
-    public static final ForgeConfigSpec spec = BUILDER.build();
+    public static final ModConfigSpec spec = BUILDER.build();
 
     private static boolean loaded = false;
     private static final List<Runnable> loadActions = new ArrayList<>();
@@ -34,10 +34,10 @@ public class ClientConfig
     }
 
     public static class General {
-        public final ForgeConfigSpec.ConfigValue<Boolean> invertShift;
-        public final ForgeConfigSpec.ConfigValue<Boolean> invertClick;
+        public final ModConfigSpec.ConfigValue<Boolean> invertShift;
+        public final ModConfigSpec.ConfigValue<Boolean> invertClick;
 
-        public General(ForgeConfigSpec.Builder builder) {
+        public General(ModConfigSpec.Builder builder) {
             builder.push("General");
 
             invertShift = builder
@@ -52,10 +52,10 @@ public class ClientConfig
     }
 
     public static class Integration {
-        public final ForgeConfigSpec.ConfigValue<Boolean> enableWaila;
-        public final ForgeConfigSpec.ConfigValue<Boolean> enableTheOneProbe;
+        public final ModConfigSpec.ConfigValue<Boolean> enableWaila;
+        public final ModConfigSpec.ConfigValue<Boolean> enableTheOneProbe;
 
-        public Integration(ForgeConfigSpec.Builder builder) {
+        public Integration(ModConfigSpec.Builder builder) {
             builder.push("Integration");
 
             enableWaila = builder
@@ -70,11 +70,11 @@ public class ClientConfig
     }
 
     public static class Render {
-        public final ForgeConfigSpec.ConfigValue<Double> labelRenderDistance;
-        public final ForgeConfigSpec.ConfigValue<Double> quantityRenderDistance;
-        public final ForgeConfigSpec.ConfigValue<Double> quantityFadeDistance;
+        public final ModConfigSpec.ConfigValue<Double> labelRenderDistance;
+        public final ModConfigSpec.ConfigValue<Double> quantityRenderDistance;
+        public final ModConfigSpec.ConfigValue<Double> quantityFadeDistance;
 
-        public Render(ForgeConfigSpec.Builder builder) {
+        public Render(ModConfigSpec.Builder builder) {
             builder.push("Render");
 
             labelRenderDistance = builder

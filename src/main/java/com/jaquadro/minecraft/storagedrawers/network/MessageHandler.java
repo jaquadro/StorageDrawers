@@ -1,8 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.network;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.NetworkRegistry;
+import net.neoforged.neoforge.network.PlayNetworkDirection;
+import net.neoforged.neoforge.network.simple.SimpleChannel;
 
 public class MessageHandler
 {
@@ -15,6 +16,9 @@ public class MessageHandler
         .simpleChannel();
 
     public static void init() {
-        INSTANCE.registerMessage(0, CountUpdateMessage.class, CountUpdateMessage::encode, CountUpdateMessage::decode, CountUpdateMessage::handle);
+        INSTANCE.messageBuilder(CountUpdateMessage.class, 0, PlayNetworkDirection.PLAY_TO_CLIENT)
+                .decoder(CountUpdateMessage::new)
+                .encoder(CountUpdateMessage::write)
+                .consumerMainThread(CountUpdateMessage::handle).add();
     }
 }

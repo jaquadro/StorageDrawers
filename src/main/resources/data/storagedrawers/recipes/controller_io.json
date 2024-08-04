@@ -11,5 +11,5 @@
         "X": { "tag": "storagedrawers:drawers" },
         "G": { "tag": "forge:ingots/gold" }
     },
-    "result": { "item": "storagedrawers:controller_slave" }
+    "result": { "item": "storagedrawers:controller_io" }
 }

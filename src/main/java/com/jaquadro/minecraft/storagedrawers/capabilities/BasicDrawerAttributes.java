@@ -3,8 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.capabilities;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.util.INBTSerializable;
-
+import net.neoforged.neoforge.common.util.INBTSerializable;
 import java.util.EnumSet;
 
 public class BasicDrawerAttributes implements IDrawerAttributesModifiable, INBTSerializable<CompoundTag>

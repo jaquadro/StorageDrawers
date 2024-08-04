@@ -10,22 +10,21 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
-
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 public final class ModBlocks
 {
-    public static final DeferredRegister<Block> BLOCK_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCKS, StorageDrawers.MOD_ID);
+    public static final DeferredRegister.Blocks BLOCK_REGISTER = DeferredRegister.createBlocks(StorageDrawers.MOD_ID);
 
     public static final List<String> EXCLUDE_ITEMS = new ArrayList<>();
 
-    public static final RegistryObject<BlockStandardDrawers>
+    public static final DeferredBlock<BlockStandardDrawers>
         OAK_FULL_DRAWERS_1 = registerWoodenDrawerBlock("oak_full_drawers_1", 1, false),
         OAK_FULL_DRAWERS_2 = registerWoodenDrawerBlock("oak_full_drawers_2", 2, false),
         OAK_FULL_DRAWERS_4 = registerWoodenDrawerBlock("oak_full_drawers_4", 4, false),
@@ -75,9 +74,10 @@ public final class ModBlocks
         WARPED_HALF_DRAWERS_2 = registerWoodenDrawerBlock("warped_half_drawers_2", 2, true),
         WARPED_HALF_DRAWERS_4 = registerWoodenDrawerBlock("warped_half_drawers_4", 4, true);
 
-    public static final RegistryObject<BlockCompDrawers> COMPACTING_DRAWERS_3 = registerCompactingDrawerBlock("compacting_drawers_3");
+    public static final DeferredBlock<BlockCompDrawers>
+        COMPACTING_DRAWERS_3 = registerCompactingDrawerBlock("compacting_drawers_3");
 
-    public static final RegistryObject<BlockTrim>
+    public static final DeferredBlock<BlockTrim>
         OAK_TRIM = registerTrimBlock("oak_trim"),
         SPRUCE_TRIM = registerTrimBlock("spruce_trim"),
         BIRCH_TRIM = registerTrimBlock("birch_trim"),
@@ -87,10 +87,13 @@ public final class ModBlocks
         CRIMSON_TRIM = registerTrimBlock("crimson_trim"),
         WARPED_TRIM = registerTrimBlock("warped_trim");
 
-    public static final RegistryObject<BlockController> CONTROLLER = registerControllerBlock("controller");
-    public static final RegistryObject<BlockSlave> CONTROLLER_SLAVE = registerControllerSlaveBlock("controller_slave");
+    public static final DeferredBlock<BlockController>
+        CONTROLLER = registerControllerBlock("controller");
 
-    public static final RegistryObject<BlockMeta>
+    public static final DeferredBlock<BlockControllerIO>
+        CONTROLLER_IO = registerControllerIOBlock("controller_io");
+
+    public static final DeferredBlock<BlockMeta>
         META_LOCKED = registerMetaBlock("meta_locked"),
         META_VOID = registerMetaBlock("meta_void"),
         META_SHROUD = registerMetaBlock("meta_shroud"),
@@ -99,32 +102,32 @@ public final class ModBlocks
 
     private ModBlocks() {}
 
-    private static RegistryObject<BlockStandardDrawers> registerWoodenDrawerBlock(String name, int drawerCount, boolean halfDepth) {
+    private static DeferredBlock<BlockStandardDrawers> registerWoodenDrawerBlock(String name, int drawerCount, boolean halfDepth) {
         return BLOCK_REGISTER.register(name, () -> new BlockStandardDrawers(drawerCount, halfDepth, getWoodenDrawerBlockProperties()));
     }
 
-    private static RegistryObject<BlockCompDrawers> registerCompactingDrawerBlock(String name) {
+    private static DeferredBlock<BlockCompDrawers> registerCompactingDrawerBlock(String name) {
         return BLOCK_REGISTER.register(name, () -> new BlockCompDrawers(getStoneDrawerBlockProperties()));
     }
 
-    private static RegistryObject<BlockTrim> registerTrimBlock(String name) {
+    private static DeferredBlock<BlockTrim> registerTrimBlock(String name) {
         return BLOCK_REGISTER.register(name, () -> new BlockTrim(getWoodenBlockProperties()));
     }
 
-    private static RegistryObject<BlockController> registerControllerBlock(String name) {
+    private static DeferredBlock<BlockController> registerControllerBlock(String name) {
         return BLOCK_REGISTER.register(name, () -> new BlockController(getStoneBlockProperties()));
     }
 
-    private static RegistryObject<BlockSlave> registerControllerSlaveBlock(String name) {
-        return BLOCK_REGISTER.register(name, () -> new BlockSlave(getStoneBlockProperties()));
+    private static DeferredBlock<BlockControllerIO> registerControllerIOBlock (String name) {
+        return BLOCK_REGISTER.register(name, () -> new BlockControllerIO(getStoneBlockProperties()));
     }
 
-    private static RegistryObject<BlockMeta> registerMetaBlock(String name) {
+    private static DeferredBlock<BlockMeta> registerMetaBlock(String name) {
         EXCLUDE_ITEMS.add(name);
         return BLOCK_REGISTER.register(name, () -> new BlockMeta(Properties.of().air()));
     }
 
-    private static RegistryObject<BlockMeta> registerSizedMetaBlock(String name) {
+    private static DeferredBlock<BlockMeta> registerSizedMetaBlock(String name) {
         EXCLUDE_ITEMS.add(name);
         return BLOCK_REGISTER.register(name, () -> new BlockMetaSized(Properties.of().air()));
     }
@@ -150,7 +153,7 @@ public final class ModBlocks
     }
 
     private static <B extends Block> Stream<B> getBlocksOfType(Class<B> blockClass) {
-        return ForgeRegistries.BLOCKS.getValues().stream().filter(blockClass::isInstance).map(blockClass::cast);
+        return BLOCK_REGISTER.getEntries().stream().map(DeferredHolder::get).filter(blockClass::isInstance).map(blockClass::cast);
     }
 
     public static Stream<BlockDrawers> getDrawers() {
@@ -161,8 +164,8 @@ public final class ModBlocks
         return getBlocksOfType(BlockController.class);
     }
 
-    public static Stream<BlockSlave> getControllerSlaves() {
-        return getBlocksOfType(BlockSlave.class);
+    public static Stream<BlockControllerIO> getControllerIOs () {
+        return getBlocksOfType(BlockControllerIO.class);
     }
 
     public static <BD extends BlockDrawers> Stream<BD> getDrawersOfType(Class<BD> drawerClass) {

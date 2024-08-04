@@ -13,30 +13,30 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.capabilities.CapabilityManager;
+import net.neoforged.neoforge.common.capabilities.CapabilityToken;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
+public class BlockEntityControllerIO extends BaseBlockEntity implements IDrawerGroup
 {
     private static final int[] drawerSlots = new int[]{0};
 
     public final ControllerData controllerData = new ControllerData();
 
-    public BlockEntitySlave(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+    public BlockEntityControllerIO (BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
 
         injectData(controllerData);
     }
 
-    public BlockEntitySlave(BlockPos pos, BlockState state) {
-        this(ModBlockEntities.CONTROLLER_SLAVE.get(), pos, state);
+    public BlockEntityControllerIO (BlockPos pos, BlockState state) {
+        this(ModBlockEntities.CONTROLLER_IO.get(), pos, state);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
     @Override
     public int[] getAccessibleDrawerSlots () {
         BlockEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getBlockPos()))
+        if (controller == null || !controller.isValidIO(getBlockPos()))
             return drawerSlots;
 
         return controller.getAccessibleDrawerSlots();
@@ -69,7 +69,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
     @Override
     public int getDrawerCount () {
         BlockEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getBlockPos()))
+        if (controller == null || !controller.isValidIO(getBlockPos()))
             return 0;
 
         return controller.getDrawerCount();
@@ -79,7 +79,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
     @NotNull
     public IDrawer getDrawer (int slot) {
         BlockEntityController controller = getController();
-        if (controller == null || !controller.isValidSlave(getBlockPos()))
+        if (controller == null || !controller.isValidIO(getBlockPos()))
             return Drawers.DISABLED;
 
         return controller.getDrawer(slot);
@@ -88,7 +88,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
     @Override
     public void setChanged () {
         BlockEntityController controller = getController();
-        if (controller != null && controller.isValidSlave(getBlockPos()))
+        if (controller != null && controller.isValidIO(getBlockPos()))
             controller.setChanged();
 
         super.setChanged();
@@ -132,7 +132,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
         @Override
         public NonNullList<ItemRecord> getAllItems () {
             BlockEntityController controller = getController();
-            if (controller == null || !controller.isValidSlave(getBlockPos()))
+            if (controller == null || !controller.isValidIO(getBlockPos()))
                 return NonNullList.create();
 
             return controller.getItemRepository().getAllItems();
@@ -142,7 +142,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
         @Override
         public ItemStack insertItem (@NotNull ItemStack stack, boolean simulate, Predicate<ItemStack> predicate) {
             BlockEntityController controller = getController();
-            if (controller == null || !controller.isValidSlave(getBlockPos()))
+            if (controller == null || !controller.isValidIO(getBlockPos()))
                 return stack;
 
             return controller.getItemRepository().insertItem(stack, simulate, predicate);
@@ -152,7 +152,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
         @Override
         public ItemStack extractItem (@NotNull ItemStack stack, int amount, boolean simulate, Predicate<ItemStack> predicate) {
             BlockEntityController controller = getController();
-            if (controller == null || !controller.isValidSlave(getBlockPos()))
+            if (controller == null || !controller.isValidIO(getBlockPos()))
                 return ItemStack.EMPTY;
 
             return controller.getItemRepository().extractItem(stack, amount, simulate, predicate);
@@ -161,7 +161,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
         @Override
         public int getStoredItemCount (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
             BlockEntityController controller = getController();
-            if (controller == null || !controller.isValidSlave(getBlockPos()))
+            if (controller == null || !controller.isValidIO(getBlockPos()))
                 return 0;
 
             return controller.getItemRepository().getStoredItemCount(stack, predicate);
@@ -170,7 +170,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
         @Override
         public int getRemainingItemCapacity (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
             BlockEntityController controller = getController();
-            if (controller == null || !controller.isValidSlave(getBlockPos()))
+            if (controller == null || !controller.isValidIO(getBlockPos()))
                 return 0;
 
             return controller.getItemRepository().getRemainingItemCapacity(stack, predicate);
@@ -179,7 +179,7 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
         @Override
         public int getItemCapacity (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
             BlockEntityController controller = getController();
-            if (controller == null || !controller.isValidSlave(getBlockPos()))
+            if (controller == null || !controller.isValidIO(getBlockPos()))
                 return 0;
 
             return controller.getItemRepository().getItemCapacity(stack, predicate);

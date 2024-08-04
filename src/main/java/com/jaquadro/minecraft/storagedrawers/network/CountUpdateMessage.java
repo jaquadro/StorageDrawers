@@ -9,11 +9,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
-
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.DistExecutor;
+import net.neoforged.neoforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class CountUpdateMessage
@@ -39,31 +38,33 @@ public class CountUpdateMessage
         this.failed = failed;
     }
 
-    public static CountUpdateMessage decode (ByteBuf buf) {
+    public CountUpdateMessage(FriendlyByteBuf buf) {
         try {
-            int x = buf.readInt();
-            int y = buf.readShort();
-            int z = buf.readInt();
-            int slot = buf.readByte();
-            int count = buf.readInt();
-            return new CountUpdateMessage(new BlockPos(x, y, z), slot, count);
+            this.x = buf.readInt();
+            this.y = buf.readShort();
+            this.z = buf.readInt();
+            this.slot = buf.readByte();
+            this.count = buf.readInt();
         }
         catch (IndexOutOfBoundsException e) {
             StorageDrawers.log.error("CountUpdateMessage: Unexpected end of packet.\nMessage: " + ByteBufUtil.hexDump(buf, 0, buf.writerIndex()), e);
-            return new CountUpdateMessage(true);
+            this.failed = true;
+            return;
         }
+
+        this.failed = false;
     }
 
-    public static void encode (CountUpdateMessage msg, FriendlyByteBuf buf) {
-        buf.writeInt(msg.x);
-        buf.writeShort(msg.y);
-        buf.writeInt(msg.z);
-        buf.writeByte(msg.slot);
-        buf.writeInt(msg.count);
+    public void write (FriendlyByteBuf buf) {
+        buf.writeInt(x);
+        buf.writeShort(y);
+        buf.writeInt(z);
+        buf.writeByte(slot);
+        buf.writeInt(count);
     }
 
-    public static void handle(CountUpdateMessage msg, Supplier<NetworkEvent.Context> ctx) {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> handleClient(msg, ctx.get()));
+    public void handle(NetworkEvent.Context ctx) {
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> handleClient(this, ctx));
     }
 
     @OnlyIn(Dist.CLIENT)

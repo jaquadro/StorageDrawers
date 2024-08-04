@@ -1,17 +1,16 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public final class CommonConfig
 {
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
     public static final General GENERAL = new General(BUILDER);
     public static final Upgrades UPGRADES = new Upgrades(BUILDER);
     public static final Integration INTEGRATION = new Integration(BUILDER);
-    public static final ForgeConfigSpec spec = BUILDER.build();
+    public static final ModConfigSpec spec = BUILDER.build();
 
     private static boolean loaded = false;
     private static final List<Runnable> loadActions = new ArrayList<>();
@@ -34,17 +33,17 @@ public final class CommonConfig
     }
 
     public static class General {
-        public final ForgeConfigSpec.ConfigValue<Integer> baseStackStorage;
-        public final ForgeConfigSpec.ConfigValue<Boolean> enableUI;
-        public final ForgeConfigSpec.ConfigValue<Boolean> enableSidedInput;
-        public final ForgeConfigSpec.ConfigValue<Boolean> enableSidedOutput;
-        public final ForgeConfigSpec.ConfigValue<Boolean> enableItemConversion;
-        public final ForgeConfigSpec.ConfigValue<Boolean> debugTrace;
-        public final ForgeConfigSpec.ConfigValue<Boolean> enableExtraCompactingRules;
-        public final ForgeConfigSpec.ConfigValue<Integer> controllerRange;
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> compRules;
+        public final ModConfigSpec.ConfigValue<Integer> baseStackStorage;
+        public final ModConfigSpec.ConfigValue<Boolean> enableUI;
+        public final ModConfigSpec.ConfigValue<Boolean> enableSidedInput;
+        public final ModConfigSpec.ConfigValue<Boolean> enableSidedOutput;
+        public final ModConfigSpec.ConfigValue<Boolean> enableItemConversion;
+        public final ModConfigSpec.ConfigValue<Boolean> debugTrace;
+        public final ModConfigSpec.ConfigValue<Boolean> enableExtraCompactingRules;
+        public final ModConfigSpec.ConfigValue<Integer> controllerRange;
+        public final ModConfigSpec.ConfigValue<List<? extends String>> compRules;
 
-        public General(ForgeConfigSpec.Builder builder) {
+        public General(ModConfigSpec.Builder builder) {
             builder.push("General");
             List<String> test = new ArrayList<>();
             test.add("minecraft:clay, minecraft:clay_ball, 4");
@@ -94,10 +93,10 @@ public final class CommonConfig
     }
 
     public static class Integration {
-        public final ForgeConfigSpec.ConfigValue<Boolean> wailaStackRemainder;
-        public final ForgeConfigSpec.BooleanValue wailaRespectQuantifyKey;
+        public final ModConfigSpec.ConfigValue<Boolean> wailaStackRemainder;
+        public final ModConfigSpec.BooleanValue wailaRespectQuantifyKey;
 
-        public Integration (ForgeConfigSpec.Builder builder) {
+        public Integration (ModConfigSpec.Builder builder) {
             builder.push("Integration");
 
             wailaStackRemainder = builder
@@ -113,13 +112,13 @@ public final class CommonConfig
     }
 
     public static class Upgrades {
-        public final ForgeConfigSpec.ConfigValue<Integer> level1Mult;
-        public final ForgeConfigSpec.ConfigValue<Integer> level2Mult;
-        public final ForgeConfigSpec.ConfigValue<Integer> level3Mult;
-        public final ForgeConfigSpec.ConfigValue<Integer> level4Mult;
-        public final ForgeConfigSpec.ConfigValue<Integer> level5Mult;
+        public final ModConfigSpec.ConfigValue<Integer> level1Mult;
+        public final ModConfigSpec.ConfigValue<Integer> level2Mult;
+        public final ModConfigSpec.ConfigValue<Integer> level3Mult;
+        public final ModConfigSpec.ConfigValue<Integer> level4Mult;
+        public final ModConfigSpec.ConfigValue<Integer> level5Mult;
 
-        public Upgrades (ForgeConfigSpec.Builder builder) {
+        public Upgrades (ModConfigSpec.Builder builder) {
             builder.push("StorageUpgrades");
             builder.comment("Storage upgrades multiply storage capacity by the given amount.",
                 "When multiple storage upgrades are used together, their multipliers are added before being applied.");

@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 public abstract class BlockEntityDataShim implements INBTSerializable<CompoundTag>
 {

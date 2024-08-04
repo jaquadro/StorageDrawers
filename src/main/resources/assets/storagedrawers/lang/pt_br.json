@@ -43,7 +43,7 @@
     "block.storagedrawers.dark_oak_trim": "Guarnição de Carvalho Escuro",
     "block.storagedrawers.compacting_drawers_3": "Gavetas Compactadoras",
     "block.storagedrawers.controller": "Controlador de Gaveta",
-    "block.storagedrawers.controller_slave": "Escravo do Controlador de Gaveta",
+    "block.storagedrawers.controller_io": "Escravo do Controlador de Gaveta",
 
     "config.jade.plugin_storagedrawers": "Storage Drawers",
     "config.jade.plugin_storagedrawers.display.content": "Conteúdo do slot",
