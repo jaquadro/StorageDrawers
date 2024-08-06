@@ -5,21 +5,14 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.Drawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
-import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -55,6 +48,10 @@ public class BlockEntityControllerIO extends BaseBlockEntity implements IDrawerG
 
     public BlockEntityController getController () {
         return controllerData.getController(this);
+    }
+
+    public IItemRepository getItemRepository () {
+        return itemRepository;
     }
 
     @Override
@@ -94,37 +91,13 @@ public class BlockEntityControllerIO extends BaseBlockEntity implements IDrawerG
         super.setChanged();
     }
 
-    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-    static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-    static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    public <T> T getCapability(@NotNull BlockCapability<T, Void> capability) {
+        if (level == null)
+            return null;
+        return level.getCapability(capability, getBlockPos(), getBlockState(), this, null);
+    }
 
-    private final DrawerItemHandler itemHandler = new DrawerItemHandler(this);
     private final ItemRepositoryProxy itemRepository = new ItemRepositoryProxy();
-
-    private final LazyOptional<IItemHandler> capabilityItemHandler = LazyOptional.of(() -> itemHandler);
-    private final LazyOptional<IItemRepository> capabilityItemRepository = LazyOptional.of(() -> itemRepository);
-    private final LazyOptional<IDrawerGroup> capabilityGroup = LazyOptional.of(() -> this);
-
-    @Override
-    @NotNull
-    public <T> LazyOptional<T> getCapability (@NotNull Capability<T> capability, @Nullable Direction facing) {
-        if (capability == ITEM_HANDLER_CAPABILITY)
-            return capabilityItemHandler.cast();
-        if (capability == ITEM_REPOSITORY_CAPABILITY)
-            return capabilityItemRepository.cast();
-        if (capability == DRAWER_GROUP_CAPABILITY)
-            return capabilityGroup.cast();
-
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        capabilityItemHandler.invalidate();
-        capabilityItemRepository.invalidate();
-        capabilityGroup.invalidate();
-    }
 
     private class ItemRepositoryProxy implements IItemRepository
     {

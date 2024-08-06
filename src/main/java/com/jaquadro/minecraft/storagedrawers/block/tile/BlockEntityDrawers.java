@@ -16,7 +16,6 @@ import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,15 +24,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.UUID;
@@ -197,9 +192,21 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     @NotNull
     public abstract IDrawerGroup getGroup ();
 
+    public static IDrawerGroup getGroup(BlockEntityDrawers be) {
+        if (be == null)
+            return null;
+        return be.getGroup();
+    }
+
     @NotNull
     public IDrawerAttributes getDrawerAttributes () {
         return drawerAttributes;
+    }
+
+    public static IDrawerAttributes getDrawerAttributes(BlockEntityDrawers be) {
+        if (be == null)
+            return null;
+        return be.getDrawerAttributes();
     }
 
     public UpgradeData upgrades () {
@@ -580,7 +587,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         PacketDistributor.TargetPoint point = new PacketDistributor.TargetPoint(
             getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 500, getLevel().dimension());
-        MessageHandler.INSTANCE.send(PacketDistributor.NEAR.with(() -> point), new CountUpdateMessage(getBlockPos(), slot, count));
+        MessageHandler.sendTo(PacketDistributor.NEAR.with(point), new CountUpdateMessage(getBlockPos(), slot, count));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -647,22 +654,10 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         customNameData.setName(name);
     }*/
 
-    public static Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY= CapabilityManager.get(new CapabilityToken<>(){});
-
-    private final LazyOptional<IDrawerGroup> capabilityGroup = LazyOptional.of(this::getGroup);
-
-    @Override
-    @NotNull
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing)
-    {
-        if (capability == DRAWER_GROUP_CAPABILITY)
-            return capabilityGroup.cast();
-
-        LazyOptional<T> cap = getGroup().getCapability(capability, facing);
-        if (cap.isPresent())
-            return cap;
-
-        return super.getCapability(capability, facing);
+    public <T> T getCapability(@NotNull BlockCapability<T, Void> capability) {
+        if (level == null)
+            return null;
+        return level.getCapability(capability, getBlockPos(), getBlockState(), this, null);
     }
 
     @NotNull
@@ -673,11 +668,5 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             /*.with(ITEM_LOCKED, drawerAttributes.isItemLocked(LockAttribute.LOCK_EMPTY))
             .with(SHROUDED, drawerAttributes.isConcealed())
             .with(VOIDING, drawerAttributes.isVoid()).build();*/
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        capabilityGroup.invalidate();
     }
 }

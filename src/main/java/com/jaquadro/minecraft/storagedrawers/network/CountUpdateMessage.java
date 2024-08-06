@@ -2,59 +2,28 @@ package com.jaquadro.minecraft.storagedrawers.network;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.DistExecutor;
-import net.neoforged.neoforge.network.NetworkEvent;
-import java.util.function.Supplier;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
-public class CountUpdateMessage
+public record CountUpdateMessage(int x, int y, int z, int slot, int count) implements CustomPacketPayload
 {
-    private int x;
-    private int y;
-    private int z;
-    private int slot;
-    private int count;
-
-    private final boolean failed;
+    public static final ResourceLocation ID = new ResourceLocation(StorageDrawers.MOD_ID, "count_update");
 
     public CountUpdateMessage (BlockPos pos, int slot, int count) {
-        this.x = pos.getX();
-        this.y = pos.getY();
-        this.z = pos.getZ();
-        this.slot = slot;
-        this.count = count;
-        this.failed = false;
-    }
-
-    private CountUpdateMessage (boolean failed) {
-        this.failed = failed;
+        this(pos.getX(), pos.getY(), pos.getZ(), slot, count);
     }
 
     public CountUpdateMessage(FriendlyByteBuf buf) {
-        try {
-            this.x = buf.readInt();
-            this.y = buf.readShort();
-            this.z = buf.readInt();
-            this.slot = buf.readByte();
-            this.count = buf.readInt();
-        }
-        catch (IndexOutOfBoundsException e) {
-            StorageDrawers.log.error("CountUpdateMessage: Unexpected end of packet.\nMessage: " + ByteBufUtil.hexDump(buf, 0, buf.writerIndex()), e);
-            this.failed = true;
-            return;
-        }
-
-        this.failed = false;
+        this(buf.readInt(), buf.readShort(), buf.readInt(), buf.readByte(), buf.readInt());
     }
 
+    @Override
     public void write (FriendlyByteBuf buf) {
         buf.writeInt(x);
         buf.writeShort(y);
@@ -63,22 +32,21 @@ public class CountUpdateMessage
         buf.writeInt(count);
     }
 
-    public void handle(NetworkEvent.Context ctx) {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> handleClient(this, ctx));
+    @Override
+    public ResourceLocation id () {
+        return ID;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private static void handleClient(CountUpdateMessage msg, NetworkEvent.Context ctx) {
-        if (!msg.failed) {
+    public static void handleClient(final CountUpdateMessage data, final PlayPayloadContext context) {
+        context.workHandler().submitAsync(() -> {
             Level world = Minecraft.getInstance().level;
             if (world != null) {
-                BlockPos pos = new BlockPos(msg.x, msg.y, msg.z);
+                BlockPos pos = new BlockPos(data.x, data.y, data.z);
                 BlockEntity blockEntity = world.getBlockEntity(pos);
                 if (blockEntity instanceof BlockEntityDrawers) {
-                    ((BlockEntityDrawers) blockEntity).clientUpdateCount(msg.slot, msg.count);
+                    ((BlockEntityDrawers) blockEntity).clientUpdateCount(data.slot, data.count);
                 }
             }
-        }
-        ctx.setPacketHandled(true);
+        }).exceptionally(e -> null);
     }
 }

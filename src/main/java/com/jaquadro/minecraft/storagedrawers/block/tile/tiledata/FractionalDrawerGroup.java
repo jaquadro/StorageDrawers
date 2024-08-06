@@ -1,43 +1,27 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
-import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
-import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.CompactingHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.util.INBTSerializable;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Stack;
 import java.util.function.Predicate;
 
 public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawerGroup
 {
-    static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-    static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-
     private final FractionalStorage storage;
     private final FractionalDrawer[] slots;
     private final int[] order;
-
-    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new DrawerItemHandler(this));
-    private final LazyOptional<IItemRepository> itemRepository = LazyOptional.of(() -> new DrawerItemRepository(this));
 
     public FractionalDrawerGroup (int slotCount) {
 
@@ -50,10 +34,6 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             slots[i] = new FractionalDrawer(storage, i);
             order[i] = i;
         }
-    }
-
-    public void setCapabilityProvider (ICapabilityProvider capProvider) {
-        storage.setCapabilityProvider(capProvider);
     }
 
     @Override
@@ -95,17 +75,6 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         return tag;
     }
 
-    @Override
-    @NotNull
-    public <T> LazyOptional<T> getCapability (@NotNull Capability<T> capability, @Nullable Direction facing) {
-        if (capability == ITEM_HANDLER_CAPABILITY)
-            return itemHandler.cast();
-        if (capability == ITEM_REPOSITORY_CAPABILITY)
-            return itemRepository.cast();
-
-        return LazyOptional.empty();
-    }
-
     public void syncAttributes () {
         storage.syncAttributes();
     }
@@ -122,17 +91,8 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
 
     protected void onAmountChanged () { }
 
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        itemHandler.invalidate();
-        itemRepository.invalidate();
-    }
-
     private static class FractionalStorage implements INBTSerializable<CompoundTag>
     {
-        static Capability<IDrawerAttributes> ATTR_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-
         private final FractionalDrawerGroup group;
         private final int slotCount;
         private final ItemStack[] protoStack;
@@ -145,7 +105,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         private final int[] cachedConvRate;
         private final ItemStackMatcher[] cachedMatchers;
 
-        IDrawerAttributes attrs;
+        IDrawerAttributes cachedAttrs;
 
         public FractionalStorage (FractionalDrawerGroup group, int slotCount) {
             cacheKey = ItemStack.EMPTY;
@@ -169,12 +129,18 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
 
             convRate = new int[slotCount];
             cachedConvRate = new int[slotCount];
-
-            attrs = EmptyDrawerAttributes.EMPTY;
         }
 
-        public void setCapabilityProvider (ICapabilityProvider capProvider) {
-            attrs = capProvider.getCapability(ATTR_CAPABILITY, null).orElse(EmptyDrawerAttributes.EMPTY);
+        @NotNull
+        IDrawerAttributes getAttributes() {
+            if (cachedAttrs != null)
+                return cachedAttrs;
+
+            cachedAttrs = group.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY);
+            if (cachedAttrs != null)
+                return cachedAttrs;
+
+            return EmptyDrawerAttributes.EMPTY;
         }
 
         public int getPooledCount () {
@@ -228,6 +194,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             if (convRate[slot] == 0)
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
@@ -238,6 +205,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             if (convRate[slot] == 0)
                 return;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending())
                 return;
 
@@ -260,6 +228,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             if (convRate[slot] == 0 || amount == 0)
                 return Math.abs(amount);
 
+            IDrawerAttributes attrs = getAttributes();
             if (amount > 0) {
                 if (attrs.isUnlimitedVending())
                     return 0;
@@ -303,6 +272,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             if (baseStack().isEmpty() || convRate[slot] == 0)
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE / convRate[slot];
 
@@ -310,6 +280,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         }
 
         public int getMaxCapacity (int slot, @NotNull ItemStack itemPrototype) {
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending()) {
                 if (convRate[slot] == 0)
                     return Integer.MAX_VALUE;
@@ -330,6 +301,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         }
 
         public int getAcceptingMaxCapacity (int slot, @NotNull ItemStack itemPrototype) {
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isVoid())
                 return Integer.MAX_VALUE;
 
@@ -340,6 +312,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             if (baseStack().isEmpty() || convRate[slot] == 0)
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
@@ -353,6 +326,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             if (baseStack().isEmpty() || convRate[slot] == 0)
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending() || attrs.isVoid())
                 return Integer.MAX_VALUE;
 
@@ -374,6 +348,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         }
 
         public boolean canItemBeStored (int slot, @NotNull ItemStack itemPrototype, Predicate<ItemStack> predicate) {
+            IDrawerAttributes attrs = getAttributes();
             if (protoStack[slot].isEmpty() && protoStack[0].isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
                 return true;
 

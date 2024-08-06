@@ -1,13 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage;
 
-import net.minecraft.core.Direction;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public interface IDrawerGroup extends ICapabilityProvider
+public interface IDrawerGroup
 {
     /**
      * Gets the number of drawers contained within this group.
@@ -32,9 +28,5 @@ public interface IDrawerGroup extends ICapabilityProvider
         return true;
     };
 
-    @Override
-    @NotNull
-    default <T> LazyOptional<T> getCapability (@NotNull final Capability<T> cap, final @Nullable Direction side) {
-        return LazyOptional.empty();
-    }
+    default <T> T getCapability(@NotNull BlockCapability<T, Void> capability) { return null; }
 }

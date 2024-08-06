@@ -2,7 +2,6 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
@@ -13,24 +12,17 @@ import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
 {
-    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-
     public BlockEntityDrawersComp(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
     }
@@ -41,7 +33,6 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
 
         public Slot3 (BlockPos pos, BlockState state) {
             super(ModBlockEntities.FRACTIONAL_DRAWERS_3.get(), pos, state);
-            groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
 
@@ -123,27 +114,16 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
             if (getWorld() != null && !getWorld().isClientSide) {
                 PacketDistributor.TargetPoint point = new PacketDistributor.TargetPoint(
                     getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 500, getWorld().dimension());
-                MessageHandler.INSTANCE.send(PacketDistributor.NEAR.with(() -> point), new CountUpdateMessage(getBlockPos(), 0, getPooledCount()));
+                MessageHandler.sendTo(PacketDistributor.NEAR.with(point), new CountUpdateMessage(getBlockPos(), 0, getPooledCount()));
 
                 setChanged();
             }
         }
 
-        private final LazyOptional<IDrawerAttributes> capabilityAttributes = LazyOptional.of(BlockEntityDrawersComp.this::getDrawerAttributes);
-
-        @Override
-        @NotNull
-        public <T> LazyOptional<T> getCapability (@NotNull Capability<T> capability, @Nullable Direction facing) {
-            if (capability == BlockEntityDrawersComp.DRAWER_ATTRIBUTES_CAPABILITY)
-                return capabilityAttributes.cast();
-
-            return super.getCapability(capability, facing);
-        }
-
-        @Override
-        public void invalidateCaps() {
-            super.invalidateCaps();
-            capabilityAttributes.invalidate();
+        public <T> T getCapability(@NotNull BlockCapability<T, Void> capability) {
+            if (level == null)
+                return null;
+            return level.getCapability(capability, getBlockPos(), getBlockState(), BlockEntityDrawersComp.this, null);
         }
     }
 

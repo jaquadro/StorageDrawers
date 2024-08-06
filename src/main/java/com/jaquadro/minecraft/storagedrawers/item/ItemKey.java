@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -24,9 +25,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,8 +32,6 @@ import java.util.List;
 
 public class ItemKey extends Item
 {
-    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-
     private final Multimap<Attribute, AttributeModifier> modifiers;
 
     public ItemKey(Item.Properties properties) {
@@ -76,7 +72,10 @@ public class ItemKey extends Item
         if (blockEntity == null)
             return InteractionResult.PASS;
 
-        IDrawerAttributes attrs = blockEntity.getCapability(DRAWER_ATTRIBUTES_CAPABILITY, null).orElse(EmptyDrawerAttributes.EMPTY);
+        IDrawerAttributes attrs = blockEntity.getLevel().getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY, blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, null);
+        if (attrs == null)
+            attrs = EmptyDrawerAttributes.EMPTY;
+
         if (!(attrs instanceof IDrawerAttributesModifiable))
             return InteractionResult.PASS;
 

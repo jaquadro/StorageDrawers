@@ -1,39 +1,23 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
-import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
-import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.util.INBTSerializable;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
 public abstract class StandardDrawerGroup extends BlockEntityDataShim implements IDrawerGroup
 {
-    public static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-    public static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-
     private final DrawerData[] slots;
     private final int[] order;
-
-    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new DrawerItemHandler(this));
-    private final LazyOptional<IItemRepository> itemRepository = LazyOptional.of(() -> new DrawerItemRepository(this));
 
     public StandardDrawerGroup (int slotCount) {
         slots = new DrawerData[slotCount];
@@ -42,11 +26,6 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         order = new int[slotCount];
         syncSlots();
-    }
-
-    public void setCapabilityProvider (ICapabilityProvider capProvider) {
-        for (DrawerData slot : slots)
-            slot.setCapabilityProvider(capProvider);
     }
 
     @Override
@@ -94,17 +73,6 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         return tag;
     }
 
-    @Override
-    @NotNull
-    public <T> LazyOptional<T> getCapability (@NotNull Capability<T> capability, @Nullable Direction facing) {
-        if (capability == ITEM_HANDLER_CAPABILITY)
-            return itemHandler.cast();
-        if (capability == ITEM_REPOSITORY_CAPABILITY)
-            return itemRepository.cast();
-
-        return LazyOptional.empty();
-    }
-
     @NotNull
     protected abstract DrawerData createDrawer (int slot);
 
@@ -139,18 +107,9 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         }
     }
 
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        itemHandler.invalidate();
-        itemRepository.invalidate();
-    }
-
     public static class DrawerData implements IDrawer, INBTSerializable<CompoundTag>
     {
-        static Capability<IDrawerAttributes> ATTR_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-
-        IDrawerAttributes attrs;
+        IDrawerAttributes cachedAttrs;
         StandardDrawerGroup group;
 
         @NotNull
@@ -160,13 +119,20 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         public DrawerData (StandardDrawerGroup group) {
             this.group = group;
-            attrs = EmptyDrawerAttributes.EMPTY;
             protoStack = ItemStack.EMPTY;
             matcher = ItemStackMatcher.EMPTY;
         }
 
-        public void setCapabilityProvider (ICapabilityProvider capProvider) {
-            attrs = capProvider.getCapability(ATTR_CAPABILITY, null).orElse(EmptyDrawerAttributes.EMPTY);
+        @NotNull
+        IDrawerAttributes getAttributes() {
+            if (cachedAttrs != null)
+                return cachedAttrs;
+
+            cachedAttrs = group.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY);
+            if (cachedAttrs != null)
+                return cachedAttrs;
+
+            return EmptyDrawerAttributes.EMPTY;
         }
 
         @Override
@@ -229,6 +195,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             if (protoStack.isEmpty())
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
@@ -244,6 +211,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             if (protoStack.isEmpty() || count == amount)
                 return;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending())
                 return;
 
@@ -271,6 +239,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             if (protoStack.isEmpty() || amount == 0)
                 return Math.abs(amount);
 
+            IDrawerAttributes attrs = getAttributes();
             if (amount > 0) {
                 if (attrs.isUnlimitedVending())
                     return 0;
@@ -299,6 +268,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         @Override
         public int getMaxCapacity (@NotNull ItemStack itemPrototype) {
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
@@ -310,6 +280,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         @Override
         public int getAcceptingMaxCapacity (@NotNull ItemStack itemPrototype) {
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isVoid())
                 return Integer.MAX_VALUE;
 
@@ -321,6 +292,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             if (protoStack.isEmpty())
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
@@ -332,6 +304,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             if (protoStack.isEmpty())
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending() || attrs.isVoid())
                 return Integer.MAX_VALUE;
 
@@ -340,6 +313,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         @Override
         public boolean canItemBeStored (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+            IDrawerAttributes attrs = getAttributes();
             if (protoStack.isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
                 return true;
 

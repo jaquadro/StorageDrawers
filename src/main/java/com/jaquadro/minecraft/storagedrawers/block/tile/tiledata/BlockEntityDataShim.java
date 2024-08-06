@@ -19,6 +19,4 @@ public abstract class BlockEntityDataShim implements INBTSerializable<CompoundTa
     public void deserializeNBT (CompoundTag nbt) {
         read(nbt);
     }
-
-    public void invalidateCaps() {}
 }

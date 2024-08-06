@@ -15,6 +15,7 @@ import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -52,7 +53,6 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,7 +61,6 @@ import java.util.List;
 
 public abstract class BlockDrawers extends HorizontalDirectionalBlock implements INetworked, EntityBlock
 {
-
     // TODO: TE.getModelData()
     //public static final IUnlistedProperty<DrawerStateModelData> STATE_MODEL = UnlistedModelData.create(DrawerStateModelData.class);
 
@@ -179,7 +178,10 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 //        }
 
         if (entity != null && entity.getOffhandItem().getItem() == ModItems.DRAWER_KEY.get()) {
-            IDrawerAttributes _attrs = blockEntity.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(new EmptyDrawerAttributes());
+            IDrawerAttributes _attrs = blockEntity.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY);
+            if (_attrs == null)
+                _attrs = new EmptyDrawerAttributes();
+
             if (_attrs instanceof IDrawerAttributesModifiable attrs) {
                 attrs.setItemLocked(LockAttribute.LOCK_EMPTY, true);
                 attrs.setItemLocked(LockAttribute.LOCK_POPULATED, true);
@@ -323,7 +325,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             }*/
 
             if (CommonConfig.GENERAL.enableUI.get() && !level.isClientSide) {
-                NetworkHooks.openScreen((ServerPlayer)player, new MenuProvider()
+                player.openMenu(new MenuProvider()
                 {
                     @Override
                     @NotNull

@@ -5,6 +5,9 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,6 +23,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class BlockCompDrawers extends BlockDrawers implements INetworked
 {
+    public static final MapCodec<BlockCompDrawers> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+            Codec.INT.fieldOf("storageUnits").forGetter(BlockDrawers::getStorageUnits),
+            propertiesCodec()
+        ).apply(instance, BlockCompDrawers::new)
+    );
+
     public static final EnumProperty<EnumCompDrawer> SLOTS = EnumProperty.create("slots", EnumCompDrawer.class);
 
     public BlockCompDrawers (int storageUnits, BlockBehaviour.Properties properties) {
@@ -30,6 +40,11 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
 
     public BlockCompDrawers (BlockBehaviour.Properties properties) {
         this(32, properties);
+    }
+
+    @Override
+    public MapCodec<BlockCompDrawers> codec() {
+        return CODEC;
     }
 
     @Override

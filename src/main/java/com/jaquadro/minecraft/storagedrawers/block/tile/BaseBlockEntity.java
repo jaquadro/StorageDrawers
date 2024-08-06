@@ -193,13 +193,4 @@ public class BaseBlockEntity extends BlockEntity
         getLevel().sendBlockUpdated(worldPosition, state, state, Block.UPDATE_CLIENTS);
         //}
     }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        if (fixedShims != null)
-            fixedShims.forEach(BlockEntityDataShim::invalidateCaps);
-        if (portableShims != null)
-            portableShims.forEach(BlockEntityDataShim::invalidateCaps);
-    }
 }

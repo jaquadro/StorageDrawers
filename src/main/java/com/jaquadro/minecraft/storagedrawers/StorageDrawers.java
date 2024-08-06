@@ -15,16 +15,14 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.InterModComms;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -48,30 +46,28 @@ public class StorageDrawers
     private static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(Registries.RECIPE_SERIALIZER, MOD_ID);
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AddUpgradeRecipe>> UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_upgrade", () -> new SimpleCraftingRecipeSerializer<>(AddUpgradeRecipe::new));
 
-    public StorageDrawers () {
+    public StorageDrawers (ModContainer modContainer, IEventBus modEventBus) {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.spec);
 
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModBlocks.register(modEventBus);
+        ModItems.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
+        ModContainers.register(modEventBus);
 
-        ModBlocks.register(bus);
-        ModItems.register(bus);
-        ModBlockEntities.register(bus);
-        ModContainers.register(bus);
+        modEventBus.addListener(this::setup);
+        modEventBus.addListener(MessageHandler::register);
+        //modEventBus.addListener(this::onModQueueEvent);
+        modEventBus.addListener(this::onModConfigEvent);
+        modEventBus.addListener(ModItems::creativeModeTabRegister);
+        modEventBus.addListener(ModCapabilities::register);
 
-        bus.addListener(this::setup);
-        //bus.addListener(this::onModQueueEvent);
-        bus.addListener(this::onModConfigEvent);
-        bus.addListener(ModItems::creativeModeTabRegister);
-
-        RECIPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        RECIPES.register(modEventBus);
 
         NeoForge.EVENT_BUS.register(this);
     }
 
     private void setup (final FMLCommonSetupEvent event) {
-        MessageHandler.init();
-
         compRegistry = new CompTierRegistry();
         compRegistry.initialize();
 
@@ -102,13 +98,6 @@ public class StorageDrawers
     @SubscribeEvent
     public void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
         //ConfigManager.serverPlayerConfigSettings.remove(event.player.getUniqueID());
-    }
-
-    @SubscribeEvent
-    public void registerCapabilities (RegisterCapabilitiesEvent event) {
-        CapabilityDrawerGroup.register(event);
-        CapabilityItemRepository.register(event);
-        CapabilityDrawerAttributes.register(event);
     }
 
     public static ResourceLocation rl(String path) {

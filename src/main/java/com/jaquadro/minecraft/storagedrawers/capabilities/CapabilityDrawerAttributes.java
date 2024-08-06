@@ -1,16 +1,26 @@
 package com.jaquadro.minecraft.storagedrawers.capabilities;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.capabilities.RegisterCapabilitiesEvent;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class CapabilityDrawerAttributes
 {
-    public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final BlockCapability<IDrawerAttributes, Void> DRAWER_ATTRIBUTES_CAPABILITY =
+        BlockCapability.createVoid(new ResourceLocation(StorageDrawers.MOD_ID, "drawer_attributes"), IDrawerAttributes.class);
 
     public static void register (RegisterCapabilitiesEvent event) {
-        event.register(IDrawerAttributes.class);
+        event.registerBlockEntity(DRAWER_ATTRIBUTES_CAPABILITY, ModBlockEntities.STANDARD_DRAWERS_1.get(),
+            (entity, context) -> BlockEntityDrawers.getDrawerAttributes(entity));
+        event.registerBlockEntity(DRAWER_ATTRIBUTES_CAPABILITY, ModBlockEntities.STANDARD_DRAWERS_2.get(),
+            (entity, context) -> BlockEntityDrawers.getDrawerAttributes(entity));
+        event.registerBlockEntity(DRAWER_ATTRIBUTES_CAPABILITY, ModBlockEntities.STANDARD_DRAWERS_4.get(),
+            (entity, context) -> BlockEntityDrawers.getDrawerAttributes(entity));
+        event.registerBlockEntity(DRAWER_ATTRIBUTES_CAPABILITY, ModBlockEntities.FRACTIONAL_DRAWERS_3.get(),
+            (entity, context) -> BlockEntityDrawers.getDrawerAttributes(entity));
     }
 }

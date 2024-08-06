@@ -1,26 +1,18 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
 {
-    static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-
     public BlockEntityDrawersStandard(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
     }
@@ -31,7 +23,6 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
 
         public Slot1 (BlockPos pos, BlockState state) {
             super(ModBlockEntities.STANDARD_DRAWERS_1.get(), pos, state);
-            groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
 
@@ -54,7 +45,6 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
 
         public Slot2 (BlockPos pos, BlockState state) {
             super(ModBlockEntities.STANDARD_DRAWERS_2.get(), pos, state);
-            groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
 
@@ -77,7 +67,6 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
 
         public Slot4 (BlockPos pos, BlockState state) {
             super(ModBlockEntities.STANDARD_DRAWERS_4.get(), pos, state);
-            groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
 
@@ -105,8 +94,6 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
 
     private class GroupData extends StandardDrawerGroup
     {
-        private final LazyOptional<IDrawerAttributes> attributesHandler = LazyOptional.of(BlockEntityDrawersStandard.this::getDrawerAttributes);
-
         public GroupData (int slotCount) {
             super(slotCount);
         }
@@ -123,18 +110,10 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
         }
 
         @Override
-        @NotNull
-        public <T> LazyOptional<T> getCapability (@NotNull Capability<T> capability, @Nullable Direction facing) {
-            if (capability == BlockEntityDrawersStandard.DRAWER_ATTRIBUTES_CAPABILITY)
-                return attributesHandler.cast();
-
-            return super.getCapability(capability, facing);
-        }
-
-        @Override
-        public void invalidateCaps() {
-            super.invalidateCaps();
-            attributesHandler.invalidate();
+        public <T> T getCapability(@NotNull BlockCapability<T, Void> capability) {
+            if (level == null)
+                return null;
+            return level.getCapability(capability, getBlockPos(), getBlockState(), BlockEntityDrawersStandard.this, null);
         }
     }
 

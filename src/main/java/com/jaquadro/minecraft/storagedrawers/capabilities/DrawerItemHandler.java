@@ -4,16 +4,11 @@ import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class DrawerItemHandler implements IItemHandler
 {
-    public static Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-
     private final IDrawerGroup group;
 
     public DrawerItemHandler (IDrawerGroup group) {
@@ -83,7 +78,7 @@ public class DrawerItemHandler implements IItemHandler
 
     @NotNull
     private ItemStack insertItemFullScan (@NotNull ItemStack stack, boolean simulate) {
-        IItemRepository itemRepo = group.getCapability(ITEM_REPOSITORY_CAPABILITY, null).orElse(null);
+        IItemRepository itemRepo = group.getCapability(CapabilityItemRepository.ITEM_REPOSITORY_CAPABILITY);
         if (itemRepo != null)
             return itemRepo.insertItem(stack, simulate);
 

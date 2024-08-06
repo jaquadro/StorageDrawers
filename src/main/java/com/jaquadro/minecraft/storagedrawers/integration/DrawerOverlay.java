@@ -22,7 +22,10 @@ public class DrawerOverlay {
     public List<Component> getOverlay(final BlockEntityDrawers tile) {
         final List<Component> result = new ArrayList<>();
 
-        final IDrawerAttributes attr = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY, null).orElse(EmptyDrawerAttributes.EMPTY);
+        IDrawerAttributes attr = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY);
+        if (attr == null)
+            attr = EmptyDrawerAttributes.EMPTY;
+
         addContent(result, tile, attr);
         addStackLimit(result, tile, attr);
         addStatus(result, tile, attr);

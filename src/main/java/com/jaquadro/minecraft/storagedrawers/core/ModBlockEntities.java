@@ -27,8 +27,8 @@ public final class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityController>> CONTROLLER = BLOCK_ENTITY_REGISTER.register("controller", () ->
         BlockEntityType.Builder.of(BlockEntityController::new, ModBlocks.CONTROLLER.get()).build(null));
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityController>> CONTROLLER_IO = BLOCK_ENTITY_REGISTER.register("controller_io", () ->
-        BlockEntityType.Builder.of(BlockEntityController::new, ModBlocks.CONTROLLER_IO.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityControllerIO>> CONTROLLER_IO = BLOCK_ENTITY_REGISTER.register("controller_io", () ->
+        BlockEntityType.Builder.of(BlockEntityControllerIO::new, ModBlocks.CONTROLLER_IO.get()).build(null));
 
     private ModBlockEntities() {}
 
