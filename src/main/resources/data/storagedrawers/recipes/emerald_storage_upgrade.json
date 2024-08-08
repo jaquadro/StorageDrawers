@@ -10,5 +10,5 @@
         "#": { "tag": "forge:gems/emerald" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
-    "result": { "item": "storagedrawers:emerald_storage_upgrade" }
+    "result": { "id": "storagedrawers:emerald_storage_upgrade" }
 }

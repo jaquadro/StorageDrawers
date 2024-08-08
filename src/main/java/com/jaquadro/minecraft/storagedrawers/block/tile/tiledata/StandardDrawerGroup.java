@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -48,25 +49,25 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
     }
 
     @Override
-    public void read (CompoundTag tag) {
+    public void read (HolderLookup.Provider provider, CompoundTag tag) {
         if (!tag.contains("Drawers"))
             return;
 
         ListTag itemList = tag.getList("Drawers", Tag.TAG_COMPOUND);
         for (int i = 0; i < itemList.size(); i++) {
             if (i < slots.length)
-                slots[i].deserializeNBT(itemList.getCompound(i));
+                slots[i].deserializeNBT(provider, itemList.getCompound(i));
         }
     }
 
     @Override
-    public CompoundTag write (CompoundTag tag) {
+    public CompoundTag write (HolderLookup.Provider provider, CompoundTag tag) {
         if (slots == null)
             return tag;
 
         ListTag itemList = new ListTag();
         for (DrawerData slot : slots)
-            itemList.add(slot.serializeNBT());
+            itemList.add(slot.serializeNBT(provider));
 
         tag.put("Drawers", itemList);
 
@@ -348,13 +349,13 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         }
 
         @Override
-        public CompoundTag serializeNBT () {
+        public CompoundTag serializeNBT (HolderLookup.Provider provider) {
             CompoundTag tag = new CompoundTag();
             if (protoStack.isEmpty())
                 return tag;
 
             CompoundTag item = new CompoundTag();
-            protoStack.save(item);
+            item = (CompoundTag)protoStack.save(provider, item);
 
             tag.put("Item", item);
             tag.putInt("Count", count);
@@ -363,12 +364,12 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         }
 
         @Override
-        public void deserializeNBT (CompoundTag nbt) {
+        public void deserializeNBT (HolderLookup.Provider provider, CompoundTag nbt) {
             ItemStack tagItem = ItemStack.EMPTY;
             int tagCount = 0;
 
             if (nbt.contains("Item"))
-                tagItem = ItemStack.of(nbt.getCompound("Item"));
+                tagItem = ItemStack.parseOptional(provider, nbt.getCompound("Item"));
             if (nbt.contains("Count"))
                 tagCount = nbt.getInt("Count");
 

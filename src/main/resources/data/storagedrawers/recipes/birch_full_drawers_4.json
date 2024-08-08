@@ -9,5 +9,5 @@
         "/": { "item": "minecraft:birch_planks" },
         "X": { "tag": "forge:chests/wooden" }
     },
-    "result": { "item": "storagedrawers:birch_full_drawers_4", "count": 4 }
+    "result": { "id": "storagedrawers:birch_full_drawers_4", "count": 4 }
 }

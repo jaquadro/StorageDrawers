@@ -9,5 +9,5 @@
         "/": { "item": "minecraft:dark_oak_slab" },
         "X": { "tag": "forge:chests/wooden" }
     },
-    "result": { "item": "storagedrawers:dark_oak_half_drawers_2", "count": 2 }
+    "result": { "id": "storagedrawers:dark_oak_half_drawers_2", "count": 2 }
 }

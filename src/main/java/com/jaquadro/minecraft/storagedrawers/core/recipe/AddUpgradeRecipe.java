@@ -5,10 +5,11 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -27,17 +28,21 @@ public class AddUpgradeRecipe extends CustomRecipe
 
     @Override
     public boolean matches(@NotNull CraftingContainer inv, @NotNull Level world) {
-        return findContext(inv) != null;
+        return findContext(inv, world.registryAccess()) != null;
     }
 
     @Override
     @NotNull
-    public ItemStack assemble(@NotNull CraftingContainer inv, RegistryAccess access) {
-        Context ctx = findContext(inv);
+    public ItemStack assemble(@NotNull CraftingContainer inv, HolderLookup.Provider registries) {
+        Context ctx = findContext(inv, registries);
         if (ctx == null)
             return ItemStack.EMPTY;
         ItemStack ret = ctx.drawer.copy();
-        ret.getOrCreateTag().put("tile", ctx.data.write(ret.getOrCreateTag().getCompound("tile")));
+
+        CustomData orig = ret.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
+        CustomData data = CustomData.of(ctx.data.write(registries, orig.copyTag()));
+        ret.set(DataComponents.BLOCK_ENTITY_DATA, data);
+
         return ret;
     }
 
@@ -48,7 +53,7 @@ public class AddUpgradeRecipe extends CustomRecipe
     }
 
     @Nullable
-    private Context findContext(CraftingContainer inv) {
+    private Context findContext(CraftingContainer inv, HolderLookup.Provider registries) {
         Context ret = new Context();
         for (int x = 0; x < inv.getContainerSize(); x++) {
             ItemStack stack = inv.getItem(x);
@@ -80,8 +85,9 @@ public class AddUpgradeRecipe extends CustomRecipe
             }
         };
 
-        if (ret.drawer.hasTag() && ret.drawer.getTag().contains("tile"))
-            ret.data.read(ret.drawer.getTag().getCompound("tile"));
+        CustomData custom = ret.drawer.get(DataComponents.BLOCK_ENTITY_DATA);
+        if (custom != null)
+            ret.data.read(registries, custom.copyTag());
 
         for (ItemStack upgrade : ret.upgrades) {
             if (upgrade.getItem() == ModItems.ONE_STACK_UPGRADE.get())

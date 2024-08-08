@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -240,7 +241,7 @@ public class UpgradeData extends BlockEntityDataShim
     }
 
     @Override
-    public void read (CompoundTag tag) {
+    public void read (HolderLookup.Provider provider, CompoundTag tag) {
         Arrays.fill(upgrades, ItemStack.EMPTY);
 
         if (!tag.contains("Upgrades"))
@@ -251,18 +252,18 @@ public class UpgradeData extends BlockEntityDataShim
             CompoundTag upgradeTag = tagList.getCompound(i);
 
             int slot = upgradeTag.getByte("Slot");
-            upgrades[slot] = ItemStack.of(upgradeTag);
+            upgrades[slot] = ItemStack.parseOptional(provider, upgradeTag);
         }
 
         syncUpgrades();
     }
 
     @Override
-    public CompoundTag write (CompoundTag tag) {
+    public CompoundTag write (HolderLookup.Provider provider, CompoundTag tag) {
         ListTag tagList = new ListTag();
         for (int i = 0; i < upgrades.length; i++) {
             if (!upgrades[i].isEmpty()) {
-                CompoundTag upgradeTag = upgrades[i].save(new CompoundTag());
+                CompoundTag upgradeTag = (CompoundTag) upgrades[i].save(provider, new CompoundTag());
                 upgradeTag.putByte("Slot", (byte)i);
 
                 tagList.add(upgradeTag);

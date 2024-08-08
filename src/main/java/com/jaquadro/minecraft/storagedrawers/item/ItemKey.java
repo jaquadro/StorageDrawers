@@ -12,13 +12,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -32,14 +32,23 @@ import java.util.List;
 
 public class ItemKey extends Item
 {
-    private final Multimap<Attribute, AttributeModifier> modifiers;
-
     public ItemKey(Item.Properties properties) {
-        super(properties);
+        super(properties.attributes(createAttributes()));
+    }
 
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double)2, AttributeModifier.Operation.ADDITION));
-        modifiers = builder.build();
+    public static ItemAttributeModifiers createAttributes() {
+        return ItemAttributeModifiers.builder()
+            .add(
+                Attributes.ATTACK_DAMAGE,
+                new AttributeModifier(
+                    BASE_ATTACK_DAMAGE_UUID,
+                    "Weapon modifier",
+                    2,
+                    AttributeModifier.Operation.ADD_VALUE
+                ),
+                EquipmentSlotGroup.MAINHAND
+            )
+            .build();
     }
 
     @Override
@@ -49,8 +58,8 @@ public class ItemKey extends Item
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText (@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText (ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltip, flag);
         tooltip.add(Component.literal("").append(getDescription()).withStyle(ChatFormatting.GRAY));
     }
 
@@ -58,11 +67,6 @@ public class ItemKey extends Item
     @NotNull
     public Component getDescription() {
         return Component.translatable(this.getDescriptionId() + ".desc");
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers (EquipmentSlot slot, ItemStack stack) {
-        return slot == EquipmentSlot.MAINHAND ? modifiers : super.getAttributeModifiers(slot, stack);
     }
 
     @Override

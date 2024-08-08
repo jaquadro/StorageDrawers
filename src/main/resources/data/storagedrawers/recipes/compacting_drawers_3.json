@@ -11,5 +11,5 @@
         "X": { "tag": "storagedrawers:drawers" },
         "I": { "tag": "forge:ingots/iron" }
     },
-    "result": { "item": "storagedrawers:compacting_drawers_3" }
+    "result": { "id": "storagedrawers:compacting_drawers_3" }
 }

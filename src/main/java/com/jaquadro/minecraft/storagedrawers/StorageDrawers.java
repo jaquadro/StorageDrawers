@@ -1,8 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers;
 
-import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityItemRepository;
 import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
@@ -16,12 +13,10 @@ import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -47,13 +42,14 @@ public class StorageDrawers
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AddUpgradeRecipe>> UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_upgrade", () -> new SimpleCraftingRecipeSerializer<>(AddUpgradeRecipe::new));
 
     public StorageDrawers (ModContainer modContainer, IEventBus modEventBus) {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.spec);
+        modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.spec);
 
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
         ModBlockEntities.register(modEventBus);
         ModContainers.register(modEventBus);
+        ModDataComponents.COMPONENTS.register(modEventBus);
 
         modEventBus.addListener(this::setup);
         modEventBus.addListener(MessageHandler::register);

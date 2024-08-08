@@ -10,5 +10,5 @@
         "#": { "tag": "forge:ingots/iron" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
-    "result": { "item": "storagedrawers:iron_storage_upgrade" }
+    "result": { "id": "storagedrawers:iron_storage_upgrade" }
 }

@@ -19,6 +19,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,6 +27,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -33,6 +35,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -153,7 +156,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     }
 
     @Override
-    public boolean isPathfindable (@NotNull BlockState state, @NotNull BlockGetter getter, @NotNull BlockPos pos, @NotNull PathComputationType type) {
+    public boolean isPathfindable (@NotNull BlockState state, @NotNull PathComputationType type) {
         return false;
     }
 
@@ -168,9 +171,9 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         if (blockEntity == null)
             return;
 
-        CompoundTag tag = stack.getTagElement("tile");
-        if (tag != null) {
-            blockEntity.readPortable(tag);
+        CustomData customdata = stack.get(DataComponents.BLOCK_ENTITY_DATA);
+        if (customdata != null) {
+            blockEntity.readPortable(world.registryAccess(), customdata.copyTag());
         }
 
 //        if (stack.hasCustomHoverName()) {
@@ -234,15 +237,14 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     }
 
     @Override
-    @NotNull
-    public InteractionResult use (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public ItemInteractionResult useItemOn (ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack item = player.getItemInHand(hand);
         if (hand == InteractionHand.OFF_HAND)
-            return InteractionResult.PASS;
+            return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
 
         if (level.isClientSide && Util.getMillis() == ignoreEventTime) {
             ignoreEventTime = 0;
-            return InteractionResult.PASS;
+            return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
 
         boolean invertClick = ClientConfig.GENERAL.invertClick.get();
@@ -250,7 +252,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             return insertOrApplyItem(state, level, pos, player, hit);
 
         interactTakeItems(state, level, pos, player, hit);
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
@@ -268,12 +270,12 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             interactTakeItems(state, level, blockPos, player, hit);
     }
 
-    public InteractionResult insertOrApplyItem(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit) {
+    public ItemInteractionResult insertOrApplyItem(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit) {
         ItemStack item = player.getItemInHand(InteractionHand.MAIN_HAND);
 
         BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(level, blockPos, BlockEntityDrawers.class);
         if (blockEntityDrawers == null)
-            return InteractionResult.FAIL;
+            return ItemInteractionResult.FAIL;
 
         //if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
         //    return false;
@@ -286,21 +288,21 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 
         if (!item.isEmpty()) {
             if (item.getItem() instanceof ItemKey)
-                return InteractionResult.PASS;
+                return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
 
             if (item.getItem() instanceof ItemUpgrade) {
                 if (!blockEntityDrawers.upgrades().canAddUpgrade(item)) {
                     if (!level.isClientSide)
                         player.displayClientMessage(Component.translatable("message.storagedrawers.cannot_add_upgrade"), true);
 
-                    return InteractionResult.PASS;
+                    return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
                 }
 
                 if (!blockEntityDrawers.upgrades().addUpgrade(item)) {
                     if (!level.isClientSide)
                         player.displayClientMessage(Component.translatable("message.storagedrawers.max_upgrades"), true);
 
-                    return InteractionResult.PASS;
+                    return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
                 }
 
                 level.sendBlockUpdated(blockPos, state, state, 3);
@@ -311,7 +313,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
                         player.getInventory().setItem(player.getInventory().selected, ItemStack.EMPTY);
                 }
 
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
         }
         else if (item.isEmpty() && player.isShiftKeyDown()) {
@@ -347,7 +349,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
                         return null;
                     }
                 }, extraData -> extraData.writeBlockPos(blockPos));
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
         }
         //if (tileDrawers.isSealed())
@@ -355,14 +357,14 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 
         int slot = getDrawerSlot(state, hit);
         if (slot < 0)
-            return InteractionResult.PASS;
+            return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
 
         blockEntityDrawers.interactPutItemsIntoSlot(slot, player);
 
         if (item.isEmpty())
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     public boolean interactTakeItems(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit) {
@@ -427,10 +429,6 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         if (tile == null)
             return drop;
 
-        CompoundTag data = drop.getTag();
-        if (data == null)
-            data = new CompoundTag();
-
         boolean hasContents = false;
         for (int i = 0; i < tile.getGroup().getDrawerCount(); i++) {
             IDrawer drawer = tile.getGroup().getDrawer(i);
@@ -443,10 +441,8 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         }
 
         if (hasContents) {
-            CompoundTag tiledata = tile.saveWithoutMetadata();
-
-            data.put("tile", tiledata);
-            drop.setTag(data);
+            CompoundTag tiledata = tile.saveWithoutMetadata(tile.getLevel().registryAccess());
+            drop.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tiledata));
         }
 
         return drop;

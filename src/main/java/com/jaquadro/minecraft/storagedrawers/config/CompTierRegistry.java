@@ -156,7 +156,7 @@ public class CompTierRegistry
             return null;
 
         for (Record r : records) {
-            if (ItemStack.isSameItemSameTags(stack, r.lower))
+            if (ItemStack.isSameItemSameComponents(stack, r.lower))
                 return r;
         }
 
@@ -168,7 +168,7 @@ public class CompTierRegistry
             return null;
 
         for (Record r : records) {
-            if (ItemStack.isSameItemSameTags(stack, r.upper))
+            if (ItemStack.isSameItemSameComponents(stack, r.upper))
                 return r;
         }
 

@@ -3,12 +3,14 @@ package com.jaquadro.minecraft.storagedrawers.item;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
@@ -26,8 +28,8 @@ public class ItemDrawers extends BlockItem
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText (@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText (ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltip, flag);
 
         //if (stack.hasTag() && stack.getTag().contains("material")) {
         //    String key = stack.getTag().getString("material");
@@ -37,8 +39,8 @@ public class ItemDrawers extends BlockItem
         Component textCapacity = Component.translatable("tooltip.storagedrawers.drawers.capacity", getCapacityForBlock(stack));
         tooltip.add(Component.literal("").append(textCapacity).withStyle(ChatFormatting.GRAY));
 
-        CompoundTag tag = stack.getTagElement("tile");
-        if (tag != null) {
+        CustomData data = stack.get(DataComponents.BLOCK_ENTITY_DATA);
+        if (data != null) {
             Component textSealed = Component.translatable("tooltip.storagedrawers.drawers.sealed");
             tooltip.add(Component.literal("").append(textSealed).withStyle(ChatFormatting.YELLOW));
         }

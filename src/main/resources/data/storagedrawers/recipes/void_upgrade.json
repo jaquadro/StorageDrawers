@@ -9,5 +9,5 @@
         "#": { "tag": "forge:obsidian" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
-    "result": { "item": "storagedrawers:void_upgrade" }
+    "result": { "id": "storagedrawers:void_upgrade" }
 }

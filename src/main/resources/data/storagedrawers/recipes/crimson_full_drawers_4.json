@@ -9,5 +9,5 @@
         "/": { "item": "minecraft:crimson_planks" },
         "X": { "tag": "forge:chests/wooden" }
     },
-    "result": { "item": "storagedrawers:crimson_full_drawers_4", "count": 4 }
+    "result": { "id": "storagedrawers:crimson_full_drawers_4", "count": 4 }
 }

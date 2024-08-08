@@ -9,5 +9,5 @@
         "/": { "item": "minecraft:crimson_slab" },
         "X": { "tag": "forge:chests/wooden" }
     },
-    "result": { "item": "storagedrawers:crimson_half_drawers_4", "count": 4 }
+    "result": { "id": "storagedrawers:crimson_half_drawers_4", "count": 4 }
 }

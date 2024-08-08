@@ -18,6 +18,7 @@ import com.jaquadro.minecraft.storagedrawers.util.ItemCollectionRegistry;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -580,8 +581,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     }
 
     @Override
-    public void readFixed (CompoundTag tag) {
-        super.readFixed(tag);
+    public void readFixed (HolderLookup.Provider provider, CompoundTag tag) {
+        super.readFixed(provider, tag);
 
         if (getLevel() != null && !getLevel().isClientSide)
             updateCache();

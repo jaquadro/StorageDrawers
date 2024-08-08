@@ -10,5 +10,5 @@
         "#": { "tag": "forge:gems/diamond" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
-    "result": { "item": "storagedrawers:diamond_storage_upgrade" }
+    "result": { "id": "storagedrawers:diamond_storage_upgrade" }
 }

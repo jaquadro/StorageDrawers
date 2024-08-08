@@ -12,6 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -112,9 +113,9 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
         @Override
         protected void onAmountChanged () {
             if (getWorld() != null && !getWorld().isClientSide) {
-                PacketDistributor.TargetPoint point = new PacketDistributor.TargetPoint(
-                    getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 500, getWorld().dimension());
-                MessageHandler.sendTo(PacketDistributor.NEAR.with(point), new CountUpdateMessage(getBlockPos(), 0, getPooledCount()));
+                PacketDistributor.sendToPlayersNear((ServerLevel)getLevel(), null,
+                    getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 500,
+                    new CountUpdateMessage(getBlockPos(), 0, getPooledCount()));
 
                 setChanged();
             }

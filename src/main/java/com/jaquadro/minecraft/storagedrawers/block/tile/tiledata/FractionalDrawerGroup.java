@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttrib
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.CompactingHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -64,14 +65,14 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
     }
 
     @Override
-    public void read (CompoundTag tag) {
+    public void read (HolderLookup.Provider provider, CompoundTag tag) {
         if (tag.contains("Drawers"))
-            storage.deserializeNBT(tag.getCompound("Drawers"));
+            storage.deserializeNBT(provider, tag.getCompound("Drawers"));
     }
 
     @Override
-    public CompoundTag write (CompoundTag tag) {
-        tag.put("Drawers", storage.serializeNBT());
+    public CompoundTag write (HolderLookup.Provider provider, CompoundTag tag) {
+        tag.put("Drawers", storage.serializeNBT(provider));
         return tag;
     }
 
@@ -525,14 +526,14 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         }
 
         @Override
-        public CompoundTag serializeNBT () {
+        public CompoundTag serializeNBT (HolderLookup.Provider provider) {
             ListTag itemList = new ListTag();
             for (int i = 0; i < slotCount; i++) {
                 if (protoStack[i].isEmpty())
                     continue;
 
                 CompoundTag itemTag = new CompoundTag();
-                protoStack[i].save(itemTag);
+                itemTag = (CompoundTag)protoStack[i].save(provider, itemTag);
 
                 CompoundTag slotTag = new CompoundTag();
                 slotTag.putByte("Slot", (byte)i);
@@ -550,7 +551,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         }
 
         @Override
-        public void deserializeNBT (CompoundTag tag) {
+        public void deserializeNBT (HolderLookup.Provider provider, CompoundTag tag) {
             for (int i = 0; i < slotCount; i++) {
                 protoStack[i] = ItemStack.EMPTY;
                 matchers[i] = ItemStackMatcher.EMPTY;
@@ -564,7 +565,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
                 CompoundTag slotTag = itemList.getCompound(i);
                 int slot = slotTag.getByte("Slot");
 
-                protoStack[slot] = ItemStack.of(slotTag.getCompound("Item"));
+                protoStack[slot] = ItemStack.parseOptional(provider, slotTag.getCompound("Item"));
                 convRate[slot] = slotTag.getByte("Conv");
 
                 matchers[slot] = new ItemStackMatcher(protoStack[slot]);

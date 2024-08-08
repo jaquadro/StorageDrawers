@@ -10,5 +10,5 @@
         "#": { "item": "minecraft:flint" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
-    "result": { "item": "storagedrawers:one_stack_upgrade" }
+    "result": { "id": "storagedrawers:one_stack_upgrade" }
 }
