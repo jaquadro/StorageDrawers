@@ -72,7 +72,6 @@ public class ConfigManager
         public boolean enableWailaIntegration;
         public boolean enableTOPIntegration;
         public boolean enableThaumcraftIntegration;
-        public boolean enableMineTweakerIntegration;
         public boolean enableTape;
         public boolean enableFallbackRecipes;
         public boolean enableFramedDrawers;
@@ -178,9 +177,6 @@ public class ConfigManager
         cache.enableThaumcraftIntegration = config.get(sectionIntegration.getQualifiedName(), "enableThaumcraft", true,
                 "Whether to enable Thaumcraft integration, which adds icons on drawers if the item stored has an Aspect.")
                 .setLanguageKey(LANG_PREFIX + "integration.enableThaumcraft").setRequiresMcRestart(true).getBoolean();
-        cache.enableMineTweakerIntegration = config.get(sectionIntegration.getQualifiedName(), "enableMineTweaker", true,
-                "Whether to enable CraftTweaker integration, which enables scripting support for modifying compaction entries and ore dictionary whitelists/blacklists.")
-                .setLanguageKey(LANG_PREFIX + "integration.enableMineTweaker").setRequiresMcRestart(true).getBoolean();
 
         cache.compRules = config.getStringList("compactingRules", sectionRegistries.getQualifiedName(), new String[] { "minecraft:clay, minecraft:clay_ball, 4" }, "Items should be in form domain:item or domain:item:meta.", null, LANG_PREFIX + "registries.compRules");
         if (StorageDrawers.compRegistry != null) {

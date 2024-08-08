@@ -5,7 +5,9 @@ import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
+import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -30,18 +32,19 @@ public class Compaction
     }
 
     @ZenMethod
-    public static void remove (IItemStack upper) {
-        if (upper == null) {
-            CraftTweakerAPI.logError("Tried to remove compacting tier with invalid item stack.");
+    public static void remove (@Optional IItemStack upper, @Optional IItemStack lower) {
+        if (upper == null && lower == null) {
+            CraftTweakerAPI.logError("Tried to remove compacting tier(s) with invalid item stacks.");
             return;
         }
 
-        ItemStack upperStack = (ItemStack)upper.getInternal();
+        ItemStack upperStack = CraftTweakerMC.getItemStack(upper);
+        ItemStack lowerStack = CraftTweakerMC.getItemStack(lower);
 
-        if (upperStack == null)
-            CraftTweakerAPI.logError("Tried to remove compacting tier with invalid item stack.");
+        if (upperStack == null && lowerStack == null)
+            CraftTweakerAPI.logError("Tried to remove compacting tier(s) with invalid item stacks.");
         else
-            CraftTweakerAPI.apply(new RemoveRecordAction(upperStack));
+            CraftTweakerAPI.apply(new RemoveRecordAction(upperStack, lowerStack));
     }
 
     private static class AddRecordAction implements IAction
@@ -49,7 +52,6 @@ public class Compaction
         ItemStack upper;
         ItemStack lower;
         int conversionRate;
-        boolean added;
 
         public AddRecordAction (ItemStack upper, ItemStack lower, int conversionRate) {
             this.upper = upper;
@@ -59,38 +61,42 @@ public class Compaction
 
         @Override
         public void apply () {
-            added = StorageDrawers.compRegistry.register(upper, lower, conversionRate);
+            boolean added = StorageDrawers.compRegistry.register(upper, lower, conversionRate);
+            if (!added)
+                CraftTweakerAPI.logError("Failed to add compacting recipe with upper item '" + upper.getDisplayName() + "'.");
         }
 
         @Override
         public String describe () {
-            if (added)
-                return "Adding compacting tier: 1 '" + upper.getDisplayName() + "' = " + conversionRate + " '" + lower.getDisplayName() + "'.";
-            else
-                return "Failed to add compacting tier.";
+            return "Adding compacting tier: 1 '" + upper.getDisplayName() + "' = " + conversionRate + " '" + lower.getDisplayName() + "'.";
         }
     }
 
     private static class RemoveRecordAction implements IAction
     {
         ItemStack upper;
-        boolean removed;
+        ItemStack lower;
 
-        public RemoveRecordAction (ItemStack upper) {
+        public RemoveRecordAction (ItemStack upper, ItemStack lower) {
             this.upper = upper;
+            this.lower = lower;
         }
 
         @Override
         public void apply () {
-            removed = StorageDrawers.compRegistry.unregisterUpperTarget(upper);
+            if (upper != ItemStack.EMPTY)
+                StorageDrawers.compRegistry.unregisterUpperTarget(upper);
+            if (lower != ItemStack.EMPTY)
+                StorageDrawers.compRegistry.unregisterLowerTarget(lower);
         }
 
         @Override
         public String describe () {
-            if (removed)
-                return "Removing existing compacting tier with upper item '" + upper.getDisplayName() + ".";
-            else
-                return "";
+            return "Removing existing compacting tier(s) with upper item '"
+                        + (upper != ItemStack.EMPTY ? upper.getDisplayName() : "null") +
+                    "' and/or lower item '"
+                        + (lower != ItemStack.EMPTY ? lower.getDisplayName() : "null") +
+                    "'.";
         }
     }
 }

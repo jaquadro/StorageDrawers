@@ -46,7 +46,6 @@ public class OreDictionaryBlacklist
     private static class AddNameAction implements IAction
     {
         String name;
-        boolean added;
 
         public AddNameAction (String name) {
             this.name = name;
@@ -54,22 +53,20 @@ public class OreDictionaryBlacklist
 
         @Override
         public void apply () {
-            added = StorageDrawers.oreDictRegistry.addBlacklist(name);
+            boolean added = StorageDrawers.oreDictRegistry.addBlacklist(name);
+            if (!added)
+                CraftTweakerAPI.logWarning("Ore dictionary key '" + name + "' already registered in drawer conversion blacklist.");
         }
 
         @Override
         public String describe () {
-            if (added)
-                return "Adding ore dictionary key '" + name + "' to drawer conversion blacklist.";
-            else
-                return "Ore dictionary key '" + name + "' already registered in drawer conversion blacklist.";
+            return "Adding ore dictionary key '" + name + "' to drawer conversion blacklist.";
         }
     }
 
     private static class RemoveNameAction implements IAction
     {
         String name;
-        boolean removed;
 
         public RemoveNameAction (String name) {
             this.name = name;
@@ -77,22 +74,18 @@ public class OreDictionaryBlacklist
 
         @Override
         public void apply () {
-            removed = StorageDrawers.oreDictRegistry.removeBlacklist(name);
+            StorageDrawers.oreDictRegistry.removeBlacklist(name);
         }
 
         @Override
         public String describe () {
-            if (removed)
-                return "Removing existing ore dictionary key '" + name + "' from drawer conversion blacklist.";
-            else
-                return "";
+            return "Removing existing ore dictionary key '" + name + "' from drawer conversion blacklist.";
         }
     }
 
     private static class AddPrefixAction implements IAction
     {
         String name;
-        boolean added;
 
         public AddPrefixAction (String name) {
             this.name = name;
@@ -100,22 +93,20 @@ public class OreDictionaryBlacklist
 
         @Override
         public void apply () {
-            added = StorageDrawers.oreDictRegistry.addBlacklistPrefix(name);
+            boolean added = StorageDrawers.oreDictRegistry.addBlacklistPrefix(name);
+            if (!added)
+                CraftTweakerAPI.logWarning("Ore dictionary prefix '" + name + "' already registered in drawer conversion blacklist.");
         }
 
         @Override
         public String describe () {
-            if (added)
-                return "Adding ore dictionary prefix '" + name + "' to drawer conversion blacklist.";
-            else
-                return "Ore dictionary prefix '" + name + "' already registered in drawer conversion blacklist.";
+            return "Adding ore dictionary prefix '" + name + "' to drawer conversion blacklist.";
         }
     }
 
     private static class RemovePrefixAction implements IAction
     {
         String name;
-        boolean removed;
 
         public RemovePrefixAction (String name) {
             this.name = name;
@@ -123,15 +114,12 @@ public class OreDictionaryBlacklist
 
         @Override
         public void apply () {
-            removed = StorageDrawers.oreDictRegistry.removeBlacklistPrefix(name);
+            StorageDrawers.oreDictRegistry.removeBlacklistPrefix(name);
         }
 
         @Override
         public String describe () {
-            if (removed)
-                return "Removing existing ore dictionary prefix '" + name + "' from drawer conversion blacklist.";
-            else
-                return "";
+            return "Removing existing ore dictionary prefix '" + name + "' from drawer conversion blacklist.";
         }
     }
 }

@@ -30,7 +30,6 @@ public class OreDictionaryWhitelist
     private static class AddNameAction implements IAction
     {
         String name;
-        boolean added;
 
         public AddNameAction (String name) {
             this.name = name;
@@ -38,22 +37,20 @@ public class OreDictionaryWhitelist
 
         @Override
         public void apply () {
-            added = StorageDrawers.oreDictRegistry.addWhitelist(name);
+            boolean added = StorageDrawers.oreDictRegistry.addWhitelist(name);
+            if (!added)
+                CraftTweakerAPI.logWarning("Ore dictionary key '" + name + "' already registered in drawer conversion whitelist.");
         }
 
         @Override
         public String describe () {
-            if (added)
-                return "Adding ore dictionary key '" + name + "' to drawer conversion whitelist.";
-            else
-                return "Ore dictionary key '" + name + "' already registered in drawer conversion whitelist.";
+            return "Adding ore dictionary key '" + name + "' to drawer conversion whitelist.";
         }
     }
 
     private static class RemoveNameAction implements IAction
     {
         String name;
-        boolean removed;
 
         public RemoveNameAction (String name) {
             this.name = name;
@@ -61,15 +58,12 @@ public class OreDictionaryWhitelist
 
         @Override
         public void apply () {
-            removed = StorageDrawers.oreDictRegistry.removeWhitelist(name);
+            StorageDrawers.oreDictRegistry.removeWhitelist(name);
         }
 
         @Override
         public String describe () {
-            if (removed)
-                return "Removing existing ore dictionary key '" + name + "' from drawer conversion whitelist.";
-            else
-                return "";
+            return "Removing existing ore dictionary key '" + name + "' from drawer conversion whitelist.";
         }
     }
 }

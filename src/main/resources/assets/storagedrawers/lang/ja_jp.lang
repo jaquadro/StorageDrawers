@@ -175,7 +175,6 @@ storagedrawers.config.integration.enableAE2=Applied Energistics 2 互換を有�
 storagedrawers.config.integration.enableWaila=WAILA 互換を有効化
 storagedrawers.config.integration.enableTOP=TOP 互換を有効化
 storagedrawers.config.integration.enableThaumcraft=Thaumcraft 互換を有効化
-storagedrawers.config.integration.enableMineTweaker=MineTweaker 互換を有効化
 storagedrawers.config.integration.enableRefinedRelocation=Refined Relocation 互換を有効化
 storagedrawers.config.integration.enableThermalExpansion=Thermal Expansion 互換を有効化
 storagedrawers.config.integration.enableThermalFoundation=Thermal Foundation 互換を有効化
