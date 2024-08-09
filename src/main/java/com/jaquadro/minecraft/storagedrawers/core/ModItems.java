@@ -23,7 +23,7 @@ public final class ModItems
 {
     public static final DeferredRegister.Items ITEM_REGISTER = DeferredRegister.createItems(StorageDrawers.MOD_ID);
 
-    private static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, new ResourceLocation(StorageDrawers.MOD_ID, "storagedrawers"));
+    private static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(StorageDrawers.MOD_ID, "storagedrawers"));
 
     public static final DeferredItem<? extends Item>
         OBSIDIAN_STORAGE_UPGRADE = ITEM_REGISTER.register("obsidian_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.OBSIDIAN, new Item.Properties())),

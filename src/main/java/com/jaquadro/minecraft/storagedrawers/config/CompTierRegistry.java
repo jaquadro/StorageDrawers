@@ -114,10 +114,10 @@ public class CompTierRegistry
         if (parts.length != 3)
             return false;
 
-        ResourceLocation upperResource = new ResourceLocation(parts[0]);
+        ResourceLocation upperResource = ResourceLocation.parse(parts[0]);
         Item upperItem = BuiltInRegistries.ITEM.get(upperResource);
 
-        ResourceLocation lowerResource = new ResourceLocation(parts[1]);
+        ResourceLocation lowerResource = ResourceLocation.parse(parts[1]);
         Item lowerItem = BuiltInRegistries.ITEM.get(lowerResource);
 
         try {

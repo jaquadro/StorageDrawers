@@ -77,7 +77,7 @@ public class StorageGuiGraphics extends GuiGraphics
             }
 
             LocalPlayer localplayer = this.minecraft.player;
-            float f = localplayer == null ? 0.0F : localplayer.getCooldowns().getCooldownPercent(item.getItem(), this.minecraft.getFrameTime());
+            float f = localplayer == null ? 0.0F : localplayer.getCooldowns().getCooldownPercent(item.getItem(), this.minecraft.getTimer().getGameTimeDeltaPartialTick(true));
             if (f > 0.0F) {
                 int y1 = y + Mth.floor(16.0F * (1.0F - f));
                 int y2 = y1 + Mth.ceil(16.0f * f);

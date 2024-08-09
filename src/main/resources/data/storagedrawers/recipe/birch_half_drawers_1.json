@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "///",
+        " X ",
+        "///"
+    ],
+    "key": {
+        "/": { "item": "minecraft:birch_slab" },
+        "X": { "tag": "c:chests/wooden" }
+    },
+    "result": { "id": "storagedrawers:birch_half_drawers_1", "count": 1 }
+}

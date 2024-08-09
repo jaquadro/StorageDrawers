@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "X/X",
+        "///",
+        "X/X"
+    ],
+    "key": {
+        "/": { "item": "minecraft:warped_slab" },
+        "X": { "tag": "c:chests/wooden" }
+    },
+    "result": { "id": "storagedrawers:warped_half_drawers_4", "count": 4 }
+}

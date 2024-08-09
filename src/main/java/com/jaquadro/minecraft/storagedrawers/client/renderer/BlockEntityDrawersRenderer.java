@@ -324,7 +324,7 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
     }
 
     private static void addVertex(Matrix4f matrix, PoseStack.Pose normal, VertexConsumer buffer, int combinedLight, int combinedOverlay, float x, float y, float z, float u, float v) {
-        buffer.vertex(matrix, x, y, z).color(1f, 1f, 1f, 1f).uv(u, v).overlayCoords(combinedOverlay).uv2(combinedLight).normal(normal, 0, 1, 0).endVertex();
+        buffer.addVertex(matrix, x, y, z).setColor(1f, 1f, 1f, 1f).setUv(u, v).setOverlay(combinedOverlay).setLight(combinedLight).setNormal(normal, 0, 1, 0);
     }
 
     private float getIndEnd (BlockEntityDrawers blockEntityDrawers, int slot, float x, float w, int step) {

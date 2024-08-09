@@ -41,8 +41,7 @@ public class ItemKey extends Item
             .add(
                 Attributes.ATTACK_DAMAGE,
                 new AttributeModifier(
-                    BASE_ATTACK_DAMAGE_UUID,
-                    "Weapon modifier",
+                    BASE_ATTACK_DAMAGE_ID,
                     2,
                     AttributeModifier.Operation.ADD_VALUE
                 ),

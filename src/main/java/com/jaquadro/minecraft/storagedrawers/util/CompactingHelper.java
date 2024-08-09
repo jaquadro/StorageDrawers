@@ -167,9 +167,10 @@ public class CompactingHelper
     private List<ItemStack> findAllMatchingRecipes (CraftingContainer crafting) {
         List<ItemStack> candidates = new ArrayList<>();
 
-        for (RecipeHolder<CraftingRecipe> recipe : world.getRecipeManager().getRecipesFor(RecipeType.CRAFTING, crafting, world)) {
-            if (recipe.value().matches(crafting, world)) {
-                ItemStack result = recipe.value().assemble(crafting, world.registryAccess());
+        CraftingInput input = crafting.asCraftInput();
+        for (RecipeHolder<CraftingRecipe> recipe : world.getRecipeManager().getRecipesFor(RecipeType.CRAFTING, input, world)) {
+            if (recipe.value().matches(input, world)) {
+                ItemStack result = recipe.value().assemble(input, world.registryAccess());
                 if (!result.isEmpty())
                     candidates.add(result);
             }

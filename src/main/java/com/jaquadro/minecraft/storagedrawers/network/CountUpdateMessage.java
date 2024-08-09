@@ -17,7 +17,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record CountUpdateMessage(int x, int y, int z, int slot, int count) implements CustomPacketPayload
 {
-    public static final Type<CountUpdateMessage> TYPE = new Type<>(new ResourceLocation(StorageDrawers.MOD_ID, "count_update"));
+    public static final Type<CountUpdateMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(StorageDrawers.MOD_ID, "count_update"));
 
     public static final StreamCodec<FriendlyByteBuf, CountUpdateMessage> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.INT,

@@ -1,0 +1,32 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "storagedrawers:compacting_drawers_3"
+        ]
+    },
+    "criteria": {
+        "has_chest": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "tag": "storagedrawers:drawers"
+                    }
+                ]
+            }
+        },
+        "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "storagedrawers:compacting_drawers_3"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_chest",
+            "has_the_recipe"
+        ]
+    ]
+}

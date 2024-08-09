@@ -11,7 +11,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 public class CapabilityDrawerGroup
 {
     public static final BlockCapability<IDrawerGroup, Void> DRAWER_GROUP_CAPABILITY =
-        BlockCapability.createVoid(new ResourceLocation(StorageDrawers.MOD_ID, "drawer_group"), IDrawerGroup.class);
+        BlockCapability.createVoid(ResourceLocation.fromNamespaceAndPath(StorageDrawers.MOD_ID, "drawer_group"), IDrawerGroup.class);
 
     public static void register (RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(DRAWER_GROUP_CAPABILITY, ModBlockEntities.STANDARD_DRAWERS_1.get(),

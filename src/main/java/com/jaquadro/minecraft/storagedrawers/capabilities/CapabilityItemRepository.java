@@ -11,7 +11,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 public class CapabilityItemRepository
 {
     public static final BlockCapability<IItemRepository, Void> ITEM_REPOSITORY_CAPABILITY =
-        BlockCapability.createVoid(new ResourceLocation(StorageDrawers.MOD_ID, "item_repository"), IItemRepository.class);
+        BlockCapability.createVoid(ResourceLocation.fromNamespaceAndPath(StorageDrawers.MOD_ID, "item_repository"), IItemRepository.class);
 
     public static void register (RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(ITEM_REPOSITORY_CAPABILITY, ModBlockEntities.STANDARD_DRAWERS_1.get(),

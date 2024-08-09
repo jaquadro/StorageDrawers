@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers;
 
+import com.jaquadro.minecraft.storagedrawers.client.ClientModBusSubscriber;
 import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
@@ -10,6 +11,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -97,6 +99,6 @@ public class StorageDrawers
     }
 
     public static ResourceLocation rl(String path) {
-        return new ResourceLocation(MOD_ID, path);
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 }
