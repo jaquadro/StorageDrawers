@@ -18,8 +18,6 @@ public class LocalIntegrationRegistry
             TOP.registerProviders();
         //if (Loader.isModLoaded("appliedenergistics2") && StorageDrawers.config.cache.enableAE2Integration)
         //    reg.add(new AppliedEnergistics());
-        //if (Loader.isModLoaded("crafttweaker") && StorageDrawers.config.cache.enableMineTweakerIntegration)
-        //    reg.add(new MineTweaker());
     }
 
     private IntegrationRegistry registry;

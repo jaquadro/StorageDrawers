@@ -188,7 +188,6 @@ storagedrawers.config.integration.enableAE2=允许关联应用能源2
 storagedrawers.config.integration.enableWaila=允许关联高亮显示增强(WAILA)
 storagedrawers.config.integration.enableTOP=允许关联TOP
 storagedrawers.config.integration.enableThaumcraft=允许关联神秘时代
-storagedrawers.config.integration.enableMineTweaker=允许关联MineTweaker
 item.storagedrawers.quantifyKey.description=隐藏或显示抽屉内储存的物品数量。
 item.storagedrawers.quantifyKey.name=数量钥匙
 item.storagedrawers.upgradeConversion.description=自动转换兼容物品。

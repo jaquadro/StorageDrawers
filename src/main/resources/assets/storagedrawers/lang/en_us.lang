@@ -218,7 +218,6 @@ storagedrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integra
 storagedrawers.config.integration.enableWaila=Enable WAILA Integration
 storagedrawers.config.integration.enableTOP=Enable TOP Integration
 storagedrawers.config.integration.enableThaumcraft=Enable Thaumcraft Integration
-storagedrawers.config.integration.enableMineTweaker=Enable MineTweaker Integration
 
 storagedrawers.config.registries=Registries
 storagedrawers.config.registries.tooltip=Configure compacting rules and ore dictionary substitution.

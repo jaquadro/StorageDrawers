@@ -27,6 +27,15 @@ dependencies {
     } else {
         compileOnly rfg.deobf("curse.maven:the-one-probe-245211:${top_file_id}")
     }
+    if (project.debug_crafttweaker.toBoolean()) {
+        implementation rfg.deobf("CraftTweaker2:CraftTweaker2-API:${crafttweaker_version}")
+        implementation rfg.deobf("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-${crafttweaker_version}")
+        implementation rfg.deobf("CraftTweaker2:ZenScript:${crafttweaker_version}")
+    } else {
+        compileOnly rfg.deobf("CraftTweaker2:CraftTweaker2-API:${crafttweaker_version}")
+        compileOnly rfg.deobf("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-${crafttweaker_version}")
+        compileOnly rfg.deobf("CraftTweaker2:ZenScript:${crafttweaker_version}")
+    }
 
     // Addons
     if (project.addon_framedcompactdrawers.toBoolean()) {
