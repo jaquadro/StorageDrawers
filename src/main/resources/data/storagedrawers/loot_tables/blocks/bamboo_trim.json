@@ -1,0 +1,19 @@
+{
+    "type": "storagedrawers:acacia_trim",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "storagedrawers:bamboo_trim"
+                }
+            ],
+            "conditions": [
+                {
+                    "condition": "minecraft:survives_explosion"
+                }
+            ]
+        }
+    ]
+}

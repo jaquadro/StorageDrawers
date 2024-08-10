@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "///",
+        " X ",
+        "///"
+    ],
+    "key": {
+        "/": { "item": "minecraft:cherry_planks" },
+        "X": { "tag": "forge:chests/wooden" }
+    },
+    "result": { "item": "storagedrawers:cherry_full_drawers_1", "count": 1 }
+}
