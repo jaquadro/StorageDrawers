@@ -45,7 +45,7 @@
     "block.storagedrawers.controller": "Controlador de Gaveta",
     "block.storagedrawers.controller_slave": "Escravo do Controlador de Gaveta",
 
-    "config.jade.plugin_storagedrawers": "Storage Drawers",
+    "config.jade.plugin_storagedrawers.main": "Storage Drawers",
     "config.jade.plugin_storagedrawers.display.content": "Conteúdo do slot",
     "config.jade.plugin_storagedrawers.display.stacklimit": "Limite de Stack",
     "config.jade.plugin_storagedrawers.display.status": "Status de Upgrade",

@@ -41,7 +41,7 @@ public class Waila implements IWailaPlugin
             BlockEntityDrawers blockEntityDrawers = (BlockEntityDrawers) accessor.getBlockEntity();
 
             DrawerOverlay overlay = new DrawerOverlay();
-            overlay.showContent = config.get(StorageDrawers.rl("display.content"));
+            overlay.showContent = false; // config.get(StorageDrawers.rl("display.content"));
             overlay.showStackLimit = config.get(StorageDrawers.rl("display.stacklimit"));
             overlay.showStatus = config.get(StorageDrawers.rl("display.status"));
 
@@ -50,7 +50,7 @@ public class Waila implements IWailaPlugin
 
         @Override
         public ResourceLocation getUid () {
-            return null;
+            return new ResourceLocation(StorageDrawers.MOD_ID, "main");
         }
     }
 }

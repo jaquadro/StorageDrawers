@@ -82,6 +82,8 @@ minecraft {
         client {
 	    // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', 'storagedrawers'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
         }
 
         server {
@@ -154,7 +156,7 @@ dependencies {
     implementation fg.deobf("curse.maven:the-one-probe-245211:${top_id}")
     //implementation fg.deobf("mcjty.theoneprobe:theoneprobe:1.19.3-7.0.0-2")
     // compileOnly since not yet updated for 41.0.64
-    compileOnly fg.deobf("curse.maven:jade-324717:${jade_id}")
+    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
 
 //    implementation fg.deobf("curse.maven:spark-361579:3670050")
 
