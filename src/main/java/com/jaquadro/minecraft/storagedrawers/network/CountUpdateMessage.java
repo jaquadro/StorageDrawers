@@ -9,6 +9,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
 public record CountUpdateMessage(int x, int y, int z, int slot, int count) implements CustomPacketPayload
@@ -39,14 +41,19 @@ public record CountUpdateMessage(int x, int y, int z, int slot, int count) imple
 
     public static void handleClient(final CountUpdateMessage data, final PlayPayloadContext context) {
         context.workHandler().submitAsync(() -> {
-            Level world = Minecraft.getInstance().level;
-            if (world != null) {
-                BlockPos pos = new BlockPos(data.x, data.y, data.z);
-                BlockEntity blockEntity = world.getBlockEntity(pos);
-                if (blockEntity instanceof BlockEntityDrawers) {
-                    ((BlockEntityDrawers) blockEntity).clientUpdateCount(data.slot, data.count);
-                }
-            }
+            handleClient(data);
         }).exceptionally(e -> null);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    static void handleClient(final CountUpdateMessage data) {
+        Level world = Minecraft.getInstance().level;
+        if (world != null) {
+            BlockPos pos = new BlockPos(data.x, data.y, data.z);
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof BlockEntityDrawers) {
+                ((BlockEntityDrawers) blockEntity).clientUpdateCount(data.slot, data.count);
+            }
+        }
     }
 }

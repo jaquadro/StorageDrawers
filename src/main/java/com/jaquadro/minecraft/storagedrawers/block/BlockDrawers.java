@@ -245,12 +245,12 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             return InteractionResult.PASS;
         }
 
-        boolean invertClick = ClientConfig.GENERAL.invertClick.get();
-        if (!invertClick)
+        //boolean invertClick = ClientConfig.GENERAL.invertClick.get();
+        //if (!invertClick)
             return insertOrApplyItem(state, level, pos, player, hit);
 
-        interactTakeItems(state, level, pos, player, hit);
-        return InteractionResult.SUCCESS;
+        //interactTakeItems(state, level, pos, player, hit);
+        //return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -261,10 +261,10 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         if (!hit.getBlockPos().equals(blockPos))
             return;
 
-        boolean invertClick = ClientConfig.GENERAL.invertClick.get();
-        if (invertClick)
-            insertOrApplyItem(state, level, blockPos, player, hit);
-        else
+        //boolean invertClick = ClientConfig.GENERAL.invertClick.get();
+        //if (invertClick)
+        //    insertOrApplyItem(state, level, blockPos, player, hit);
+        //else
             interactTakeItems(state, level, blockPos, player, hit);
     }
 
@@ -386,9 +386,9 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         IDrawer drawer = blockEntityDrawers.getDrawer(slot);
 
         ItemStack item;
-        boolean invertShift = ClientConfig.GENERAL.invertShift.get();
+        //boolean invertShift = ClientConfig.GENERAL.invertShift.get();
 
-        if (player.isShiftKeyDown() != invertShift)
+        if (player.isShiftKeyDown() /* != invertShift*/)
             item = blockEntityDrawers.takeItemsFromSlot(slot, drawer.getStoredItemStackSize());
         else
             item = blockEntityDrawers.takeItemsFromSlot(slot, 1);

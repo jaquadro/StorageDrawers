@@ -47,7 +47,7 @@
     "block.storagedrawers.controller": "서랍 제어기",
     "block.storagedrawers.controller_io": "제어기 슬레이브",
 
-    "config.jade.plugin_storagedrawers": "스토리지 드로어",
+    "config.jade.plugin_storagedrawers.main": "스토리지 드로어",
     "config.jade.plugin_storagedrawers.display.content": "슬롯 내용물",
     "config.jade.plugin_storagedrawers.display.stacklimit": "스택 제한",
     "config.jade.plugin_storagedrawers.display.status": "업그레이드 상태",
