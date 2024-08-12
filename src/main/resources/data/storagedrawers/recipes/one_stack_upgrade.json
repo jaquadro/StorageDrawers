@@ -6,7 +6,7 @@
         "///"
     ],
     "key": {
-        "/": { "tag": "forge:rods/wooden" },
+        "/": { "tag": "c:rods/wooden" },
         "#": { "item": "minecraft:flint" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },

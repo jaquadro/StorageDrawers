@@ -7,7 +7,7 @@
     ],
     "key": {
         "/": { "item": "minecraft:warped_slab" },
-        "X": { "tag": "forge:chests/wooden" }
+        "X": { "tag": "c:chests/wooden" }
     },
     "result": { "id": "storagedrawers:warped_half_drawers_1", "count": 1 }
 }

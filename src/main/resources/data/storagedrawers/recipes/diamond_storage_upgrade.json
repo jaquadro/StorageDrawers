@@ -6,8 +6,8 @@
         "///"
     ],
     "key": {
-        "/": { "tag": "forge:rods/wooden" },
-        "#": { "tag": "forge:gems/diamond" },
+        "/": { "tag": "c:rods/wooden" },
+        "#": { "tag": "c:gems/diamond" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
     "result": { "id": "storagedrawers:diamond_storage_upgrade" }

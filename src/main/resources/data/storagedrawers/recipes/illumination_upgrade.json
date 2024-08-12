@@ -6,8 +6,8 @@
         "R/R"
     ],
     "key": {
-        "/": { "tag": "forge:rods/wooden" },
-        "R": { "tag": "forge:dusts/glowstone" },
+        "/": { "tag": "c:rods/wooden" },
+        "R": { "tag": "c:dusts/glowstone" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
     "result": { "id": "storagedrawers:illumination_upgrade", "count": 8 }

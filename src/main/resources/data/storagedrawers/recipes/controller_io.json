@@ -9,7 +9,7 @@
         "#": { "item": "minecraft:stone" },
         "C": { "item": "minecraft:comparator" },
         "X": { "tag": "storagedrawers:drawers" },
-        "G": { "tag": "forge:ingots/gold" }
+        "G": { "tag": "c:ingots/gold" }
     },
     "result": { "id": "storagedrawers:controller_io" }
 }

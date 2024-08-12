@@ -9,7 +9,7 @@
         "#": { "item": "minecraft:stone" },
         "T": { "item": "minecraft:piston" },
         "X": { "tag": "storagedrawers:drawers" },
-        "I": { "tag": "forge:ingots/iron" }
+        "I": { "tag": "c:ingots/iron" }
     },
     "result": { "id": "storagedrawers:compacting_drawers_3" }
 }

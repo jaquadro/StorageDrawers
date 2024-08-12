@@ -6,8 +6,8 @@
         "///"
     ],
     "key": {
-        "/": { "tag": "forge:rods/wooden" },
-        "R": { "tag": "forge:dusts/redstone" },
+        "/": { "tag": "c:rods/wooden" },
+        "R": { "tag": "c:dusts/redstone" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
     "result": { "id": "storagedrawers:max_redstone_upgrade" }

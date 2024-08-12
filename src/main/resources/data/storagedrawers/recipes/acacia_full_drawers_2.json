@@ -7,7 +7,7 @@
     ],
     "key": {
         "/": { "item": "minecraft:acacia_planks" },
-        "X": { "tag": "forge:chests/wooden" }
+        "X": { "tag": "c:chests/wooden" }
     },
     "result": { "id": "storagedrawers:acacia_full_drawers_2", "count": 2 }
 }

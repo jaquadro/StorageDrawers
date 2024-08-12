@@ -6,8 +6,8 @@
         "///"
     ],
     "key": {
-        "/": { "tag": "forge:rods/wooden" },
-        "#": { "tag": "forge:ingots/iron" },
+        "/": { "tag": "c:rods/wooden" },
+        "#": { "tag": "c:ingots/iron" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
     "result": { "id": "storagedrawers:iron_storage_upgrade" }

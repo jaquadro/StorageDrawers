@@ -6,7 +6,7 @@
         "X/X"
     ],
     "key": {
-        "/": { "tag": "forge:rods/wooden" },
+        "/": { "tag": "c:rods/wooden" },
         "X": { "item": "minecraft:jungle_planks" }
     },
     "result": { "id": "storagedrawers:jungle_trim", "count": 4 }

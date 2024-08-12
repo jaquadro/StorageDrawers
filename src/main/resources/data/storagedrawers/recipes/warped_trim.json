@@ -6,7 +6,7 @@
         "X/X"
     ],
     "key": {
-        "/": { "tag": "forge:rods/wooden" },
+        "/": { "tag": "c:rods/wooden" },
         "X": { "item": "minecraft:warped_planks" }
     },
     "result": { "id": "storagedrawers:warped_trim", "count": 4 }

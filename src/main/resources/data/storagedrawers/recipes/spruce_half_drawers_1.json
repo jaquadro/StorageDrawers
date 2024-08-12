@@ -7,7 +7,7 @@
     ],
     "key": {
         "/": { "item": "minecraft:spruce_slab" },
-        "X": { "tag": "forge:chests/wooden" }
+        "X": { "tag": "c:chests/wooden" }
     },
     "result": { "id": "storagedrawers:spruce_half_drawers_1", "count": 1 }
 }

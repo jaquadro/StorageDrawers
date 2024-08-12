@@ -6,7 +6,7 @@
         "///"
     ],
     "key": {
-        "/": { "tag": "forge:rods/wooden" },
+        "/": { "tag": "c:rods/wooden" },
         "X": { "tag": "storagedrawers:drawers" }
     },
     "result": { "id": "storagedrawers:upgrade_template", "count": 4 }
