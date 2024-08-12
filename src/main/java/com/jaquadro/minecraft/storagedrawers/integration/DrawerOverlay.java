@@ -26,7 +26,7 @@ public class DrawerOverlay {
         if (attr == null)
             attr = EmptyDrawerAttributes.EMPTY;
 
-        addContent(result, tile, attr);
+        // addContent(result, tile, attr);
         addStackLimit(result, tile, attr);
         addStatus(result, tile, attr);
 
