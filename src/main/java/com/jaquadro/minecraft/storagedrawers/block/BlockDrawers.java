@@ -441,7 +441,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         }
 
         if (hasContents) {
-            CompoundTag tiledata = tile.saveWithoutMetadata(tile.getLevel().registryAccess());
+            CompoundTag tiledata = tile.saveWithId(tile.getLevel().registryAccess());
             drop.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tiledata));
         }
 

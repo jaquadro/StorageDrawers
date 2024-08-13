@@ -145,7 +145,7 @@ public class BaseBlockEntity extends BlockEntity
     @NotNull
     public final CompoundTag getUpdateTag (HolderLookup.Provider provider) {
         //save(tag);
-        return this.saveWithoutMetadata(provider);
+        return this.saveCustomOnly(provider);
     }
 
     @Override
