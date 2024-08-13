@@ -42,8 +42,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     public static Capability<IDrawerAttributes> DRAWER_ATTRIBUTES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     private static final int PRI_LOCKED = 0;
-    private static final int PRI_LOCKED_VOID = 1;
-    private static final int PRI_NORMAL = 2;
+    private static final int PRI_NORMAL = 1;
+    private static final int PRI_LOCKED_VOID = 2;
     private static final int PRI_VOID = 3;
     private static final int PRI_EMPTY = 4;
     private static final int PRI_LOCKED_EMPTY = 5;
@@ -670,6 +670,33 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
             int amount = stack.getCount();
             if (primaryRecords != null) {
+                // First test by strict remaining capacity
+                for (SlotRecord record : primaryRecords) {
+                    IDrawerGroup candidateGroup = getGroupForSlotRecord(record);
+                    if (candidateGroup == null)
+                        continue;
+
+                    IDrawer drawer = candidateGroup.getDrawer(record.slot);
+                    if (drawer.isEmpty())
+                        continue;
+                    if (!testPredicateInsert(drawer, stack, predicate))
+                        continue;
+                    if (!hasAccess(candidateGroup, drawer))
+                        continue;
+
+                    int adjusted = Math.min(amount, drawer.getRemainingCapacity());
+                    amount = (simulate)
+                        ? Math.max(amount - drawer.getRemainingCapacity(), 0)
+                        : (amount - adjusted) + drawer.adjustStoredItemCount(adjusted);
+
+                    if (amount == 0)
+                        return ItemStack.EMPTY;
+
+                    if (simulate)
+                        checkedSlots.add(record.index);
+                }
+
+                // Then relax to available capacity
                 for (SlotRecord record : primaryRecords) {
                     IDrawerGroup candidateGroup = getGroupForSlotRecord(record);
                     if (candidateGroup == null)
