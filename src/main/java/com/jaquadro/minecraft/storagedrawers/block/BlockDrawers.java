@@ -453,7 +453,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     @Override
     @SuppressWarnings("deprecation")
     public boolean isSignalSource (@NotNull BlockState state) {
-        return false;
+        return !CommonConfig.GENERAL.enableAnalogRedstone.get();
     }
 
     @Override
@@ -484,7 +484,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(BlockState p_51520_) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
