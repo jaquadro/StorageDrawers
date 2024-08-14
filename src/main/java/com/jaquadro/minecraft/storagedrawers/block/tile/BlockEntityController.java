@@ -475,7 +475,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                 drawerSlotList.add(new SlotRecord(group, coord, i));
         }
         else {
-            IDrawerGroup group = level.getCapability(CapabilityDrawerGroup.DRAWER_GROUP_CAPABILITY, getBlockPos(), getBlockState(), blockEntity, null);
+            IDrawerGroup group = level.getCapability(CapabilityDrawerGroup.DRAWER_GROUP_CAPABILITY, blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, null);
             if (record.storage == group)
                 return;
 
