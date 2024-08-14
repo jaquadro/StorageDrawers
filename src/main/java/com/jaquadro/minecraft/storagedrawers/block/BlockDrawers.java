@@ -13,6 +13,7 @@ import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
+import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.Util;
@@ -283,7 +284,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 
 
         if (!item.isEmpty()) {
-            if (item.getItem() instanceof ItemKey)
+            if (item.getItem() instanceof ItemKey || item.getItem() instanceof ItemKeyring)
                 return InteractionResult.PASS;
 
             if (item.getItem() instanceof ItemUpgrade) {

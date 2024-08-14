@@ -11,6 +11,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.stream.Stream;
+
 public final class ModItems
 {
     public static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, StorageDrawers.MOD_ID);
@@ -31,10 +33,18 @@ public final class ModItems
         MAX_REDSTONE_UPGRADE = ITEM_REGISTER.register("max_redstone_upgrade", () -> new ItemUpgradeRedstone(EnumUpgradeRedstone.MAX, new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS))),
         ILLUMINATION_UPGRADE = ITEM_REGISTER.register("illumination_upgrade", () -> new ItemUpgrade(new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS))),
         FILL_LEVEL_UPGRADE = ITEM_REGISTER.register("fill_level_upgrade", () -> new ItemUpgrade(new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS))),
-        UPGRADE_TEMPLATE = ITEM_REGISTER.register("upgrade_template", () -> new Item(new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS))),
+        UPGRADE_TEMPLATE = ITEM_REGISTER.register("upgrade_template", () -> new Item(new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS)));
+
+    public static final RegistryObject<ItemKey>
         DRAWER_KEY = ITEM_REGISTER.register("drawer_key", () -> new ItemDrawerKey(new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS))),
         QUANTIFY_KEY = ITEM_REGISTER.register("quantify_key", () -> new ItemQuantifyKey(new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS))),
         SHROUD_KEY = ITEM_REGISTER.register("shroud_key", () -> new ItemShroudKey(new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS)));
+
+    public static final RegistryObject<ItemKeyring>
+        KEYRING = ITEM_REGISTER.register("keyring", () -> new ItemKeyring(null, new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS))),
+        KEYRING_DRAWER = ITEM_REGISTER.register("keyring_drawer", () -> new ItemKeyring(DRAWER_KEY, new Item.Properties().stacksTo(1))),
+        KEYRING_QUANTIFY = ITEM_REGISTER.register("keyring_quantify", () -> new ItemKeyring(QUANTIFY_KEY, new Item.Properties().stacksTo(1))),
+        KEYRING_SHROUD = ITEM_REGISTER.register("keyring_shroud", () -> new ItemKeyring(SHROUD_KEY, new Item.Properties().stacksTo(1)));
 
     private ModItems() {}
 
@@ -50,5 +60,17 @@ public final class ModItems
             });
         }
         ITEM_REGISTER.register(bus);
+    }
+
+    private static <B extends Item> Stream<B> getItemsOfType(Class<B> itemClass) {
+        return ForgeRegistries.ITEMS.getValues().stream().filter(itemClass::isInstance).map(itemClass::cast);
+    }
+
+    public static Stream<ItemKey> getKeys() {
+        return getItemsOfType(ItemKey.class);
+    }
+
+    public static Stream<ItemKeyring> getKeyrings() {
+        return getItemsOfType(ItemKeyring.class);
     }
 }
