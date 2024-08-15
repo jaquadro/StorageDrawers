@@ -122,7 +122,7 @@ dependencies {
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     //compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
     //compileOnly "mezz.jei:jei-${mc_version}-forge-api:${jei_version}"
-    //runtimeOnly "mezz.jei:jei-${mc_version}-forge:${jei_version}"
+    runtimeOnly "mezz.jei:jei-${jei_mc}-neoforge:${jei_version}"
 
     //compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
     //implementation fg.deobf("curse.maven:jei-238222:${jei_id}")

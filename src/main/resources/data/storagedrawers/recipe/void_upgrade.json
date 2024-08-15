@@ -6,7 +6,7 @@
         "###"
     ],
     "key": {
-        "#": { "tag": "c:obsidian" },
+        "#": { "tag": "c:obsidians" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
     "result": { "id": "storagedrawers:void_upgrade" }
