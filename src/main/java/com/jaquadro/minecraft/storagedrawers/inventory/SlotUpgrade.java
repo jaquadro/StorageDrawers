@@ -53,4 +53,11 @@ public class SlotUpgrade extends Slot
 
         return true;
     }
+
+    public boolean canSwapStack (@NotNull ItemStack stack) {
+        if (container instanceof InventoryUpgrade invUpgrade) {
+            return invUpgrade.canSwapUpgrade(getSlotIndex(), stack);
+        }
+        return false;
+    }
 }
