@@ -78,8 +78,18 @@ public class UpgradeData extends BlockEntityDataShim
         }
 
         ItemStack prevUpgrade = upgrades[slot];
-        if (!prevUpgrade.isEmpty() && !canRemoveUpgrade(slot))
-            return false;
+        if (!prevUpgrade.isEmpty() && !canRemoveUpgrade(slot)) {
+            // Check if we're trying to swap in a bigger upgrade
+            if (!(prevUpgrade.getItem() instanceof ItemUpgradeStorage))
+                return false;
+            if (!(upgrade.getItem() instanceof ItemUpgradeStorage))
+                return false;
+
+            ItemUpgradeStorage target = (ItemUpgradeStorage)prevUpgrade.getItem();
+            ItemUpgradeStorage source = (ItemUpgradeStorage)upgrade.getItem();
+            if (source.level.getLevel() <= target.level.getLevel())
+                return false;
+        }
 
         upgrades[slot] = ItemStack.EMPTY;
         syncStorageMultiplier();
@@ -124,6 +134,10 @@ public class UpgradeData extends BlockEntityDataShim
     public boolean canRemoveUpgrade (int slot) {
         slot = Mth.clamp(slot, 0, upgrades.length - 1);
         return !upgrades[slot].isEmpty();
+    }
+
+    public boolean canSwapUpgrade (int slot, @NotNull ItemStack add) {
+        return canAddUpgrade(add) && canRemoveUpgrade(slot);
     }
 
     public int getStorageMultiplier () {

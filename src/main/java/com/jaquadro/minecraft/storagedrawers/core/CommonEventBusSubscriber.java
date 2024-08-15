@@ -3,6 +3,9 @@ package com.jaquadro.minecraft.storagedrawers.core;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
+import com.jaquadro.minecraft.storagedrawers.inventory.SlotUpgrade;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -11,7 +14,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.event.ItemStackedOnOtherEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +42,22 @@ public class CommonEventBusSubscriber {
 
                     event.setCanceled(true);
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void itemStackedOn (ItemStackedOnOtherEvent event) {
+        if (!(event.getStackedOnItem().getItem() instanceof ItemUpgradeStorage))
+            return;
+        if (!(event.getCarriedItem().getItem() instanceof ItemUpgradeStorage))
+            return;
+
+        if (event.getSlot() instanceof SlotUpgrade slot) {
+            if (slot.canSwapStack(event.getCarriedItem())) {
+                event.getSlot().set(event.getCarriedItem());
+                event.getCarriedSlotAccess().set(event.getStackedOnItem());
+                event.setCanceled(true);
             }
         }
     }

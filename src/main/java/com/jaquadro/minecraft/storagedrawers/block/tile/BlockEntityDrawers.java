@@ -145,6 +145,42 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
             return true;
         }
+
+        @Override
+        public boolean canSwapUpgrade(int slot, @NotNull ItemStack add) {
+            if (!(add.getItem() instanceof ItemUpgradeStorage))
+                return false;
+
+            ItemStack upgrade = getUpgrade(slot);
+            if (upgrade.getItem() == ModItems.ONE_STACK_UPGRADE.get())
+                return true;
+
+            if (!(upgrade.getItem() instanceof ItemUpgradeStorage))
+                return false;
+
+            if (!canAddUpgrade(add))
+                return false;
+
+            if (((ItemUpgradeStorage) add.getItem()).level.getLevel() > ((ItemUpgradeStorage) upgrade.getItem()).level.getLevel())
+                return true;
+
+            // New item is a downgrade
+            int currentUpgradeMult = upgradeData.getStorageMultiplier();
+            int storageLevel = ((ItemUpgradeStorage) upgrade.getItem()).level.getLevel();
+            int storageMult = CommonConfig.UPGRADES.getLevelMult(storageLevel);
+
+            // The below first calculates the amount of stacks to remove if the multiplier stayed the same, then adds the removed multiplier,
+            // which results in the amount of stacks (storage) to remove. The addition would be multiplied by
+            // the stacks to scale to, but in this case, that is 1.
+
+            // We need the below removed stacks calculation to be less than or equal to
+            // currentUpgradeMult * getEffectiveDrawerCapacity - 1, as otherwise, the calculated stacks to remove will be equal
+            // to the current max stack size of the drawer, which will result in a calculation of 0 stacks.
+
+            int removedStacks = Math.min(currentUpgradeMult * getEffectiveDrawerCapacity() - 1,
+                currentUpgradeMult * (getEffectiveDrawerCapacity() - 1) + storageMult);
+            return stackCapacityCheck(removedStacks);
+        }
     }
 
     protected BlockEntityDrawers(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {

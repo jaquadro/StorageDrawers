@@ -101,4 +101,8 @@ public class InventoryUpgrade implements Container
     public boolean canRemoveStorageUpgrade (int slot) {
         return blockEntityDrawers.upgrades().canRemoveUpgrade(slot);
     }
+
+    public boolean canSwapUpgrade (int slot, @NotNull ItemStack item) {
+        return blockEntityDrawers.upgrades().canSwapUpgrade(slot, item);
+    }
 }
