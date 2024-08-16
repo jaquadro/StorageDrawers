@@ -21,8 +21,8 @@ import java.util.List;
 
 public class AddUpgradeRecipe extends CustomRecipe
 {
-    public AddUpgradeRecipe(ResourceLocation name, CraftingBookCategory cat) {
-        super(name, cat);
+    public AddUpgradeRecipe(CraftingBookCategory cat) {
+        super(cat);
     }
 
     @Override

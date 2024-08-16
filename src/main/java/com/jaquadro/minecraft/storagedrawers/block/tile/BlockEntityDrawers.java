@@ -582,7 +582,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         PacketDistributor.TargetPoint point = new PacketDistributor.TargetPoint(
             getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 500, getLevel().dimension());
-        MessageHandler.INSTANCE.send(PacketDistributor.NEAR.with(() -> point), new CountUpdateMessage(getBlockPos(), slot, count));
+        MessageHandler.INSTANCE.send(new CountUpdateMessage(getBlockPos(), slot, count), PacketDistributor.NEAR.with(point));
     }
 
     @OnlyIn(Dist.CLIENT)

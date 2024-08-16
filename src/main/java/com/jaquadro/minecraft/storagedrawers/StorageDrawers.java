@@ -9,7 +9,6 @@ import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.AddUpgradeRecipe;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.KeyringRecipe;
-import com.jaquadro.minecraft.storagedrawers.integration.TheOneProbe;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -63,7 +62,7 @@ public class StorageDrawers
         ModContainers.register(bus);
 
         bus.addListener(this::setup);
-        bus.addListener(this::onModQueueEvent);
+        // bus.addListener(this::onModQueueEvent);
         bus.addListener(this::onModConfigEvent);
         bus.addListener(ModItems::creativeModeTabRegister);
 
@@ -91,10 +90,13 @@ public class StorageDrawers
         //LocalIntegrationRegistry.instance().postInit();
     }
 
+    /*
     @SuppressWarnings("Convert2MethodRef")  // otherwise the class loader gets upset if TheOneProbe is not loaded
     private void onModQueueEvent(final InterModEnqueueEvent event) {
         InterModComms.sendTo("theoneprobe", "getTheOneProbe", () -> new TheOneProbe());
     }
+    */
+
     private void onModConfigEvent(final ModConfigEvent event) {
         if (event.getConfig().getType() == ModConfig.Type.COMMON)
             CommonConfig.setLoaded();

@@ -1,5 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
-
+/*
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
@@ -40,3 +40,4 @@ public class TheOneProbe implements Function<ITheOneProbe, Void> {
         }
     }
 }
+*/

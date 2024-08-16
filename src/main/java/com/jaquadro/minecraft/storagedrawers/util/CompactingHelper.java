@@ -8,10 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
@@ -127,7 +124,8 @@ public class CompactingHelper
         List<ItemStack> candidates = new ArrayList<>();
         Map<ItemStack, Integer> candidatesRate = new HashMap<>();
 
-        for (Recipe<CraftingContainer> recipe : world.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
+        for (RecipeHolder<CraftingRecipe> rh : world.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
+            CraftingRecipe recipe = rh.value();
             ItemStack output = recipe.getResultItem(world.registryAccess());
             // TODO: ItemStackOreMatcher.areItemsEqual(stack, output, true)
             if (!ItemStackMatcher.areItemsEqual(stack, output))
@@ -170,7 +168,8 @@ public class CompactingHelper
     private List<ItemStack> findAllMatchingRecipes (CraftingContainer crafting) {
         List<ItemStack> candidates = new ArrayList<>();
 
-        for (CraftingRecipe recipe : world.getRecipeManager().getRecipesFor(RecipeType.CRAFTING, crafting, world)) {
+        for (RecipeHolder<CraftingRecipe> rh : world.getRecipeManager().getRecipesFor(RecipeType.CRAFTING, crafting, world)) {
+            CraftingRecipe recipe = rh.value();
             if (recipe.matches(crafting, world)) {
                 ItemStack result = recipe.assemble(crafting, world.registryAccess());
                 if (!result.isEmpty())

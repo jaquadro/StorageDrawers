@@ -11,10 +11,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 public class CountUpdateMessage
 {
@@ -62,12 +60,12 @@ public class CountUpdateMessage
         buf.writeInt(msg.count);
     }
 
-    public static void handle(CountUpdateMessage msg, Supplier<NetworkEvent.Context> ctx) {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> handleClient(msg, ctx.get()));
+    public static void handle(CountUpdateMessage msg, CustomPayloadEvent.Context ctx) {
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> handleClient(msg, ctx));
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void handleClient(CountUpdateMessage msg, NetworkEvent.Context ctx) {
+    private static void handleClient(CountUpdateMessage msg, CustomPayloadEvent.Context ctx) {
         if (!msg.failed) {
             Level world = Minecraft.getInstance().level;
             if (world != null) {

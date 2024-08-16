@@ -53,7 +53,6 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -324,7 +323,8 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             }*/
 
             if (CommonConfig.GENERAL.enableUI.get() && !level.isClientSide) {
-                NetworkHooks.openScreen((ServerPlayer)player, new MenuProvider()
+                ServerPlayer sp = (ServerPlayer)player;
+                sp.openMenu(new MenuProvider()
                 {
                     @Override
                     @NotNull

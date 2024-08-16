@@ -2,14 +2,14 @@ plugins {
     id 'maven-publish'
     id 'eclipse'
     id 'idea'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
 }
 
-version = "${minecraft_version}-${mod_version}"
+version = "${minecraft_version}-${mod_loader}-${mod_version}"
 group = mod_group_id
 
 base {
-    archivesName = mod_id
+    archivesName = mod_filename
 }
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
@@ -81,14 +81,14 @@ minecraft {
 
         client {
 	    // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', 'storagedrawers'
+            property 'forge.enabledGameTestNamespaces', mod_id
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
         }
 
         server {
 	    // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', 'storagedrawers'
+            property 'forge.enabledGameTestNamespaces', mod_id
             args '--nogui'
         }
 
@@ -96,7 +96,7 @@ minecraft {
         // By default, the server will crash when no gametests are provided.
         // The gametest system is also enabled by default for other run configs under the /test command.
         gameTestServer {
-            property 'forge.enabledGameTestNamespaces', 'storagedrawers'
+            property 'forge.enabledGameTestNamespaces', mod_id
         }
 
         data {
@@ -104,7 +104,7 @@ minecraft {
             workingDirectory project.file('run-data')
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'storagedrawers', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
         }
     }
 }
@@ -149,14 +149,14 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     //compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
-    implementation fg.deobf("curse.maven:jei-238222:${jei_id}")
+    //implementation fg.deobf("curse.maven:jei-238222:${jei_id}")
     // JEI not yet updated for 41.0.64
-    // runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${jei_mc}-forge:${jei_version}")
 
-    implementation fg.deobf("curse.maven:the-one-probe-245211:${top_id}")
+    //implementation fg.deobf("curse.maven:the-one-probe-245211:${top_id}")
     //implementation fg.deobf("mcjty.theoneprobe:theoneprobe:1.19.3-7.0.0-2")
     // compileOnly since not yet updated for 41.0.64
-    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
+    implementation fg.deobf("curse.maven:jade-${jade_projid}:${jade_id}")
 
 //    implementation fg.deobf("curse.maven:spark-361579:3670050")
 

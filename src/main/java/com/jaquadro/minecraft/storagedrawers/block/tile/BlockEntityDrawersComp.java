@@ -123,7 +123,7 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
             if (getWorld() != null && !getWorld().isClientSide) {
                 PacketDistributor.TargetPoint point = new PacketDistributor.TargetPoint(
                     getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 500, getWorld().dimension());
-                MessageHandler.INSTANCE.send(PacketDistributor.NEAR.with(() -> point), new CountUpdateMessage(getBlockPos(), 0, getPooledCount()));
+                MessageHandler.INSTANCE.send(new CountUpdateMessage(getBlockPos(), 0, getPooledCount()), PacketDistributor.NEAR.with(point));
 
                 setChanged();
             }

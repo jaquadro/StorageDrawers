@@ -59,13 +59,13 @@ public final class ModItems
         KEYRING_QUANTIFY = ITEM_REGISTER.register("keyring_quantify", () -> new ItemKeyring(QUANTIFY_KEY, new Item.Properties().stacksTo(1))),
         KEYRING_SHROUD = ITEM_REGISTER.register("keyring_shroud", () -> new ItemKeyring(SHROUD_KEY, new Item.Properties().stacksTo(1)));
 
-    private ModItems() {
+    private ModItems() { }
+
+    public static void register(IEventBus bus) {
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD);
-    }
 
-    public static void register(IEventBus bus) {
         for (RegistryObject<Block> ro : ModBlocks.BLOCK_REGISTER.getEntries()) {
             if (ModBlocks.EXCLUDE_ITEMS.contains(ro.getId().getPath()))
                 continue;

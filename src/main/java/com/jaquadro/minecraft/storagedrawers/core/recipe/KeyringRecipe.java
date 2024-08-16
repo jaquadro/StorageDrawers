@@ -17,8 +17,8 @@ import javax.annotation.Nullable;
 
 public class KeyringRecipe extends ShapedRecipe
 {
-    public KeyringRecipe(ResourceLocation name, CraftingBookCategory cat) {
-        super(name, "", cat, 3, 3, NonNullList.of(Ingredient.EMPTY,
+    public KeyringRecipe(CraftingBookCategory cat) {
+        super("", cat, 3, 3, NonNullList.of(Ingredient.EMPTY,
             Ingredient.EMPTY, Ingredient.of(Items.IRON_NUGGET), Ingredient.EMPTY,
             Ingredient.of(Items.IRON_NUGGET),
                 Ingredient.of(ModItems.getKeys().map(i -> new ItemStack(i, 1))),
