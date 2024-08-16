@@ -2,6 +2,9 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersStandard;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -12,6 +15,14 @@ import org.jetbrains.annotations.Nullable;
 
 public class BlockStandardDrawers extends BlockDrawers
 {
+    public static final MapCodec<BlockStandardDrawers> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+            Codec.INT.fieldOf("drawerCount").forGetter(BlockDrawers::getDrawerCount),
+            Codec.BOOL.fieldOf("halfDepth").forGetter(BlockDrawers::isHalfDepth),
+            Codec.INT.fieldOf("storageUnits").forGetter(BlockDrawers::getStorageUnits),
+            propertiesCodec()
+        ).apply(instance, BlockStandardDrawers::new)
+    );
 
     public BlockStandardDrawers (int drawerCount, boolean halfDepth, int storageUnits, BlockBehaviour.Properties properties) {
        super(drawerCount, halfDepth, storageUnits, properties);
@@ -23,6 +34,11 @@ public class BlockStandardDrawers extends BlockDrawers
 
     private static int calcUnits (int drawerCount, boolean halfDepth) {
         return halfDepth ? 4 / drawerCount : 8 / drawerCount;
+    }
+
+    @Override
+    public MapCodec<BlockStandardDrawers> codec() {
+        return CODEC;
     }
 
     @Override

@@ -14,16 +14,17 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class KeyringRecipe extends ShapedRecipe
 {
     public KeyringRecipe(CraftingBookCategory cat) {
-        super("", cat, 3, 3, NonNullList.of(Ingredient.EMPTY,
+        super("", cat, new ShapedRecipePattern(3, 3, NonNullList.of(Ingredient.EMPTY,
             Ingredient.EMPTY, Ingredient.of(Items.IRON_NUGGET), Ingredient.EMPTY,
             Ingredient.of(Items.IRON_NUGGET),
                 Ingredient.of(ModItems.getKeys().map(i -> new ItemStack(i, 1))),
             Ingredient.of(Items.IRON_NUGGET),
-            Ingredient.EMPTY, Ingredient.of(Items.IRON_NUGGET), Ingredient.EMPTY),
+            Ingredient.EMPTY, Ingredient.of(Items.IRON_NUGGET), Ingredient.EMPTY), Optional.empty()),
             new ItemStack(ModItems.KEYRING.get()));
     }
 

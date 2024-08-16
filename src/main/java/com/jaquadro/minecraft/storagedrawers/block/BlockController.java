@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -31,8 +32,15 @@ import java.util.EnumSet;
 
 public class BlockController extends HorizontalDirectionalBlock implements INetworked, EntityBlock
 {
+    public static final MapCodec<BlockController> CODEC = simpleCodec(BlockController::new);
+
     public BlockController (BlockBehaviour.Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public MapCodec<BlockController> codec() {
+        return CODEC;
     }
 
     @Override
