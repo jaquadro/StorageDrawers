@@ -41,6 +41,7 @@ public final class CommonConfig
         public final ModConfigSpec.ConfigValue<Boolean> debugTrace;
         public final ModConfigSpec.ConfigValue<Boolean> enableExtraCompactingRules;
         public final ModConfigSpec.ConfigValue<Integer> controllerRange;
+        public final ModConfigSpec.ConfigValue<Boolean> enableAnalogRedstone;
         public final ModConfigSpec.ConfigValue<List<? extends String>> compRules;
 
         public General(ModConfigSpec.Builder builder) {
@@ -58,6 +59,10 @@ public final class CommonConfig
                     "on X, Y, or Z planes.  The default value of 50 gives the controller a very",
                     "large range, but not beyond the chunk load distance.")
                 .defineInRange("controllerRange", 50, 1, 75);
+            enableAnalogRedstone = builder
+                .comment("Whether redstone upgrades should emit an analog redstone signal, requiring",
+                    "the use of a comparator to read it.")
+                .define("enableAnalogRedstone", true);
             enableUI = builder
                 .define("enableUI", true);
             enableSidedInput = builder
