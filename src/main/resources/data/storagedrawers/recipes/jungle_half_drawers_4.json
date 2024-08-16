@@ -9,5 +9,5 @@
         "/": { "item": "minecraft:jungle_slab" },
         "X": { "tag": "forge:chests/wooden" }
     },
-    "result": { "item": "storagedrawers:jungle_half_drawers_4", "count": 4 }
+    "result": { "id": "storagedrawers:jungle_half_drawers_4", "count": 4 }
 }

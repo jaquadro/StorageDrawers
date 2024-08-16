@@ -9,5 +9,5 @@
         "/": { "tag": "forge:rods/wooden" },
         "X": { "item": "minecraft:oak_planks" }
     },
-    "result": { "item": "storagedrawers:oak_trim", "count": 4 }
+    "result": { "id": "storagedrawers:oak_trim", "count": 4 }
 }

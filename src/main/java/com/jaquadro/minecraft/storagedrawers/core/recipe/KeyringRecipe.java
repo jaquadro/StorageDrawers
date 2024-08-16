@@ -1,9 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.core.recipe;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.components.item.KeyringContents;
+import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -34,7 +37,7 @@ public class KeyringRecipe extends ShapedRecipe
     }
 
     @Override
-    public ItemStack assemble (CraftingContainer inv, RegistryAccess registries) {
+    public ItemStack assemble (CraftingContainer inv, HolderLookup.Provider registries) {
         ItemStack center = inv.getItem(4);
         if (center.isEmpty() || !(center.getItem() instanceof ItemKey))
             return ItemStack.EMPTY;
@@ -43,7 +46,13 @@ public class KeyringRecipe extends ShapedRecipe
         if (result.isEmpty())
             return ItemStack.EMPTY;
 
-        ItemKeyring.add(result, center);
+        KeyringContents contents = result.get(ModDataComponents.KEYRING_CONTENTS.get());
+        if (contents != null) {
+            KeyringContents.Mutable mutable = new KeyringContents.Mutable(contents);
+            mutable.tryInsert(center);
+            result.set(ModDataComponents.KEYRING_CONTENTS.get(), mutable.toImmutable());
+        }
+
         return result;
     }
 

@@ -122,7 +122,7 @@ public interface IDrawer
         if (protoStack.isEmpty())
             return 0;
 
-        return protoStack.getItem().getMaxStackSize(protoStack);
+        return protoStack.getItem().getDefaultMaxStackSize();
     }
 
     /**

@@ -4,5 +4,5 @@
         { "item": "storagedrawers:drawer_key" },
         { "item": "minecraft:writable_book" }
     ],
-    "result": { "item": "storagedrawers:quantify_key" }
+    "result": { "id": "storagedrawers:quantify_key" }
 }

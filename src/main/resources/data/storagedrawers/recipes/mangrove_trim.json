@@ -9,5 +9,5 @@
         "/": { "tag": "forge:rods/wooden" },
         "X": { "item": "minecraft:mangrove_planks" }
     },
-    "result": { "item": "storagedrawers:mangrove_trim", "count": 4 }
+    "result": { "id": "storagedrawers:mangrove_trim", "count": 4 }
 }

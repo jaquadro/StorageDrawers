@@ -22,6 +22,6 @@ public class ItemStackMatcher
         if (stack1.isEmpty() || !ItemStack.isSameItem(stack1, stack2))
             return false;
 
-        return ItemStack.isSameItemSameTags(stack1, stack2);
+        return ItemStack.isSameItemSameComponents(stack1, stack2);
     }
 }

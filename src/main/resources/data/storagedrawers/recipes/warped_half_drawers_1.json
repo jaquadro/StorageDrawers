@@ -9,5 +9,5 @@
         "/": { "item": "minecraft:warped_slab" },
         "X": { "tag": "forge:chests/wooden" }
     },
-    "result": { "item": "storagedrawers:warped_half_drawers_1", "count": 1 }
+    "result": { "id": "storagedrawers:warped_half_drawers_1", "count": 1 }
 }

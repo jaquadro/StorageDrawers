@@ -26,7 +26,7 @@ public final class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<BlockEntityDrawersStandard>> STANDARD_DRAWERS_4 = registerDrawerBlockEntityType("standard_drawers_4", BlockEntityDrawersStandard.Slot4::new, BlockStandardDrawers.class, 4);
     public static final RegistryObject<BlockEntityType<BlockEntityDrawersComp>> FRACTIONAL_DRAWERS_3 = registerDrawerBlockEntityType("fractional_drawers_3", BlockEntityDrawersComp.Slot3::new, BlockCompDrawers.class, 3);
     public static final RegistryObject<BlockEntityType<BlockEntityController>> CONTROLLER = registerBlockEntityType("controller", BlockEntityController::new, ModBlocks.getControllers());
-    public static final RegistryObject<BlockEntityType<BlockEntitySlave>> CONTROLLER_SLAVE = registerBlockEntityType("controller_slave", BlockEntitySlave::new, ModBlocks.getControllerSlaves());
+    public static final RegistryObject<BlockEntityType<BlockEntityControllerIO>> CONTROLLER_IO = registerBlockEntityType("controller_io", BlockEntityControllerIO::new, ModBlocks.getControllerSlaves());
 
     private ModBlockEntities() {}
 

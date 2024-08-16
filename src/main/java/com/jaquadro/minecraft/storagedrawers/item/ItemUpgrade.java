@@ -41,8 +41,8 @@ public class ItemUpgrade extends Item
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText (@NotNull ItemStack itemStack, @Nullable Level world, List<Component> list, TooltipFlag advanced) {
-        list.add(Component.literal("").append(getDescription()).withStyle(ChatFormatting.GRAY));
+    public void appendHoverText (ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        tooltip.add(Component.literal("").append(getDescription()).withStyle(ChatFormatting.GRAY));
     }
 
     @OnlyIn(Dist.CLIENT)

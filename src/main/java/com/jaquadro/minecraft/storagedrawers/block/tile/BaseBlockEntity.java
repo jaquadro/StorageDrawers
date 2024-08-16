@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.BlockEntityDataShim;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -46,22 +47,22 @@ public class BaseBlockEntity extends BlockEntity
     }
 
     @Override
-    public final void load (@NotNull CompoundTag tag) {
-        super.load(tag);
+    public final void loadAdditional (CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
 
         //failureSnapshot = null;
 
         //try {
-            readFixed(tag);
-            readPortable(tag);
+        readFixed(registries, tag);
+        readPortable(registries, tag);
         //}
         //catch (Throwable t) {
         //    trapLoadFailure(t, tag);
         //}
     }
 
-    public final void read (CompoundTag tag) {
-        load(tag);
+    public final void read (CompoundTag tag, HolderLookup.Provider registries) {
+        loadAdditional(tag, registries);
     }
 
     /*@Override
@@ -85,38 +86,40 @@ public class BaseBlockEntity extends BlockEntity
     }*/
 
     @Override
-    protected void saveAdditional (@NotNull CompoundTag tag) {
-        tag = writeFixed(tag);
-        writePortable(tag);
+    protected void saveAdditional (@NotNull CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+
+        tag = writeFixed(registries, tag);
+        writePortable(registries, tag);
     }
 
-    public void readPortable (CompoundTag tag) {
+    public void readPortable (HolderLookup.Provider provider, CompoundTag tag) {
         if (portableShims != null) {
             for (BlockEntityDataShim shim : portableShims)
-                shim.read(tag);
+                shim.read(provider, tag);
         }
     }
 
-    public CompoundTag writePortable (CompoundTag tag) {
+    public CompoundTag writePortable (HolderLookup.Provider provider, CompoundTag tag) {
         if (portableShims != null) {
             for (BlockEntityDataShim shim : portableShims)
-                tag = shim.write(tag);
+                tag = shim.write(provider, tag);
         }
 
         return tag;
     }
 
-    protected void readFixed (CompoundTag tag) {
+    protected void readFixed (HolderLookup.Provider provider, CompoundTag tag) {
         if (fixedShims != null) {
             for (BlockEntityDataShim shim : fixedShims)
-                shim.read(tag);
+                shim.read(provider, tag);
         }
     }
 
-    protected CompoundTag writeFixed (CompoundTag tag) {
+    protected CompoundTag writeFixed (HolderLookup.Provider provider, CompoundTag tag) {
         if (fixedShims != null) {
             for (BlockEntityDataShim shim : fixedShims)
-                tag = shim.write(tag);
+                tag = shim.write(provider, tag);
         }
 
         return tag;
@@ -140,9 +143,9 @@ public class BaseBlockEntity extends BlockEntity
 
     @Override
     @NotNull
-    public final CompoundTag getUpdateTag () {
+    public final CompoundTag getUpdateTag (HolderLookup.Provider provider) {
         //save(tag);
-        return this.saveWithoutMetadata();
+        return this.saveCustomOnly(provider);
     }
 
     @Override
@@ -151,9 +154,9 @@ public class BaseBlockEntity extends BlockEntity
     }
 
     @Override
-    public final void onDataPacket (Connection net, ClientboundBlockEntityDataPacket pkt) {
+    public final void onDataPacket (Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         if (pkt != null && pkt.getTag() != null)
-            read(pkt.getTag());
+            read(pkt.getTag(), lookupProvider);
 
         if (getLevel() != null && getLevel().isClientSide && dataPacketRequiresRenderUpdate()) {
             BlockState state = getLevel().getBlockState(getBlockPos());

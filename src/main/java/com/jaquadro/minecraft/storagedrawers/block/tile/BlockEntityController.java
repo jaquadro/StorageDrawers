@@ -6,7 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
+import com.jaquadro.minecraft.storagedrawers.block.BlockControllerIO;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
@@ -18,6 +18,7 @@ import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -455,9 +456,9 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
             record.storage = null;
         }
-        else if (blockEntity instanceof BlockEntitySlave) {
+        else if (blockEntity instanceof BlockEntityControllerIO) {
             if (record.storage == null && record.invStorageSize == 0) {
-                if (((BlockEntitySlave) blockEntity).getController() == this)
+                if (((BlockEntityControllerIO) blockEntity).getController() == this)
                     return;
             }
 
@@ -466,7 +467,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
             record.storage = null;
 
-            ((BlockEntitySlave) blockEntity).bindController(getBlockPos());
+            ((BlockEntityControllerIO) blockEntity).bindController(getBlockPos());
         }
         else if (blockEntity instanceof BlockEntityDrawers) {
             IDrawerGroup group = ((BlockEntityDrawers) blockEntity).getGroup();
@@ -529,8 +530,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                 storage.put(coord, record);
             }
 
-            if (block instanceof BlockSlave) {
-                WorldUtils.getBlockEntity(getLevel(), coord, BlockEntitySlave.class);
+            if (block instanceof BlockControllerIO) {
+                WorldUtils.getBlockEntity(getLevel(), coord, BlockEntityControllerIO.class);
             }
 
             updateRecordInfo(coord, record, getLevel().getBlockEntity(coord));
@@ -588,8 +589,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     }
 
     @Override
-    public void readFixed (CompoundTag tag) {
-        super.readFixed(tag);
+    public void readFixed (HolderLookup.Provider provider, CompoundTag tag) {
+        super.readFixed(provider, tag);
 
         if (getLevel() != null && !getLevel().isClientSide)
             updateCache();

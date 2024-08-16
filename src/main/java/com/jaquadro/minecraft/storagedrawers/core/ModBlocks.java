@@ -109,7 +109,7 @@ public final class ModBlocks
         WARPED_TRIM = registerTrimBlock("warped_trim");
 
     public static final RegistryObject<BlockController> CONTROLLER = registerControllerBlock("controller");
-    public static final RegistryObject<BlockSlave> CONTROLLER_SLAVE = registerControllerSlaveBlock("controller_slave");
+    public static final RegistryObject<BlockControllerIO> CONTROLLER_IO = registerControllerIOBlock("controller_io");
 
     public static final RegistryObject<BlockMeta>
         META_LOCKED = registerMetaBlock("meta_locked"),
@@ -136,8 +136,8 @@ public final class ModBlocks
         return BLOCK_REGISTER.register(name, () -> new BlockController(getStoneBlockProperties()));
     }
 
-    private static RegistryObject<BlockSlave> registerControllerSlaveBlock(String name) {
-        return BLOCK_REGISTER.register(name, () -> new BlockSlave(getStoneBlockProperties()));
+    private static RegistryObject<BlockControllerIO> registerControllerIOBlock (String name) {
+        return BLOCK_REGISTER.register(name, () -> new BlockControllerIO(getStoneBlockProperties()));
     }
 
     private static RegistryObject<BlockMeta> registerMetaBlock(String name) {
@@ -182,8 +182,8 @@ public final class ModBlocks
         return getBlocksOfType(BlockController.class);
     }
 
-    public static Stream<BlockSlave> getControllerSlaves() {
-        return getBlocksOfType(BlockSlave.class);
+    public static Stream<BlockControllerIO> getControllerSlaves() {
+        return getBlocksOfType(BlockControllerIO.class);
     }
 
     public static <BD extends BlockDrawers> Stream<BD> getDrawersOfType(Class<BD> drawerClass) {

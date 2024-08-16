@@ -41,7 +41,6 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
 
         public Slot3 (BlockPos pos, BlockState state) {
             super(ModBlockEntities.FRACTIONAL_DRAWERS_3.get(), pos, state);
-            groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
 

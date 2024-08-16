@@ -78,7 +78,7 @@
     "block.storagedrawers.warped_trim": "Warped Trim",
     "block.storagedrawers.compacting_drawers_3": "Compacting Drawers",
     "block.storagedrawers.controller": "Drawer Controller",
-    "block.storagedrawers.controller_slave": "Drawer Controller Slave",
+    "block.storagedrawers.controller_io": "Drawer Controller IO",
 
     "config.jade.plugin_storagedrawers.main": "Storage Drawers",
     "config.jade.plugin_storagedrawers.display.content": "Slot Contents",

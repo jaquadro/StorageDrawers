@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.client;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.client.gui.ClientKeyringTooltip;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.BlockEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
@@ -42,6 +43,6 @@ public class ClientModBusSubscriber {
 
     @SubscribeEvent
     public static void registerClientTooltips(RegisterClientTooltipComponentFactoriesEvent event) {
-        event.register(KeyringTooltip.class, ClientBundleTooltip::new);
+        event.register(KeyringTooltip.class, t -> new ClientKeyringTooltip(t.contents()));
     }
 }

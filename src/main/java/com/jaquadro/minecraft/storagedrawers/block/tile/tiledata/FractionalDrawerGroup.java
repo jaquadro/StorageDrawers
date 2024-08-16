@@ -3,12 +3,14 @@ package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.CompactingHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -52,10 +54,6 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         }
     }
 
-    public void setCapabilityProvider (ICapabilityProvider capProvider) {
-        storage.setCapabilityProvider(capProvider);
-    }
-
     @Override
     public int getDrawerCount () {
         return slots.length;
@@ -84,14 +82,14 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
     }
 
     @Override
-    public void read (CompoundTag tag) {
+    public void read (HolderLookup.Provider provider, CompoundTag tag) {
         if (tag.contains("Drawers"))
-            storage.deserializeNBT(tag.getCompound("Drawers"));
+            storage.deserializeNBT(provider, tag.getCompound("Drawers"));
     }
 
     @Override
-    public CompoundTag write (CompoundTag tag) {
-        tag.put("Drawers", storage.serializeNBT());
+    public CompoundTag write (HolderLookup.Provider provider, CompoundTag tag) {
+        tag.put("Drawers", storage.serializeNBT(provider));
         return tag;
     }
 
@@ -145,7 +143,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         private final int[] cachedConvRate;
         private final ItemStackMatcher[] cachedMatchers;
 
-        IDrawerAttributes attrs;
+        IDrawerAttributes cachedAttrs;
 
         public FractionalStorage (FractionalDrawerGroup group, int slotCount) {
             cacheKey = ItemStack.EMPTY;
@@ -169,12 +167,18 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
 
             convRate = new int[slotCount];
             cachedConvRate = new int[slotCount];
-
-            attrs = EmptyDrawerAttributes.EMPTY;
         }
 
-        public void setCapabilityProvider (ICapabilityProvider capProvider) {
-            attrs = capProvider.getCapability(ATTR_CAPABILITY, null).orElse(EmptyDrawerAttributes.EMPTY);
+        @NotNull
+        IDrawerAttributes getAttributes() {
+            if (cachedAttrs != null)
+                return cachedAttrs;
+
+            cachedAttrs = group.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(null);
+            if (cachedAttrs != null)
+                return cachedAttrs;
+
+            return EmptyDrawerAttributes.EMPTY;
         }
 
         public int getPooledCount () {
@@ -228,6 +232,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             if (convRate[slot] == 0)
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
@@ -238,6 +243,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             if (convRate[slot] == 0)
                 return;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending())
                 return;
 
@@ -260,6 +266,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             if (convRate[slot] == 0 || amount == 0)
                 return Math.abs(amount);
 
+            IDrawerAttributes attrs = getAttributes();
             if (amount > 0) {
                 if (attrs.isUnlimitedVending())
                     return 0;
@@ -303,13 +310,15 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             if (baseStack().isEmpty() || convRate[slot] == 0)
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE / convRate[slot];
 
-            return baseStack().getItem().getMaxStackSize(baseStack()) * group.getStackCapacity() * (baseRate() / convRate[slot]);
+            return baseStack().getItem().getDefaultMaxStackSize() * group.getStackCapacity() * (baseRate() / convRate[slot]);
         }
 
         public int getMaxCapacity (int slot, @NotNull ItemStack itemPrototype) {
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending()) {
                 if (convRate[slot] == 0)
                     return Integer.MAX_VALUE;
@@ -319,7 +328,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             if (baseStack().isEmpty()) {
                 int itemStackLimit = 64;
                 if (!itemPrototype.isEmpty())
-                    itemStackLimit = itemPrototype.getItem().getMaxStackSize(itemPrototype);
+                    itemStackLimit = itemPrototype.getItem().getDefaultMaxStackSize();
                 return itemStackLimit * group.getStackCapacity();
             }
 
@@ -330,6 +339,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         }
 
         public int getAcceptingMaxCapacity (int slot, @NotNull ItemStack itemPrototype) {
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isVoid())
                 return Integer.MAX_VALUE;
 
@@ -340,6 +350,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             if (baseStack().isEmpty() || convRate[slot] == 0)
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
@@ -353,6 +364,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             if (baseStack().isEmpty() || convRate[slot] == 0)
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending() || attrs.isVoid())
                 return Integer.MAX_VALUE;
 
@@ -374,6 +386,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         }
 
         public boolean canItemBeStored (int slot, @NotNull ItemStack itemPrototype, Predicate<ItemStack> predicate) {
+            IDrawerAttributes attrs = getAttributes();
             if (protoStack[slot].isEmpty() && protoStack[0].isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
                 return true;
 
@@ -550,14 +563,14 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         }
 
         @Override
-        public CompoundTag serializeNBT () {
+        public CompoundTag serializeNBT (HolderLookup.Provider provider) {
             ListTag itemList = new ListTag();
             for (int i = 0; i < slotCount; i++) {
                 if (protoStack[i].isEmpty())
                     continue;
 
                 CompoundTag itemTag = new CompoundTag();
-                protoStack[i].save(itemTag);
+                itemTag = (CompoundTag)protoStack[i].save(provider, itemTag);
 
                 CompoundTag slotTag = new CompoundTag();
                 slotTag.putByte("Slot", (byte)i);
@@ -575,7 +588,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         }
 
         @Override
-        public void deserializeNBT (CompoundTag tag) {
+        public void deserializeNBT (HolderLookup.Provider provider, CompoundTag tag) {
             for (int i = 0; i < slotCount; i++) {
                 protoStack[i] = ItemStack.EMPTY;
                 matchers[i] = ItemStackMatcher.EMPTY;
@@ -589,7 +602,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
                 CompoundTag slotTag = itemList.getCompound(i);
                 int slot = slotTag.getByte("Slot");
 
-                protoStack[slot] = ItemStack.of(slotTag.getCompound("Item"));
+                protoStack[slot] = ItemStack.parseOptional(provider, slotTag.getCompound("Item"));
                 convRate[slot] = slotTag.getByte("Conv");
 
                 matchers[slot] = new ItemStackMatcher(protoStack[slot]);

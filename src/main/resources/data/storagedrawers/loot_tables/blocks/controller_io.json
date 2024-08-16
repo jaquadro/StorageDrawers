@@ -1,12 +1,12 @@
 {
-    "type": "storagedrawers:controller_slave",
+    "type": "storagedrawers:controller_io",
     "pools": [
         {
             "rolls": 1,
             "entries": [
                 {
                     "type": "minecraft:item",
-                    "name": "storagedrawers:controller_slave"
+                    "name": "storagedrawers:controller_io"
                 }
             ],
             "conditions": [

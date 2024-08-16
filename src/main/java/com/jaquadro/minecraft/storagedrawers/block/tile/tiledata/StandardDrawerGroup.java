@@ -3,11 +3,13 @@ package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -44,11 +46,6 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         syncSlots();
     }
 
-    public void setCapabilityProvider (ICapabilityProvider capProvider) {
-        for (DrawerData slot : slots)
-            slot.setCapabilityProvider(capProvider);
-    }
-
     @Override
     public int getDrawerCount () {
         return slots.length;
@@ -69,25 +66,25 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
     }
 
     @Override
-    public void read (CompoundTag tag) {
+    public void read (HolderLookup.Provider provider, CompoundTag tag) {
         if (!tag.contains("Drawers"))
             return;
 
         ListTag itemList = tag.getList("Drawers", Tag.TAG_COMPOUND);
         for (int i = 0; i < itemList.size(); i++) {
             if (i < slots.length)
-                slots[i].deserializeNBT(itemList.getCompound(i));
+                slots[i].deserializeNBT(provider, itemList.getCompound(i));
         }
     }
 
     @Override
-    public CompoundTag write (CompoundTag tag) {
+    public CompoundTag write (HolderLookup.Provider provider, CompoundTag tag) {
         if (slots == null)
             return tag;
 
         ListTag itemList = new ListTag();
         for (DrawerData slot : slots)
-            itemList.add(slot.serializeNBT());
+            itemList.add(slot.serializeNBT(provider));
 
         tag.put("Drawers", itemList);
 
@@ -150,7 +147,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
     {
         static Capability<IDrawerAttributes> ATTR_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
-        IDrawerAttributes attrs;
+        IDrawerAttributes cachedAttrs;
         StandardDrawerGroup group;
 
         @NotNull
@@ -160,13 +157,20 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         public DrawerData (StandardDrawerGroup group) {
             this.group = group;
-            attrs = EmptyDrawerAttributes.EMPTY;
             protoStack = ItemStack.EMPTY;
             matcher = ItemStackMatcher.EMPTY;
         }
 
-        public void setCapabilityProvider (ICapabilityProvider capProvider) {
-            attrs = capProvider.getCapability(ATTR_CAPABILITY, null).orElse(EmptyDrawerAttributes.EMPTY);
+        @NotNull
+        IDrawerAttributes getAttributes() {
+            if (cachedAttrs != null)
+                return cachedAttrs;
+
+            cachedAttrs = group.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(null);
+            if (cachedAttrs != null)
+                return cachedAttrs;
+
+            return EmptyDrawerAttributes.EMPTY;
         }
 
         @Override
@@ -201,7 +205,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             //if (attrs.isDictConvertible())
             //    matcher = new ItemStackOreMatcher(protoStack);
             //else
-                matcher = new ItemStackMatcher(protoStack);
+            matcher = new ItemStackMatcher(protoStack);
 
             group.syncSlots();
             if (notify)
@@ -219,7 +223,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             //if (attrs.isDictConvertible())
             //    matcher = new ItemStackOreMatcher(protoStack);
             //else
-                matcher = new ItemStackMatcher(protoStack);
+            matcher = new ItemStackMatcher(protoStack);
 
             return this;
         }
@@ -229,6 +233,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             if (protoStack.isEmpty())
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
@@ -244,6 +249,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             if (protoStack.isEmpty() || count == amount)
                 return;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending())
                 return;
 
@@ -271,6 +277,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             if (protoStack.isEmpty() || amount == 0)
                 return Math.abs(amount);
 
+            IDrawerAttributes attrs = getAttributes();
             if (amount > 0) {
                 if (attrs.isUnlimitedVending())
                     return 0;
@@ -299,17 +306,19 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         @Override
         public int getMaxCapacity (@NotNull ItemStack itemPrototype) {
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
             if (itemPrototype.isEmpty())
                 return 64 * getStackCapacity();
 
-            return itemPrototype.getItem().getMaxStackSize(itemPrototype) * getStackCapacity();
+            return itemPrototype.getItem().getDefaultMaxStackSize() * getStackCapacity();
         }
 
         @Override
         public int getAcceptingMaxCapacity (@NotNull ItemStack itemPrototype) {
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isVoid())
                 return Integer.MAX_VALUE;
 
@@ -321,6 +330,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             if (protoStack.isEmpty())
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
@@ -332,6 +342,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             if (protoStack.isEmpty())
                 return 0;
 
+            IDrawerAttributes attrs = getAttributes();
             if (attrs.isUnlimitedVending() || attrs.isVoid())
                 return Integer.MAX_VALUE;
 
@@ -340,6 +351,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         @Override
         public boolean canItemBeStored (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+            IDrawerAttributes attrs = getAttributes();
             if (protoStack.isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
                 return true;
 
@@ -374,13 +386,13 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         }
 
         @Override
-        public CompoundTag serializeNBT () {
+        public CompoundTag serializeNBT (HolderLookup.Provider provider) {
             CompoundTag tag = new CompoundTag();
             if (protoStack.isEmpty())
                 return tag;
 
             CompoundTag item = new CompoundTag();
-            protoStack.save(item);
+            item = (CompoundTag)protoStack.save(provider, item);
 
             tag.put("Item", item);
             tag.putInt("Count", count);
@@ -389,12 +401,12 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         }
 
         @Override
-        public void deserializeNBT (CompoundTag nbt) {
+        public void deserializeNBT (HolderLookup.Provider provider, CompoundTag nbt) {
             ItemStack tagItem = ItemStack.EMPTY;
             int tagCount = 0;
 
             if (nbt.contains("Item"))
-                tagItem = ItemStack.of(nbt.getCompound("Item"));
+                tagItem = ItemStack.parseOptional(provider, nbt.getCompound("Item"));
             if (nbt.contains("Count"))
                 tagCount = nbt.getInt("Count");
 

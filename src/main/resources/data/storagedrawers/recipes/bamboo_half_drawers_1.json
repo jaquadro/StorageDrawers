@@ -9,5 +9,5 @@
         "/": { "item": "minecraft:bamboo_slab" },
         "X": { "tag": "forge:chests/wooden" }
     },
-    "result": { "item": "storagedrawers:bamboo_half_drawers_1", "count": 1 }
+    "result": { "id": "storagedrawers:bamboo_half_drawers_1", "count": 1 }
 }

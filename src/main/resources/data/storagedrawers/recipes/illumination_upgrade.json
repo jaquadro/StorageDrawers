@@ -10,5 +10,5 @@
         "R": { "tag": "forge:dusts/glowstone" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
-    "result": { "item": "storagedrawers:illumination_upgrade", "count": 8 }
+    "result": { "id": "storagedrawers:illumination_upgrade", "count": 8 }
 }

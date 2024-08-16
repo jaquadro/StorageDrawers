@@ -10,5 +10,5 @@
         "#": { "tag": "forge:ingots/gold" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
-    "result": { "item": "storagedrawers:gold_storage_upgrade" }
+    "result": { "id": "storagedrawers:gold_storage_upgrade" }
 }

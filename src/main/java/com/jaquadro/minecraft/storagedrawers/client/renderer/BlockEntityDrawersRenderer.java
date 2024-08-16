@@ -195,7 +195,7 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
 
         alignRendering(matrix, side);
         matrix.translate(moveX / 16, 1 - moveY / 16, 1 - moveZ);
-        matrix.mulPoseMatrix((new Matrix4f()).scale(scaleX, scaleY, 0.001f));
+        matrix.mulPose((new Matrix4f()).scale(scaleX, scaleY, 0.001f));
 
         try {
             BakedModel itemModel = itemRenderer.getModel(itemStack, null, null, 0);
@@ -217,7 +217,7 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
         // Rotate to face the correct direction for the drawer's orientation.
 
         matrix.translate(.5f, 0, .5f);
-        matrix.mulPoseMatrix((new Matrix4f()).rotateYXZ(getRotationYForSide2D(side), 0, 0));
+        matrix.mulPose((new Matrix4f()).rotateYXZ(getRotationYForSide2D(side), 0, 0));
         matrix.translate(-.5f, 0, -.5f);
     }
 
@@ -308,23 +308,22 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
 
             if (xCur > x1 && yCur > y1) {
                 Matrix4f matrix = matrixStack.last().pose();
-                Matrix3f normal = matrixStack.last().normal();
                 VertexConsumer builder = buffer.getBuffer(RenderType.solid());
-                addQuad(matrix, normal, builder, combinedLight, combinedOverlay, x1, xCur, y1, yCur, z, uCur, su1, sv1, vCur);
+                addQuad(matrix, matrixStack.last(), builder, combinedLight, combinedOverlay, x1, xCur, y1, yCur, z, uCur, su1, sv1, vCur);
             }
         }
 
         matrixStack.popPose();
     }
 
-    public static void addQuad(Matrix4f matrix, Matrix3f normal, VertexConsumer buffer, int combinedLight, int combinedOverlay, float x1, float x2, float y1, float y2, float z, float u1, float u2, float v1, float v2) {
+    public static void addQuad(Matrix4f matrix, PoseStack.Pose normal, VertexConsumer buffer, int combinedLight, int combinedOverlay, float x1, float x2, float y1, float y2, float z, float u1, float u2, float v1, float v2) {
         addVertex(matrix, normal, buffer, combinedLight, combinedOverlay, x2, y1, z, u1, v1);
         addVertex(matrix, normal, buffer, combinedLight, combinedOverlay, x2, y2, z, u1, v2);
         addVertex(matrix, normal, buffer, combinedLight, combinedOverlay, x1, y2, z, u2, v2);
         addVertex(matrix, normal, buffer, combinedLight, combinedOverlay, x1, y1, z, u2, v1);
     }
 
-    private static void addVertex(Matrix4f matrix, Matrix3f normal, VertexConsumer buffer, int combinedLight, int combinedOverlay, float x, float y, float z, float u, float v) {
+    private static void addVertex(Matrix4f matrix, PoseStack.Pose normal, VertexConsumer buffer, int combinedLight, int combinedOverlay, float x, float y, float z, float u, float v) {
         buffer.vertex(matrix, x, y, z).color(1f, 1f, 1f, 1f).uv(u, v).overlayCoords(combinedOverlay).uv2(combinedLight).normal(normal, 0, 1, 0).endVertex();
     }
 

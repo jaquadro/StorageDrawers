@@ -9,5 +9,5 @@
         "/": { "item": "minecraft:cherry_slab" },
         "X": { "tag": "forge:chests/wooden" }
     },
-    "result": { "item": "storagedrawers:cherry_half_drawers_4", "count": 4 }
+    "result": { "id": "storagedrawers:cherry_half_drawers_4", "count": 4 }
 }

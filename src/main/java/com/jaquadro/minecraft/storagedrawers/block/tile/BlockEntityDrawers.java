@@ -17,6 +17,7 @@ import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -494,9 +495,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     }
 
     @Override
-    public void readPortable (CompoundTag tag) {
+    public void readPortable (HolderLookup.Provider provider, CompoundTag tag) {
         loading = true;
-        super.readPortable(tag);
+        super.readPortable(provider, tag);
 
         //material = null;
         //if (tag.hasKey("Mat"))
@@ -535,8 +536,8 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     }
 
     @Override
-    public CompoundTag writePortable (CompoundTag tag) {
-        tag = super.writePortable(tag);
+    public CompoundTag writePortable (HolderLookup.Provider provider, CompoundTag tag) {
+        tag = super.writePortable(provider, tag);
 
         //if (material != null)
         //    tag.setString("Mat", material);

@@ -1,5 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
+import com.jaquadro.minecraft.storagedrawers.components.item.DrawerCountData;
+import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -53,14 +55,7 @@ public class ItemStackHelper
         if (proto.isEmpty())
             return stack;
 
-        CompoundTag tag = proto.getTag();
-        if (tag == null) {
-            tag = new CompoundTag();
-            proto.setTag(tag);
-        }
-
-        tag.putInt("__storagedrawers_count", stack.getCount());
-
+        proto.set(ModDataComponents.DRAWER_COUNT.get(), new DrawerCountData(stack.getCount()));
         return proto;
     }
 
@@ -73,14 +68,7 @@ public class ItemStackHelper
 
         if (count == 0 || count >= 128) {
             ItemStack stack = proto.copy();
-
-            CompoundTag tag = stack.getTag();
-            if (tag == null) {
-                tag = new CompoundTag();
-                stack.setTag(tag);
-            }
-
-            tag.putInt("__storagedrawers_count", count);
+            stack.set(ModDataComponents.DRAWER_COUNT.get(), new DrawerCountData(count));
             return stack;
         }
 
@@ -101,34 +89,23 @@ public class ItemStackHelper
     }
 
     public static int decodedCount (@NotNull ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        if (tag != null && tag.contains("__storagedrawers_count"))
-            return tag.getInt("__storagedrawers_count");
+        DrawerCountData data = stack.get(ModDataComponents.DRAWER_COUNT.get());
+        if (data != null)
+            return data.count();
 
         return stack.getCount();
     }
 
     public static ItemStack stripDecoding (@NotNull ItemStack stack) {
         ItemStack decode = stack.copy();
-        CompoundTag tag = decode.getTag();
-
-        if (tag != null && tag.contains("__storagedrawers_count")) {
-            tag.remove("__storagedrawers_count");
-            if (tag.size() == 0)
-                decode.setTag(null);
-            else
-                decode.setTag(tag);
-        }
+        decode.remove(ModDataComponents.DRAWER_COUNT.get());
 
         return decode;
     }
 
     public static boolean isStackEncoded (@NotNull ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        if (tag == null)
-            return false;
-
-        return tag.contains("__storagedrawers_count");
+        DrawerCountData data = stack.get(ModDataComponents.DRAWER_COUNT.get());
+        return data != null;
     }
 
     /*static {

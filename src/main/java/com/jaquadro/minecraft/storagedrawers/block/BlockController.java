@@ -55,7 +55,7 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
 
     @Override
     @NotNull
-    public InteractionResult use (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult useWithoutItem (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
         Direction blockDir = state.getValue(FACING);
         BlockEntityController blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);
         if (blockEntity == null)

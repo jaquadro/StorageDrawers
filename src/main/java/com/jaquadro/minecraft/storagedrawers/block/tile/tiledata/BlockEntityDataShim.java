@@ -1,23 +1,24 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public abstract class BlockEntityDataShim implements INBTSerializable<CompoundTag>
 {
-    public abstract void read (CompoundTag tag);
+    public abstract void read (HolderLookup.Provider provider, CompoundTag tag);
 
-    public abstract CompoundTag write (CompoundTag tag);
+    public abstract CompoundTag write (HolderLookup.Provider provider, CompoundTag tag);
 
     @Override
-    public CompoundTag serializeNBT () {
+    public CompoundTag serializeNBT (HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
-        return write(tag);
+        return write(provider, tag);
     }
 
     @Override
-    public void deserializeNBT (CompoundTag nbt) {
-        read(nbt);
+    public void deserializeNBT (HolderLookup.Provider provider, CompoundTag nbt) {
+        read(provider, nbt);
     }
 
     public void invalidateCaps() {}

@@ -9,5 +9,5 @@
         "/": { "tag": "forge:rods/wooden" },
         "X": { "item": "minecraft:crimson_planks" }
     },
-    "result": { "item": "storagedrawers:crimson_trim", "count": 4 }
+    "result": { "id": "storagedrawers:crimson_trim", "count": 4 }
 }

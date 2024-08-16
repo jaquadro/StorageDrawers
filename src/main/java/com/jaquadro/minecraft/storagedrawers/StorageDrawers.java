@@ -60,6 +60,7 @@ public class StorageDrawers
         ModItems.register(bus);
         ModBlockEntities.register(bus);
         ModContainers.register(bus);
+        ModDataComponents.COMPONENTS.register(bus);
 
         bus.addListener(this::setup);
         // bus.addListener(this::onModQueueEvent);

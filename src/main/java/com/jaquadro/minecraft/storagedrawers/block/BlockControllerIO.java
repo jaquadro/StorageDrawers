@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
-import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntitySlave;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityControllerIO;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -12,14 +12,14 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockSlave extends Block implements INetworked, EntityBlock
+public class BlockControllerIO extends Block implements INetworked, EntityBlock
 {
-    public BlockSlave (BlockBehaviour.Properties properties) {
+    public BlockControllerIO (BlockBehaviour.Properties properties) {
         super(properties);
     }
 
     public void toggle (Level world, BlockPos pos, Player player, EnumKeyType keyType) {
-        BlockEntitySlave blockEntity = WorldUtils.getBlockEntity(world, pos, BlockEntitySlave.class);
+        BlockEntityControllerIO blockEntity = WorldUtils.getBlockEntity(world, pos, BlockEntityControllerIO.class);
         if (blockEntity == null)
             return;
 
@@ -34,7 +34,7 @@ public class BlockSlave extends Block implements INetworked, EntityBlock
     }
 
     @Override
-    public BlockEntitySlave newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
-        return new BlockEntitySlave(pos, state);
+    public BlockEntityControllerIO newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
+        return new BlockEntityControllerIO(pos, state);
     }
 }

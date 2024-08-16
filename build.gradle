@@ -2,7 +2,7 @@ plugins {
     id 'maven-publish'
     id 'eclipse'
     id 'idea'
-    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
 }
 
 version = "${minecraft_version}-${mod_loader}-${mod_version}"
@@ -12,8 +12,8 @@ base {
     archivesName = mod_filename
 }
 
-// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+// Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
@@ -151,12 +151,12 @@ dependencies {
     //compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
     //implementation fg.deobf("curse.maven:jei-238222:${jei_id}")
     // JEI not yet updated for 41.0.64
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_mc}-forge:${jei_version}")
+    runtimeOnly "mezz.jei:jei-${jei_mc}-forge:${jei_version}"
 
     //implementation fg.deobf("curse.maven:the-one-probe-245211:${top_id}")
     //implementation fg.deobf("mcjty.theoneprobe:theoneprobe:1.19.3-7.0.0-2")
     // compileOnly since not yet updated for 41.0.64
-    implementation fg.deobf("curse.maven:jade-${jade_projid}:${jade_id}")
+    // implementation fg.deobf("curse.maven:jade-${jade_projid}:${jade_id}")
 
 //    implementation fg.deobf("curse.maven:spark-361579:3670050")
 
@@ -164,6 +164,9 @@ dependencies {
     //deobfCompile "org.ow2.asm:asm-debug-all:5.0.3"
 
     //compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${minecraft_version}:${crafttweaker_version}")
+
+    // Hack fix for now, force jopt-simple to be exactly 5.0.4 because Mojang ships that version, but some transitive dependencies request 6.0+
+    implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

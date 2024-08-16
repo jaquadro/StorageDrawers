@@ -9,5 +9,5 @@
         "/": { "item": "minecraft:acacia_slab" },
         "X": { "tag": "forge:chests/wooden" }
     },
-    "result": { "item": "storagedrawers:acacia_half_drawers_4", "count": 4 }
+    "result": { "id": "storagedrawers:acacia_half_drawers_4", "count": 4 }
 }

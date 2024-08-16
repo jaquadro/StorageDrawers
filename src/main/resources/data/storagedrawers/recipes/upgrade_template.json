@@ -9,5 +9,5 @@
         "/": { "tag": "forge:rods/wooden" },
         "X": { "tag": "storagedrawers:drawers" }
     },
-    "result": { "item": "storagedrawers:upgrade_template", "count": 4 }
+    "result": { "id": "storagedrawers:upgrade_template", "count": 4 }
 }

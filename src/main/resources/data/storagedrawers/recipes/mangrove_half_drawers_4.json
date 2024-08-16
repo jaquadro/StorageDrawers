@@ -9,5 +9,5 @@
         "/": { "item": "minecraft:mangrove_slab" },
         "X": { "tag": "forge:chests/wooden" }
     },
-    "result": { "item": "storagedrawers:mangrove_half_drawers_4", "count": 4 }
+    "result": { "id": "storagedrawers:mangrove_half_drawers_4", "count": 4 }
 }

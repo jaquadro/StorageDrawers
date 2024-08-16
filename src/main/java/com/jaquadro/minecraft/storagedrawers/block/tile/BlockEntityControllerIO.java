@@ -23,20 +23,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
+public class BlockEntityControllerIO extends BaseBlockEntity implements IDrawerGroup
 {
     private static final int[] drawerSlots = new int[]{0};
 
     public final ControllerData controllerData = new ControllerData();
 
-    public BlockEntitySlave(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+    public BlockEntityControllerIO (BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
 
         injectData(controllerData);
     }
 
-    public BlockEntitySlave(BlockPos pos, BlockState state) {
-        this(ModBlockEntities.CONTROLLER_SLAVE.get(), pos, state);
+    public BlockEntityControllerIO (BlockPos pos, BlockState state) {
+        this(ModBlockEntities.CONTROLLER_IO.get(), pos, state);
     }
 
     @Override

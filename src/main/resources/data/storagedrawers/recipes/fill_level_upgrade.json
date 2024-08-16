@@ -4,5 +4,5 @@
         { "item": "storagedrawers:upgrade_template" },
         { "item": "minecraft:repeater" }
     ],
-    "result": { "item": "storagedrawers:fill_level_upgrade" }
+    "result": { "id": "storagedrawers:fill_level_upgrade" }
 }

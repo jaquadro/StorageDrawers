@@ -31,7 +31,6 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
 
         public Slot1 (BlockPos pos, BlockState state) {
             super(ModBlockEntities.STANDARD_DRAWERS_1.get(), pos, state);
-            groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
 
@@ -54,7 +53,6 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
 
         public Slot2 (BlockPos pos, BlockState state) {
             super(ModBlockEntities.STANDARD_DRAWERS_2.get(), pos, state);
-            groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
 
@@ -77,7 +75,6 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
 
         public Slot4 (BlockPos pos, BlockState state) {
             super(ModBlockEntities.STANDARD_DRAWERS_4.get(), pos, state);
-            groupData.setCapabilityProvider(this);
             injectPortableData(groupData);
         }
 

@@ -10,5 +10,5 @@
         "R": { "tag": "forge:dusts/redstone" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
-    "result": { "item": "storagedrawers:max_redstone_upgrade" }
+    "result": { "id": "storagedrawers:max_redstone_upgrade" }
 }
