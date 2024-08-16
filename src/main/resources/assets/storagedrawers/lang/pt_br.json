@@ -120,6 +120,8 @@
     "item.storagedrawers.quantify_key.desc": "Mostrar ou ocultar rótulos de quantidade armazenada",
     "item.storagedrawers.personal_key": "Chave Pessoal",
     "item.storagedrawers.personal_key.desc": "Proteja o acesso de outros jogadores",
+    "item.storagedrawers.keyring": "Keyring",
+    "item.storagedrawers.keyring.desc": "Storage for keys\nAdd or remove keys in inventory\nCrouch and use to cycle keys",
 
     "itemGroup.storagedrawers": "Storage Drawers",
 

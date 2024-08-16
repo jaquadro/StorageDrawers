@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMeta;
 import com.jaquadro.minecraft.storagedrawers.item.*;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -19,9 +20,14 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public final class ModItems
 {
     public static final DeferredRegister.Items ITEM_REGISTER = DeferredRegister.createItems(StorageDrawers.MOD_ID);
+    public static final List<ResourceLocation> EXCLUDE_ITEMS_CREATIVE_TAB = new ArrayList<>();
 
     private static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(StorageDrawers.MOD_ID, "storagedrawers"));
 
@@ -41,12 +47,20 @@ public final class ModItems
         MAX_REDSTONE_UPGRADE = ITEM_REGISTER.register("max_redstone_upgrade", () -> new ItemUpgradeRedstone(EnumUpgradeRedstone.MAX, new Item.Properties())),
         ILLUMINATION_UPGRADE = ITEM_REGISTER.register("illumination_upgrade", () -> new ItemUpgrade(new Item.Properties())),
         FILL_LEVEL_UPGRADE = ITEM_REGISTER.register("fill_level_upgrade", () -> new ItemUpgrade(new Item.Properties())),
-        UPGRADE_TEMPLATE = ITEM_REGISTER.register("upgrade_template", () -> new Item(new Item.Properties())),
+        UPGRADE_TEMPLATE = ITEM_REGISTER.register("upgrade_template", () -> new Item(new Item.Properties()));
+
+    public static final DeferredItem<? extends ItemKey>
         DRAWER_KEY = ITEM_REGISTER.register("drawer_key", () -> new ItemDrawerKey(new Item.Properties())),
         QUANTIFY_KEY = ITEM_REGISTER.register("quantify_key", () -> new ItemQuantifyKey(new Item.Properties())),
         SHROUD_KEY = ITEM_REGISTER.register("shroud_key", () -> new ItemShroudKey(new Item.Properties()));
 
-    private ModItems() {}
+    public static final DeferredItem<? extends ItemKeyring>
+        KEYRING = ITEM_REGISTER.register("keyring", () -> new ItemKeyring(null, new Item.Properties().stacksTo(1))),
+        KEYRING_DRAWER = ITEM_REGISTER.register("keyring_drawer", () -> new ItemKeyring(DRAWER_KEY, new Item.Properties().stacksTo(1))),
+        KEYRING_QUANTIFY = ITEM_REGISTER.register("keyring_quantify", () -> new ItemKeyring(QUANTIFY_KEY, new Item.Properties().stacksTo(1))),
+        KEYRING_SHROUD = ITEM_REGISTER.register("keyring_shroud", () -> new ItemKeyring(SHROUD_KEY, new Item.Properties().stacksTo(1)));
+
+    private ModItems() { }
 
     public static void register(IEventBus bus) {
         for (DeferredHolder<Block, ? extends Block> ro : ModBlocks.BLOCK_REGISTER.getEntries()) {
@@ -68,15 +82,33 @@ public final class ModItems
     }
 
     public static void creativeModeTabRegister(RegisterEvent event) {
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER.getId());
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY.getId());
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD.getId());
+
         event.register(Registries.CREATIVE_MODE_TAB, helper -> {
             helper.register(MAIN, CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2.get()))
                 .title(Component.translatable("storagedrawers"))
                 .displayItems((params, output) -> {
                     ITEM_REGISTER.getEntries().forEach((reg) -> {
+                        if (ModItems.EXCLUDE_ITEMS_CREATIVE_TAB.contains(reg.getId()))
+                            return;
                         output.accept(new ItemStack(reg.get()));
                     });
                 })
                 .build());
         });
+    }
+
+    private static <B extends Item> Stream<B> getItemsOfType(Class<B> itemClass) {
+        return BuiltInRegistries.ITEM.stream().filter(itemClass::isInstance).map(itemClass::cast);
+    }
+
+    public static Stream<ItemKey> getKeys() {
+        return getItemsOfType(ItemKey.class);
+    }
+
+    public static Stream<ItemKeyring> getKeyrings() {
+        return getItemsOfType(ItemKeyring.class);
     }
 }

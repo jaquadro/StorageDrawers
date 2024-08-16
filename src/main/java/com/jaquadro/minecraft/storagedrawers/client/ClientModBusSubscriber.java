@@ -1,18 +1,20 @@
 package com.jaquadro.minecraft.storagedrawers.client;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.client.gui.ClientKeyringTooltip;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.BlockEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerScreen;
+import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.KeyringTooltip;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterRenderers;
+import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -36,5 +38,10 @@ public class ClientModBusSubscriber
     @OnlyIn(Dist.CLIENT)
     public static void setup(FMLClientSetupEvent event) {
         ModLoadingContext.get().getActiveContainer().registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void registerClientTooltips(RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(KeyringTooltip.class, t -> new ClientKeyringTooltip(t.contents()));
     }
 }

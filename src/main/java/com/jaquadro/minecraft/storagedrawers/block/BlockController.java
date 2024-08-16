@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -80,6 +81,9 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
     public boolean toggle (Level world, BlockPos pos, Player player, Item item) {
         if (world.isClientSide || item == null)
             return false;
+
+        if (item instanceof ItemKeyring keyring)
+            item = keyring.getKey().getItem();
 
         if (item == ModItems.DRAWER_KEY.get())
             toggle(world, pos, player, EnumKeyType.DRAWER);

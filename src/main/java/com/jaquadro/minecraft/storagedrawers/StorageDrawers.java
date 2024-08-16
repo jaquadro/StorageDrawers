@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.AddUpgradeRecipe;
+import com.jaquadro.minecraft.storagedrawers.core.recipe.KeyringRecipe;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -42,6 +43,7 @@ public class StorageDrawers
 
     private static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(Registries.RECIPE_SERIALIZER, MOD_ID);
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AddUpgradeRecipe>> UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_upgrade", () -> new SimpleCraftingRecipeSerializer<>(AddUpgradeRecipe::new));
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<KeyringRecipe>> KEYRING_RECIPE_SERIALIZER = RECIPES.register("keyring", () -> new SimpleCraftingRecipeSerializer<>(KeyringRecipe::new));
 
     public StorageDrawers (ModContainer modContainer, IEventBus modEventBus) {
         modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
