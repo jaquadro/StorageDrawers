@@ -10,10 +10,6 @@ buildscript {
     }
 }
 
-plugins {
-    id "com.jfrog.bintray" version "1.8.1"
-}
-
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
@@ -248,22 +244,5 @@ publishing.publications {
         artifact apiJar
         artifact deobfJar
         artifact jar
-    }
-}
-
-bintrayUpload.dependsOn build
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    publications = ['StorageDrawers']
-    publish = true
-    pkg {
-        repo = 'dev'
-        name = 'storagedrawers'
-        version {
-            name = project.jar.archiveVersion
-            released = new Date()
-        }
     }
 }
