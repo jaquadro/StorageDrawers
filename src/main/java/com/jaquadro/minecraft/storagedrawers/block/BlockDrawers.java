@@ -440,7 +440,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     @Override
     @SuppressWarnings("deprecation")
     public boolean isSignalSource (@NotNull BlockState state) {
-        return true;
+        return !CommonConfig.GENERAL.enableAnalogRedstone.get();
     }
 
     @Override
@@ -459,6 +459,32 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     @Override
     public int getDirectSignal (@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull Direction side) {
         return (side == Direction.UP) ? getSignal(state, worldIn, pos, side) : 0;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onRemove(BlockState p_51538_, Level p_51539_, BlockPos p_51540_, BlockState p_51541_, boolean p_51542_) {
+        if (!p_51538_.is(p_51541_.getBlock())) {
+            p_51539_.updateNeighbourForOutputSignal(p_51540_, this);
+            super.onRemove(p_51538_, p_51539_, p_51540_, p_51541_, p_51542_);
+        }
+    }
+
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState state, Level blockAccess, BlockPos pos) {
+        if (!hasAnalogOutputSignal(state))
+            return 0;
+
+        BlockEntityDrawers blockEntity = WorldUtils.getBlockEntity(blockAccess, pos, BlockEntityDrawers.class);
+        if (blockEntity == null || !blockEntity.isRedstone())
+            return 0;
+
+        return blockEntity.getRedstoneLevel();
     }
 
     @Override

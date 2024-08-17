@@ -42,6 +42,7 @@ public final class CommonConfig
         public final ForgeConfigSpec.ConfigValue<Boolean> debugTrace;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableExtraCompactingRules;
         public final ForgeConfigSpec.ConfigValue<Integer> controllerRange;
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableAnalogRedstone;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> compRules;
 
         public General(ForgeConfigSpec.Builder builder) {
@@ -59,6 +60,10 @@ public final class CommonConfig
                     "on X, Y, or Z planes.  The default value of 50 gives the controller a very",
                     "large range, but not beyond the chunk load distance.")
                 .defineInRange("controllerRange", 50, 1, 75);
+            enableAnalogRedstone = builder
+                .comment("Whether redstone upgrades should emit an analog redstone signal, requiring",
+                    "the use of a comparator to read it.  This will default to true starting with MC 1.21.")
+                .define("enableAnalogRedstone", false);
             enableUI = builder
                 .define("enableUI", true);
             enableSidedInput = builder

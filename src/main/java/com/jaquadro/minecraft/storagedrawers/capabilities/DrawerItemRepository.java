@@ -41,6 +41,29 @@ public class DrawerItemRepository implements IItemRepository
     public ItemStack insertItem (@NotNull ItemStack stack, boolean simulate, Predicate<ItemStack> predicate) {
         int amount = stack.getCount();
 
+        // First use strict capacity check
+        for (int slot : group.getAccessibleDrawerSlots()) {
+            IDrawer drawer = group.getDrawer(slot);
+            if (!drawer.isEnabled())
+                continue;
+            if (!testPredicateInsert(drawer, stack, predicate))
+                continue;
+
+            boolean empty = drawer.isEmpty();
+            if (empty && !simulate)
+                drawer = drawer.setStoredItem(stack);
+
+            int capacity = empty ? drawer.getMaxCapacity(stack) : drawer.getRemainingCapacity();
+            int adjusted = Math.min(amount, capacity);
+            amount = (simulate)
+                ? Math.max(amount - capacity, 0)
+                : (amount - adjusted) + drawer.adjustStoredItemCount(adjusted);
+
+            if (amount == 0)
+                return ItemStack.EMPTY;
+        }
+
+        // Then relax check
         for (int slot : group.getAccessibleDrawerSlots()) {
             IDrawer drawer = group.getDrawer(slot);
             if (!drawer.isEnabled())
