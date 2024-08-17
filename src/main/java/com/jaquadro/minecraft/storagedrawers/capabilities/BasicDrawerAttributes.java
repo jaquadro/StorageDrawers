@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.capabilities;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -148,7 +149,7 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable, INBTS
     }
 
     @Override
-    public CompoundTag serializeNBT () {
+    public CompoundTag serializeNBT (HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
 
         tag.putInt("itemLock", LockAttribute.getBitfield(itemLock));
@@ -164,7 +165,7 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable, INBTS
     }
 
     @Override
-    public void deserializeNBT (CompoundTag nbt) {
+    public void deserializeNBT (HolderLookup.Provider provider, CompoundTag nbt) {
         itemLock = LockAttribute.getEnumSet(nbt.getInt("itemLock"));
         isConcealed = nbt.getBoolean("concealed");
         isVoid = nbt.getBoolean("void");

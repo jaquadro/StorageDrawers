@@ -32,12 +32,7 @@ public class KeyringRecipe extends ShapedRecipe
     }
 
     @Override
-    public boolean matches (CraftingContainer p_44176_, Level p_44177_) {
-        return super.matches(p_44176_, p_44177_);
-    }
-
-    @Override
-    public ItemStack assemble (CraftingContainer inv, HolderLookup.Provider registries) {
+    public ItemStack assemble (CraftingInput inv, HolderLookup.Provider registries) {
         ItemStack center = inv.getItem(4);
         if (center.isEmpty() || !(center.getItem() instanceof ItemKey))
             return ItemStack.EMPTY;

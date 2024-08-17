@@ -13,6 +13,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -29,13 +30,13 @@ public class AddUpgradeRecipe extends CustomRecipe
     }
 
     @Override
-    public boolean matches(@NotNull CraftingContainer inv, @NotNull Level world) {
+    public boolean matches(@NotNull CraftingInput inv, @NotNull Level world) {
         return findContext(inv, world.registryAccess()) != null;
     }
 
     @Override
     @NotNull
-    public ItemStack assemble(@NotNull CraftingContainer inv, HolderLookup.Provider registries) {
+    public ItemStack assemble(@NotNull CraftingInput inv, HolderLookup.Provider registries) {
         Context ctx = findContext(inv, registries);
         if (ctx == null)
             return ItemStack.EMPTY;
@@ -55,9 +56,9 @@ public class AddUpgradeRecipe extends CustomRecipe
     }
 
     @Nullable
-    private Context findContext(CraftingContainer inv, HolderLookup.Provider registries) {
+    private Context findContext(CraftingInput inv, HolderLookup.Provider registries) {
         Context ret = new Context();
-        for (int x = 0; x < inv.getContainerSize(); x++) {
+        for (int x = 0; x < inv.size(); x++) {
             ItemStack stack = inv.getItem(x);
             if (stack.isEmpty())
                 continue;
