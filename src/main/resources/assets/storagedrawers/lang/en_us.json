@@ -101,6 +101,8 @@
     "item.storagedrawers.quantify_key.desc": "Show or hide stored quantity labels",
     "item.storagedrawers.personal_key": "Personal Key",
     "item.storagedrawers.personal_key.desc": "Protect access from other players",
+    "item.storagedrawers.keyring": "Keyring",
+    "item.storagedrawers.keyring.desc": "Storage for keys\nAdd or remove keys in inventory\nCrouch and use to cycle keys",
 
     "itemGroup.storagedrawers": "Storage Drawers",
 

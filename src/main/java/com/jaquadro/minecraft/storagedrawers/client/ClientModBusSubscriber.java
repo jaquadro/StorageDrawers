@@ -5,12 +5,18 @@ import com.jaquadro.minecraft.storagedrawers.client.renderer.BlockEntityDrawersR
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
+import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerScreen;
+import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.KeyringTooltip;
+import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers;
+import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -36,5 +42,13 @@ public class ClientModBusSubscriber {
     @SubscribeEvent
     public static void registerEntityRenderers(RegisterRenderers event) {
         ModBlockEntities.getBlockEntityTypesWithRenderers().forEach(ro -> event.registerBlockEntityRenderer(ro.get(), BlockEntityDrawersRenderer::new));
+    }
+
+    @SubscribeEvent
+    public void renderTooltip(RenderTooltipEvent.Pre event) {
+        ItemStack stack = event.getItemStack();
+        if (stack.getItem() instanceof ItemKeyring keyring) {
+            event.getComponents().add(new ClientBundleTooltip((KeyringTooltip)keyring.getTooltipImage(stack).get()));
+        }
     }
 }

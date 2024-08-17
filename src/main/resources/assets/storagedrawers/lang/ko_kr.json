@@ -87,6 +87,8 @@
     "item.storagedrawers.quantify_key.desc": "저장된 아이템의 개수를 표시하거나 숨깁니다",
     "item.storagedrawers.personal_key": "개인 열쇠",
     "item.storagedrawers.personal_key.desc": "다른 플레이어가 아이템에 접근할 수 없게 합니다",
+    "item.storagedrawers.keyring": "Keyring",
+    "item.storagedrawers.keyring.desc": "Storage for keys\nAdd or remove keys in inventory\nCrouch and use to cycle keys",
 
     "itemGroup.storagedrawers": "Storage Drawers",
 
