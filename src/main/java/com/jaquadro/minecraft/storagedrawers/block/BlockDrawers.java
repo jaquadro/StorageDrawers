@@ -137,6 +137,11 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         return storageUnits;
     }
 
+    public String getNameTypeKey() {
+        String type = halfDepth ? "half" : "full";
+        return "block." + StorageDrawers.MOD_ID + ".type." + type + "_drawers_" + getDrawerCount();
+    }
+
     @Override
     @NotNull
     public VoxelShape getShape (@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {

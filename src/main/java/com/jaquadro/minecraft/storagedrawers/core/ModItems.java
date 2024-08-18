@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
 import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMeta;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.core.registries.Registries;
@@ -70,24 +71,34 @@ public final class ModItems
             if (ModBlocks.EXCLUDE_ITEMS.contains(ro.getId().getPath()))
                 continue;
 
-            ITEM_REGISTER.register(ro.getId().getPath(), () -> {
-                Block block = ro.get();
-                if (block instanceof BlockMeta)
-                    return null;
-                if (block instanceof BlockDrawers) {
-                    return new ItemDrawers(block, new Item.Properties());
-                } else {
-                    return new BlockItem(block, new Item.Properties());
-                }
-            });
+            registerBlock(ITEM_REGISTER, ro);
         }
+
         ITEM_REGISTER.register(bus);
+    }
+
+    static void registerBlock(DeferredRegister<Item> register, RegistryObject<? extends Block> blockHolder) {
+        if (blockHolder == null)
+            return;
+
+        register.register(blockHolder.getId().getPath(), () -> {
+            Block block = blockHolder.get();
+            if (block instanceof BlockMeta)
+                return null;
+            if (block instanceof BlockDrawers) {
+                return new ItemDrawers(block, new Item.Properties());
+            } else if (block instanceof BlockTrim) {
+                return new ItemTrim(block, new Item.Properties());
+            } else {
+                return new BlockItem(block, new Item.Properties());
+            }
+        });
     }
 
     public static void creativeModeTabRegister(RegisterEvent event) {
         event.register(Registries.CREATIVE_MODE_TAB, helper -> {
             helper.register(MAIN, CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2.get()))
-                .title(Component.translatable("storagedrawers"))
+                .title(Component.translatable("itemGroup.storagedrawers"))
                 .displayItems((params, output) -> {
                     ITEM_REGISTER.getEntries().forEach((reg) -> {
                         if (ModItems.EXCLUDE_ITEMS_CREATIVE_TAB.contains(reg))

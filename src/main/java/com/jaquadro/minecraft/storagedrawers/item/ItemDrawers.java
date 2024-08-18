@@ -1,6 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -44,6 +46,22 @@ public class ItemDrawers extends BlockItem
         }
 
         //tooltip.add(getDescription().applyTextStyle(TextFormatting.GRAY));
+    }
+
+    @Override
+    public Component getName (ItemStack stack) {
+        String fallback = null;
+        Block block = Block.byItem(stack.getItem());
+
+        if (block instanceof BlockStandardDrawers drawers) {
+            String matKey = drawers.getMatKey();
+            if (matKey != null) {
+                String mat = Component.translatable(drawers.getNameMatKey()).getString();
+                fallback = Component.translatable(drawers.getNameTypeKey(), mat).getString();
+            }
+        }
+
+        return Component.translatableWithFallback(this.getDescriptionId(stack), fallback);
     }
 
     @OnlyIn(Dist.CLIENT)
