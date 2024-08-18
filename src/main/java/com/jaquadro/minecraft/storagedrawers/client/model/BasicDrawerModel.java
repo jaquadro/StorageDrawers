@@ -410,6 +410,10 @@ public final class BasicDrawerModel
                 ChunkRenderTypeSet renderTypes = mainModel.getRenderTypes(state, rand, extraData);
                 if (type == null || renderTypes.contains(type)) {
                     mainQuads = mainModel.getQuads(state, side, rand, extraData, type);
+                    //mainQuads = new ArrayList<>();
+                    //for (var q : mainModel.getQuads(state, side, rand, extraData, type)) {
+                    //    mainQuads.add(new BakedQuad(q.getVertices(), q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade(), false));
+                    //}
                 } else {
                     mainQuads = Collections.emptyList();
                 }
