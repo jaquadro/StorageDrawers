@@ -10,6 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
@@ -35,7 +36,9 @@ import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup /* IProtectable, INameable */
@@ -408,6 +411,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.getCount());
 
+        if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade())
+            balanceSlots(slot);
+
         if (isRedstone() && getLevel() != null) {
             getLevel().updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
             getLevel().updateNeighborsAt(getBlockPos().below(), getBlockState().getBlock());
@@ -436,7 +442,39 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         drawer.setStoredItemCount(drawer.getStoredItemCount() + countAdded);
         stack.shrink(countAdded);
 
+        if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade())
+            balanceSlots(slot);
+
         return countAdded;
+    }
+
+    void balanceSlots (int slot) {
+        IDrawer drawer = getGroup().getDrawer(slot);
+        if (!drawer.isEnabled() || drawer.isEmpty())
+            return;
+
+        ItemStack proto = drawer.getStoredItemPrototype();
+        List<IDrawer> balanceDrawers = new ArrayList<>();
+
+        int aggCount = 0;
+        for (int i = 0; i < getGroup().getDrawerCount(); i++) {
+            IDrawer other = getGroup().getDrawer(i);
+            if (!drawer.isEnabled() || drawer.isEmpty())
+                continue;
+
+            if (ItemStack.isSameItemSameTags(proto, other.getStoredItemPrototype())) {
+                balanceDrawers.add(other);
+                aggCount += other.getStoredItemCount();
+            }
+        }
+
+        if (!balanceDrawers.isEmpty()) {
+            int dist = aggCount / balanceDrawers.size();
+            int remainder = aggCount - (dist * balanceDrawers.size());
+
+            for (int i = 0; i < balanceDrawers.size(); i++)
+                balanceDrawers.get(i).setStoredItemCount(dist + (i < remainder ? 1 : 0));
+        }
     }
 
     public int interactPutCurrentItemIntoSlot (int slot, Player player) {

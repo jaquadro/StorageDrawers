@@ -54,6 +54,8 @@
     "item.storagedrawers.min_redstone_upgrade.desc": "Emite sinal de redstone quando todos slot estiverem ocupados com itens",
     "item.storagedrawers.max_redstone_upgrade": "Upgrade de Redstone Máxima",
     "item.storagedrawers.max_redstone_upgrade.desc": "Emite sinal de redstone pelo slots mais cheio",
+    "item.storagedrawers.balanced_fill_upgrade": "Balanced Fill Upgrade",
+    "item.storagedrawers.balanced_fill_upgrade.desc": "Distribute items evenly across slots",
     "item.storagedrawers.upgrade_template": "Modelo de Upgrade",
     "item.storagedrawers.drawer_key": "Chave de Gaveta",
     "item.storagedrawers.drawer_key.desc": "Tranca e destranca gavetas\nMantenha na mão para trancar gavetas recém-colocadas",
@@ -79,5 +81,6 @@
     "tooltip.storagedrawers.waila.limit": "Limite de Stack: %s (x%s)",
     "tooltip.storagedrawers.waila.locked": "Bloqueado",
     "tooltip.storagedrawers.waila.void": "Vácuo",
-    "tooltip.storagedrawers.waila.protected": "Protegido"
+    "tooltip.storagedrawers.waila.protected": "Protegido",
+    "tooltip.storagedrawers.waila.balanced": "Balanced"
 }

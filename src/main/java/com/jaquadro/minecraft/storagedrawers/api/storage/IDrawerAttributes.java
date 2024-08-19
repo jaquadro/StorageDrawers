@@ -65,4 +65,6 @@ public interface IDrawerAttributes
     default boolean isDictConvertible () {
         return false;
     }
+
+    default boolean isBalancedFill () { return false; }
 }

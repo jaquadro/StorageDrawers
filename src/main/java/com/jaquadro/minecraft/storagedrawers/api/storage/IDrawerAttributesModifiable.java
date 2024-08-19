@@ -56,4 +56,6 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
     default boolean setIsDictConvertible (boolean state) {
         return false;
     }
+
+    default boolean setIsBalancedFill (boolean state) { return false; }
 }

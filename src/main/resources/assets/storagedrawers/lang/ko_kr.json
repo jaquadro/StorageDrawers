@@ -54,6 +54,8 @@
     "item.storagedrawers.min_redstone_upgrade.desc": "가장 적게 저장된 슬롯의 저장량에 비례해 레드스톤 신호를 방출합니다",
     "item.storagedrawers.max_redstone_upgrade": "레드스톤(최대) 업그레이드",
     "item.storagedrawers.max_redstone_upgrade.desc": "가장 많이 저장된 슬롯의 저장량에 비례해 레드스톤 신호를 방출합니다",
+    "item.storagedrawers.balanced_fill_upgrade": "Balanced Fill Upgrade",
+    "item.storagedrawers.balanced_fill_upgrade.desc": "Distribute items evenly across slots",
     "item.storagedrawers.upgrade_template": "업그레이드 템플릿",
     "item.storagedrawers.drawer_key": "서랍 열쇠",
     "item.storagedrawers.drawer_key.desc": "서랍을 잠그거나 풉니다\n보조 손에 든 채로 서랍을 설치하면 잠긴 채로 설치됩니다",
@@ -79,5 +81,6 @@
     "tooltip.storagedrawers.waila.limit": "스택 제한: %s (x%s)",
     "tooltip.storagedrawers.waila.locked": "잠김",
     "tooltip.storagedrawers.waila.void": "공허",
-    "tooltip.storagedrawers.waila.protected": "보호됨"
+    "tooltip.storagedrawers.waila.protected": "보호됨",
+    "tooltip.storagedrawers.waila.balanced": "Balanced"
 }
