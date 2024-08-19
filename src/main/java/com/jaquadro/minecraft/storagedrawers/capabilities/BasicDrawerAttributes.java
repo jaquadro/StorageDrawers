@@ -17,6 +17,7 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable, INBTS
     private boolean isUnlimitedVending;
     private boolean isConversion;
     private boolean hasFillLevel;
+    private boolean hasBalancedFill;
 
     @Override
     public boolean canItemLock (LockAttribute attr) {
@@ -148,6 +149,21 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable, INBTS
     }
 
     @Override
+    public boolean isBalancedFill () {
+        return hasBalancedFill;
+    }
+
+    @Override
+    public boolean setIsBalancedFill (boolean state) {
+        if (hasBalancedFill != state) {
+            hasBalancedFill = state;
+            onAttributeChanged();
+        }
+
+        return true;
+    }
+
+    @Override
     public CompoundTag serializeNBT () {
         CompoundTag tag = new CompoundTag();
 
@@ -159,6 +175,7 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable, INBTS
         tag.putBoolean("vending", isUnlimitedVending);
         tag.putBoolean("conv", isConversion);
         tag.putBoolean("fillLevel", hasFillLevel);
+        tag.putBoolean("balancedFill", hasBalancedFill);
 
         return tag;
     }
@@ -173,6 +190,7 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable, INBTS
         isUnlimitedVending = nbt.getBoolean("vending");
         isConversion = nbt.getBoolean("conv");
         hasFillLevel = nbt.getBoolean("fillLevel");
+        hasBalancedFill = nbt.getBoolean("balancedFill");
     }
 
     protected void onAttributeChanged () { }

@@ -1,12 +1,16 @@
 package com.jaquadro.minecraft.storagedrawers.capabilities;
 
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
+import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class DrawerItemRepository implements IItemRepository
@@ -60,30 +64,38 @@ public class DrawerItemRepository implements IItemRepository
                 : (amount - adjusted) + drawer.adjustStoredItemCount(adjusted);
 
             if (amount == 0)
-                return ItemStack.EMPTY;
+                break;
         }
 
         // Then relax check
-        for (int slot : group.getAccessibleDrawerSlots()) {
-            IDrawer drawer = group.getDrawer(slot);
-            if (!drawer.isEnabled())
-                continue;
-            if (!testPredicateInsert(drawer, stack, predicate))
-                continue;
+        if (amount > 0) {
+            for (int slot : group.getAccessibleDrawerSlots()) {
+                IDrawer drawer = group.getDrawer(slot);
+                if (!drawer.isEnabled())
+                    continue;
+                if (!testPredicateInsert(drawer, stack, predicate))
+                    continue;
 
-            boolean empty = drawer.isEmpty();
-            if (empty && !simulate)
-                drawer = drawer.setStoredItem(stack);
+                boolean empty = drawer.isEmpty();
+                if (empty && !simulate)
+                    drawer = drawer.setStoredItem(stack);
 
-            amount = (simulate)
-                ? Math.max(amount - (empty ? drawer.getAcceptingMaxCapacity(stack) : drawer.getAcceptingRemainingCapacity()), 0)
-                : drawer.adjustStoredItemCount(amount);
+                amount = (simulate)
+                    ? Math.max(amount - (empty ? drawer.getAcceptingMaxCapacity(stack) : drawer.getAcceptingRemainingCapacity()), 0)
+                    : drawer.adjustStoredItemCount(amount);
 
-            if (amount == 0)
-                return ItemStack.EMPTY;
+                if (amount == 0)
+                    break;
+            }
         }
 
-        return stackResult(stack, amount);
+        IDrawerAttributes attrs = group.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(EmptyDrawerAttributes.EMPTY);
+        if (!simulate && attrs.isBalancedFill() && !attrs.isUnlimitedVending())
+            balanceItems(stack);
+
+        return (amount == 0)
+            ? ItemStack.EMPTY
+            : stackResult(stack, amount);
     }
 
     @NotNull
@@ -103,12 +115,40 @@ public class DrawerItemRepository implements IItemRepository
                 : drawer.adjustStoredItemCount(-remaining);
 
             if (remaining == 0)
-                return stackResult(stack, amount);
+                break;
         }
+
+        IDrawerAttributes attrs = group.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(EmptyDrawerAttributes.EMPTY);
+        if (!simulate && attrs.isBalancedFill() && !attrs.isUnlimitedVending())
+            balanceItems(stack);
 
         return (amount == remaining)
             ? ItemStack.EMPTY
             : stackResult(stack, amount - remaining);
+    }
+
+    void balanceItems (ItemStack item) {
+        List<IDrawer> balanceDrawers = new ArrayList<>();
+        int aggCount = 0;
+
+        for (int slot : group.getAccessibleDrawerSlots()) {
+            IDrawer drawer = group.getDrawer(slot);
+            if (!drawer.isEnabled())
+                continue;
+
+            if (ItemStack.isSameItemSameTags(item, drawer.getStoredItemPrototype())) {
+                balanceDrawers.add(drawer);
+                aggCount += drawer.getStoredItemCount();
+            }
+        }
+
+        if (balanceDrawers.size() > 1) {
+            int dist = aggCount / balanceDrawers.size();
+            int remainder = aggCount - (dist * balanceDrawers.size());
+
+            for (int i = 0; i < balanceDrawers.size(); i++)
+                balanceDrawers.get(i).setStoredItemCount(dist + (i < remainder ? 1 : 0));
+        }
     }
 
     @Override

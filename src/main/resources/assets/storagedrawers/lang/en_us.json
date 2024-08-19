@@ -56,6 +56,8 @@
     "item.storagedrawers.min_redstone_upgrade.desc": "Emits signal for least full slot",
     "item.storagedrawers.max_redstone_upgrade": "Max Redstone Upgrade",
     "item.storagedrawers.max_redstone_upgrade.desc": "Emits signal for most full slot",
+    "item.storagedrawers.balanced_fill_upgrade": "Balanced Fill Upgrade",
+    "item.storagedrawers.balanced_fill_upgrade.desc": "Distribute items evenly across slots",
     "item.storagedrawers.upgrade_template": "Upgrade Template",
     "item.storagedrawers.drawer_key": "Drawer Key",
     "item.storagedrawers.drawer_key.desc": "Locks and unlocks drawers\nHold in off-hand to lock newly-placed drawers",
@@ -81,5 +83,6 @@
     "tooltip.storagedrawers.waila.limit": "Stack Limit: %s (x%s)",
     "tooltip.storagedrawers.waila.locked": "Locked",
     "tooltip.storagedrawers.waila.void": "Void",
-    "tooltip.storagedrawers.waila.protected": "Protected"
+    "tooltip.storagedrawers.waila.protected": "Protected",
+    "tooltip.storagedrawers.waila.balanced": "Balanced"
 }

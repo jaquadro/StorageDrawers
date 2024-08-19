@@ -92,6 +92,8 @@ public class DrawerOverlay {
             attribs.add(Component.translatable("tooltip.storagedrawers.waila.locked"));
         if (attr.isVoid())
             attribs.add(Component.translatable("tooltip.storagedrawers.waila.void"));
+        if (attr.isBalancedFill())
+            attribs.add(Component.translatable("tooltip.storagedrawers.waila.balanced"));
         //if (tile.getOwner() != null)
         //    attribs.add(new TranslationTextComponent("tooltip.storagedrawers.waila.protected"));
 
