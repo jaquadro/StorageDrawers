@@ -2,9 +2,11 @@ package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.mojang.datafixers.util.Either;
@@ -47,21 +49,59 @@ import java.util.function.Function;
 
 public final class BasicDrawerModel
 {
-    private static final Map<Direction, BakedModel> lockOverlaysFull = new HashMap<>();
-    private static final Map<Direction, BakedModel> lockOverlaysHalf = new HashMap<>();
-    private static final Map<Direction, BakedModel> voidOverlaysFull = new HashMap<>();
-    private static final Map<Direction, BakedModel> voidOverlaysHalf = new HashMap<>();
-    private static final Map<Direction, BakedModel> shroudOverlaysFull = new HashMap<>();
-    private static final Map<Direction, BakedModel> shroudOverlaysHalf = new HashMap<>();
-    private static final Map<Direction, BakedModel> indicator1Full = new HashMap<>();
-    private static final Map<Direction, BakedModel> indicator1Half = new HashMap<>();
-    private static final Map<Direction, BakedModel> indicator2Full = new HashMap<>();
-    private static final Map<Direction, BakedModel> indicator2Half = new HashMap<>();
-    private static final Map<Direction, BakedModel> indicator4Full = new HashMap<>();
-    private static final Map<Direction, BakedModel> indicator4Half = new HashMap<>();
-    private static final Map<Direction, BakedModel> indicatorComp = new HashMap<>();
+    public enum DynamicPart {
+        LOCK("lock"),
+        VOID("void"),
+        SHROUD("shroud"),
+        INDICATOR("indicator"),
+        MISSING_1("missing_1"),
+        MISSING_2("missing_2"),
+        MISSING_3("missing_3"),
+        MISSING_4("missing_4");
+
+        private String name;
+
+        DynamicPart(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    private static final Map<String, BakedModel> overlayModels = new HashMap<>();
+
+    private static final DynamicPart[] missingSlots1 = {
+        DynamicPart.MISSING_1
+    };
+    private static final DynamicPart[] missingSlots2 = {
+        DynamicPart.MISSING_1, DynamicPart.MISSING_2
+    };
+    private static final DynamicPart[] missingSlots4 = {
+        DynamicPart.MISSING_1, DynamicPart.MISSING_2, DynamicPart.MISSING_3, DynamicPart.MISSING_4
+    };
+    private static final DynamicPart[][] missingSlots = {
+        missingSlots1, missingSlots2, new DynamicPart[0], missingSlots4
+    };
 
     private static boolean geometryDataLoaded = false;
+
+    static String getVariant(Direction dir, boolean half) {
+        return "facing=" + dir.getName() + ",half=" + half;
+    }
+
+    static String getVariant(Direction dir, boolean half, int slots) {
+        return "facing=" + dir.getName() + ",half=" + half + ",slots=" + slots;
+    }
+
+    static String getVariant(DynamicPart part, Direction dir, boolean half) {
+        return "part=" + part.getName() + ",facing=" + dir.getName() + ",half=" + half;
+    }
+
+    static String getVariant(DynamicPart part, Direction dir, boolean half, int slots) {
+        return "part=" + part.getName() + ",facing=" + dir.getName() + ",half=" + half + ",slots=" + slots;
+    }
 
     @Mod.EventBusSubscriber(modid = StorageDrawers.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class Register // extends DefaultRegister
@@ -194,7 +234,6 @@ public final class BasicDrawerModel
         }
 
         @SubscribeEvent
-        //public static void registerModels (BakingCompleted event) {
         public static void registerModels(ModelEvent.ModifyBakingResult event) {
             if (!ModBlocks.OAK_FULL_DRAWERS_1.isPresent()) {
                 StorageDrawers.log.warn("Block objects not set in ModelBakeEvent.  Is your mod environment broken?");
@@ -205,35 +244,46 @@ public final class BasicDrawerModel
                 Direction dir = Direction.from2DDataValue(i);
                 BlockModelRotation rot = BlockModelRotation.by(0, (int)dir.toYRot() + 180);
 
-                lockOverlaysFull.put(dir, event.getModels().get(new ModelResourceLocation(StorageDrawers.rl("meta_locked"), getVariant(dir, false))));
-                lockOverlaysHalf.put(dir, event.getModels().get(new ModelResourceLocation(StorageDrawers.rl("meta_locked"), getVariant(dir, true))));
-                voidOverlaysFull.put(dir, event.getModels().get(new ModelResourceLocation(StorageDrawers.rl("meta_void"), getVariant(dir, false))));
-                voidOverlaysHalf.put(dir, event.getModels().get(new ModelResourceLocation(StorageDrawers.rl("meta_void"), getVariant(dir, true))));
-                shroudOverlaysFull.put(dir, event.getModels().get(new ModelResourceLocation(StorageDrawers.rl("meta_shroud"), getVariant(dir, false))));
-                shroudOverlaysHalf.put(dir, event.getModels().get(new ModelResourceLocation(StorageDrawers.rl("meta_shroud"), getVariant(dir, true))));
-                indicator1Full.put(dir, event.getModels().get(new ModelResourceLocation(StorageDrawers.rl("meta_indicator"), getVariant(dir, false, 1))));
-                indicator1Half.put(dir, event.getModels().get(new ModelResourceLocation(StorageDrawers.rl("meta_indicator"), getVariant(dir, true, 1))));
-                indicator2Full.put(dir, event.getModels().get(new ModelResourceLocation(StorageDrawers.rl("meta_indicator"), getVariant(dir, false, 2))));
-                indicator2Half.put(dir, event.getModels().get(new ModelResourceLocation(StorageDrawers.rl("meta_indicator"), getVariant(dir, true, 2))));
-                indicator4Full.put(dir, event.getModels().get(new ModelResourceLocation(StorageDrawers.rl("meta_indicator"), getVariant(dir, false, 4))));
-                indicator4Half.put(dir, event.getModels().get(new ModelResourceLocation(StorageDrawers.rl("meta_indicator"), getVariant(dir, true, 4))));
-                indicatorComp.put(dir, event.getModels().get(new ModelResourceLocation(StorageDrawers.rl("meta_comp_indicator"), getVariant(dir, false))));
+                for (int j = 0; j < 2; j++) {
+                    boolean half = j == 1;
+
+                    overlayModels.put(getVariant(DynamicPart.LOCK, dir, half), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_locked"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.VOID, dir, half), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_void"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.SHROUD, dir, half), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_shroud"), getVariant(dir, half))));
+
+                    overlayModels.put(getVariant(DynamicPart.INDICATOR, dir, half, 1), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_indicator"), getVariant(dir, half, 1))));
+                    overlayModels.put(getVariant(DynamicPart.INDICATOR, dir, half, 2), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_indicator"), getVariant(dir, half, 2))));
+                    overlayModels.put(getVariant(DynamicPart.INDICATOR, dir, half, 4), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_indicator"), getVariant(dir, half, 4))));
+                    overlayModels.put(getVariant(DynamicPart.INDICATOR, dir, half), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_comp_indicator"), getVariant(dir, half))));
+
+                    overlayModels.put(getVariant(DynamicPart.MISSING_1, dir, half, 1), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_missing_slot_1_1"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.MISSING_1, dir, half, 2), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_missing_slot_2_1"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.MISSING_1, dir, half, 4), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_missing_slot_4_1"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.MISSING_2, dir, half, 2), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_missing_slot_2_2"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.MISSING_2, dir, half, 4), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_missing_slot_4_2"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.MISSING_3, dir, half, 4), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_missing_slot_4_3"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.MISSING_4, dir, half, 4), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_missing_slot_4_4"), getVariant(dir, half))));
+                }
             }
 
             ModBlocks.getDrawers().forEach(blockDrawers -> replaceBlock(event, blockDrawers));
-
-            //event.getModelBakery().getBakedModel(StorageDrawers.rl("block/full_drawers_lock"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
-            //event.getModelBakery().getBakedModel(StorageDrawers.rl("block/full_drawers_void"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
-            //event.getModelBakery().getBakedModel(StorageDrawers.rl("block/full_drawers_shroud"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
         }
 
-        static String getVariant(Direction dir, boolean half) {
-            return "facing=" + dir.getName() + ",half=" + half;
-        }
 
-        static String getVariant(Direction dir, boolean half, int slots) {
-            return "facing=" + dir.getName() + ",half=" + half + ",slots=" + slots;
-        }
 
         public static void replaceBlock(ModelEvent.ModifyBakingResult event, BlockDrawers block) {
             BakedModel missing = event.getModels().get(ModelBakery.MISSING_MODEL_LOCATION);
@@ -246,10 +296,10 @@ public final class BasicDrawerModel
                 } else if (parentModel == missing)
                     continue;
 
-                if (block.isHalfDepth())
-                    event.getModels().put(modelResource, new Model2.HalfModel(parentModel));
-                else
-                    event.getModels().put(modelResource, new Model2.FullModel(parentModel));
+                //if (block.isHalfDepth())
+                    event.getModels().put(modelResource, new Model2(parentModel));
+                //else
+                //    event.getModels().put(modelResource, new Model2.FullModel(parentModel));
             }
         }
 
@@ -354,17 +404,18 @@ public final class BasicDrawerModel
         }
     }
 
-    public static abstract class Model2 implements IDynamicBakedModel {
+    public static class Model2 implements IDynamicBakedModel {
         protected final BakedModel mainModel;
+        /*
         protected final Map<Direction, BakedModel> lockOverlay;
         protected final Map<Direction, BakedModel> voidOverlay;
         protected final Map<Direction, BakedModel> shroudOverlay;
         protected final Map<Direction, BakedModel> indicator1Overlay;
         protected final Map<Direction, BakedModel> indicator2Overlay;
         protected final Map<Direction, BakedModel> indicator4Overlay;
-        protected final Map<Direction, BakedModel> indicatorCompOverlay;
+        protected final Map<Direction, BakedModel> indicatorCompOverlay;*/
 
-        public static class FullModel extends Model2 {
+        /*public static class FullModel extends Model2 {
             FullModel(BakedModel mainModel) {
                 super(mainModel, lockOverlaysFull, voidOverlaysFull, shroudOverlaysFull, indicator1Full, indicator2Full, indicator4Full);
             }
@@ -374,9 +425,13 @@ public final class BasicDrawerModel
             HalfModel(BakedModel mainModel) {
                 super(mainModel, lockOverlaysHalf, voidOverlaysHalf, shroudOverlaysHalf, indicator1Half, indicator2Half, indicator4Half);
             }
+        }*/
+
+        public Model2(BakedModel mainModel) {
+            this.mainModel = mainModel;
         }
 
-        private Model2(BakedModel mainModel,
+        /*private Model2(BakedModel mainModel,
                        Map<Direction, BakedModel> lockOverlay,
                        Map<Direction, BakedModel> voidOverlay,
                        Map<Direction, BakedModel> shroudOverlay,
@@ -391,7 +446,7 @@ public final class BasicDrawerModel
             this.indicator2Overlay = indicator2Overlay;
             this.indicator4Overlay = indicator4Overlay;
             this.indicatorCompOverlay = indicatorComp;
-        }
+        }*/
 
         @Override
         public boolean usesBlockLight () {
@@ -439,44 +494,50 @@ public final class BasicDrawerModel
             IDrawerAttributes attr = extraData.get(BlockEntityDrawers.ATTRIBUTES);
             Direction dir = state.getValue(BlockDrawers.FACING);
 
+            boolean half = false;
+            Block block = state.getBlock();
+            if (block instanceof BlockDrawers drawers)
+                half = drawers.isHalfDepth();
+
             if (attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED)) {
-                BakedModel model = lockOverlay.get(dir);
+                BakedModel model = overlayModels.get(getVariant(DynamicPart.LOCK, dir, half));
                 if (model != null)
                     quads.addAll(model.getQuads(state, side, rand, extraData, type));
             }
             if (attr.isVoid()) {
-                BakedModel model = voidOverlay.get(dir);
+                BakedModel model = overlayModels.get(getVariant(DynamicPart.VOID, dir, half));
                 if (model != null)
                     quads.addAll(model.getQuads(state, side, rand, extraData, type));
             }
             if (attr.isConcealed()) {
-                BakedModel model = shroudOverlay.get(dir);
+                BakedModel model = overlayModels.get(getVariant(DynamicPart.SHROUD, dir, half));
                 if (model != null)
                     quads.addAll(model.getQuads(state, side, rand, extraData, type));
             }
             if (attr.hasFillLevel()) {
-                Block block = state.getBlock();
                 if (block instanceof BlockCompDrawers) {
-                    BakedModel model = indicatorCompOverlay.get(dir);
+                    BakedModel model = overlayModels.get(getVariant(DynamicPart.INDICATOR, dir, half));
                     if (model != null)
                         quads.addAll((model.getQuads(state, side, rand, extraData, type)));
                 }
                 else if (block instanceof BlockDrawers) {
                     int count = ((BlockDrawers) block).getDrawerCount();
-                    if (count == 1) {
-                        BakedModel model = indicator1Overlay.get(dir);
-                        if (model != null)
-                            quads.addAll((model.getQuads(state, side, rand, extraData, type)));
-                    }
-                    else if (count == 2) {
-                        BakedModel model = indicator2Overlay.get(dir);
-                        if (model != null)
-                            quads.addAll((model.getQuads(state, side, rand, extraData, type)));
-                    }
-                    else if (count == 4) {
-                        BakedModel model = indicator4Overlay.get(dir);
-                        if (model != null)
-                            quads.addAll((model.getQuads(state, side, rand, extraData, type)));
+                    BakedModel model = overlayModels.get(getVariant(DynamicPart.INDICATOR, dir, half, count));
+                    if (model != null)
+                        quads.addAll((model.getQuads(state, side, rand, extraData, type)));
+                }
+            }
+            if (block instanceof BlockStandardDrawers && extraData.has(BlockEntityDrawers.DRAWER_GROUP)) {
+                IDrawerGroup group = extraData.get(BlockEntityDrawers.DRAWER_GROUP);
+                if (group != null) {
+                    int count = group.getDrawerCount();
+                    DynamicPart[] groupMissingSlots = missingSlots[count - 1];
+                    for (int i = 0; i < groupMissingSlots.length; i++) {
+                        if (group.getDrawer(i).isMissing()) {
+                            BakedModel model = overlayModels.get(getVariant(groupMissingSlots[i], dir, half, count));
+                            if (model != null)
+                                quads.addAll((model.getQuads(state, side, rand, extraData, type)));
+                        }
                     }
                 }
             }

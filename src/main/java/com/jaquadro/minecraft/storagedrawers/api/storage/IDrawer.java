@@ -164,6 +164,10 @@ public interface IDrawer
     boolean isEmpty ();
 
     default boolean isEnabled () {
-        return true;
+        return !isMissing();
+    }
+
+    default boolean isMissing () {
+        return false;
     }
 }

@@ -44,6 +44,7 @@ import java.util.UUID;
 public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup /* IProtectable, INameable */
 {
     public static final ModelProperty<IDrawerAttributes> ATTRIBUTES = new ModelProperty<>();
+    public static final ModelProperty<IDrawerGroup> DRAWER_GROUP = new ModelProperty<>();
     //public static final ModelProperty<Boolean> ITEM_LOCKED = new ModelProperty<>();
     //public static final ModelProperty<Boolean> SHROUDED = new ModelProperty<>();
     //public static final ModelProperty<Boolean> VOIDING = new ModelProperty<>();
@@ -709,7 +710,8 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     @Override
     public ModelData getModelData () {
         return ModelData.builder()
-            .with(ATTRIBUTES, drawerAttributes).build();
+            .with(ATTRIBUTES, drawerAttributes)
+            .with(DRAWER_GROUP, getGroup()).build();
             /*.with(ITEM_LOCKED, drawerAttributes.isItemLocked(LockAttribute.LOCK_EMPTY))
             .with(SHROUDED, drawerAttributes.isConcealed())
             .with(VOIDING, drawerAttributes.isVoid()).build();*/
