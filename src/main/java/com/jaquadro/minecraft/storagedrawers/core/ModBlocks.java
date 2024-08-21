@@ -118,6 +118,14 @@ public final class ModBlocks
         META_INDICATOR = registerSizedMetaBlock("meta_indicator"),
         META_COMP_INDICATOR = registerMetaBlock("meta_comp_indicator");
 
+    public static final RegistryObject<BlockKeyButton>
+        KEYBUTTON_DRAWER = BLOCK_REGISTER.register("keybutton_drawer",
+            () -> new BlockKeyButton(KeyType.DRAWER, Properties.of().sound(SoundType.STONE))),
+        KEYBUTTON_QUANTIFY = BLOCK_REGISTER.register("keybutton_quantify",
+            () -> new BlockKeyButton(KeyType.QUANTIFY, Properties.of().sound(SoundType.STONE))),
+        KEYBUTTON_CONCEALMENT = BLOCK_REGISTER.register("keybutton_concealment",
+            () -> new BlockKeyButton(KeyType.CONCEALMENT, Properties.of().sound(SoundType.STONE)));
+
     private ModBlocks() {}
 
     private static RegistryObject<BlockStandardDrawers> registerWoodenDrawerBlock(String name, int drawerCount, boolean halfDepth) {

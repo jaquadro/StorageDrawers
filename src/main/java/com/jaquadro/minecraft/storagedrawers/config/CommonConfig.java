@@ -63,7 +63,7 @@ public final class CommonConfig
             enableAnalogRedstone = builder
                 .comment("Whether redstone upgrades should emit an analog redstone signal, requiring",
                     "the use of a comparator to read it.  This will default to true starting with MC 1.21.")
-                .define("enableAnalogRedstone", false);
+                .define("enableAnalogRedstone", true);
             enableUI = builder
                 .define("enableUI", true);
             enableSidedInput = builder
