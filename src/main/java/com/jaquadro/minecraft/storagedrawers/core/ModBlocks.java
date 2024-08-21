@@ -92,6 +92,14 @@ public final class ModBlocks
     public static final RegistryObject<BlockController> CONTROLLER = registerControllerBlock("controller");
     public static final RegistryObject<BlockSlave> CONTROLLER_SLAVE = registerControllerSlaveBlock("controller_slave");
 
+    public static final RegistryObject<BlockKeyButton>
+        KEYBUTTON_DRAWER = BLOCK_REGISTER.register("keybutton_drawer",
+        () -> new BlockKeyButton(Properties.of(Material.STONE).sound(SoundType.STONE), EnumKeyType.DRAWER)),
+        KEYBUTTON_QUANTIFY = BLOCK_REGISTER.register("keybutton_quantify",
+            () -> new BlockKeyButton(Properties.of(Material.STONE).sound(SoundType.STONE), EnumKeyType.QUANTIFY)),
+        KEYBUTTON_CONCEALMENT = BLOCK_REGISTER.register("keybutton_concealment",
+            () -> new BlockKeyButton(Properties.of(Material.STONE).sound(SoundType.STONE), EnumKeyType.CONCEALMENT));
+
     private ModBlocks() {}
 
     private static RegistryObject<BlockStandardDrawers> registerWoodenDrawerBlock(String name, int drawerCount, boolean halfDepth) {

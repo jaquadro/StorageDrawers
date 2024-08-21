@@ -51,6 +51,10 @@
     "block.storagedrawers.mangrove_half_drawers_2": "Mangrove Half Drawers 1x2",
     "block.storagedrawers.mangrove_half_drawers_4": "Mangrove Half Drawers 2x2",
     "block.storagedrawers.mangrove_trim": "Mangrove Trim",
+    "block.storagedrawers.keybutton_drawer": "Drawer Key Button",
+    "block.storagedrawers.keybutton_quantify": "Quantify Key Button",
+    "block.storagedrawers.keybutton_concealment": "Concealment Key Button",
+    "block.storagedrawers.keybutton_personal": "Personal Key Button",
 
     "config.jade.plugin_storagedrawers": "Storage Drawers",
     "config.jade.plugin_storagedrawers.display.content": "Conteúdo do slot",
@@ -93,7 +97,7 @@
     "item.storagedrawers.personal_key": "Chave Pessoal",
     "item.storagedrawers.personal_key.desc": "Proteja o acesso de outros jogadores",
     "item.storagedrawers.keyring": "Keyring",
-    "item.storagedrawers.keyring.desc": "Storage for keys\nAdd or remote keys in inventory\nCrouch and use to cycle keys",
+    "item.storagedrawers.keyring.desc": "Storage for keys\nAdd or remove keys in inventory\nCrouch and use to cycle keys",
 
     "itemGroup.storagedrawers": "Storage Drawers",
 

@@ -1,0 +1,8 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        { "item": "storagedrawers:drawer_key" },
+        { "item": "minecraft:stone_button" }
+    ],
+    "result": { "item": "storagedrawers:keybutton_drawer" }
+}

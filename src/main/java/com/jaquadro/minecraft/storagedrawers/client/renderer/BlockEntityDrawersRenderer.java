@@ -202,7 +202,11 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
             else
                 matrix.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
 
-            itemRenderer.render(itemStack, ItemTransforms.TransformType.GUI, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
+            ItemTransforms.TransformType context = ItemTransforms.TransformType.GUI;
+            if (itemModel.isCustomRenderer())
+                context = ItemTransforms.TransformType.FIXED;
+
+            itemRenderer.render(itemStack, context, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
         } catch (Exception e) {
             // Shrug
         }

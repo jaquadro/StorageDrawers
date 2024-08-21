@@ -1,333 +1,165 @@
-/*package com.jaquadro.minecraft.storagedrawers.block;
+package com.jaquadro.minecraft.storagedrawers.block;
 
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityKeyButton;
-import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
-import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Nullable;
-import java.util.Random;
+import javax.annotation.Nullable;
 
-public class BlockKeyButton extends Block implements ITileEntityProvider
+public class BlockKeyButton  extends FaceAttachedHorizontalDirectionalBlock
 {
-    public static final PropertyDirection FACING = PropertyDirection.create("facing");
-    public static final PropertyBool POWERED = PropertyBool.create("powered");
-    public static final PropertyEnum<EnumKeyType> VARIANT = PropertyEnum.create("variant", EnumKeyType.class);
+    public static final BooleanProperty POWERED;
+    protected static final VoxelShape CEILING_AABB_X;
+    protected static final VoxelShape CEILING_AABB_Z;
+    protected static final VoxelShape FLOOR_AABB_X;
+    protected static final VoxelShape FLOOR_AABB_Z;
+    protected static final VoxelShape NORTH_AABB;
+    protected static final VoxelShape SOUTH_AABB;
+    protected static final VoxelShape WEST_AABB;
+    protected static final VoxelShape EAST_AABB;
+    protected static final VoxelShape PRESSED_CEILING_AABB_X;
+    protected static final VoxelShape PRESSED_CEILING_AABB_Z;
+    protected static final VoxelShape PRESSED_FLOOR_AABB_X;
+    protected static final VoxelShape PRESSED_FLOOR_AABB_Z;
+    protected static final VoxelShape PRESSED_NORTH_AABB;
+    protected static final VoxelShape PRESSED_SOUTH_AABB;
+    protected static final VoxelShape PRESSED_WEST_AABB;
+    protected static final VoxelShape PRESSED_EAST_AABB;
 
-    private static final double U3 = 0.1875;
-    private static final double U13 = 0.8125;
+    private final EnumKeyType keyType;
 
-    protected static final AxisAlignedBB AABB_DOWN_OFF = new AxisAlignedBB(U3, 0.875D, U3, U13, 1.0D, U13);
-    protected static final AxisAlignedBB AABB_UP_OFF = new AxisAlignedBB(U3, 0.0D, U3, U13, 0.125D, U13);
-    protected static final AxisAlignedBB AABB_NORTH_OFF = new AxisAlignedBB(U3, U3, 0.875D, U13, U13, 1.0D);
-    protected static final AxisAlignedBB AABB_SOUTH_OFF = new AxisAlignedBB(U3, U3, 0.0D, U13, U13, 0.125D);
-    protected static final AxisAlignedBB AABB_WEST_OFF = new AxisAlignedBB(0.875D, U3, U3, 1.0D, U13, U13);
-    protected static final AxisAlignedBB AABB_EAST_OFF = new AxisAlignedBB(0.0D, U3, U3, 0.125D, U13, U13);
-    protected static final AxisAlignedBB AABB_DOWN_ON = new AxisAlignedBB(U3, 0.937D, U3, U13, 1.0D, U13);
-    protected static final AxisAlignedBB AABB_UP_ON = new AxisAlignedBB(U3, 0.0D, U3, U13, 0.0625D, U13);
-    protected static final AxisAlignedBB AABB_NORTH_ON = new AxisAlignedBB(U3, U3, 0.937D, U13, U13, 1.0D);
-    protected static final AxisAlignedBB AABB_SOUTH_ON = new AxisAlignedBB(U3, U3, 0.0D, U13, U13, 0.0625D);
-    protected static final AxisAlignedBB AABB_WEST_ON = new AxisAlignedBB(0.937D, U3, U3, 1.0D, U13, U13);
-    protected static final AxisAlignedBB AABB_EAST_ON = new AxisAlignedBB(0.0D, U3, U3, 0.0625D, U13, U13);
+    public BlockKeyButton (BlockBehaviour.Properties properties, EnumKeyType keyType) {
+        super(properties);
 
-    public BlockKeyButton (String registryName, String blockName) {
-        super(Material.CIRCUITS);
-
-        setHardness(5);
-        setUnlocalizedName(blockName);
-        setRegistryName(registryName);
-        setSoundType(SoundType.STONE);
-        setCreativeTab(ModCreativeTabs.tabStorageDrawers);
-        setTickRandomly(true);
-
-        setDefaultState(blockState.getBaseState()
-            .withProperty(FACING, EnumFacing.NORTH)
-            .withProperty(POWERED, false)
-            .withProperty(VARIANT, EnumKeyType.DRAWER));
-    }
-
-    @Nullable
-    @Override
-    @SuppressWarnings("deprecation")
-    public AxisAlignedBB getCollisionBoundingBox (IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
-        return NULL_AABB;
+        registerDefaultState(stateDefinition.any()
+            .setValue(FACING, Direction.NORTH)
+            .setValue(POWERED, false)
+            .setValue(FACE, AttachFace.WALL));
+        this.keyType = keyType;
     }
 
     @Override
-    public int tickRate (World worldIn) {
-        return 5;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean isOpaqueCube (IBlockState state) {
-        return false;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean isFullCube (IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public BlockRenderLayer getBlockLayer () {
-        return BlockRenderLayer.CUTOUT_MIPPED;
-    }
-
-    @Override
-    public boolean canPlaceBlockOnSide (World worldIn, BlockPos pos, EnumFacing side) {
-        return canPlaceBlock(worldIn, pos, side.getOpposite());
-    }
-
-    @Override
-    public boolean canPlaceBlockAt (World worldIn, BlockPos pos) {
-        for (EnumFacing facing : EnumFacing.values()) {
-            if (canPlaceBlock(worldIn, pos, facing))
-                return true;
-        }
-
-        return false;
-    }
-
-    protected static boolean canPlaceBlock (World world, BlockPos pos, EnumFacing facing) {
-        BlockPos blockPos = pos.offset(facing);
-        return world.getBlockState(blockPos).isSideSolid(world, blockPos, facing.getOpposite());
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public IBlockState getStateForPlacement (World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        if (canPlaceBlock(world, pos, facing.getOpposite()))
-            return getStateFromMeta(meta).withProperty(FACING, facing).withProperty(POWERED, false);
-
-        return getStateFromMeta(meta).withProperty(FACING, EnumFacing.DOWN).withProperty(POWERED, false);
-    }
-
-    @Override
-    public void onBlockPlacedBy (World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, @Nonnull ItemStack stack) {
-        TileEntityKeyButton tile = getTileEntity(worldIn, pos);
-        if (tile != null)
-            tile.setDirection(state.getValue(FACING));
-
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public void neighborChanged (IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        state = getActualState(state, worldIn, pos);
-        if (checkForDrop(worldIn, pos, state) && !canPlaceBlock(worldIn, pos, state.getValue(FACING).getOpposite())) {
-            dropBlockAsItem(worldIn, pos, state, 0);
-            worldIn.setBlockToAir(pos);
-        }
-    }
-
-    private boolean checkForDrop (World world, BlockPos pos, IBlockState state) {
-        if (canPlaceBlockAt(world, pos))
-            return true;
-
-        dropBlockAsItem(world, pos, state, 0);
-        world.setBlockToAir(pos);
-        return false;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public AxisAlignedBB getBoundingBox (IBlockState state, IBlockAccess source, BlockPos pos) {
-        state = getActualState(state, source, pos);
-        EnumFacing facing = state.getValue(FACING);
+    public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext collision) {
+        Direction dir = state.getValue(FACING);
         boolean powered = state.getValue(POWERED);
 
-        switch (facing) {
-            case EAST:
-                return powered ? AABB_EAST_ON : AABB_EAST_OFF;
-            case WEST:
-                return powered ? AABB_WEST_ON : AABB_WEST_OFF;
-            case SOUTH:
-                return powered ? AABB_SOUTH_ON : AABB_SOUTH_OFF;
-            case NORTH:
-                return powered ? AABB_NORTH_ON : AABB_NORTH_OFF;
-            case UP:
-                return powered ? AABB_UP_ON : AABB_UP_OFF;
-            case DOWN:
-                return powered ? AABB_DOWN_ON : AABB_DOWN_OFF;
+        switch (state.getValue(FACE)) {
+            case FLOOR:
+                if (dir.getAxis() == Direction.Axis.X)
+                    return powered ? PRESSED_FLOOR_AABB_X : FLOOR_AABB_X;
+                return powered ? PRESSED_FLOOR_AABB_Z : FLOOR_AABB_Z;
+            case WALL:
+                return switch (dir) {
+                    case EAST -> powered ? PRESSED_EAST_AABB : EAST_AABB;
+                    case WEST -> powered ? PRESSED_WEST_AABB : WEST_AABB;
+                    case SOUTH -> powered ? PRESSED_SOUTH_AABB : SOUTH_AABB;
+                    case NORTH, UP, DOWN -> powered ? PRESSED_NORTH_AABB : NORTH_AABB;
+                };
+            case CEILING:
+            default:
+                if (dir.getAxis() == Direction.Axis.X)
+                    return powered ? PRESSED_CEILING_AABB_X : CEILING_AABB_X;
+                else
+                    return powered ? PRESSED_CEILING_AABB_Z : CEILING_AABB_Z;
         }
-
-        return NULL_AABB;
     }
 
     @Override
-    public boolean onBlockActivated (World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        state = getActualState(state, worldIn, pos);
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (state.getValue(POWERED)) {
+            return InteractionResult.CONSUME;
+        } else {
+            this.press(state, level, pos);
+            this.playSound(player, level, pos, true);
+            level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
+
+            BlockPos targetPos = pos.offset(state.getValue(FACING).getOpposite().getNormal());
+            Block target = level.getBlockState(targetPos).getBlock();
+            if (target instanceof BlockController controller)
+                controller.toggle(level, targetPos, player, keyType);
+            else if (target instanceof BlockSlave slave)
+                slave.toggle(level, targetPos, player, keyType);
+
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+    }
+
+    public void press(BlockState state, Level level, BlockPos pos) {
+        level.setBlock(pos, state.setValue(POWERED, true), 3);
+        this.updateNeighbours(state, level, pos);
+        level.scheduleTick(pos, this, 10);
+    }
+
+    protected void playSound(@Nullable Player player, LevelAccessor level, BlockPos pos, boolean clickOn) {
+        level.playSound(clickOn ? player : null, pos, this.getSound(clickOn), SoundSource.BLOCKS, 0.3F, clickOn ? 0.6F : 0.5F);
+    }
+
+    protected SoundEvent getSound(boolean clickOn) {
+        return clickOn ? SoundEvents.WOODEN_BUTTON_CLICK_ON : SoundEvents.WOODEN_BUTTON_CLICK_OFF;
+    }
+
+    @Override
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (state.getValue(POWERED))
-            return true;
+            this.checkPressed(state, level, pos);
+    }
 
-        TileEntityKeyButton tile = getTileEntity(worldIn, pos);
-        if (tile != null)
-            tile.setPowered(true);
-
-        worldIn.setBlockState(pos, state.withProperty(POWERED, true), 3);
-        worldIn.markBlockRangeForRenderUpdate(pos, pos);
-        worldIn.playSound(playerIn, pos, SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.6F);
-        notifyNeighbors(worldIn, pos, state.getValue(FACING));
-        worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
-
-        BlockPos targetPos = pos.offset(state.getValue(FACING).getOpposite());
-        Block target = worldIn.getBlockState(targetPos).getBlock();
-        if (target instanceof BlockController) {
-            BlockController controller = (BlockController)target;
-            controller.toggle(worldIn, targetPos, playerIn, state.getValue(VARIANT));
+    protected void checkPressed(BlockState state, Level level, BlockPos pos) {
+        if (state.getValue(POWERED)) {
+            level.setBlock(pos, state.setValue(POWERED, false), 3);
+            this.updateNeighbours(state, level, pos);
+            this.playSound(null, level, pos, false);
+            level.gameEvent(null, GameEvent.BLOCK_DEACTIVATE, pos);
         }
-        else if (target instanceof BlockSlave) {
-            BlockSlave slave = (BlockSlave)target;
-            slave.toggle(worldIn, targetPos, playerIn, state.getValue(VARIANT));
-        }
+    }
 
-        return true;
+    private void updateNeighbours(BlockState state, Level level, BlockPos pos) {
+        level.updateNeighborsAt(pos, this);
+        level.updateNeighborsAt(pos.relative(getConnectedDirection(state).getOpposite()), this);
     }
 
     @Override
-    public void breakBlock (World worldIn, BlockPos pos, IBlockState state) {
-        state = getActualState(state, worldIn, pos);
-        if (state.getValue(POWERED))
-            notifyNeighbors(worldIn, pos, state.getValue(FACING));
-
-        worldIn.removeTileEntity(pos);
-        super.breakBlock(worldIn, pos, state);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING, POWERED, FACE);
     }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean eventReceived (IBlockState state, World worldIn, BlockPos pos, int id, int param) {
-        super.eventReceived(state, worldIn, pos, id, param);
-        TileEntity tile = worldIn.getTileEntity(pos);
-        return tile != null && tile.receiveClientEvent(id, param);
-    }
-
-    @Override
-    @Nonnull
-    public TileEntity createNewTileEntity (World worldIn, int meta) {
-        return new TileEntityKeyButton();
-    }
-
-    public TileEntityKeyButton getTileEntity (IBlockAccess blockAccess, BlockPos pos) {
-        TileEntity tile = blockAccess.getTileEntity(pos);
-        return (tile instanceof TileEntityKeyButton) ? (TileEntityKeyButton) tile : null;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public int getWeakPower (IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-        blockState = getActualState(blockState, blockAccess, pos);
-        return blockState.getValue(POWERED) ? 15 : 0;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public int getStrongPower (IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-        blockState = getActualState(blockState, blockAccess, pos);
-        return !blockState.getValue(POWERED) ? 0 : (blockState.getValue(FACING) == side ? 15 : 0);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean canProvidePower (IBlockState state) {
-        return true;
-    }
-
-    @Override
-    public void randomTick (World worldIn, BlockPos pos, IBlockState state, Random random) { }
-
-    @Override
-    public void updateTick (World worldIn, BlockPos pos, IBlockState state, Random rand) {
-        state = getActualState(state, worldIn, pos);
-        if (worldIn.isRemote || !state.getValue(POWERED))
-            return;
-
-        TileEntityKeyButton tile = getTileEntity(worldIn, pos);
-        if (tile != null)
-            tile.setPowered(false);
-
-        worldIn.setBlockState(pos, state.withProperty(POWERED, false));
-        notifyNeighbors(worldIn, pos, state.getValue(FACING));
-        worldIn.playSound(null, pos, SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF, SoundCategory.BLOCKS, 0.3F, 0.5F);
-        worldIn.markBlockRangeForRenderUpdate(pos, pos);
-    }
-
-    private void notifyNeighbors(World worldIn, BlockPos pos, EnumFacing facing)
-    {
-        worldIn.notifyNeighborsOfStateChange(pos, this, false);
-        worldIn.notifyNeighborsOfStateChange(pos.offset(facing.getOpposite()), this, false);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public IBlockState withRotation (IBlockState state, Rotation rot) {
-        return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public IBlockState withMirror (IBlockState state, Mirror mirrorIn) {
-        return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
-    }
-
-    @Override
-    protected BlockStateContainer createBlockState () {
-        return new BlockStateContainer(this, FACING, POWERED, VARIANT);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public IBlockState getActualState (IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        TileEntityKeyButton tile = getTileEntity(worldIn, pos);
-        if (tile == null)
-            return state;
-
-        return state.withProperty(FACING, tile.getDirection()).withProperty(POWERED, tile.isPowered());
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public IBlockState getStateFromMeta (int meta) {
-        return getDefaultState().withProperty(VARIANT, EnumKeyType.byMetadata(meta));
-    }
-
-    @Override
-    public int getMetaFromState (IBlockState state) {
-        return state.getValue(VARIANT).getMetadata();
-    }
-
-    @Override
-    public int damageDropped (IBlockState state) {
-        return getMetaFromState(state);
-    }
-
-    @Override
-    public void getSubBlocks (CreativeTabs tab, NonNullList<ItemStack> list) {
-        for (EnumKeyType type : EnumKeyType.values()) {
-            list.add(new ItemStack(this, 1, type.getMetadata()));
-        }
+    static {
+        POWERED = BlockStateProperties.POWERED;
+        CEILING_AABB_X = Block.box(3.0, 14.0, 3.0, 13.0, 16.0, 13.0);
+        CEILING_AABB_Z = Block.box(3.0, 14.0, 3.0, 13.0, 16.0, 13.0);
+        FLOOR_AABB_X = Block.box(3.0, 0.0, 3.0, 13.0, 2.0, 13.0);
+        FLOOR_AABB_Z = Block.box(3.0, 0.0, 3.0, 13.0, 2.0, 13.0);
+        NORTH_AABB = Block.box(3.0, 3.0, 14.0, 13.0, 13.0, 16.0);
+        SOUTH_AABB = Block.box(3.0, 3.0, 0.0, 13.0, 13.0, 2.0);
+        WEST_AABB = Block.box(14.0, 3.0, 3.0, 16.0, 13.0, 13.0);
+        EAST_AABB = Block.box(0.0, 3.0, 3.0, 2.0, 13.0, 13.0);
+        PRESSED_CEILING_AABB_X = Block.box(3.0, 15.0, 3.0, 13.0, 16.0, 13.0);
+        PRESSED_CEILING_AABB_Z = Block.box(3.0, 15.0, 3.0, 13.0, 16.0, 13.0);
+        PRESSED_FLOOR_AABB_X = Block.box(3.0, 0.0, 3.0, 13.0, 1.0, 13.0);
+        PRESSED_FLOOR_AABB_Z = Block.box(3.0, 0.0, 3.0, 13.0, 1.0, 13.0);
+        PRESSED_NORTH_AABB = Block.box(3.0, 3.0, 15.0, 13.0, 13.0, 16.0);
+        PRESSED_SOUTH_AABB = Block.box(3.0, 3.0, 0.0, 13.0, 13.0, 1.0);
+        PRESSED_WEST_AABB = Block.box(15.0, 3.0, 3.0, 16.0, 13.0, 13.0);
+        PRESSED_EAST_AABB = Block.box(0.0, 3.0, 3.0, 1.0, 13.0, 13.0);
     }
 }
-*/

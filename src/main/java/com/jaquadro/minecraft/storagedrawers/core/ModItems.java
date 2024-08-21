@@ -41,7 +41,7 @@ public final class ModItems
         SHROUD_KEY = ITEM_REGISTER.register("shroud_key", () -> new ItemShroudKey(new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS)));
 
     public static final RegistryObject<ItemKeyring>
-        KEYRING = ITEM_REGISTER.register("keyring", () -> new ItemKeyring(null, new Item.Properties().tab(ModItemGroup.STORAGE_DRAWERS))),
+        KEYRING = ITEM_REGISTER.register("keyring", () -> new ItemKeyring(null, new Item.Properties().stacksTo(1).tab(ModItemGroup.STORAGE_DRAWERS))),
         KEYRING_DRAWER = ITEM_REGISTER.register("keyring_drawer", () -> new ItemKeyring(DRAWER_KEY, new Item.Properties().stacksTo(1))),
         KEYRING_QUANTIFY = ITEM_REGISTER.register("keyring_quantify", () -> new ItemKeyring(QUANTIFY_KEY, new Item.Properties().stacksTo(1))),
         KEYRING_SHROUD = ITEM_REGISTER.register("keyring_shroud", () -> new ItemKeyring(SHROUD_KEY, new Item.Properties().stacksTo(1)));

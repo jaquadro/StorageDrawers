@@ -65,6 +65,10 @@
     "block.storagedrawers.compacting_drawers_3": "Compacting Drawers",
     "block.storagedrawers.controller": "Drawer Controller",
     "block.storagedrawers.controller_slave": "Drawer Controller Slave",
+    "block.storagedrawers.keybutton_drawer": "Drawer Key Button",
+    "block.storagedrawers.keybutton_quantify": "Quantify Key Button",
+    "block.storagedrawers.keybutton_concealment": "Concealment Key Button",
+    "block.storagedrawers.keybutton_personal": "Personal Key Button",
 
     "config.jade.plugin_storagedrawers": "Storage Drawers",
     "config.jade.plugin_storagedrawers.display.content": "Slot Contents",
@@ -109,7 +113,7 @@
     "item.storagedrawers.personal_key": "Personal Key",
     "item.storagedrawers.personal_key.desc": "Protect access from other players",
     "item.storagedrawers.keyring": "Keyring",
-    "item.storagedrawers.keyring.desc": "Storage for keys\nAdd or remote keys in inventory\nCrouch and use to cycle keys",
+    "item.storagedrawers.keyring.desc": "Storage for keys\nAdd or remove keys in inventory\nCrouch and use to cycle keys",
 
     "itemGroup.storagedrawers": "Storage Drawers",
 
