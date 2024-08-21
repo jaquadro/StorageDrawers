@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersStandard;
 import com.mojang.serialization.Codec;
@@ -7,6 +8,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -24,6 +26,9 @@ public class BlockStandardDrawers extends BlockDrawers
         ).apply(instance, BlockStandardDrawers::new)
     );
 
+    private String matKey = null;
+    private String matNamespace = StorageDrawers.MOD_ID;
+
     public BlockStandardDrawers (int drawerCount, boolean halfDepth, int storageUnits, BlockBehaviour.Properties properties) {
        super(drawerCount, halfDepth, storageUnits, properties);
     }
@@ -34,6 +39,25 @@ public class BlockStandardDrawers extends BlockDrawers
 
     private static int calcUnits (int drawerCount, boolean halfDepth) {
         return halfDepth ? 4 / drawerCount : 8 / drawerCount;
+    }
+
+    public BlockStandardDrawers setMatKey (ResourceLocation material) {
+        this.matNamespace = material.getNamespace();
+        this.matKey = material.getPath();
+        return this;
+    }
+
+    public BlockStandardDrawers setMatKey (@Nullable String matKey) {
+        this.matKey = matKey;
+        return this;
+    }
+
+    public String getMatKey () {
+        return matKey;
+    }
+
+    public String getNameMatKey () {
+        return "block." + matNamespace + ".mat." + matKey;
     }
 
     @Override
