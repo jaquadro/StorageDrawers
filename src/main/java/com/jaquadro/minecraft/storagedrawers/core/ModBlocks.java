@@ -119,6 +119,14 @@ public final class ModBlocks
         META_INDICATOR = registerSizedMetaBlock("meta_indicator"),
         META_COMP_INDICATOR = registerMetaBlock("meta_comp_indicator");
 
+    public static final RegistryObject<BlockKeyButton>
+        KEYBUTTON_DRAWER = BLOCK_REGISTER.register("keybutton_drawer",
+            () -> new BlockKeyButton(Properties.of().sound(SoundType.STONE), EnumKeyType.DRAWER)),
+        KEYBUTTON_QUANTIFY = BLOCK_REGISTER.register("keybutton_quantify",
+            () -> new BlockKeyButton(Properties.of().sound(SoundType.STONE), EnumKeyType.QUANTIFY)),
+        KEYBUTTON_CONCEALMENT = BLOCK_REGISTER.register("keybutton_concealment",
+            () -> new BlockKeyButton(Properties.of().sound(SoundType.STONE), EnumKeyType.CONCEALMENT));
+
     private ModBlocks() {}
 
     static ResourceLocation modLoc (String name) {

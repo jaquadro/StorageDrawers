@@ -22,6 +22,10 @@
     "block.storagedrawers.compacting_drawers_3": "Gavetas Compactadoras",
     "block.storagedrawers.controller": "Controlador de Gaveta",
     "block.storagedrawers.controller_slave": "Escravo do Controlador de Gaveta",
+    "block.storagedrawers.keybutton_drawer": "Drawer Key Button",
+    "block.storagedrawers.keybutton_quantify": "Quantify Key Button",
+    "block.storagedrawers.keybutton_concealment": "Concealment Key Button",
+    "block.storagedrawers.keybutton_personal": "Personal Key Button",
 
     "config.jade.plugin_storagedrawers.main": "Storage Drawers",
     "config.jade.plugin_storagedrawers.display.content": "Conteúdo do slot",
