@@ -61,11 +61,7 @@ public final class ModItems
         KEYRING_QUANTIFY = ITEM_REGISTER.register("keyring_quantify", () -> new ItemKeyring(QUANTIFY_KEY, new Item.Properties().stacksTo(1))),
         KEYRING_SHROUD = ITEM_REGISTER.register("keyring_shroud", () -> new ItemKeyring(SHROUD_KEY, new Item.Properties().stacksTo(1)));
 
-    private ModItems() {
-        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER);
-        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY);
-        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD);
-    }
+    private ModItems() { }
 
     public static void register(IEventBus bus) {
         for (RegistryObject<Block> ro : ModBlocks.BLOCK_REGISTER.getEntries()) {
@@ -97,6 +93,10 @@ public final class ModItems
     }
 
     public static void creativeModeTabRegister(RegisterEvent event) {
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD);
+
         event.register(Registries.CREATIVE_MODE_TAB, helper -> {
             helper.register(MAIN, CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2.get()))
                 .title(Component.translatable("itemGroup.storagedrawers"))
