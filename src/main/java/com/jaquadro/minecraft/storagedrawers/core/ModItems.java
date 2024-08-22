@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
 import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMeta;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,10 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.RegisterEvent;
+import net.neoforged.neoforge.registries.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,7 @@ import java.util.stream.Stream;
 public final class ModItems
 {
     public static final DeferredRegister.Items ITEM_REGISTER = DeferredRegister.createItems(StorageDrawers.MOD_ID);
-    public static final List<ResourceLocation> EXCLUDE_ITEMS_CREATIVE_TAB = new ArrayList<>();
+    public static final List<DeferredItem<? extends Item>> EXCLUDE_ITEMS_CREATIVE_TAB = new ArrayList<>();
 
     private static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(StorageDrawers.MOD_ID, "storagedrawers"));
 
@@ -63,37 +61,46 @@ public final class ModItems
     private ModItems() { }
 
     public static void register(IEventBus bus) {
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD);
+
         for (DeferredHolder<Block, ? extends Block> ro : ModBlocks.BLOCK_REGISTER.getEntries()) {
             if (ModBlocks.EXCLUDE_ITEMS.contains(ro.getId().getPath()))
                 continue;
 
-            ITEM_REGISTER.register(ro.getId().getPath(), () -> {
-                Block block = ro.get();
-                if (block instanceof BlockMeta)
-                    return null;
-                if (block instanceof BlockDrawers) {
-                    return new ItemDrawers(block, new Item.Properties());
-                } else {
-                    return new BlockItem(block, new Item.Properties());
-                }
-            });
+            registerBlock(ITEM_REGISTER, ro);
         }
         ITEM_REGISTER.register(bus);
     }
 
-    public static void creativeModeTabRegister(RegisterEvent event) {
-        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER.getId());
-        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY.getId());
-        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD.getId());
+    static void registerBlock(DeferredRegister<Item> register, DeferredHolder<Block, ? extends Block> blockHolder) {
+        if (blockHolder == null)
+            return;
 
+        register.register(blockHolder.getId().getPath(), () -> {
+            Block block = blockHolder.get();
+            if (block instanceof BlockMeta)
+                return null;
+            if (block instanceof BlockDrawers) {
+                return new ItemDrawers(block, new Item.Properties());
+            } else if (block instanceof BlockTrim) {
+                return new ItemTrim(block, new Item.Properties());
+            } else {
+                return new BlockItem(block, new Item.Properties());
+            }
+        });
+    }
+
+    public static void creativeModeTabRegister(RegisterEvent event) {
         event.register(Registries.CREATIVE_MODE_TAB, helper -> {
             helper.register(MAIN, CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2.get()))
-                .title(Component.translatable("storagedrawers"))
+                .title(Component.translatable("itemGroup.storagedrawers"))
                 .displayItems((params, output) -> {
                     ITEM_REGISTER.getEntries().forEach((reg) -> {
                         if (reg == null || !reg.isBound())
                             return;
-                        if (ModItems.EXCLUDE_ITEMS_CREATIVE_TAB.contains(reg.getId()))
+                        if (ModItems.EXCLUDE_ITEMS_CREATIVE_TAB.contains(reg))
                             return;
                         output.accept(new ItemStack(reg.get()));
                     });
