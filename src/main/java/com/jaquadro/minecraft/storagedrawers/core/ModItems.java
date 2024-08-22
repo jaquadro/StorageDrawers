@@ -91,6 +91,8 @@ public final class ModItems
                 .title(Component.translatable("storagedrawers"))
                 .displayItems((params, output) -> {
                     ITEM_REGISTER.getEntries().forEach((reg) -> {
+                        if (reg == null || !reg.isBound())
+                            return;
                         if (ModItems.EXCLUDE_ITEMS_CREATIVE_TAB.contains(reg.getId()))
                             return;
                         output.accept(new ItemStack(reg.get()));

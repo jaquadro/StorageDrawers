@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -86,11 +85,11 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
             item = keyring.getKey().getItem();
 
         if (item == ModItems.DRAWER_KEY.get())
-            toggle(world, pos, player, EnumKeyType.DRAWER);
+            toggle(world, pos, player, KeyType.DRAWER);
         else if (item == ModItems.SHROUD_KEY.get())
-            toggle(world, pos, player, EnumKeyType.CONCEALMENT);
+            toggle(world, pos, player, KeyType.CONCEALMENT);
         else if (item == ModItems.QUANTIFY_KEY.get())
-            toggle(world, pos, player, EnumKeyType.QUANTIFY);
+            toggle(world, pos, player, KeyType.QUANTIFY);
         //else if (item == ModItems.personalKey)
         //    toggle(world, pos, player, EnumKeyType.PERSONAL);
         else
@@ -99,7 +98,7 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         return true;
     }
 
-    public void toggle (@NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull EnumKeyType keyType) {
+    public void toggle (@NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull KeyType keyType) {
         if (level.isClientSide)
             return;
 
@@ -107,18 +106,19 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         if (blockEntity == null)
             return;
 
-        switch (keyType) {
-            case DRAWER -> blockEntity.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());
-            case CONCEALMENT -> blockEntity.toggleShroud(player.getGameProfile());
-            case QUANTIFY -> blockEntity.toggleQuantified(player.getGameProfile());
+        if (keyType == KeyType.DRAWER)
+            blockEntity.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());
+        else if (keyType == KeyType.CONCEALMENT)
+            blockEntity.toggleShroud(player.getGameProfile());
+        else if (keyType == KeyType.QUANTIFY)
+            blockEntity.toggleQuantified(player.getGameProfile());
 
-            //case PERSONAL:
-            //    String securityKey = ModItems.personalKey.getSecurityProviderKey(0);
-            //    ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
+        //case PERSONAL:
+        //    String securityKey = ModItems.personalKey.getSecurityProviderKey(0);
+        //    ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
 
-            //    te.toggleProtection(player.getGameProfile(), provider);
-            //    break;
-        }
+        //    te.toggleProtection(player.getGameProfile(), provider);
+        //    break;
     }
 
     @Override

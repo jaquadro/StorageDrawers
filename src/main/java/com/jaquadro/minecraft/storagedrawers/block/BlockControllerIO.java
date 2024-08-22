@@ -18,7 +18,7 @@ public class BlockControllerIO extends Block implements INetworked, EntityBlock
         super(properties);
     }
 
-    public void toggle (Level world, BlockPos pos, Player player, EnumKeyType keyType) {
+    public void toggle (Level world, BlockPos pos, Player player, KeyType keyType) {
         BlockEntityControllerIO blockEntity = WorldUtils.getBlockEntity(world, pos, BlockEntityControllerIO.class);
         if (blockEntity == null)
             return;
