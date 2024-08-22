@@ -100,6 +100,10 @@ public final class ModItems
     }
 
     public static void creativeModeTabRegister(RegisterEvent event) {
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD);
+
         event.register(Registries.CREATIVE_MODE_TAB, helper -> {
             helper.register(MAIN, CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2.get()))
                 .title(Component.translatable("itemGroup.storagedrawers"))

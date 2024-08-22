@@ -126,6 +126,14 @@ public final class ModBlocks
         META_MISSING_4_3 = registerMetaBlock("meta_missing_slot_4_3"),
         META_MISSING_4_4 = registerMetaBlock("meta_missing_slot_4_4");
 
+    public static final RegistryObject<BlockKeyButton>
+        KEYBUTTON_DRAWER = BLOCK_REGISTER.register("keybutton_drawer",
+            () -> new BlockKeyButton(Properties.of().sound(SoundType.STONE), EnumKeyType.DRAWER)),
+        KEYBUTTON_QUANTIFY = BLOCK_REGISTER.register("keybutton_quantify",
+            () -> new BlockKeyButton(Properties.of().sound(SoundType.STONE), EnumKeyType.QUANTIFY)),
+        KEYBUTTON_CONCEALMENT = BLOCK_REGISTER.register("keybutton_concealment",
+            () -> new BlockKeyButton(Properties.of().sound(SoundType.STONE), EnumKeyType.CONCEALMENT));
+
     private ModBlocks() {}
 
     static ResourceLocation modLoc (String name) {

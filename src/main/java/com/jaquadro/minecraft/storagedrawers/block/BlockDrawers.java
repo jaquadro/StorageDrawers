@@ -32,6 +32,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -184,11 +185,24 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 //            //    blockEntity.setCustomName(stack.getDisplayName());
 //        }
 
-        if (entity != null && entity.getOffhandItem().getItem() == ModItems.DRAWER_KEY.get()) {
+        Item key = null;
+        if (entity != null) {
+            if (entity.getOffhandItem().getItem() instanceof ItemKey itemKey)
+                key = itemKey;
+            else if (entity.getOffhandItem().getItem() instanceof ItemKeyring itemKeyring)
+                key = itemKeyring.getKey().getItem();
+        }
+
+        if (key != null) {
             IDrawerAttributes _attrs = blockEntity.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(new EmptyDrawerAttributes());
             if (_attrs instanceof IDrawerAttributesModifiable attrs) {
-                attrs.setItemLocked(LockAttribute.LOCK_EMPTY, true);
-                attrs.setItemLocked(LockAttribute.LOCK_POPULATED, true);
+                if (key == ModItems.DRAWER_KEY.get()) {
+                    attrs.setItemLocked(LockAttribute.LOCK_EMPTY, true);
+                    attrs.setItemLocked(LockAttribute.LOCK_POPULATED, true);
+                } else if (key == ModItems.QUANTIFY_KEY.get())
+                    attrs.setIsShowingQuantity(true);
+                else if (key == ModItems.SHROUD_KEY.get())
+                    attrs.setIsConcealed(true);
             }
         }
     }
