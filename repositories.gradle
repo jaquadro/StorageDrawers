@@ -1,0 +1,32 @@
+repositories {
+    mavenCentral {
+        content {
+            excludeGroupByRegex "net\\.minecraftforge.*"
+            excludeGroupByRegex "com\\.mojang.*"
+            excludeGroupByRegex "cpw\\.mods.*"
+            excludeGroupByRegex "mezz\\.jei.*"
+            excludeGroupByRegex "curse\\.maven.*"
+        }
+    }
+    maven {
+        name = "JEI"
+        url "https://dvs1.progwml6.com/files/maven"
+        content {
+            includeGroup "mezz.jei"
+        }
+    }
+    maven {
+        name = "CraftTweaker"
+        url "https://maven.blamejared.com/"
+    }
+    maven {
+        name 'TOP'
+        url "https://maven.k-4u.nl"
+    }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+}

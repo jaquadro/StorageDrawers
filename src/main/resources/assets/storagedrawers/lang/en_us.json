@@ -60,8 +60,8 @@
     "item.storagedrawers.min_redstone_upgrade.desc": "Emits signal for least full slot",
     "item.storagedrawers.max_redstone_upgrade": "Max Redstone Upgrade",
     "item.storagedrawers.max_redstone_upgrade.desc": "Emits signal for most full slot",
-    "item.storagedrawers.balanced_fill_upgrade": "Balanced Fill Upgrade",
-    "item.storagedrawers.balanced_fill_upgrade.desc": "Distribute items evenly across slots",
+    "item.storagedrawers.balance_fill_upgrade": "Balanced Fill Upgrade",
+    "item.storagedrawers.balance_fill_upgrade.desc": "Distribute items evenly across slots",
     "item.storagedrawers.upgrade_template": "Upgrade Template",
     "item.storagedrawers.drawer_key": "Drawer Key",
     "item.storagedrawers.drawer_key.desc": "Locks and unlocks drawers\nHold in off-hand to lock newly-placed drawers",
@@ -73,6 +73,10 @@
     "item.storagedrawers.personal_key.desc": "Protect access from other players",
     "item.storagedrawers.keyring": "Keyring",
     "item.storagedrawers.keyring.desc": "Storage for keys\nAdd or remove keys in inventory\nCrouch and use to cycle keys",
+    "item.storagedrawers.drawer_puller": "Drawer Puller",
+    "item.storagedrawers.drawer_puller.desc": "Remove a drawer from its block\nDetached drawer will keep its contents",
+    "item.storagedrawers.detached_drawer": "Detached Drawer",
+    "item.storagedrawers.detached_drawer_full": "Detached Drawer",
 
     "itemGroup.storagedrawers": "Storage Drawers",
 

@@ -48,9 +48,7 @@ public final class ModItems
         ILLUMINATION_UPGRADE = ITEM_REGISTER.register("illumination_upgrade", () -> new ItemUpgrade(new Item.Properties())),
         FILL_LEVEL_UPGRADE = ITEM_REGISTER.register("fill_level_upgrade", () -> new ItemUpgrade(new Item.Properties())),
         BALANCE_FILL_UPGRADE = ITEM_REGISTER.register("balance_fill_upgrade", () -> new ItemUpgrade(new Item.Properties())),
-        UPGRADE_TEMPLATE = ITEM_REGISTER.register("upgrade_template", () -> new Item(new Item.Properties())),
-        DETACHED_DRAWER = ITEM_REGISTER.register("detached_drawer", () -> new ItemDetachedDrawer(new Item.Properties())),
-        DETACHED_DRAWER_FULL = ITEM_REGISTER.register("detached_drawer_full", () -> new ItemDetachedDrawer(new Item.Properties().stacksTo(1)));
+        UPGRADE_TEMPLATE = ITEM_REGISTER.register("upgrade_template", () -> new Item(new Item.Properties()));
 
     public static final RegistryObject<ItemKey>
         DRAWER_KEY = ITEM_REGISTER.register("drawer_key", () -> new ItemDrawerKey(new Item.Properties())),
@@ -65,7 +63,16 @@ public final class ModItems
         KEYRING_SHROUD = ITEM_REGISTER.register("keyring_shroud", () -> new ItemKeyring(SHROUD_KEY, new Item.Properties().stacksTo(1))),
         KEYRING_PULLER = ITEM_REGISTER.register("keyring_puller", () -> new ItemKeyring(DRAWER_PULLER, new Item.Properties().stacksTo(1)));
 
+<<<<<<< HEAD
+    private ModItems() {
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PULLER);
+    }
+=======
     private ModItems() { }
+>>>>>>> 1.20
 
     public static void register(IEventBus bus) {
         for (RegistryObject<Block> ro : ModBlocks.BLOCK_REGISTER.getEntries()) {
@@ -100,8 +107,6 @@ public final class ModItems
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD);
-        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PULLER);
-        EXCLUDE_ITEMS_CREATIVE_TAB.add(DETACHED_DRAWER_FULL);
 
         event.register(Registries.CREATIVE_MODE_TAB, helper -> {
             helper.register(MAIN, CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2.get()))

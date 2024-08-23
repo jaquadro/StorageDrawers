@@ -170,4 +170,10 @@ public interface IDrawer
     default boolean isMissing () {
         return false;
     }
+
+    default boolean canDetach () {
+        return false;
+    }
+
+    default void setDetached (boolean state) { }
 }

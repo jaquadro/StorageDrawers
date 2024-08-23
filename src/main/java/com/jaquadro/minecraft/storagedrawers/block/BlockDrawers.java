@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
@@ -12,9 +13,7 @@ import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
-import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
-import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
+import com.jaquadro.minecraft.storagedrawers.item.*;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -134,11 +133,11 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         return halfDepth;
     }
 
-    public int getStorageUnits() {
+    public int getStorageUnits () {
         return storageUnits;
     }
 
-    public String getNameTypeKey() {
+    public String getNameTypeKey () {
         String type = halfDepth ? "half" : "full";
         return "block." + StorageDrawers.MOD_ID + ".type." + type + "_drawers_" + getDrawerCount();
     }
@@ -227,11 +226,10 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         return -1;
     }
 
-    protected boolean hitAny(Direction side, Vec3 normalizedHit) {
+    protected boolean hitAny (Direction side, Vec3 normalizedHit) {
         if (side == Direction.NORTH || side == Direction.SOUTH) {
             return .0625 < normalizedHit.x && normalizedHit.x < .9375 && .0625 < normalizedHit.y && normalizedHit.y < .9375;
-        }
-        else if (side == Direction.EAST || side == Direction.WEST) {
+        } else if (side == Direction.EAST || side == Direction.WEST) {
             return .0625 < normalizedHit.z && normalizedHit.z < .9375 && .0625 < normalizedHit.y && normalizedHit.y < .9375;
         }
         return false;
@@ -258,6 +256,14 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         if (hand == InteractionHand.OFF_HAND)
             return InteractionResult.PASS;
 
+        if (item.getItem() == ModItems.DRAWER_PULLER.get()) {
+            this.interactPullDrawer(state, level, pos, player, hit);
+            return InteractionResult.SUCCESS;
+        } else if (item.getItem() instanceof ItemDetachedDrawer) {
+            this.interactReturnDrawer(state, level, pos, player, hit, item);
+            return InteractionResult.SUCCESS;
+        }
+
         if (level.isClientSide && Util.getMillis() == ignoreEventTime) {
             ignoreEventTime = 0;
             return InteractionResult.PASS;
@@ -272,7 +278,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     }
 
     @Override
-    public void attack(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player) {
+    public void attack (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player) {
         BlockHitResult hit = WorldUtils.rayTraceEyes(level, player, blockPos);
         if (hit.getType() != HitResult.Type.BLOCK)
             return;
@@ -286,7 +292,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             interactTakeItems(state, level, blockPos, player, hit);
     }
 
-    public InteractionResult insertOrApplyItem(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit) {
+    public InteractionResult insertOrApplyItem (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit) {
         ItemStack item = player.getItemInHand(InteractionHand.MAIN_HAND);
 
         BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(level, blockPos, BlockEntityDrawers.class);
@@ -303,6 +309,11 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 
 
         if (!item.isEmpty()) {
+            if (item.getItem() instanceof ItemDrawerPuller) {
+                interactPullDrawer(state, level, blockPos, player, hit);
+                return InteractionResult.PASS;
+            }
+
             if (item.getItem() instanceof ItemKey || item.getItem() instanceof ItemKeyring)
                 return InteractionResult.PASS;
 
@@ -331,8 +342,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
 
                 return InteractionResult.SUCCESS;
             }
-        }
-        else if (item.isEmpty() && player.isShiftKeyDown()) {
+        } else if (item.isEmpty() && player.isShiftKeyDown()) {
             /*if (tileDrawers.isSealed()) {
                 tileDrawers.setIsSealed(false);
                 return true;
@@ -343,7 +353,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             }*/
 
             if (CommonConfig.GENERAL.enableUI.get() && !level.isClientSide) {
-                NetworkHooks.openScreen((ServerPlayer)player, new MenuProvider()
+                NetworkHooks.openScreen((ServerPlayer) player, new MenuProvider()
                 {
                     @Override
                     @NotNull
@@ -383,7 +393,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         return InteractionResult.SUCCESS;
     }
 
-    public boolean interactTakeItems(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit) {
+    public boolean interactTakeItems (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit) {
         if (CommonConfig.GENERAL.debugTrace.get())
             StorageDrawers.log.info("onBlockClicked");
 
@@ -418,11 +428,95 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             if (!player.getInventory().add(item)) {
                 dropItemStack(level, blockPos.relative(hit.getDirection()), player, item);
                 level.sendBlockUpdated(blockPos, state, state, Block.UPDATE_ALL);
+            } else
+                level.playSound(null, blockPos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, ((level.random.nextFloat() - level.random.nextFloat()) * .7f + 1) * 2);
+        }
+        return true;
+    }
+
+    private IDrawerGroup getDrawerGroup (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos) {
+        if (!(state.getBlock() instanceof BlockDrawers))
+            return null;
+
+        BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(level, blockPos, BlockEntityDrawers.class);
+        if (blockEntityDrawers == null)
+            return null;
+
+        if (level.getBlockState(blockPos) != state)
+            return null;
+
+        return blockEntityDrawers.getGroup();
+    }
+
+    public void interactPullDrawer(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit) {
+        IDrawerGroup group = getDrawerGroup(state, level, blockPos);
+        if (group == null)
+            return;
+
+        int slot = getDrawerSlot(state, hit);
+        if (slot < 0)
+            return;
+
+        IDrawer drawer = group.getDrawer(slot);
+        if (!drawer.isEnabled() || drawer.isMissing() || !drawer.canDetach())
+            return;
+
+        ItemStack detachedDrawer = pullDrawer(group, slot);
+        if (!detachedDrawer.isEmpty())
+            drawer.setDetached(true);
+
+        giveOrDropItemStack(state, level, blockPos, player, hit, detachedDrawer);
+    }
+
+    public void interactReturnDrawer(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit, ItemStack detachedDrawer) {
+        if (!(state.getBlock() instanceof BlockDrawers))
+            return;
+
+        BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(level, blockPos, BlockEntityDrawers.class);
+        if (blockEntityDrawers == null)
+            return;
+
+        if (detachedDrawer.isEmpty())
+            return;
+
+        int slot = getDrawerSlot(state, hit);
+        if (slot < 0)
+            return;
+
+        if (!blockEntityDrawers.interactReplaceDrawer(slot, detachedDrawer))
+            return;
+
+        if (detachedDrawer.getItem() == ModItems.DETACHED_DRAWER.get()) {
+            detachedDrawer.setCount(detachedDrawer.getCount() - 1);
+            if (detachedDrawer.getCount() > 0)
+                return;
+        }
+
+        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+    }
+
+    private ItemStack pullDrawer(IDrawerGroup group, int slot) {
+        IDrawer drawer = group.getDrawer(slot);
+        if (drawer.isEmpty())
+            return new ItemStack(ModItems.DETACHED_DRAWER.get(), 1);
+
+        DetachedDrawerData data = new DetachedDrawerData(drawer);
+
+        ItemStack stack = new ItemStack(ModItems.DETACHED_DRAWER_FULL.get(), 1);
+        stack.setTag(data.serializeNBT());
+
+        return stack;
+    }
+
+    private void giveOrDropItemStack(BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, BlockHitResult hit, @NotNull ItemStack item) {
+        if (!item.isEmpty()) {
+            if (!player.getInventory().add(item)) {
+                dropItemStack(level, blockPos.relative(hit.getDirection()), player, item);
+                level.sendBlockUpdated(blockPos, state, state, Block.UPDATE_ALL);
             }
             else
                 level.playSound(null, blockPos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, ((level.random.nextFloat() - level.random.nextFloat()) * .7f + 1) * 2);
         }
-        return true;
     }
 
     private void dropItemStack (@NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull ItemStack stack) {

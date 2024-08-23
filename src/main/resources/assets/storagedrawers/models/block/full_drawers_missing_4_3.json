@@ -4,10 +4,10 @@
         "missing": "storagedrawers:block/indicator/missing_slots_4"
     },
     "elements": [ {
-        "from": [ 1, 1, 0.95 ],
-        "to": [ 7, 7, 16],
+        "from": [ 9, 1, 0.95 ],
+        "to": [ 15, 7, 16],
         "faces": {
-            "north": { "uv": [ 1, 1, 7, 7 ], "texture": "#missing" }
+            "north": { "uv": [ 9, 1, 15, 7 ], "texture": "#missing" }
         },
         "__comment": "slot 3 (bottom left)"
     } ]

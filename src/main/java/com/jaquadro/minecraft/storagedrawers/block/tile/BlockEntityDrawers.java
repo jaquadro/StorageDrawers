@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifi
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
@@ -530,6 +531,30 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         lastClickUUID = player.getUUID();
 
         return count;
+    }
+
+    public boolean interactReplaceDrawer (int slot, ItemStack detachedDrawer) {
+        IDrawer drawer = getDrawer(slot);
+        if (!drawer.isMissing())
+            return false;
+
+        if (detachedDrawer.isEmpty())
+            return false;
+
+        DetachedDrawerData data = new DetachedDrawerData(detachedDrawer.getOrCreateTag());
+        ItemStack proto = data.getStoredItemPrototype();
+        int count = data.getStoredItemCount();
+
+        if (count > drawer.getMaxCapacity(proto))
+            return false;
+
+        drawer.setDetached(false);
+        drawer.setStoredItem(proto, count);
+
+        if (drawerAttributes.isBalancedFill())
+            balanceSlots(slot);
+
+        return true;
     }
 
     @Override
