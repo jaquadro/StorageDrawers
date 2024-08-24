@@ -49,26 +49,25 @@ public class BlockStandardDrawers extends BlockDrawers
     }
 
     @Override
-    protected int getDrawerSlot (Direction correctSide, @NotNull Vec3 normalizedHit) {
-        if (!hitAny(correctSide, normalizedHit))
-            return super.getDrawerSlot(correctSide, normalizedHit);
+    protected int getFaceSlot (Direction correctSide, @NotNull Vec3 normalizedHit) {
+        if (!hitWithinArea(correctSide, normalizedHit, .0625f, .9375f))
+            return super.getFaceSlot(correctSide, normalizedHit);
 
         if (getDrawerCount() == 1)
             return 0;
 
-        boolean hitTop = hitTop(normalizedHit);
-
+        boolean hitTop = hitWithinY(normalizedHit, .5f, 1f);
         if (getDrawerCount() == 2)
             return hitTop ? 0 : 1;
 
         if (getDrawerCount() == 4) {
-            if (hitLeft(correctSide, normalizedHit))
+            if (hitWithinX(correctSide, normalizedHit, 0, .5f))
                 return hitTop ? 0 : 2;
             else
                 return hitTop ? 1 : 3;
         }
 
-        return super.getDrawerSlot(correctSide, normalizedHit);
+        return super.getFaceSlot(correctSide, normalizedHit);
     }
 
     @Override

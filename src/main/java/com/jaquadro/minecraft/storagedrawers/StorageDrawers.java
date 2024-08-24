@@ -11,11 +11,15 @@ import com.jaquadro.minecraft.storagedrawers.core.recipe.AddUpgradeRecipe;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.KeyringRecipe;
 import com.jaquadro.minecraft.storagedrawers.integration.TheOneProbe;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
+import com.jaquadro.minecraft.storagedrawers.network.PlayerBoolConfigMessage;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,6 +36,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.UUID;
 
 @Mod(StorageDrawers.MOD_ID)
 public class StorageDrawers
@@ -93,8 +99,9 @@ public class StorageDrawers
 
     @SuppressWarnings("Convert2MethodRef")  // otherwise the class loader gets upset if TheOneProbe is not loaded
     private void onModQueueEvent(final InterModEnqueueEvent event) {
-        InterModComms.sendTo("theoneprobe", "getTheOneProbe", () -> new TheOneProbe());
+        InterModComms.sendTo("theoneprobe", "getTheOneProbe", TheOneProbe::getInstance);
     }
+
     private void onModConfigEvent(final ModConfigEvent event) {
         if (event.getConfig().getType() == ModConfig.Type.COMMON)
             CommonConfig.setLoaded();
@@ -105,6 +112,21 @@ public class StorageDrawers
     @SubscribeEvent
     public void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
         //ConfigManager.serverPlayerConfigSettings.remove(event.player.getUniqueID());
+    }
+
+    @SubscribeEvent
+    public void onEntityJoinWorldEvent(EntityJoinLevelEvent event) {
+        if (!event.getLevel().isClientSide() || !(event.getEntity() instanceof Player))
+            return;
+
+        if (Minecraft.getInstance().player == null)
+            return;
+
+        UUID playerId = Minecraft.getInstance().player.getUUID();
+        if (event.getEntity().getUUID() == playerId) {
+            MessageHandler.INSTANCE.sendToServer(new PlayerBoolConfigMessage(playerId.toString(), "invertShift", ClientConfig.GENERAL.invertShift.get()));
+            MessageHandler.INSTANCE.sendToServer(new PlayerBoolConfigMessage(playerId.toString(), "invertClick", ClientConfig.GENERAL.invertClick.get()));
+        }
     }
 
     @SubscribeEvent

@@ -43,6 +43,8 @@ public final class CommonConfig
         public final ForgeConfigSpec.ConfigValue<Boolean> enableExtraCompactingRules;
         public final ForgeConfigSpec.ConfigValue<Integer> controllerRange;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableAnalogRedstone;
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableDetachedDrawers;
+        public final ForgeConfigSpec.ConfigValue<Boolean> forceDetachedDrawersMaxCapacityCheck;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> compRules;
 
         public General(ForgeConfigSpec.Builder builder) {
@@ -74,6 +76,14 @@ public final class CommonConfig
                 .define("enableItemConversion", true);
             enableExtraCompactingRules = builder
                 .define("enableExtraCompactingRules", true);
+            enableDetachedDrawers = builder
+                .comment("Allows drawers to be pulled from their block and inserted into another block.")
+                .define("enableDetachedDrawers", true);
+            forceDetachedDrawersMaxCapacityCheck = builder
+                .comment("Drawers track the capacity upgrades from the block they were taken from.",
+                    "Drawers can only be placed back into a block with the same or lower max capacity.",
+                    "Drawers can still only be inserted into a block with enough capacity for the items held.")
+                .define("forceDetachedDrawersMaxCapacityCheck", true);
             debugTrace = builder
                 .define("debugTrace", false);
             compRules = builder
