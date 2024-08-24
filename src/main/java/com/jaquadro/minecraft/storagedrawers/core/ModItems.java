@@ -112,7 +112,7 @@ public final class ModItems
                             return;
                         if (ModItems.EXCLUDE_ITEMS_CREATIVE_TAB.contains(reg))
                             return;
-                        output.accept(new ItemStack(reg.get()));
+                        output.accept(reg.get().getDefaultInstance());
                     });
                 })
                 .build());

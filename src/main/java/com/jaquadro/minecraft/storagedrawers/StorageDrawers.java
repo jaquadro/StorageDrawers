@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.AddUpgradeRecipe;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.KeyringRecipe;
+import com.jaquadro.minecraft.storagedrawers.core.recipe.UpgradeDetachedDrawerRecipe;
 import com.jaquadro.minecraft.storagedrawers.integration.TheOneProbe;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import com.jaquadro.minecraft.storagedrawers.network.PlayerBoolConfigMessage;
@@ -55,6 +56,7 @@ public class StorageDrawers
 
     private static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MOD_ID);
     public static final RegistryObject<RecipeSerializer<AddUpgradeRecipe>> UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_upgrade", () -> new SimpleCraftingRecipeSerializer<>(AddUpgradeRecipe::new));
+    public static final RegistryObject<RecipeSerializer<UpgradeDetachedDrawerRecipe>> DETACHED_UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_detached_upgrade", () -> new SimpleCraftingRecipeSerializer<>(UpgradeDetachedDrawerRecipe::new));
     public static final RegistryObject<RecipeSerializer<KeyringRecipe>> KEYRING_RECIPE_SERIALIZER = RECIPES.register("keyring", () -> new SimpleCraftingRecipeSerializer<>(KeyringRecipe::new));
 
     public StorageDrawers () {

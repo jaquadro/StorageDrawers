@@ -98,6 +98,14 @@ public class InventoryUpgrade implements Container
 
     }
 
+    public int getStorageMultiplier () {
+        return blockEntityDrawers.upgrades().getStorageMultiplier();
+    }
+
+    public int getStackCapacity () {
+        return blockEntityDrawers.getEffectiveDrawerCapacity() * blockEntityDrawers.upgrades().getStorageMultiplier();
+    }
+
     public boolean slotIsLocked (int slot) {
         if (blockEntityDrawers.hasMissingDrawers() && CommonConfig.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
             return true;

@@ -364,21 +364,16 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         return InteractionResult.SUCCESS;
     }
 
-    private IDrawerGroup getDrawerGroup (InteractContext context) {
-        BlockEntityDrawers entity = context.getCheckedEntity(BlockEntityDrawers.class, BlockDrawers.class);
-        return (entity != null) ? entity.getGroup() : null;
-    }
-
     public boolean interactPullDrawer(InteractContext context) {
-        IDrawerGroup group = getDrawerGroup(context);
-        if (group == null)
+        BlockEntityDrawers entity = context.getCheckedEntity(BlockEntityDrawers.class, BlockDrawers.class);
+        if (entity == null)
             return false;
 
-        IDrawer drawer = group.getDrawer(context.slot);
+        IDrawer drawer = entity.getGroup().getDrawer(context.slot);
         if (!drawer.isEnabled() || drawer.isMissing() || !drawer.canDetach())
             return false;
 
-        ItemStack detachedDrawer = pullDrawer(group, context.slot);
+        ItemStack detachedDrawer = pullDrawer(entity, context.slot);
         if (!detachedDrawer.isEmpty())
             drawer.setDetached(true);
 
@@ -407,12 +402,13 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         return true;
     }
 
-    private ItemStack pullDrawer(IDrawerGroup group, int slot) {
+    private ItemStack pullDrawer(BlockEntityDrawers group, int slot) {
         IDrawer drawer = group.getDrawer(slot);
         if (drawer.isEmpty())
             return new ItemStack(ModItems.DETACHED_DRAWER.get(), 1);
 
-        DetachedDrawerData data = new DetachedDrawerData(drawer);
+        int cap = group.getEffectiveDrawerCapacity() * group.upgrades().getStorageMultiplier();
+        DetachedDrawerData data = new DetachedDrawerData(drawer, cap);
 
         ItemStack stack = new ItemStack(ModItems.DETACHED_DRAWER_FULL.get(), 1);
         stack.setTag(data.serializeNBT());

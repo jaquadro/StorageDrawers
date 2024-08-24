@@ -76,7 +76,7 @@
     "item.storagedrawers.drawer_puller": "Drawer Puller",
     "item.storagedrawers.drawer_puller.desc": "Remove a drawer from its block\nDetached drawer will keep its contents",
     "item.storagedrawers.detached_drawer": "Detached Drawer",
-    "item.storagedrawers.detached_drawer_full": "Detached Drawer",
+    "item.storagedrawers.detached_drawer.desc": "Put in a drawer block with a missing space",
 
     "itemGroup.storagedrawers": "Storage Drawers",
 

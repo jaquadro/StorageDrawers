@@ -548,6 +548,12 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         if (count > drawer.getMaxCapacity(proto))
             return false;
 
+        if (CommonConfig.GENERAL.forceDetachedDrawersMaxCapacityCheck.get()) {
+            int cap = getEffectiveDrawerCapacity() * upgradeData.getStorageMultiplier();
+            if (data.getStorageMultiplier() < cap)
+                return false;
+        }
+
         drawer.setDetached(false);
         drawer.setStoredItem(proto, count);
 
