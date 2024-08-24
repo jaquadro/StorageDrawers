@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
@@ -256,18 +257,25 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
 
         // Drawer upgrades
         if (item.getItem() instanceof ItemUpgrade) {
+            if (entity.getGroup().hasMissingDrawers() && CommonConfig.GENERAL.forceDetachedDrawersMaxCapacityCheck.get()) {
+                if (!context.level.isClientSide)
+                    context.player.displayClientMessage(Component.translatable("message.storagedrawers.missing_slots_upgrade"), true);
+
+                return Optional.of(InteractionResult.PASS);
+            }
+
             if (!entity.upgrades().canAddUpgrade(item)) {
                 if (!context.level.isClientSide)
                     context.player.displayClientMessage(Component.translatable("message.storagedrawers.cannot_add_upgrade"), true);
 
-                Optional.of(InteractionResult.PASS);
+                return Optional.of(InteractionResult.PASS);
             }
 
             if (!entity.upgrades().addUpgrade(item)) {
                 if (!context.level.isClientSide)
                     context.player.displayClientMessage(Component.translatable("message.storagedrawers.max_upgrades"), true);
 
-                Optional.of(InteractionResult.PASS);
+                return Optional.of(InteractionResult.PASS);
             }
 
             context.level.sendBlockUpdated(context.pos, context.state, context.state, 3);
@@ -292,7 +300,8 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
             @Override
             @NotNull
             public Component getDisplayName () {
-                return Component.translatable(getDescriptionId());
+                ItemStack stack = new ItemStack(BlockDrawers.this);
+                return stack.getItem().getName(stack);
             }
 
             @Nullable

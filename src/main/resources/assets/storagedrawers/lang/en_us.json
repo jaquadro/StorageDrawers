@@ -82,6 +82,7 @@
 
     "message.storagedrawers.cannot_add_upgrade": "That upgrade cannot be installed in this drawer",
     "message.storagedrawers.max_upgrades": "This drawer cannot accept any more upgrades",
+    "message.storagedrawers.missing_slots_upgrade": "Upgrades cannot be changed while drawers are removed",
 
     "tooltip.storagedrawers.drawers.capacity": "Holds %d stacks per drawer",
     "tooltip.storagedrawers.drawers.sealed": "Contents sealed within",

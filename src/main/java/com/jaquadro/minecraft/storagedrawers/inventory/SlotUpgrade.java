@@ -44,7 +44,8 @@ public class SlotUpgrade extends Slot
             ItemStack stack = getItem();
             if (stack.getItem() instanceof ItemUpgradeStorage) {
                 return inventoryUpgrade.canRemoveStorageUpgrade(getSlotIndex());
-            }
+            } else if (!inventoryUpgrade.canRemoveUpgrade(getSlotIndex()))
+                return false;
 
             if (player != null && !player.isCreative()) {
                 return stack.getItem() != ModItems.CREATIVE_STORAGE_UPGRADE.get() && stack.getItem() != ModItems.CREATIVE_VENDING_UPGRADE.get();

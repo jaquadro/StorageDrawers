@@ -20,12 +20,12 @@ public class ContainerDrawers2 extends ContainerDrawers
     }
 
     @Override
-    protected int getStorageSlotX (int slot) {
+    public int getStorageSlotX (int slot) {
         return slotCoordinates[slot][0];
     }
 
     @Override
-    protected int getStorageSlotY (int slot) {
+    public int getStorageSlotY (int slot) {
         return slotCoordinates[slot][1];
     }
 }

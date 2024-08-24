@@ -37,6 +37,7 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
 
     private final Container upgradeInventory;
 
+    private final int maxStorageSlots;
     private final List<Slot> storageSlots;
     private final List<Slot> upgradeSlots;
     private final List<Slot> playerSlots;
@@ -66,6 +67,7 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
         super(type, windowId);
 
         int drawerCount = 0;
+        maxStorageSlots = tileEntity.getGroup().getDrawerCount();
 
         upgradeInventory = new InventoryUpgrade(tileEntity);
         Block block = tileEntity.getBlockState().getBlock();
@@ -75,7 +77,7 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
 
         storageSlots = new ArrayList<>();
         for (int i = 0; i < drawerCount; i++) {
-            if (group.getDrawer(i).isEnabled())
+            if (group.getDrawer(i).isEnabled() || group.getDrawer(i).isMissing())
                 storageSlots.add(addSlot(new SlotDrawer(this, group, i, getStorageSlotX(i), getStorageSlotY(i))));
         }
 
@@ -101,12 +103,16 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
             activeGuiGraphics.overrideStack = stack;
     }
 
-    protected int getStorageSlotX (int slot) {
+    public int getStorageSlotX (int slot) {
         return 0;
     }
 
-    protected int getStorageSlotY (int slot) {
+    public int getStorageSlotY (int slot) {
         return 0;
+    }
+
+    public int getMaxStorageSlots() {
+        return maxStorageSlots;
     }
 
     public List<Slot> getStorageSlots () {

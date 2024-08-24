@@ -25,6 +25,7 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
 
     private static final int smDisabledX = 176;
     private static final int smDisabledY = 0;
+    private static final int smMissingY = 16;
 
     private static StorageGuiGraphics storageGuiGraphics;
 
@@ -100,17 +101,22 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
 
         List<Slot> storageSlots = menu.getStorageSlots();
         for (Slot slot : storageSlots) {
-            graphics.blit(background, guiX + slot.x, guiY + slot.y, smDisabledX, smDisabledY, 16, 16);
+            if (slot instanceof SlotDrawer sd && sd.getDrawer().isMissing())
+                graphics.blit(background, guiX + slot.x, guiY + slot.y, smDisabledX, smMissingY, 16, 16);
+            else
+                graphics.blit(background, guiX + slot.x, guiY + slot.y, smDisabledX, smDisabledY, 16, 16);
         }
 
         List<Slot> upgradeSlots = menu.getUpgradeSlots();
         for (Slot slot : upgradeSlots) {
-            if (slot instanceof SlotUpgrade && !((SlotUpgrade) slot).canTakeStack(Minecraft.getInstance().player))
+            boolean locked = false;
+            if (slot.container instanceof InventoryUpgrade ucontainer)
+                locked = ucontainer.slotIsLocked(slot.getSlotIndex());
+
+            if (locked)
                 graphics.blit(background, guiX + slot.x, guiY + slot.y, smDisabledX, smDisabledY, 16, 16);
         }
     }
-
-
 
     @Override
     protected boolean isHovering (int x, int y, int width, int height, double originX, double originY) {

@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
@@ -86,6 +87,9 @@ public class InventoryUpgrade implements Container
 
     @Override
     public boolean canPlaceItem (int slot, @NotNull ItemStack item) {
+        if (blockEntityDrawers.hasMissingDrawers() && CommonConfig.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
+            return false;
+
         return blockEntityDrawers.upgrades().canAddUpgrade(item);
     }
 
@@ -94,15 +98,41 @@ public class InventoryUpgrade implements Container
 
     }
 
+    public boolean slotIsLocked (int slot) {
+        if (blockEntityDrawers.hasMissingDrawers() && CommonConfig.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
+            return true;
+
+        if (!getItem(slot).isEmpty())
+            return !canRemoveUpgrade(slot);
+
+        return false;
+    }
+
     public boolean canAddUpgrade (@NotNull ItemStack item) {
+        if (blockEntityDrawers.hasMissingDrawers() && CommonConfig.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
+            return false;
+
         return blockEntityDrawers.upgrades().canAddUpgrade(item);
     }
 
+    public boolean canRemoveUpgrade (int slot) {
+        if (blockEntityDrawers.hasMissingDrawers() && CommonConfig.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
+            return false;
+
+        return blockEntityDrawers.upgrades().canRemoveUpgrade(slot);
+    }
+
     public boolean canRemoveStorageUpgrade (int slot) {
+        if (blockEntityDrawers.hasMissingDrawers() && CommonConfig.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
+            return false;
+
         return blockEntityDrawers.upgrades().canRemoveUpgrade(slot);
     }
 
     public boolean canSwapUpgrade (int slot, @NotNull ItemStack item) {
+        if (blockEntityDrawers.hasMissingDrawers() && CommonConfig.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
+            return false;
+
         return blockEntityDrawers.upgrades().canSwapUpgrade(slot, item);
     }
 }
