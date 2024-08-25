@@ -3,14 +3,23 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemNameBlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class BlockStandardDrawers extends BlockDrawers
 {
@@ -74,5 +83,42 @@ public class BlockStandardDrawers extends BlockDrawers
     @Nullable
     public BlockEntityDrawers newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
         return BlockEntityDrawersStandard.createEntity(getDrawerCount(), pos, state);
+    }
+
+    @Override
+    public boolean retrimBlock (Level world, BlockPos pos, ItemStack prototype) {
+        if (retrimType() == null)
+            return false;
+
+        Block protoBlock = Block.byItem(prototype.getItem());
+        if (!(protoBlock instanceof BlockTrim))
+            return false;
+
+        BlockTrim trim = (BlockTrim) protoBlock;
+        if (trim.getMatKey() == null || Objects.equals(trim.getMatKey(), ""))
+            return false;
+
+        var blockList = ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockStandardDrawers.class, getDrawerCount(), isHalfDepth())
+            .filter(b -> b.getMatKey() == trim.getMatKey()).toList();
+
+        if (blockList.size() != 1)
+            return false;
+
+        BlockStandardDrawers targetBlock = blockList.get(0);
+        BlockEntity entity = world.getBlockEntity(pos);
+        if (!(entity instanceof BlockEntityDrawersStandard))
+            return false;
+
+        BlockState curState = world.getBlockState(pos);
+        BlockEntityDrawersStandard curEntity = (BlockEntityDrawersStandard) entity;
+        CompoundTag entityData = curEntity.saveWithoutMetadata();
+
+        BlockState newState = targetBlock.defaultBlockState().setValue(FACING, curState.getValue(FACING));
+        world.setBlockAndUpdate(pos, newState);
+
+        BlockEntity newEnt = world.getBlockEntity(pos);
+        newEnt.load(entityData);
+
+        return true;
     }
 }

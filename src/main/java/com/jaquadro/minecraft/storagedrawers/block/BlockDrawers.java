@@ -249,6 +249,22 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
             }
         }
 
+        // Re-trimming
+        if (Block.byItem(item.getItem()) instanceof BlockTrim && context.player.isShiftKeyDown()) {
+            if (!retrimBlock(context.level, context.pos, item))
+                return Optional.of(InteractionResult.PASS);
+
+            if (!context.player.isCreative()) {
+                item.shrink(1);
+                if (item.getCount() <= 0)
+                    context.player.getInventory().setItem(context.player.getInventory().selected, ItemStack.EMPTY);
+                context.level.playSound(null, context.pos, SoundEvents.WOOD_PLACE, SoundSource.PLAYERS, .2f,
+                    ((context.level.random.nextFloat() - context.level.random.nextFloat()) * .7f + 1) * 2);
+            }
+
+            return Optional.of(InteractionResult.SUCCESS);
+        }
+
         // Drawer keys
         if (item.getItem() instanceof ItemKey || item.getItem() instanceof ItemKeyring)
             return Optional.of(InteractionResult.PASS);
