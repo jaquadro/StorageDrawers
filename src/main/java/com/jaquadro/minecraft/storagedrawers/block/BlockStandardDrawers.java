@@ -1,9 +1,11 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -118,6 +120,67 @@ public class BlockStandardDrawers extends BlockDrawers
 
         BlockEntity newEnt = world.getBlockEntity(pos);
         newEnt.load(entityData);
+
+        return true;
+    }
+
+    @Override
+    public boolean repartitionBlock (Level world, BlockPos pos, ItemStack prototype) {
+        if (retrimType() == null)
+            return false;
+
+        Block protoBlock = Block.byItem(prototype.getItem());
+        if (!(protoBlock instanceof BlockStandardDrawers))
+            return false;
+
+        BlockStandardDrawers targetBlock = (BlockStandardDrawers) protoBlock;
+        if (targetBlock.isHalfDepth() != isHalfDepth())
+            return false;
+        if (targetBlock.getDrawerCount() == getDrawerCount())
+            return false;
+
+        BlockEntity sourceEntity = world.getBlockEntity(pos);
+        if (!(sourceEntity instanceof BlockEntityDrawersStandard))
+            return false;
+
+        BlockEntityDrawersStandard sourceBE = (BlockEntityDrawersStandard) sourceEntity;
+        ItemStack firstStack = sourceBE.getGroup().getDrawer(0).getStoredItemPrototype();
+        int aggCount = 0;
+
+        for (int i = 0; i < sourceBE.getGroup().getDrawerCount(); i++) {
+            IDrawer drawer = sourceBE.getGroup().getDrawer(i);
+            ItemStack stack = drawer.getStoredItemPrototype();
+
+            if (firstStack.isEmpty() && !stack.isEmpty())
+                firstStack = stack;
+
+            if (!ItemStackMatcher.areItemsEqual(firstStack, stack) && !stack.isEmpty())
+                return false;
+
+            aggCount += drawer.getStoredItemCount();
+        }
+
+        // Set new block
+
+        BlockState curState = world.getBlockState(pos);
+        CompoundTag entityData = sourceEntity.saveWithoutMetadata();
+
+        BlockState newState = targetBlock.defaultBlockState().setValue(FACING, curState.getValue(FACING));
+        world.setBlockAndUpdate(pos, newState);
+
+        BlockEntity newEnt = world.getBlockEntity(pos);
+        newEnt.load(entityData);
+
+        BlockEntityDrawersStandard targetBE = (BlockEntityDrawersStandard) newEnt;
+        int drawerCount = targetBE.getGroup().getDrawerCount();
+        int divCount = aggCount / drawerCount;
+        int remCount = aggCount - (divCount * drawerCount);
+        for (int i = 0; i < drawerCount; i++) {
+            int slotCount = divCount;
+            if (i < remCount)
+                slotCount += 1;
+            targetBE.getGroup().getDrawer(i).setStoredItem(firstStack, slotCount);
+        }
 
         return true;
     }

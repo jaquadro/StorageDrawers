@@ -117,6 +117,10 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         return BlockType.Drawers;
     }
 
+    public boolean repartitionBlock (Level world, BlockPos pos, ItemStack prototype) {
+        return false;
+    }
+
     // TODO: ABSTRACT?  Still need BlockState?
     public int getDrawerCount () {
         return drawerCount;
@@ -250,8 +254,24 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         }
 
         // Re-trimming
-        if (Block.byItem(item.getItem()) instanceof BlockTrim && context.player.isShiftKeyDown()) {
+        if (Block.byItem(item.getItem()) instanceof BlockTrim && context.slot >= 0 && context.player.isShiftKeyDown()) {
             if (!retrimBlock(context.level, context.pos, item))
+                return Optional.of(InteractionResult.PASS);
+
+            if (!context.player.isCreative()) {
+                item.shrink(1);
+                if (item.getCount() <= 0)
+                    context.player.getInventory().setItem(context.player.getInventory().selected, ItemStack.EMPTY);
+                context.level.playSound(null, context.pos, SoundEvents.WOOD_PLACE, SoundSource.PLAYERS, .2f,
+                    ((context.level.random.nextFloat() - context.level.random.nextFloat()) * .7f + 1) * 2);
+            }
+
+            return Optional.of(InteractionResult.SUCCESS);
+        }
+
+        // Re-partitioning
+        if (Block.byItem(item.getItem()) instanceof BlockDrawers && context.slot >= 0 && context.player.isShiftKeyDown()) {
+            if (!repartitionBlock(context.level, context.pos, item))
                 return Optional.of(InteractionResult.PASS);
 
             if (!context.player.isCreative()) {
