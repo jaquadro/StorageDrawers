@@ -38,7 +38,6 @@ public final class CommonConfig
         public final ForgeConfigSpec.ConfigValue<Boolean> enableUI;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableSidedInput;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableSidedOutput;
-        public final ForgeConfigSpec.ConfigValue<Boolean> enableItemConversion;
         public final ForgeConfigSpec.ConfigValue<Boolean> debugTrace;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableExtraCompactingRules;
         public final ForgeConfigSpec.ConfigValue<Integer> controllerRange;
@@ -72,8 +71,6 @@ public final class CommonConfig
                 .define("enableSidedInput", true);
             enableSidedOutput = builder
                 .define("enableSidedOutput", true);
-            enableItemConversion = builder
-                .define("enableItemConversion", true);
             enableExtraCompactingRules = builder
                 .define("enableExtraCompactingRules", true);
             enableDetachedDrawers = builder
@@ -134,6 +131,8 @@ public final class CommonConfig
         public final ForgeConfigSpec.ConfigValue<Integer> level4Mult;
         public final ForgeConfigSpec.ConfigValue<Integer> level5Mult;
 
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableBalanceUpgrade;
+
         public Upgrades (ForgeConfigSpec.Builder builder) {
             builder.push("StorageUpgrades");
             builder.comment("Storage upgrades multiply storage capacity by the given amount.",
@@ -149,6 +148,11 @@ public final class CommonConfig
                 .define("level4Mult", 16);
             level5Mult = builder
                 .define("level5Mult", 32);
+
+            enableBalanceUpgrade = builder
+                .comment("Balance upgrades allow same-item slots to balance out their amounts when items are",
+                    "added or removed from a lot.  Works across networks when acting through a controller.")
+                .define("enableBalanceUpgrade", true);
 
             builder.pop();
         }

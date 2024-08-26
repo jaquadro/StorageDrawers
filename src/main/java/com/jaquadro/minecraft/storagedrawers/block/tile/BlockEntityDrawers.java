@@ -16,6 +16,7 @@ import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
+import com.jaquadro.minecraft.storagedrawers.storage.StorageUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -414,7 +415,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.getCount());
 
         if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade())
-            balanceSlots(slot);
+            StorageUtil.rebalanceDrawers(getGroup(), slot);
 
         if (isRedstone() && getLevel() != null) {
             getLevel().updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
@@ -445,38 +446,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         stack.shrink(countAdded);
 
         if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade())
-            balanceSlots(slot);
+            StorageUtil.rebalanceDrawers(getGroup(), slot);
 
         return countAdded;
-    }
-
-    void balanceSlots (int slot) {
-        IDrawer drawer = getGroup().getDrawer(slot);
-        if (!drawer.isEnabled() || drawer.isEmpty())
-            return;
-
-        ItemStack proto = drawer.getStoredItemPrototype();
-        List<IDrawer> balanceDrawers = new ArrayList<>();
-
-        int aggCount = 0;
-        for (int i = 0; i < getGroup().getDrawerCount(); i++) {
-            IDrawer other = getGroup().getDrawer(i);
-            if (!drawer.isEnabled() || drawer.isEmpty())
-                continue;
-
-            if (ItemStack.isSameItemSameTags(proto, other.getStoredItemPrototype())) {
-                balanceDrawers.add(other);
-                aggCount += other.getStoredItemCount();
-            }
-        }
-
-        if (!balanceDrawers.isEmpty()) {
-            int dist = aggCount / balanceDrawers.size();
-            int remainder = aggCount - (dist * balanceDrawers.size());
-
-            for (int i = 0; i < balanceDrawers.size(); i++)
-                balanceDrawers.get(i).setStoredItemCount(dist + (i < remainder ? 1 : 0));
-        }
     }
 
     public int interactPutCurrentItemIntoSlot (int slot, Player player) {
@@ -558,7 +530,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         drawer.setStoredItem(proto, count);
 
         if (drawerAttributes.isBalancedFill())
-            balanceSlots(slot);
+            StorageUtil.rebalanceDrawers(getGroup(), slot);
 
         return true;
     }
