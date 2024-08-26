@@ -1,3 +1,6 @@
+[12.6.1]
+- Fixed accidental hard dependency on The One Probe
+
 [12.6.0]
 - Added detached drawers, which can be placed in empty slots in drawer blocks
 - Added drawer puller tool to remove drawers from blocks

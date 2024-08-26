@@ -6,7 +6,7 @@ plugins {
     id 'idea'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'net.darkhax.curseforgegradle' version '1.1.15' apply false
-    id 'com.modrinth.minotaur' version '2.+'
+    id 'com.modrinth.minotaur' version '2.8+'
 }
 
 version = "${minecraft_version}-${mod_version}"
@@ -73,14 +73,14 @@ dependencies {
     // JEI not yet updated for 41.0.64
     // runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
-    implementation fg.deobf("curse.maven:the-one-probe-245211:${top_id}")
+    compileOnly fg.deobf("curse.maven:the-one-probe-245211:${top_id}")
     //implementation fg.deobf("mcjty.theoneprobe:theoneprobe:1.19.3-7.0.0-2")
     // compileOnly since not yet updated for 41.0.64
     implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
 
-    implementation fg.deobf("curse.maven:chemlib-340666:5128632")
-    implementation fg.deobf("curse.maven:alchemylib-293426:5037781")
-    implementation fg.deobf("curse.maven:alchemistry-293425:4770614")
+    //implementation fg.deobf("curse.maven:chemlib-340666:5128632")
+    //implementation fg.deobf("curse.maven:alchemylib-293426:5037781")
+    //implementation fg.deobf("curse.maven:alchemistry-293425:4770614")
 
 //    implementation fg.deobf("curse.maven:spark-361579:3670050")
 
@@ -168,7 +168,7 @@ static def splitList(list) {
 }
 
 def getReleaseType() {
-    String type = project.releaseType
+    String type = project.dist_releaseType
     if (!(type in ['release', 'beta', 'alpha'])) {
         throw new Exception("Release type invalid! Found \"" + type + "\", allowed: \"release\", \"beta\", \"alpha\"")
     }
@@ -190,8 +190,8 @@ if (cfApiKey.isPresent()) {
         mainFile.displayName = "${mod_filename}-${minecraft_version}-${mod_version}"
         mainFile.releaseType = getReleaseType()
         mainFile.changelog = rootProject.file('CHANGELOG.last.md').text
-        mainFile.addModLoader(splitList(modLoaders))
-        mainFile.addGameVersion(splitList(gameVersions))
+        mainFile.addModLoader(splitList(dist_modLoaders))
+        mainFile.addGameVersion(splitList(dist_gameVersions))
 
         if (project.hasProperty('curseforgeRequiredDeps')) {
             mainFile.addRequirement(splitList("${curseforgeRequiredDeps}"))
@@ -205,19 +205,22 @@ if (cfApiKey.isPresent()) {
     }
 }
 
-if (modrinthApiKey.isPresent()) {
-    modrinth {
-        token = modrinthApiKey.getOrElse('debug_token')
-        projectId = modrinthProjectId
-        versionType = getReleaseType()
-        versionNumber = "${minecraft_version}-${mod_version}"
-        uploadFile = file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar")
-        changelog = rootProject.file('CHANGELOG.last.md').text
-        gameVersions = splitList(gameVersions)
-        loaders = splitList(modLoaders)
+tasks.modrinth {
+    onlyIf {
+        modrinthApiKey
     }
+}
 
-    tasks.modrinth.dependsOn(build)
+modrinth {
+    token = modrinthApiKey.getOrElse('debug_token')
+    projectId = modrinthProjectId
+    versionType = getReleaseType()
+    versionNumber = "${minecraft_version}-${mod_version}"
+    versionName = "${mod_name} ${minecraft_version}-${mod_version}"
+    uploadFile = file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar")
+    changelog = rootProject.file('CHANGELOG.last.md').text
+    gameVersions = splitList(dist_gameVersions) as List
+    loaders = (splitList(dist_modLoaders) as List).collect{ it.toLowerCase() }
 }
 
 tasks.withType(JavaCompile).configureEach {
