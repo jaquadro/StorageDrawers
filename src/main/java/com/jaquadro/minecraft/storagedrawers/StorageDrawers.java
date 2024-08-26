@@ -102,7 +102,7 @@ public class StorageDrawers
 
     @SuppressWarnings("Convert2MethodRef")  // otherwise the class loader gets upset if TheOneProbe is not loaded
     private void onModQueueEvent(final InterModEnqueueEvent event) {
-        InterModComms.sendTo("theoneprobe", "getTheOneProbe", TheOneProbe::getInstance);
+        InterModComms.sendTo("theoneprobe", "getTheOneProbe", () -> new TheOneProbe());
     }
 
     private void onModConfigEvent(final ModConfigEvent event) {
