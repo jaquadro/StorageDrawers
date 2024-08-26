@@ -62,6 +62,9 @@
     "item.storagedrawers.max_redstone_upgrade.desc": "Emits signal for most full slot",
     "item.storagedrawers.balance_fill_upgrade": "Balanced Fill Upgrade",
     "item.storagedrawers.balance_fill_upgrade.desc": "Distribute items evenly across slots",
+    "item.storagedrawers.portability_upgrade": "Portability Upgrade",
+    "item.storagedrawers.portability_upgrade.desc": "Allows you to carry filled drawers",
+    "item.storagedrawers.portability_upgrade.warn": "Has no effect with current mod configuration",
     "item.storagedrawers.upgrade_template": "Upgrade Template",
     "item.storagedrawers.drawer_key": "Drawer Key",
     "item.storagedrawers.drawer_key.desc": "Locks and unlocks drawers\nHold in off-hand to lock newly-placed drawers",
@@ -86,6 +89,7 @@
 
     "tooltip.storagedrawers.drawers.capacity": "Holds %d stacks per drawer",
     "tooltip.storagedrawers.drawers.sealed": "Contents sealed within",
+    "tooltip.storagedrawers.drawers.too_heavy": "It's too heavy!",
     "tooltip.storagedrawers.waila.empty": "<Empty>",
     "tooltip.storagedrawers.waila.drawer": "#%s: %s",
     "tooltip.storagedrawers.waila.nolimit": "Stack Limit: ∞",

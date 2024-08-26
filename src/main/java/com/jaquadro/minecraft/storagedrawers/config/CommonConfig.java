@@ -45,6 +45,7 @@ public final class CommonConfig
         public final ForgeConfigSpec.ConfigValue<Boolean> enableDetachedDrawers;
         public final ForgeConfigSpec.ConfigValue<Boolean> forceDetachedDrawersMaxCapacityCheck;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> compRules;
+        public final ForgeConfigSpec.ConfigValue<Boolean> heavyDrawers;
 
         public General(ForgeConfigSpec.Builder builder) {
             builder.push("General");
@@ -87,6 +88,10 @@ public final class CommonConfig
                 .comment("List of rules in format \"domain:item1, domain:item2, n\".",
                     "Creates a compacting drawer rule to convert 1 of item1 into n of item2.")
                 .defineList("compactingRules", test, obj -> CompTierRegistry.validateRuleSyntax((String)obj));
+
+                heavyDrawers = builder
+                .comment("If enabled, carrying filled drawers in your inventory gives slowness debuff, unless a Portability Upgrade is used.")
+                .define("heavyDrawers", false);
 
             builder.pop();
         }

@@ -78,6 +78,7 @@ public class StorageDrawers
         RECIPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new PlayerEventListener());
     }
 
     private void setup (final FMLCommonSetupEvent event) {

@@ -3,6 +3,8 @@ package com.jaquadro.minecraft.storagedrawers.item;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -49,6 +51,10 @@ public class ItemDrawers extends BlockItem
             tooltip.add(Component.literal("").append(textSealed).withStyle(ChatFormatting.YELLOW));
         }
 
+        if(isHeavy(stack)) {
+            tooltip.add(Component.translatable("tooltip.storagedrawers.drawers.too_heavy").withStyle(ChatFormatting.RED));
+        }
+
         //tooltip.add(getDescription().applyTextStyle(TextFormatting.GRAY));
     }
 
@@ -72,6 +78,27 @@ public class ItemDrawers extends BlockItem
     @NotNull
     public Component getDescription() {
         return Component.translatable(this.getDescriptionId() + ".desc");
+    }
+
+    public static boolean isHeavy(@NotNull ItemStack stack) {
+        if(!CommonConfig.GENERAL.heavyDrawers.get()
+               || !(Block.byItem(stack.getItem()) instanceof BlockDrawers))
+            return false;
+
+        CompoundTag tile = stack.getTagElement("tile");
+
+        if(tile == null)
+            return false;
+
+        var x = new UpgradeData(7);
+
+        try {
+            x.read(tile);
+        } catch (ClassCastException e) {
+            return false;
+        }
+
+        return !x.hasPortabilityUpgrade();
     }
 
     private int getCapacityForBlock (@NotNull ItemStack itemStack) {
