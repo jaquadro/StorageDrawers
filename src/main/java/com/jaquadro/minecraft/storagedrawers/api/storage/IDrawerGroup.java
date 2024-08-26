@@ -32,6 +32,15 @@ public interface IDrawerGroup extends ICapabilityProvider
         return true;
     };
 
+    default boolean hasMissingDrawers () {
+        for (int i = 0; i < getDrawerCount(); i++) {
+            if (getDrawer(i).isMissing())
+                return true;
+        }
+
+        return false;
+    }
+
     @Override
     @NotNull
     default <T> LazyOptional<T> getCapability (@NotNull final Capability<T> cap, final @Nullable Direction side) {

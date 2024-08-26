@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.storage.StorageUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -91,7 +92,7 @@ public class DrawerItemRepository implements IItemRepository
 
         IDrawerAttributes attrs = group.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(EmptyDrawerAttributes.EMPTY);
         if (!simulate && attrs.isBalancedFill() && !attrs.isUnlimitedVending())
-            balanceItems(stack);
+            StorageUtil.rebalanceDrawers(group, stack);
 
         return (amount == 0)
             ? ItemStack.EMPTY
@@ -120,35 +121,11 @@ public class DrawerItemRepository implements IItemRepository
 
         IDrawerAttributes attrs = group.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY).orElse(EmptyDrawerAttributes.EMPTY);
         if (!simulate && attrs.isBalancedFill() && !attrs.isUnlimitedVending())
-            balanceItems(stack);
+            StorageUtil.rebalanceDrawers(group, stack);
 
         return (amount == remaining)
             ? ItemStack.EMPTY
             : stackResult(stack, amount - remaining);
-    }
-
-    void balanceItems (ItemStack item) {
-        List<IDrawer> balanceDrawers = new ArrayList<>();
-        int aggCount = 0;
-
-        for (int slot : group.getAccessibleDrawerSlots()) {
-            IDrawer drawer = group.getDrawer(slot);
-            if (!drawer.isEnabled())
-                continue;
-
-            if (ItemStack.isSameItemSameTags(item, drawer.getStoredItemPrototype())) {
-                balanceDrawers.add(drawer);
-                aggCount += drawer.getStoredItemCount();
-            }
-        }
-
-        if (balanceDrawers.size() > 1) {
-            int dist = aggCount / balanceDrawers.size();
-            int remainder = aggCount - (dist * balanceDrawers.size());
-
-            for (int i = 0; i < balanceDrawers.size(); i++)
-                balanceDrawers.get(i).setStoredItemCount(dist + (i < remainder ? 1 : 0));
-        }
     }
 
     @Override

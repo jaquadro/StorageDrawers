@@ -3,16 +3,22 @@ package com.jaquadro.minecraft.storagedrawers.item;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -45,6 +51,10 @@ public class ItemDrawers extends BlockItem
             tooltip.add(Component.literal("").append(textSealed).withStyle(ChatFormatting.YELLOW));
         }
 
+        if(isHeavy(stack)) {
+            tooltip.add(Component.translatable("tooltip.storagedrawers.drawers.too_heavy").withStyle(ChatFormatting.RED));
+        }
+
         //tooltip.add(getDescription().applyTextStyle(TextFormatting.GRAY));
     }
 
@@ -70,6 +80,27 @@ public class ItemDrawers extends BlockItem
         return Component.translatable(this.getDescriptionId() + ".desc");
     }
 
+    public static boolean isHeavy(@NotNull ItemStack stack) {
+        if(!CommonConfig.GENERAL.heavyDrawers.get()
+               || !(Block.byItem(stack.getItem()) instanceof BlockDrawers))
+            return false;
+
+        CompoundTag tile = stack.getTagElement("tile");
+
+        if(tile == null)
+            return false;
+
+        var x = new UpgradeData(7);
+
+        try {
+            x.read(tile);
+        } catch (ClassCastException e) {
+            return false;
+        }
+
+        return !x.hasPortabilityUpgrade();
+    }
+
     private int getCapacityForBlock (@NotNull ItemStack itemStack) {
         Block block = Block.byItem(itemStack.getItem());
         if (block instanceof BlockDrawers blockDrawers) {
@@ -77,5 +108,13 @@ public class ItemDrawers extends BlockItem
         }
 
         return 0;
+    }
+
+    @Override
+    public boolean doesSneakBypassUse (ItemStack stack, LevelReader level, BlockPos pos, Player player) {
+        BlockState state = level.getBlockState(pos);
+        Block block = state.getBlock();
+
+        return block instanceof BlockDrawers bd && bd.retrimType() != null;
     }
 }

@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifi
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
@@ -15,6 +16,7 @@ import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
+import com.jaquadro.minecraft.storagedrawers.storage.StorageUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,6 +46,7 @@ import java.util.UUID;
 public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup /* IProtectable, INameable */
 {
     public static final ModelProperty<IDrawerAttributes> ATTRIBUTES = new ModelProperty<>();
+    public static final ModelProperty<IDrawerGroup> DRAWER_GROUP = new ModelProperty<>();
     //public static final ModelProperty<Boolean> ITEM_LOCKED = new ModelProperty<>();
     //public static final ModelProperty<Boolean> SHROUDED = new ModelProperty<>();
     //public static final ModelProperty<Boolean> VOIDING = new ModelProperty<>();
@@ -412,7 +415,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.getCount());
 
         if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade())
-            balanceSlots(slot);
+            StorageUtil.rebalanceDrawers(getGroup(), slot);
 
         if (isRedstone() && getLevel() != null) {
             getLevel().updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
@@ -443,38 +446,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         stack.shrink(countAdded);
 
         if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade())
-            balanceSlots(slot);
+            StorageUtil.rebalanceDrawers(getGroup(), slot);
 
         return countAdded;
-    }
-
-    void balanceSlots (int slot) {
-        IDrawer drawer = getGroup().getDrawer(slot);
-        if (!drawer.isEnabled() || drawer.isEmpty())
-            return;
-
-        ItemStack proto = drawer.getStoredItemPrototype();
-        List<IDrawer> balanceDrawers = new ArrayList<>();
-
-        int aggCount = 0;
-        for (int i = 0; i < getGroup().getDrawerCount(); i++) {
-            IDrawer other = getGroup().getDrawer(i);
-            if (!drawer.isEnabled() || drawer.isEmpty())
-                continue;
-
-            if (ItemStack.isSameItemSameTags(proto, other.getStoredItemPrototype())) {
-                balanceDrawers.add(other);
-                aggCount += other.getStoredItemCount();
-            }
-        }
-
-        if (!balanceDrawers.isEmpty()) {
-            int dist = aggCount / balanceDrawers.size();
-            int remainder = aggCount - (dist * balanceDrawers.size());
-
-            for (int i = 0; i < balanceDrawers.size(); i++)
-                balanceDrawers.get(i).setStoredItemCount(dist + (i < remainder ? 1 : 0));
-        }
     }
 
     public int interactPutCurrentItemIntoSlot (int slot, Player player) {
@@ -529,6 +503,36 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         lastClickUUID = player.getUUID();
 
         return count;
+    }
+
+    public boolean interactReplaceDrawer (int slot, ItemStack detachedDrawer) {
+        IDrawer drawer = getDrawer(slot);
+        if (!drawer.isMissing())
+            return false;
+
+        if (detachedDrawer.isEmpty())
+            return false;
+
+        DetachedDrawerData data = new DetachedDrawerData(detachedDrawer.getOrCreateTag());
+        ItemStack proto = data.getStoredItemPrototype();
+        int count = data.getStoredItemCount();
+
+        if (count > drawer.getMaxCapacity(proto))
+            return false;
+
+        if (CommonConfig.GENERAL.forceDetachedDrawersMaxCapacityCheck.get()) {
+            int cap = getEffectiveDrawerCapacity() * upgradeData.getStorageMultiplier();
+            if (data.getStorageMultiplier() < cap)
+                return false;
+        }
+
+        drawer.setDetached(false);
+        drawer.setStoredItem(proto, count);
+
+        if (drawerAttributes.isBalancedFill())
+            StorageUtil.rebalanceDrawers(getGroup(), slot);
+
+        return true;
     }
 
     @Override
@@ -709,7 +713,8 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     @Override
     public ModelData getModelData () {
         return ModelData.builder()
-            .with(ATTRIBUTES, drawerAttributes).build();
+            .with(ATTRIBUTES, drawerAttributes)
+            .with(DRAWER_GROUP, getGroup()).build();
             /*.with(ITEM_LOCKED, drawerAttributes.isItemLocked(LockAttribute.LOCK_EMPTY))
             .with(SHROUDED, drawerAttributes.isConcealed())
             .with(VOIDING, drawerAttributes.isVoid()).build();*/

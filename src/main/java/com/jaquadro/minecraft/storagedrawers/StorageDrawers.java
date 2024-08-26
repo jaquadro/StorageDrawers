@@ -9,13 +9,18 @@ import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.AddUpgradeRecipe;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.KeyringRecipe;
+import com.jaquadro.minecraft.storagedrawers.core.recipe.UpgradeDetachedDrawerRecipe;
 import com.jaquadro.minecraft.storagedrawers.integration.TheOneProbe;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
+import com.jaquadro.minecraft.storagedrawers.network.PlayerBoolConfigMessage;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,6 +38,8 @@ import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.UUID;
+
 @Mod(StorageDrawers.MOD_ID)
 public class StorageDrawers
 {
@@ -49,6 +56,7 @@ public class StorageDrawers
 
     private static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MOD_ID);
     public static final RegistryObject<RecipeSerializer<AddUpgradeRecipe>> UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_upgrade", () -> new SimpleCraftingRecipeSerializer<>(AddUpgradeRecipe::new));
+    public static final RegistryObject<RecipeSerializer<UpgradeDetachedDrawerRecipe>> DETACHED_UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_detached_upgrade", () -> new SimpleCraftingRecipeSerializer<>(UpgradeDetachedDrawerRecipe::new));
     public static final RegistryObject<RecipeSerializer<KeyringRecipe>> KEYRING_RECIPE_SERIALIZER = RECIPES.register("keyring", () -> new SimpleCraftingRecipeSerializer<>(KeyringRecipe::new));
 
     public StorageDrawers () {
@@ -70,6 +78,7 @@ public class StorageDrawers
         RECIPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new PlayerEventListener());
     }
 
     private void setup (final FMLCommonSetupEvent event) {
@@ -93,8 +102,9 @@ public class StorageDrawers
 
     @SuppressWarnings("Convert2MethodRef")  // otherwise the class loader gets upset if TheOneProbe is not loaded
     private void onModQueueEvent(final InterModEnqueueEvent event) {
-        InterModComms.sendTo("theoneprobe", "getTheOneProbe", () -> new TheOneProbe());
+        InterModComms.sendTo("theoneprobe", "getTheOneProbe", TheOneProbe::getInstance);
     }
+
     private void onModConfigEvent(final ModConfigEvent event) {
         if (event.getConfig().getType() == ModConfig.Type.COMMON)
             CommonConfig.setLoaded();
@@ -105,6 +115,21 @@ public class StorageDrawers
     @SubscribeEvent
     public void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
         //ConfigManager.serverPlayerConfigSettings.remove(event.player.getUniqueID());
+    }
+
+    @SubscribeEvent
+    public void onEntityJoinWorldEvent(EntityJoinLevelEvent event) {
+        if (!event.getLevel().isClientSide() || !(event.getEntity() instanceof Player))
+            return;
+
+        if (Minecraft.getInstance().player == null)
+            return;
+
+        UUID playerId = Minecraft.getInstance().player.getUUID();
+        if (event.getEntity().getUUID() == playerId) {
+            MessageHandler.INSTANCE.sendToServer(new PlayerBoolConfigMessage(playerId.toString(), "invertShift", ClientConfig.GENERAL.invertShift.get()));
+            MessageHandler.INSTANCE.sendToServer(new PlayerBoolConfigMessage(playerId.toString(), "invertClick", ClientConfig.GENERAL.invertClick.get()));
+        }
     }
 
     @SubscribeEvent

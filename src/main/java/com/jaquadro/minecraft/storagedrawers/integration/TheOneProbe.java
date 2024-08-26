@@ -14,11 +14,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.function.Function;
 
 public class TheOneProbe implements Function<ITheOneProbe, Void> {
+    private static final TheOneProbe INSTANCE = new TheOneProbe();
+
+    public static TheOneProbe getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public Void apply(ITheOneProbe probe) {
-        if (ClientConfig.INTEGRATION.enableTheOneProbe.get())
-            probe.registerProvider(new DrawerProbeProvider());
-
+        probe.registerProvider(new DrawerProbeProvider());
         return null;
     }
 
@@ -30,6 +34,9 @@ public class TheOneProbe implements Function<ITheOneProbe, Void> {
 
         @Override
         public void addProbeInfo(ProbeMode probeMode, IProbeInfo probe, Player player, Level world, BlockState blockState, IProbeHitData data) {
+            if (world.isClientSide() && !ClientConfig.INTEGRATION.enableTheOneProbe.get())
+                return;
+
             BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(world, data.getPos(), BlockEntityDrawers.class);
             if (blockEntityDrawers != null) {
                 DrawerOverlay overlay = new DrawerOverlay();

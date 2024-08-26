@@ -1,0 +1,14 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "missing": "storagedrawers:block/indicator/missing_slots_2"
+    },
+    "elements": [ {
+        "from": [ 1, 9, 0.95 ],
+        "to": [ 15, 15, 16],
+        "faces": {
+            "north": { "uv": [ 1, 9, 15, 15 ], "texture": "#missing" }
+        },
+        "__comment": "slot 1 (top)"
+    } ]
+}

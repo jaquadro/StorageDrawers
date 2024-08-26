@@ -117,7 +117,14 @@ public final class ModBlocks
         META_VOID = registerMetaBlock("meta_void"),
         META_SHROUD = registerMetaBlock("meta_shroud"),
         META_INDICATOR = registerSizedMetaBlock("meta_indicator"),
-        META_COMP_INDICATOR = registerMetaBlock("meta_comp_indicator");
+        META_COMP_INDICATOR = registerMetaBlock("meta_comp_indicator"),
+        META_MISSING_1_1 = registerMetaBlock("meta_missing_slot_1_1"),
+        META_MISSING_2_1 = registerMetaBlock("meta_missing_slot_2_1"),
+        META_MISSING_2_2 = registerMetaBlock("meta_missing_slot_2_2"),
+        META_MISSING_4_1 = registerMetaBlock("meta_missing_slot_4_1"),
+        META_MISSING_4_2 = registerMetaBlock("meta_missing_slot_4_2"),
+        META_MISSING_4_3 = registerMetaBlock("meta_missing_slot_4_3"),
+        META_MISSING_4_4 = registerMetaBlock("meta_missing_slot_4_4");
 
     public static final RegistryObject<BlockKeyButton>
         KEYBUTTON_DRAWER = BLOCK_REGISTER.register("keybutton_drawer",

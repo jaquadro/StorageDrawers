@@ -38,12 +38,14 @@ public final class CommonConfig
         public final ForgeConfigSpec.ConfigValue<Boolean> enableUI;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableSidedInput;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableSidedOutput;
-        public final ForgeConfigSpec.ConfigValue<Boolean> enableItemConversion;
         public final ForgeConfigSpec.ConfigValue<Boolean> debugTrace;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableExtraCompactingRules;
         public final ForgeConfigSpec.ConfigValue<Integer> controllerRange;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableAnalogRedstone;
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableDetachedDrawers;
+        public final ForgeConfigSpec.ConfigValue<Boolean> forceDetachedDrawersMaxCapacityCheck;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> compRules;
+        public final ForgeConfigSpec.ConfigValue<Boolean> heavyDrawers;
 
         public General(ForgeConfigSpec.Builder builder) {
             builder.push("General");
@@ -70,16 +72,26 @@ public final class CommonConfig
                 .define("enableSidedInput", true);
             enableSidedOutput = builder
                 .define("enableSidedOutput", true);
-            enableItemConversion = builder
-                .define("enableItemConversion", true);
             enableExtraCompactingRules = builder
                 .define("enableExtraCompactingRules", true);
+            enableDetachedDrawers = builder
+                .comment("Allows drawers to be pulled from their block and inserted into another block.")
+                .define("enableDetachedDrawers", true);
+            forceDetachedDrawersMaxCapacityCheck = builder
+                .comment("Drawers track the capacity upgrades from the block they were taken from.",
+                    "Drawers can only be placed back into a block with the same or lower max capacity.",
+                    "Drawers can still only be inserted into a block with enough capacity for the items held.")
+                .define("forceDetachedDrawersMaxCapacityCheck", true);
             debugTrace = builder
                 .define("debugTrace", false);
             compRules = builder
                 .comment("List of rules in format \"domain:item1, domain:item2, n\".",
                     "Creates a compacting drawer rule to convert 1 of item1 into n of item2.")
                 .defineList("compactingRules", test, obj -> CompTierRegistry.validateRuleSyntax((String)obj));
+
+                heavyDrawers = builder
+                .comment("If enabled, carrying filled drawers in your inventory gives slowness debuff, unless a Portability Upgrade is used.")
+                .define("heavyDrawers", false);
 
             builder.pop();
         }
@@ -124,6 +136,8 @@ public final class CommonConfig
         public final ForgeConfigSpec.ConfigValue<Integer> level4Mult;
         public final ForgeConfigSpec.ConfigValue<Integer> level5Mult;
 
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableBalanceUpgrade;
+
         public Upgrades (ForgeConfigSpec.Builder builder) {
             builder.push("StorageUpgrades");
             builder.comment("Storage upgrades multiply storage capacity by the given amount.",
@@ -139,6 +153,11 @@ public final class CommonConfig
                 .define("level4Mult", 16);
             level5Mult = builder
                 .define("level5Mult", 32);
+
+            enableBalanceUpgrade = builder
+                .comment("Balance upgrades allow same-item slots to balance out their amounts when items are",
+                    "added or removed from a lot.  Works across networks when acting through a controller.")
+                .define("enableBalanceUpgrade", true);
 
             builder.pop();
         }

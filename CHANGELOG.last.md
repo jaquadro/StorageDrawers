@@ -1,0 +1,3 @@
+- Added detached drawers, which can be placed in empty slots in drawer blocks
+- Added drawer puller tool to remove drawers from blocks
+- Added balanced fill upgrade

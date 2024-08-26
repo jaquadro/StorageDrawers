@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "/#/",
+        "XXX"
+    ],
+    "key": {
+        "#": { "tag": "forge:chests/wooden" },
+        "X": { "tag": "minecraft:wooden_slabs" },
+        "/": { "tag": "forge:rods/wooden" }
+    },
+    "result": { "item": "storagedrawers:detached_drawer" }
+}

@@ -16,5 +16,6 @@ public class MessageHandler
 
     public static void init() {
         INSTANCE.registerMessage(0, CountUpdateMessage.class, CountUpdateMessage::encode, CountUpdateMessage::decode, CountUpdateMessage::handle);
+        INSTANCE.registerMessage(1, PlayerBoolConfigMessage.class, PlayerBoolConfigMessage::encode, PlayerBoolConfigMessage::decode, PlayerBoolConfigMessage::handle);
     }
 }

@@ -63,7 +63,10 @@ public class CountUpdateMessage
     }
 
     public static void handle(CountUpdateMessage msg, Supplier<NetworkEvent.Context> ctx) {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> handleClient(msg, ctx.get()));
+        ctx.get().enqueueWork(() -> {
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> handleClient(msg, ctx.get()));
+        });
+        ctx.get().setPacketHandled(true);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -78,6 +81,5 @@ public class CountUpdateMessage
                 }
             }
         }
-        ctx.setPacketHandled(true);
     }
 }

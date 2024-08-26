@@ -75,7 +75,7 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
 
         storageSlots = new ArrayList<>();
         for (int i = 0; i < drawerCount; i++) {
-            if (group.getDrawer(i).isEnabled())
+            if (group.getDrawer(i).isEnabled() || group.getDrawer(i).isMissing())
                 storageSlots.add(addSlot(new SlotDrawer(this, group, i, getStorageSlotX(i), getStorageSlotY(i))));
         }
 
@@ -115,6 +115,12 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
 
     public List<Slot> getUpgradeSlots () {
         return upgradeSlots;
+    }
+
+    public int getStackCapacity () {
+        if (upgradeInventory instanceof InventoryUpgrade inv)
+            return inv.getStackCapacity();
+        return 1;
     }
 
     @Override

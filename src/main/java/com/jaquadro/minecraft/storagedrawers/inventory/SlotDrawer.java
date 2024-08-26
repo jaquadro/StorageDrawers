@@ -76,6 +76,10 @@ public class SlotDrawer extends Slot
         return group;
     }
 
+    public IDrawer getDrawer () {
+        return drawer;
+    }
+
     @Override
     public boolean isSameInventory (@NotNull Slot other) {
         return other instanceof SlotDrawer && ((SlotDrawer) other).getDrawerGroup() == group;
