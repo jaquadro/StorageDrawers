@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.client.gui;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.DetachedDrawerTooltip;
 import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
 import net.minecraft.client.gui.Font;
@@ -47,13 +48,17 @@ public class ClientDetachedDrawerTooltip implements ClientTooltipComponent
 
     @Override
     public void renderImage(Font font, int pX, int pY, GuiGraphics graphics) {
-        graphics.blit(BACKGROUND_SPRITE, pX, pY, 0, 0, this.backgroundWidth(), this.backgroundHeight(), 128, 64);
+        boolean forceCapCheck = CommonConfig.GENERAL.forceDetachedDrawersMaxCapacityCheck.get();
+        int bgY = forceCapCheck ? 0 : 24;
+        graphics.blit(BACKGROUND_SPRITE, pX, pY, 0, bgY, this.backgroundWidth(), this.backgroundHeight(), 128, 64);
 
         renderSlot(pX + 3, pY + 3, graphics, font);
 
         String count = CountFormatter.formatApprox(font, drawer);
         graphics.drawString(font, count, pX + 22, pY + 8, 0x808080, false);
-        graphics.drawString(font, Integer.toString(stackLimit), pX + 83, pY + 8, 0x808080, false);
+
+        if (forceCapCheck)
+            graphics.drawString(font, Integer.toString(stackLimit), pX + 83, pY + 8, 0x808080, false);
     }
 
     private void renderSlot(int pX, int pY, GuiGraphics graphics, Font font) {

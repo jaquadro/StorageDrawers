@@ -1,12 +1,11 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IPortable;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.DetachedDrawerTooltip;
-import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.KeyringTooltip;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
@@ -21,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class ItemDetachedDrawer extends Item
+public class ItemDetachedDrawer extends Item implements IPortable
 {
     public ItemDetachedDrawer (Properties properties) {
         super(properties);
@@ -43,6 +42,10 @@ public class ItemDetachedDrawer extends Item
     public void appendHoverText (@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(Component.literal("").append(getDescription()).withStyle(ChatFormatting.GRAY));
+
+        if (isHeavy(stack)) {
+            tooltip.add(Component.translatable("tooltip.storagedrawers.drawers.too_heavy").withStyle(ChatFormatting.RED));
+        }
     }
 
     @Override
@@ -56,7 +59,9 @@ public class ItemDetachedDrawer extends Item
     @OnlyIn(Dist.CLIENT)
     @NotNull
     public Component getDescription() {
-        return Component.translatable(this.getDescriptionId() + ".desc");
+        return CommonConfig.GENERAL.enableDetachedDrawers.get()
+            ? Component.translatable(this.getDescriptionId() + ".desc")
+            : Component.translatable("itemConfig.storagedrawers.disabled_tool").withStyle(ChatFormatting.RED);
     }
 
     @Override
@@ -65,5 +70,14 @@ public class ItemDetachedDrawer extends Item
         ItemStack innerStack = data.getStoredItemPrototype().copy();
         innerStack.setCount(data.getStoredItemCount());
         return Optional.of(new DetachedDrawerTooltip(data, innerStack, data.getStorageMultiplier()));
+    }
+
+    @Override
+    public boolean isHeavy(@NotNull ItemStack stack) {
+        if (stack.getItem() != this)
+            return false;
+
+        DetachedDrawerData data = new DetachedDrawerData(stack.getTag());
+        return data.isHeavy() && data.getStoredItemCount() > data.getStoredItemStackSize();
     }
 }

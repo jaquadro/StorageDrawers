@@ -1,3 +1,12 @@
+[12.6.2]
+- Added disabled messages to balance upgrade and drawer pulled if disabled in config
+- Extended "heavy" drawer mode to detached drawers
+  - considered heavy if containing more than stacksize of items
+  - and was taken from drawer block that didn't have portability upgrade
+- Fixed heavy drawer mode to check player inventory
+- Made it possible to insert upgrades as normal items if sneak-clicking
+- Detached drawer tooltip won't show stack limit if stack limit is not enforced in config
+
 [12.6.1]
 - Fixed accidental hard dependency on The One Probe
 

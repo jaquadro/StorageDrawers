@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IPortable;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemDrawers extends BlockItem
+public class ItemDrawers extends BlockItem implements IPortable
 {
     public ItemDrawers (Block block, Item.Properties properties) {
         super(block, properties);
@@ -51,7 +52,7 @@ public class ItemDrawers extends BlockItem
             tooltip.add(Component.literal("").append(textSealed).withStyle(ChatFormatting.YELLOW));
         }
 
-        if(isHeavy(stack)) {
+        if (isHeavy(stack)) {
             tooltip.add(Component.translatable("tooltip.storagedrawers.drawers.too_heavy").withStyle(ChatFormatting.RED));
         }
 
@@ -80,18 +81,16 @@ public class ItemDrawers extends BlockItem
         return Component.translatable(this.getDescriptionId() + ".desc");
     }
 
-    public static boolean isHeavy(@NotNull ItemStack stack) {
-        if(!CommonConfig.GENERAL.heavyDrawers.get()
-               || !(Block.byItem(stack.getItem()) instanceof BlockDrawers))
+    @Override
+    public boolean isHeavy(@NotNull ItemStack stack) {
+        if (stack.getItem() != this)
             return false;
 
         CompoundTag tile = stack.getTagElement("tile");
-
         if(tile == null)
             return false;
 
         var x = new UpgradeData(7);
-
         try {
             x.read(tile);
         } catch (ClassCastException e) {

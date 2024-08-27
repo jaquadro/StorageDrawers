@@ -47,7 +47,7 @@ public final class ModItems
         MAX_REDSTONE_UPGRADE = ITEM_REGISTER.register("max_redstone_upgrade", () -> new ItemUpgradeRedstone(EnumUpgradeRedstone.MAX, new Item.Properties())),
         ILLUMINATION_UPGRADE = ITEM_REGISTER.register("illumination_upgrade", () -> new ItemUpgrade(new Item.Properties())),
         FILL_LEVEL_UPGRADE = ITEM_REGISTER.register("fill_level_upgrade", () -> new ItemUpgrade(new Item.Properties())),
-        BALANCE_FILL_UPGRADE = ITEM_REGISTER.register("balance_fill_upgrade", () -> new ItemUpgrade(new Item.Properties())),
+        BALANCE_FILL_UPGRADE = ITEM_REGISTER.register("balance_fill_upgrade", () -> new ItemUpgradeBalance(new Item.Properties())),
         PORTABILITY_UPGRADE = ITEM_REGISTER.register("portability_upgrade", () -> new ItemUpgradePortability(new Item.Properties())),
         UPGRADE_TEMPLATE = ITEM_REGISTER.register("upgrade_template", () -> new Item(new Item.Properties())),
         DETACHED_DRAWER = ITEM_REGISTER.register("detached_drawer", () -> new ItemDetachedDrawer(new Item.Properties())),

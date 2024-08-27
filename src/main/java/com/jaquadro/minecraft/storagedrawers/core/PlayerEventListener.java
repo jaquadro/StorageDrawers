@@ -1,10 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
-import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IPortable;
+import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -21,8 +25,7 @@ public class PlayerEventListener {
 
 	@SubscribeEvent
 	public void onPlayerPickup(EntityItemPickupEvent event) {
-		if(ItemDrawers.isHeavy(event.getItem().getItem()))
-			applyDebuff(event.getEntity());
+		checkItemDebuf(event.getItem().getItem(), event.getEntity());
 	}
 
 	@SubscribeEvent
@@ -31,13 +34,30 @@ public class PlayerEventListener {
 		if(event.phase != Phase.END || event.player.tickCount % 60 != 0)
 			return;
 
-		for(var s : event.player.getAllSlots())
-		{
-			if(s.getCount() > 0 && ItemDrawers.isHeavy(s))
-			{
-				applyDebuff(event.player);
+		if (!CommonConfig.GENERAL.heavyDrawers.get())
+			return;
+
+		for(var s : event.player.getAllSlots()) {
+			if (checkItemDebuf(s, event.player))
 				return;
+		}
+
+		Inventory inv = event.player.getInventory();
+		for (int i = 0; i < inv.getContainerSize(); i++) {
+			if (checkItemDebuf(inv.getItem(i), event.player))
+				return;
+		}
+	}
+
+	private boolean checkItemDebuf (ItemStack stack, Player player) {
+		Item item = stack.getItem();
+		if (item instanceof IPortable ip) {
+			if (ip.isHeavy(stack)) {
+				applyDebuff(player);
+				return true;
 			}
 		}
+
+		return false;
 	}
 }

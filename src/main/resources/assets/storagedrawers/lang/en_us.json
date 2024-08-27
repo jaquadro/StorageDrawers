@@ -62,6 +62,7 @@
     "item.storagedrawers.max_redstone_upgrade.desc": "Emits signal for most full slot",
     "item.storagedrawers.balance_fill_upgrade": "Balanced Fill Upgrade",
     "item.storagedrawers.balance_fill_upgrade.desc": "Distribute items evenly across slots",
+    "item.storagedrawers.balance_fill_upgrade.warn": "Has no effect with current mod configuration",
     "item.storagedrawers.portability_upgrade": "Portability Upgrade",
     "item.storagedrawers.portability_upgrade.desc": "Allows you to carry filled drawers",
     "item.storagedrawers.portability_upgrade.warn": "Has no effect with current mod configuration",
@@ -80,6 +81,9 @@
     "item.storagedrawers.drawer_puller.desc": "Remove a drawer from its block\nDetached drawer will keep its contents",
     "item.storagedrawers.detached_drawer": "Detached Drawer",
     "item.storagedrawers.detached_drawer.desc": "Put in a drawer block with a missing space",
+
+    "itemConfig.storagedrawers.disabled_upgrade": "Has no effect with current mod configuration",
+    "itemConfig.storagedrawers.disabled_tool": "Has no effect with current mod configuration",
 
     "itemGroup.storagedrawers": "Storage Drawers",
 

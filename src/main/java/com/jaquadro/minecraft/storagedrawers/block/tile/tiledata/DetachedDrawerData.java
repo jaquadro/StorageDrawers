@@ -15,11 +15,13 @@ public class DetachedDrawerData implements IDrawer, INBTSerializable<CompoundTag
     private ItemStack protoStack;
     private int count;
     private int storageMult;
+    private boolean heavy;
 
     public DetachedDrawerData () {
         protoStack = ItemStack.EMPTY;
         count = 0;
         storageMult = 1;
+        heavy = false;
     }
 
     public DetachedDrawerData (IDrawer sourceDrawer) {
@@ -42,6 +44,14 @@ public class DetachedDrawerData implements IDrawer, INBTSerializable<CompoundTag
 
     public void setStorageMultiplier (int storageMult) {
         this.storageMult = storageMult;
+    }
+
+    public boolean isHeavy () {
+        return heavy;
+    }
+
+    public void setIsHeavy (boolean state) {
+        heavy = state;
     }
 
     @Override
@@ -117,6 +127,9 @@ public class DetachedDrawerData implements IDrawer, INBTSerializable<CompoundTag
         tag.put("Item", item);
         tag.putInt("Count", count);
 
+        if (heavy)
+            tag.putBoolean("Heavy", true);
+
         return tag;
     }
 
@@ -134,6 +147,9 @@ public class DetachedDrawerData implements IDrawer, INBTSerializable<CompoundTag
             storageMult = nbt.getInt("StorageMult");
         else
             storageMult = CommonConfig.GENERAL.baseStackStorage.get() * 8;
+
+        if (nbt.contains("Heavy"))
+            setIsHeavy(nbt.getBoolean("Heavy"));
 
         setStoredItemRaw(tagItem);
         setStoredItemCountRaw(tagCount);

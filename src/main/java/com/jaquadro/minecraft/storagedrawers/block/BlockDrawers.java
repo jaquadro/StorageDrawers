@@ -292,7 +292,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         BlockEntityDrawers entity = context.getCheckedEntity(BlockEntityDrawers.class);
 
         // Drawer upgrades
-        if (item.getItem() instanceof ItemUpgrade) {
+        if (item.getItem() instanceof ItemUpgrade && !context.player.isShiftKeyDown()) {
             if (entity.getGroup().hasMissingDrawers() && CommonConfig.GENERAL.forceDetachedDrawersMaxCapacityCheck.get()) {
                 if (!context.level.isClientSide)
                     context.player.displayClientMessage(Component.translatable("message.storagedrawers.missing_slots_upgrade"), true);
@@ -445,6 +445,9 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
 
         int cap = group.getEffectiveDrawerCapacity() * group.upgrades().getStorageMultiplier();
         DetachedDrawerData data = new DetachedDrawerData(drawer, cap);
+
+        if (CommonConfig.GENERAL.heavyDrawers.get() && !group.upgrades().hasPortabilityUpgrade())
+            data.setIsHeavy(true);
 
         ItemStack stack = new ItemStack(ModItems.DETACHED_DRAWER_FULL.get(), 1);
         stack.setTag(data.serializeNBT());
