@@ -1,3 +1,6 @@
+[12.6.3]
+- Fix failure in recipe reload when EMI is present
+
 [12.6.2]
 - Added disabled messages to balance upgrade and drawer pulled if disabled in config
 - Extended "heavy" drawer mode to detached drawers

@@ -138,6 +138,9 @@ public class DetachedDrawerData implements IDrawer, INBTSerializable<CompoundTag
         ItemStack tagItem = ItemStack.EMPTY;
         int tagCount = 0;
 
+        if (nbt == null)
+            return;
+
         if (nbt.contains("Item"))
             tagItem = ItemStack.of(nbt.getCompound("Item"));
         if (nbt.contains("Count"))
