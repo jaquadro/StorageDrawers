@@ -79,7 +79,13 @@ public class DrawerOverlay {
             result.add(Component.translatable("tooltip.storagedrawers.waila.nolimit"));
         else {
             int multiplier = tile.upgrades().getStorageMultiplier();
-            int limit = tile.getEffectiveDrawerCapacity() * multiplier;
+            int limit = tile.getEffectiveDrawerCapacity();
+            try {
+                limit = Math.multiplyExact(limit, multiplier);
+            } catch (ArithmeticException e) {
+                limit = Integer.MAX_VALUE / 64;
+            }
+
             result.add(Component.translatable("tooltip.storagedrawers.waila.limit", limit, multiplier));
         }
     }

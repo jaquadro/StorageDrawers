@@ -25,6 +25,9 @@ public class PlayerEventListener {
 
 	@SubscribeEvent
 	public void onPlayerPickup(EntityItemPickupEvent event) {
+		if (!CommonConfig.GENERAL.heavyDrawers.get())
+			return;
+
 		checkItemDebuf(event.getItem().getItem(), event.getEntity());
 	}
 

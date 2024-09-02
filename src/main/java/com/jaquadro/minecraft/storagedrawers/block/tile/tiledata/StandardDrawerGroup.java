@@ -310,10 +310,18 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             if (attrs.isUnlimitedStorage() || attrs.isUnlimitedVending())
                 return Integer.MAX_VALUE;
 
-            if (itemPrototype.isEmpty())
-                return 64 * getStackCapacity();
+            try {
+                return Math.multiplyExact(getStackSize(itemPrototype), getStackCapacity());
+            } catch (ArithmeticException e) {
+                return Integer.MAX_VALUE;
+            }
+        }
 
-            return itemPrototype.getItem().getMaxStackSize(itemPrototype) * getStackCapacity();
+        public static int getStackSize (@NotNull ItemStack itemPrototype) {
+            if (itemPrototype.isEmpty())
+                return 64;
+
+            return itemPrototype.getItem().getMaxStackSize(itemPrototype);
         }
 
         @Override

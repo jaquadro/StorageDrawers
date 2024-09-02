@@ -1,3 +1,7 @@
+[12.6.4]
+- Fixed broken drawers causing slowness even when heavy config is disabled
+- Added some overflow checking for when upgrades are configured very large
+
 [12.6.3]
 - Fix failure in recipe reload when EMI is present
 

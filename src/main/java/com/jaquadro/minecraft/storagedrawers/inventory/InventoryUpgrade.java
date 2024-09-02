@@ -103,7 +103,11 @@ public class InventoryUpgrade implements Container
     }
 
     public int getStackCapacity () {
-        return blockEntityDrawers.getEffectiveDrawerCapacity() * blockEntityDrawers.upgrades().getStorageMultiplier();
+        try {
+            return Math.multiplyExact(blockEntityDrawers.getEffectiveDrawerCapacity(), blockEntityDrawers.upgrades().getStorageMultiplier());
+        } catch (ArithmeticException e) {
+            return Integer.MAX_VALUE / 64;
+        }
     }
 
     public boolean slotIsLocked (int slot) {
