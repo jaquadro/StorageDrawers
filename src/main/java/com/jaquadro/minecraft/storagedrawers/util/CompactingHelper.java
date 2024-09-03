@@ -237,26 +237,33 @@ public class CompactingHelper
 
     private static class InventoryLookup extends TransientCraftingContainer
     {
-        private final ItemStack[] stackList;
+        private final NonNullList<ItemStack> items;
 
         public InventoryLookup (int width, int height) {
             super(null, width, height);
-
-            stackList = new ItemStack[width * height];
-            Arrays.fill(stackList, ItemStack.EMPTY);
+            items = NonNullList.withSize(width * height, ItemStack.EMPTY);
         }
 
         @Override
         public int getContainerSize ()
         {
-            return this.stackList.length;
+            return items.size();
+        }
+
+        @Override
+        public boolean isEmpty () {
+            for (ItemStack stack : items) {
+                if (!stack.isEmpty())
+                    return false;
+            }
+            return true;
         }
 
         @Override
         @NotNull
         public ItemStack getItem (int slot)
         {
-            return slot >= this.getContainerSize() ? ItemStack.EMPTY : this.stackList[slot];
+            return slot >= this.getContainerSize() ? ItemStack.EMPTY : this.items.get(slot);
         }
 
         @Override
@@ -273,7 +280,19 @@ public class CompactingHelper
 
         @Override
         public void setItem (int slot, @NotNull ItemStack stack) {
-            stackList[slot] = stack;
+            stack = stack.copy();
+            stack.setCount(1);
+            items.set(slot, stack);
+        }
+
+        @Override
+        public void clearContent () {
+
+        }
+
+        @Override
+        public List<ItemStack> getItems () {
+            return List.copyOf(items);
         }
     }
 }
