@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "X/X",
+        "///",
+        "X/X"
+    ],
+    "key": {
+        "/": { "item": "minecraft:spruce_planks" },
+        "X": { "tag": "forge:chests/wooden" }
+    },
+    "result": { "id": "storagedrawers:spruce_full_drawers_4", "count": 4 }
+}
