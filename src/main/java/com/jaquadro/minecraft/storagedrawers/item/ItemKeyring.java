@@ -29,6 +29,7 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -60,7 +61,12 @@ public class ItemKeyring extends Item
                 access.set(s);
             });
             if (getContents(targetStack).count() == 0) {
-                slot.set(new ItemStack(ModItems.KEYRING.get(), 1));
+                ItemStack newStack = new ItemStack(ModItems.KEYRING.get(), 1);
+                newStack.setTag(targetStack.getTag());
+                slot.set(newStack);
+            } else {
+                ItemStack newStack = rotateKeyring(targetStack);
+                slot.set(newStack);
             }
             return true;
         }
@@ -121,6 +127,23 @@ public class ItemKeyring extends Item
         }).findFirst();
     }
 
+    private static ItemStack getActiveKey (ItemStack stack, Item item) {
+        CompoundTag tag = stack.getOrCreateTag();
+        if (!tag.contains(TAG_ITEMS))
+            return null;
+
+        ListTag list = tag.getList(TAG_ITEMS, 10);
+        if (list.isEmpty())
+            return null;
+
+        return list.stream().filter(CompoundTag.class::isInstance)
+            .map(CompoundTag.class::cast)
+            .map(ItemStack::of)
+            .filter(t -> {
+                return ItemStack.isSameItem(t, new ItemStack(item));
+        }).findFirst().orElse(null);
+    }
+
     private static Optional<ItemStack> removeOne (ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         if (!tag.contains(TAG_ITEMS))
@@ -160,8 +183,14 @@ public class ItemKeyring extends Item
         if (key == null || !key.isPresent())
             return super.getName(stack);
 
+        Component subName;
+        ItemStack activeKey = getActiveKey(stack, key.get());
+        if (activeKey != null)
+            subName = activeKey.getHoverName();
+        else
+            subName = Component.translatable(key.get().getDescriptionId());
+
         MutableComponent name = Component.translatable(ModItems.KEYRING.get().getDescriptionId());
-        MutableComponent subName = Component.translatable(key.get().getDescriptionId());
         return name.append(" (").append(subName).append(")");
     }
 
@@ -174,7 +203,9 @@ public class ItemKeyring extends Item
     @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText (@NotNull ItemStack itemStack, @Nullable Level world, List<Component> list, TooltipFlag advanced) {
-        list.add(Component.literal("").append(getDescription()).withStyle(ChatFormatting.GRAY));
+        List<MutableComponent> desc = Arrays.stream(getDescription().getString().split("\n")).map(Component::literal).toList();
+        for (MutableComponent component : desc)
+            list.add(component.withStyle(ChatFormatting.GRAY));
     }
 
     @Override
@@ -203,6 +234,14 @@ public class ItemKeyring extends Item
         if (list.isEmpty())
             return InteractionResultHolder.pass(stack);
 
+        ItemStack keyring = rotateKeyring(stack);
+
+        return InteractionResultHolder.success(keyring);
+    }
+
+    private ItemStack rotateKeyring(ItemStack stack) {
+        List<ItemStack> list = getContents(stack).toList();
+
         int index = 0;
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getItem() == key.get()) {
@@ -219,6 +258,6 @@ public class ItemKeyring extends Item
         ItemStack keyring = getKeyring(nextItem);
         keyring.setTag(stack.getTag());
 
-        return InteractionResultHolder.success(keyring);
+        return keyring;
     }
 }

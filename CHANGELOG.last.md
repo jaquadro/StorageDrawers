@@ -1,2 +1,4 @@
-- Fixed broken drawers causing slowness even when heavy config is disabled
-- Added some overflow checking for when upgrades are configured very large
+- Fixed keyring representing a key that has been removed
+- Fixed keyring losing extra metadata when last key is removed
+- Fixed keyring not showing a key's custom name
+- Fixed keyring description not rendering newlines correctly in some cases
