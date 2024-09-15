@@ -10,7 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
@@ -115,7 +115,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             ItemStack upgrade = getUpgrade(slot);
             if (upgrade.getItem() instanceof ItemUpgradeStorage) {
                 int storageLevel = ((ItemUpgradeStorage) upgrade.getItem()).level.getLevel();
-                int storageMult = CommonConfig.UPGRADES.getLevelMult(storageLevel);
+                int storageMult = ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(storageLevel);
                 int effectiveStorageMult = upgradeData.getStorageMultiplier();
                 if (effectiveStorageMult == storageMult)
                     storageMult--;
@@ -148,7 +148,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             // New item is a downgrade
             int currentUpgradeMult = upgradeData.getStorageMultiplier();
             int storageLevel = ((ItemUpgradeStorage) upgrade.getItem()).level.getLevel();
-            int storageMult = CommonConfig.UPGRADES.getLevelMult(storageLevel);
+            int storageMult = ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(storageLevel);
 
             // The below first calculates the amount of stacks to remove if the multiplier stayed the same, then adds the removed multiplier,
             // which results in the amount of stacks (storage) to remove. The addition would be multiplied by
@@ -234,7 +234,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         if (upgradeData.hasOneStackUpgrade())
             return 1;
 
-        return getDrawerCapacity() * CommonConfig.GENERAL.baseStackStorage.get();
+        return getDrawerCapacity() * ModCommonConfig.INSTANCE.GENERAL.baseStackStorage.get();
     }
 
     protected boolean emptySlotCanBeCleared (int slot) {

@@ -6,7 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersComp;
-import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModClientConfig;
 import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -72,7 +72,7 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
 
         float distance = (float)Math.sqrt(blockEntityDrawers.getBlockPos().distToCenterSqr(player.position()));
 
-        double renderDistance = ClientConfig.RENDER.labelRenderDistance.get();
+        double renderDistance = ModClientConfig.INSTANCE.RENDER.labelRenderDistance.get();
         if (renderDistance > 0 && distance > renderDistance)
             return;
 
@@ -127,11 +127,11 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
 
         if (blockEntityDrawers.getDrawerAttributes().isShowingQuantity()) {
             float alpha = 1;
-            double fadeDistance = ClientConfig.RENDER.quantityFadeDistance.get();
+            double fadeDistance = ModClientConfig.INSTANCE.RENDER.quantityFadeDistance.get();
             if (fadeDistance == 0 || distance > fadeDistance)
                 alpha = Math.max(1f - ((distance - 4) / 6), 0.05f);
 
-            double renderDistance = ClientConfig.RENDER.quantityRenderDistance.get();
+            double renderDistance = ModClientConfig.INSTANCE.RENDER.quantityRenderDistance.get();
             if (renderDistance == 0 || distance < renderDistance) {
                 for (int i = 0; i < drawerCount; i++) {
                     String format = CountFormatter.format(this.context.getFont(), blockEntityDrawers.getGroup().getDrawer(i));

@@ -1,11 +1,11 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
-import com.jaquadro.minecraft.storagedrawers.api.storage.Drawers;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
+import com.mojang.authlib.GameProfile;
+import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-public class BlockEntityControllerIO extends BaseBlockEntity implements IDrawerGroup
+public class BlockEntityControllerIO extends BaseBlockEntity implements IDrawerGroup, IControlGroup
 {
     private static final int[] drawerSlots = new int[]{0};
 
@@ -30,6 +30,33 @@ public class BlockEntityControllerIO extends BaseBlockEntity implements IDrawerG
 
     public BlockEntityControllerIO (BlockPos pos, BlockState state) {
         this(ModBlockEntities.CONTROLLER_IO.get(), pos, state);
+    }
+
+    @Override
+    public IDrawerGroup getDrawerGroup () {
+        BlockEntityController controller = getController();
+        if (controller == null || !controller.isValidIO(getBlockPos()))
+            return null;
+
+        return controller.getDrawerGroup();
+    }
+
+    @Override
+    public IDrawerAttributesGroupControl getGroupControllableAttributes (GameProfile profile) {
+        BlockEntityController controller = getController();
+        if (controller == null || !controller.isValidIO(getBlockPos()))
+            return null;
+
+        return controller.getGroupControllableAttributes(profile);
+    }
+
+    @Override
+    public IControlGroup getBoundControlGroup () {
+        BlockEntityController controller = getController();
+        if (controller == null || !controller.isValidIO(getBlockPos()))
+            return null;
+
+        return controller;
     }
 
     @Override
@@ -91,11 +118,19 @@ public class BlockEntityControllerIO extends BaseBlockEntity implements IDrawerG
         super.setChanged();
     }
 
+    @Override
+    public <T> T getCapability (ChameleonCapability<T> capability) {
+        if (capability == null || level == null)
+            return null;
+        return capability.getCapability(level, getBlockPos());
+    }
+
+    /*
     public <T> T getCapability(@NotNull BlockCapability<T, Void> capability) {
         if (level == null)
             return null;
         return level.getCapability(capability, getBlockPos(), getBlockState(), this, null);
-    }
+    }*/
 
     private final ItemRepositoryProxy itemRepository = new ItemRepositoryProxy();
 

@@ -8,12 +8,13 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
-import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
+import com.texelsaurus.minecraft.chameleon.ChameleonServices;
+import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -24,12 +25,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
@@ -37,7 +32,7 @@ import java.util.UUID;
 
 public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup /* IProtectable, INameable */
 {
-    public static final ModelProperty<IDrawerAttributes> ATTRIBUTES = new ModelProperty<>();
+    //public static final ModelProperty<IDrawerAttributes> ATTRIBUTES = new ModelProperty<>();
     //public static final ModelProperty<Boolean> ITEM_LOCKED = new ModelProperty<>();
     //public static final ModelProperty<Boolean> SHROUDED = new ModelProperty<>();
     //public static final ModelProperty<Boolean> VOIDING = new ModelProperty<>();
@@ -54,7 +49,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     //private UUID owner;
     //private String securityKey;
 
-    private final IDrawerAttributesModifiable drawerAttributes;
+    protected final IDrawerAttributesModifiable drawerAttributes;
 
     private long lastClickTime;
     private UUID lastClickUUID;
@@ -108,7 +103,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             ItemStack upgrade = getUpgrade(slot);
             if (upgrade.getItem() instanceof ItemUpgradeStorage) {
                 int storageLevel = ((ItemUpgradeStorage) upgrade.getItem()).level.getLevel();
-                int storageMult = CommonConfig.UPGRADES.getLevelMult(storageLevel);
+                int storageMult = ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(storageLevel);
                 int effectiveStorageMult = upgradeData.getStorageMultiplier();
                 if (effectiveStorageMult == storageMult)
                     storageMult--;
@@ -141,7 +136,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             // New item is a downgrade
             int currentUpgradeMult = upgradeData.getStorageMultiplier();
             int storageLevel = ((ItemUpgradeStorage) upgrade.getItem()).level.getLevel();
-            int storageMult = CommonConfig.UPGRADES.getLevelMult(storageLevel);
+            int storageMult = ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(storageLevel);
 
             // The below first calculates the amount of stacks to remove if the multiplier stayed the same, then adds the removed multiplier,
             // which results in the amount of stacks (storage) to remove. The addition would be multiplied by
@@ -239,7 +234,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         if (upgradeData.hasOneStackUpgrade())
             return 1;
 
-        return getDrawerCapacity() * CommonConfig.GENERAL.baseStackStorage.get();
+        return getDrawerCapacity() * ModCommonConfig.INSTANCE.GENERAL.baseStackStorage.get();
     }
 
     protected boolean emptySlotCanBeCleared (int slot) {
@@ -589,12 +584,10 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         if (getLevel() != null && getLevel().isClientSide)
             return;
 
-        PacketDistributor.sendToPlayersNear((ServerLevel)getLevel(), null,
-            getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 500,
-            new CountUpdateMessage(getBlockPos(), slot, count));
+        ChameleonServices.NETWORK.sendToPlayersNear(new CountUpdateMessage(getBlockPos(), slot, count),
+            (ServerLevel) getLevel(), getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 500);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void clientUpdateCount (final int slot, final int count) {
         if (getLevel() == null || !getLevel().isClientSide)
             return;
@@ -602,7 +595,6 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         Minecraft.getInstance().tell(() -> BlockEntityDrawers.this.clientUpdateCountAsync(slot, count));
     }
 
-    @OnlyIn(Dist.CLIENT)
     private void clientUpdateCountAsync (int slot, int count) {
         IDrawer drawer = getDrawer(slot);
         if (drawer.isEnabled() && drawer.getStoredItemCount() != count)
@@ -658,19 +650,25 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         customNameData.setName(name);
     }*/
 
-    public <T> T getCapability(@NotNull BlockCapability<T, Void> capability) {
+    @Override
+    public <T> T getCapability (ChameleonCapability<T> capability) {
+        if (capability == null || level == null)
+            return null;
+        return capability.getCapability(level, getBlockPos());
+    }
+
+    /*public <T> T getCapability(@NotNull BlockCapability<T, Void> capability) {
         if (level == null)
             return null;
         return level.getCapability(capability, getBlockPos(), getBlockState(), this, null);
-    }
+    }*/
 
+    /*
     @NotNull
     @Override
     public ModelData getModelData () {
         return ModelData.builder()
             .with(ATTRIBUTES, drawerAttributes).build();
-            /*.with(ITEM_LOCKED, drawerAttributes.isItemLocked(LockAttribute.LOCK_EMPTY))
-            .with(SHROUDED, drawerAttributes.isConcealed())
-            .with(VOIDING, drawerAttributes.isVoid()).build();*/
     }
+    */
 }

@@ -1,10 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
+import com.jaquadro.minecraft.storagedrawers.ModConstants;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
 import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMeta;
 import com.jaquadro.minecraft.storagedrawers.item.*;
+import com.texelsaurus.minecraft.chameleon.ChameleonServices;
+import com.texelsaurus.minecraft.chameleon.registry.ChameleonRegistry;
+import com.texelsaurus.minecraft.chameleon.registry.RegistryEntry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -15,7 +19,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.*;
 
 import java.util.ArrayList;
@@ -24,57 +27,58 @@ import java.util.stream.Stream;
 
 public final class ModItems
 {
-    public static final DeferredRegister.Items ITEM_REGISTER = DeferredRegister.createItems(StorageDrawers.MOD_ID);
-    public static final List<DeferredItem<? extends Item>> EXCLUDE_ITEMS_CREATIVE_TAB = new ArrayList<>();
+    public static final ChameleonRegistry<Item> ITEMS = ChameleonServices.REGISTRY.create(BuiltInRegistries.ITEM, ModConstants.MOD_ID);
+    //public static final DeferredRegister.Items ITEM_REGISTER = DeferredRegister.createItems(StorageDrawers.MOD_ID);
+    public static final List<RegistryEntry<? extends Item>> EXCLUDE_ITEMS_CREATIVE_TAB = new ArrayList<>();
 
     private static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(StorageDrawers.MOD_ID, "storagedrawers"));
 
-    public static final DeferredItem<? extends Item>
-        OBSIDIAN_STORAGE_UPGRADE = ITEM_REGISTER.register("obsidian_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.OBSIDIAN, new Item.Properties())),
-        IRON_STORAGE_UPGRADE = ITEM_REGISTER.register("iron_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.IRON, new Item.Properties())),
-        GOLD_STORAGE_UPGRADE = ITEM_REGISTER.register("gold_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.GOLD, new Item.Properties())),
-        DIAMOND_STORAGE_UPGRADE = ITEM_REGISTER.register("diamond_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.DIAMOND, new Item.Properties())),
-        EMERALD_STORAGE_UPGRADE = ITEM_REGISTER.register("emerald_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.EMERALD, new Item.Properties())),
-        ONE_STACK_UPGRADE = ITEM_REGISTER.register("one_stack_upgrade", () -> new ItemUpgrade(new Item.Properties())),
-        VOID_UPGRADE = ITEM_REGISTER.register("void_upgrade", () -> new ItemUpgrade(new Item.Properties())),
-        CREATIVE_STORAGE_UPGRADE = ITEM_REGISTER.register("creative_storage_upgrade", () -> new ItemUpgrade(new Item.Properties())),
-        CREATIVE_VENDING_UPGRADE = ITEM_REGISTER.register("creative_vending_upgrade", () -> new ItemUpgrade(new Item.Properties())),
-        //CONVERSION_UPGRADE = ITEM_REGISTER.register("conversion_upgrade", () -> new ItemUpgrade(new Item.Properties())),
-        REDSTONE_UPGRADE = ITEM_REGISTER.register("redstone_upgrade", () -> new ItemUpgradeRedstone(EnumUpgradeRedstone.COMBINED, new Item.Properties())),
-        MIN_REDSTONE_UPGRADE = ITEM_REGISTER.register("min_redstone_upgrade", () -> new ItemUpgradeRedstone(EnumUpgradeRedstone.MIN, new Item.Properties())),
-        MAX_REDSTONE_UPGRADE = ITEM_REGISTER.register("max_redstone_upgrade", () -> new ItemUpgradeRedstone(EnumUpgradeRedstone.MAX, new Item.Properties())),
-        ILLUMINATION_UPGRADE = ITEM_REGISTER.register("illumination_upgrade", () -> new ItemUpgrade(new Item.Properties())),
-        FILL_LEVEL_UPGRADE = ITEM_REGISTER.register("fill_level_upgrade", () -> new ItemUpgrade(new Item.Properties())),
-        UPGRADE_TEMPLATE = ITEM_REGISTER.register("upgrade_template", () -> new Item(new Item.Properties()));
+    public static final RegistryEntry<? extends Item>
+        OBSIDIAN_STORAGE_UPGRADE = ITEMS.register("obsidian_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.OBSIDIAN, new Item.Properties())),
+        IRON_STORAGE_UPGRADE = ITEMS.register("iron_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.IRON, new Item.Properties())),
+        GOLD_STORAGE_UPGRADE = ITEMS.register("gold_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.GOLD, new Item.Properties())),
+        DIAMOND_STORAGE_UPGRADE = ITEMS.register("diamond_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.DIAMOND, new Item.Properties())),
+        EMERALD_STORAGE_UPGRADE = ITEMS.register("emerald_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.EMERALD, new Item.Properties())),
+        ONE_STACK_UPGRADE = ITEMS.register("one_stack_upgrade", () -> new ItemUpgrade(new Item.Properties())),
+        VOID_UPGRADE = ITEMS.register("void_upgrade", () -> new ItemUpgrade(new Item.Properties())),
+        CREATIVE_STORAGE_UPGRADE = ITEMS.register("creative_storage_upgrade", () -> new ItemUpgrade(new Item.Properties())),
+        CREATIVE_VENDING_UPGRADE = ITEMS.register("creative_vending_upgrade", () -> new ItemUpgrade(new Item.Properties())),
+        //CONVERSION_UPGRADE = ITEMS.register("conversion_upgrade", () -> new ItemUpgrade(new Item.Properties())),
+        REDSTONE_UPGRADE = ITEMS.register("redstone_upgrade", () -> new ItemUpgradeRedstone(EnumUpgradeRedstone.COMBINED, new Item.Properties())),
+        MIN_REDSTONE_UPGRADE = ITEMS.register("min_redstone_upgrade", () -> new ItemUpgradeRedstone(EnumUpgradeRedstone.MIN, new Item.Properties())),
+        MAX_REDSTONE_UPGRADE = ITEMS.register("max_redstone_upgrade", () -> new ItemUpgradeRedstone(EnumUpgradeRedstone.MAX, new Item.Properties())),
+        ILLUMINATION_UPGRADE = ITEMS.register("illumination_upgrade", () -> new ItemUpgrade(new Item.Properties())),
+        FILL_LEVEL_UPGRADE = ITEMS.register("fill_level_upgrade", () -> new ItemUpgrade(new Item.Properties())),
+        UPGRADE_TEMPLATE = ITEMS.register("upgrade_template", () -> new Item(new Item.Properties()));
 
-    public static final DeferredItem<? extends ItemKey>
-        DRAWER_KEY = ITEM_REGISTER.register("drawer_key", () -> new ItemDrawerKey(new Item.Properties())),
-        QUANTIFY_KEY = ITEM_REGISTER.register("quantify_key", () -> new ItemQuantifyKey(new Item.Properties())),
-        SHROUD_KEY = ITEM_REGISTER.register("shroud_key", () -> new ItemShroudKey(new Item.Properties()));
+    public static final RegistryEntry<? extends ItemKey>
+        DRAWER_KEY = ITEMS.register("drawer_key", () -> new ItemDrawerKey(new Item.Properties())),
+        QUANTIFY_KEY = ITEMS.register("quantify_key", () -> new ItemQuantifyKey(new Item.Properties())),
+        SHROUD_KEY = ITEMS.register("shroud_key", () -> new ItemShroudKey(new Item.Properties()));
 
-    public static final DeferredItem<? extends ItemKeyring>
-        KEYRING = ITEM_REGISTER.register("keyring", () -> new ItemKeyring(null, new Item.Properties().stacksTo(1))),
-        KEYRING_DRAWER = ITEM_REGISTER.register("keyring_drawer", () -> new ItemKeyring(DRAWER_KEY, new Item.Properties().stacksTo(1))),
-        KEYRING_QUANTIFY = ITEM_REGISTER.register("keyring_quantify", () -> new ItemKeyring(QUANTIFY_KEY, new Item.Properties().stacksTo(1))),
-        KEYRING_SHROUD = ITEM_REGISTER.register("keyring_shroud", () -> new ItemKeyring(SHROUD_KEY, new Item.Properties().stacksTo(1)));
+    public static final RegistryEntry<? extends ItemKeyring>
+        KEYRING = ITEMS.register("keyring", () -> new ItemKeyring(null, new Item.Properties().stacksTo(1))),
+        KEYRING_DRAWER = ITEMS.register("keyring_drawer", () -> new ItemKeyring(DRAWER_KEY, new Item.Properties().stacksTo(1))),
+        KEYRING_QUANTIFY = ITEMS.register("keyring_quantify", () -> new ItemKeyring(QUANTIFY_KEY, new Item.Properties().stacksTo(1))),
+        KEYRING_SHROUD = ITEMS.register("keyring_shroud", () -> new ItemKeyring(SHROUD_KEY, new Item.Properties().stacksTo(1)));
 
     private ModItems() { }
 
-    public static void register(IEventBus bus) {
+    public static void init() {
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD);
 
-        for (DeferredHolder<Block, ? extends Block> ro : ModBlocks.BLOCK_REGISTER.getEntries()) {
+        for (RegistryEntry<Block> ro : ModBlocks.BLOCKS.getEntries()) {
             if (ModBlocks.EXCLUDE_ITEMS.contains(ro.getId().getPath()))
                 continue;
 
-            registerBlock(ITEM_REGISTER, ro);
+            registerBlock(ITEMS, ro);
         }
-        ITEM_REGISTER.register(bus);
+        ITEMS.init();
     }
 
-    static void registerBlock(DeferredRegister<Item> register, DeferredHolder<Block, ? extends Block> blockHolder) {
+    static void registerBlock(ChameleonRegistry<Item> register, RegistryEntry<? extends Block> blockHolder) {
         if (blockHolder == null)
             return;
 
@@ -97,8 +101,8 @@ public final class ModItems
             helper.register(MAIN, CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2.get()))
                 .title(Component.translatable("itemGroup.storagedrawers"))
                 .displayItems((params, output) -> {
-                    ITEM_REGISTER.getEntries().forEach((reg) -> {
-                        if (reg == null || !reg.isBound())
+                    ITEMS.getEntries().forEach((reg) -> {
+                        if (reg == null)
                             return;
                         if (ModItems.EXCLUDE_ITEMS_CREATIVE_TAB.contains(reg))
                             return;

@@ -1,31 +1,33 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
+import com.jaquadro.minecraft.storagedrawers.ModConstants;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.*;
 import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMeta;
 import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMetaSized;
+import com.texelsaurus.minecraft.chameleon.ChameleonServices;
+import com.texelsaurus.minecraft.chameleon.registry.ChameleonRegistry;
+import com.texelsaurus.minecraft.chameleon.registry.RegistryEntry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 public final class ModBlocks
 {
-    public static final DeferredRegister.Blocks BLOCK_REGISTER = DeferredRegister.createBlocks(StorageDrawers.MOD_ID);
+    public static final ChameleonRegistry<Block> BLOCKS = ChameleonServices.REGISTRY.create(BuiltInRegistries.BLOCK, ModConstants.MOD_ID);
+    //public static final DeferredRegister.Blocks BLOCK_REGISTER = DeferredRegister.createBlocks(StorageDrawers.MOD_ID);
 
     public static final List<String> EXCLUDE_ITEMS = new ArrayList<>();
 
-    public static final DeferredBlock<BlockStandardDrawers>
+    public static final RegistryEntry<BlockStandardDrawers>
         OAK_FULL_DRAWERS_1 = registerWoodenDrawerBlock(modLoc("oak"), 1, false),
         OAK_FULL_DRAWERS_2 = registerWoodenDrawerBlock(modLoc("oak"), 2, false),
         OAK_FULL_DRAWERS_4 = registerWoodenDrawerBlock(modLoc("oak"), 4, false),
@@ -93,9 +95,9 @@ public final class ModBlocks
         WARPED_HALF_DRAWERS_2 = registerWoodenDrawerBlock(modLoc("warped"), 2, true),
         WARPED_HALF_DRAWERS_4 = registerWoodenDrawerBlock(modLoc("warped"), 4, true);
 
-    public static final DeferredBlock<BlockCompDrawers> COMPACTING_DRAWERS_3 = registerCompactingDrawerBlock("compacting_drawers_3");
+    public static final RegistryEntry<BlockCompDrawers> COMPACTING_DRAWERS_3 = registerCompactingDrawerBlock("compacting_drawers_3");
 
-    public static final DeferredBlock<BlockTrim>
+    public static final RegistryEntry<BlockTrim>
         OAK_TRIM = registerTrimBlock(modLoc("oak")),
         SPRUCE_TRIM = registerTrimBlock(modLoc("spruce")),
         BIRCH_TRIM = registerTrimBlock(modLoc("birch")),
@@ -108,25 +110,25 @@ public final class ModBlocks
         CRIMSON_TRIM = registerTrimBlock(modLoc("crimson")),
         WARPED_TRIM = registerTrimBlock(modLoc("warped"));
 
-    public static final DeferredBlock<BlockController>
+    public static final RegistryEntry<BlockController>
         CONTROLLER = registerControllerBlock("controller");
 
-    public static final DeferredBlock<BlockControllerIO>
+    public static final RegistryEntry<BlockControllerIO>
         CONTROLLER_IO = registerControllerIOBlock("controller_io");
 
-    public static final DeferredBlock<BlockMeta>
+    public static final RegistryEntry<BlockMeta>
         META_LOCKED = registerMetaBlock("meta_locked"),
         META_VOID = registerMetaBlock("meta_void"),
         META_SHROUD = registerMetaBlock("meta_shroud"),
         META_INDICATOR = registerSizedMetaBlock("meta_indicator"),
         META_COMP_INDICATOR = registerMetaBlock("meta_comp_indicator");
 
-    public static final DeferredBlock<BlockKeyButton>
-        KEYBUTTON_DRAWER = BLOCK_REGISTER.register("keybutton_drawer",
+    public static final RegistryEntry<BlockKeyButton>
+        KEYBUTTON_DRAWER = BLOCKS.register("keybutton_drawer",
         () -> new BlockKeyButton(KeyType.DRAWER, Properties.of().sound(SoundType.STONE))),
-        KEYBUTTON_QUANTIFY = BLOCK_REGISTER.register("keybutton_quantify",
+        KEYBUTTON_QUANTIFY = BLOCKS.register("keybutton_quantify",
             () -> new BlockKeyButton(KeyType.QUANTIFY, Properties.of().sound(SoundType.STONE))),
-        KEYBUTTON_CONCEALMENT = BLOCK_REGISTER.register("keybutton_concealment",
+        KEYBUTTON_CONCEALMENT = BLOCKS.register("keybutton_concealment",
             () -> new BlockKeyButton(KeyType.CONCEALMENT, Properties.of().sound(SoundType.STONE)));
 
     private ModBlocks() {}
@@ -135,52 +137,52 @@ public final class ModBlocks
         return ResourceLocation.fromNamespaceAndPath(StorageDrawers.MOD_ID, name);
     }
 
-    static DeferredBlock<BlockStandardDrawers> registerWoodenDrawerBlock(ResourceLocation name, int drawerCount, boolean halfDepth) {
-        return registerWoodenDrawerBlock(BLOCK_REGISTER, name, drawerCount, halfDepth);
+    static RegistryEntry<BlockStandardDrawers> registerWoodenDrawerBlock(ResourceLocation name, int drawerCount, boolean halfDepth) {
+        return registerWoodenDrawerBlock(BLOCKS, name, drawerCount, halfDepth);
     }
 
-    static DeferredBlock<BlockStandardDrawers> registerWoodenDrawerBlock(DeferredRegister.Blocks register, String name, int drawerCount, boolean halfDepth) {
+    static RegistryEntry<BlockStandardDrawers> registerWoodenDrawerBlock(ChameleonRegistry<Block> register, String name, int drawerCount, boolean halfDepth) {
         return register.register(name, () -> new BlockStandardDrawers(drawerCount, halfDepth, getWoodenDrawerBlockProperties()));
     }
 
-    static DeferredBlock<BlockStandardDrawers> registerWoodenDrawerBlock(DeferredRegister.Blocks register, ResourceLocation material, int drawerCount, boolean halfDepth) {
+    static RegistryEntry<BlockStandardDrawers> registerWoodenDrawerBlock(ChameleonRegistry<Block> register, ResourceLocation material, int drawerCount, boolean halfDepth) {
         String name = material.getPath() + (halfDepth ? "_half_drawers_" : "_full_drawers_") + drawerCount;
         return register.register(name, () -> new BlockStandardDrawers(drawerCount, halfDepth, getWoodenDrawerBlockProperties()).setMatKey(material));
     }
 
-    static DeferredBlock<BlockCompDrawers> registerCompactingDrawerBlock(String name) {
-        return BLOCK_REGISTER.register(name, () -> new BlockCompDrawers(getStoneDrawerBlockProperties()));
+    static RegistryEntry<BlockCompDrawers> registerCompactingDrawerBlock(String name) {
+        return BLOCKS.register(name, () -> new BlockCompDrawers(getStoneDrawerBlockProperties()));
     }
 
-    static DeferredBlock<BlockTrim> registerTrimBlock(ResourceLocation name) {
-        return registerTrimBlock(BLOCK_REGISTER, name);
+    static RegistryEntry<BlockTrim> registerTrimBlock(ResourceLocation name) {
+        return registerTrimBlock(BLOCKS, name);
     }
 
-    static DeferredBlock<BlockTrim> registerTrimBlock(DeferredRegister.Blocks register, String name) {
+    static RegistryEntry<BlockTrim> registerTrimBlock(ChameleonRegistry<Block> register, String name) {
         return register.register(name, () -> new BlockTrim(getWoodenBlockProperties()));
     }
 
-    static DeferredBlock<BlockTrim> registerTrimBlock(DeferredRegister.Blocks register, ResourceLocation material) {
+    static RegistryEntry<BlockTrim> registerTrimBlock(ChameleonRegistry<Block> register, ResourceLocation material) {
         String name = material.getPath() + "_trim";
         return register.register(name, () -> new BlockTrim(getWoodenBlockProperties()).setMatKey(material));
     }
 
-    static DeferredBlock<BlockController> registerControllerBlock(String name) {
-        return BLOCK_REGISTER.register(name, () -> new BlockController(getStoneBlockProperties()));
+    static RegistryEntry<BlockController> registerControllerBlock(String name) {
+        return BLOCKS.register(name, () -> new BlockController(getStoneBlockProperties()));
     }
 
-    static DeferredBlock<BlockControllerIO> registerControllerIOBlock (String name) {
-        return BLOCK_REGISTER.register(name, () -> new BlockControllerIO(getStoneBlockProperties()));
+    static RegistryEntry<BlockControllerIO> registerControllerIOBlock (String name) {
+        return BLOCKS.register(name, () -> new BlockControllerIO(getStoneBlockProperties()));
     }
 
-    static DeferredBlock<BlockMeta> registerMetaBlock(String name) {
+    static RegistryEntry<BlockMeta> registerMetaBlock(String name) {
         EXCLUDE_ITEMS.add(name);
-        return BLOCK_REGISTER.register(name, () -> new BlockMeta(Properties.of().air()));
+        return BLOCKS.register(name, () -> new BlockMeta(Properties.of().air()));
     }
 
-    static DeferredBlock<BlockMeta> registerSizedMetaBlock(String name) {
+    static RegistryEntry<BlockMeta> registerSizedMetaBlock(String name) {
         EXCLUDE_ITEMS.add(name);
-        return BLOCK_REGISTER.register(name, () -> new BlockMetaSized(Properties.of().air()));
+        return BLOCKS.register(name, () -> new BlockMetaSized(Properties.of().air()));
     }
 
     static Properties getWoodenBlockProperties() {
@@ -199,12 +201,12 @@ public final class ModBlocks
         return getStoneBlockProperties().isSuffocating(ModBlocks::predFalse).isRedstoneConductor(ModBlocks::predFalse);
     }
 
-    public static void register(IEventBus bus) {
-        BLOCK_REGISTER.register(bus);
+    public static void init() {
+        BLOCKS.init();
     }
 
     private static <B extends Block> Stream<B> getBlocksOfType(Class<B> blockClass) {
-        return BLOCK_REGISTER.getEntries().stream().map(DeferredHolder::get).filter(blockClass::isInstance).map(blockClass::cast);
+        return BLOCKS.getEntries().stream().map(RegistryEntry::get).filter(blockClass::isInstance).map(blockClass::cast);
     }
 
     public static Stream<BlockDrawers> getDrawers() {

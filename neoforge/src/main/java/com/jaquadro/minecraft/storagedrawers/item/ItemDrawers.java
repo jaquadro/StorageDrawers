@@ -2,22 +2,17 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -28,7 +23,6 @@ public class ItemDrawers extends BlockItem
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void appendHoverText (ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
 
@@ -65,7 +59,6 @@ public class ItemDrawers extends BlockItem
         return Component.translatableWithFallback(this.getDescriptionId(stack), fallback);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @NotNull
     public Component getDescription() {
         return Component.translatable(this.getDescriptionId() + ".desc");
@@ -74,7 +67,7 @@ public class ItemDrawers extends BlockItem
     private int getCapacityForBlock (@NotNull ItemStack itemStack) {
         Block block = Block.byItem(itemStack.getItem());
         if (block instanceof BlockDrawers blockDrawers) {
-            return blockDrawers.getStorageUnits() * CommonConfig.GENERAL.getBaseStackStorage();
+            return blockDrawers.getStorageUnits() * ModCommonConfig.INSTANCE.GENERAL.getBaseStackStorage();
         }
 
         return 0;

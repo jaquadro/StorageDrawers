@@ -1,16 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-// import com.jaquadro.minecraft.storagedrawers.api.event.DrawerPopulatedEvent;
-import com.jaquadro.minecraft.storagedrawers.api.capabilities.IDrawerCapability;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
+import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
@@ -112,7 +108,7 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
         }
 
         @Override
-        public <T> T getCapability (IDrawerCapability<T> capability) {
+        public <T> T getCapability (ChameleonCapability<T> capability) {
             if (level == null)
                 return null;
 

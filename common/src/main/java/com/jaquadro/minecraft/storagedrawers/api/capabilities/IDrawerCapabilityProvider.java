@@ -1,11 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.api.capabilities;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
+import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 
 public interface IDrawerCapabilityProvider
 {
-    default <T> T getCapability(IDrawerCapability<T> capability) {
+    default <T> T getCapability(ChameleonCapability<T> capability) {
         return null;
     }
 }

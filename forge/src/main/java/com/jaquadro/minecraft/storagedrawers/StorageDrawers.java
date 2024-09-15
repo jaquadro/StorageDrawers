@@ -3,13 +3,12 @@ package com.jaquadro.minecraft.storagedrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityItemRepository;
-import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
-import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
+import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.AddUpgradeRecipe;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.KeyringRecipe;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
+import com.jaquadro.minecraft.storagedrawers.service.ForgeConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
@@ -51,8 +50,16 @@ public class StorageDrawers
     public static final RegistryObject<RecipeSerializer<KeyringRecipe>> KEYRING_RECIPE_SERIALIZER = RECIPES.register("keyring", () -> new SimpleCraftingRecipeSerializer<>(KeyringRecipe::new));
 
     public StorageDrawers () {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.spec);
+        ModCommonConfig.INSTANCE.context().init();
+        ModClientConfig.INSTANCE.context().init();
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ((ForgeConfig)ModCommonConfig.INSTANCE.context()).forgeSpec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ((ForgeConfig)ModClientConfig.INSTANCE.context()).forgeSpec);
+
+        //ForgeConfig.init();
+        //ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ForgeConfig.spec);
+
+        //ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
+        //ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.spec);
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -100,9 +107,9 @@ public class StorageDrawers
 
     private void onModConfigEvent(final ModConfigEvent event) {
         if (event.getConfig().getType() == ModConfig.Type.COMMON)
-            CommonConfig.setLoaded();
+            ModCommonConfig.INSTANCE.setLoaded();
         if (event.getConfig().getType() == ModConfig.Type.CLIENT)
-            ClientConfig.setLoaded();
+            ModClientConfig.INSTANCE.setLoaded();
     }
 
     @SubscribeEvent

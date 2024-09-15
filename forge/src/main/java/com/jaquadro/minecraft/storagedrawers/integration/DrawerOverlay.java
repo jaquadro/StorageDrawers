@@ -4,7 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -16,8 +16,13 @@ public class DrawerOverlay {
     public boolean showContent = true;
     public boolean showStackLimit = true;
     public boolean showStatus = true;
-    public boolean showStackRemainder = CommonConfig.INTEGRATION.wailaStackRemainder.get();
-    public boolean respectQuantifyKey = CommonConfig.INTEGRATION.wailaRespectQuantifyKey.get();
+    public boolean showStackRemainder;
+    public boolean respectQuantifyKey;
+
+    public DrawerOverlay() {
+        showStackRemainder = ModCommonConfig.INSTANCE.INTEGRATION.wailaStackRemainder.get();
+        respectQuantifyKey = ModCommonConfig.INSTANCE.INTEGRATION.wailaRespectQuantifyKey.get();
+    }
 
     public List<Component> getOverlay(final BlockEntityDrawers tile) {
         final List<Component> result = new ArrayList<>();

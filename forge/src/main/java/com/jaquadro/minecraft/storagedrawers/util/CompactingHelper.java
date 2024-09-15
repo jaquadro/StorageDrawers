@@ -1,8 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.util;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -50,7 +50,7 @@ public class CompactingHelper
 
     @NotNull
     public Result findHigherTier (@NotNull ItemStack stack) {
-        boolean debugTrace = CommonConfig.GENERAL.debugTrace.get();
+        boolean debugTrace = ModCommonConfig.INSTANCE.GENERAL.debugTrace.get();
         if (!world.isClientSide && debugTrace)
             StorageDrawers.log.info("Finding ascending candidates for " + stack.toString());
 
@@ -109,7 +109,7 @@ public class CompactingHelper
 
     @NotNull
     public Result findLowerTier (@NotNull ItemStack stack) {
-        boolean debugTrace = CommonConfig.GENERAL.debugTrace.get();
+        boolean debugTrace = ModCommonConfig.INSTANCE.GENERAL.debugTrace.get();
         if (!world.isClientSide && debugTrace)
             StorageDrawers.log.info("Finding descending candidates for " + stack.toString());
 

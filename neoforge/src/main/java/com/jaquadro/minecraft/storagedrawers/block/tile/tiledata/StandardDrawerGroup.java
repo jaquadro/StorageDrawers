@@ -3,7 +3,6 @@ package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
-import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
 import net.minecraft.core.HolderLookup;
@@ -11,7 +10,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
@@ -109,7 +107,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         }
     }
 
-    public static class DrawerData implements IDrawer, INBTSerializable<CompoundTag>
+    public static class DrawerData implements IDrawer
     {
         IDrawerAttributes cachedAttrs;
         StandardDrawerGroup group;
@@ -349,7 +347,6 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
                 onItemChanged();
         }
 
-        @Override
         public CompoundTag serializeNBT (HolderLookup.Provider provider) {
             CompoundTag tag = new CompoundTag();
             if (protoStack.isEmpty())
@@ -364,7 +361,6 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             return tag;
         }
 
-        @Override
         public void deserializeNBT (HolderLookup.Provider provider, CompoundTag nbt) {
             ItemStack tagItem = ItemStack.EMPTY;
             int tagCount = 0;

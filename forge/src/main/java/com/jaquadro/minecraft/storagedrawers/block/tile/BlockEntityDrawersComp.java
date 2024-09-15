@@ -9,7 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.FractionalDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
@@ -89,7 +89,7 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
 
         @Override
         protected void log (String message) {
-            if (!getWorld().isClientSide && CommonConfig.GENERAL.debugTrace.get())
+            if (!getWorld().isClientSide && ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
                 StorageDrawers.log.info(message);
         }
 

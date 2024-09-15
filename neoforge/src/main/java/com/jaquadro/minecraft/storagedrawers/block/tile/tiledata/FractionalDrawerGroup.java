@@ -3,7 +3,6 @@ package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
-import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.CompactingHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
@@ -13,7 +12,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Stack;
@@ -93,7 +91,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
 
     protected void onAmountChanged () { }
 
-    private static class FractionalStorage implements INBTSerializable<CompoundTag>
+    private static class FractionalStorage
     {
         private final FractionalDrawerGroup group;
         private final int slotCount;
@@ -526,7 +524,6 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             }
         }
 
-        @Override
         public CompoundTag serializeNBT (HolderLookup.Provider provider) {
             ListTag itemList = new ListTag();
             for (int i = 0; i < slotCount; i++) {
@@ -551,7 +548,6 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             return tag;
         }
 
-        @Override
         public void deserializeNBT (HolderLookup.Provider provider, CompoundTag tag) {
             for (int i = 0; i < slotCount; i++) {
                 protoStack[i] = ItemStack.EMPTY;

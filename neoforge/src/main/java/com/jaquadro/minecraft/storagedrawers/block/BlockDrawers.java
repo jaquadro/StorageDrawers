@@ -4,9 +4,8 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
@@ -196,7 +195,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         }
 
         if (key != null) {
-            IDrawerAttributes _attrs = blockEntity.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY);
+            IDrawerAttributes _attrs = blockEntity.getCapability(Capabilities.DRAWER_ATTRIBUTES);
             if (_attrs instanceof IDrawerAttributesModifiable attrs) {
                 if (key == ModItems.DRAWER_KEY.get()) {
                     attrs.setItemLocked(LockAttribute.LOCK_EMPTY, true);
@@ -297,7 +296,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         //if (!SecurityManager.hasAccess(player.getGameProfile(), tileDrawers))
         //    return false;
 
-        if (CommonConfig.GENERAL.debugTrace.get()) {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get()) {
             StorageDrawers.log.info("BlockDrawers.onBlockActivated");
             StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item.toString());
         }
@@ -343,7 +342,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
                 return true;
             }*/
 
-            if (CommonConfig.GENERAL.enableUI.get() && !level.isClientSide) {
+            if (ModCommonConfig.INSTANCE.GENERAL.enableUI.get() && !level.isClientSide) {
                 player.openMenu(new MenuProvider()
                 {
                     @Override
@@ -385,7 +384,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     }
 
     public boolean interactTakeItems(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit) {
-        if (CommonConfig.GENERAL.debugTrace.get())
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
             StorageDrawers.log.info("onBlockClicked");
 
         if (!(state.getBlock() instanceof BlockDrawers))
@@ -412,7 +411,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         else
             item = blockEntityDrawers.takeItemsFromSlot(slot, 1);
 
-        if (CommonConfig.GENERAL.debugTrace.get())
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
             StorageDrawers.log.info((item.isEmpty()) ? "  null item" : "  " + item);
 
         if (!item.isEmpty()) {
@@ -468,7 +467,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     @Override
     @SuppressWarnings("deprecation")
     public boolean isSignalSource (@NotNull BlockState state) {
-        return !CommonConfig.GENERAL.enableAnalogRedstone.get();
+        return !ModCommonConfig.INSTANCE.GENERAL.enableAnalogRedstone.get();
     }
 
     @Override

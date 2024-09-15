@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
+/*
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityItemRepository;
@@ -15,3 +16,4 @@ public class ModCapabilities
         CapabilityDrawerAttributes.register(event);
     }
 }
+*/

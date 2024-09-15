@@ -1,6 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
@@ -8,16 +8,15 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockControllerIO;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
-import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.ItemCollectionRegistry;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import com.mojang.authlib.GameProfile;
+import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -27,13 +26,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
-public class BlockEntityController extends BaseBlockEntity implements IDrawerGroup
+public class BlockEntityController extends BaseBlockEntity implements IDrawerGroup, IControlGroup
 {
     private static final int PRI_LOCKED = 0;
     private static final int PRI_NORMAL = 1;
@@ -149,7 +148,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
     protected BlockEntityController(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
-        range = CommonConfig.GENERAL.controllerRange.get();
+        range = ModCommonConfig.INSTANCE.GENERAL.controllerRange.get();
     }
 
     public BlockEntityController(BlockPos pos, BlockState state) {
@@ -157,10 +156,25 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     }
 
     public void printDebugInfo () {
-        StorageDrawers.log.info("Controller at " + worldPosition);
-        StorageDrawers.log.info("  Range: " + range + " blocks");
-        StorageDrawers.log.info("  Stored records: " + storage.size() + ", slot list: " + drawerSlots.length);
-        StorageDrawers.log.info("  Ticks since last update: " + (getLevel() == null ? "null" : (getLevel().getGameTime() - lastUpdateTime)));
+        ModServices.log.info("Controller at " + worldPosition);
+        ModServices.log.info("  Range: " + range + " blocks");
+        ModServices.log.info("  Stored records: " + storage.size() + ", slot list: " + drawerSlots.length);
+        ModServices.log.info("  Ticks since last update: " + (getLevel() == null ? "null" : (getLevel().getGameTime() - lastUpdateTime)));
+    }
+
+    @Override
+    public IDrawerGroup getDrawerGroup () {
+        return this;
+    }
+
+    @Override
+    public IDrawerAttributesGroupControl getGroupControllableAttributes (GameProfile profile) {
+        return new GroupAttributeController(profile);
+    }
+
+    @Override
+    public IControlGroup getBoundControlGroup () {
+        return null;
     }
 
     @Override
@@ -218,6 +232,62 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         return added;
     }
 
+    private class GroupAttributeController implements IDrawerAttributesGroupControl {
+        private GameProfile profile = null;
+
+        public GroupAttributeController() { }
+
+        public GroupAttributeController(GameProfile profile) {
+            this.profile = profile;
+        }
+
+        @Override
+        public boolean setIsConcealed (boolean state) {
+            getSlotsValidAttributes(profile).forEach(record -> {
+                record.setIsConcealed(state);
+            });
+            return true;
+        }
+
+        @Override
+        public boolean setIsShowingQuantity (boolean state) {
+            getSlotsValidAttributes(profile).forEach(record -> {
+                record.setIsShowingQuantity(state);
+            });
+            return true;
+        }
+
+        @Override
+        public boolean setItemLocked (EnumSet<LockAttribute> attributes, LockAttribute attr, boolean isLocked) {
+            getSlotsValidAttributes(profile).forEach(record -> {
+                for (LockAttribute a : attributes)
+                    record.setItemLocked(a, isLocked);
+            });
+            return true;
+        }
+
+        @Override
+        public boolean toggleConcealed () {
+            getSlotsValidAttributes(profile).findFirst().ifPresent(template ->
+                setIsConcealed(!template.isConcealed()));
+            return true;
+        }
+
+        @Override
+        public boolean toggleIsShowingQuantity () {
+            getSlotsValidAttributes(profile).findFirst().ifPresent(template ->
+                setIsShowingQuantity(!template.isShowingQuantity()));
+            return true;
+        }
+
+        @Override
+        public boolean toggleItemLocked (EnumSet<LockAttribute> attributes, LockAttribute attr) {
+            getSlotsValidAttributes(profile).findFirst().ifPresent(template ->
+                setItemLocked(attributes, attr, !template.isItemLocked(attr)));
+            return true;
+        }
+    }
+
     public void toggleProtection (GameProfile profile, ISecurityProvider provider) {
         IProtectable template = null;
         UUID state = null;
@@ -246,6 +316,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         }
     }
 
+    /*
     public void toggleShroud (GameProfile profile) {
         Boolean template = null;
         boolean state = false;
@@ -294,8 +365,27 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             }
             mattrs.setIsShowingQuantity(state);
         }
+    }*/
+
+    private Stream<IDrawerAttributesModifiable> getSlotsValidAttributes(GameProfile profile) {
+        return storage.values().stream().map(record -> {
+            if (record.storage == null)
+                return null;
+
+            if (record.storage instanceof IProtectable) {
+                if (!SecurityManager.hasAccess(profile, (IProtectable)record.storage))
+                    return null;
+            }
+
+            IDrawerAttributes attrs = getAttributes(record.storage);
+            if ((attrs instanceof IDrawerAttributesModifiable mattrs))
+                return mattrs;
+
+            return null;
+        }).filter(Objects::nonNull);
     }
 
+    /*
     public void toggleLock (EnumSet<LockAttribute> attributes, LockAttribute key, GameProfile profile) {
         Boolean template = null;
         boolean state = false;
@@ -321,7 +411,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             for (LockAttribute attr : attributes)
                 mattrs.setItemLocked(attr, state);
         }
-    }
+    }*/
 
     protected void resetCache () {
         storage.clear();
@@ -477,7 +567,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                 drawerSlotList.add(new SlotRecord(group, coord, i));
         }
         else {
-            IDrawerGroup group = level.getCapability(CapabilityDrawerGroup.DRAWER_GROUP_CAPABILITY, blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, null);
+            IDrawerGroup group = Capabilities.DRAWER_GROUP.getCapability(level, blockEntity.getBlockPos());
             if (record.storage == group)
                 return;
 
@@ -620,11 +710,20 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
     private final ItemRepository itemRepository = new ItemRepository(this);
 
+    @Override
+    public <T> T getCapability (ChameleonCapability<T> capability) {
+        if (capability == null || level == null)
+            return null;
+        return capability.getCapability(level, getBlockPos());
+    }
+
+    /*
     public <T> T getCapability(@NotNull BlockCapability<T, Void> capability) {
         if (level == null)
             return null;
         return level.getCapability(capability, getBlockPos(), getBlockState(), this, null);
     }
+     */
 
     private class ItemRepository extends DrawerItemRepository
     {

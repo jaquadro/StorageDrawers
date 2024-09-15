@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.components.item.KeyringContents;
 import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.KeyringTooltip;
+import com.texelsaurus.minecraft.chameleon.registry.RegistryEntry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -23,7 +24,6 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.registries.DeferredItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -33,9 +33,9 @@ public class ItemKeyring extends Item
 {
     private static final String TAG_ITEMS = "Items";
 
-    private final DeferredItem<? extends ItemKey> key;
+    private final RegistryEntry<? extends ItemKey> key;
 
-    public ItemKeyring (DeferredItem<? extends ItemKey> key, Item.Properties properties) {
+    public ItemKeyring (RegistryEntry<? extends ItemKey> key, Item.Properties properties) {
         super(properties);
         this.key = key;
     }
@@ -114,7 +114,7 @@ public class ItemKeyring extends Item
         if (context.getPlayer().isShiftKeyDown())
             return InteractionResult.PASS;
 
-        if (key != null && key.isBound())
+        if (key != null)
             return key.get().useOn(context);
 
         return InteractionResult.PASS;
@@ -146,7 +146,7 @@ public class ItemKeyring extends Item
 
     @Override
     public Component getName (ItemStack stack) {
-        if (key == null || !key.isBound())
+        if (key == null)
             return super.getName(stack);
 
         MutableComponent name = Component.translatable(ModItems.KEYRING.get().getDescriptionId());

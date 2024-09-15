@@ -18,8 +18,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +40,6 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
     private final List<Slot> playerSlots;
     private final List<Slot> hotbarSlots;
 
-    @OnlyIn(Dist.CLIENT)
     public StorageGuiGraphics activeGuiGraphics;
 
     private final boolean isRemote;

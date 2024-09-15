@@ -1,18 +1,16 @@
 package com.jaquadro.minecraft.storagedrawers;
 
-import com.jaquadro.minecraft.storagedrawers.client.ClientModBusSubscriber;
-import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
-import com.jaquadro.minecraft.storagedrawers.config.CompTierRegistry;
+import com.jaquadro.minecraft.storagedrawers.capabilities.PlatformCapabilities;
+import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.AddUpgradeRecipe;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.KeyringRecipe;
-import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
+import com.texelsaurus.minecraft.chameleon.service.NeoforgeConfig;
+import com.texelsaurus.minecraft.chameleon.service.NeoforgeNetworking;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -34,7 +32,7 @@ public class StorageDrawers
     public static final Api api = new Api();
     public static Logger log = LogManager.getLogger();
     //public static ConfigManager config;
-    public static CompTierRegistry compRegistry;
+    //public static CompTierRegistry compRegistry;
     //public static OreDictRegistry oreDictRegistry;
 
     //public static RenderRegistry renderRegistry;
@@ -46,21 +44,28 @@ public class StorageDrawers
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<KeyringRecipe>> KEYRING_RECIPE_SERIALIZER = RECIPES.register("keyring", () -> new SimpleCraftingRecipeSerializer<>(KeyringRecipe::new));
 
     public StorageDrawers (ModContainer modContainer, IEventBus modEventBus) {
-        modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
-        modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.spec);
+        ModCommonConfig.INSTANCE.context().init();
+        ModClientConfig.INSTANCE.context().init();
+        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, ((NeoforgeConfig)ModCommonConfig.INSTANCE.context()).neoSpec);
+        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.CLIENT, ((NeoforgeConfig)ModClientConfig.INSTANCE.context()).neoSpec);
 
-        ModBlocks.register(modEventBus);
-        ModItems.register(modEventBus);
-        ModBlockEntities.register(modEventBus);
-        ModContainers.register(modEventBus);
-        ModDataComponents.COMPONENTS.register(modEventBus);
+        //modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
+        //modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.spec);
+
+        ModBlocks.init();
+        ModItems.init();
+        ModBlockEntities.init();
+        ModContainers.init();
+        ModDataComponents.COMPONENTS.init();
 
         modEventBus.addListener(this::setup);
-        modEventBus.addListener(MessageHandler::register);
+        //modEventBus.addListener(MessageHandler::register);
         //modEventBus.addListener(this::onModQueueEvent);
         modEventBus.addListener(this::onModConfigEvent);
         modEventBus.addListener(ModItems::creativeModeTabRegister);
-        modEventBus.addListener(ModCapabilities::register);
+        modEventBus.addListener(PlatformCapabilities::register);
+
+        NeoforgeNetworking.init(MOD_ID, modEventBus, ModNetworking.INSTANCE);
 
         RECIPES.register(modEventBus);
 
@@ -68,8 +73,8 @@ public class StorageDrawers
     }
 
     private void setup (final FMLCommonSetupEvent event) {
-        compRegistry = new CompTierRegistry();
-        compRegistry.initialize();
+        //compRegistry = new CompTierRegistry();
+        CompTierRegistry.INSTANCE.initialize();
 
         //oreDictRegistry = new OreDictRegistry();
         //renderRegistry = new RenderRegistry();
@@ -90,9 +95,9 @@ public class StorageDrawers
     //}
     private void onModConfigEvent(final ModConfigEvent event) {
         if (event.getConfig().getType() == ModConfig.Type.COMMON)
-            CommonConfig.setLoaded();
+            ModCommonConfig.INSTANCE.setLoaded();
         if (event.getConfig().getType() == ModConfig.Type.CLIENT)
-            ClientConfig.setLoaded();
+            ModClientConfig.INSTANCE.setLoaded();
     }
 
     @SubscribeEvent

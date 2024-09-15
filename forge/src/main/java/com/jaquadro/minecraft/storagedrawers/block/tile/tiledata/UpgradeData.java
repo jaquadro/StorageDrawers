@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
@@ -231,12 +231,12 @@ public class UpgradeData extends BlockEntityDataShim
         for (ItemStack stack : upgrades) {
             if (stack.getItem() instanceof ItemUpgradeStorage) {
                 int level = ((ItemUpgradeStorage) stack.getItem()).level.getLevel();
-                storageMultiplier += CommonConfig.UPGRADES.getLevelMult(level);
+                storageMultiplier += ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(level);
             }
         }
 
         if (storageMultiplier == 0)
-            storageMultiplier = CommonConfig.UPGRADES.getLevelMult(0);
+            storageMultiplier = ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(0);
     }
 
     private void syncRedstoneLevel () {

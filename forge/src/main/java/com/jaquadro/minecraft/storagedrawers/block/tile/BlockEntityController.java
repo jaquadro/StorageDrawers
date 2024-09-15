@@ -9,7 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.BlockControllerIO;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
@@ -156,7 +156,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
     protected BlockEntityController(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
-        range = CommonConfig.GENERAL.controllerRange.get();
+        range = ModCommonConfig.INSTANCE.GENERAL.controllerRange.get();
     }
 
     public BlockEntityController(BlockPos pos, BlockState state) {

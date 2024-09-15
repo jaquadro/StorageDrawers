@@ -2,10 +2,11 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
+import com.texelsaurus.minecraft.chameleon.registry.ChameleonRegistry;
+import com.texelsaurus.minecraft.chameleon.registry.RegistryEntry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.world.level.block.Block;
 
 public class ModBlockVariants
 {
@@ -16,16 +17,16 @@ public class ModBlockVariants
             this.material = material;
         }
 
-        public DeferredBlock<BlockStandardDrawers> blockFull1;
-        public DeferredBlock<BlockStandardDrawers> blockFull2;
-        public DeferredBlock<BlockStandardDrawers> blockFull4;
-        public DeferredBlock<BlockStandardDrawers> blockHalf1;
-        public DeferredBlock<BlockStandardDrawers> blockHalf2;
-        public DeferredBlock<BlockStandardDrawers> blockHalf4;
-        public DeferredBlock<BlockTrim> blockTrim;
+        public RegistryEntry<BlockStandardDrawers> blockFull1;
+        public RegistryEntry<BlockStandardDrawers> blockFull2;
+        public RegistryEntry<BlockStandardDrawers> blockFull4;
+        public RegistryEntry<BlockStandardDrawers> blockHalf1;
+        public RegistryEntry<BlockStandardDrawers> blockHalf2;
+        public RegistryEntry<BlockStandardDrawers> blockHalf4;
+        public RegistryEntry<BlockTrim> blockTrim;
     }
 
-    public static void registerVariant(DeferredRegister.Blocks register, VariantData data) {
+    public static void registerVariant(ChameleonRegistry<Block> register, VariantData data) {
         data.blockFull1 = ModBlocks.registerWoodenDrawerBlock(register, data.material, 1, false);
         data.blockFull2 = ModBlocks.registerWoodenDrawerBlock(register, data.material, 2, false);
         data.blockFull4 = ModBlocks.registerWoodenDrawerBlock(register, data.material, 4, false);
@@ -35,7 +36,7 @@ public class ModBlockVariants
         data.blockTrim = ModBlocks.registerTrimBlock(register, data.material);
     }
 
-    public static void registerVariantItem(DeferredRegister<Item> register, VariantData data) {
+    public static void registerVariantItem(ChameleonRegistry<Item> register, VariantData data) {
         ModItems.registerBlock(register, data.blockFull1);
         ModItems.registerBlock(register, data.blockFull2);
         ModItems.registerBlock(register, data.blockFull4);

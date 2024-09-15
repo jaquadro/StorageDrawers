@@ -2,7 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModClientConfig;
 import com.jaquadro.minecraft.storagedrawers.inventory.SlotUpgrade;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
@@ -33,7 +33,7 @@ public class CommonEventBusSubscriber {
             if (player.isCreative()) {
                 BlockHitResult hit = WorldUtils.rayTraceEyes(level, player, pos);
                 if (hit.getType() == HitResult.Type.BLOCK) {
-                    boolean invertClick = ClientConfig.GENERAL.invertClick.get();
+                    boolean invertClick = ModClientConfig.INSTANCE.GENERAL.invertClick.get();
                     if (!invertClick)
                         event.setCanceled(blockDrawers.interactTakeItems(state, level, pos, player, hit));
                     else {

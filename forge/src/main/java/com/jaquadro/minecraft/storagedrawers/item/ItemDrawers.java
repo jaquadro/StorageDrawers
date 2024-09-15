@@ -2,7 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -74,7 +74,7 @@ public class ItemDrawers extends BlockItem
     private int getCapacityForBlock (@NotNull ItemStack itemStack) {
         Block block = Block.byItem(itemStack.getItem());
         if (block instanceof BlockDrawers blockDrawers) {
-            return blockDrawers.getStorageUnits() * CommonConfig.GENERAL.getBaseStackStorage();
+            return blockDrawers.getStorageUnits() * ModCommonConfig.INSTANCE.GENERAL.getBaseStackStorage();
         }
 
         return 0;

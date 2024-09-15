@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.PlatformBlockEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -69,7 +70,7 @@ public final class BasicDrawerModel
             //if (event.getMap() != Minecraft.getInstance().getTextureMap())
             //    return;
 
-            if (!ModBlocks.OAK_FULL_DRAWERS_1.isBound()) {
+            if (ModBlocks.OAK_FULL_DRAWERS_1 == null) {
                 StorageDrawers.log.warn("Block objects not set in TextureStitchEvent.  Is your mod environment broken?");
                 return;
             }
@@ -194,7 +195,7 @@ public final class BasicDrawerModel
         @SubscribeEvent
         //public static void registerModels (BakingCompleted event) {
         public static void registerModels(ModelEvent.ModifyBakingResult event) {
-            if (!ModBlocks.OAK_FULL_DRAWERS_1.isBound()) {
+            if (ModBlocks.OAK_FULL_DRAWERS_1 == null) {
                 StorageDrawers.log.warn("Block objects not set in ModelBakeEvent.  Is your mod environment broken?");
                 return;
             }
@@ -419,7 +420,7 @@ public final class BasicDrawerModel
                 return mainModel.getQuads(null, side, rand, extraData, type);
             }
 
-            if (!extraData.has(BlockEntityDrawers.ATTRIBUTES)) {
+            if (!extraData.has(PlatformBlockEntityDrawersStandard.ATTRIBUTES)) {
                 // Nothing to render.
                 return mainQuads;
             }
@@ -430,7 +431,7 @@ public final class BasicDrawerModel
             }
 
             List<BakedQuad> quads = new ArrayList<>(mainQuads);
-            IDrawerAttributes attr = extraData.get(BlockEntityDrawers.ATTRIBUTES);
+            IDrawerAttributes attr = extraData.get(PlatformBlockEntityDrawersStandard.ATTRIBUTES);
             Direction dir = state.getValue(BlockDrawers.FACING);
 
             if (attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED)) {

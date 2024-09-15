@@ -6,20 +6,17 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.FractionalDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
-import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
+import com.texelsaurus.minecraft.chameleon.ChameleonServices;
+import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
@@ -62,7 +59,7 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
         return false;
     }
 
-    private class GroupData extends FractionalDrawerGroup
+    protected class GroupData extends FractionalDrawerGroup
     {
         public GroupData (int slotCount) {
             super(slotCount);
@@ -80,7 +77,7 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
 
         @Override
         protected void log (String message) {
-            if (!getWorld().isClientSide && CommonConfig.GENERAL.debugTrace.get())
+            if (!getWorld().isClientSide && ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
                 StorageDrawers.log.info(message);
         }
 
@@ -113,19 +110,27 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
         @Override
         protected void onAmountChanged () {
             if (getWorld() != null && !getWorld().isClientSide) {
-                PacketDistributor.sendToPlayersNear((ServerLevel)getLevel(), null,
-                    getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 500,
-                    new CountUpdateMessage(getBlockPos(), 0, getPooledCount()));
+                ChameleonServices.NETWORK.sendToPlayersNear(new CountUpdateMessage(getBlockPos(), 0, getPooledCount()),
+                    (ServerLevel) getLevel(), getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 500);
 
                 setChanged();
             }
         }
 
+        @Override
+        public <T> T getCapability (ChameleonCapability<T> capability) {
+            if (capability == null || level == null)
+                return null;
+            return capability.getCapability(level, getBlockPos());
+        }
+
+        /*
         public <T> T getCapability(@NotNull BlockCapability<T, Void> capability) {
             if (level == null)
                 return null;
             return level.getCapability(capability, getBlockPos(), getBlockState(), BlockEntityDrawersComp.this, null);
         }
+        */
     }
 
     /*@Override
@@ -150,7 +155,6 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void clientUpdateCount (final int slot, final int count) {
         if (getLevel() == null || !getLevel().isClientSide)
             return;
@@ -158,7 +162,6 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
         Minecraft.getInstance().tell(() -> BlockEntityDrawersComp.this.clientUpdateCountAsync(count));
     }
 
-    @OnlyIn(Dist.CLIENT)
     private void clientUpdateCountAsync (int count) {
         if (getGroup() instanceof FractionalDrawerGroup) {
             ((FractionalDrawerGroup)getGroup()).setPooledCount(count);

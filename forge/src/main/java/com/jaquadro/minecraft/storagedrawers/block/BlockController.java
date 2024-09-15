@@ -3,7 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
-import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
@@ -69,7 +69,7 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
             return InteractionResult.CONSUME;
 
         if (!level.isClientSide) {
-            if (CommonConfig.GENERAL.debugTrace.get() && item.isEmpty())
+            if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get() && item.isEmpty())
                 blockEntity.printDebugInfo();
 
             blockEntity.interactPutItemsIntoInventory(player);
