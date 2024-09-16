@@ -26,5 +26,11 @@ public abstract class PlatformBlockEntityDrawersComp extends BlockEntityDrawersC
         public ModelData getModelData () {
             return ModelData.builder().with(ATTRIBUTES, drawerAttributes).build();
         }
+
+        @Override
+        protected void onAttributeChanged () {
+            super.onAttributeChanged();
+            requestModelDataUpdate();
+        }
     }
 }

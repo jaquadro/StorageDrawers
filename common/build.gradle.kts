@@ -1,4 +1,5 @@
 import com.texelsaurus.Versions
+import com.texelsaurus.Properties
 
 plugins {
     id("java-conv")
@@ -7,6 +8,7 @@ plugins {
 
 minecraft {
     version(Versions.minecraft)
+    accessWideners(file("src/main/resources/${Properties.modid}.accesswidener"))
 }
 
 dependencies {

@@ -26,6 +26,12 @@ public abstract class PlatformBlockEntityDrawersStandard extends BlockEntityDraw
         public ModelData getModelData () {
             return ModelData.builder().with(ATTRIBUTES, drawerAttributes).build();
         }
+
+        @Override
+        protected void onAttributeChanged () {
+            super.onAttributeChanged();
+            requestModelDataUpdate();
+        }
     }
 
     public static class Slot2 extends BlockEntityDrawersStandard.Slot2 {
@@ -38,6 +44,12 @@ public abstract class PlatformBlockEntityDrawersStandard extends BlockEntityDraw
         public ModelData getModelData () {
             return ModelData.builder().with(ATTRIBUTES, drawerAttributes).build();
         }
+
+        @Override
+        protected void onAttributeChanged () {
+            super.onAttributeChanged();
+            requestModelDataUpdate();
+        }
     }
 
     public static class Slot4 extends BlockEntityDrawersStandard.Slot4 {
@@ -49,6 +61,12 @@ public abstract class PlatformBlockEntityDrawersStandard extends BlockEntityDraw
         @Override
         public ModelData getModelData () {
             return ModelData.builder().with(ATTRIBUTES, drawerAttributes).build();
+        }
+
+        @Override
+        protected void onAttributeChanged () {
+            super.onAttributeChanged();
+            requestModelDataUpdate();
         }
     }
 }

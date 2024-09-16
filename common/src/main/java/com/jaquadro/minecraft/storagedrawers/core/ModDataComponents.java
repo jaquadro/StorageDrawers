@@ -17,4 +17,8 @@ public class ModDataComponents
         COMPONENTS.register("drawer_count", () -> DataComponentType.<DrawerCountData>builder().persistent(DrawerCountData.CODEC).build());
     public static final RegistryEntry<DataComponentType<KeyringContents>> KEYRING_CONTENTS =
         COMPONENTS.register("keyring_content", () -> DataComponentType.<KeyringContents>builder().persistent(KeyringContents.CODEC).build());
+
+    public static void init() {
+        COMPONENTS.init();
+    }
 }

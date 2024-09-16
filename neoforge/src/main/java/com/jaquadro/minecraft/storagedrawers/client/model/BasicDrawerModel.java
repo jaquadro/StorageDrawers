@@ -5,7 +5,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.PlatformBlockEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.client.Minecraft;
@@ -27,7 +26,6 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent;
@@ -63,7 +61,7 @@ public final class BasicDrawerModel
     private static boolean geometryDataLoaded = false;
 
     @EventBusSubscriber(modid = StorageDrawers.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class Register // extends DefaultRegister
+    public static class Register
     {
         @SubscribeEvent
         public static void registerTextures (TextureAtlasStitchedEvent event) {
@@ -75,29 +73,8 @@ public final class BasicDrawerModel
                 return;
             }
 
-            /*loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_lock.json"));
-            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_void.json"));
-            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_shroud.json"));
-            loadUnbakedModel(event, StorageDrawers.rl("models/block/compdrawers_indicator.json"));
-            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_indicator_1.json"));
-            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_indicator_2.json"));
-            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_indicator_4.json"));*/
-
             loadGeometryData();
         }
-
-        /*
-        private static void loadUnbakedModel(TextureStitchEvent event, ResourceLocation resource) {
-            BlockModel unbakedModel = getBlockModel(resource);
-
-            for (Either<Material, String> x : unbakedModel.textureMap.values()) {
-                x.ifLeft((value) -> {
-                    if (value.atlasLocation().equals(event.getAtlas().location()))
-                        event.addSprite(value.texture());
-                });
-            }
-        }
-        */
 
         private static void loadGeometryData () {
             if (geometryDataLoaded)
@@ -193,7 +170,6 @@ public final class BasicDrawerModel
         }
 
         @SubscribeEvent
-        //public static void registerModels (BakingCompleted event) {
         public static void registerModels(ModelEvent.ModifyBakingResult event) {
             if (ModBlocks.OAK_FULL_DRAWERS_1 == null) {
                 StorageDrawers.log.warn("Block objects not set in ModelBakeEvent.  Is your mod environment broken?");
@@ -220,10 +196,6 @@ public final class BasicDrawerModel
             }
 
             ModBlocks.getDrawers().forEach(blockDrawers -> replaceBlock(event, blockDrawers));
-
-            //event.getModelBakery().getBakedModel(StorageDrawers.rl("block/full_drawers_lock"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
-            //event.getModelBakery().getBakedModel(StorageDrawers.rl("block/full_drawers_void"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
-            //event.getModelBakery().getBakedModel(StorageDrawers.rl("block/full_drawers_shroud"), ModelRotation.X0_Y0, ModelLoader.defaultTextureGetter());
         }
 
         static String getVariant(Direction dir, boolean half) {
@@ -250,106 +222,6 @@ public final class BasicDrawerModel
                 else
                     event.getModels().put(modelResource, new Model2.FullModel(parentModel));
             }
-        }
-
-        /*public Register () {
-            super(ModBlocks.basicDrawers);
-        }
-
-        public List<IBlockState> getBlockStates () {
-            List<IBlockState> states = new ArrayList<>();
-
-            for (EnumBasicDrawer drawer : EnumBasicDrawer.values()) {
-                for (EnumFacing dir : EnumFacing.HORIZONTALS) {
-                    for (BlockPlanks.EnumType woodType : BlockPlanks.EnumType.values()) {
-                        states.add(ModBlocks.basicDrawers.getDefaultState()
-                            .withProperty(BlockStandardDrawers.BLOCK, drawer)
-                            .withProperty(BlockDrawers.FACING, dir)
-                            .withProperty(BlockVariantDrawers.VARIANT, woodType));
-                    }
-                }
-            }
-
-            return states;
-        }
-
-        @Override
-        public IBakedModel getModel (IBlockState state, IBakedModel existingModel) {
-            return new CachedBuilderModel(new Model(existingModel));
-        }
-
-        @Override
-        public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
-            return new CachedBuilderModel(new Model(existingModel));
-        }
-
-        @Override
-        public List<ResourceLocation> getTextureResources () {
-            List<ResourceLocation> resource = new ArrayList<>();
-            resource.add(DrawerDecoratorModel.iconClaim);
-            resource.add(DrawerDecoratorModel.iconClaimLock);
-            resource.add(DrawerDecoratorModel.iconLock);
-            resource.add(DrawerDecoratorModel.iconShroudCover);
-            resource.add(DrawerDecoratorModel.iconVoid);
-            resource.add(DrawerSealedModel.iconTapeCover);
-            return resource;
-        }*/
-    }
-
-    public static class MergedModel implements IDynamicBakedModel {
-        protected final BakedModel mainModel;
-        protected final BakedModel[] models;
-
-        public MergedModel (BakedModel mainModel, BakedModel... models) {
-            this.mainModel = mainModel;
-            this.models = models;
-        }
-
-        @Override
-        @NotNull
-        public List<BakedQuad> getQuads (@Nullable BlockState state,
-                                         @Nullable Direction side,
-                                         @NotNull RandomSource rand,
-                                         @NotNull ModelData data,
-                                         @Nullable RenderType type) {
-            List<BakedQuad> quads = new ArrayList<>(
-                    mainModel.getQuads(state, side, rand, data, type)
-            );
-            for (BakedModel model : models)
-                quads.addAll(model.getQuads(state, side, rand, data, type));
-            return quads;
-        }
-
-        @Override
-        public boolean useAmbientOcclusion () {
-            return mainModel.useAmbientOcclusion();
-        }
-
-        @Override
-        public boolean isGui3d () {
-            return mainModel.isGui3d();
-        }
-
-        @Override
-        public boolean usesBlockLight () {
-            return mainModel.usesBlockLight();
-        }
-
-        @Override
-        public boolean isCustomRenderer () {
-            return mainModel.isCustomRenderer();
-        }
-
-        @Override
-        @NotNull
-        public TextureAtlasSprite getParticleIcon () {
-            return mainModel.getParticleIcon();
-        }
-
-        @Override
-        @NotNull
-        public ItemOverrides getOverrides () {
-            return mainModel.getOverrides();
         }
     }
 
@@ -533,81 +405,4 @@ public final class BasicDrawerModel
             return mainModel.getRenderPasses(itemStack, fabulous);
         }
     }
-
-    public static class Model extends ProxyBuilderModel
-    {
-        Direction side;
-        Map<Direction, BakedModel> overlays;
-
-        public Model (BakedModel parent, Map<Direction, BakedModel> overlays, Direction side) {
-            super(parent);
-            this.overlays = overlays;
-            this.side = side;
-        }
-
-        @Override
-        protected BakedModel buildModel (BlockState state, BakedModel parent) {
-            return new MergedModel(parent, overlays.get(side));
-            /*try {
-                //EnumBasicDrawer drawer = state.get(BlockStandardDrawers.BLOCK);
-                Direction dir = state.get(BlockDrawers.HORIZONTAL_FACING);
-
-                if (!(state instanceof IExtendedBlockState))
-                    return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
-
-                IExtendedBlockState xstate = (IExtendedBlockState)state;
-                DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
-
-                if (!DrawerDecoratorModel.shouldHandleState(stateModel))
-                    return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
-
-                return new DrawerDecoratorModel(parent, xstate, drawer, dir, stateModel);
-            }
-            catch (Throwable t) {
-                return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
-            }*/
-        }
-
-        /*@Override
-        public ItemOverrideList getOverrides () {
-            return itemHandler;
-        }*/
-
-        /*@Override
-        public List<Object> getKey (BlockState state) {
-            try {
-                List<Object> key = new ArrayList<Object>();
-                IExtendedBlockState xstate = (IExtendedBlockState)state;
-                key.add(xstate.getValue(BlockDrawers.STATE_MODEL));
-
-                return key;
-            }
-            catch (Throwable t) {
-                return super.getKey(state);
-            }
-        }*/
-    }
-
-    /*private static class ItemHandler extends ItemOverrideList
-    {
-        public ItemHandler () {
-            super(ImmutableList.<ItemOverride>of());
-        }
-
-        @Override
-        public IBakedModel handleItemState (IBakedModel parent, @NotNull ItemStack stack, World world, EntityLivingBase entity) {
-            if (stack.isEmpty())
-                return parent;
-
-            if (!stack.hasTagCompound() || !stack.getTagCompound().hasKey("tile", Constants.NBT.TAG_COMPOUND))
-                return parent;
-
-            Block block = Block.getBlockFromItem(stack.getItem());
-            IBlockState state = block.getStateFromMeta(stack.getMetadata());
-
-            return new DrawerSealedModel(parent, state, true);
-        }
-    }
-
-    private static final ItemHandler itemHandler = new ItemHandler();*/
 }

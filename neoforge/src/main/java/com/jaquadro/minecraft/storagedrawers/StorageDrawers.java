@@ -39,10 +39,6 @@ public class StorageDrawers
     //public static WailaRegistry wailaRegistry;
     //public static SecurityRegistry securityRegistry;
 
-    private static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(Registries.RECIPE_SERIALIZER, MOD_ID);
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AddUpgradeRecipe>> UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_upgrade", () -> new SimpleCraftingRecipeSerializer<>(AddUpgradeRecipe::new));
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<KeyringRecipe>> KEYRING_RECIPE_SERIALIZER = RECIPES.register("keyring", () -> new SimpleCraftingRecipeSerializer<>(KeyringRecipe::new));
-
     public StorageDrawers (ModContainer modContainer, IEventBus modEventBus) {
         ModCommonConfig.INSTANCE.context().init();
         ModClientConfig.INSTANCE.context().init();
@@ -56,18 +52,17 @@ public class StorageDrawers
         ModItems.init();
         ModBlockEntities.init();
         ModContainers.init();
-        ModDataComponents.COMPONENTS.init();
+        ModDataComponents.init();
+        ModRecipes.init();
 
         modEventBus.addListener(this::setup);
         //modEventBus.addListener(MessageHandler::register);
         //modEventBus.addListener(this::onModQueueEvent);
         modEventBus.addListener(this::onModConfigEvent);
-        modEventBus.addListener(ModItems::creativeModeTabRegister);
+        modEventBus.addListener(ModCreativeTabs::init);
         modEventBus.addListener(PlatformCapabilities::register);
 
         NeoforgeNetworking.init(MOD_ID, modEventBus, ModNetworking.INSTANCE);
-
-        RECIPES.register(modEventBus);
 
         NeoForge.EVENT_BUS.register(this);
     }
