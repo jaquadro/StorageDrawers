@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 
 public final class ModBlockEntities {
     public static final ChameleonRegistry<BlockEntityType<?>> BLOCK_ENTITIES = ChameleonServices.REGISTRY.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, ModConstants.MOD_ID);
-    //public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTER = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, StorageDrawers.MOD_ID);
 
     private static final Set<RegistryEntry<? extends BlockEntityType<? extends BlockEntityDrawers>>> BLOCK_ENTITY_TYPES_WITH_RENDERERS = new HashSet<>();
     private static final Set<RegistryEntry<? extends BlockEntityType<? extends BlockEntityDrawers>>> DRAWER_TYPES = new HashSet<>();
@@ -31,10 +30,10 @@ public final class ModBlockEntities {
     public static final RegistryEntry<BlockEntityType<BlockEntityDrawersComp>> FRACTIONAL_DRAWERS_3 = registerDrawerBlockEntityType("fractional_drawers_3", ModServices.RESOURCE_FACTORY.createBlockEntityDrawersComp(3), BlockCompDrawers.class, 3);
 
     public static final RegistryEntry<BlockEntityType<BlockEntityController>> CONTROLLER = BLOCK_ENTITIES.register("controller", () ->
-        BlockEntityType.Builder.of(BlockEntityController::new, ModBlocks.CONTROLLER.get()).build(null));
+        BlockEntityType.Builder.of(ModServices.RESOURCE_FACTORY.createBlockEntityController(), ModBlocks.CONTROLLER.get()).build(null));
 
     public static final RegistryEntry<BlockEntityType<BlockEntityControllerIO>> CONTROLLER_IO = BLOCK_ENTITIES.register("controller_io", () ->
-        BlockEntityType.Builder.of(BlockEntityControllerIO::new, ModBlocks.CONTROLLER_IO.get()).build(null));
+        BlockEntityType.Builder.of(ModServices.RESOURCE_FACTORY.createBlockEntityControllerIO(), ModBlocks.CONTROLLER_IO.get()).build(null));
 
     private ModBlockEntities() {}
 

@@ -21,9 +21,22 @@ minecraft {
     reobf = false
     runs {
         create("client") {
-            taskName("Client")
+            taskName("runClient")
             workingDirectory(project.file("run"))
             ideaModule("${rootProject.name}.${project.name}.main")
+            //args("-mixin.config=${Properties.modid}.mixins.json")
+            mods {
+                create(Properties.modid) {
+                    source(sourceSets.main.get())
+                }
+            }
+        }
+
+        create("server") {
+            taskName("runServer")
+            workingDirectory(project.file("run"))
+            ideaModule("${rootProject.name}.${project.name}.main")
+            args("--nogui")
             //args("-mixin.config=${Properties.modid}.mixins.json")
             mods {
                 create(Properties.modid) {

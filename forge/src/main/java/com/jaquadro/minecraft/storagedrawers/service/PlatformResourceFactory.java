@@ -1,9 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.service;
 
-import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersComp;
-import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersStandard;
-import com.jaquadro.minecraft.storagedrawers.block.tile.PlatformBlockEntityDrawersComp;
-import com.jaquadro.minecraft.storagedrawers.block.tile.PlatformBlockEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.block.tile.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class PlatformResourceFactory implements ResourceFactory
@@ -24,5 +21,15 @@ public class PlatformResourceFactory implements ResourceFactory
             case 3 -> PlatformBlockEntityDrawersComp.Slot3::new;
             default -> null;
         };
+    }
+
+    @Override
+    public BlockEntityType.BlockEntitySupplier<BlockEntityController> createBlockEntityController () {
+        return PlatformBlockEntityController::new;
+    }
+
+    @Override
+    public BlockEntityType.BlockEntitySupplier<BlockEntityControllerIO> createBlockEntityControllerIO () {
+        return PlatformBlockEntityControllerIO::new;
     }
 }

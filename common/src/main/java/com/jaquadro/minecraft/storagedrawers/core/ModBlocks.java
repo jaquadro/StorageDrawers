@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 public final class ModBlocks
 {
     public static final ChameleonRegistry<Block> BLOCKS = ChameleonServices.REGISTRY.create(BuiltInRegistries.BLOCK, ModConstants.MOD_ID);
-    //public static final DeferredRegister.Blocks BLOCK_REGISTER = DeferredRegister.createBlocks(StorageDrawers.MOD_ID);
 
     public static final List<String> EXCLUDE_ITEMS = new ArrayList<>();
 

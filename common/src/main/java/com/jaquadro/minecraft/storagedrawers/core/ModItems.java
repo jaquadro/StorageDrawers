@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public final class ModItems
 {
     public static final ChameleonRegistry<Item> ITEMS = ChameleonServices.REGISTRY.create(BuiltInRegistries.ITEM, ModConstants.MOD_ID);
-    //public static final DeferredRegister.Items ITEM_REGISTER = DeferredRegister.createItems(StorageDrawers.MOD_ID);
+
     public static final List<RegistryEntry<? extends Item>> EXCLUDE_ITEMS_CREATIVE_TAB = new ArrayList<>();
 
     public static final RegistryEntry<? extends Item>

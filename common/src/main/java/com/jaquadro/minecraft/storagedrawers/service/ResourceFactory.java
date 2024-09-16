@@ -2,6 +2,8 @@ package com.jaquadro.minecraft.storagedrawers.service;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityControllerIO;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersStandard;
 import net.minecraft.core.BlockPos;
@@ -13,4 +15,6 @@ public interface ResourceFactory
 {
     BlockEntityType.BlockEntitySupplier<BlockEntityDrawersStandard> createBlockEntityDrawersStandard (int slotCount);
     BlockEntityType.BlockEntitySupplier<BlockEntityDrawersComp> createBlockEntityDrawersComp (int slotCount);
+    BlockEntityType.BlockEntitySupplier<BlockEntityController> createBlockEntityController ();
+    BlockEntityType.BlockEntitySupplier<BlockEntityControllerIO> createBlockEntityControllerIO ();
 }
