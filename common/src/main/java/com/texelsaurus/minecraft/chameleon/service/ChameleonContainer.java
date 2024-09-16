@@ -1,5 +1,6 @@
 package com.texelsaurus.minecraft.chameleon.service;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -14,10 +15,12 @@ public interface ChameleonContainer
 {
     <C extends AbstractContainerMenu> Supplier<MenuType<C>> getContainerSupplier(ChameleonContainerFactory<C> factory);
 
-    void openMenu(Player player, MenuProvider menuProvider, Consumer<RegistryFriendlyByteBuf> extraData);
+    void openMenu(Player player, MenuProvider menuProvider, Consumer<FriendlyByteBuf> extraData);
 
     interface ChameleonContainerFactory<T extends AbstractContainerMenu> extends MenuType.MenuSupplier<T> {
-        T create(int windowId, Inventory playerInv, RegistryFriendlyByteBuf data);
+        //T create(int windowId, Inventory playerInv, RegistryFriendlyByteBuf data);
+
+        T create(int windowId, Inventory playerInv, FriendlyByteBuf data);
 
         default T create(int windowId, Inventory playerInv) {
             return this.create(windowId, playerInv, null);

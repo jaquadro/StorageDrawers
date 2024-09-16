@@ -3,7 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.integration;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,7 +27,10 @@ public class DrawerOverlay {
     public List<Component> getOverlay(final BlockEntityDrawers tile) {
         final List<Component> result = new ArrayList<>();
 
-        final IDrawerAttributes attr = tile.getCapability(CapabilityDrawerAttributes.DRAWER_ATTRIBUTES_CAPABILITY, null).orElse(EmptyDrawerAttributes.EMPTY);
+        IDrawerAttributes attr = Capabilities.DRAWER_ATTRIBUTES.getCapability(tile.getLevel(), tile.getBlockPos());
+        if (attr == null)
+            attr = EmptyDrawerAttributes.EMPTY;
+
         addContent(result, tile, attr);
         addStackLimit(result, tile, attr);
         addStatus(result, tile, attr);

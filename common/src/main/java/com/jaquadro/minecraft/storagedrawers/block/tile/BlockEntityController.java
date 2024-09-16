@@ -97,6 +97,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         IDrawerAttributes attrs = EmptyDrawerAttributes.EMPTY;
         if (obj instanceof IDrawerGroup dg)
             attrs = dg.getCapability(Capabilities.DRAWER_ATTRIBUTES);
+        if (attrs == null)
+            attrs = EmptyDrawerAttributes.EMPTY;
 
         return attrs;
     }

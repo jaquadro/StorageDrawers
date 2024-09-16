@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.PlatformBlockEntityDrawersStandard;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
@@ -64,41 +65,13 @@ public final class BasicDrawerModel
     private static boolean geometryDataLoaded = false;
 
     @Mod.EventBusSubscriber(modid = StorageDrawers.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class Register // extends DefaultRegister
+    public static class Register
     {
         @SubscribeEvent
         public static void registerTextures (TextureStitchEvent event) {
-            //if (event.getMap() != Minecraft.getInstance().getTextureMap())
-            //    return;
-
-            if (!ModBlocks.OAK_FULL_DRAWERS_1.isPresent()) {
-                StorageDrawers.log.warn("Block objects not set in TextureStitchEvent.  Is your mod environment broken?");
-                return;
-            }
-
-            /*loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_lock.json"));
-            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_void.json"));
-            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_shroud.json"));
-            loadUnbakedModel(event, StorageDrawers.rl("models/block/compdrawers_indicator.json"));
-            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_indicator_1.json"));
-            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_indicator_2.json"));
-            loadUnbakedModel(event, StorageDrawers.rl("models/block/full_drawers_indicator_4.json"));*/
 
             loadGeometryData();
         }
-
-        /*
-        private static void loadUnbakedModel(TextureStitchEvent event, ResourceLocation resource) {
-            BlockModel unbakedModel = getBlockModel(resource);
-
-            for (Either<Material, String> x : unbakedModel.textureMap.values()) {
-                x.ifLeft((value) -> {
-                    if (value.atlasLocation().equals(event.getAtlas().location()))
-                        event.addSprite(value.texture());
-                });
-            }
-        }
-        */
 
         private static void loadGeometryData () {
             if (geometryDataLoaded)
@@ -196,10 +169,10 @@ public final class BasicDrawerModel
         @SubscribeEvent
         //public static void registerModels (BakingCompleted event) {
         public static void registerModels(ModelEvent.ModifyBakingResult event) {
-            if (!ModBlocks.OAK_FULL_DRAWERS_1.isPresent()) {
-                StorageDrawers.log.warn("Block objects not set in ModelBakeEvent.  Is your mod environment broken?");
-                return;
-            }
+            //if (!ModBlocks.OAK_FULL_DRAWERS_1.isPresent()) {
+            //    StorageDrawers.log.warn("Block objects not set in ModelBakeEvent.  Is your mod environment broken?");
+            //    return;
+            //}
 
             for (int i = 0; i < 4; i++) {
                 Direction dir = Direction.from2DDataValue(i);
@@ -252,49 +225,6 @@ public final class BasicDrawerModel
                     event.getModels().put(modelResource, new Model2.FullModel(parentModel));
             }
         }
-
-        /*public Register () {
-            super(ModBlocks.basicDrawers);
-        }
-
-        public List<IBlockState> getBlockStates () {
-            List<IBlockState> states = new ArrayList<>();
-
-            for (EnumBasicDrawer drawer : EnumBasicDrawer.values()) {
-                for (EnumFacing dir : EnumFacing.HORIZONTALS) {
-                    for (BlockPlanks.EnumType woodType : BlockPlanks.EnumType.values()) {
-                        states.add(ModBlocks.basicDrawers.getDefaultState()
-                            .withProperty(BlockStandardDrawers.BLOCK, drawer)
-                            .withProperty(BlockDrawers.FACING, dir)
-                            .withProperty(BlockVariantDrawers.VARIANT, woodType));
-                    }
-                }
-            }
-
-            return states;
-        }
-
-        @Override
-        public IBakedModel getModel (IBlockState state, IBakedModel existingModel) {
-            return new CachedBuilderModel(new Model(existingModel));
-        }
-
-        @Override
-        public IBakedModel getModel (ItemStack stack, IBakedModel existingModel) {
-            return new CachedBuilderModel(new Model(existingModel));
-        }
-
-        @Override
-        public List<ResourceLocation> getTextureResources () {
-            List<ResourceLocation> resource = new ArrayList<>();
-            resource.add(DrawerDecoratorModel.iconClaim);
-            resource.add(DrawerDecoratorModel.iconClaimLock);
-            resource.add(DrawerDecoratorModel.iconLock);
-            resource.add(DrawerDecoratorModel.iconShroudCover);
-            resource.add(DrawerDecoratorModel.iconVoid);
-            resource.add(DrawerSealedModel.iconTapeCover);
-            return resource;
-        }*/
     }
 
     public static class MergedModel implements IDynamicBakedModel {
@@ -421,7 +351,7 @@ public final class BasicDrawerModel
                 return mainModel.getQuads(null, side, rand, extraData, type);
             }
 
-            if (!extraData.has(BlockEntityDrawers.ATTRIBUTES)) {
+            if (!extraData.has(PlatformBlockEntityDrawersStandard.ATTRIBUTES)) {
                 // Nothing to render.
                 return mainQuads;
             }
@@ -432,7 +362,7 @@ public final class BasicDrawerModel
             }
 
             List<BakedQuad> quads = new ArrayList<>(mainQuads);
-            IDrawerAttributes attr = extraData.get(BlockEntityDrawers.ATTRIBUTES);
+            IDrawerAttributes attr = extraData.get(PlatformBlockEntityDrawersStandard.ATTRIBUTES);
             Direction dir = state.getValue(BlockDrawers.FACING);
 
             if (attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED)) {
@@ -534,81 +464,4 @@ public final class BasicDrawerModel
             return mainModel.getRenderPasses(itemStack, fabulous);
         }
     }
-
-    public static class Model extends ProxyBuilderModel
-    {
-        Direction side;
-        Map<Direction, BakedModel> overlays;
-
-        public Model (BakedModel parent, Map<Direction, BakedModel> overlays, Direction side) {
-            super(parent);
-            this.overlays = overlays;
-            this.side = side;
-        }
-
-        @Override
-        protected BakedModel buildModel (BlockState state, BakedModel parent) {
-            return new MergedModel(parent, overlays.get(side));
-            /*try {
-                //EnumBasicDrawer drawer = state.get(BlockStandardDrawers.BLOCK);
-                Direction dir = state.get(BlockDrawers.HORIZONTAL_FACING);
-
-                if (!(state instanceof IExtendedBlockState))
-                    return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
-
-                IExtendedBlockState xstate = (IExtendedBlockState)state;
-                DrawerStateModelData stateModel = xstate.getValue(BlockDrawers.STATE_MODEL);
-
-                if (!DrawerDecoratorModel.shouldHandleState(stateModel))
-                    return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
-
-                return new DrawerDecoratorModel(parent, xstate, drawer, dir, stateModel);
-            }
-            catch (Throwable t) {
-                return new PassLimitedModel(parent, BlockRenderLayer.CUTOUT_MIPPED);
-            }*/
-        }
-
-        /*@Override
-        public ItemOverrideList getOverrides () {
-            return itemHandler;
-        }*/
-
-        /*@Override
-        public List<Object> getKey (BlockState state) {
-            try {
-                List<Object> key = new ArrayList<Object>();
-                IExtendedBlockState xstate = (IExtendedBlockState)state;
-                key.add(xstate.getValue(BlockDrawers.STATE_MODEL));
-
-                return key;
-            }
-            catch (Throwable t) {
-                return super.getKey(state);
-            }
-        }*/
-    }
-
-    /*private static class ItemHandler extends ItemOverrideList
-    {
-        public ItemHandler () {
-            super(ImmutableList.<ItemOverride>of());
-        }
-
-        @Override
-        public IBakedModel handleItemState (IBakedModel parent, @NotNull ItemStack stack, World world, EntityLivingBase entity) {
-            if (stack.isEmpty())
-                return parent;
-
-            if (!stack.hasTagCompound() || !stack.getTagCompound().hasKey("tile", Constants.NBT.TAG_COMPOUND))
-                return parent;
-
-            Block block = Block.getBlockFromItem(stack.getItem());
-            IBlockState state = block.getStateFromMeta(stack.getMetadata());
-
-            return new DrawerSealedModel(parent, state, true);
-        }
-    }
-
-    private static final ItemHandler itemHandler = new ItemHandler();*/
 }

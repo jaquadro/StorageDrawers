@@ -8,23 +8,23 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
-import net.neoforged.neoforge.network.IContainerFactory;
+import net.minecraftforge.common.extensions.IForgeMenuType;
+import net.minecraftforge.network.IContainerFactory;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class NeoforgeContainer implements ChameleonContainer
+public class ForgeContainer implements ChameleonContainer
 {
     @Override
     public <C extends AbstractContainerMenu> Supplier<MenuType<C>> getContainerSupplier (ChameleonContainerFactory<C> factory) {
         IContainerFactory<C> wrapped = new PlatformContainerFactory<>(factory);
-        return () -> IMenuTypeExtension.create(wrapped);
+        return () -> IForgeMenuType.create(wrapped);
     }
 
     @Override
     public void openMenu (Player player, MenuProvider menuProvider, Consumer<FriendlyByteBuf> extraData) {
-        player.openMenu(menuProvider, extraData::accept);
+        ((ServerPlayer)player).openMenu(menuProvider, extraData);
     }
 
     static class PlatformContainerFactory<T extends AbstractContainerMenu> implements ChameleonContainerFactory<T>, IContainerFactory<T> {
@@ -34,10 +34,10 @@ public class NeoforgeContainer implements ChameleonContainer
             this.factory = factory;
         }
 
-        @Override
+        /*@Override
         public T create (int windowId, Inventory playerInv, RegistryFriendlyByteBuf data) {
             return factory.create(windowId, playerInv, data);
-        }
+        }*/
 
         @Override
         public T create (int windowId, Inventory playerInv, FriendlyByteBuf data) {
