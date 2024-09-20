@@ -16,7 +16,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 public class UpgradeData extends BlockEntityDataShim
@@ -144,7 +143,7 @@ public class UpgradeData extends BlockEntityDataShim
      * @param add The ItemStack of the upgrade being added
      * @return Whether the upgrades can be swapped
      */
-    public boolean canSwapUpgrade (int slot, @Nonnull ItemStack add) {
+    public boolean canSwapUpgrade (int slot, @NotNull ItemStack add) {
         return canAddUpgrade(add) && canRemoveUpgrade(slot);
     }
 

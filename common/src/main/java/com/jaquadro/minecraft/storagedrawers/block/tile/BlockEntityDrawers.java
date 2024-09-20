@@ -602,7 +602,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
     }
 
-    //@Override
+    @Override
     public boolean dataPacketRequiresRenderUpdate () {
         return true;
     }

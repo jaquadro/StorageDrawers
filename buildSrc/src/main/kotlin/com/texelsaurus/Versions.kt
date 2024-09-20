@@ -11,6 +11,6 @@ object Versions {
     const val neoForge = "21.1.28"
     const val neoForgeVersionRange = "[21.0.0,)"
     const val neoForgeLoaderRange = "[4,)"
-    const val fabric = "0.100.1+1.21"
+    const val fabric = "0.100.8+1.21"
     const val fabricLoader = "0.15.11"
 }

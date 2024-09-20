@@ -232,6 +232,11 @@ public final class ModBlocks
         return getDrawersOfTypeAndSize(drawerClass, size).filter(blockDrawers -> blockDrawers.isHalfDepth() == halfDepth);
     }
 
+    public static <BD extends BlockDrawers> Stream<BD> getDrawersofTypeAndDepth(Class<BD> drawerClass, boolean halfDepth) {
+        return getDrawersOfType(drawerClass).filter(blockDrawers -> blockDrawers.isHalfDepth() == halfDepth);
+
+    }
+
     private static boolean predFalse (BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         return false;
     }

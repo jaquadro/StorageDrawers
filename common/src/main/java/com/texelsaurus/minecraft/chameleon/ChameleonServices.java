@@ -11,6 +11,7 @@ public final class ChameleonServices
     public static final ChameleonConfig CONFIG = load(ChameleonConfig.class);
     public static final ChameleonCapabilities CAPABILITY = load(ChameleonCapabilities.class);
     public static final ChameleonContainer CONTAINER = load(ChameleonContainer.class);
+    public static final ChameleonPlatform PLATFORM = load(ChameleonPlatform.class);
 
     private static <T> T load(Class<T> clazz) {
         final T service = ServiceLoader.load(clazz).findFirst().orElseThrow();

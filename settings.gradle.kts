@@ -20,4 +20,4 @@ rootProject.name = "StorageDrawers"
 include("common")
 include("forge")
 include("neoforge")
-// include("fabric")
+include("fabric")

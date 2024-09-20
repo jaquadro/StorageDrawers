@@ -1,0 +1,32 @@
+{
+    "schemaVersion": 1,
+    "id": "${mod_id}",
+    "name": "${mod_name}",
+    "version": "${mod_version}",
+    "environment": "*",
+    "icon": "icon.png",
+    "authors": ["${mod_authors}"],
+    "license": "${mod_license}",
+    "contact": {
+        "homepage": "https://www.curseforge.com/minecraft/mc-mods/storage-drawers",
+        "sources": "https://github.com/jaquadro/StorageDrawers",
+        "issues": "https://github.com/jaquadro/StorageDrawers/issues"
+    },
+    "description": "${mod_description}",
+    "entrypoints": {
+        "main": [
+            "com.jaquadro.minecraft.storagedrawers.StorageDrawers"
+        ],
+        "client": [
+            "com.jaquadro.minecraft.storagedrawers.StorageDrawersClient"
+        ]
+    },
+    "depends": {
+        "fabricloader": ">=${fabric_loader}",
+        "fabric-api": "*",
+        "java": ">=${java_version}",
+        "minecraft": "${minecraft_version}"
+    },
+    "custom": {},
+    "mixins": []
+}
