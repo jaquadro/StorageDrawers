@@ -1,4 +1,1 @@
-- Fixed keyring representing a key that has been removed
-- Fixed keyring losing extra metadata when last key is removed
-- Fixed keyring not showing a key's custom name
-- Fixed keyring description not rendering newlines correctly in some cases
+- Fixed pulled drawer losing its capacity data if pulled when empty

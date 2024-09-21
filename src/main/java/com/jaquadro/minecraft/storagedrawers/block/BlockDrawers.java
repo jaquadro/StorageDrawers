@@ -439,17 +439,18 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
     }
 
     private ItemStack pullDrawer(BlockEntityDrawers group, int slot) {
-        IDrawer drawer = group.getDrawer(slot);
-        if (drawer.isEmpty())
-            return new ItemStack(ModItems.DETACHED_DRAWER.get(), 1);
-
         int cap = group.getEffectiveDrawerCapacity() * group.upgrades().getStorageMultiplier();
+        Item baseItem = ModItems.DETACHED_DRAWER_FULL.get();
+
+        IDrawer drawer = group.getDrawer(slot);
         DetachedDrawerData data = new DetachedDrawerData(drawer, cap);
+        if (drawer.isEmpty())
+            baseItem = ModItems.DETACHED_DRAWER.get();
 
         if (CommonConfig.GENERAL.heavyDrawers.get() && !group.upgrades().hasPortabilityUpgrade())
             data.setIsHeavy(true);
 
-        ItemStack stack = new ItemStack(ModItems.DETACHED_DRAWER_FULL.get(), 1);
+        ItemStack stack = new ItemStack(baseItem, 1);
         stack.setTag(data.serializeNBT());
 
         return stack;

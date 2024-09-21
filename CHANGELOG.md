@@ -1,3 +1,6 @@
+[12.6.6]
+- Fixed pulled drawer losing its capacity data if pulled when empty
+
 [12.6.5]
 - Fixed keyring representing a key that has been removed
 - Fixed keyring losing extra metadata when last key is removed
