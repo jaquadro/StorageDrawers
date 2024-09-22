@@ -14,7 +14,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.ItemCollectionRegistry;
-import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
+import com.texelsaurus.minecraft.chameleon.util.WorldUtils;
 import com.mojang.authlib.GameProfile;
 import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import net.minecraft.core.BlockPos;

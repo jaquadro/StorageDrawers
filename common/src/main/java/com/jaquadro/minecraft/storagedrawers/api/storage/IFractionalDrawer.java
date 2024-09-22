@@ -25,4 +25,6 @@ public interface IFractionalDrawer extends IDrawer
      * the drawer group.
      */
     boolean isSmallestUnit ();
+
+    IFractionalDrawer copy ();
 }

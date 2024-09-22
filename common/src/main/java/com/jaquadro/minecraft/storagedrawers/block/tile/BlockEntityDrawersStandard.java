@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.ModServices;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
@@ -117,6 +118,11 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
             this.slot = slot;
         }
 
+        private StandardDrawerData (StandardDrawerData data) {
+            super(data);
+            slot = data.slot;
+        }
+
         @Override
         protected int getStackCapacity () {
             return upgrades().getStorageMultiplier() * getEffectiveDrawerCapacity();
@@ -139,6 +145,11 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
                 syncClientCount(slot, getStoredItemCount());
                 setChanged();
             }
+        }
+
+        @Override
+        public IDrawer copy () {
+            return new StandardDrawerData(this);
         }
     }
 }

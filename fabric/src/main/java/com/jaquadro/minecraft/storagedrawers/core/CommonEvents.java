@@ -1,7 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
+import com.texelsaurus.minecraft.chameleon.util.WorldUtils;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.Block;
@@ -20,6 +20,9 @@ public class CommonEvents
             Block block = state.getBlock();
             if (block instanceof BlockDrawers blockDrawers) {
                 if (player.isCreative()) {
+                    if (level.isClientSide)
+                        return InteractionResult.CONSUME;
+
                     BlockHitResult hit = WorldUtils.rayTraceEyes(level, player, pos);
                     if (hit.getType() == HitResult.Type.BLOCK) {
                         if (blockDrawers.interactTakeItems(state, level, pos, player, hit))

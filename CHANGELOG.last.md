@@ -1,3 +1,8 @@
-- Refactored project into multiloader project
+This is the first build for Fabric modloader
 
-There are no feature changes in this version, so if you're looking for a stable build you should remain on 13.2.x.  However, any testing with this version is HIGHLY appreciated as these multi-loader builds will be used going forward.
+Known Issues:
+* Item extraction pulls multiple items while mouse is held down
+* Block rendering in labels has flat lighting
+* Transaction safety not yet guaranteed around compacting drawers
+
+There are likely numerous issues, report them in the issue tracker or discord

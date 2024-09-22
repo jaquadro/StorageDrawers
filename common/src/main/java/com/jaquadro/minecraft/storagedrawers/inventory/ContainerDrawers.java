@@ -6,7 +6,8 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.gui.StorageGuiGraphics;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
-import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
+import com.texelsaurus.minecraft.chameleon.inventory.content.PositionContent;
+import com.texelsaurus.minecraft.chameleon.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class ContainerDrawers extends AbstractContainerMenu
 {
@@ -44,8 +46,8 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
 
     private final boolean isRemote;
 
-    public ContainerDrawers (@Nullable MenuType<?> type, int windowId, Inventory playerInv, FriendlyByteBuf data) {
-        this(type, windowId, playerInv, getBlockEntity(playerInv, data.readBlockPos()));
+    public ContainerDrawers (@Nullable MenuType<?> type, int windowId, Inventory playerInv, Optional<PositionContent> content) {
+        this(type, windowId, playerInv, PositionContent.getOrNull(content, playerInv.player.level(), BlockEntityDrawers.class));
     }
 
     protected static BlockEntityDrawers getBlockEntity(Inventory playerInv, BlockPos pos) {

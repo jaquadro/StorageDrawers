@@ -1,7 +1,9 @@
 package com.texelsaurus.minecraft.chameleon.service;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import com.texelsaurus.minecraft.chameleon.inventory.ContainerContent;
+import com.texelsaurus.minecraft.chameleon.inventory.ContainerContentSerializer;
+import com.texelsaurus.minecraft.chameleon.inventory.ContentMenuProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -9,44 +11,47 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
-import net.neoforged.neoforge.network.IContainerFactory;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class NeoforgeContainer implements ChameleonContainer
 {
     @Override
-    public <C extends AbstractContainerMenu> Supplier<MenuType<C>> getContainerSupplier (ChameleonContainerFactory<C> factory) {
-        IContainerFactory<C> wrapped = new PlatformContainerFactory<>(factory);
-        return () -> IMenuTypeExtension.create(wrapped);
+    public <T extends AbstractContainerMenu, C extends ContainerContent<C>> Supplier<MenuType<T>> getContainerSupplier (ChameleonContainerFactory<T, C> factory, ContainerContentSerializer<C> serializer) {
+        return () -> IMenuTypeExtension.create((id, inventory, data) -> {
+            if (serializer != null)
+                return factory.create(id, inventory, Optional.ofNullable(serializer.from(data)));
+            return factory.create(id, inventory, Optional.empty());
+        });
     }
 
     @Override
-    public void openMenu (Player player, MenuProvider menuProvider, Consumer<FriendlyByteBuf> extraData) {
-        player.openMenu(menuProvider, extraData::accept);
+    public <C extends ContainerContent<C>> void openMenu (Player player, ContentMenuProvider<C> menuProvider) {
+        player.openMenu(new PlatformContainerFactory<>(menuProvider), buf -> {
+            C content = menuProvider.createContent((ServerPlayer) player);
+            if (content != null)
+                content.serializer().to(buf, content);
+        });
     }
 
-    static class PlatformContainerFactory<T extends AbstractContainerMenu> implements ChameleonContainerFactory<T>, IContainerFactory<T> {
-        ChameleonContainerFactory<T> factory;
+    private record PlatformContainerFactory<T extends ContainerContent<T>> (ContentMenuProvider<T> provider) implements MenuProvider
+    {
+        @Override
+        public Component getDisplayName () {
+            return provider.getDisplayName();
+        }
 
-        public PlatformContainerFactory(ChameleonContainerFactory<T> factory) {
-            this.factory = factory;
+        @Nullable
+        @Override
+        public AbstractContainerMenu createMenu (int i, Inventory inventory, Player player) {
+            return provider.createMenu(i, inventory, player);
         }
 
         @Override
-        public T create (int windowId, Inventory playerInv, RegistryFriendlyByteBuf data) {
-            return factory.create(windowId, playerInv, data);
-        }
-
-        @Override
-        public T create (int windowId, Inventory playerInv, FriendlyByteBuf data) {
-            return factory.create(windowId, playerInv, data);
-        }
-
-        @Override
-        public T create (int windowId, Inventory playerInv) {
-            return create(windowId, playerInv, null);
+        public boolean shouldTriggerClientSideContainerClosingOnOpen () {
+            return true;
         }
     }
 }

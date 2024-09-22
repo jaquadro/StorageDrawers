@@ -109,8 +109,8 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
     public static class DrawerData implements IDrawer
     {
-        IDrawerAttributes cachedAttrs;
-        StandardDrawerGroup group;
+        protected IDrawerAttributes cachedAttrs;
+        protected StandardDrawerGroup group;
 
         @NotNull
         private ItemStack protoStack;
@@ -121,6 +121,15 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             this.group = group;
             protoStack = ItemStack.EMPTY;
             matcher = ItemStackMatcher.EMPTY;
+        }
+
+        protected DrawerData (DrawerData data) {
+            this(data.group);
+            cachedAttrs = data.cachedAttrs;
+
+            protoStack = data.protoStack;
+            count = data.count;
+            matcher = data.matcher;
         }
 
         @NotNull
@@ -390,6 +399,11 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         protected void onItemChanged() { }
 
         protected void onAmountChanged() { }
+
+        @Override
+        public IDrawer copy () {
+            return new DrawerData(this);
+        }
     }
 
 }

@@ -10,22 +10,30 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import com.jaquadro.minecraft.storagedrawers.inventory.*;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.texelsaurus.minecraft.chameleon.ChameleonServices;
 import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
+import com.texelsaurus.minecraft.chameleon.inventory.ContentMenuProvider;
+import com.texelsaurus.minecraft.chameleon.inventory.content.PositionContent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.UUID;
@@ -671,4 +679,35 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             .with(ATTRIBUTES, drawerAttributes).build();
     }
     */
+
+    public static class ContentProvider implements ContentMenuProvider<PositionContent>
+    {
+        private BlockEntityDrawers entity;
+
+        public ContentProvider (BlockEntityDrawers entity) {
+            this.entity = entity;
+        }
+
+        @Override
+        public PositionContent createContent (ServerPlayer player) {
+            return new PositionContent(entity.getBlockPos());
+        }
+
+        @Override
+        public Component getDisplayName () {
+            return Component.translatable(entity.getBlockState().getBlock().getDescriptionId());
+        }
+
+        @Nullable
+        @Override
+        public AbstractContainerMenu createMenu (int id, Inventory inventory, Player player) {
+            return switch (entity.getGroup().getDrawerCount()) {
+                case 1 -> new ContainerDrawers1(id, inventory, entity);
+                case 2 -> new ContainerDrawers2(id, inventory, entity);
+                case 4 -> new ContainerDrawers4(id, inventory, entity);
+                case 3 -> new ContainerDrawersComp(id, inventory, entity);
+                default -> null;
+            };
+        }
+    }
 }

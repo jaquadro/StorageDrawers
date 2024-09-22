@@ -10,7 +10,7 @@ public class ModelLoadPlugin implements ModelLoadingPlugin
 {
     @Override
     public void onInitializeModelLoader (Context pluginContext) {
-        BasicDrawerModel.loadGeometryData();
+        DrawerModelGeometry.loadGeometryData();
         pluginContext.modifyModelAfterBake().register((original, context) -> {
             if (context.topLevelId() == null)
                 return original;

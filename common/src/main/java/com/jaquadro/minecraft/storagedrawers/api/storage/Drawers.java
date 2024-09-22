@@ -63,6 +63,11 @@ public class Drawers
         public boolean isEnabled () {
             return false;
         }
+
+        @Override
+        public IDrawer copy () {
+            return this;
+        }
     }
 
     private static class DisabledFractionalDrawer extends DisabledDrawer implements IFractionalDrawer
@@ -80,6 +85,107 @@ public class Drawers
         @Override
         public boolean isSmallestUnit () {
             return false;
+        }
+
+        @Override
+        public IFractionalDrawer copy () {
+            return this;
+        }
+    }
+
+    public static class WrappedDrawer implements IDrawer
+    {
+        private IDrawer wrapped;
+
+        public WrappedDrawer (IDrawer drawer) {
+            wrapped = drawer;
+        }
+
+        @NotNull
+        @Override
+        public ItemStack getStoredItemPrototype () {
+            return wrapped.getStoredItemPrototype();
+        }
+
+        @NotNull
+        @Override
+        public IDrawer setStoredItem (@NotNull ItemStack itemPrototype) {
+            return wrapped.setStoredItem(itemPrototype);
+        }
+
+        @Override
+        public int getStoredItemCount () {
+            return wrapped.getStoredItemCount();
+        }
+
+        @Override
+        public void setStoredItemCount (int amount) {
+            wrapped.setStoredItemCount(amount);
+        }
+
+        @Override
+        public int getMaxCapacity (@NotNull ItemStack itemPrototype) {
+            return wrapped.getMaxCapacity(itemPrototype);
+        }
+
+        @Override
+        public int getRemainingCapacity () {
+            return wrapped.getRemainingCapacity();
+        }
+
+        @Override
+        public boolean canItemBeStored (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+            return wrapped.canItemBeStored(itemPrototype, matchPredicate);
+        }
+
+        @Override
+        public boolean canItemBeExtracted (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+            return wrapped.canItemBeExtracted(itemPrototype, matchPredicate);
+        }
+
+        @Override
+        public boolean isEmpty () {
+            return wrapped.isEmpty();
+        }
+
+        @Override
+        public boolean isEnabled () {
+            return wrapped.isEnabled();
+        }
+
+        @Override
+        public IDrawer copy () {
+            return new WrappedDrawer(wrapped);
+        }
+    }
+
+    public static class WrappedFractionalDrawer extends WrappedDrawer implements IFractionalDrawer
+    {
+        private IFractionalDrawer wrapped;
+
+        public WrappedFractionalDrawer (IFractionalDrawer drawer) {
+            super(drawer);
+            wrapped = drawer;
+        }
+
+        @Override
+        public int getConversionRate () {
+            return wrapped.getConversionRate();
+        }
+
+        @Override
+        public int getStoredItemRemainder () {
+            return wrapped.getStoredItemRemainder();
+        }
+
+        @Override
+        public boolean isSmallestUnit () {
+            return wrapped.isSmallestUnit();
+        }
+
+        @Override
+        public IFractionalDrawer copy () {
+            return new WrappedFractionalDrawer(wrapped);
         }
     }
 }

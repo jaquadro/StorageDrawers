@@ -604,11 +604,13 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         private final FractionalStorage storage;
         private final int slot;
 
-        private FractionalDrawer(
-                FractionalStorage storage,
-                int slot) {
+        private FractionalDrawer(FractionalStorage storage, int slot) {
             this.storage = storage;
             this.slot = slot;
+        }
+
+        private FractionalDrawer(FractionalDrawer data) {
+            this(data.storage, data.slot);
         }
 
         @NotNull
@@ -699,6 +701,11 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         @Override
         public boolean isSmallestUnit() {
             return storage.isSmallestUnit(slot);
+        }
+
+        @Override
+        public IFractionalDrawer copy () {
+            return new FractionalDrawer(this);
         }
     }
 }

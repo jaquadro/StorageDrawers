@@ -15,7 +15,9 @@ import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
-import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
+import com.texelsaurus.minecraft.chameleon.inventory.ContentMenuProvider;
+import com.texelsaurus.minecraft.chameleon.inventory.content.PositionContent;
+import com.texelsaurus.minecraft.chameleon.util.WorldUtils;
 import com.texelsaurus.minecraft.chameleon.ChameleonServices;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -23,6 +25,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -332,8 +335,11 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         }
         else if (item.isEmpty() && player.isShiftKeyDown()) {
             if (ModCommonConfig.INSTANCE.GENERAL.enableUI.get() && !level.isClientSide) {
-                ChameleonServices.CONTAINER.openMenu(player, state.getMenuProvider(level, blockPos), extraData ->
-                    extraData.writeBlockPos(blockPos));
+                MenuProvider provider = state.getMenuProvider(level, blockPos);
+                if (provider instanceof ContentMenuProvider<?> menu)
+                    menu.openMenu((ServerPlayer) player);
+                //ChameleonServices.CONTAINER.openMenu(player, state.getMenuProvider(level, blockPos), extraData ->
+                //    extraData.writeBlockPos(blockPos));
 
                 return ItemInteractionResult.SUCCESS;
             }
@@ -351,6 +357,8 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         return ItemInteractionResult.SUCCESS;
     }
 
+
+
     @Nullable
     @Override
     protected MenuProvider getMenuProvider (BlockState blockState, Level level, BlockPos blockPos) {
@@ -358,7 +366,8 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
         if (blockEntityDrawers == null)
             return null;
 
-        return new MenuProvider()
+        return new BlockEntityDrawers.ContentProvider(blockEntityDrawers);
+        /*return new MenuProvider()
         {
             @Override
             @NotNull
@@ -379,7 +388,7 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
                     return new ContainerDrawersComp(windowId, playerInv, blockEntityDrawers);
                 return null;
             }
-        };
+        };*/
     }
 
     public boolean interactTakeItems(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit) {

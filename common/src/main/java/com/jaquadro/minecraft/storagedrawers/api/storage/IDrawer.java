@@ -166,4 +166,6 @@ public interface IDrawer
     default boolean isEnabled () {
         return true;
     }
+
+    IDrawer copy ();
 }
