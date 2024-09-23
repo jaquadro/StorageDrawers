@@ -61,8 +61,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public abstract class BlockDrawers extends HorizontalDirectionalBlock implements INetworked, EntityBlock
 {
@@ -77,6 +76,8 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
     private static final VoxelShape AABB_SOUTH_HALF = Block.box(0, 0, 0, 16, 16, 8);
     private static final VoxelShape AABB_WEST_HALF = Block.box(8, 0, 0, 16, 16, 16);
     private static final VoxelShape AABB_EAST_HALF = Block.box(0, 0, 0, 8, 16, 16);
+
+    private static final Map<UUID, Long> lastLeftClick = new HashMap<>();
 
     private final int drawerCount;
     private final boolean halfDepth;
@@ -367,33 +368,18 @@ public abstract class BlockDrawers extends HorizontalDirectionalBlock implements
             return null;
 
         return new BlockEntityDrawers.ContentProvider(blockEntityDrawers);
-        /*return new MenuProvider()
-        {
-            @Override
-            @NotNull
-            public Component getDisplayName () {
-                return Component.translatable(getDescriptionId());
-            }
-
-            @Nullable
-            @Override
-            public AbstractContainerMenu createMenu (int windowId, @NotNull Inventory playerInv, @NotNull Player playerEntity) {
-                if (drawerCount == 1)
-                    return new ContainerDrawers1(windowId, playerInv, blockEntityDrawers);
-                else if (drawerCount == 2)
-                    return new ContainerDrawers2(windowId, playerInv, blockEntityDrawers);
-                else if (drawerCount == 4)
-                    return new ContainerDrawers4(windowId, playerInv, blockEntityDrawers);
-                else if (drawerCount == 3 && BlockDrawers.this instanceof BlockCompDrawers)
-                    return new ContainerDrawersComp(windowId, playerInv, blockEntityDrawers);
-                return null;
-            }
-        };*/
     }
 
     public boolean interactTakeItems(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult hit) {
         if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
             ModServices.log.info("onBlockClicked");
+
+        long lastClickTime = lastLeftClick.getOrDefault(player.getUUID(), 0L);
+        if (level.getGameTime() - lastClickTime < 2) {
+            lastLeftClick.put(player.getUUID(), level.getGameTime());
+            return true;
+        }
+        lastLeftClick.put(player.getUUID(), level.getGameTime());
 
         if (!(state.getBlock() instanceof BlockDrawers))
             return false;

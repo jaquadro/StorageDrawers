@@ -19,9 +19,9 @@ public class ModelLoadPlugin implements ModelLoadingPlugin
                 DrawerModelStore.tryAddModel(context.topLevelId(), original);
 
                 if (DrawerModelStore.fullDrawerDecorations.isTargetedModel(context.topLevelId()))
-                    return new DecoratedDrawerModel.FullModel(original);
+                    return new PlatformDecoratedDrawerModel.FullModel(original);
                 else if (DrawerModelStore.halfDrawerDecorations.isTargetedModel(context.topLevelId()))
-                    return new DecoratedDrawerModel.HalfModel(original);
+                    return new PlatformDecoratedDrawerModel.HalfModel(original);
             }
 
             return original;

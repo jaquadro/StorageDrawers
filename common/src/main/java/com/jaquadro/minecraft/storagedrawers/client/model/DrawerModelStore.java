@@ -7,16 +7,19 @@ import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class DrawerModelStore
 {
     private static final Map<String, BakedModel> modelStore = new HashMap<>();
+    private static final Map<String, ModelResourceLocation> locationStore = new HashMap<>();
 
     public static final DecorationSet fullDrawerDecorations = new DecorationSet(false);
     public static final DecorationSet halfDrawerDecorations = new DecorationSet(true);
@@ -70,7 +73,9 @@ public class DrawerModelStore
     }
 
     static ModelResourceLocation addLocation(ModelResourceLocation loc) {
+        locationStore.put(loc.toString(), loc);
         modelStore.put(loc.toString(), null);
+
         return loc;
     }
 
@@ -80,6 +85,10 @@ public class DrawerModelStore
 
     static String getVariant(Direction dir, boolean half, int slots) {
         return "facing=" + dir.getName() + ",half=" + half + ",slots=" + slots;
+    }
+
+    public static Stream<ModelResourceLocation> getModelLocations() {
+        return locationStore.values().stream();
     }
 
     public static void tryAddModel(ModelResourceLocation loc, BakedModel model) {

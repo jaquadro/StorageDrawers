@@ -695,7 +695,8 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         @Override
         public Component getDisplayName () {
-            return Component.translatable(entity.getBlockState().getBlock().getDescriptionId());
+            ItemStack stack = new ItemStack(entity.getBlockState().getBlock());
+            return stack.getItem().getName(stack);
         }
 
         @Nullable
