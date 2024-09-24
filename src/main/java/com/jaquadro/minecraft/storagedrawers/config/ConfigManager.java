@@ -228,6 +228,7 @@ public class ConfigManager
 
         config.get(sectionBlocksController.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksController.getQualifiedName(), "range", 12).setLanguageKey(LANG_PREFIX + "prop.controllerRange");
+        config.get(sectionBlocksController.getQualifiedName(), "enableControllerIO", true).setLanguageKey(LANG_PREFIX + "prop.enableControllerIO").getBoolean();
 
         config.get(sectionBlocksTrim.getQualifiedName(), "enabled", true).setLanguageKey(LANG_PREFIX + "prop.enabled").setRequiresMcRestart(true);
         config.get(sectionBlocksTrim.getQualifiedName(), "recipeOutput", 4).setLanguageKey(LANG_PREFIX + "prop.recipeOutput").setRequiresMcRestart(true);
@@ -285,6 +286,11 @@ public class ConfigManager
     public int getControllerRange () {
         ConfigSection section = blockSectionsMap.get("controller");
         return section.getCategory().get("range").getInt();
+    }
+
+    public boolean allowControllerIO() {
+        ConfigSection section = blockSectionsMap.get("controller");
+        return section.getCategory().get("enableControllerIO").getBoolean();
     }
 
     public int getStorageUpgradeMultiplier (int level) {
