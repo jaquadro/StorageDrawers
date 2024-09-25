@@ -2,7 +2,10 @@
     "parent": "minecraft:recipes/root",
     "rewards": {
         "recipes": [
-            "storagedrawers:compacting_drawers_3"
+            "storagedrawers:compacting_drawers_2",
+            "storagedrawers:compacting_drawers_3",
+            "storagedrawers:compacting_half_drawers_2",
+            "storagedrawers:compacting_half_drawers_3"
         ]
     },
     "criteria": {

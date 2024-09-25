@@ -7,12 +7,11 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
-import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp;
+import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp3;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
@@ -350,7 +349,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
                 else if (drawerCount == 4)
                     return new ContainerDrawers4(windowId, playerInv, blockEntityDrawers);
                 else if (drawerCount == 3 && BlockDrawers.this instanceof BlockCompDrawers)
-                    return new ContainerDrawersComp(windowId, playerInv, blockEntityDrawers);
+                    return new ContainerDrawersComp3(windowId, playerInv, blockEntityDrawers);
                 return null;
             }
         }, extraData -> extraData.writeBlockPos(context.pos));

@@ -1,8 +1,8 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "###",
-        "TXT",
+        "#T#",
+        "#X#",
         "#I#"
     ],
     "key": {
@@ -11,5 +11,5 @@
         "X": { "tag": "storagedrawers:full_drawers" },
         "I": { "tag": "forge:ingots/iron" }
     },
-    "result": { "item": "storagedrawers:compacting_drawers_3" }
+    "result": { "item": "storagedrawers:compacting_drawers_2" }
 }

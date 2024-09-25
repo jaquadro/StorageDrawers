@@ -8,8 +8,8 @@
     "key": {
         "#": { "item": "minecraft:stone" },
         "T": { "item": "minecraft:piston" },
-        "X": { "tag": "storagedrawers:full_drawers" },
+        "X": { "tag": "storagedrawers:half_drawers" },
         "I": { "tag": "forge:ingots/iron" }
     },
-    "result": { "item": "storagedrawers:compacting_drawers_3" }
+    "result": { "item": "storagedrawers:compacting_half_drawers_3" }
 }

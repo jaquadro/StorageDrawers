@@ -24,6 +24,9 @@ import java.util.Optional;
 
 public abstract class FaceSlotBlock extends HorizontalDirectionalBlock implements INetworked, EntityBlock
 {
+    private long ignoreEventTime;
+    private long ignoreEventThresh = 2;
+
     protected FaceSlotBlock (BlockBehaviour.Properties properties) {
         super(properties);
     }
@@ -56,6 +59,12 @@ public abstract class FaceSlotBlock extends HorizontalDirectionalBlock implement
     public InteractionResult leftAction (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
         int slot = getFaceSlot(state, hit);
         InteractContext context = new InteractContext(state, level, pos, player, hit, slot);
+
+        //if (level.getGameTime() - ignoreEventTime < ignoreEventThresh) {
+        //    ignoreEventTime = level.getGameTime();
+        //    return InteractionResult.PASS;
+        //}
+        //ignoreEventTime = level.getGameTime();
 
         boolean altAction = PlayerConfig.getInvertShift(player) != player.isShiftKeyDown();
 

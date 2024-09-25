@@ -17,7 +17,8 @@ public class ModContainers
     public static final RegistryObject<MenuType<ContainerDrawers1>> DRAWER_CONTAINER_1 = registerContainer("drawer_container_1", ContainerDrawers1::new);
     public static final RegistryObject<MenuType<ContainerDrawers2>> DRAWER_CONTAINER_2 = registerContainer("drawer_container_2", ContainerDrawers2::new);
     public static final RegistryObject<MenuType<ContainerDrawers4>> DRAWER_CONTAINER_4 = registerContainer("drawer_container_4", ContainerDrawers4::new);
-    public static final RegistryObject<MenuType<ContainerDrawersComp>> DRAWER_CONTAINER_COMP = registerContainer("drawer_container_comp", ContainerDrawersComp::new);
+    public static final RegistryObject<MenuType<ContainerDrawersComp2>> DRAWER_CONTAINER_COMP_2 = registerContainer("drawer_container_comp_2", ContainerDrawersComp2::new);
+    public static final RegistryObject<MenuType<ContainerDrawersComp3>> DRAWER_CONTAINER_COMP_3 = registerContainer("drawer_container_comp_3", ContainerDrawersComp3::new);
 
     private static <C extends ContainerDrawers> RegistryObject<MenuType<C>> registerContainer(String name, IContainerFactory<C> containerFactory) {
         return CONTAINERS_REGISTER.register(name, () -> IForgeMenuType.create(containerFactory));

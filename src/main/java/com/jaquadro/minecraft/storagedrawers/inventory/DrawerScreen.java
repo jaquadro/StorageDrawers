@@ -21,7 +21,8 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
     private static final ResourceLocation guiTextures1 = StorageDrawers.rl("textures/gui/drawers_1.png");
     private static final ResourceLocation guiTextures2 = StorageDrawers.rl("textures/gui/drawers_2.png");
     private static final ResourceLocation guiTextures4 = StorageDrawers.rl("textures/gui/drawers_4.png");
-    private static final ResourceLocation guiTexturesComp = StorageDrawers.rl("textures/gui/drawers_comp.png");
+    private static final ResourceLocation guiTexturesComp2 = StorageDrawers.rl("textures/gui/drawers_comp2.png");
+    private static final ResourceLocation guiTexturesComp3 = StorageDrawers.rl("textures/gui/drawers_comp.png");
 
     private static final int smDisabledX = 176;
     private static final int smDisabledY = 0;
@@ -59,9 +60,15 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
         }
     }
 
-    public static class Compacting extends DrawerScreen {
-        public Compacting(ContainerDrawers container, Inventory playerInv, Component name) {
-            super(container, playerInv, name, guiTexturesComp);
+    public static class Compacting2 extends DrawerScreen {
+        public Compacting2(ContainerDrawers container, Inventory playerInv, Component name) {
+            super(container, playerInv, name, guiTexturesComp2);
+        }
+    }
+
+    public static class Compacting3 extends DrawerScreen {
+        public Compacting3(ContainerDrawers container, Inventory playerInv, Component name) {
+            super(container, playerInv, name, guiTexturesComp2);
         }
     }
 

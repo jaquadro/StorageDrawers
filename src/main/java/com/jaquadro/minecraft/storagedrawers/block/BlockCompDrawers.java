@@ -22,6 +22,18 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
 {
     public static final EnumProperty<EnumCompDrawer> SLOTS = EnumProperty.create("slots", EnumCompDrawer.class);
 
+    public BlockCompDrawers (int drawerCount, boolean halfDepth, int storageUnits, BlockBehaviour.Properties properties) {
+        super(drawerCount, halfDepth, storageUnits, properties);
+    }
+
+    public BlockCompDrawers (int drawerCount, boolean halfDepth, BlockBehaviour.Properties properties) {
+        super(drawerCount, halfDepth, calcUnits(drawerCount, halfDepth), properties);
+    }
+
+    private static int calcUnits (int drawerCount, boolean halfDepth) {
+        return halfDepth ? 16 : 32;
+    }
+
     public BlockCompDrawers (int storageUnits, BlockBehaviour.Properties properties) {
         super(3, false, storageUnits, properties);
         this.registerDefaultState(defaultBlockState()
@@ -29,7 +41,7 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     }
 
     public BlockCompDrawers (BlockBehaviour.Properties properties) {
-        this(32, properties);
+        this(3, false, properties);
     }
 
     @Override
@@ -46,10 +58,17 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
         if (hitWithinY(normalizedHit, .5f, 1f))
             return 0;
 
-        if (hitWithinX(correctSide, normalizedHit, 0, .5f))
+        if (getDrawerCount() == 2)
             return 1;
-        else
-            return 2;
+
+        if (getDrawerCount() == 3) {
+            if (hitWithinX(correctSide, normalizedHit, 0, .5f))
+                return 1;
+            else
+                return 2;
+        }
+
+        return super.getFaceSlot(correctSide, normalizedHit);
     }
 
     @Override
@@ -70,6 +89,6 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
 
     @Override
     public BlockEntityDrawers newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
-        return new BlockEntityDrawersComp.Slot3(pos, state);
+        return BlockEntityDrawersComp.createEntity(getDrawerCount(), pos, state);
     }
 }

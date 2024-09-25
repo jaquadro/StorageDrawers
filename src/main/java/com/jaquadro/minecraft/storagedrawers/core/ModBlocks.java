@@ -94,7 +94,10 @@ public final class ModBlocks
         WARPED_HALF_DRAWERS_2 = registerWoodenDrawerBlock(modLoc("warped"), 2, true),
         WARPED_HALF_DRAWERS_4 = registerWoodenDrawerBlock(modLoc("warped"), 4, true);
 
-    public static final RegistryObject<BlockCompDrawers> COMPACTING_DRAWERS_3 = registerCompactingDrawerBlock("compacting_drawers_3");
+    public static final RegistryObject<BlockCompDrawers> COMPACTING_DRAWERS_2 = registerCompactingDrawerBlock("compacting_drawers_2", 2, false);
+    public static final RegistryObject<BlockCompDrawers> COMPACTING_DRAWERS_3 = registerCompactingDrawerBlock("compacting_drawers_3", 3, false);
+    public static final RegistryObject<BlockCompDrawers> COMPACTING_HALF_DRAWERS_2 = registerCompactingDrawerBlock("compacting_half_drawers_2", 2, true);
+    public static final RegistryObject<BlockCompDrawers> COMPACTING_HALF_DRAWERS_3 = registerCompactingDrawerBlock("compacting_half_drawers_3", 3, true);
 
     public static final RegistryObject<BlockTrim>
         OAK_TRIM = registerTrimBlock(modLoc("oak")),
@@ -117,7 +120,7 @@ public final class ModBlocks
         META_VOID = registerMetaBlock("meta_void"),
         META_SHROUD = registerMetaBlock("meta_shroud"),
         META_INDICATOR = registerSizedMetaBlock("meta_indicator"),
-        META_COMP_INDICATOR = registerMetaBlock("meta_comp_indicator"),
+        META_COMP_INDICATOR = registerSizedMetaBlock("meta_comp_indicator"),
         META_MISSING_1_1 = registerMetaBlock("meta_missing_slot_1_1"),
         META_MISSING_2_1 = registerMetaBlock("meta_missing_slot_2_1"),
         META_MISSING_2_2 = registerMetaBlock("meta_missing_slot_2_2"),
@@ -153,8 +156,8 @@ public final class ModBlocks
         return register.register(name, () -> new BlockStandardDrawers(drawerCount, halfDepth, getWoodenDrawerBlockProperties()).setMatKey(material));
     }
 
-    static RegistryObject<BlockCompDrawers> registerCompactingDrawerBlock(String name) {
-        return BLOCK_REGISTER.register(name, () -> new BlockCompDrawers(getStoneDrawerBlockProperties()));
+    static RegistryObject<BlockCompDrawers> registerCompactingDrawerBlock(String name, int drawerCount, boolean halfDepth) {
+        return BLOCK_REGISTER.register(name, () -> new BlockCompDrawers(drawerCount, halfDepth, getStoneDrawerBlockProperties()));
     }
 
     static RegistryObject<BlockTrim> registerTrimBlock(ResourceLocation name) {

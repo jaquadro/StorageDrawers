@@ -249,14 +249,15 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
     public static final ResourceLocation TEXTURE_IND_1 = StorageDrawers.rl("block/indicator/indicator_1_on");
     public static final ResourceLocation TEXTURE_IND_2 = StorageDrawers.rl("block/indicator/indicator_2_on");
     public static final ResourceLocation TEXTURE_IND_4 = StorageDrawers.rl("block/indicator/indicator_4_on");
-    public static final ResourceLocation TEXTURE_IND_COMP = StorageDrawers.rl("block/indicator/indicator_comp_on");
+    public static final ResourceLocation TEXTURE_IND_COMP_3 = StorageDrawers.rl("block/indicator/indicator_comp_on");
+    public static final ResourceLocation TEXTURE_IND_COMP_2 = StorageDrawers.rl("block/indicator/indicator_comp2_on");
 
     private void renderIndicator (BlockDrawers block, BlockEntityDrawers blockEntityDrawers, PoseStack matrixStack, MultiBufferSource buffer, Direction side, int combinedLight, int combinedOverlay) {
         int count = (blockEntityDrawers instanceof BlockEntityDrawersComp) ? 1 : block.getDrawerCount();
 
         ResourceLocation resource = TEXTURE_IND_1;
         if (blockEntityDrawers instanceof BlockEntityDrawersComp)
-            resource = TEXTURE_IND_COMP;
+            resource = block.getDrawerCount() == 2 ? TEXTURE_IND_COMP_2 : TEXTURE_IND_COMP_3;
         else if (count == 2)
             resource = TEXTURE_IND_2;
         else if (count == 4)
@@ -313,7 +314,7 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
             if (xCur > x1 && yCur > y1) {
                 Matrix4f matrix = matrixStack.last().pose();
                 Matrix3f normal = matrixStack.last().normal();
-                VertexConsumer builder = buffer.getBuffer(RenderType.solid());
+                VertexConsumer builder = buffer.getBuffer(RenderType.cutout());
                 addQuad(matrix, normal, builder, combinedLight, combinedOverlay, x1, xCur, y1, yCur, z, uCur, su1, sv1, vCur);
             }
         }

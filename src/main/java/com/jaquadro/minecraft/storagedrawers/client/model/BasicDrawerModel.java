@@ -54,6 +54,7 @@ public final class BasicDrawerModel
         VOID("void"),
         SHROUD("shroud"),
         INDICATOR("indicator"),
+        INDICATOR_COMP("indicator_comp"),
         MISSING_1("missing_1"),
         MISSING_2("missing_2"),
         MISSING_3("missing_3"),
@@ -176,11 +177,27 @@ public final class BasicDrawerModel
                 StorageDrawers.rl("models/block/geometry/half_drawers_ind_area_4.json"),
                 StorageDrawers.rl("models/block/geometry/half_drawers_indbase_area_4.json"),
                     ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 4, true).toArray(BlockDrawers[]::new));
-            populateGeometryData(StorageDrawers.rl("models/block/geometry/comp_drawers_icon_area_3.json"),
-                StorageDrawers.rl("models/block/geometry/comp_drawers_count_area_3.json"),
-                StorageDrawers.rl("models/block/geometry/comp_drawers_ind_area_3.json"),
-                StorageDrawers.rl("models/block/geometry/comp_drawers_indbase_area_3.json"),
-                    ModBlocks.getDrawersOfType(BlockCompDrawers.class).toArray(BlockDrawers[]::new));
+
+            populateGeometryData(StorageDrawers.rl("models/block/geometry/full_comp_drawers_icon_area_2.json"),
+                StorageDrawers.rl("models/block/geometry/full_comp_drawers_count_area_2.json"),
+                StorageDrawers.rl("models/block/geometry/full_comp_drawers_ind_area_2.json"),
+                StorageDrawers.rl("models/block/geometry/full_comp_drawers_indbase_area_2.json"),
+                    ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockCompDrawers.class, 2, false).toArray(BlockDrawers[]::new));
+            populateGeometryData(StorageDrawers.rl("models/block/geometry/full_comp_drawers_icon_area_3.json"),
+                StorageDrawers.rl("models/block/geometry/full_comp_drawers_count_area_3.json"),
+                StorageDrawers.rl("models/block/geometry/full_comp_drawers_ind_area_3.json"),
+                StorageDrawers.rl("models/block/geometry/full_comp_drawers_indbase_area_3.json"),
+                    ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockCompDrawers.class, 3, false).toArray(BlockDrawers[]::new));
+            populateGeometryData(StorageDrawers.rl("models/block/geometry/half_comp_drawers_icon_area_2.json"),
+                StorageDrawers.rl("models/block/geometry/half_comp_drawers_count_area_2.json"),
+                StorageDrawers.rl("models/block/geometry/half_comp_drawers_ind_area_2.json"),
+                StorageDrawers.rl("models/block/geometry/half_comp_drawers_indbase_area_2.json"),
+                ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockCompDrawers.class, 2, true).toArray(BlockDrawers[]::new));
+            populateGeometryData(StorageDrawers.rl("models/block/geometry/half_comp_drawers_icon_area_3.json"),
+                StorageDrawers.rl("models/block/geometry/half_comp_drawers_count_area_3.json"),
+                StorageDrawers.rl("models/block/geometry/half_comp_drawers_ind_area_3.json"),
+                StorageDrawers.rl("models/block/geometry/half_comp_drawers_indbase_area_3.json"),
+                ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockCompDrawers.class, 3, true).toArray(BlockDrawers[]::new));
         }
 
         private static BlockModel getBlockModel (ResourceLocation location) {
@@ -260,8 +277,10 @@ public final class BasicDrawerModel
                         .get(new ModelResourceLocation(StorageDrawers.rl("meta_indicator"), getVariant(dir, half, 2))));
                     overlayModels.put(getVariant(DynamicPart.INDICATOR, dir, half, 4), event.getModels()
                         .get(new ModelResourceLocation(StorageDrawers.rl("meta_indicator"), getVariant(dir, half, 4))));
-                    overlayModels.put(getVariant(DynamicPart.INDICATOR, dir, half), event.getModels()
-                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_comp_indicator"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.INDICATOR_COMP, dir, half, 2), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_comp_indicator"), getVariant(dir, half, 2))));
+                    overlayModels.put(getVariant(DynamicPart.INDICATOR_COMP, dir, half, 3), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_comp_indicator"), getVariant(dir, half, 3))));
 
                     overlayModels.put(getVariant(DynamicPart.MISSING_1, dir, half, 1), event.getModels()
                         .get(new ModelResourceLocation(StorageDrawers.rl("meta_missing_slot_1_1"), getVariant(dir, half))));
@@ -516,7 +535,8 @@ public final class BasicDrawerModel
             }
             if (attr.hasFillLevel()) {
                 if (block instanceof BlockCompDrawers) {
-                    BakedModel model = overlayModels.get(getVariant(DynamicPart.INDICATOR, dir, half));
+                    int count = ((BlockDrawers) block).getDrawerCount();
+                    BakedModel model = overlayModels.get(getVariant(DynamicPart.INDICATOR_COMP, dir, half, count));
                     if (model != null)
                         quads.addAll((model.getQuads(state, side, rand, extraData, type)));
                 }

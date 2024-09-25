@@ -81,7 +81,7 @@ public final class CommonConfig
                 .comment("Drawers track the capacity upgrades from the block they were taken from.",
                     "Drawers can only be placed back into a block with the same or lower max capacity.",
                     "Drawers can still only be inserted into a block with enough capacity for the items held.")
-                .define("forceDetachedDrawersMaxCapacityCheck", true);
+                .define("forceDetachedDrawersMaxCapacityCheck", false);
             debugTrace = builder
                 .define("debugTrace", false);
             compRules = builder
@@ -141,7 +141,8 @@ public final class CommonConfig
         public Upgrades (ForgeConfigSpec.Builder builder) {
             builder.push("StorageUpgrades");
             builder.comment("Storage upgrades multiply storage capacity by the given amount.",
-                "When multiple storage upgrades are used together, their multipliers are added before being applied.");
+                "When multiple storage upgrades are used together, their multipliers are added before being applied.",
+                "Storage upgrades start at the level 2 multiplier.  The resistance upgrade uses level 1.");
 
             level1Mult = builder
                 .define("level1Mult", 2);
