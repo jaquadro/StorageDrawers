@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifi
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
@@ -14,6 +15,7 @@ import com.jaquadro.minecraft.storagedrawers.inventory.*;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
+import com.jaquadro.minecraft.storagedrawers.storage.StorageUtil;
 import com.texelsaurus.minecraft.chameleon.ChameleonServices;
 import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import com.texelsaurus.minecraft.chameleon.inventory.ContentMenuProvider;
@@ -21,6 +23,7 @@ import com.texelsaurus.minecraft.chameleon.inventory.content.PositionContent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -29,6 +32,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -420,6 +424,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.getCount());
 
+        if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade())
+            StorageUtil.rebalanceDrawers(getGroup(), slot);
+
         if (isRedstone() && getLevel() != null) {
             getLevel().updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
             getLevel().updateNeighborsAt(getBlockPos().below(), getBlockState().getBlock());
@@ -447,6 +454,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         drawer.setStoredItemCount(drawer.getStoredItemCount() + countAdded);
         stack.shrink(countAdded);
+
+        if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade())
+            StorageUtil.rebalanceDrawers(getGroup(), slot);
 
         return countAdded;
     }
@@ -503,6 +513,39 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         lastClickUUID = player.getUUID();
 
         return count;
+    }
+
+    public boolean interactReplaceDrawer (int slot, ItemStack detachedDrawer) {
+        IDrawer drawer = getDrawer(slot);
+        if (!drawer.isMissing())
+            return false;
+
+        if (detachedDrawer.isEmpty())
+            return false;
+
+        CustomData customdata = detachedDrawer.get(DataComponents.CUSTOM_DATA);
+        CompoundTag tag = customdata != null ? customdata.copyTag() : new CompoundTag();
+
+        DetachedDrawerData data = new DetachedDrawerData(level.registryAccess(), tag);
+        ItemStack proto = data.getStoredItemPrototype();
+        int count = data.getStoredItemCount();
+
+        if (count > drawer.getMaxCapacity(proto))
+            return false;
+
+        if (ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get()) {
+            int cap = getEffectiveDrawerCapacity() * upgradeData.getStorageMultiplier();
+            if (data.getStorageMultiplier() < cap)
+                return false;
+        }
+
+        drawer.setDetached(false);
+        drawer.setStoredItem(proto, count);
+
+        if (drawerAttributes.isBalancedFill())
+            StorageUtil.rebalanceDrawers(getGroup(), slot);
+
+        return true;
     }
 
     @Override

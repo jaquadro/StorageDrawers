@@ -39,18 +39,24 @@ public final class ModItems
         MAX_REDSTONE_UPGRADE = ITEMS.register("max_redstone_upgrade", () -> new ItemUpgradeRedstone(EnumUpgradeRedstone.MAX, new Item.Properties())),
         ILLUMINATION_UPGRADE = ITEMS.register("illumination_upgrade", () -> new ItemUpgrade(new Item.Properties())),
         FILL_LEVEL_UPGRADE = ITEMS.register("fill_level_upgrade", () -> new ItemUpgrade(new Item.Properties())),
-        UPGRADE_TEMPLATE = ITEMS.register("upgrade_template", () -> new Item(new Item.Properties()));
+        BALANCE_FILL_UPGRADE = ITEMS.register("balance_fill_upgrade", () -> new ItemUpgradeBalance(new Item.Properties())),
+        PORTABILITY_UPGRADE = ITEMS.register("portability_upgrade", () -> new ItemUpgradePortability(new Item.Properties())),
+        UPGRADE_TEMPLATE = ITEMS.register("upgrade_template", () -> new Item(new Item.Properties())),
+        DETACHED_DRAWER = ITEMS.register("detached_drawer", () -> new ItemDetachedDrawer(new Item.Properties())),
+        DETACHED_DRAWER_FULL = ITEMS.register("detached_drawer_full", () -> new ItemDetachedDrawer(new Item.Properties().stacksTo(1)));
 
     public static final RegistryEntry<? extends ItemKey>
         DRAWER_KEY = ITEMS.register("drawer_key", () -> new ItemDrawerKey(new Item.Properties())),
         QUANTIFY_KEY = ITEMS.register("quantify_key", () -> new ItemQuantifyKey(new Item.Properties())),
-        SHROUD_KEY = ITEMS.register("shroud_key", () -> new ItemShroudKey(new Item.Properties()));
+        SHROUD_KEY = ITEMS.register("shroud_key", () -> new ItemShroudKey(new Item.Properties())),
+        DRAWER_PULLER = ITEMS.register("drawer_puller", () -> new ItemDrawerPuller(new Item.Properties()));
 
     public static final RegistryEntry<? extends ItemKeyring>
         KEYRING = ITEMS.register("keyring", () -> new ItemKeyring(null, new Item.Properties().stacksTo(1))),
         KEYRING_DRAWER = ITEMS.register("keyring_drawer", () -> new ItemKeyring(DRAWER_KEY, new Item.Properties().stacksTo(1))),
         KEYRING_QUANTIFY = ITEMS.register("keyring_quantify", () -> new ItemKeyring(QUANTIFY_KEY, new Item.Properties().stacksTo(1))),
-        KEYRING_SHROUD = ITEMS.register("keyring_shroud", () -> new ItemKeyring(SHROUD_KEY, new Item.Properties().stacksTo(1)));
+        KEYRING_SHROUD = ITEMS.register("keyring_shroud", () -> new ItemKeyring(SHROUD_KEY, new Item.Properties().stacksTo(1))),
+        KEYRING_PULLER = ITEMS.register("keyring_puller", () -> new ItemKeyring(DRAWER_PULLER, new Item.Properties().stacksTo(1)));
 
     private ModItems() { }
 
@@ -58,6 +64,8 @@ public final class ModItems
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PULLER);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(DETACHED_DRAWER_FULL);
 
         for (RegistryEntry<Block> ro : ModBlocks.BLOCKS.getEntries()) {
             if (ModBlocks.EXCLUDE_ITEMS.contains(ro.getId().getPath()))

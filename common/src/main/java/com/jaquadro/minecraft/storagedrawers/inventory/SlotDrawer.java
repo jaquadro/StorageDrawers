@@ -76,6 +76,10 @@ public class SlotDrawer extends Slot
         return group;
     }
 
+    public IDrawer getDrawer () {
+        return drawer;
+    }
+
     // TODO: Forge extension
     // @Override
     public boolean isSameInventory (@NotNull Slot other) {

@@ -13,6 +13,7 @@ import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
+import com.jaquadro.minecraft.storagedrawers.storage.StorageUtil;
 import com.jaquadro.minecraft.storagedrawers.util.ItemCollectionRegistry;
 import com.texelsaurus.minecraft.chameleon.util.WorldUtils;
 import com.mojang.authlib.GameProfile;
@@ -738,6 +739,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         public ItemStack insertItem (@NotNull ItemStack stack, boolean simulate, Predicate<ItemStack> predicate) {
             Collection<SlotRecord> primaryRecords = drawerPrimaryLookup.getEntries(stack.getItem());
             Set<Integer> checkedSlots = (simulate) ? new HashSet<>() : null;
+            List<IDrawer> rebalance = new ArrayList<>();
 
             int amount = stack.getCount();
             if (primaryRecords != null) {
@@ -755,68 +757,81 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                     if (!hasAccess(candidateGroup, drawer))
                         continue;
 
+                    IDrawerAttributes attrs = getAttributes(candidateGroup);
+                    if (attrs != null && attrs.isBalancedFill())
+                        rebalance.add(drawer);
+
+                    if (amount == 0)
+                        continue;
+
                     int adjusted = Math.min(amount, drawer.getRemainingCapacity());
                     amount = (simulate)
                         ? Math.max(amount - drawer.getRemainingCapacity(), 0)
                         : (amount - adjusted) + drawer.adjustStoredItemCount(adjusted);
 
                     if (amount == 0)
-                        return ItemStack.EMPTY;
+                        continue;
 
                     if (simulate)
                         checkedSlots.add(record.index);
                 }
 
                 // Then relax to available capacity
-                for (SlotRecord record : primaryRecords) {
-                    IDrawerGroup candidateGroup = getGroupForSlotRecord(record);
-                    if (candidateGroup == null)
-                        continue;
+                if (amount > 0) {
+                    for (SlotRecord record : primaryRecords) {
+                        IDrawerGroup candidateGroup = getGroupForSlotRecord(record);
+                        if (candidateGroup == null)
+                            continue;
 
-                    IDrawer drawer = candidateGroup.getDrawer(record.slot);
-                    if (drawer.isEmpty())
-                        continue;
-                    if (!testPredicateInsert(drawer, stack, predicate))
-                        continue;
-                    if (!hasAccess(candidateGroup, drawer))
-                        continue;
+                        IDrawer drawer = candidateGroup.getDrawer(record.slot);
+                        if (drawer.isEmpty())
+                            continue;
+                        if (!testPredicateInsert(drawer, stack, predicate))
+                            continue;
+                        if (!hasAccess(candidateGroup, drawer))
+                            continue;
 
-                    amount = (simulate)
-                        ? Math.max(amount - drawer.getAcceptingRemainingCapacity(), 0)
-                        : drawer.adjustStoredItemCount(amount);
+                        amount = (simulate)
+                            ? Math.max(amount - drawer.getAcceptingRemainingCapacity(), 0)
+                            : drawer.adjustStoredItemCount(amount);
 
-                    if (amount == 0)
-                        return ItemStack.EMPTY;
-
-                    if (simulate)
-                        checkedSlots.add(record.index);
+                        if (simulate)
+                            checkedSlots.add(record.index);
+                    }
                 }
             }
 
-            for (int slot : drawerSlots) {
-                IDrawer drawer = getDrawer(slot);
-                if (!drawer.isEnabled())
-                    continue;
-                if (!testPredicateInsert(drawer, stack, predicate))
-                    continue;
-                if (!hasAccess(getGroupForDrawerSlot(slot), drawer))
-                    continue;
-                if (simulate && checkedSlots.contains(slot))
-                    continue;
+            if (amount > 0) {
+                for (int slot : drawerSlots) {
+                    IDrawer drawer = getDrawer(slot);
+                    if (!drawer.isEnabled())
+                        continue;
+                    if (!testPredicateInsert(drawer, stack, predicate))
+                        continue;
+                    if (!hasAccess(getGroupForDrawerSlot(slot), drawer))
+                        continue;
+                    if (simulate && checkedSlots.contains(slot))
+                        continue;
 
-                boolean empty = drawer.isEmpty();
-                if (empty && !simulate)
-                    drawer = drawer.setStoredItem(stack);
+                    boolean empty = drawer.isEmpty();
+                    if (empty && !simulate)
+                        drawer = drawer.setStoredItem(stack);
 
-                amount = (simulate)
-                    ? Math.max(amount - (empty ? drawer.getAcceptingMaxCapacity(stack) : drawer.getAcceptingRemainingCapacity()), 0)
-                    : drawer.adjustStoredItemCount(amount);
+                    amount = (simulate)
+                        ? Math.max(amount - (empty ? drawer.getAcceptingMaxCapacity(stack) : drawer.getAcceptingRemainingCapacity()), 0)
+                        : drawer.adjustStoredItemCount(amount);
 
-                if (amount == 0)
-                    return ItemStack.EMPTY;
+                    if (amount == 0)
+                        break;
+                }
             }
 
-            return stackResult(stack, amount);
+            if (!rebalance.isEmpty())
+                StorageUtil.rebalanceDrawers(rebalance.stream());
+
+            return (amount == 0)
+                ? ItemStack.EMPTY
+                : stackResult(stack, amount);
         }
 
         @NotNull
@@ -824,6 +839,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         public ItemStack extractItem (@NotNull ItemStack stack, int amount, boolean simulate, Predicate<ItemStack> predicate) {
             Collection<SlotRecord> primaryRecords = drawerPrimaryLookup.getEntries(stack.getItem());
             Set<Integer> checkedSlots = (simulate) ? new HashSet<>() : null;
+            List<IDrawer> rebalance = new ArrayList<>();
 
             int remaining = amount;
             if (primaryRecords != null) {
@@ -840,33 +856,46 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                     if (!hasAccess(candidateGroup, drawer))
                         continue;
 
+                    IDrawerAttributes attrs = getAttributes(candidateGroup);
+                    if (attrs != null && attrs.isBalancedFill())
+                        rebalance.add(drawer);
+
+                    if (remaining == 0)
+                        continue;
+
                     remaining = (simulate)
                         ? Math.max(remaining - drawer.getStoredItemCount(), 0)
                         : drawer.adjustStoredItemCount(-remaining);
-
-                    if (remaining == 0)
-                        return stackResult(stack, amount);
 
                     if (simulate)
                         checkedSlots.add(record.index);
                 }
             }
 
-            for (int slot : drawerSlots) {
-                IDrawer drawer = getDrawer(slot);
-                if (!drawer.isEnabled())
-                    continue;
-                if (!testPredicateExtract(drawer, stack, predicate))
-                    continue;
-                if (simulate && checkedSlots.contains(slot))
-                    continue;
+            if (remaining > 0) {
+                for (int slot : drawerSlots) {
+                    IDrawer drawer = getDrawer(slot);
+                    if (!drawer.isEnabled())
+                        continue;
+                    if (!testPredicateExtract(drawer, stack, predicate))
+                        continue;
+                    if (simulate && checkedSlots.contains(slot))
+                        continue;
 
-                remaining = (simulate)
-                    ? Math.max(remaining - drawer.getStoredItemCount(), 0)
-                    : drawer.adjustStoredItemCount(-remaining);
+                    remaining = (simulate)
+                        ? Math.max(remaining - drawer.getStoredItemCount(), 0)
+                        : drawer.adjustStoredItemCount(-remaining);
 
-                if (remaining == 0)
-                    return stackResult(stack, amount);
+                    if (remaining == 0)
+                        return stackResult(stack, amount);
+                }
+
+                if (!rebalance.isEmpty())
+                    StorageUtil.rebalanceDrawers(rebalance.stream());
+
+                return (amount == remaining)
+                    ? ItemStack.EMPTY
+                    : stackResult(stack, amount - remaining);
             }
 
             return (amount == remaining)

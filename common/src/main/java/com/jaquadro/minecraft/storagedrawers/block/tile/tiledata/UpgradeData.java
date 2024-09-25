@@ -32,6 +32,7 @@ public class UpgradeData extends BlockEntityDataShim
     private boolean hasConversion;
     private boolean hasIllumination;
     private boolean hasFillLevel;
+    private boolean hasBalanceFill;
 
     private IDrawerAttributesModifiable attrs;
 
@@ -175,6 +176,19 @@ public class UpgradeData extends BlockEntityDataShim
         return hasIllumination;
     }
 
+    public boolean hasbalancedFillUpgrade () {
+        return hasBalanceFill;
+    }
+
+    public boolean hasPortabilityUpgrade() {
+        for (ItemStack stack : upgrades) {
+            if (stack.getItem() == ModItems.PORTABILITY_UPGRADE.get())
+                return true;
+        }
+
+        return false;
+    }
+
     private int getNextUpgradeSlot () {
         for (int i = 0; i < upgrades.length; i++) {
             if (upgrades[i].isEmpty())
@@ -198,9 +212,11 @@ public class UpgradeData extends BlockEntityDataShim
         hasConversion = false;
         hasIllumination = false;
         hasFillLevel = false;
+        hasBalanceFill = false;
 
         for (ItemStack stack : upgrades) {
             Item item = stack.getItem();
+
             if (item == ModItems.ONE_STACK_UPGRADE.get())
                 hasOneStack = true;
             else if (item == ModItems.VOID_UPGRADE.get())
@@ -215,6 +231,8 @@ public class UpgradeData extends BlockEntityDataShim
                 hasIllumination = true;
             else if (item == ModItems.FILL_LEVEL_UPGRADE.get())
                 hasFillLevel = true;
+            else if (item == ModItems.BALANCE_FILL_UPGRADE.get())
+                hasBalanceFill = true;
         }
 
         attrs.setIsVoid(hasVoid);
@@ -222,6 +240,7 @@ public class UpgradeData extends BlockEntityDataShim
         attrs.setIsDictConvertible(hasConversion);
         attrs.setIsUnlimitedStorage(hasUnlimited);
         attrs.setIsUnlimitedVending(hasVending);
+        attrs.setIsBalancedFill(hasBalanceFill);
     }
 
     private void syncStorageMultiplier () {

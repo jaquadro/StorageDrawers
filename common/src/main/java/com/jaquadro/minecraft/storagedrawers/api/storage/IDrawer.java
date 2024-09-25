@@ -164,8 +164,18 @@ public interface IDrawer
     boolean isEmpty ();
 
     default boolean isEnabled () {
-        return true;
+        return !isMissing();
     }
+
+    default boolean isMissing () {
+        return false;
+    }
+
+    default boolean canDetach () {
+        return false;
+    }
+
+    default void setDetached (boolean state) { }
 
     IDrawer copy ();
 }

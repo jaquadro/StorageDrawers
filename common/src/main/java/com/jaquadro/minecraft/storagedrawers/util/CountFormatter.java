@@ -38,7 +38,10 @@ public class CountFormatter
         if (drawer == null || drawer.isEmpty())
             return "";
 
-        int count = drawer.getStoredItemCount();
+        return formatApprox(font, drawer.getStoredItemCount());
+    }
+
+    public static String formatApprox (Font font, int count) {
         String text;
 
         if (count >= 1000000000)

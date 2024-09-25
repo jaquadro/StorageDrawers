@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.client;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.client.gui.ClientDetachedDrawerTooltip;
 import com.jaquadro.minecraft.storagedrawers.client.gui.ClientKeyringTooltip;
 import com.jaquadro.minecraft.storagedrawers.client.model.DrawerModelGeometry;
 import com.jaquadro.minecraft.storagedrawers.client.model.DrawerModelStore;
@@ -11,6 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
 import com.jaquadro.minecraft.storagedrawers.inventory.DrawerScreen;
+import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.DetachedDrawerTooltip;
 import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.KeyringTooltip;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
@@ -55,6 +57,7 @@ public class ClientModBusSubscriber
     @SubscribeEvent
     public static void registerClientTooltips(RegisterClientTooltipComponentFactoriesEvent event) {
         event.register(KeyringTooltip.class, t -> new ClientKeyringTooltip(t.contents()));
+        event.register(DetachedDrawerTooltip.class, t -> new ClientDetachedDrawerTooltip(t.contents()));
     }
 
     @SubscribeEvent
@@ -92,10 +95,8 @@ public class ClientModBusSubscriber
             } else if (parentModel == missing)
                 continue;
 
-            if (DrawerModelStore.fullDrawerDecorations.isTargetedModel(modelResource))
-                event.getModels().put(modelResource, new PlatformDecoratedDrawerModel(parentModel, DrawerModelStore.fullDrawerDecorations));
-            else if (DrawerModelStore.halfDrawerDecorations.isTargetedModel(modelResource))
-                event.getModels().put(modelResource, new PlatformDecoratedDrawerModel(parentModel, DrawerModelStore.halfDrawerDecorations));
+            if (DrawerModelStore.INSTANCE.isTargetedModel(modelResource))
+                event.getModels().put(modelResource, new PlatformDecoratedDrawerModel(parentModel, DrawerModelStore.INSTANCE));
         }
     }
 }

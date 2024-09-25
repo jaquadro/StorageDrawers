@@ -15,6 +15,7 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable
     private boolean isUnlimitedVending;
     private boolean isConversion;
     private boolean hasFillLevel;
+    private boolean hasBalancedFill;
 
     @Override
     public boolean canItemLock (LockAttribute attr) {
@@ -139,6 +140,21 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable
     public boolean setIsDictConvertible (boolean state) {
         if (isConversion != state) {
             isConversion = state;
+            onAttributeChanged();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean isBalancedFill () {
+        return hasBalancedFill;
+    }
+
+    @Override
+    public boolean setIsBalancedFill (boolean state) {
+        if (hasBalancedFill != state) {
+            hasBalancedFill = state;
             onAttributeChanged();
         }
 

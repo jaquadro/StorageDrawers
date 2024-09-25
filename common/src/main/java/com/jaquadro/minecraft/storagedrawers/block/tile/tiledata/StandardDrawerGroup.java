@@ -116,11 +116,13 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         private ItemStack protoStack;
         private int count;
         private ItemStackMatcher matcher;
+        private boolean missing;
 
         public DrawerData (StandardDrawerGroup group) {
             this.group = group;
             protoStack = ItemStack.EMPTY;
             matcher = ItemStackMatcher.EMPTY;
+            missing = false;
         }
 
         protected DrawerData (DrawerData data) {
@@ -147,6 +149,9 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         @Override
         @NotNull
         public ItemStack getStoredItemPrototype () {
+            if (isMissing())
+                return ItemStack.EMPTY;
+
             return protoStack;
         }
 
@@ -157,6 +162,9 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         }
 
         protected IDrawer setStoredItem (@NotNull ItemStack itemPrototype, boolean notify) {
+            if (isMissing())
+                return this;
+
             if (ItemStackHelper.isStackEncoded(itemPrototype))
                 itemPrototype = ItemStackHelper.decodeItemStackPrototype(itemPrototype);
 
@@ -201,7 +209,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         @Override
         public int getStoredItemCount () {
-            if (protoStack.isEmpty())
+            if (isMissing() || protoStack.isEmpty())
                 return 0;
 
             IDrawerAttributes attrs = getAttributes();
@@ -217,7 +225,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         }
 
         protected void setStoredItemCount (int amount, boolean notify) {
-            if (protoStack.isEmpty() || count == amount)
+            if (isMissing() || protoStack.isEmpty() || count == amount)
                 return;
 
             IDrawerAttributes attrs = getAttributes();
@@ -245,7 +253,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         }
 
         protected int adjustStoredItemCount (int amount, boolean notify) {
-            if (protoStack.isEmpty() || amount == 0)
+            if (isMissing() || protoStack.isEmpty() || amount == 0)
                 return Math.abs(amount);
 
             IDrawerAttributes attrs = getAttributes();
@@ -289,6 +297,9 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         @Override
         public int getAcceptingMaxCapacity (@NotNull ItemStack itemPrototype) {
+            if (isMissing())
+                return 0;
+
             IDrawerAttributes attrs = getAttributes();
             if (attrs.isVoid())
                 return Integer.MAX_VALUE;
@@ -298,7 +309,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         @Override
         public int getRemainingCapacity () {
-            if (protoStack.isEmpty())
+            if (isMissing() || protoStack.isEmpty())
                 return 0;
 
             IDrawerAttributes attrs = getAttributes();
@@ -310,7 +321,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         @Override
         public int getAcceptingRemainingCapacity () {
-            if (protoStack.isEmpty())
+            if (isMissing() || protoStack.isEmpty())
                 return 0;
 
             IDrawerAttributes attrs = getAttributes();
@@ -322,6 +333,9 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         @Override
         public boolean canItemBeStored (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+            if (isMissing())
+                return false;
+
             IDrawerAttributes attrs = getAttributes();
             if (protoStack.isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
                 return true;
@@ -333,7 +347,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         @Override
         public boolean canItemBeExtracted (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
-            if (protoStack.isEmpty())
+            if (isMissing() || protoStack.isEmpty())
                 return false;
 
             if (matchPredicate == null)
@@ -343,7 +357,7 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         @Override
         public boolean isEmpty () {
-            return protoStack.isEmpty();
+            return isMissing() || protoStack.isEmpty();
         }
 
         protected void reset (boolean notify) {
@@ -358,6 +372,8 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         public CompoundTag serializeNBT (HolderLookup.Provider provider) {
             CompoundTag tag = new CompoundTag();
+            tag.putBoolean("Missing", missing);
+
             if (protoStack.isEmpty())
                 return tag;
 
@@ -373,14 +389,18 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         public void deserializeNBT (HolderLookup.Provider provider, CompoundTag nbt) {
             ItemStack tagItem = ItemStack.EMPTY;
             int tagCount = 0;
+            boolean tagMissing = false;
 
             if (nbt.contains("Item"))
                 tagItem = ItemStack.parseOptional(provider, nbt.getCompound("Item"));
             if (nbt.contains("Count"))
                 tagCount = nbt.getInt("Count");
+            if (nbt.contains("Missing"))
+                tagMissing = nbt.getBoolean("Missing");
 
             setStoredItemRaw(tagItem);
             setStoredItemCountRaw(tagCount);
+            this.missing = tagMissing;
         }
 
         public void syncAttributes () {
@@ -399,6 +419,29 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
         protected void onItemChanged() { }
 
         protected void onAmountChanged() { }
+
+        @Override
+        public boolean canDetach () {
+            return true;
+        }
+
+        @Override
+        public boolean isMissing () {
+            return missing;
+        }
+
+        @Override
+        public void setDetached (boolean state) {
+            if (missing != state) {
+                if (state)
+                    setStoredItem(ItemStack.EMPTY);
+
+                missing = state;
+
+                onItemChanged();
+                onAmountChanged();
+            }
+        }
 
         @Override
         public IDrawer copy () {

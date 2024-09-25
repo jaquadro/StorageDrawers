@@ -28,5 +28,14 @@ public interface IDrawerGroup extends IDrawerCapabilityProvider
         return true;
     };
 
+    default boolean hasMissingDrawers () {
+        for (int i = 0; i < getDrawerCount(); i++) {
+            if (getDrawer(i).isMissing())
+                return true;
+        }
+
+        return false;
+    }
+
     //default <T> T getCapability(@NotNull BlockCapability<T, Void> capability) { return null; }
 }

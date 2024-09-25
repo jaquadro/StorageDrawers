@@ -41,6 +41,10 @@ public final class ModCommonConfig extends ConfigSpec
         public ChameleonConfig.ConfigEntry<Boolean> enableExtraCompactingRules;
         public ChameleonConfig.ConfigEntry<Integer> controllerRange;
         public ChameleonConfig.ConfigEntry<Boolean> enableAnalogRedstone;
+        public ChameleonConfig.ConfigEntry<Boolean> enableDetachedDrawers;
+        public ChameleonConfig.ConfigEntry<Boolean> forceDetachedDrawersMaxCapacityCheck;
+        public ChameleonConfig.ConfigEntry<Boolean> heavyDrawers;
+
         public ChameleonConfig.ConfigEntry<List<? extends String>> compRules;
 
         public General() {
@@ -71,6 +75,22 @@ public final class ModCommonConfig extends ConfigSpec
             enableSidedOutput = commonConfig.define("enableSidedOutput", true).build();
             enableItemConversion = commonConfig.define("enableItemConversion", true).build();
             enableExtraCompactingRules = commonConfig.define("enableExtraCompactingRules", true).build();
+
+            enableDetachedDrawers = commonConfig.define("enableDetachedDrawers", true)
+                .comment("Allows drawers to be pulled from their block and inserted into another block.")
+                .build();
+
+            forceDetachedDrawersMaxCapacityCheck = commonConfig.define("forceDetachedDrawersMaxCapacityCheck", true)
+                .comment("Drawers track the capacity upgrades from the block they were taken from.",
+                    "Drawers can only be placed back into a block with the same or lower max capacity.",
+                    "Drawers can still only be inserted into a block with enough capacity for the items held.")
+                .build();
+
+            heavyDrawers = commonConfig.define("heavyDrawers", false)
+                .comment("If enabled, carrying filled drawers in your inventory gives slowness debuff,",
+                    "unless a Portability Upgrade is used.")
+                .build();
+
             debugTrace = commonConfig.define("debugTrace", true).build();
             //compRules = ModServices.CONFIG.defineList("compactingRules", test, obj -> CompTierRegistry.validateRuleSyntax((String)obj)).build();
 
@@ -111,6 +131,9 @@ public final class ModCommonConfig extends ConfigSpec
         public final ChameleonConfig.ConfigEntry<Integer> level4Mult;
         public final ChameleonConfig.ConfigEntry<Integer> level5Mult;
 
+        public final ChameleonConfig.ConfigEntry<Boolean> enableBalanceUpgrade;
+
+
         public Upgrades () {
             commonConfig.pushGroup("StorageUpgrades");
 
@@ -122,6 +145,11 @@ public final class ModCommonConfig extends ConfigSpec
             level3Mult = commonConfig.define("level3Mult", 8).build();
             level4Mult = commonConfig.define("level4Mult", 16).build();
             level5Mult = commonConfig.define("level5Mult", 32).build();
+
+            enableBalanceUpgrade = commonConfig.define("enableBalanceUpgrade", true)
+                .comment("Balance upgrades allow same-item slots to balance out their amounts when items are",
+                    "added or removed from a lot.  Works across networks when acting through a controller.")
+                .build();
 
             commonConfig.popGroup();
         }

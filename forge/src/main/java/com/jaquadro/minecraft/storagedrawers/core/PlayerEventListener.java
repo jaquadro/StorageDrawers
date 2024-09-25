@@ -1,0 +1,66 @@
+package com.jaquadro.minecraft.storagedrawers.core;
+
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IPortable;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.event.TickEvent.PlayerTickEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+/** Punishes players holding filled drawers, if enabled in config */
+public class PlayerEventListener
+{
+
+	private void applyDebuff(Player plr)
+	{
+		// slowness IV for 5 seconds
+		plr.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 3, true, true));
+	}
+
+	@SubscribeEvent
+	public void onPlayerPickup(EntityItemPickupEvent event) {
+		if (!ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get())
+			return;
+
+		checkItemDebuf(event.getItem().getItem(), event.getEntity());
+	}
+
+	@SubscribeEvent
+	public void onPlayerTick(PlayerTickEvent event) {
+		// every 3 seconds, in the END phase
+		if(event.phase != Phase.END || event.player.tickCount % 60 != 0)
+			return;
+
+		if (!ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get())
+			return;
+
+		for(var s : event.player.getAllSlots()) {
+			if (checkItemDebuf(s, event.player))
+				return;
+		}
+
+		Inventory inv = event.player.getInventory();
+		for (int i = 0; i < inv.getContainerSize(); i++) {
+			if (checkItemDebuf(inv.getItem(i), event.player))
+				return;
+		}
+	}
+
+	private boolean checkItemDebuf (ItemStack stack, Player player) {
+		Item item = stack.getItem();
+		if (item instanceof IPortable ip) {
+			if (ip.isHeavy(player.level().registryAccess(), stack)) {
+				applyDebuff(player);
+				return true;
+			}
+		}
+
+		return false;
+	}
+}

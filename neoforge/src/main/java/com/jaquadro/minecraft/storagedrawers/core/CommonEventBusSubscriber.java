@@ -32,14 +32,8 @@ public class CommonEventBusSubscriber {
             if (player.isCreative()) {
                 BlockHitResult hit = WorldUtils.rayTraceEyes(level, player, pos);
                 if (hit.getType() == HitResult.Type.BLOCK) {
-                    //boolean invertClick = ClientConfig.GENERAL.invertClick.get();
-                    //if (!invertClick)
-                        event.setCanceled(blockDrawers.interactTakeItems(state, level, pos, player, hit));
-                    //else {
-                    //    if (hit.getBlockPos().equals(pos))
-                    //        blockDrawers.insertOrApplyItem(state, level, pos, player, hit);
-                    //    event.setCanceled(true);
-                    //}
+                    blockDrawers.leftAction(state, level, pos, player, hit);
+                    event.setCanceled(blockDrawers.getFaceSlot(state, hit) >= 0);
                 }
             }
         }
