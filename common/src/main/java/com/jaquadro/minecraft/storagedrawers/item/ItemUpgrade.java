@@ -1,10 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.LevelReader;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -29,6 +31,12 @@ public class ItemUpgrade extends Item
         int groupId = nextGroupId;
         nextGroupId += 1;
         return groupId;
+    }
+
+    // TODO: Forge extension
+    // @Override
+    public boolean doesSneakBypassUseItem (ItemStack stack, LevelReader level, BlockPos pos) {
+        return true;
     }
 
     public int getUpgradeGroup() {

@@ -63,7 +63,7 @@ public abstract class FaceSlotBlock extends HorizontalDirectionalBlock implement
 
         /*if (level.getGameTime() - ignoreEventTime < ignoreEventThresh) {
             ignoreEventTime = level.getGameTime();
-            return InteractionResult.PASS;
+            return InteractionResult.FAIL;
         }
         ignoreEventTime = level.getGameTime();*/
 

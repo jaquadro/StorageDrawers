@@ -82,6 +82,9 @@
     "item.storagedrawers.detached_drawer": "Detached Drawer",
     "item.storagedrawers.detached_drawer.desc": "Put in a drawer block with a missing space",
 
+    "itemConfig.storagedrawers.disabled_upgrade": "Has no effect with current mod configuration",
+    "itemConfig.storagedrawers.disabled_tool": "Has no effect with current mod configuration",
+
     "itemGroup.storagedrawers": "Storage Drawers",
 
     "message.storagedrawers.cannot_add_upgrade": "That upgrade cannot be installed in this drawer",

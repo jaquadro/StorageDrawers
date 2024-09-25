@@ -76,10 +76,14 @@ public class ItemDrawers extends BlockItem implements IPortable
 
     @Override
     public boolean isHeavy(HolderLookup.Provider provider, @NotNull ItemStack stack) {
+        if (!ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get())
+            return false;
         if (stack.getItem() != this)
             return false;
 
         CustomData data = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
+        if (data.isEmpty())
+            return false;
 
         var x = new UpgradeData(7);
         try {

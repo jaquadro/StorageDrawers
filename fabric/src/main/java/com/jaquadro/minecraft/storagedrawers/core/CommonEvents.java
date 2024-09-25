@@ -25,7 +25,8 @@ public class CommonEvents
 
                     BlockHitResult hit = WorldUtils.rayTraceEyes(level, player, pos);
                     if (hit.getType() == HitResult.Type.BLOCK) {
-                        if (blockDrawers.interactTakeItems(state, level, pos, player, hit))
+                        blockDrawers.leftAction(state, level, pos, player, hit);
+                        if (blockDrawers.getFaceSlot(state, hit) >= 0)
                             return InteractionResult.CONSUME;
                     }
                 }

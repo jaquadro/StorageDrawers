@@ -20,21 +20,7 @@ import java.util.function.Supplier;
 @Environment(EnvType.CLIENT)
 public class PlatformDecoratedDrawerModel extends DecoratedDrawerModel implements FabricBakedModel
 {
-    public static class FullModel extends PlatformDecoratedDrawerModel
-    {
-        FullModel(BakedModel mainModel) {
-            super(mainModel, DrawerModelStore.fullDrawerDecorations);
-        }
-    }
-
-    public static class HalfModel extends PlatformDecoratedDrawerModel
-    {
-        HalfModel(BakedModel mainModel) {
-            super(mainModel, DrawerModelStore.halfDrawerDecorations);
-        }
-    }
-
-    protected PlatformDecoratedDrawerModel (BakedModel mainModel, DrawerModelStore.DecorationSet overlays) {
+    public PlatformDecoratedDrawerModel (BakedModel mainModel, DrawerModelStore.DecorationSet overlays) {
         super(mainModel, overlays);
     }
 
@@ -57,13 +43,13 @@ public class PlatformDecoratedDrawerModel extends DecoratedDrawerModel implement
             return;
 
         Object renderData = fabricView.getBlockEntityRenderData(pos);
-        if (renderData instanceof IDrawerAttributes attr) {
+        if (renderData instanceof DrawerModelContext modelContext) {
             Consumer<BakedModel> emitModel = model -> {
                 if (model != null)
                     model.emitBlockQuads(blockView, state, pos, randomSupplier, context);
             };
 
-            emitDecoratedQuads(state, attr, emitModel);
+            emitDecoratedQuads(modelContext, emitModel);
         }
     }
 }

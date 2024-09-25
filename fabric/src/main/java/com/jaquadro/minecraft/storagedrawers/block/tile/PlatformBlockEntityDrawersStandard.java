@@ -1,10 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.client.model.DrawerModelContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class PlatformBlockEntityDrawersStandard extends BlockEntityDrawersStandard
@@ -20,7 +19,7 @@ public abstract class PlatformBlockEntityDrawersStandard extends BlockEntityDraw
 
         @Override
         public @Nullable Object getRenderData () {
-            return drawerAttributes;
+            return new DrawerModelContext(getBlockState(), getDrawerAttributes(), getGroup());
         }
     }
 
@@ -31,7 +30,7 @@ public abstract class PlatformBlockEntityDrawersStandard extends BlockEntityDraw
 
         @Override
         public @Nullable Object getRenderData () {
-            return drawerAttributes;
+            return new DrawerModelContext(getBlockState(), getDrawerAttributes(), getGroup());
         }
     }
 
@@ -42,7 +41,7 @@ public abstract class PlatformBlockEntityDrawersStandard extends BlockEntityDraw
 
         @Override
         public @Nullable Object getRenderData () {
-            return drawerAttributes;
+            return new DrawerModelContext(getBlockState(), getDrawerAttributes(), getGroup());
         }
     }
 }

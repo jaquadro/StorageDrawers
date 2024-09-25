@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.PlatformBlockEntityDrawersStandard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -57,6 +58,7 @@ public class PlatformDecoratedDrawerModel extends DecoratedDrawerModel implement
 
         List<BakedQuad> quads = new ArrayList<>(mainQuads);
         IDrawerAttributes attr = extraData.get(PlatformBlockEntityDrawersStandard.ATTRIBUTES);
+        IDrawerGroup group = extraData.get(PlatformBlockEntityDrawersStandard.DRAWER_GROUP);
 
         if (attr != null) {
             Consumer<BakedModel> emitModel = model -> {
@@ -64,7 +66,8 @@ public class PlatformDecoratedDrawerModel extends DecoratedDrawerModel implement
                     quads.addAll(model.getQuads(state, side, rand, extraData, type));
             };
 
-            emitDecoratedQuads(state, attr, emitModel);
+            DrawerModelContext context = new DrawerModelContext(state, attr, group);
+            emitDecoratedQuads(context, emitModel);
         }
 
         return quads;
