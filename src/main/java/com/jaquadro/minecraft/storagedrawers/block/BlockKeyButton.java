@@ -96,8 +96,11 @@ public class BlockKeyButton  extends FaceAttachedHorizontalDirectionalBlock
             Block target = level.getBlockState(targetPos).getBlock();
             if (target instanceof BlockController controller)
                 controller.toggle(level, targetPos, player, keyType);
-            else if (target instanceof BlockSlave slave)
-                slave.toggle(level, targetPos, player, keyType);
+            else if (target instanceof BlockSlave slave) {
+                BlockController controller = slave.getController(level, pos);
+                if (controller != null)
+                    controller.toggle(level, targetPos, player, keyType);
+            }
 
             return InteractionResult.sidedSuccess(level.isClientSide);
         }

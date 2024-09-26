@@ -1,11 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
+import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -83,8 +86,8 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
             toggle(world, pos, player, EnumKeyType.CONCEALMENT);
         else if (item == ModItems.QUANTIFY_KEY.get())
             toggle(world, pos, player, EnumKeyType.QUANTIFY);
-        //else if (item == ModItems.personalKey)
-        //    toggle(world, pos, player, EnumKeyType.PERSONAL);
+        else if (item instanceof ItemPersonalKey itemKey)
+            togglePersonal(world, pos, player, itemKey.getSecurityProviderKey());
         else
             return false;
 
@@ -100,17 +103,22 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
             return;
 
         switch (keyType) {
-            case DRAWER -> blockEntity.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player.getGameProfile());
-            case CONCEALMENT -> blockEntity.toggleShroud(player.getGameProfile());
-            case QUANTIFY -> blockEntity.toggleQuantified(player.getGameProfile());
-
-            //case PERSONAL:
-            //    String securityKey = ModItems.personalKey.getSecurityProviderKey(0);
-            //    ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
-
-            //    te.toggleProtection(player.getGameProfile(), provider);
-            //    break;
+            case DRAWER -> blockEntity.toggleLock(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED, player);
+            case CONCEALMENT -> blockEntity.toggleShroud(player);
+            case QUANTIFY -> blockEntity.toggleQuantified(player);
         }
+    }
+
+    public void togglePersonal (@NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, String providerKey) {
+        if (level.isClientSide)
+            return;
+
+        BlockEntityController blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);
+        if (blockEntity == null)
+            return;
+
+        ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(providerKey);
+        blockEntity.toggleProtection(player.getGameProfile(), provider);
     }
 
     @Override

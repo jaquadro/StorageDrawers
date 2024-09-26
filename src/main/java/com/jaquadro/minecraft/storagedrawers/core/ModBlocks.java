@@ -117,6 +117,8 @@ public final class ModBlocks
 
     public static final RegistryObject<BlockMeta>
         META_LOCKED = registerMetaBlock("meta_locked"),
+        META_CLAIMED = registerMetaBlock("meta_claimed"),
+        META_LOCKED_CLAIMED = registerMetaBlock("meta_locked_claimed"),
         META_VOID = registerMetaBlock("meta_void"),
         META_SHROUD = registerMetaBlock("meta_shroud"),
         META_INDICATOR = registerSizedMetaBlock("meta_indicator"),

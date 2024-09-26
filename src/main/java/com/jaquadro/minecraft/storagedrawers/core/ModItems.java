@@ -57,6 +57,8 @@ public final class ModItems
         DRAWER_KEY = ITEM_REGISTER.register("drawer_key", () -> new ItemDrawerKey(new Item.Properties())),
         QUANTIFY_KEY = ITEM_REGISTER.register("quantify_key", () -> new ItemQuantifyKey(new Item.Properties())),
         SHROUD_KEY = ITEM_REGISTER.register("shroud_key", () -> new ItemShroudKey(new Item.Properties())),
+        PERSONAL_KEY = ITEM_REGISTER.register("personal_key", () -> new ItemPersonalKey(null, new Item.Properties())),
+        PERSONAL_KEY_COFH = ITEM_REGISTER.register("personal_key_cofh", () -> new ItemPersonalKey("cofh", new Item.Properties())),
         DRAWER_PULLER = ITEM_REGISTER.register("drawer_puller", () -> new ItemDrawerPuller(new Item.Properties()));
 
     public static final RegistryObject<ItemKeyring>
@@ -64,6 +66,8 @@ public final class ModItems
         KEYRING_DRAWER = ITEM_REGISTER.register("keyring_drawer", () -> new ItemKeyring(DRAWER_KEY, new Item.Properties().stacksTo(1))),
         KEYRING_QUANTIFY = ITEM_REGISTER.register("keyring_quantify", () -> new ItemKeyring(QUANTIFY_KEY, new Item.Properties().stacksTo(1))),
         KEYRING_SHROUD = ITEM_REGISTER.register("keyring_shroud", () -> new ItemKeyring(SHROUD_KEY, new Item.Properties().stacksTo(1))),
+        KEYRING_PERSONAL = ITEM_REGISTER.register("keyring_personal", () -> new ItemKeyring(PERSONAL_KEY, new Item.Properties().stacksTo(1))),
+        KEYRING_PERSONAL_COFH = ITEM_REGISTER.register("keyring_personal_cofh", () -> new ItemKeyring(PERSONAL_KEY_COFH, new Item.Properties().stacksTo(1))),
         KEYRING_PULLER = ITEM_REGISTER.register("keyring_puller", () -> new ItemKeyring(DRAWER_PULLER, new Item.Properties().stacksTo(1)));
 
     private ModItems() { }
@@ -101,6 +105,8 @@ public final class ModItems
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PERSONAL);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PERSONAL_COFH);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PULLER);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(DETACHED_DRAWER_FULL);
 

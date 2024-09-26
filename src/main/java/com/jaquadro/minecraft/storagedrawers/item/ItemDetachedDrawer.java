@@ -43,7 +43,7 @@ public class ItemDetachedDrawer extends Item implements IPortable
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(Component.literal("").append(getDescription()).withStyle(ChatFormatting.GRAY));
 
-        if (isHeavy(stack)) {
+        if (CommonConfig.GENERAL.heavyDrawers.get() && isHeavy(stack)) {
             tooltip.add(Component.translatable("tooltip.storagedrawers.drawers.too_heavy").withStyle(ChatFormatting.RED));
         }
     }

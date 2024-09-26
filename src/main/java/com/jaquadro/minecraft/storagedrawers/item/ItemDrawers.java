@@ -52,7 +52,7 @@ public class ItemDrawers extends BlockItem implements IPortable
             tooltip.add(Component.literal("").append(textSealed).withStyle(ChatFormatting.YELLOW));
         }
 
-        if (isHeavy(stack)) {
+        if (CommonConfig.GENERAL.heavyDrawers.get() && isHeavy(stack)) {
             tooltip.add(Component.translatable("tooltip.storagedrawers.drawers.too_heavy").withStyle(ChatFormatting.RED));
         }
 
@@ -87,7 +87,7 @@ public class ItemDrawers extends BlockItem implements IPortable
             return false;
 
         CompoundTag tile = stack.getTagElement("tile");
-        if(tile == null)
+        if(tile == null || tile.isEmpty())
             return false;
 
         var x = new UpgradeData(7);

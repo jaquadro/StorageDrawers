@@ -46,6 +46,7 @@ public final class CommonConfig
         public final ForgeConfigSpec.ConfigValue<Boolean> forceDetachedDrawersMaxCapacityCheck;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> compRules;
         public final ForgeConfigSpec.ConfigValue<Boolean> heavyDrawers;
+        public final ForgeConfigSpec.ConfigValue<Boolean> enablePersonalKey;
 
         public General(ForgeConfigSpec.Builder builder) {
             builder.push("General");
@@ -89,9 +90,12 @@ public final class CommonConfig
                     "Creates a compacting drawer rule to convert 1 of item1 into n of item2.")
                 .defineList("compactingRules", test, obj -> CompTierRegistry.validateRuleSyntax((String)obj));
 
-                heavyDrawers = builder
+            heavyDrawers = builder
                 .comment("If enabled, carrying filled drawers in your inventory gives slowness debuff, unless a Portability Upgrade is used.")
                 .define("heavyDrawers", false);
+            enablePersonalKey = builder
+                .comment("If enabled, players can lock drawer interactions to just themselves.")
+                .define("enablePersonalKey", true);
 
             builder.pop();
         }
@@ -111,11 +115,16 @@ public final class CommonConfig
     }
 
     public static class Integration {
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableCoFHIntegration;
         public final ForgeConfigSpec.ConfigValue<Boolean> wailaStackRemainder;
         public final ForgeConfigSpec.BooleanValue wailaRespectQuantifyKey;
 
         public Integration (ForgeConfigSpec.Builder builder) {
             builder.push("Integration");
+
+            enableCoFHIntegration = builder
+                .comment("Add CoFH Core specific features if the mod is loaded")
+                .define("enableCoFHIntegration", true);
 
             wailaStackRemainder = builder
                     .comment("When true, shows quantity as NxS + R (by stack size) rather than count")

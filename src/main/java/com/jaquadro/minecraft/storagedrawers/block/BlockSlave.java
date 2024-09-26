@@ -18,19 +18,20 @@ public class BlockSlave extends Block implements INetworked, EntityBlock
         super(properties);
     }
 
-    public void toggle (Level world, BlockPos pos, Player player, EnumKeyType keyType) {
+    public BlockController getController(Level world, BlockPos pos) {
         BlockEntitySlave blockEntity = WorldUtils.getBlockEntity(world, pos, BlockEntitySlave.class);
         if (blockEntity == null)
-            return;
+            return null;
 
         BlockPos controllerPos = blockEntity.getControllerPos();
         if (controllerPos == null)
-            return;
+            return null;
 
         Block block = world.getBlockState(controllerPos).getBlock();
-        if (block instanceof BlockController blockController) {
-            blockController.toggle(world, controllerPos, player, keyType);
-        }
+        if (block instanceof BlockController c)
+            return c;
+
+        return null;
     }
 
     @Override

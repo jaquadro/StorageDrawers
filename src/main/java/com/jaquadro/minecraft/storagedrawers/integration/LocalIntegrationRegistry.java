@@ -1,8 +1,9 @@
-/*package com.jaquadro.minecraft.storagedrawers.integration;
+package com.jaquadro.minecraft.storagedrawers.integration;
 
-import com.jaquadro.minecraft.chameleon.integration.IntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import net.minecraftforge.fml.common.Loader;
+import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.integration.cofh.CoFHModule;
+import net.minecraftforge.fml.ModList;
 
 public class LocalIntegrationRegistry
 {
@@ -10,8 +11,9 @@ public class LocalIntegrationRegistry
 
     static {
         IntegrationRegistry reg = instance();
-        if (Loader.isModLoaded("waila") && StorageDrawers.config.cache.enableWailaIntegration)
-            reg.add(new Waila());
+        if (ModList.get().isLoaded("cofh_core") && CommonConfig.INTEGRATION.enableCoFHIntegration.get())
+            reg.add(new CoFHModule());
+
         //if (Loader.isModLoaded("Thaumcraft") && StorageDrawers.config.cache.enableThaumcraftIntegration)
         //    reg.add(new Thaumcraft());
         //if (Loader.isModLoaded("appliedenergistics2") && StorageDrawers.config.cache.enableAE2Integration)
@@ -20,10 +22,17 @@ public class LocalIntegrationRegistry
         //    reg.add(new MineTweaker());
     }
 
-    private IntegrationRegistry registry;
+    private final IntegrationRegistry registry;
 
     private LocalIntegrationRegistry () {
         registry = new IntegrationRegistry(StorageDrawers.MOD_ID);
+    }
+
+    public static boolean isModLoaded (String modid) {
+        if (instance == null)
+            instance = new LocalIntegrationRegistry();
+
+        return instance.registry.isModLoaded(modid);
     }
 
     public static IntegrationRegistry instance () {
@@ -33,4 +42,3 @@ public class LocalIntegrationRegistry
         return instance.registry;
     }
 }
-*/

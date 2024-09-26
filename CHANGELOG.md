@@ -1,3 +1,7 @@
+[12.7.1]
+- Fixed empty drawer items showing too-heavy message
+- Brought back the personal key and CoFH variant of it
+
 [12.7.0]
 - Added 2-tier version of compacting drawers
 - Added half-depth versions of both compacting drawers

@@ -1,7 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
@@ -13,6 +15,7 @@ import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp3;
 import com.jaquadro.minecraft.storagedrawers.item.*;
+import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -241,6 +244,10 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
     public Optional<InteractionResult> useSlot (InteractContext context) {
         ItemStack item = context.player.getItemInHand(InteractionHand.MAIN_HAND);
 
+        BlockEntityDrawers blockEntity = context.getCheckedEntity(BlockEntityDrawers.class);
+        if (!SecurityManager.hasAccess(context.player, blockEntity))
+            return Optional.of(InteractionResult.PASS);
+
         // Drawer pulling
         if (CommonConfig.GENERAL.enableDetachedDrawers.get() && context.slot >= 0) {
             if (item.getItem() == ModItems.DRAWER_PULLER.get()) {
@@ -284,7 +291,32 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
             return Optional.of(InteractionResult.SUCCESS);
         }
 
-        // Drawer keys
+        ItemStack keyItem = null;
+        if (item.getItem() instanceof ItemKeyring keyring)
+            keyItem = keyring.getKey();
+
+        // Personal Key
+        if (item.getItem() instanceof ItemPersonalKey || keyItem != null) {
+            if (keyItem != null)
+                item = keyItem;
+
+            String securityKey = ((ItemPersonalKey) item.getItem()).getSecurityProviderKey();
+            ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
+
+            if (blockEntity.getOwner() == null) {
+                blockEntity.setOwner(context.player.getUUID());
+                blockEntity.setSecurityProvider(provider);
+            }
+            else if (SecurityManager.hasOwnership(context.player.getGameProfile(), blockEntity)) {
+                blockEntity.setOwner(null);
+                blockEntity.setSecurityProvider(null);
+            }
+            else
+                return Optional.of(InteractionResult.PASS);
+            return Optional.of(InteractionResult.SUCCESS);
+        }
+
+        // Other drawer keys
         if (item.getItem() instanceof ItemKey || item.getItem() instanceof ItemKeyring)
             return Optional.of(InteractionResult.PASS);
 
@@ -362,6 +394,9 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         if (blockEntityDrawers == null)
             return InteractionResult.FAIL;
 
+        if (!SecurityManager.hasAccess(context.player, blockEntityDrawers))
+            return InteractionResult.PASS;
+
         blockEntityDrawers.interactPutItemsIntoSlot(context.slot, context.player);
 
         if (item.isEmpty())
@@ -375,6 +410,9 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         BlockEntityDrawers blockEntityDrawers = context.getCheckedEntity(BlockEntityDrawers.class, BlockDrawers.class);
         if (blockEntityDrawers == null)
             return InteractionResult.FAIL;
+
+        if (!SecurityManager.hasAccess(context.player, blockEntityDrawers))
+            return InteractionResult.PASS;
 
         IDrawer drawer = blockEntityDrawers.getGroup().getDrawer(context.slot);
 

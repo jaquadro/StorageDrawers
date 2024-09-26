@@ -5,6 +5,8 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.CapabilityDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -35,6 +37,9 @@ public class DrawerOverlay {
         final boolean showCounts = !this.respectQuantifyKey || attr.isShowingQuantity();
 
         final IDrawerGroup group = tile.getGroup();
+        if (!SecurityManager.clientHasAccess(tile))
+            return;
+
         for (int i = 0; i < group.getDrawerCount(); i++) {
             final IDrawer drawer = group.getDrawer(i);
             if (!drawer.isEnabled())
@@ -100,8 +105,8 @@ public class DrawerOverlay {
             attribs.add(Component.translatable("tooltip.storagedrawers.waila.void"));
         if (attr.isBalancedFill())
             attribs.add(Component.translatable("tooltip.storagedrawers.waila.balanced"));
-        //if (tile.getOwner() != null)
-        //    attribs.add(new TranslationTextComponent("tooltip.storagedrawers.waila.protected"));
+        if (tile.getOwner() != null)
+            attribs.add(Component.translatable("tooltip.storagedrawers.waila.protected"));
 
         if (!attribs.isEmpty())
             result.add(attribs.stream().reduce((a, b) ->

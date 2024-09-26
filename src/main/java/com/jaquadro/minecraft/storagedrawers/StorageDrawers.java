@@ -10,9 +10,11 @@ import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.AddUpgradeRecipe;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.KeyringRecipe;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.UpgradeDetachedDrawerRecipe;
+import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.integration.TheOneProbe;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
 import com.jaquadro.minecraft.storagedrawers.network.PlayerBoolConfigMessage;
+import com.jaquadro.minecraft.storagedrawers.security.SecurityRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -52,7 +54,7 @@ public class StorageDrawers
 
     //public static RenderRegistry renderRegistry;
     //public static WailaRegistry wailaRegistry;
-    //public static SecurityRegistry securityRegistry;
+    public static SecurityRegistry securityRegistry;
 
     private static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MOD_ID);
     public static final RegistryObject<RecipeSerializer<AddUpgradeRecipe>> UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_upgrade", () -> new SimpleCraftingRecipeSerializer<>(AddUpgradeRecipe::new));
@@ -90,14 +92,14 @@ public class StorageDrawers
         //oreDictRegistry = new OreDictRegistry();
         //renderRegistry = new RenderRegistry();
         //wailaRegistry = new WailaRegistry();
-        //securityRegistry = new SecurityRegistry();
+        securityRegistry = new SecurityRegistry();
 
         //proxy.registerRenderers();
 
-        //LocalIntegrationRegistry.instance().init();
+        LocalIntegrationRegistry.instance().init();
         //compRegistry.initialize();
 
-        //LocalIntegrationRegistry.instance().postInit();
+        LocalIntegrationRegistry.instance().postInit();
     }
 
     @SuppressWarnings("Convert2MethodRef")  // otherwise the class loader gets upset if TheOneProbe is not loaded

@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.client.model;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
@@ -51,6 +52,8 @@ public final class BasicDrawerModel
 {
     public enum DynamicPart {
         LOCK("lock"),
+        CLAIM("claim"),
+        LOCK_CLAIM("lock_claim"),
         VOID("void"),
         SHROUD("shroud"),
         INDICATOR("indicator"),
@@ -266,6 +269,10 @@ public final class BasicDrawerModel
 
                     overlayModels.put(getVariant(DynamicPart.LOCK, dir, half), event.getModels()
                         .get(new ModelResourceLocation(StorageDrawers.rl("meta_locked"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.CLAIM, dir, half), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_claimed"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.LOCK_CLAIM, dir, half), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_locked_claimed"), getVariant(dir, half))));
                     overlayModels.put(getVariant(DynamicPart.VOID, dir, half), event.getModels()
                         .get(new ModelResourceLocation(StorageDrawers.rl("meta_void"), getVariant(dir, half))));
                     overlayModels.put(getVariant(DynamicPart.SHROUD, dir, half), event.getModels()
@@ -511,6 +518,7 @@ public final class BasicDrawerModel
 
             List<BakedQuad> quads = new ArrayList<>(mainQuads);
             IDrawerAttributes attr = extraData.get(BlockEntityDrawers.ATTRIBUTES);
+            IProtectable protectable = extraData.get(BlockEntityDrawers.PROTECTABLE);
             Direction dir = state.getValue(BlockDrawers.FACING);
 
             boolean half = false;
@@ -518,11 +526,23 @@ public final class BasicDrawerModel
             if (block instanceof BlockDrawers drawers)
                 half = drawers.isHalfDepth();
 
-            if (attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED)) {
+            boolean isLocked = attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED);
+            boolean isClaimed = protectable != null && protectable.getOwner() != null;
+
+            if (isLocked && isClaimed) {
+                BakedModel model = overlayModels.get(getVariant(DynamicPart.LOCK_CLAIM, dir, half));
+                if (model != null)
+                    quads.addAll(model.getQuads(state, side, rand, extraData, type));
+            } else if (isLocked) {
                 BakedModel model = overlayModels.get(getVariant(DynamicPart.LOCK, dir, half));
                 if (model != null)
                     quads.addAll(model.getQuads(state, side, rand, extraData, type));
+            } else if (isClaimed) {
+                BakedModel model = overlayModels.get(getVariant(DynamicPart.CLAIM, dir, half));
+                if (model != null)
+                    quads.addAll(model.getQuads(state, side, rand, extraData, type));
             }
+
             if (attr.isVoid()) {
                 BakedModel model = overlayModels.get(getVariant(DynamicPart.VOID, dir, half));
                 if (model != null)

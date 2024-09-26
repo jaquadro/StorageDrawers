@@ -1,9 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
@@ -43,10 +46,11 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup /* IProtectable, INameable */
+public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup, IProtectable /*, INameable */
 {
     public static final ModelProperty<IDrawerAttributes> ATTRIBUTES = new ModelProperty<>();
     public static final ModelProperty<IDrawerGroup> DRAWER_GROUP = new ModelProperty<>();
+    public static final ModelProperty<IProtectable> PROTECTABLE = new ModelProperty<>();
     //public static final ModelProperty<Boolean> ITEM_LOCKED = new ModelProperty<>();
     //public static final ModelProperty<Boolean> SHROUDED = new ModelProperty<>();
     //public static final ModelProperty<Boolean> VOIDING = new ModelProperty<>();
@@ -60,8 +64,8 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     //private int direction;
     //private String material;
     //private boolean taped = false;
-    //private UUID owner;
-    //private String securityKey;
+    private UUID owner;
+    private String securityKey;
 
     private final IDrawerAttributesModifiable drawerAttributes;
 
@@ -244,9 +248,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         return !drawer.isEmpty() && drawer.getStoredItemCount() == 0;
     }
 
-    /*@Override
+    @Override
     public UUID getOwner () {
-        if (!StorageDrawers.config.cache.enablePersonalUpgrades)
+        if (!CommonConfig.GENERAL.enablePersonalKey.get())
             return null;
 
         return owner;
@@ -254,14 +258,13 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
     @Override
     public boolean setOwner (UUID owner) {
-        if (!StorageDrawers.config.cache.enablePersonalUpgrades)
+        if (!CommonConfig.GENERAL.enablePersonalKey.get())
             return false;
 
         if ((this.owner != null && !this.owner.equals(owner)) || (owner != null && !owner.equals(this.owner))) {
             this.owner = owner;
 
-            if (getWorld() != null && !getWorld().isRemote) {
-                markDirty();
+            if (level != null && !level.isClientSide) {
                 markBlockForUpdate();
             }
         }
@@ -276,21 +279,20 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
     @Override
     public boolean setSecurityProvider (ISecurityProvider provider) {
-        if (!StorageDrawers.config.cache.enablePersonalUpgrades)
+        if (!CommonConfig.GENERAL.enablePersonalKey.get())
             return false;
 
         String newKey = (provider == null) ? null : provider.getProviderID();
         if ((newKey != null && !newKey.equals(securityKey)) || (securityKey != null && !securityKey.equals(newKey))) {
             securityKey = newKey;
 
-            if (getWorld() != null && !getWorld().isRemote) {
-                markDirty();
+            if (level != null && !level.isClientSide) {
                 markBlockForUpdate();
             }
         }
 
         return true;
-    }*/
+    }
 
     protected void onAttributeChanged () {
         requestModelDataUpdate();
@@ -566,13 +568,14 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         else
             drawerAttributes.setIsShowingQuantity(false);
 
-        /*owner = null;
-        if (tag.hasKey("Own"))
+        owner = null;
+        if (tag.contains("Own"))
             owner = UUID.fromString(tag.getString("Own"));
 
         securityKey = null;
-        if (tag.hasKey("Sec"))
-            securityKey = tag.getString("Sec");*/
+        if (tag.contains("Sec"))
+            securityKey = tag.getString("Sec");
+
         loading = false;
     }
 
@@ -599,11 +602,11 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         if (drawerAttributes.isShowingQuantity())
             tag.putBoolean("Qua", true);
 
-        /*if (owner != null)
-            tag.setString("Own", owner.toString());
+        if (owner != null)
+            tag.putString("Own", owner.toString());
 
         if (securityKey != null)
-            tag.setString("Sec", securityKey);*/
+            tag.putString("Sec", securityKey);
 
         return tag;
     }
@@ -714,7 +717,8 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     public ModelData getModelData () {
         return ModelData.builder()
             .with(ATTRIBUTES, drawerAttributes)
-            .with(DRAWER_GROUP, getGroup()).build();
+            .with(DRAWER_GROUP, getGroup())
+            .with(PROTECTABLE, this).build();
             /*.with(ITEM_LOCKED, drawerAttributes.isItemLocked(LockAttribute.LOCK_EMPTY))
             .with(SHROUDED, drawerAttributes.isConcealed())
             .with(VOIDING, drawerAttributes.isVoid()).build();*/

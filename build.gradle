@@ -79,6 +79,8 @@ dependencies {
     implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
     implementation fg.deobf("curse.maven:emi-580555:${emi_id}")
 
+    implementation fg.deobf("curse.maven:cofh-core-69162:${cofhcore_id}")
+
     //implementation fg.deobf("curse.maven:chemlib-340666:5128632")
     //implementation fg.deobf("curse.maven:alchemylib-293426:5037781")
     //implementation fg.deobf("curse.maven:alchemistry-293425:4770614")
