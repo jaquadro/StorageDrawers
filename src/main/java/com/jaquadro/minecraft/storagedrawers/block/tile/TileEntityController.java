@@ -657,7 +657,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
 
     @Override
     public boolean hasCapability (@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == ITEM_HANDLER_CAPABILITY
+        return (capability == ITEM_HANDLER_CAPABILITY && StorageDrawers.config.allowControllerIO())
             || capability == ITEM_REPOSITORY_CAPABILITY
             || capability == DRAWER_GROUP_CAPABILITY
             || super.hasCapability(capability, facing);
@@ -666,7 +666,7 @@ public class TileEntityController extends TileEntity implements IDrawerGroup
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getCapability (@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == ITEM_HANDLER_CAPABILITY)
+        if (capability == ITEM_HANDLER_CAPABILITY && StorageDrawers.config.allowControllerIO())
             return (T) itemHandler;
         if (capability == ITEM_REPOSITORY_CAPABILITY)
             return (T) itemRepository;
