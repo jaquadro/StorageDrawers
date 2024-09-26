@@ -12,6 +12,17 @@ public abstract class PlatformBlockEntityDrawersComp extends BlockEntityDrawersC
         super(blockEntityType, pos, state);
     }
 
+    public static class Slot2 extends BlockEntityDrawersComp.Slot2 {
+        public Slot2 (BlockPos pos, BlockState state) {
+            super(pos, state);
+        }
+
+        @Override
+        public @Nullable Object getRenderData () {
+            return new DrawerModelContext(getBlockState(), getDrawerAttributes(), getGroup());
+        }
+    }
+
     public static class Slot3 extends BlockEntityDrawersComp.Slot3 {
         public Slot3 (BlockPos pos, BlockState state) {
             super(pos, state);

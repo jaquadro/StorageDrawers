@@ -86,9 +86,10 @@ public abstract class DecoratedDrawerModel implements BakedModel
         if (attr.isConcealed())
             emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.SHROUD, dir, half));
         if (attr.hasFillLevel()) {
-            if (block instanceof BlockCompDrawers)
-                emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.INDICATOR, dir, half));
-            else if (block instanceof BlockStandardDrawers stdBlock) {
+            if (block instanceof BlockCompDrawers compBlock) {
+                int count = compBlock.getDrawerCount();
+                emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.INDICATOR_COMP, dir, half, count));
+            } else if (block instanceof BlockStandardDrawers stdBlock) {
                 int count = stdBlock.getDrawerCount();
                 emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.INDICATOR, dir, half, count));
             }

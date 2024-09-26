@@ -245,14 +245,15 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
     public static final ResourceLocation TEXTURE_IND_1 = ModConstants.loc("block/indicator/indicator_1_on");
     public static final ResourceLocation TEXTURE_IND_2 = ModConstants.loc("block/indicator/indicator_2_on");
     public static final ResourceLocation TEXTURE_IND_4 = ModConstants.loc("block/indicator/indicator_4_on");
-    public static final ResourceLocation TEXTURE_IND_COMP = ModConstants.loc("block/indicator/indicator_comp_on");
+    public static final ResourceLocation TEXTURE_IND_COMP_3 = ModConstants.loc("block/indicator/indicator_comp_on");
+    public static final ResourceLocation TEXTURE_IND_COMP_2 = ModConstants.loc("block/indicator/indicator_comp2_on");
 
     private void renderIndicator (BlockDrawers block, BlockEntityDrawers blockEntityDrawers, PoseStack matrixStack, MultiBufferSource buffer, Direction side, int combinedLight, int combinedOverlay) {
         int count = (blockEntityDrawers instanceof BlockEntityDrawersComp) ? 1 : block.getDrawerCount();
 
         ResourceLocation resource = TEXTURE_IND_1;
         if (blockEntityDrawers instanceof BlockEntityDrawersComp)
-            resource = TEXTURE_IND_COMP;
+            resource = block.getDrawerCount() == 2 ? TEXTURE_IND_COMP_2 : TEXTURE_IND_COMP_3;
         else if (count == 2)
             resource = TEXTURE_IND_2;
         else if (count == 4)

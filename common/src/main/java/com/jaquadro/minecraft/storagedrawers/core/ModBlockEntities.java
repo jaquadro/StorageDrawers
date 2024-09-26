@@ -27,6 +27,7 @@ public final class ModBlockEntities {
     public static final RegistryEntry<BlockEntityType<BlockEntityDrawersStandard>> STANDARD_DRAWERS_1 = registerDrawerBlockEntityType("standard_drawers_1", ModServices.RESOURCE_FACTORY.createBlockEntityDrawersStandard(1), BlockStandardDrawers.class, 1);
     public static final RegistryEntry<BlockEntityType<BlockEntityDrawersStandard>> STANDARD_DRAWERS_2 = registerDrawerBlockEntityType("standard_drawers_2", ModServices.RESOURCE_FACTORY.createBlockEntityDrawersStandard(2), BlockStandardDrawers.class, 2);
     public static final RegistryEntry<BlockEntityType<BlockEntityDrawersStandard>> STANDARD_DRAWERS_4 = registerDrawerBlockEntityType("standard_drawers_4", ModServices.RESOURCE_FACTORY.createBlockEntityDrawersStandard(4), BlockStandardDrawers.class, 4);
+    public static final RegistryEntry<BlockEntityType<BlockEntityDrawersComp>> FRACTIONAL_DRAWERS_2 = registerDrawerBlockEntityType("fractional_drawers_2", ModServices.RESOURCE_FACTORY.createBlockEntityDrawersComp(2), BlockCompDrawers.class, 2);
     public static final RegistryEntry<BlockEntityType<BlockEntityDrawersComp>> FRACTIONAL_DRAWERS_3 = registerDrawerBlockEntityType("fractional_drawers_3", ModServices.RESOURCE_FACTORY.createBlockEntityDrawersComp(3), BlockCompDrawers.class, 3);
 
     public static final RegistryEntry<BlockEntityType<BlockEntityController>> CONTROLLER = BLOCK_ENTITIES.register("controller", () ->

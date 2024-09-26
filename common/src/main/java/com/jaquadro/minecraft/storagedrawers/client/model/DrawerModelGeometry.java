@@ -57,11 +57,27 @@ public class DrawerModelGeometry
             ModConstants.loc("models/block/geometry/half_drawers_ind_area_4.json"),
             ModConstants.loc("models/block/geometry/half_drawers_indbase_area_4.json"),
             ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockDrawers.class, 4, true).toArray(BlockDrawers[]::new));
-        populateGeometryData(ModConstants.loc("models/block/geometry/comp_drawers_icon_area_3.json"),
-            ModConstants.loc("models/block/geometry/comp_drawers_count_area_3.json"),
-            ModConstants.loc("models/block/geometry/comp_drawers_ind_area_3.json"),
-            ModConstants.loc("models/block/geometry/comp_drawers_indbase_area_3.json"),
-            ModBlocks.getDrawersOfType(BlockCompDrawers.class).toArray(BlockDrawers[]::new));
+
+        populateGeometryData(ModConstants.loc("models/block/geometry/full_comp_drawers_icon_area_2.json"),
+            ModConstants.loc("models/block/geometry/full_comp_drawers_count_area_2.json"),
+            ModConstants.loc("models/block/geometry/full_comp_drawers_ind_area_2.json"),
+            ModConstants.loc("models/block/geometry/full_comp_drawers_indbase_area_2.json"),
+            ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockCompDrawers.class, 2, false).toArray(BlockDrawers[]::new));
+        populateGeometryData(ModConstants.loc("models/block/geometry/full_comp_drawers_icon_area_3.json"),
+            ModConstants.loc("models/block/geometry/full_comp_drawers_count_area_3.json"),
+            ModConstants.loc("models/block/geometry/full_comp_drawers_ind_area_3.json"),
+            ModConstants.loc("models/block/geometry/full_comp_drawers_indbase_area_3.json"),
+            ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockCompDrawers.class, 3, false).toArray(BlockDrawers[]::new));
+        populateGeometryData(ModConstants.loc("models/block/geometry/half_comp_drawers_icon_area_2.json"),
+            ModConstants.loc("models/block/geometry/half_comp_drawers_count_area_2.json"),
+            ModConstants.loc("models/block/geometry/half_comp_drawers_ind_area_2.json"),
+            ModConstants.loc("models/block/geometry/half_comp_drawers_indbase_area_2.json"),
+            ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockCompDrawers.class, 2, true).toArray(BlockDrawers[]::new));
+        populateGeometryData(ModConstants.loc("models/block/geometry/half_comp_drawers_icon_area_3.json"),
+            ModConstants.loc("models/block/geometry/half_comp_drawers_count_area_3.json"),
+            ModConstants.loc("models/block/geometry/half_comp_drawers_ind_area_3.json"),
+            ModConstants.loc("models/block/geometry/half_comp_drawers_indbase_area_3.json"),
+            ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockCompDrawers.class, 3, true).toArray(BlockDrawers[]::new));
     }
 
     private static void populateGeometryData(ResourceLocation locationIcon,

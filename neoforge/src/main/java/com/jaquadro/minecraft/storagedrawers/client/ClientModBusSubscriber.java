@@ -41,7 +41,8 @@ public class ClientModBusSubscriber
         event.register(ModContainers.DRAWER_CONTAINER_1.get(), DrawerScreen.Slot1::new);
         event.register(ModContainers.DRAWER_CONTAINER_2.get(), DrawerScreen.Slot2::new);
         event.register(ModContainers.DRAWER_CONTAINER_4.get(), DrawerScreen.Slot4::new);
-        event.register(ModContainers.DRAWER_CONTAINER_COMP.get(), DrawerScreen.Compacting::new);
+        event.register(ModContainers.DRAWER_CONTAINER_COMP_2.get(), DrawerScreen.Compacting2::new);
+        event.register(ModContainers.DRAWER_CONTAINER_COMP_3.get(), DrawerScreen.Compacting3::new);
     }
 
     @SubscribeEvent

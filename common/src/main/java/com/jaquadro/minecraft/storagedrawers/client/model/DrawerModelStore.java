@@ -23,6 +23,7 @@ public class DrawerModelStore
         VOID("void"),
         SHROUD("shroud"),
         INDICATOR("indicator"),
+        INDICATOR_COMP("indicator_comp"),
         MISSING_1("missing_1"),
         MISSING_2("missing_2"),
         MISSING_3("missing_3"),
@@ -76,7 +77,8 @@ public class DrawerModelStore
             addOverlay(getVariant(DynamicPart.INDICATOR, dir, half, 1), new ModelResourceLocation(ModConstants.loc("meta_indicator"), getVariant(dir, half, 1)));
             addOverlay(getVariant(DynamicPart.INDICATOR, dir, half, 2), new ModelResourceLocation(ModConstants.loc("meta_indicator"), getVariant(dir, half, 2)));
             addOverlay(getVariant(DynamicPart.INDICATOR, dir, half, 4), new ModelResourceLocation(ModConstants.loc("meta_indicator"), getVariant(dir, half, 4)));
-            addOverlay(getVariant(DynamicPart.INDICATOR, dir, half), new ModelResourceLocation(ModConstants.loc("meta_comp_indicator"), getVariant(dir, half)));
+            addOverlay(getVariant(DynamicPart.INDICATOR_COMP, dir, half, 2), new ModelResourceLocation(ModConstants.loc("meta_comp_indicator"), getVariant(dir, half, 2)));
+            addOverlay(getVariant(DynamicPart.INDICATOR_COMP, dir, half, 3), new ModelResourceLocation(ModConstants.loc("meta_comp_indicator"), getVariant(dir, half, 3)));
 
             addOverlay(getVariant(DynamicPart.MISSING_1, dir, half, 1), new ModelResourceLocation(ModConstants.loc("meta_missing_slot_1_1"), getVariant(dir, half)));
             addOverlay(getVariant(DynamicPart.MISSING_1, dir, half, 2), new ModelResourceLocation(ModConstants.loc("meta_missing_slot_2_1"), getVariant(dir, half)));

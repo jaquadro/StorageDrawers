@@ -749,7 +749,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
                 case 1 -> new ContainerDrawers1(id, inventory, entity);
                 case 2 -> new ContainerDrawers2(id, inventory, entity);
                 case 4 -> new ContainerDrawers4(id, inventory, entity);
-                case 3 -> new ContainerDrawersComp(id, inventory, entity);
+                case 3 -> new ContainerDrawersComp3(id, inventory, entity);
                 default -> null;
             };
         }

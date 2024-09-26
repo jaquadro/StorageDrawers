@@ -3,6 +3,9 @@
     "values": [
         "storagedrawers:controller",
         "storagedrawers:controller_io",
-        "storagedrawers:compacting_drawers_3"
+        "storagedrawers:compacting_drawers_2",
+        "storagedrawers:compacting_drawers_3",
+        "storagedrawers:compacting_half_drawers_2",
+        "storagedrawers:compacting_half_drawers_3"
     ]
 }

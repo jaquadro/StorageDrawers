@@ -23,6 +23,31 @@ public abstract class PlatformBlockEntityDrawersComp extends BlockEntityDrawersC
         super(blockEntityType, pos, state);
     }
 
+    public static class Slot2 extends BlockEntityDrawersComp.Slot2 {
+        public Slot2 (BlockPos pos, BlockState state) {
+            super(pos, state);
+        }
+
+        @NotNull
+        @Override
+        public ModelData getModelData () {
+            return ModelData.builder()
+                .with(ATTRIBUTES, drawerAttributes)
+                .with(DRAWER_GROUP, getGroup()).build();
+        }
+
+        @Override
+        protected void onAttributeChanged () {
+            super.onAttributeChanged();
+            requestModelDataUpdate();
+        }
+
+        @Override
+        public @NotNull <T> LazyOptional<T> getCapability (@NotNull Capability<T> cap, @Nullable Direction side) {
+            return LazyOptional.of(() -> PlatformCapabilities.getCapability(cap, this));
+        }
+    }
+
     public static class Slot3 extends BlockEntityDrawersComp.Slot3 {
         public Slot3 (BlockPos pos, BlockState state) {
             super(pos, state);

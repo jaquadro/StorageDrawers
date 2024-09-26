@@ -18,6 +18,7 @@ public class PlatformResourceFactory implements ResourceFactory
     @Override
     public BlockEntityType.BlockEntitySupplier<BlockEntityDrawersComp> createBlockEntityDrawersComp (int slotCount) {
         return switch (slotCount) {
+            case 2 -> PlatformBlockEntityDrawersComp.Slot2::new;
             case 3 -> PlatformBlockEntityDrawersComp.Slot3::new;
             default -> null;
         };

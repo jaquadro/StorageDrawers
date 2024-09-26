@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#T#",
+        "#X#",
+        "#I#"
+    ],
+    "key": {
+        "#": { "item": "minecraft:stone" },
+        "T": { "item": "minecraft:piston" },
+        "X": { "tag": "storagedrawers:half_drawers" },
+        "I": { "tag": "forge:ingots/iron" }
+    },
+    "result": { "id": "storagedrawers:compacting_half_drawers_2" }
+}

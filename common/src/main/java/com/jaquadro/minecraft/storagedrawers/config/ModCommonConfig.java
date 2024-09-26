@@ -80,7 +80,7 @@ public final class ModCommonConfig extends ConfigSpec
                 .comment("Allows drawers to be pulled from their block and inserted into another block.")
                 .build();
 
-            forceDetachedDrawersMaxCapacityCheck = commonConfig.define("forceDetachedDrawersMaxCapacityCheck", true)
+            forceDetachedDrawersMaxCapacityCheck = commonConfig.define("forceDetachedDrawersMaxCapacityCheck", false)
                 .comment("Drawers track the capacity upgrades from the block they were taken from.",
                     "Drawers can only be placed back into a block with the same or lower max capacity.",
                     "Drawers can still only be inserted into a block with enough capacity for the items held.")

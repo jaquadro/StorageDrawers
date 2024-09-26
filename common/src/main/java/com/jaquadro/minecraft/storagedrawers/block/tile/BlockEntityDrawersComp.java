@@ -25,6 +25,28 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
         super(blockEntityType, pos, state);
     }
 
+    public static class Slot2 extends BlockEntityDrawersComp
+    {
+        private final GroupData groupData = new GroupData(2);
+
+        public Slot2 (BlockPos pos, BlockState state) {
+            super(ModBlockEntities.FRACTIONAL_DRAWERS_2.get(), pos, state);
+            injectPortableData(groupData);
+        }
+
+        @Override
+        @NotNull
+        public IDrawerGroup getGroup () {
+            return groupData;
+        }
+
+        @Override
+        protected void onAttributeChanged () {
+            super.onAttributeChanged();
+            groupData.syncAttributes();
+        }
+    }
+
     public static class Slot3 extends BlockEntityDrawersComp
     {
         private final GroupData groupData = new GroupData(3);
