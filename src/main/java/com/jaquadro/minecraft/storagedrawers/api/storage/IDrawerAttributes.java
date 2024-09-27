@@ -43,6 +43,10 @@ public interface IDrawerAttributes
         return false;
     }
 
+    default int getPriority () {
+        return 0;
+    }
+
     /**
      * Gets whether or not the drawer has a voiding attribute.
      */

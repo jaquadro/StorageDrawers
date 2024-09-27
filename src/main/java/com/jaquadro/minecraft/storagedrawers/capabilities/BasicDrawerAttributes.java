@@ -18,6 +18,7 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable, INBTS
     private boolean isConversion;
     private boolean hasFillLevel;
     private boolean hasBalancedFill;
+    private int priority;
 
     @Override
     public boolean canItemLock (LockAttribute attr) {
@@ -104,6 +105,21 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable, INBTS
     }
 
     @Override
+    public int getPriority () {
+        return priority;
+    }
+
+    @Override
+    public boolean setPriority (int priority) {
+        if (this.priority != priority) {
+            this.priority = priority;
+            onAttributeChanged();
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean isUnlimitedStorage () {
         return isUnlimitedStorage;
     }
@@ -176,6 +192,7 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable, INBTS
         tag.putBoolean("conv", isConversion);
         tag.putBoolean("fillLevel", hasFillLevel);
         tag.putBoolean("balancedFill", hasBalancedFill);
+        tag.putInt("priority", priority);
 
         return tag;
     }
@@ -191,6 +208,7 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable, INBTS
         isConversion = nbt.getBoolean("conv");
         hasFillLevel = nbt.getBoolean("fillLevel");
         hasBalancedFill = nbt.getBoolean("balancedFill");
+        priority = nbt.getInt("priority");
     }
 
     protected void onAttributeChanged () { }

@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerD
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.DetachedDrawerTooltip;
+import com.jaquadro.minecraft.storagedrawers.util.ComponentUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -41,7 +42,7 @@ public class ItemDetachedDrawer extends Item implements IPortable
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText (@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(Component.literal("").append(getDescription()).withStyle(ChatFormatting.GRAY));
+        ComponentUtil.appendSplitDescription(tooltip, this);
 
         if (CommonConfig.GENERAL.heavyDrawers.get() && isHeavy(stack)) {
             tooltip.add(Component.translatable("tooltip.storagedrawers.drawers.too_heavy").withStyle(ChatFormatting.RED));

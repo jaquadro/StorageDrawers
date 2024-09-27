@@ -1,2 +1,2 @@
-- Fixed crash when using keyring on drawers
-- Fixed broken GUI texture on compacting drawers
+- Fixed item descriptions not breaking on newlines
+- Added priority key and 5 priority levels to drawers

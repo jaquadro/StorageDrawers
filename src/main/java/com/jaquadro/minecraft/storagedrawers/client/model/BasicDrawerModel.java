@@ -50,7 +50,8 @@ import java.util.function.Function;
 
 public final class BasicDrawerModel
 {
-    public enum DynamicPart {
+    public enum DynamicPart
+    {
         LOCK("lock"),
         CLAIM("claim"),
         LOCK_CLAIM("lock_claim"),
@@ -58,6 +59,10 @@ public final class BasicDrawerModel
         SHROUD("shroud"),
         INDICATOR("indicator"),
         INDICATOR_COMP("indicator_comp"),
+        PRIORITY_P1("priority_p1"),
+        PRIORITY_P2("priority_p2"),
+        PRIORITY_N1("priority_n1"),
+        PRIORITY_N2("priority_n2"),
         MISSING_1("missing_1"),
         MISSING_2("missing_2"),
         MISSING_3("missing_3"),
@@ -65,11 +70,11 @@ public final class BasicDrawerModel
 
         private String name;
 
-        DynamicPart(String name) {
+        DynamicPart (String name) {
             this.name = name;
         }
 
-        public String getName() {
+        public String getName () {
             return name;
         }
     }
@@ -288,6 +293,15 @@ public final class BasicDrawerModel
                         .get(new ModelResourceLocation(StorageDrawers.rl("meta_comp_indicator"), getVariant(dir, half, 2))));
                     overlayModels.put(getVariant(DynamicPart.INDICATOR_COMP, dir, half, 3), event.getModels()
                         .get(new ModelResourceLocation(StorageDrawers.rl("meta_comp_indicator"), getVariant(dir, half, 3))));
+
+                    overlayModels.put(getVariant(DynamicPart.PRIORITY_P1, dir, half), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_priority_p1"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.PRIORITY_P2, dir, half), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_priority_p2"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.PRIORITY_N1, dir, half), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_priority_n1"), getVariant(dir, half))));
+                    overlayModels.put(getVariant(DynamicPart.PRIORITY_N2, dir, half), event.getModels()
+                        .get(new ModelResourceLocation(StorageDrawers.rl("meta_priority_n2"), getVariant(dir, half))));
 
                     overlayModels.put(getVariant(DynamicPart.MISSING_1, dir, half, 1), event.getModels()
                         .get(new ModelResourceLocation(StorageDrawers.rl("meta_missing_slot_1_1"), getVariant(dir, half))));
@@ -539,6 +553,19 @@ public final class BasicDrawerModel
                     quads.addAll(model.getQuads(state, side, rand, extraData, type));
             } else if (isClaimed) {
                 BakedModel model = overlayModels.get(getVariant(DynamicPart.CLAIM, dir, half));
+                if (model != null)
+                    quads.addAll(model.getQuads(state, side, rand, extraData, type));
+            }
+
+            DynamicPart priorityPart = switch (attr.getPriority()) {
+                case 1 -> DynamicPart.PRIORITY_P1;
+                case 2 -> DynamicPart.PRIORITY_P2;
+                case -1 -> DynamicPart.PRIORITY_N1;
+                case -2 -> DynamicPart.PRIORITY_N2;
+                default -> null;
+            };
+            if (priorityPart != null) {
+                BakedModel model = overlayModels.get(getVariant(priorityPart, dir, half));
                 if (model != null)
                     quads.addAll(model.getQuads(state, side, rand, extraData, type));
             }

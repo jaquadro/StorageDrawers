@@ -37,6 +37,10 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
         return false;
     }
 
+    default boolean setPriority (int priority) {
+        return false;
+    }
+
     default boolean setIsVoid (boolean state) {
         return false;
     }

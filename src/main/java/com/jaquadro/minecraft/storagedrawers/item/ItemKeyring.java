@@ -2,11 +2,13 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.KeyringTooltip;
+import com.jaquadro.minecraft.storagedrawers.util.ComponentUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -203,9 +205,7 @@ public class ItemKeyring extends Item
     @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText (@NotNull ItemStack itemStack, @Nullable Level world, List<Component> list, TooltipFlag advanced) {
-        List<MutableComponent> desc = Arrays.stream(getDescription().getString().split("\n")).map(Component::literal).toList();
-        for (MutableComponent component : desc)
-            list.add(component.withStyle(ChatFormatting.GRAY));
+        ComponentUtil.appendSplitDescription(list, this);
     }
 
     @Override
