@@ -296,7 +296,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
             keyItem = keyring.getKey();
 
         // Personal Key
-        if (item.getItem() instanceof ItemPersonalKey || keyItem != null) {
+        if (item.getItem() instanceof ItemPersonalKey || (keyItem != null && keyItem.getItem() instanceof ItemPersonalKey)) {
             if (keyItem != null)
                 item = keyItem;
 

@@ -1,2 +1,2 @@
-- Fixed empty drawer items showing too-heavy message
-- Brought back the personal key and CoFH variant of it
+- Fixed crash when using keyring on drawers
+- Fixed broken GUI texture on compacting drawers

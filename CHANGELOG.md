@@ -1,3 +1,7 @@
+[12.7.2]
+- Fixed crash when using keyring on drawers
+- Fixed broken GUI texture on compacting drawers
+
 [12.7.1]
 - Fixed empty drawer items showing too-heavy message
 - Brought back the personal key and CoFH variant of it
