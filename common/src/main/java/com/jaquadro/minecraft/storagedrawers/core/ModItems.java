@@ -49,6 +49,8 @@ public final class ModItems
         DRAWER_KEY = ITEMS.register("drawer_key", () -> new ItemDrawerKey(new Item.Properties())),
         QUANTIFY_KEY = ITEMS.register("quantify_key", () -> new ItemQuantifyKey(new Item.Properties())),
         SHROUD_KEY = ITEMS.register("shroud_key", () -> new ItemShroudKey(new Item.Properties())),
+        PERSONAL_KEY = ITEMS.register("personal_key", () -> new ItemPersonalKey(null, new Item.Properties())),
+        PERSONAL_KEY_COFH = ITEMS.register("personal_key_cofh", () -> new ItemPersonalKey("cofh", new Item.Properties())),
         DRAWER_PULLER = ITEMS.register("drawer_puller", () -> new ItemDrawerPuller(new Item.Properties()));
 
     public static final RegistryEntry<? extends ItemKeyring>
@@ -56,6 +58,8 @@ public final class ModItems
         KEYRING_DRAWER = ITEMS.register("keyring_drawer", () -> new ItemKeyring(DRAWER_KEY, new Item.Properties().stacksTo(1))),
         KEYRING_QUANTIFY = ITEMS.register("keyring_quantify", () -> new ItemKeyring(QUANTIFY_KEY, new Item.Properties().stacksTo(1))),
         KEYRING_SHROUD = ITEMS.register("keyring_shroud", () -> new ItemKeyring(SHROUD_KEY, new Item.Properties().stacksTo(1))),
+        KEYRING_PERSONAL = ITEMS.register("keyring_personal", () -> new ItemKeyring(PERSONAL_KEY, new Item.Properties().stacksTo(1))),
+        KEYRING_PERSONAL_COFH = ITEMS.register("keyring_personal_cofh", () -> new ItemKeyring(PERSONAL_KEY_COFH, new Item.Properties().stacksTo(1))),
         KEYRING_PULLER = ITEMS.register("keyring_puller", () -> new ItemKeyring(DRAWER_PULLER, new Item.Properties().stacksTo(1)));
 
     private ModItems() { }
@@ -64,6 +68,8 @@ public final class ModItems
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PERSONAL);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PERSONAL_COFH);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PULLER);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(DETACHED_DRAWER_FULL);
 

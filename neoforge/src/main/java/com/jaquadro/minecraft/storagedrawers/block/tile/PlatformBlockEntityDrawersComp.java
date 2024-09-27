@@ -1,19 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PlatformBlockEntityDrawersComp extends BlockEntityDrawersComp
 {
-    public static final ModelProperty<IDrawerAttributes> ATTRIBUTES = new ModelProperty<>();
-    public static final ModelProperty<IDrawerGroup> DRAWER_GROUP = new ModelProperty<>();
-
     public PlatformBlockEntityDrawersComp(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
     }
@@ -26,9 +20,7 @@ public abstract class PlatformBlockEntityDrawersComp extends BlockEntityDrawersC
         @NotNull
         @Override
         public ModelData getModelData () {
-            return ModelData.builder()
-                .with(ATTRIBUTES, drawerAttributes)
-                .with(DRAWER_GROUP, getGroup()).build();
+            return DrawerModelProperties.getModelData(this);
         }
 
         @Override
@@ -46,9 +38,7 @@ public abstract class PlatformBlockEntityDrawersComp extends BlockEntityDrawersC
         @NotNull
         @Override
         public ModelData getModelData () {
-            return ModelData.builder()
-                .with(ATTRIBUTES, drawerAttributes)
-                .with(DRAWER_GROUP, getGroup()).build();
+            return DrawerModelProperties.getModelData(this);
         }
 
         @Override

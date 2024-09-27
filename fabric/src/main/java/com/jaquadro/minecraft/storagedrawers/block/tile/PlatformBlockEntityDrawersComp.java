@@ -19,7 +19,7 @@ public abstract class PlatformBlockEntityDrawersComp extends BlockEntityDrawersC
 
         @Override
         public @Nullable Object getRenderData () {
-            return new DrawerModelContext(getBlockState(), getDrawerAttributes(), getGroup());
+            return new DrawerModelContext(getBlockState(), getDrawerAttributes(), getGroup(), this);
         }
     }
 
@@ -30,7 +30,7 @@ public abstract class PlatformBlockEntityDrawersComp extends BlockEntityDrawersC
 
         @Override
         public @Nullable Object getRenderData () {
-            return new DrawerModelContext(getBlockState(), getDrawerAttributes(), getGroup());
+            return new DrawerModelContext(getBlockState(), getDrawerAttributes(), getGroup(), this);
         }
     }
 }

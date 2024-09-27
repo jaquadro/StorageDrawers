@@ -8,6 +8,7 @@ import com.mojang.authlib.GameProfile;
 import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,12 +42,12 @@ public class BlockEntityControllerIO extends BaseBlockEntity implements IDrawerG
     }
 
     @Override
-    public IDrawerAttributesGroupControl getGroupControllableAttributes (GameProfile profile) {
+    public IDrawerAttributesGroupControl getGroupControllableAttributes (Player player) {
         BlockEntityController controller = getController();
         if (controller == null || !controller.isValidIO(getBlockPos()))
             return null;
 
-        return controller.getGroupControllableAttributes(profile);
+        return controller.getGroupControllableAttributes(player);
     }
 
     @Override

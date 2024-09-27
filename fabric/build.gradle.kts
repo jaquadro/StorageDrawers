@@ -44,7 +44,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.changelogType = "markdown"
     mainFile.changelog = File(rootDir, "CHANGELOG.last.md").readText()
     mainFile.releaseType = Properties.distRelease
-    mainFile.addGameVersion(Versions.minecraft)
+    Properties.distGameVersions.split(',').forEach { v -> mainFile.addGameVersion(v) }
     mainFile.addModLoader("Fabric")
     mainFile.addRequirement("fabric-api")
 }
@@ -56,7 +56,7 @@ modrinth {
     versionName.set("${Properties.name}-${Versions.minecraft}-fabric-$version")
     versionNumber.set("${Versions.minecraft}-${Versions.mod}")
     versionType.set(Properties.distRelease)
-    gameVersions.set(listOf(Versions.minecraft))
+    gameVersions.set(Properties.distGameVersions.split(','))
     uploadFile.set(tasks.remapJar.get())
     loaders.add("fabric")
 

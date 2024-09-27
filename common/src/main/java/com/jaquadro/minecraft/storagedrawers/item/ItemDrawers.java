@@ -46,7 +46,7 @@ public class ItemDrawers extends BlockItem implements IPortable
             tooltip.add(Component.literal("").append(textSealed).withStyle(ChatFormatting.YELLOW));
         }
 
-        if (isHeavy(context.registries(), stack)) {
+        if (ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get() && isHeavy(context.registries(), stack)) {
             tooltip.add(Component.translatable("tooltip.storagedrawers.drawers.too_heavy").withStyle(ChatFormatting.RED));
         }
 
@@ -76,8 +76,6 @@ public class ItemDrawers extends BlockItem implements IPortable
 
     @Override
     public boolean isHeavy(HolderLookup.Provider provider, @NotNull ItemStack stack) {
-        if (!ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get())
-            return false;
         if (stack.getItem() != this)
             return false;
 

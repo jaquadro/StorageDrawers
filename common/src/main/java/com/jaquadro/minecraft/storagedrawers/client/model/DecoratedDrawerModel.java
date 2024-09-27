@@ -2,10 +2,12 @@ package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -79,8 +81,18 @@ public abstract class DecoratedDrawerModel implements BakedModel
             half = drawers.isHalfDepth();
 
         IDrawerAttributes attr = context.attr();
-        if (attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED))
+        IProtectable protectable = context.protectable();
+
+        boolean isLocked = attr.isItemLocked(LockAttribute.LOCK_EMPTY) || attr.isItemLocked(LockAttribute.LOCK_POPULATED);
+        boolean isClaimed = protectable != null && protectable.getOwner() != null;
+
+        if (isLocked && isClaimed)
+            emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.LOCK_CLAIM, dir, half));
+        else if (isLocked)
             emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.LOCK, dir, half));
+        else if (isClaimed)
+            emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.CLAIM, dir, half));
+
         if (attr.isVoid())
             emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.VOID, dir, half));
         if (attr.isConcealed())

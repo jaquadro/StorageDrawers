@@ -86,6 +86,7 @@ tasks {
         val properties = mapOf(
             "minecraft_version" to Versions.minecraft,
             "minecraft_version_range" to Versions.minecraftRange,
+            "minecraft_version_upper" to Versions.minecraftUpper,
             "neo_version" to Versions.neoForge,
             "neo_version_range" to Versions.neoForgeVersionRange,
             "forge_version" to Versions.forge,

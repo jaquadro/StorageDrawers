@@ -1,12 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage;
 
-import com.mojang.authlib.GameProfile;
+import net.minecraft.world.entity.player.Player;
 
 public interface IControlGroup
 {
     IDrawerGroup getDrawerGroup();
 
-    IDrawerAttributesGroupControl getGroupControllableAttributes(GameProfile profile);
+    IDrawerAttributesGroupControl getGroupControllableAttributes(Player player);
 
     IControlGroup getBoundControlGroup();
 }

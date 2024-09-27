@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockview.v2.FabricBlockView;
@@ -13,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 

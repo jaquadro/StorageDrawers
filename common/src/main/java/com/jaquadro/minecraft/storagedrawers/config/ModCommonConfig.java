@@ -44,6 +44,8 @@ public final class ModCommonConfig extends ConfigSpec
         public ChameleonConfig.ConfigEntry<Boolean> enableDetachedDrawers;
         public ChameleonConfig.ConfigEntry<Boolean> forceDetachedDrawersMaxCapacityCheck;
         public ChameleonConfig.ConfigEntry<Boolean> heavyDrawers;
+        public ChameleonConfig.ConfigEntry<Boolean> enablePersonalKey;
+
 
         public ChameleonConfig.ConfigEntry<List<? extends String>> compRules;
 
@@ -89,6 +91,10 @@ public final class ModCommonConfig extends ConfigSpec
             heavyDrawers = commonConfig.define("heavyDrawers", false)
                 .comment("If enabled, carrying filled drawers in your inventory gives slowness debuff,",
                     "unless a Portability Upgrade is used.")
+                .build();
+
+            enablePersonalKey = commonConfig.define("enablePersonalKey", true)
+                .comment("If enabled, players can lock drawer interactions to just themselves.")
                 .build();
 
             debugTrace = commonConfig.define("debugTrace", true).build();

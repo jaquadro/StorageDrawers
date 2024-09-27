@@ -171,8 +171,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     }
 
     @Override
-    public IDrawerAttributesGroupControl getGroupControllableAttributes (GameProfile profile) {
-        return new GroupAttributeController(profile);
+    public IDrawerAttributesGroupControl getGroupControllableAttributes (Player player) {
+        return new GroupAttributeController(player);
     }
 
     @Override
@@ -205,7 +205,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         if (!dumpInventory) {
             ItemStack currentStack = player.getInventory().getSelected();
             if (!currentStack.isEmpty()) {
-                count = insertItems(currentStack, player.getGameProfile());
+                count = insertItems(currentStack, player);
                 if (currentStack.getCount() == 0)
                     player.getInventory().setItem(player.getInventory().selected, ItemStack.EMPTY);
             }
@@ -214,7 +214,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             for (int i = 0, n = player.getInventory().getContainerSize(); i < n; i++) {
                 ItemStack subStack = player.getInventory().getItem(i);
                 if (!subStack.isEmpty()) {
-                    count += insertItems(subStack, player.getGameProfile());
+                    count += insertItems(subStack, player);
                     if (subStack.getCount() == 0)
                         player.getInventory().setItem(i, ItemStack.EMPTY);
                 }
@@ -227,8 +227,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         return count;
     }
 
-    protected int insertItems (@NotNull ItemStack stack, GameProfile profile) {
-        int remainder = new ProtectedItemRepository(this, profile).insertItem(stack, false).getCount();
+    protected int insertItems (@NotNull ItemStack stack, Player player) {
+        int remainder = new ProtectedItemRepository(this, player).insertItem(stack, false).getCount();
         int added = stack.getCount() - remainder;
 
         stack.setCount(remainder);
@@ -236,17 +236,17 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     }
 
     private class GroupAttributeController implements IDrawerAttributesGroupControl {
-        private GameProfile profile = null;
+        private Player player = null;
 
         public GroupAttributeController() { }
 
-        public GroupAttributeController(GameProfile profile) {
-            this.profile = profile;
+        public GroupAttributeController(Player player) {
+            this.player = player;
         }
 
         @Override
         public boolean setIsConcealed (boolean state) {
-            getSlotsValidAttributes(profile).forEach(record -> {
+            getSlotsValidAttributes(player).forEach(record -> {
                 record.setIsConcealed(state);
             });
             return true;
@@ -254,7 +254,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
         @Override
         public boolean setIsShowingQuantity (boolean state) {
-            getSlotsValidAttributes(profile).forEach(record -> {
+            getSlotsValidAttributes(player).forEach(record -> {
                 record.setIsShowingQuantity(state);
             });
             return true;
@@ -262,7 +262,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
         @Override
         public boolean setItemLocked (EnumSet<LockAttribute> attributes, LockAttribute attr, boolean isLocked) {
-            getSlotsValidAttributes(profile).forEach(record -> {
+            getSlotsValidAttributes(player).forEach(record -> {
                 for (LockAttribute a : attributes)
                     record.setItemLocked(a, isLocked);
             });
@@ -271,21 +271,21 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
         @Override
         public boolean toggleConcealed () {
-            getSlotsValidAttributes(profile).findFirst().ifPresent(template ->
+            getSlotsValidAttributes(player).findFirst().ifPresent(template ->
                 setIsConcealed(!template.isConcealed()));
             return true;
         }
 
         @Override
         public boolean toggleIsShowingQuantity () {
-            getSlotsValidAttributes(profile).findFirst().ifPresent(template ->
+            getSlotsValidAttributes(player).findFirst().ifPresent(template ->
                 setIsShowingQuantity(!template.isShowingQuantity()));
             return true;
         }
 
         @Override
         public boolean toggleItemLocked (EnumSet<LockAttribute> attributes, LockAttribute attr) {
-            getSlotsValidAttributes(profile).findFirst().ifPresent(template ->
+            getSlotsValidAttributes(player).findFirst().ifPresent(template ->
                 setItemLocked(attributes, attr, !template.isItemLocked(attr)));
             return true;
         }
@@ -370,13 +370,13 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         }
     }*/
 
-    private Stream<IDrawerAttributesModifiable> getSlotsValidAttributes(GameProfile profile) {
+    private Stream<IDrawerAttributesModifiable> getSlotsValidAttributes(Player player) {
         return storage.values().stream().map(record -> {
             if (record.storage == null)
                 return null;
 
             if (record.storage instanceof IProtectable) {
-                if (!SecurityManager.hasAccess(profile, (IProtectable)record.storage))
+                if (!SecurityManager.hasAccess(player, (IProtectable)record.storage))
                     return null;
             }
 
@@ -910,11 +910,11 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
     private class ProtectedItemRepository extends ItemRepository
     {
-        private final GameProfile profile;
+        private final Player player;
 
-        public ProtectedItemRepository (IDrawerGroup group, GameProfile profile) {
+        public ProtectedItemRepository (IDrawerGroup group, Player player) {
             super(group);
-            this.profile = profile;
+            this.player = player;
         }
 
         @Override
@@ -922,7 +922,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             if (drawer.isEmpty())
                 return false;
             if (group instanceof IProtectable)
-                return SecurityManager.hasAccess(profile, (IProtectable)group);
+                return SecurityManager.hasAccess(player, (IProtectable)group);
 
             return true;
         }

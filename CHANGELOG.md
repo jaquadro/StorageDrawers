@@ -1,3 +1,9 @@
+[13.5.0]
+- Added 2-tier variation of compacting drawers
+- Added half-depth version of both compacting drawers
+- Brought back the personal key
+- Fixed compacting drawers not rendering overlays
+
 [13.4.0]
 - Fixed major regression from last beta that prevented items from being withdrawn
 - Added detached drawers, which can be placed in empty slots in drawer blocks

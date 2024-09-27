@@ -17,19 +17,20 @@ public class BlockControllerIO extends Block implements INetworked, EntityBlock
         super(properties);
     }
 
-    public void toggle (Level world, BlockPos pos, Player player, KeyType keyType) {
-        BlockEntityControllerIO blockEntity = WorldUtils.getBlockEntity(world, pos, BlockEntityControllerIO.class);
+    public BlockController getController(Level world, BlockPos pos) {
+        BlockEntityControllerIO blockEntity = com.jaquadro.minecraft.storagedrawers.util.WorldUtils.getBlockEntity(world, pos, BlockEntityControllerIO.class);
         if (blockEntity == null)
-            return;
+            return null;
 
         BlockPos controllerPos = blockEntity.getControllerPos();
         if (controllerPos == null)
-            return;
+            return null;
 
         Block block = world.getBlockState(controllerPos).getBlock();
-        if (block instanceof BlockController blockController) {
-            blockController.toggle(world, controllerPos, player, keyType);
-        }
+        if (block instanceof BlockController c)
+            return c;
+
+        return null;
     }
 
     @Override

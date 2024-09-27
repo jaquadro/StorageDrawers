@@ -2,6 +2,8 @@ package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
+import com.jaquadro.minecraft.storagedrawers.block.tile.DrawerModelProperties;
 import com.jaquadro.minecraft.storagedrawers.block.tile.PlatformBlockEntityDrawersStandard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -46,7 +48,7 @@ public class PlatformDecoratedDrawerModel extends DecoratedDrawerModel implement
             return mainModel.getQuads(null, side, rand, extraData, type);
         }
 
-        if (!extraData.has(PlatformBlockEntityDrawersStandard.ATTRIBUTES)) {
+        if (!extraData.has(DrawerModelProperties.ATTRIBUTES)) {
             // Nothing to render.
             return mainQuads;
         }
@@ -57,8 +59,9 @@ public class PlatformDecoratedDrawerModel extends DecoratedDrawerModel implement
         }
 
         List<BakedQuad> quads = new ArrayList<>(mainQuads);
-        IDrawerAttributes attr = extraData.get(PlatformBlockEntityDrawersStandard.ATTRIBUTES);
-        IDrawerGroup group = extraData.get(PlatformBlockEntityDrawersStandard.DRAWER_GROUP);
+        IDrawerAttributes attr = extraData.get(DrawerModelProperties.ATTRIBUTES);
+        IDrawerGroup group = extraData.get(DrawerModelProperties.DRAWER_GROUP);
+        IProtectable protectable = extraData.get(DrawerModelProperties.PROTECTABLE);
 
         if (attr != null) {
             Consumer<BakedModel> emitModel = model -> {
@@ -66,7 +69,7 @@ public class PlatformDecoratedDrawerModel extends DecoratedDrawerModel implement
                     quads.addAll(model.getQuads(state, side, rand, extraData, type));
             };
 
-            DrawerModelContext context = new DrawerModelContext(state, attr, group);
+            DrawerModelContext context = new DrawerModelContext(state, attr, group, protectable);
             emitDecoratedQuads(context, emitModel);
         }
 

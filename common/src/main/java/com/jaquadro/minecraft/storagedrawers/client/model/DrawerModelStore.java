@@ -20,6 +20,8 @@ public class DrawerModelStore
 {
     public enum DynamicPart {
         LOCK("lock"),
+        CLAIM("claim"),
+        LOCK_CLAIM("lock_claim"),
         VOID("void"),
         SHROUD("shroud"),
         INDICATOR("indicator"),
@@ -71,6 +73,8 @@ public class DrawerModelStore
         
         public void add (Direction dir, boolean half) {
             addOverlay(getVariant(DynamicPart.LOCK, dir, half), new ModelResourceLocation(ModConstants.loc("meta_locked"), getVariant(dir, half)));
+            addOverlay(getVariant(DynamicPart.CLAIM, dir, half), new ModelResourceLocation(ModConstants.loc("meta_claimed"), getVariant(dir, half)));
+            addOverlay(getVariant(DynamicPart.LOCK_CLAIM, dir, half), new ModelResourceLocation(ModConstants.loc("meta_locked_claimed"), getVariant(dir, half)));
             addOverlay(getVariant(DynamicPart.VOID, dir, half), new ModelResourceLocation(ModConstants.loc("meta_void"), getVariant(dir, half)));
             addOverlay(getVariant(DynamicPart.SHROUD, dir, half), new ModelResourceLocation(ModConstants.loc("meta_shroud"), getVariant(dir, half)));
 

@@ -1,0 +1,8 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        { "item": "storagedrawers:drawer_key" },
+        { "item": "minecraft:name_tag" }
+    ],
+    "result": { "id": "storagedrawers:personal_key" }
+}

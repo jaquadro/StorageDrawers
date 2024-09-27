@@ -25,7 +25,7 @@
         "fabricloader": ">=${fabric_loader}",
         "fabric-api": "*",
         "java": ">=${java_version}",
-        "minecraft": "${minecraft_version}"
+        "minecraft": ">=${minecraft_version} <${minecraft_version_upper}"
     },
     "custom": {},
     "mixins": []

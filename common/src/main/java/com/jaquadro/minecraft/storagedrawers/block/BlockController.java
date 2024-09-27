@@ -1,12 +1,15 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesGroupControl;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import com.jaquadro.minecraft.storagedrawers.core.ModSecurity;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
+import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import com.texelsaurus.minecraft.chameleon.util.WorldUtils;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -90,8 +93,8 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
             toggle(world, pos, player, KeyType.CONCEALMENT);
         else if (item == ModItems.QUANTIFY_KEY.get())
             toggle(world, pos, player, KeyType.QUANTIFY);
-        //else if (item == ModItems.personalKey)
-        //    toggle(world, pos, player, EnumKeyType.PERSONAL);
+        else if (item instanceof ItemPersonalKey itemKey)
+            togglePersonal(world, pos, player, itemKey.getSecurityProviderKey());
         else
             return false;
 
@@ -106,7 +109,7 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         if (blockEntity == null)
             return;
 
-        IDrawerAttributesGroupControl controlAttrs = blockEntity.getGroupControllableAttributes(player.getGameProfile());
+        IDrawerAttributesGroupControl controlAttrs = blockEntity.getGroupControllableAttributes(player);
         if (controlAttrs != null) {
             if (keyType == KeyType.DRAWER)
                 controlAttrs.toggleItemLocked(EnumSet.allOf(LockAttribute.class), LockAttribute.LOCK_POPULATED);
@@ -115,13 +118,18 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
             else if (keyType == KeyType.QUANTIFY)
                 controlAttrs.toggleIsShowingQuantity();
         }
+    }
 
-        //case PERSONAL:
-        //    String securityKey = ModItems.personalKey.getSecurityProviderKey(0);
-        //    ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
+    public void togglePersonal (@NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, String providerKey) {
+        if (level.isClientSide)
+            return;
 
-        //    te.toggleProtection(player.getGameProfile(), provider);
-        //    break;
+        BlockEntityController blockEntity = com.jaquadro.minecraft.storagedrawers.util.WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);
+        if (blockEntity == null)
+            return;
+
+        ISecurityProvider provider = ModSecurity.registry.getProvider(providerKey);
+        blockEntity.toggleProtection(player.getGameProfile(), provider);
     }
 
     @Override
