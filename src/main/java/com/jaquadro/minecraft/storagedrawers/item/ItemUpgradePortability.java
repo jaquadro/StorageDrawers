@@ -15,11 +15,7 @@ public class ItemUpgradePortability extends ItemUpgrade
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    @NotNull
-    public Component getDescription() {
-        return CommonConfig.GENERAL.heavyDrawers.get()
-            ? Component.translatable("item.storagedrawers.portability_upgrade.desc")
-            : Component.translatable("itemConfig.storagedrawers.disabled_upgrade").withStyle(ChatFormatting.RED);
+    public boolean isEnabled () {
+        return CommonConfig.GENERAL.heavyDrawers.get();
     }
 }

@@ -52,6 +52,10 @@ public class ControllerData extends BlockEntityDataShim
         return (BlockEntityController)blockEntity;
     }
 
+    public boolean bind (BlockEntityController entity) {
+        return bindCoord(entity != null ? entity.getBlockPos() : null);
+    }
+
     public boolean bindCoord (BlockPos pos) {
         if (controllerCoord == null || !controllerCoord.equals(pos)) {
             controllerCoord = pos;

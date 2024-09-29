@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " E ",
+        "RXR",
+        "///"
+    ],
+    "key": {
+        "/": { "tag": "forge:rods/wooden" },
+        "E": { "item": "minecraft:ender_pearl" },
+        "R": { "tag": "forge:dusts/redstone" },
+        "X": { "item": "storagedrawers:upgrade_template" }
+    },
+    "result": { "item": "storagedrawers:remote_upgrade" }
+}

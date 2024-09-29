@@ -331,6 +331,18 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
                 return Optional.of(InteractionResult.PASS);
             }
 
+            // Copy remote binding if remote upgrade already present
+            if (item.getItem() instanceof ItemUpgradeRemote remote && entity.upgrades().hasRemoteUpgrade()) {
+                if (remote.isBound()) {
+                    entity.upgrades().updateRemoteUpgradeBinding(item);
+                    BlockPos pos = ItemUpgradeRemote.getBoundPosition(item);
+                    if (pos != null)
+                        context.player.displayClientMessage(Component.translatable("message.storagedrawers.updated_remote_binding", pos.getX(), pos.getY(), pos.getZ()), true);
+
+                    return Optional.of(InteractionResult.SUCCESS);
+                }
+            }
+
             if (!entity.upgrades().canAddUpgrade(item)) {
                 if (!context.level.isClientSide)
                     context.player.displayClientMessage(Component.translatable("message.storagedrawers.cannot_add_upgrade"), true);

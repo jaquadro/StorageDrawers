@@ -52,11 +52,17 @@ public class ItemUpgrade extends Item
     @OnlyIn(Dist.CLIENT)
     @NotNull
     public Component getDescription() {
-        return Component.translatable(this.getDescriptionId() + ".desc");
+        return isEnabled()
+            ? Component.translatable(this.getDescriptionId() + ".desc")
+            : Component.translatable("itemConfig.storagedrawers.disabled_upgrade").withStyle(ChatFormatting.RED);
     }
 
     @Override
     public boolean doesSneakBypassUse (ItemStack stack, LevelReader level, BlockPos pos, Player player) {
+        return true;
+    }
+
+    public boolean isEnabled () {
         return true;
     }
 

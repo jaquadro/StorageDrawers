@@ -1,3 +1,11 @@
+[12.8.0]
+- Fixed item descriptions not breaking on newlines
+- Added priority key and 5 priority levels to drawers
+- Added Remote Upgrade to connect drawers to controller remotely
+- Added Remote Group Upgrade to connect group of connected drawers to controller remotely
+- Added more config entries to disable upgrades
+- Fixed crash when trying to open Fluid Drawer GUIs (Legacy Fluid Drawers mod)
+
 [12.7.2]
 - Fixed crash when using keyring on drawers
 - Fixed broken GUI texture on compacting drawers

@@ -2,13 +2,11 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
@@ -16,6 +14,7 @@ import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeRemote;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
 import com.jaquadro.minecraft.storagedrawers.network.CountUpdateMessage;
 import com.jaquadro.minecraft.storagedrawers.network.MessageHandler;
@@ -46,7 +45,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup, IProtectable /*, INameable */
+public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup, IProtectable, INetworked /*, INameable */
 {
     public static final ModelProperty<IDrawerAttributes> ATTRIBUTES = new ModelProperty<>();
     public static final ModelProperty<IDrawerGroup> DRAWER_GROUP = new ModelProperty<>();
@@ -58,6 +57,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     //private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
     //private MaterialData materialData = new MaterialData();
     private final UpgradeData upgradeData = new DrawerUpgradeData();
+    private final ControllerData controllerData = new ControllerData();
 
     //public final ControllerData controllerData = new ControllerData();
 
@@ -171,6 +171,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         @Override
         protected void onUpgradeChanged (ItemStack oldUpgrade, ItemStack newUpgrade) {
+            checkBoundController();
+            if (getBoundControlGroup() != null)
+                getBoundControlGroup().addRemoteNode(BlockEntityDrawers.this);
 
             if (getLevel() != null && !getLevel().isClientSide) {
                 setChanged();
@@ -203,7 +206,56 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         //injectPortableData(customNameData);
         injectPortableData(upgradeData);
         //injectPortableData(materialData);
-        //injectData(controllerData);
+        injectPortableData(controllerData);
+    }
+
+    private void checkBoundController () {
+        BlockEntityController controller = controllerData.getController(this);
+        ItemStack remote = upgradeData.getRemoteUpgrade();
+        if (remote == null && controller != null) {
+            controller.invalidateRemoteNode(this);
+            controllerData.bind(null);
+            return;
+        }
+
+        if (remote != null && remote.getItem() instanceof ItemUpgradeRemote itemRemote) {
+            BlockEntityController upgradeController = itemRemote.getBoundController(remote, level);
+            if (controller != null && controller != upgradeController)
+                controller.invalidateRemoteNode(this);
+
+            if (upgradeController != null) {
+                controllerData.bind(upgradeController);
+                if (!upgradeController.addRemoteNode(this))
+                    controllerData.bind(null);
+            }
+        }
+    }
+
+    @Override
+    public boolean supportsDirectControllerLink () {
+        return true;
+    }
+
+    @Override
+    public IControlGroup getBoundControlGroup () {
+        return controllerData.getController(this);
+    }
+
+    @Override
+    public boolean canRecurseSearch () {
+        ItemStack upgrade = upgradeData.getRemoteUpgrade();
+        if (upgrade == null)
+            return true;
+
+        if (upgrade.getItem() instanceof ItemUpgradeRemote item)
+            return item.isGroupUpgrade();
+
+        return true;
+    }
+
+    @Override
+    public void unbindControlGroup () {
+        upgradeData.unbindRemoteUpgrade();
     }
 
     @NotNull
@@ -617,6 +669,11 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             tag.putInt("Pri", drawerAttributes.getPriority());
 
         return tag;
+    }
+
+    @Override
+    protected void onLoadFinished () {
+        super.onLoadFinished();
     }
 
     @Override

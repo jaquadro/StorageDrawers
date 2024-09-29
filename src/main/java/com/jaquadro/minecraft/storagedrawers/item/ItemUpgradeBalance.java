@@ -14,6 +14,11 @@ public class ItemUpgradeBalance extends ItemUpgrade
     }
 
     @Override
+    public boolean isEnabled () {
+        return CommonConfig.UPGRADES.enableBalanceUpgrade.get();
+    }
+
+    @Override
     @OnlyIn(Dist.CLIENT)
     @NotNull
     public Component getDescription() {

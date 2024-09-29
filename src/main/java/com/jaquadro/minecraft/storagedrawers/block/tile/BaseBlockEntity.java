@@ -54,11 +54,14 @@ public class BaseBlockEntity extends BlockEntity
         //try {
             readFixed(tag);
             readPortable(tag);
+            onLoadFinished();
         //}
         //catch (Throwable t) {
         //    trapLoadFailure(t, tag);
         //}
     }
+
+    protected void onLoadFinished () { }
 
     public final void read (CompoundTag tag) {
         load(tag);

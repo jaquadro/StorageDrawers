@@ -145,7 +145,15 @@ public final class CommonConfig
         public final ForgeConfigSpec.ConfigValue<Integer> level4Mult;
         public final ForgeConfigSpec.ConfigValue<Integer> level5Mult;
 
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableStorageUpgrade;
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableFillLevelUpgrade;
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableRedstoneUpgrade;
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableIlluminationUpgrade;
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableVoidUpgrade;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableBalanceUpgrade;
+        public final ForgeConfigSpec.ConfigValue<Boolean> enablePortabilityUpgrade;
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableRemoteUpgrade;
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableRemoteGroupUpgrade;
 
         public Upgrades (ForgeConfigSpec.Builder builder) {
             builder.push("StorageUpgrades");
@@ -164,10 +172,42 @@ public final class CommonConfig
             level5Mult = builder
                 .define("level5Mult", 32);
 
+            enableStorageUpgrade = builder
+                .comment("Storage upgrades increase capacity of drawers.")
+                .define("enableStorageUpgrade", true);
+
+            enableFillLevelUpgrade = builder
+                .comment("Fill level upgrades add fill bars to the faces of drawers.")
+                .define("enableFillLevelUpgrade", true);
+
+            enableRedstoneUpgrade = builder
+                .comment("Adds redstone output to drawers based on fill levels.")
+                .define("enableRedstoneUpgrade", true);
+
+            enableIlluminationUpgrade = builder
+                .comment("Renders drawer labels brighter than the surrounding environment would allow.")
+                .define("enableIlluminationUpgrade", true);
+
+            enableVoidUpgrade = builder
+                .comment("Causes drawers to accept but void compatible items when they are filled to capacity.")
+                .define("enableVoidUpgrade", true);
+
             enableBalanceUpgrade = builder
                 .comment("Balance upgrades allow same-item slots to balance out their amounts when items are",
                     "added or removed from a lot.  Works across networks when acting through a controller.")
                 .define("enableBalanceUpgrade", true);
+
+            enablePortabilityUpgrade = builder
+                .comment("Allows drawers with contents to be freely carried when heavy drawers is enabled.")
+                .define("enablePortabilityUpgrade", true);
+
+            enableRemoteUpgrade = builder
+                .comment("Allows a single drawer to connect to a controller remotely.")
+                .define("enableRemoteUpgrade", true);
+
+            enableRemoteGroupUpgrade = builder
+                .comment("Allows a drawer and all drawers connected to it to connect to a controller remotely.")
+                .define("enableRemoteGroupUpgrade", true);
 
             builder.pop();
         }
