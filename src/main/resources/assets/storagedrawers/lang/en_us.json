@@ -18,6 +18,7 @@
     "block.storagedrawers.mat.bamboo": "Bamboo",
     "block.storagedrawers.mat.crimson": "Crimson",
     "block.storagedrawers.mat.warped": "Warped",
+    "block.storagedrawers.mat.framed": "Framed",
 
     "block.storagedrawers.compacting_drawers_2": "Compacting Drawers (2-Tier)",
     "block.storagedrawers.compacting_drawers_3": "Compacting Drawers (3-Tier)",
@@ -29,6 +30,7 @@
     "block.storagedrawers.keybutton_quantify": "Quantify Key Button",
     "block.storagedrawers.keybutton_concealment": "Concealment Key Button",
     "block.storagedrawers.keybutton_personal": "Personal Key Button",
+    "block.storagedrawers.framing_table": "Framing Table",
 
     "config.jade.plugin_storagedrawers.main": "Storage Drawers",
     "config.jade.plugin_storagedrawers.display.content": "Slot Contents",
@@ -36,6 +38,7 @@
     "config.jade.plugin_storagedrawers.display.status": "Upgrade Status",
 
     "container.storagedrawers.upgrades": "Upgrades",
+    "container.storagedrawers.framing_table": "Framing Table",
 
     "item.storagedrawers.storage_upgrade.desc": "Increases storage by %d times base value",
     "item.storagedrawers.obsidian_storage_upgrade": "Storage Upgrade (I)",

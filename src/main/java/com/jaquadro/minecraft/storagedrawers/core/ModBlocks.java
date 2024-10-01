@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
@@ -94,6 +95,14 @@ public final class ModBlocks
         WARPED_HALF_DRAWERS_2 = registerWoodenDrawerBlock(modLoc("warped"), 2, true),
         WARPED_HALF_DRAWERS_4 = registerWoodenDrawerBlock(modLoc("warped"), 4, true);
 
+    public static final RegistryObject<BlockStandardDrawersFramed>
+        FRAMED_FULL_DRAWERS_1 = registerFramedDrawerBlock("framed_full_drawers_1", 1, false),
+        FRAMED_FULL_DRAWERS_2 = registerFramedDrawerBlock("framed_full_drawers_2", 2, false),
+        FRAMED_FULL_DRAWERS_4 = registerFramedDrawerBlock("framed_full_drawers_4", 4, false),
+        FRAMED_HALF_DRAWERS_1 = registerFramedDrawerBlock("framed_half_drawers_1", 1, true),
+        FRAMED_HALF_DRAWERS_2 = registerFramedDrawerBlock("framed_half_drawers_2", 2, true),
+        FRAMED_HALF_DRAWERS_4 = registerFramedDrawerBlock("framed_half_drawers_4", 4, true);
+
     public static final RegistryObject<BlockCompDrawers> COMPACTING_DRAWERS_2 = registerCompactingDrawerBlock("compacting_drawers_2", 2, false);
     public static final RegistryObject<BlockCompDrawers> COMPACTING_DRAWERS_3 = registerCompactingDrawerBlock("compacting_drawers_3", 3, false);
     public static final RegistryObject<BlockCompDrawers> COMPACTING_HALF_DRAWERS_2 = registerCompactingDrawerBlock("compacting_half_drawers_2", 2, true);
@@ -115,6 +124,8 @@ public final class ModBlocks
     public static final RegistryObject<BlockController> CONTROLLER = registerControllerBlock("controller");
     public static final RegistryObject<BlockSlave> CONTROLLER_SLAVE = registerControllerSlaveBlock("controller_slave");
 
+    public static final RegistryObject<BlockFramingTable> FRAMING_TABLE = registerFramingTableBlock("framing_table");
+
     public static final RegistryObject<BlockMeta>
         META_LOCKED = registerMetaBlock("meta_locked"),
         META_CLAIMED = registerMetaBlock("meta_claimed"),
@@ -133,7 +144,11 @@ public final class ModBlocks
         META_MISSING_4_1 = registerMetaBlock("meta_missing_slot_4_1"),
         META_MISSING_4_2 = registerMetaBlock("meta_missing_slot_4_2"),
         META_MISSING_4_3 = registerMetaBlock("meta_missing_slot_4_3"),
-        META_MISSING_4_4 = registerMetaBlock("meta_missing_slot_4_4");
+        META_MISSING_4_4 = registerMetaBlock("meta_missing_slot_4_4"),
+        META_FRAMED_DRAWERS_SIDE = registerSizedMetaBlock("meta_framed_drawers_side"),
+        META_FRAMED_DRAWERS_TRIM = registerSizedMetaBlock("meta_framed_drawers_trim"),
+        META_FRAMED_DRAWERS_FRONT = registerSizedMetaBlock("meta_framed_drawers_front"),
+        META_FRAMED_DRAWERS_SHADING = registerSizedMetaBlock("meta_framed_drawers_shading");
 
     public static final RegistryObject<BlockKeyButton>
         KEYBUTTON_DRAWER = BLOCK_REGISTER.register("keybutton_drawer",
@@ -162,6 +177,10 @@ public final class ModBlocks
         return register.register(name, () -> new BlockStandardDrawers(drawerCount, halfDepth, getWoodenDrawerBlockProperties()).setMatKey(material));
     }
 
+    static RegistryObject<BlockStandardDrawersFramed> registerFramedDrawerBlock(String name, int drawerCount, boolean halfDepth) {
+        return BLOCK_REGISTER.register(name, () -> (BlockStandardDrawersFramed)new BlockStandardDrawersFramed(drawerCount, halfDepth, getWoodenDrawerBlockProperties()).setMatKey("framed"));
+    }
+
     static RegistryObject<BlockCompDrawers> registerCompactingDrawerBlock(String name, int drawerCount, boolean halfDepth) {
         return BLOCK_REGISTER.register(name, () -> new BlockCompDrawers(drawerCount, halfDepth, getStoneDrawerBlockProperties()));
     }
@@ -185,6 +204,10 @@ public final class ModBlocks
 
     static RegistryObject<BlockSlave> registerControllerSlaveBlock(String name) {
         return BLOCK_REGISTER.register(name, () -> new BlockSlave(getStoneBlockProperties()));
+    }
+
+    static RegistryObject<BlockFramingTable> registerFramingTableBlock(String name) {
+        return BLOCK_REGISTER.register(name, () -> new BlockFramingTable(getWoodenBlockProperties()));
     }
 
     static RegistryObject<BlockMeta> registerMetaBlock(String name) {
@@ -223,6 +246,10 @@ public final class ModBlocks
 
     public static Stream<BlockDrawers> getDrawers() {
         return getBlocksOfType(BlockDrawers.class);
+    }
+
+    public static Stream<BlockStandardDrawersFramed> getFramedDrawers() {
+        return getBlocksOfType(BlockStandardDrawersFramed.class);
     }
 
     public static Stream<BlockController> getControllers() {

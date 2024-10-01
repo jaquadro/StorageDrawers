@@ -8,6 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
@@ -47,15 +48,8 @@ import java.util.UUID;
 
 public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup, IProtectable, INetworked /*, INameable */
 {
-    public static final ModelProperty<IDrawerAttributes> ATTRIBUTES = new ModelProperty<>();
-    public static final ModelProperty<IDrawerGroup> DRAWER_GROUP = new ModelProperty<>();
-    public static final ModelProperty<IProtectable> PROTECTABLE = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> ITEM_LOCKED = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> SHROUDED = new ModelProperty<>();
-    //public static final ModelProperty<Boolean> VOIDING = new ModelProperty<>();
-
     //private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
-    //private MaterialData materialData = new MaterialData();
+    private final MaterialData materialData = new MaterialData();
     private final UpgradeData upgradeData = new DrawerUpgradeData();
     private final ControllerData controllerData = new ControllerData();
 
@@ -205,7 +199,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         //injectPortableData(customNameData);
         injectPortableData(upgradeData);
-        //injectPortableData(materialData);
+        injectPortableData(materialData);
         injectPortableData(controllerData);
     }
 
@@ -270,9 +264,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         return upgradeData;
     }
 
-    //public MaterialData material () {
-    //    return materialData;
-    //}
+    public MaterialData material () {
+        return materialData;
+    }
 
 
     @Override
@@ -780,13 +774,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     @NotNull
     @Override
     public ModelData getModelData () {
-        return ModelData.builder()
-            .with(ATTRIBUTES, drawerAttributes)
-            .with(DRAWER_GROUP, getGroup())
-            .with(PROTECTABLE, this).build();
-            /*.with(ITEM_LOCKED, drawerAttributes.isItemLocked(LockAttribute.LOCK_EMPTY))
-            .with(SHROUDED, drawerAttributes.isConcealed())
-            .with(VOIDING, drawerAttributes.isVoid()).build();*/
+        return DrawerModelProperties.getModelData(this);
     }
 
     @Override

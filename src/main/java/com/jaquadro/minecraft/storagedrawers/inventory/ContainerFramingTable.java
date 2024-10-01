@@ -1,25 +1,30 @@
-/*package com.jaquadro.minecraft.storagedrawers.inventory;
+package com.jaquadro.minecraft.storagedrawers.inventory;
 
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
-import com.jaquadro.minecraft.storagedrawers.block.BlockTrimCustom;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
-import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemCustomTrim;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawersFramed;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityFramingTable;
+import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
+import com.jaquadro.minecraft.storagedrawers.item.ItemFramedDrawers;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
+import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContainerFramingTable extends Container
+public class ContainerFramingTable extends AbstractContainerMenu
 {
     private static final int InventoryX = 8;
     private static final int InventoryY = 84;
@@ -36,8 +41,10 @@ public class ContainerFramingTable extends Container
     private static final int OutputX = 133;
     private static final int OutputY = 35;
 
-    private IInventory tableInventory;
-    private IInventory craftResult = new InventoryCraftResult();
+    private final Container tableInventory;
+    private final Container craftResult;
+    private final ContainerLevelAccess access;
+    private final Player player;
 
     private Slot inputSlot;
     private Slot materialSideSlot;
@@ -47,60 +54,91 @@ public class ContainerFramingTable extends Container
     private List<Slot> playerSlots;
     private List<Slot> hotbarSlots;
 
-    public ContainerFramingTable (InventoryPlayer inventory, TileEntityFramingTable tileEntity) {
-        tableInventory = new InventoryContainerProxy(tileEntity, this);
+    public ContainerFramingTable (@Nullable MenuType<?> type, int windowId, Inventory playerInv, FriendlyByteBuf data) {
+        this(type, windowId, playerInv, getBlockEntity(playerInv, data.readBlockPos()));
+    }
 
-        inputSlot = addSlotToContainer(new SlotRestricted(tableInventory, 0, InputX, InputY));
-        materialSideSlot = addSlotToContainer(new SlotRestricted(tableInventory, 1, MaterialSideX, MaterialSideY));
-        materialTrimSlot = addSlotToContainer(new SlotRestricted(tableInventory, 2, MaterialTrimX, MaterialTrimY));
-        materialFrontSlot = addSlotToContainer(new SlotRestricted(tableInventory, 3, MaterialFrontX, MaterialFrontY));
-        outputSlot = addSlotToContainer(new SlotCraftResult(inventory.player, tableInventory, craftResult, new int[] { 0, 1, 2, 3 }, 4, OutputX, OutputY));
+    public ContainerFramingTable (int windowId, Inventory playerInventory, FriendlyByteBuf packet) {
+        this(ModContainers.FRAMING_TABLE.get(), windowId, playerInventory, packet);
+    }
+
+    protected static BlockEntityFramingTable getBlockEntity(Inventory playerInv, BlockPos pos) {
+        Level level = playerInv.player.getCommandSenderWorld();
+        BlockEntityFramingTable blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityFramingTable.class);
+        if (blockEntity == null)
+            StorageDrawers.log.error("Expected a framing table tile entity at " + pos);
+        else
+            return blockEntity;
+
+        return null;
+    }
+
+    public ContainerFramingTable (@Nullable MenuType<?> type, int windowId, Inventory playerInventory, BlockEntityFramingTable blockEntity) {
+        super(type, windowId);
+
+        tableInventory = blockEntity;
+        craftResult = blockEntity;
+        access = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
+        player = playerInventory.player;
+
+        inputSlot = addSlot(new RestrictedSlot(tableInventory, 0, InputX, InputY));
+        materialSideSlot = addSlot(new RestrictedSlot(tableInventory, 1, MaterialSideX, MaterialSideY));
+        materialTrimSlot = addSlot(new RestrictedSlot(tableInventory, 2, MaterialTrimX, MaterialTrimY));
+        materialFrontSlot = addSlot(new RestrictedSlot(tableInventory, 3, MaterialFrontX, MaterialFrontY));
+        outputSlot = addSlot(new CraftResultSlot(playerInventory.player, tableInventory, craftResult, new int[] { 0, 1, 2, 3 }, 4, OutputX, OutputY));
 
         playerSlots = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++)
-                playerSlots.add(addSlotToContainer(new Slot(inventory, j + i * 9 + 9, InventoryX + j * 18, InventoryY + i * 18)));
+                playerSlots.add(addSlot(new Slot(playerInventory, j + i * 9 + 9, InventoryX + j * 18, InventoryY + i * 18)));
         }
 
         hotbarSlots = new ArrayList<>();
         for (int i = 0; i < 9; i++)
-            hotbarSlots.add(addSlotToContainer(new Slot(inventory, i, InventoryX + i * 18, HotbarY)));
+            hotbarSlots.add(addSlot(new Slot(playerInventory, i, InventoryX + i * 18, HotbarY)));
 
-        onCraftMatrixChanged(tableInventory);
+        slotsChanged(tableInventory);
     }
 
-    @Override
-    public boolean canInteractWith (EntityPlayer player) {
-        return tableInventory.isUsableByPlayer(player);
-    }
+    protected static void slotChangedCraftingGrid(AbstractContainerMenu menu, Level level, Player player, Container tableContainer, Container resultContainer) {
+        if (level.isClientSide)
+            return;
 
-    @Override
-    public void onCraftMatrixChanged (IInventory inventory) {
-        ItemStack target = tableInventory.getStackInSlot(inputSlot.getSlotIndex());
-        ItemStack matSide = tableInventory.getStackInSlot(materialSideSlot.getSlotIndex());
-        ItemStack matTrim = tableInventory.getStackInSlot(materialTrimSlot.getSlotIndex());
-        ItemStack matFront = tableInventory.getStackInSlot(materialFrontSlot.getSlotIndex());
+        ItemStack target = tableContainer.getItem(BlockEntityFramingTable.SLOT_INPUT);
+        ItemStack matSide = tableContainer.getItem(BlockEntityFramingTable.SLOT_SIDE);
+        ItemStack matTrim = tableContainer.getItem(BlockEntityFramingTable.SLOT_TRIM);
+        ItemStack matFront = tableContainer.getItem(BlockEntityFramingTable.SLOT_FRONT);
 
-        if (!target.isEmpty()) {
-            Block block = Block.getBlockFromItem(target.getItem());
-            if (block instanceof BlockDrawersCustom) {
-                IBlockState state = block.getStateFromMeta(target.getMetadata());
+        if (!target.isEmpty() && target.getItem() instanceof BlockItem blockItem) {
+            Block block = blockItem.getBlock();
+            if (block instanceof BlockStandardDrawersFramed) {
+
+                BlockState state = block.defaultBlockState();
                 if (!matSide.isEmpty()) {
-                    craftResult.setInventorySlotContents(0, ItemCustomDrawers.makeItemStack(state, 1, matSide, matTrim, matFront));
+                    resultContainer.setItem(BlockEntityFramingTable.SLOT_RESULT,
+                        ItemFramedDrawers.makeItemStack(state, 1, matSide, matTrim, matFront));
                     return;
                 }
             }
-            else if (block instanceof BlockTrimCustom) {
+            /*else if (block instanceof BlockTrimCustom) {
                 if (!matSide.isEmpty()) {
                     craftResult.setInventorySlotContents(0, ItemCustomTrim.makeItemStack(block, 1, matSide, matTrim));
                     return;
                 }
-            }
+            }*/
         }
 
-        craftResult.setInventorySlotContents(0, ItemStack.EMPTY);
+        resultContainer.setItem(BlockEntityFramingTable.SLOT_RESULT, ItemStack.EMPTY);
     }
 
+    @Override
+    public void slotsChanged (Container container) {
+        this.access.execute((level, pos) -> {
+            slotChangedCraftingGrid(this, level, player, tableInventory, craftResult);
+        });
+    }
+
+    /*
     @Override
     @Nonnull
     public ItemStack transferStackInSlot (EntityPlayer player, int slotIndex) {
@@ -158,5 +196,82 @@ public class ContainerFramingTable extends Container
 
         return itemStack;
     }
+    */
+
+    @Override
+    public ItemStack quickMoveStack (Player player, int slotIndex) {
+        ItemStack itemStack = ItemStack.EMPTY;
+        Slot slot = slots.get(slotIndex);
+
+        // Assume inventory and hotbar slot IDs are contiguous
+        int inventoryStart = playerSlots.get(0).index;
+        int hotbarStart = hotbarSlots.get(0).index;
+        int hotbarEnd = hotbarSlots.get(hotbarSlots.size() - 1).index + 1;
+
+        if (slot.hasItem()) {
+            ItemStack slotStack = slot.getItem();
+            itemStack = slotStack.copy();
+
+            /*
+            // Try merge upgrades to inventory
+            if (slotIndex >= upgradeStart && slotIndex < upgradeEnd) {
+                if (!moveItemStackTo(slotStack, inventoryStart, hotbarEnd, true))
+                    return ItemStack.EMPTY;
+                slot.onQuickCraft(slotStack, itemStack);
+            }
+
+            // Try merge inventory to upgrades
+            else if (slotIndex >= inventoryStart && slotIndex < hotbarEnd && !slotStack.isEmpty()) {
+                if (slotStack.getItem() instanceof ItemUpgrade) {
+                    ItemStack slotStack1 = slotStack.copy();
+                    slotStack1.setCount(1);
+
+                    if (!moveItemStackTo(slotStack1, upgradeStart, upgradeEnd, false)) {
+                        if (slotIndex < hotbarStart) {
+                            if (!moveItemStackTo(slotStack, hotbarStart, hotbarEnd, false))
+                                return ItemStack.EMPTY;
+                        } else if (!moveItemStackTo(slotStack, inventoryStart, hotbarStart, false))
+                            return ItemStack.EMPTY;
+                    }
+                    else {
+                        slotStack.shrink(1);
+                        if (slotStack.getCount() == 0)
+                            slot.set(ItemStack.EMPTY);
+                        else
+                            slot.setChanged();
+
+                        slot.onTake(player, slotStack);
+                        return ItemStack.EMPTY;
+                    }
+                } else if (slotIndex < hotbarStart) {
+                    if (!moveItemStackTo(slotStack, hotbarStart, hotbarEnd, false))
+                        return ItemStack.EMPTY;
+                } else if (!moveItemStackTo(slotStack, inventoryStart, hotbarStart, false))
+                    return ItemStack.EMPTY;
+            }
+
+            // Try merge stack into inventory
+            else if (!moveItemStackTo(slotStack, inventoryStart, hotbarEnd, false))
+                return ItemStack.EMPTY;
+
+            int slotStackSize = slotStack.getCount();
+            if (slotStackSize == 0)
+                slot.set(ItemStack.EMPTY);
+            else
+                slot.setChanged();
+
+            if (slotStackSize == itemStack.getCount())
+                return ItemStack.EMPTY;
+
+            slot.onTake(player, slotStack);
+            */
+        }
+
+        return itemStack;
+    }
+
+    @Override
+    public boolean stillValid (Player player) {
+        return tableInventory.stillValid(player);
+    }
 }
-*/

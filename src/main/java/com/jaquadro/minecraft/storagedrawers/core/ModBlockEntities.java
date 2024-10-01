@@ -28,6 +28,7 @@ public final class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<BlockEntityDrawersComp>> FRACTIONAL_DRAWERS_3 = registerDrawerBlockEntityType("fractional_drawers_3", BlockEntityDrawersComp.Slot3::new, BlockCompDrawers.class, 3);
     public static final RegistryObject<BlockEntityType<BlockEntityController>> CONTROLLER = registerBlockEntityType("controller", BlockEntityController::new, ModBlocks.getControllers());
     public static final RegistryObject<BlockEntityType<BlockEntitySlave>> CONTROLLER_SLAVE = registerBlockEntityType("controller_slave", BlockEntitySlave::new, ModBlocks.getControllerSlaves());
+    public static final RegistryObject<BlockEntityType<BlockEntityFramingTable>> FRAMING_TABLE = registerBlockEntityType("framing_table", BlockEntityFramingTable::new, ModBlocks.FRAMING_TABLE);
 
     private ModBlockEntities() {}
 
@@ -39,6 +40,10 @@ public final class ModBlockEntities {
 
     private static <BE extends BaseBlockEntity, B extends Block> RegistryObject<BlockEntityType<BE>> registerBlockEntityType(String name, BlockEntitySupplier<BE> blockEntitySupplier, Stream<B> blockStream) {
         return BLOCK_ENTITY_REGISTER.register(name, () -> BlockEntityType.Builder.of(blockEntitySupplier, blockStream.toArray(Block[]::new)).build(null));
+    }
+
+    private static <BE extends BaseBlockEntity, B extends Block> RegistryObject<BlockEntityType<BE>> registerBlockEntityType(String name, BlockEntitySupplier<BE> blockEntitySupplier, RegistryObject<B> block) {
+        return BLOCK_ENTITY_REGISTER.register(name, () -> BlockEntityType.Builder.of(blockEntitySupplier, block.get()).build(null));
     }
 
     public static void register(IEventBus bus) {

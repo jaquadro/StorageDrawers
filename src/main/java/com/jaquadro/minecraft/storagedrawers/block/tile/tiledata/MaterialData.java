@@ -1,104 +1,115 @@
-/*package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
+package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
-import com.jaquadro.minecraft.chameleon.block.tiledata.TileDataShim;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-
-public class MaterialData extends TileDataShim
+public class MaterialData extends BlockEntityDataShim
 {
-    @Nonnull
+    @NotNull
     private ItemStack materialSide;
-    @Nonnull
+    @NotNull
     private ItemStack materialFront;
-    @Nonnull
+    @NotNull
     private ItemStack materialTrim;
 
     public MaterialData () {
-        materialSide = ItemStack.EMPTY;
-        materialFront = ItemStack.EMPTY;
-        materialTrim = ItemStack.EMPTY;
+        this(ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
     }
 
-    @Nonnull
+    public MaterialData (@NotNull ItemStack side, @NotNull ItemStack front, @NotNull ItemStack trim) {
+        materialSide = side;
+        materialFront = front;
+        materialTrim = trim;
+    }
+
+    @NotNull
     public ItemStack getSide () {
         return materialSide;
     }
 
-    @Nonnull
+    @NotNull
     public ItemStack getFront () {
         return materialFront;
     }
 
-    @Nonnull
+    @NotNull
     public ItemStack getTrim () {
         return materialTrim;
     }
 
-    @Nonnull
+    @NotNull
     public ItemStack getEffectiveSide () {
         return materialSide;
     }
 
-    @Nonnull
+    @NotNull
     public ItemStack getEffectiveFront () {
         return !materialFront.isEmpty() ? materialFront : materialSide;
     }
 
-    @Nonnull
+    @NotNull
     public ItemStack getEffectiveTrim () {
         return !materialTrim.isEmpty() ? materialTrim : materialSide;
     }
 
-    public void setSide (@Nonnull ItemStack material) {
+    public void setSide (@NotNull ItemStack material) {
         materialSide = material;
     }
 
-    public void setFront (@Nonnull ItemStack material) {
+    public void setFront (@NotNull ItemStack material) {
         materialFront = material;
     }
 
-    public void setTrim (@Nonnull ItemStack material) {
+    public void setTrim (@NotNull ItemStack material) {
         materialTrim = material;
     }
 
-    @Override
-    public void readFromNBT (NBTTagCompound tag) {
+    public void clear () {
         materialSide = ItemStack.EMPTY;
-        if (tag.hasKey("MatS"))
-            materialSide = new ItemStack(tag.getCompoundTag("MatS"));
-
         materialFront = ItemStack.EMPTY;
-        if (tag.hasKey("MatF"))
-            materialFront = new ItemStack(tag.getCompoundTag("MatF"));
-
         materialTrim = ItemStack.EMPTY;
-        if (tag.hasKey("MatT"))
-            materialTrim = new ItemStack(tag.getCompoundTag("MatT"));
+    }
+
+    public boolean isEmpty () {
+        return materialFront.isEmpty() && materialSide.isEmpty() && materialTrim.isEmpty();
     }
 
     @Override
-    public NBTTagCompound writeToNBT (NBTTagCompound tag) {
+    public void read (CompoundTag tag) {
+        materialSide = ItemStack.EMPTY;
+        if (tag.contains("MatS"))
+            materialSide = ItemStack.of(tag.getCompound("MatS"));
+
+        materialFront = ItemStack.EMPTY;
+        if (tag.contains("MatF"))
+            materialFront = ItemStack.of(tag.getCompound("MatF"));
+
+        materialTrim = ItemStack.EMPTY;
+        if (tag.contains("MatT"))
+            materialTrim = ItemStack.of(tag.getCompound("MatT"));
+    }
+
+    @Override
+    public CompoundTag write (CompoundTag tag) {
         if (!materialSide.isEmpty()) {
-            NBTTagCompound itag = new NBTTagCompound();
-            materialSide.writeToNBT(itag);
-            tag.setTag("MatS", itag);
+            CompoundTag itag = new CompoundTag();
+            materialSide.save(itag);
+            tag.put("MatS", itag);
         }
 
         if (!materialFront.isEmpty()) {
-            NBTTagCompound itag = new NBTTagCompound();
-            materialFront.writeToNBT(itag);
-            tag.setTag("MatF", itag);
+            CompoundTag itag = new CompoundTag();
+            materialFront.save(itag);
+            tag.put("MatF", itag);
         }
 
         if (!materialTrim.isEmpty()) {
-            NBTTagCompound itag = new NBTTagCompound();
-            materialTrim.writeToNBT(itag);
-            tag.setTag("MatT", itag);
+            CompoundTag itag = new CompoundTag();
+            materialTrim.save(itag);
+            tag.put("MatT", itag);
         }
 
         return tag;
     }
 }
-*/

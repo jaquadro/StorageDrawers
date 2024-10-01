@@ -1,0 +1,11 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "XXX",
+        "X X"
+    ],
+    "key": {
+        "X": { "tag": "storagedrawers:trim" }
+    },
+    "result": { "item": "storagedrawers:framing_table", "count": 1 }
+}

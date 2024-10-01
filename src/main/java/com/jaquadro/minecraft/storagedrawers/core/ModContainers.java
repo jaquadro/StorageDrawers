@@ -20,7 +20,13 @@ public class ModContainers
     public static final RegistryObject<MenuType<ContainerDrawersComp2>> DRAWER_CONTAINER_COMP_2 = registerContainer("drawer_container_comp_2", ContainerDrawersComp2::new);
     public static final RegistryObject<MenuType<ContainerDrawersComp3>> DRAWER_CONTAINER_COMP_3 = registerContainer("drawer_container_comp_3", ContainerDrawersComp3::new);
 
+    public static final RegistryObject<MenuType<ContainerFramingTable>> FRAMING_TABLE = registerFramingContainer("framing_table_container", ContainerFramingTable::new);
+
     private static <C extends ContainerDrawers> RegistryObject<MenuType<C>> registerContainer(String name, IContainerFactory<C> containerFactory) {
+        return CONTAINERS_REGISTER.register(name, () -> IForgeMenuType.create(containerFactory));
+    }
+
+    private static <C extends ContainerFramingTable> RegistryObject<MenuType<C>> registerFramingContainer(String name, IContainerFactory<C> containerFactory) {
         return CONTAINERS_REGISTER.register(name, () -> IForgeMenuType.create(containerFactory));
     }
 
