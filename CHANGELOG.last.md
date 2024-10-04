@@ -1,6 +1,1 @@
-- Added back support for framed drawers
-  - Includes support for standard drawers, compacting drawers, trim, controllers, and slaves
-- Added back framing table
-  - Place any normal supported block on the table to create a framed version
-  - Place framed version on table to get back materials and original block
-  - Works for drawers that already hold contents
+- Fix startup crash

@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
@@ -168,8 +169,10 @@ public class DrawerModelStore
                     targetBlocks.add(BlockModelShaper.stateToModelLocation(state).toString());
             });
             ModBlocks.getFramedBlocks().forEach(blockTrim -> {
-                for (BlockState state : blockTrim.getStateDefinition().getPossibleStates())
-                    targetBlocks.add(BlockModelShaper.stateToModelLocation(state).toString());
+                if (blockTrim instanceof Block mcBlock) {
+                    for (BlockState state : mcBlock.getStateDefinition().getPossibleStates())
+                        targetBlocks.add(BlockModelShaper.stateToModelLocation(state).toString());
+                }
             });
         }
         

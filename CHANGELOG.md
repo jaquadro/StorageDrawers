@@ -1,3 +1,6 @@
+[12.9.1]
+- Fix startup crash
+
 [12.9.0]
 - Added back support for framed drawers
   - Includes support for standard drawers, compacting drawers, trim, controllers, and slaves

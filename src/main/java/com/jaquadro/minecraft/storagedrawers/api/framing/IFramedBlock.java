@@ -12,8 +12,4 @@ public interface IFramedBlock
     IFramedBlockEntity getFramedBlockEntity(@NotNull Level world, @NotNull BlockPos pos);
 
     boolean supportsFrameMaterial (FrameMaterial material);
-
-    // From Block
-
-    StateDefinition<Block, BlockState> getStateDefinition();
 }
