@@ -6,6 +6,12 @@
         "storagedrawers:compacting_drawers_2",
         "storagedrawers:compacting_drawers_3",
         "storagedrawers:compacting_half_drawers_2",
-        "storagedrawers:compacting_half_drawers_3"
+        "storagedrawers:compacting_half_drawers_3",
+        "storagedrawers:framed_controller",
+        "storagedrawers:framed_controller_io",
+        "storagedrawers:framed_compacting_drawers_2",
+        "storagedrawers:framed_compacting_drawers_3",
+        "storagedrawers:framed_compacting_half_drawers_2",
+        "storagedrawers:framed_compacting_half_drawers_3"
     ]
 }

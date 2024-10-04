@@ -1,3 +1,11 @@
+[12.9.0]
+- Added back support for framed drawers
+  - Includes support for standard drawers, compacting drawers, trim, controllers, and slaves
+- Added back framing table
+  - Place any normal supported block on the table to create a framed version
+  - Place framed version on table to get back materials and original block
+  - Works for drawers that already hold contents
+
 [12.8.0]
 - Fixed item descriptions not breaking on newlines
 - Added priority key and 5 priority levels to drawers

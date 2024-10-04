@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.jaquadro.minecraft.storagedrawers.block.*;
+import com.jaquadro.minecraft.storagedrawers.block.framed.*;
 import com.jaquadro.minecraft.storagedrawers.block.meta.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -132,8 +133,8 @@ public final class ModBlocks
 
     public static final RegistryObject<BlockFramedController> FRAMED_CONTROLLER = BLOCK_REGISTER.register("framed_controller",
         () -> new BlockFramedController(getStoneBlockProperties()));
-    public static final RegistryObject<BlockFramedController> FRAMED_CONTROLLER_IO = BLOCK_REGISTER.register("framed_controller_io",
-        () -> new BlockFramedController(getStoneBlockProperties()));
+    public static final RegistryObject<BlockFramedControllerIO> FRAMED_CONTROLLER_IO = BLOCK_REGISTER.register("framed_controller_io",
+        () -> new BlockFramedControllerIO(getStoneBlockProperties()));
 
     public static final RegistryObject<BlockFramingTable> FRAMING_TABLE = registerFramingTableBlock("framing_table");
 

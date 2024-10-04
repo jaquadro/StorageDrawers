@@ -1,10 +1,11 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockFramedStandardDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.framed.BlockFramedStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
-import com.jaquadro.minecraft.storagedrawers.block.BlockFramedTrim;
+import com.jaquadro.minecraft.storagedrawers.block.framed.BlockFramedTrim;
 import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMetaFacingSized;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.core.registries.Registries;
@@ -151,6 +152,11 @@ public final class ModItems
                             return;
                         if (ModItems.EXCLUDE_ITEMS_CREATIVE_TAB.contains(reg))
                             return;
+                        if (reg.get() instanceof BlockItem blockItem) {
+                            if (blockItem.getBlock() instanceof IFramedBlock)
+                                return;
+                        }
+
                         output.accept(reg.get().getDefaultInstance());
                     });
                 })

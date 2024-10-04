@@ -197,8 +197,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         //injectPortableData(customNameData);
         injectPortableData(upgradeData);
-        injectPortableData(materialData);
         injectPortableData(controllerData);
+
+        injectData(materialData);
     }
 
     private void checkBoundController () {

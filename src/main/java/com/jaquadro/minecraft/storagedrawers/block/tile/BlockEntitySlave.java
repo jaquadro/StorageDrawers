@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedMaterials;
 import com.jaquadro.minecraft.storagedrawers.api.storage.Drawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.block.tile.modelprops.FramedModelProperties;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
@@ -16,6 +17,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -134,6 +136,12 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup, I
     @Override
     public MaterialData material () {
         return materialData;
+    }
+
+    @NotNull
+    @Override
+    public ModelData getModelData () {
+        return FramedModelProperties.getModelData(this);
     }
 
     private class ItemRepositoryProxy implements IItemRepository

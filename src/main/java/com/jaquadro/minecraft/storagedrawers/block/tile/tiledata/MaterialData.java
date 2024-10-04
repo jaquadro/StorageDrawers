@@ -125,25 +125,29 @@ public class MaterialData extends BlockEntityDataShim implements IFramedMaterial
             CompoundTag itag = new CompoundTag();
             frameBase.save(itag);
             tag.put("MatB", itag);
-        }
+        } else if (tag.contains("MatB"))
+            tag.remove("MatB");
 
         if (!materialSide.isEmpty()) {
             CompoundTag itag = new CompoundTag();
             materialSide.save(itag);
             tag.put("MatS", itag);
-        }
+        } else if (tag.contains("MatS"))
+            tag.remove("MatS");
 
         if (!materialFront.isEmpty()) {
             CompoundTag itag = new CompoundTag();
             materialFront.save(itag);
             tag.put("MatF", itag);
-        }
+        } else if (tag.contains("MatF"))
+            tag.remove("MatF");
 
         if (!materialTrim.isEmpty()) {
             CompoundTag itag = new CompoundTag();
             materialTrim.save(itag);
             tag.put("MatT", itag);
-        }
+        } else if (tag.contains("MatT"))
+            tag.remove("MatT");
 
         return tag;
     }

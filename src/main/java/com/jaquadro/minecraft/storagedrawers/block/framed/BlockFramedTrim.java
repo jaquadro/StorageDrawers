@@ -1,7 +1,10 @@
-package com.jaquadro.minecraft.storagedrawers.block;
+package com.jaquadro.minecraft.storagedrawers.block.framed;
 
 import com.jaquadro.minecraft.storagedrawers.api.framing.FrameMaterial;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityTrim;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
@@ -13,8 +16,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockFramedTrim extends BlockTrim implements EntityBlock, IFramedBlock
 {
@@ -32,6 +40,26 @@ public class BlockFramedTrim extends BlockTrim implements EntityBlock, IFramedBl
         CompoundTag tag = stack.getOrCreateTag();
         blockEntity.material().read(tag);
         blockEntity.setChanged();
+    }
+
+    @Override
+    @NotNull
+    public List<ItemStack> getDrops (@NotNull BlockState state, LootParams.Builder builder) {
+        List<ItemStack> items = new ArrayList<>();
+        items.add(getMainDrop(state, (BlockEntityTrim)builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY)));
+        return items;
+    }
+
+    protected ItemStack getMainDrop (BlockState state, BlockEntityTrim tile) {
+        ItemStack drop = new ItemStack(this);
+        if (tile == null)
+            return drop;
+
+        CompoundTag data = drop.getOrCreateTag();
+        tile.material().write(data);
+        drop.setTag(data);
+
+        return drop;
     }
 
     @Nullable
