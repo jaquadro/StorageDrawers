@@ -2,9 +2,10 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawersFramed;
+import com.jaquadro.minecraft.storagedrawers.block.BlockFramedStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
-import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMeta;
+import com.jaquadro.minecraft.storagedrawers.block.BlockFramedTrim;
+import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMetaFacingSized;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -105,12 +106,14 @@ public final class ModItems
 
         register.register(blockHolder.getId().getPath(), () -> {
             Block block = blockHolder.get();
-            if (block instanceof BlockMeta)
+            if (block instanceof BlockMetaFacingSized)
                 return null;
-            if (block instanceof BlockStandardDrawersFramed) {
+            if (block instanceof BlockFramedStandardDrawers) {
                 return new ItemFramedDrawers(block, new Item.Properties());
             } else if (block instanceof BlockDrawers) {
                 return new ItemDrawers(block, new Item.Properties());
+            } else if (block instanceof BlockFramedTrim) {
+                return new ItemFramedTrim(block, new Item.Properties());
             } else if (block instanceof BlockTrim) {
                 return new ItemTrim(block, new Item.Properties());
             } else {

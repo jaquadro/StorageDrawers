@@ -1,12 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
-import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawersFramed;
+import com.jaquadro.minecraft.storagedrawers.api.framing.FrameMaterial;
+import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedSourceBlock;
+import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerFramingTable;
-import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemFramedDrawers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -106,7 +106,7 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
             return;
 
         switch (slot) {
-            case SLOT_INPUT -> inputStack = stack;
+            case SLOT_INPUT -> setInputItem(stack);
             case SLOT_FRONT -> materialData.setFront(stack);
             case SLOT_SIDE -> materialData.setSide(stack);
             case SLOT_TRIM -> materialData.setTrim(stack);
@@ -114,6 +114,54 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
 
         rebuildResult();
         setChanged();
+    }
+
+    private void setInputItem (ItemStack stack) {
+        if (level != null && !stack.isEmpty() && stack.getItem() instanceof BlockItem blockItem) {
+            Block block = blockItem.getBlock();
+            if (block instanceof IFramedBlock fb) {
+                MaterialData data = new MaterialData();
+                data.read(stack.getOrCreateTag());
+
+                if (fb.supportsFrameMaterial(FrameMaterial.SIDE)) {
+                    if (!materialData.getSide().isEmpty() && !data.getSide().isEmpty()) {
+                        resultStack = stack;
+                        return;
+                    }
+                }
+
+                if (fb.supportsFrameMaterial(FrameMaterial.TRIM)) {
+                    if (!materialData.getTrim().isEmpty() && !data.getTrim().isEmpty()) {
+                        resultStack = stack;
+                        return;
+                    }
+                }
+
+                if (fb.supportsFrameMaterial(FrameMaterial.FRONT)) {
+                    if (!materialData.getFront().isEmpty() && !data.getFront().isEmpty()) {
+                        resultStack = stack;
+                        return;
+                    }
+                }
+
+                ItemStack source = data.getFrameBase();
+                if (!source.isEmpty()) {
+                    source.setTag(stack.getOrCreateTag().copy());
+                    MaterialData empty = new MaterialData();
+                    empty.write(source.getTag());
+
+                    inputStack = source;
+
+                    materialData.setSide(fb.supportsFrameMaterial(FrameMaterial.SIDE) ? data.getSide() : ItemStack.EMPTY);
+                    materialData.setTrim(fb.supportsFrameMaterial(FrameMaterial.TRIM) ? data.getTrim() : ItemStack.EMPTY);
+                    materialData.setFront(fb.supportsFrameMaterial(FrameMaterial.FRONT) ? data.getFront() : ItemStack.EMPTY);
+
+                    return;
+                }
+            }
+        }
+
+        inputStack = stack;
     }
 
     private void rebuildResult () {
@@ -129,19 +177,12 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
 
         if (!target.isEmpty() && target.getItem() instanceof BlockItem blockItem) {
             Block block = blockItem.getBlock();
-            if (block instanceof BlockStandardDrawersFramed) {
-                BlockState state = block.defaultBlockState();
+            if (block instanceof IFramedSourceBlock fsb) {
                 if (matSide.isEmpty())
                     resultStack = ItemStack.EMPTY;
                 else
-                    resultStack = ItemFramedDrawers.makeItemStack(state, 1, matSide, matTrim, matFront);
+                    resultStack = fsb.makeFramedItem(target, matSide, matTrim, matFront);
             }
-            /*else if (block instanceof BlockTrimCustom) {
-                if (!matSide.isEmpty()) {
-                    craftResult.setInventorySlotContents(0, ItemCustomTrim.makeItemStack(block, 1, matSide, matTrim));
-                    return;
-                }
-            }*/
         }
     }
 
@@ -189,14 +230,15 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
         return tag;
     }
 
-    public static boolean isItemValidDrawer (ItemStack stack) {
+    public static boolean isItemValidTarget (ItemStack stack) {
         if (stack.isEmpty())
             return false;
 
         if (!(stack.getItem() instanceof BlockItem blockItem))
             return false;
 
-        return blockItem.getBlock() instanceof BlockStandardDrawersFramed;
+        return blockItem.getBlock() instanceof IFramedSourceBlock
+            || blockItem.getBlock() instanceof IFramedBlock;
     }
 
     public static boolean isItemValidMaterial (ItemStack stack) {

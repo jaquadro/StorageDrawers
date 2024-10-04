@@ -29,7 +29,7 @@ public class ItemFramedDrawers extends ItemDrawers
         return true;
     }
 
-    public static ItemStack makeItemStack (BlockState blockState, int count, ItemStack matSide, ItemStack matTrim, ItemStack matFront) {
+    /*public static ItemStack makeItemStack (BlockState blockState, int count, ItemStack matSide, ItemStack matTrim, ItemStack matFront) {
         Block block = blockState.getBlock();
         Item item = Item.byBlock(block);
         if (!(item instanceof ItemFramedDrawers))
@@ -43,5 +43,5 @@ public class ItemFramedDrawers extends ItemDrawers
         stack.setTag(tag);
 
         return stack;
-    }
+    }*/
 }

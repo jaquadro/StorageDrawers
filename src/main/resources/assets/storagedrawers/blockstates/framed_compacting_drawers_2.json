@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "facing=north,slots=open1": { "model": "storagedrawers:block/full_compdrawers_2_open1" },
+        "facing=south,slots=open1": { "model": "storagedrawers:block/full_compdrawers_2_open1", "y": 180 },
+        "facing=west,slots=open1": { "model": "storagedrawers:block/full_compdrawers_2_open1", "y": 270 },
+        "facing=east,slots=open1": { "model": "storagedrawers:block/full_compdrawers_2_open1", "y": 90 },
+        "facing=north,slots=open2": { "model": "storagedrawers:block/full_compdrawers_2_open2" },
+        "facing=south,slots=open2": { "model": "storagedrawers:block/full_compdrawers_2_open2", "y": 180 },
+        "facing=west,slots=open2": { "model": "storagedrawers:block/full_compdrawers_2_open2", "y": 270 },
+        "facing=east,slots=open2": { "model": "storagedrawers:block/full_compdrawers_2_open2", "y": 90 }
+    }
+}

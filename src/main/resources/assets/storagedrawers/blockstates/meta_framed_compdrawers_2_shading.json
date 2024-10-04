@@ -1,0 +1,20 @@
+{
+    "variants": {
+        "facing=north,half=false,slots=open1": { "model": "storagedrawers:block/framed/framed_full_compdrawers_2_front_shading_open1" },
+        "facing=east,half=false,slots=open1": { "model": "storagedrawers:block/framed/framed_full_compdrawers_2_front_shading_open1", "y": 90 },
+        "facing=south,half=false,slots=open1": { "model": "storagedrawers:block/framed/framed_full_compdrawers_2_front_shading_open1", "y": 180 },
+        "facing=west,half=false,slots=open1": { "model": "storagedrawers:block/framed/framed_full_compdrawers_2_front_shading_open1", "y": 270 },
+        "facing=north,half=true,slots=open1": { "model": "storagedrawers:block/framed/framed_half_compdrawers_2_front_shading_open1" },
+        "facing=east,half=true,slots=open1": { "model": "storagedrawers:block/framed/framed_half_compdrawers_2_front_shading_open1", "y": 90 },
+        "facing=south,half=true,slots=open1": { "model": "storagedrawers:block/framed/framed_half_compdrawers_2_front_shading_open1", "y": 180 },
+        "facing=west,half=true,slots=open1": { "model": "storagedrawers:block/framed/framed_half_compdrawers_2_front_shading_open1", "y": 270 },
+        "facing=north,half=false,slots=open2": { "model": "storagedrawers:block/framed/framed_full_compdrawers_2_front_shading_open2" },
+        "facing=east,half=false,slots=open2": { "model": "storagedrawers:block/framed/framed_full_compdrawers_2_front_shading_open2", "y": 90 },
+        "facing=south,half=false,slots=open2": { "model": "storagedrawers:block/framed/framed_full_compdrawers_2_front_shading_open2", "y": 180 },
+        "facing=west,half=false,slots=open2": { "model": "storagedrawers:block/framed/framed_full_compdrawers_2_front_shading_open2", "y": 270 },
+        "facing=north,half=true,slots=open2": { "model": "storagedrawers:block/framed/framed_half_compdrawers_2_front_shading_open2" },
+        "facing=east,half=true,slots=open2": { "model": "storagedrawers:block/framed/framed_half_compdrawers_2_front_shading_open2", "y": 90 },
+        "facing=south,half=true,slots=open2": { "model": "storagedrawers:block/framed/framed_half_compdrawers_2_front_shading_open2", "y": 180 },
+        "facing=west,half=true,slots=open2": { "model": "storagedrawers:block/framed/framed_half_compdrawers_2_front_shading_open2", "y": 270 }
+    }
+}

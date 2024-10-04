@@ -1,0 +1,27 @@
+{
+    "textures": {
+        "mat": "storagedrawers:block/base/base_oak",
+        "particle": "storagedrawers:block/base/base_oak"
+    },
+    "elements": [
+        {
+            "from": [1, 9, 1],
+            "to": [15, 15, 2],
+            "faces": {
+                "north": {"uv": [1, 9, 15, 15], "texture": "#mat"}
+            }
+        }, {
+            "from": [1, 1, 1],
+            "to": [7, 7, 2],
+            "faces": {
+                "north": {"uv": [1, 1, 7, 7], "texture": "#mat"}
+            }
+        }, {
+            "from": [9, 1, 1],
+            "to": [15, 7, 2],
+            "faces": {
+                "north": {"uv": [9, 1, 15, 7], "texture": "#mat"}
+            }
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "textures": {
+        "mat": "storagedrawers:block/overlay/shading_comp2_open1",
+        "particle": "storagedrawers:block/overlay/shading_comp2_open1"
+    },
+    "elements": [
+        {
+            "from": [1, 1, 0.99],
+            "to": [15, 15, 2],
+            "faces": {
+                "north": {"uv": [1, 1, 15, 15], "texture": "#mat"}
+            }
+        }
+    ]
+}

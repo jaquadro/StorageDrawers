@@ -1,14 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.jaquadro.minecraft.storagedrawers.block.*;
-import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMeta;
-import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMetaSized;
+import com.jaquadro.minecraft.storagedrawers.block.meta.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
@@ -95,7 +94,7 @@ public final class ModBlocks
         WARPED_HALF_DRAWERS_2 = registerWoodenDrawerBlock(modLoc("warped"), 2, true),
         WARPED_HALF_DRAWERS_4 = registerWoodenDrawerBlock(modLoc("warped"), 4, true);
 
-    public static final RegistryObject<BlockStandardDrawersFramed>
+    public static final RegistryObject<BlockFramedStandardDrawers>
         FRAMED_FULL_DRAWERS_1 = registerFramedDrawerBlock("framed_full_drawers_1", 1, false),
         FRAMED_FULL_DRAWERS_2 = registerFramedDrawerBlock("framed_full_drawers_2", 2, false),
         FRAMED_FULL_DRAWERS_4 = registerFramedDrawerBlock("framed_full_drawers_4", 4, false),
@@ -107,6 +106,11 @@ public final class ModBlocks
     public static final RegistryObject<BlockCompDrawers> COMPACTING_DRAWERS_3 = registerCompactingDrawerBlock("compacting_drawers_3", 3, false);
     public static final RegistryObject<BlockCompDrawers> COMPACTING_HALF_DRAWERS_2 = registerCompactingDrawerBlock("compacting_half_drawers_2", 2, true);
     public static final RegistryObject<BlockCompDrawers> COMPACTING_HALF_DRAWERS_3 = registerCompactingDrawerBlock("compacting_half_drawers_3", 3, true);
+
+    public static final RegistryObject<BlockFramedCompDrawers> FRAMED_COMPACTING_DRAWERS_2 = registerFramedCompactingDrawerBlock("framed_compacting_drawers_2", 2, false);
+    public static final RegistryObject<BlockFramedCompDrawers> FRAMED_COMPACTING_DRAWERS_3 = registerFramedCompactingDrawerBlock("framed_compacting_drawers_3", 3, false);
+    public static final RegistryObject<BlockFramedCompDrawers> FRAMED_COMPACTING_HALF_DRAWERS_2 = registerFramedCompactingDrawerBlock("framed_compacting_half_drawers_2", 2, true);
+    public static final RegistryObject<BlockFramedCompDrawers> FRAMED_COMPACTING_HALF_DRAWERS_3 = registerFramedCompactingDrawerBlock("framed_compacting_half_drawers_3", 3, true);
 
     public static final RegistryObject<BlockTrim>
         OAK_TRIM = registerTrimBlock(modLoc("oak")),
@@ -121,34 +125,58 @@ public final class ModBlocks
         CRIMSON_TRIM = registerTrimBlock(modLoc("crimson")),
         WARPED_TRIM = registerTrimBlock(modLoc("warped"));
 
+    public static final RegistryObject<BlockFramedTrim> FRAMED_TRIM = registerFramedTrimBlock("framed_trim");
+
     public static final RegistryObject<BlockController> CONTROLLER = registerControllerBlock("controller");
     public static final RegistryObject<BlockSlave> CONTROLLER_SLAVE = registerControllerSlaveBlock("controller_slave");
+
+    public static final RegistryObject<BlockFramedController> FRAMED_CONTROLLER = BLOCK_REGISTER.register("framed_controller",
+        () -> new BlockFramedController(getStoneBlockProperties()));
+    public static final RegistryObject<BlockFramedController> FRAMED_CONTROLLER_IO = BLOCK_REGISTER.register("framed_controller_io",
+        () -> new BlockFramedController(getStoneBlockProperties()));
 
     public static final RegistryObject<BlockFramingTable> FRAMING_TABLE = registerFramingTableBlock("framing_table");
 
     public static final RegistryObject<BlockMeta>
-        META_LOCKED = registerMetaBlock("meta_locked"),
-        META_CLAIMED = registerMetaBlock("meta_claimed"),
-        META_LOCKED_CLAIMED = registerMetaBlock("meta_locked_claimed"),
-        META_VOID = registerMetaBlock("meta_void"),
-        META_SHROUD = registerMetaBlock("meta_shroud"),
-        META_INDICATOR = registerSizedMetaBlock("meta_indicator"),
-        META_COMP_INDICATOR = registerSizedMetaBlock("meta_comp_indicator"),
-        META_PRIORITY_P1 = registerMetaBlock("meta_priority_p1"),
-        META_PRIORITY_P2 = registerMetaBlock("meta_priority_p2"),
-        META_PRIORITY_N1 = registerMetaBlock("meta_priority_n1"),
-        META_PRIORITY_N2 = registerMetaBlock("meta_priority_n2"),
-        META_MISSING_1_1 = registerMetaBlock("meta_missing_slot_1_1"),
-        META_MISSING_2_1 = registerMetaBlock("meta_missing_slot_2_1"),
-        META_MISSING_2_2 = registerMetaBlock("meta_missing_slot_2_2"),
-        META_MISSING_4_1 = registerMetaBlock("meta_missing_slot_4_1"),
-        META_MISSING_4_2 = registerMetaBlock("meta_missing_slot_4_2"),
-        META_MISSING_4_3 = registerMetaBlock("meta_missing_slot_4_3"),
-        META_MISSING_4_4 = registerMetaBlock("meta_missing_slot_4_4"),
-        META_FRAMED_DRAWERS_SIDE = registerSizedMetaBlock("meta_framed_drawers_side"),
-        META_FRAMED_DRAWERS_TRIM = registerSizedMetaBlock("meta_framed_drawers_trim"),
-        META_FRAMED_DRAWERS_FRONT = registerSizedMetaBlock("meta_framed_drawers_front"),
-        META_FRAMED_DRAWERS_SHADING = registerSizedMetaBlock("meta_framed_drawers_shading");
+        META_LOCKED = registerMetaFacingSizedBlock("meta_locked"),
+        META_CLAIMED = registerMetaFacingSizedBlock("meta_claimed"),
+        META_LOCKED_CLAIMED = registerMetaFacingSizedBlock("meta_locked_claimed"),
+        META_VOID = registerMetaFacingSizedBlock("meta_void"),
+        META_SHROUD = registerMetaFacingSizedBlock("meta_shroud"),
+        META_INDICATOR = registerMetaFacingSizedSlottedBlock("meta_indicator"),
+        META_COMP_INDICATOR = registerMetaFacingSizedSlottedBlock("meta_comp_indicator"),
+        META_PRIORITY_P1 = registerMetaFacingSizedBlock("meta_priority_p1"),
+        META_PRIORITY_P2 = registerMetaFacingSizedBlock("meta_priority_p2"),
+        META_PRIORITY_N1 = registerMetaFacingSizedBlock("meta_priority_n1"),
+        META_PRIORITY_N2 = registerMetaFacingSizedBlock("meta_priority_n2"),
+        META_MISSING_1_1 = registerMetaFacingSizedBlock("meta_missing_slot_1_1"),
+        META_MISSING_2_1 = registerMetaFacingSizedBlock("meta_missing_slot_2_1"),
+        META_MISSING_2_2 = registerMetaFacingSizedBlock("meta_missing_slot_2_2"),
+        META_MISSING_4_1 = registerMetaFacingSizedBlock("meta_missing_slot_4_1"),
+        META_MISSING_4_2 = registerMetaFacingSizedBlock("meta_missing_slot_4_2"),
+        META_MISSING_4_3 = registerMetaFacingSizedBlock("meta_missing_slot_4_3"),
+        META_MISSING_4_4 = registerMetaFacingSizedBlock("meta_missing_slot_4_4"),
+        META_FRAMED_DRAWERS_SIDE = registerMetaFacingSizedSlottedBlock("meta_framed_drawers_side"),
+        META_FRAMED_DRAWERS_TRIM = registerMetaFacingSizedSlottedBlock("meta_framed_drawers_trim"),
+        META_FRAMED_DRAWERS_FRONT = registerMetaFacingSizedSlottedBlock("meta_framed_drawers_front"),
+        META_FRAMED_DRAWERS_SHADING = registerMetaFacingSizedSlottedBlock("meta_framed_drawers_shading"),
+        META_FRAMED_TRIM_SIDE = registerMetaBlock("meta_framed_trim_side"),
+        META_FRAMED_TRIM_TRIM = registerMetaBlock("meta_framed_trim_trim"),
+        META_FRAMED_CONTROLLER_SIDE = registerMetaFacingBlock("meta_framed_controller_side"),
+        META_FRAMED_CONTROLLER_TRIM = registerMetaFacingBlock("meta_framed_controller_trim"),
+        META_FRAMED_CONTROLLER_FRONT = registerMetaFacingBlock("meta_framed_controller_front"),
+        META_FRAMED_CONTROLLER_SHADING = registerMetaFacingBlock("meta_framed_controller_shading"),
+        META_FRAMED_CONTROLLER_IO_SIDE = registerMetaBlock("meta_framed_controller_io_side"),
+        META_FRAMED_CONTROLLER_IO_TRIM = registerMetaBlock("meta_framed_controller_io_trim"),
+        META_FRAMED_CONTROLLER_IO_SHADING = registerMetaBlock("meta_framed_controller_io_shading"),
+        META_FRAMED_COMPDRAWERS_2_SIDE = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_2_side"),
+        META_FRAMED_COMPDRAWERS_2_TRIM = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_2_trim"),
+        META_FRAMED_COMPDRAWERS_2_FRONT = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_2_front"),
+        META_FRAMED_COMPDRAWERS_2_SHADING = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_2_shading"),
+        META_FRAMED_COMPDRAWERS_3_SIDE = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_3_side"),
+        META_FRAMED_COMPDRAWERS_3_TRIM = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_3_trim"),
+        META_FRAMED_COMPDRAWERS_3_FRONT = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_3_front"),
+        META_FRAMED_COMPDRAWERS_3_SHADING = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_3_shading");
 
     public static final RegistryObject<BlockKeyButton>
         KEYBUTTON_DRAWER = BLOCK_REGISTER.register("keybutton_drawer",
@@ -177,12 +205,16 @@ public final class ModBlocks
         return register.register(name, () -> new BlockStandardDrawers(drawerCount, halfDepth, getWoodenDrawerBlockProperties()).setMatKey(material));
     }
 
-    static RegistryObject<BlockStandardDrawersFramed> registerFramedDrawerBlock(String name, int drawerCount, boolean halfDepth) {
-        return BLOCK_REGISTER.register(name, () -> (BlockStandardDrawersFramed)new BlockStandardDrawersFramed(drawerCount, halfDepth, getWoodenDrawerBlockProperties()).setMatKey("framed"));
+    static RegistryObject<BlockFramedStandardDrawers> registerFramedDrawerBlock(String name, int drawerCount, boolean halfDepth) {
+        return BLOCK_REGISTER.register(name, () -> (BlockFramedStandardDrawers)new BlockFramedStandardDrawers(drawerCount, halfDepth, getWoodenDrawerBlockProperties()).setMatKey("framed"));
     }
 
     static RegistryObject<BlockCompDrawers> registerCompactingDrawerBlock(String name, int drawerCount, boolean halfDepth) {
         return BLOCK_REGISTER.register(name, () -> new BlockCompDrawers(drawerCount, halfDepth, getStoneDrawerBlockProperties()));
+    }
+
+    static RegistryObject<BlockFramedCompDrawers> registerFramedCompactingDrawerBlock(String name, int drawerCount, boolean halfDepth) {
+        return BLOCK_REGISTER.register(name, () -> new BlockFramedCompDrawers(drawerCount, halfDepth, getStoneDrawerBlockProperties()));
     }
 
     static RegistryObject<BlockTrim> registerTrimBlock(ResourceLocation name) {
@@ -198,6 +230,10 @@ public final class ModBlocks
         return register.register(name, () -> new BlockTrim(getWoodenBlockProperties()).setMatKey(material));
     }
 
+    static RegistryObject<BlockFramedTrim> registerFramedTrimBlock(String name) {
+        return BLOCK_REGISTER.register(name, () -> (BlockFramedTrim)new BlockFramedTrim(getWoodenDrawerBlockProperties()).setMatKey("framed"));
+    }
+
     static RegistryObject<BlockController> registerControllerBlock(String name) {
         return BLOCK_REGISTER.register(name, () -> new BlockController(getStoneBlockProperties()));
     }
@@ -210,14 +246,29 @@ public final class ModBlocks
         return BLOCK_REGISTER.register(name, () -> new BlockFramingTable(getWoodenBlockProperties()));
     }
 
-    static RegistryObject<BlockMeta> registerMetaBlock(String name) {
+    static RegistryObject<BlockMeta> registerMetaBlock (String name) {
         EXCLUDE_ITEMS.add(name);
         return BLOCK_REGISTER.register(name, () -> new BlockMeta(Properties.of().air()));
     }
 
-    static RegistryObject<BlockMeta> registerSizedMetaBlock(String name) {
+    static RegistryObject<BlockMeta> registerMetaFacingBlock (String name) {
         EXCLUDE_ITEMS.add(name);
-        return BLOCK_REGISTER.register(name, () -> new BlockMetaSized(Properties.of().air()));
+        return BLOCK_REGISTER.register(name, () -> new BlockMetaFacing(Properties.of().air()));
+    }
+
+    static RegistryObject<BlockMeta> registerMetaFacingSizedBlock (String name) {
+        EXCLUDE_ITEMS.add(name);
+        return BLOCK_REGISTER.register(name, () -> new BlockMetaFacingSized(Properties.of().air()));
+    }
+
+    static RegistryObject<BlockMeta> registerMetaFacingSizedSlottedBlock (String name) {
+        EXCLUDE_ITEMS.add(name);
+        return BLOCK_REGISTER.register(name, () -> new BlockMetaFacingSizedSlotted(Properties.of().air()));
+    }
+
+    static RegistryObject<BlockMeta> registerMetaFacingSizedOpenBlock (String name) {
+        EXCLUDE_ITEMS.add(name);
+        return BLOCK_REGISTER.register(name, () -> new BlockMetaFacingSizedOpen(Properties.of().air()));
     }
 
     static Properties getWoodenBlockProperties() {
@@ -248,8 +299,8 @@ public final class ModBlocks
         return getBlocksOfType(BlockDrawers.class);
     }
 
-    public static Stream<BlockStandardDrawersFramed> getFramedDrawers() {
-        return getBlocksOfType(BlockStandardDrawersFramed.class);
+    public static Stream<BlockFramedStandardDrawers> getFramedDrawers() {
+        return getBlocksOfType(BlockFramedStandardDrawers.class);
     }
 
     public static Stream<BlockController> getControllers() {
@@ -270,6 +321,14 @@ public final class ModBlocks
 
     public static <BD extends BlockDrawers> Stream<BD> getDrawersOfTypeAndSizeAndDepth(Class<BD> drawerClass, int size, boolean halfDepth) {
         return getDrawersOfTypeAndSize(drawerClass, size).filter(blockDrawers -> blockDrawers.isHalfDepth() == halfDepth);
+    }
+
+    public static Stream<BlockFramedTrim> getFramedTrim() {
+        return getBlocksOfType(BlockFramedTrim.class);
+    }
+
+    public static Stream<IFramedBlock> getFramedBlocks() {
+        return ForgeRegistries.BLOCKS.getValues().stream().filter(IFramedBlock.class::isInstance).map(IFramedBlock.class::cast);
     }
 
     private static boolean predFalse (BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {

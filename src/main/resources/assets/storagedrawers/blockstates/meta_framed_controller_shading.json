@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "storagedrawers:block/framed/framed_controller_shading" },
+        "facing=east": { "model": "storagedrawers:block/framed/framed_controller_shading", "y": 90 },
+        "facing=south": { "model": "storagedrawers:block/framed/framed_controller_shading", "y": 180 },
+        "facing=west": { "model": "storagedrawers:block/framed/framed_controller_shading", "y": 270 }
+    }
+}

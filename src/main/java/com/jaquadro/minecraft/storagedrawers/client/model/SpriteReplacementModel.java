@@ -48,8 +48,8 @@ public class SpriteReplacementModel extends ParentModel
         String key = cacheKey(state, dir);
         List<BakedQuad> list = cache.getOrDefault(key, null);
         if (list == null) {
-            list = super.getQuads(state, dir, rand);
-            list.replaceAll(bakedQuad -> new ReplacementBakedQuad(bakedQuad, sprite));
+            list = super.getQuads(state, dir, rand).stream().map(
+                bakedQuad -> (BakedQuad)new ReplacementBakedQuad(bakedQuad, sprite)).toList();
             cache.put(key, list);
         }
 

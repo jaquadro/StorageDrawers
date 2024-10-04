@@ -1,11 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawersFramed;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityFramingTable;
 import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemFramedDrawers;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,14 +10,10 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,44 +91,6 @@ public class ContainerFramingTable extends AbstractContainerMenu
             hotbarSlots.add(addSlot(new Slot(playerInventory, i, InventoryX + i * 18, HotbarY)));
 
         slotsChanged(tableInventory);
-    }
-
-    protected static void slotChangedCraftingGrid(AbstractContainerMenu menu, Level level, Player player, Container tableContainer, Container resultContainer) {
-        if (level.isClientSide)
-            return;
-
-        ItemStack target = tableContainer.getItem(BlockEntityFramingTable.SLOT_INPUT);
-        ItemStack matSide = tableContainer.getItem(BlockEntityFramingTable.SLOT_SIDE);
-        ItemStack matTrim = tableContainer.getItem(BlockEntityFramingTable.SLOT_TRIM);
-        ItemStack matFront = tableContainer.getItem(BlockEntityFramingTable.SLOT_FRONT);
-
-        if (!target.isEmpty() && target.getItem() instanceof BlockItem blockItem) {
-            Block block = blockItem.getBlock();
-            if (block instanceof BlockStandardDrawersFramed) {
-
-                BlockState state = block.defaultBlockState();
-                if (!matSide.isEmpty()) {
-                    resultContainer.setItem(BlockEntityFramingTable.SLOT_RESULT,
-                        ItemFramedDrawers.makeItemStack(state, 1, matSide, matTrim, matFront));
-                    return;
-                }
-            }
-            /*else if (block instanceof BlockTrimCustom) {
-                if (!matSide.isEmpty()) {
-                    craftResult.setInventorySlotContents(0, ItemCustomTrim.makeItemStack(block, 1, matSide, matTrim));
-                    return;
-                }
-            }*/
-        }
-
-        resultContainer.setItem(BlockEntityFramingTable.SLOT_RESULT, ItemStack.EMPTY);
-    }
-
-    @Override
-    public void slotsChanged (Container container) {
-        this.access.execute((level, pos) -> {
-            slotChangedCraftingGrid(this, level, player, tableInventory, craftResult);
-        });
     }
 
     /*

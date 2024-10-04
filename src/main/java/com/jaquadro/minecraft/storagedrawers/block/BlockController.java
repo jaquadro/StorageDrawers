@@ -1,11 +1,15 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedSourceBlock;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
+import com.jaquadro.minecraft.storagedrawers.block.tile.util.FrameHelper;
 import com.jaquadro.minecraft.storagedrawers.config.CommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
@@ -13,12 +17,14 @@ import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeRemote;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -35,7 +41,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 
-public class BlockController extends HorizontalDirectionalBlock implements INetworked, EntityBlock
+public class BlockController extends HorizontalDirectionalBlock implements INetworked, EntityBlock, IFramedSourceBlock
 {
     public BlockController (BlockBehaviour.Properties properties) {
         super(properties);
@@ -149,5 +155,10 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
     @Override
     public BlockEntityController newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
         return new BlockEntityController(pos, state);
+    }
+
+    @Override
+    public ItemStack makeFramedItem (ItemStack source, ItemStack matSide, ItemStack matTrim, ItemStack matFront) {
+        return FrameHelper.makeFramedItem(ModBlocks.FRAMED_CONTROLLER.get(), source, matSide, matTrim, matFront);
     }
 }

@@ -1,10 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
+import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
+import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedMaterials;
 import com.jaquadro.minecraft.storagedrawers.api.storage.Drawers;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemHandler;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -23,16 +26,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
+public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup, IFramedBlockEntity
 {
     private static final int[] drawerSlots = new int[]{0};
 
     public final ControllerData controllerData = new ControllerData();
+    public final MaterialData materialData = new MaterialData();
 
     public BlockEntitySlave(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
 
         injectData(controllerData);
+        injectPortableData(materialData);
     }
 
     public BlockEntitySlave(BlockPos pos, BlockState state) {
@@ -124,6 +129,11 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup
         capabilityItemHandler.invalidate();
         capabilityItemRepository.invalidate();
         capabilityGroup.invalidate();
+    }
+
+    @Override
+    public MaterialData material () {
+        return materialData;
     }
 
     private class ItemRepositoryProxy implements IItemRepository

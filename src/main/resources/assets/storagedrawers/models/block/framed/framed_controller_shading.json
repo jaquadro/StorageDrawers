@@ -1,0 +1,24 @@
+{
+    "textures": {
+        "front": "storagedrawers:block/overlay/controller_front",
+        "side": "storagedrawers:block/overlay/controller_side",
+        "particle": "storagedrawers:block/overlay/controller_front"
+    },
+    "elements": [
+        {
+            "from": [1, 1, 0.99],
+            "to": [15, 15, 2],
+            "faces": {
+                "north": {"uv": [1, 1, 15, 15], "texture": "#front", "cull":  "north"}
+            }
+        }, {
+            "from": [-0.01, -0.01, -0.01],
+            "to": [16.01, 16.01, 16.01],
+            "faces": {
+                "south": {"uv": [0, 0, 16, 16], "texture": "#side", "cull":  "south"},
+                "east": {"uv": [0, 0, 16, 16], "texture": "#side", "cull":  "east"},
+                "west": {"uv": [0, 0, 16, 16], "texture": "#side", "cull":  "west"}
+            }
+        }
+    ]
+}

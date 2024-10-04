@@ -1,9 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
+import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedSourceBlock;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersComp;
+import com.jaquadro.minecraft.storagedrawers.block.tile.util.FrameHelper;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,7 +22,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockCompDrawers extends BlockDrawers implements INetworked
+public class BlockCompDrawers extends BlockDrawers implements INetworked, IFramedSourceBlock
 {
     public static final EnumProperty<EnumCompDrawer> SLOTS = EnumProperty.create("slots", EnumCompDrawer.class);
 
@@ -90,5 +94,18 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked
     @Override
     public BlockEntityDrawers newBlockEntity (@NotNull BlockPos pos, @NotNull BlockState state) {
         return BlockEntityDrawersComp.createEntity(getDrawerCount(), pos, state);
+    }
+
+    @Override
+    public ItemStack makeFramedItem (ItemStack source, ItemStack matSide, ItemStack matTrim, ItemStack matFront) {
+        IFramedBlock frameBlock = switch(getDrawerCount()) {
+            case 2 -> isHalfDepth() ? ModBlocks.FRAMED_COMPACTING_HALF_DRAWERS_2.get() : ModBlocks.FRAMED_COMPACTING_DRAWERS_2.get();
+            case 3 -> isHalfDepth() ? ModBlocks.FRAMED_COMPACTING_HALF_DRAWERS_3.get() : ModBlocks.FRAMED_COMPACTING_DRAWERS_3.get();
+            default -> null;
+        };
+        if (frameBlock == null)
+            return ItemStack.EMPTY;
+
+        return FrameHelper.makeFramedItem(frameBlock, source, matSide, matTrim, matFront);
     }
 }

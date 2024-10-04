@@ -1,16 +1,18 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
+import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedSourceBlock;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.block.tile.util.FrameHelper;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -23,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class BlockStandardDrawers extends BlockDrawers
+public class BlockStandardDrawers extends BlockDrawers implements IFramedSourceBlock
 {
     private String matKey = null;
     private String matNamespace = StorageDrawers.MOD_ID;
@@ -183,5 +185,19 @@ public class BlockStandardDrawers extends BlockDrawers
         }
 
         return true;
+    }
+
+    @Override
+    public ItemStack makeFramedItem (ItemStack source, ItemStack matSide, ItemStack matTrim, ItemStack matFront) {
+        IFramedBlock frameBlock = switch(getDrawerCount()) {
+            case 1 -> isHalfDepth() ? ModBlocks.FRAMED_HALF_DRAWERS_1.get() : ModBlocks.FRAMED_FULL_DRAWERS_1.get();
+            case 2 -> isHalfDepth() ? ModBlocks.FRAMED_HALF_DRAWERS_2.get() : ModBlocks.FRAMED_FULL_DRAWERS_2.get();
+            case 4 -> isHalfDepth() ? ModBlocks.FRAMED_HALF_DRAWERS_4.get() : ModBlocks.FRAMED_FULL_DRAWERS_4.get();
+            default -> null;
+        };
+        if (frameBlock == null)
+            return ItemStack.EMPTY;
+
+        return FrameHelper.makeFramedItem(frameBlock, source, matSide, matTrim, matFront);
     }
 }

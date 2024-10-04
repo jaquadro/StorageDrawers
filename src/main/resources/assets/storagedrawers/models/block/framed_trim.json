@@ -1,0 +1,7 @@
+{
+    "render_type": "minecraft:cutout_mipped",
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "storagedrawers:block/drawers_raw_front_1"
+    }
+}

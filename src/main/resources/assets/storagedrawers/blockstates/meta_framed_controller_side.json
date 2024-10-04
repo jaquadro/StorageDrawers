@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "storagedrawers:block/framed/framed_full_drawers_sides" },
+        "facing=east": { "model": "storagedrawers:block/framed/framed_full_drawers_sides", "y": 90 },
+        "facing=south": { "model": "storagedrawers:block/framed/framed_full_drawers_sides", "y": 180 },
+        "facing=west": { "model": "storagedrawers:block/framed/framed_full_drawers_sides", "y": 270 }
+    }
+}

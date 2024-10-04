@@ -29,6 +29,7 @@ public final class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<BlockEntityController>> CONTROLLER = registerBlockEntityType("controller", BlockEntityController::new, ModBlocks.getControllers());
     public static final RegistryObject<BlockEntityType<BlockEntitySlave>> CONTROLLER_SLAVE = registerBlockEntityType("controller_slave", BlockEntitySlave::new, ModBlocks.getControllerSlaves());
     public static final RegistryObject<BlockEntityType<BlockEntityFramingTable>> FRAMING_TABLE = registerBlockEntityType("framing_table", BlockEntityFramingTable::new, ModBlocks.FRAMING_TABLE);
+    public static final RegistryObject<BlockEntityType<BlockEntityTrim>> TRIM = registerTrimBlockEntityType("trim", BlockEntityTrim::new);
 
     private ModBlockEntities() {}
 
@@ -36,6 +37,10 @@ public final class ModBlockEntities {
         RegistryObject<BlockEntityType<BE>> ro = registerBlockEntityType(name, blockEntitySupplier, ModBlocks.getDrawersOfTypeAndSize(drawerBlockClass, size));
         BLOCK_ENTITY_TYPES_WITH_RENDERERS.add(ro);
         return ro;
+    }
+
+    private static <BE extends BlockEntityTrim> RegistryObject<BlockEntityType<BE>> registerTrimBlockEntityType(String name, BlockEntitySupplier<BE> blockEntitySupplier) {
+        return registerBlockEntityType(name, blockEntitySupplier, ModBlocks.getFramedTrim());
     }
 
     private static <BE extends BaseBlockEntity, B extends Block> RegistryObject<BlockEntityType<BE>> registerBlockEntityType(String name, BlockEntitySupplier<BE> blockEntitySupplier, Stream<B> blockStream) {
