@@ -1,7 +1,7 @@
 package com.texelsaurus;
 
 object Versions {
-    const val mod = "13.5.0"
+    const val mod = "13.6.0"
     const val java = "21"
     const val minecraft = "1.21"
     const val minecraftRange = "[1.21,1.21.1]"

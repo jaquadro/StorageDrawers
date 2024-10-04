@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
+import com.jaquadro.minecraft.storagedrawers.util.ComponentUtil;
 import com.texelsaurus.minecraft.chameleon.util.WorldUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -52,7 +53,8 @@ public class ItemKey extends Item
 
     @Override
     public void appendHoverText (ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("").append(getDescription()).withStyle(ChatFormatting.GRAY));
+        super.appendHoverText(stack, context, tooltip, flag);
+        ComponentUtil.appendSplitDescription(tooltip, this);
     }
 
     @NotNull

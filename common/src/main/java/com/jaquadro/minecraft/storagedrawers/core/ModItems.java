@@ -51,6 +51,11 @@ public final class ModItems
         SHROUD_KEY = ITEMS.register("shroud_key", () -> new ItemShroudKey(new Item.Properties())),
         PERSONAL_KEY = ITEMS.register("personal_key", () -> new ItemPersonalKey(null, new Item.Properties())),
         PERSONAL_KEY_COFH = ITEMS.register("personal_key_cofh", () -> new ItemPersonalKey("cofh", new Item.Properties())),
+        PRIORITY_KEY = ITEMS.register("priority_key", () -> new ItemPriorityKey(0, 1, new Item.Properties())),
+        PRIORITY_KEY_P1 = ITEMS.register("priority_key_p1", () -> new ItemPriorityKey(1, 2, new Item.Properties())),
+        PRIORITY_KEY_P2 = ITEMS.register("priority_key_p2", () -> new ItemPriorityKey(2, -1, new Item.Properties())),
+        PRIORITY_KEY_N1 = ITEMS.register("priority_key_n1", () -> new ItemPriorityKey(-1, -2, new Item.Properties())),
+        PRIORITY_KEY_N2 = ITEMS.register("priority_key_n2", () -> new ItemPriorityKey(-2, 0, new Item.Properties())),
         DRAWER_PULLER = ITEMS.register("drawer_puller", () -> new ItemDrawerPuller(new Item.Properties()));
 
     public static final RegistryEntry<? extends ItemKeyring>
@@ -60,16 +65,30 @@ public final class ModItems
         KEYRING_SHROUD = ITEMS.register("keyring_shroud", () -> new ItemKeyring(SHROUD_KEY, new Item.Properties().stacksTo(1))),
         KEYRING_PERSONAL = ITEMS.register("keyring_personal", () -> new ItemKeyring(PERSONAL_KEY, new Item.Properties().stacksTo(1))),
         KEYRING_PERSONAL_COFH = ITEMS.register("keyring_personal_cofh", () -> new ItemKeyring(PERSONAL_KEY_COFH, new Item.Properties().stacksTo(1))),
+        KEYRING_PRIORITY = ITEMS.register("keyring_priority", () -> new ItemKeyring(PRIORITY_KEY, new Item.Properties().stacksTo(1))),
+        KEYRING_PRIORITY_P1 = ITEMS.register("keyring_priority_p1", () -> new ItemKeyring(PRIORITY_KEY_P1, new Item.Properties().stacksTo(1))),
+        KEYRING_PRIORITY_P2 = ITEMS.register("keyring_priority_p2", () -> new ItemKeyring(PRIORITY_KEY_P2, new Item.Properties().stacksTo(1))),
+        KEYRING_PRIORITY_N1 = ITEMS.register("keyring_priority_n1", () -> new ItemKeyring(PRIORITY_KEY_N1, new Item.Properties().stacksTo(1))),
+        KEYRING_PRIORITY_N2 = ITEMS.register("keyring_priority_n2", () -> new ItemKeyring(PRIORITY_KEY_N2, new Item.Properties().stacksTo(1))),
         KEYRING_PULLER = ITEMS.register("keyring_puller", () -> new ItemKeyring(DRAWER_PULLER, new Item.Properties().stacksTo(1)));
 
-    private ModItems() { }
+    private ModItems () { }
 
-    public static void init() {
+    public static void init () {
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(PRIORITY_KEY_N1);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(PRIORITY_KEY_N2);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(PRIORITY_KEY_P1);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(PRIORITY_KEY_P2);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PERSONAL);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PERSONAL_COFH);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PRIORITY);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PRIORITY_P1);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PRIORITY_P2);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PRIORITY_N1);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PRIORITY_N2);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PULLER);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(DETACHED_DRAWER_FULL);
 
@@ -82,7 +101,7 @@ public final class ModItems
         ITEMS.init();
     }
 
-    static void registerBlock(ChameleonRegistry<Item> register, RegistryEntry<? extends Block> blockHolder) {
+    static void registerBlock (ChameleonRegistry<Item> register, RegistryEntry<? extends Block> blockHolder) {
         if (blockHolder == null)
             return;
 
@@ -100,15 +119,15 @@ public final class ModItems
         });
     }
 
-    private static <B extends Item> Stream<B> getItemsOfType(Class<B> itemClass) {
+    private static <B extends Item> Stream<B> getItemsOfType (Class<B> itemClass) {
         return BuiltInRegistries.ITEM.stream().filter(itemClass::isInstance).map(itemClass::cast);
     }
 
-    public static Stream<ItemKey> getKeys() {
+    public static Stream<ItemKey> getKeys () {
         return getItemsOfType(ItemKey.class);
     }
 
-    public static Stream<ItemKeyring> getKeyrings() {
+    public static Stream<ItemKeyring> getKeyrings () {
         return getItemsOfType(ItemKeyring.class);
     }
 }

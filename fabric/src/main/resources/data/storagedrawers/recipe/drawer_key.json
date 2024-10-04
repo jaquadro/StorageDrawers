@@ -6,7 +6,7 @@
         " X"
     ],
     "key": {
-        "-": { "tag": "c:nuggets/gold" },
+        "-": { "item": "minecraft:gold_nugget" },
         "#": { "tag": "c:ingots/gold" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },

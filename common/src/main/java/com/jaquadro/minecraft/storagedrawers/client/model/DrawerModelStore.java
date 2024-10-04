@@ -26,6 +26,10 @@ public class DrawerModelStore
         SHROUD("shroud"),
         INDICATOR("indicator"),
         INDICATOR_COMP("indicator_comp"),
+        PRIORITY_P1("priority_p1"),
+        PRIORITY_P2("priority_p2"),
+        PRIORITY_N1("priority_n1"),
+        PRIORITY_N2("priority_n2"),
         MISSING_1("missing_1"),
         MISSING_2("missing_2"),
         MISSING_3("missing_3"),
@@ -33,11 +37,11 @@ public class DrawerModelStore
 
         private String name;
 
-        DynamicPart(String name) {
+        DynamicPart (String name) {
             this.name = name;
         }
 
-        public String getName() {
+        public String getName () {
             return name;
         }
     }
@@ -83,6 +87,11 @@ public class DrawerModelStore
             addOverlay(getVariant(DynamicPart.INDICATOR, dir, half, 4), new ModelResourceLocation(ModConstants.loc("meta_indicator"), getVariant(dir, half, 4)));
             addOverlay(getVariant(DynamicPart.INDICATOR_COMP, dir, half, 2), new ModelResourceLocation(ModConstants.loc("meta_comp_indicator"), getVariant(dir, half, 2)));
             addOverlay(getVariant(DynamicPart.INDICATOR_COMP, dir, half, 3), new ModelResourceLocation(ModConstants.loc("meta_comp_indicator"), getVariant(dir, half, 3)));
+
+            addOverlay(getVariant(DynamicPart.PRIORITY_P1, dir, half), new ModelResourceLocation(ModConstants.loc("meta_priority_p1"), getVariant(dir, half)));
+            addOverlay(getVariant(DynamicPart.PRIORITY_P2, dir, half), new ModelResourceLocation(ModConstants.loc("meta_priority_p2"), getVariant(dir, half)));
+            addOverlay(getVariant(DynamicPart.PRIORITY_N1, dir, half), new ModelResourceLocation(ModConstants.loc("meta_priority_n1"), getVariant(dir, half)));
+            addOverlay(getVariant(DynamicPart.PRIORITY_N2, dir, half), new ModelResourceLocation(ModConstants.loc("meta_priority_n2"), getVariant(dir, half)));
 
             addOverlay(getVariant(DynamicPart.MISSING_1, dir, half, 1), new ModelResourceLocation(ModConstants.loc("meta_missing_slot_1_1"), getVariant(dir, half)));
             addOverlay(getVariant(DynamicPart.MISSING_1, dir, half, 2), new ModelResourceLocation(ModConstants.loc("meta_missing_slot_2_1"), getVariant(dir, half)));

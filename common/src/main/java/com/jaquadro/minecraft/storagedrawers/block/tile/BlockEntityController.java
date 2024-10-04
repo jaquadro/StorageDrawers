@@ -68,6 +68,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
         public int index;
         public int priority;
+        public int priorityGroup;
 
         public SlotRecord (IDrawerGroup group, BlockPos coord, int slot) {
             this.group = group;
@@ -77,22 +78,29 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
         @Override
         public int compareTo (SlotRecord other) {
-            int diff = priority - other.priority;
-            if (diff == 0) {
-                diff = coord.compareTo(other.coord);
-                if (diff == 0)
-                    return index - other.index;
-
+            int diff = other.priorityGroup - priorityGroup;
+            if (diff != 0)
                 return diff;
-            }
 
-            return diff;
+            diff = priority - other.priority;
+            if (diff != 0)
+                return diff;
+            diff = coord.compareTo(other.coord);
+            if (diff != 0)
+                return diff;
+
+            return index - other.index;
         }
     }
 
     private final Queue<BlockPos> searchQueue = new LinkedList<>();
     private final Set<BlockPos> searchDiscovered = new HashSet<>();
-    private final Comparator<SlotRecord> slotRecordComparator = Comparator.comparingInt(o -> o.priority);
+    private final Comparator<SlotRecord> slotRecordComparator = (o1, o2) -> {
+        if (o1.priorityGroup != o2.priorityGroup)
+            return o2.priorityGroup - o1.priorityGroup;
+        else
+            return o1.priority - o2.priority;
+    };
 
     private IDrawerAttributes getAttributes (Object obj) {
         IDrawerAttributes attrs = EmptyDrawerAttributes.EMPTY;
@@ -102,6 +110,12 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             attrs = EmptyDrawerAttributes.EMPTY;
 
         return attrs;
+    }
+
+    private int getSlotPriorityGroup (SlotRecord record) {
+        IDrawerGroup group = getGroupForSlotRecord(record);
+        IDrawerAttributes attrs = getAttributes(group);
+        return attrs.getPriority();
     }
 
     private int getSlotPriority (SlotRecord record) {
@@ -457,6 +471,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             if (record != null) {
                 record.index = i;
                 record.priority = getSlotPriority(record);
+                record.priorityGroup = getSlotPriorityGroup(record);
             }
         }
     }

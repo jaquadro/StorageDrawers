@@ -588,6 +588,11 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         if (tag.contains("Sec"))
             securityKey = tag.getString("Sec");
 
+        if (tag.contains("Pri"))
+            drawerAttributes.setPriority(tag.getInt("Pri"));
+        else
+            drawerAttributes.setPriority(0);
+
         loading = false;
     }
 
@@ -619,6 +624,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         if (securityKey != null)
             tag.putString("Sec", securityKey);
+
+        if (drawerAttributes.getPriority() != 0)
+            tag.putInt("Pri", drawerAttributes.getPriority());
 
         return tag;
     }

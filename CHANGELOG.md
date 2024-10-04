@@ -1,3 +1,14 @@
+[13.6.0]
+- Fixed item descriptions not breaking on newlines
+- Added priority key and 5 priority levels to drawers
+
+[13.5.2]
+- FABRIC: Fixed void upgrade recipe
+- FABRIC: Fixed client crash when hovering over keyring or detached drawer items
+
+[13.5.1]
+- FABRIC: Fixed drawer key recipe for older Fabric API versions
+
 [13.5.0]
 - Added 2-tier variation of compacting drawers
 - Added half-depth version of both compacting drawers

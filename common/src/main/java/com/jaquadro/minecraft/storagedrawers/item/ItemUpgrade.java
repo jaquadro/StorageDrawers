@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.storagedrawers.util.ComponentUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -45,7 +46,7 @@ public class ItemUpgrade extends Item
 
     @Override
     public void appendHoverText (ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("").append(getDescription()).withStyle(ChatFormatting.GRAY));
+        ComponentUtil.appendSplitDescription(tooltip, this);
     }
 
     @NotNull

@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.components.item.KeyringContents;
 import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.KeyringTooltip;
+import com.jaquadro.minecraft.storagedrawers.util.ComponentUtil;
 import com.texelsaurus.minecraft.chameleon.registry.RegistryEntry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -141,7 +142,7 @@ public class ItemKeyring extends Item
 
     @Override
     public void appendHoverText (@NotNull ItemStack itemStack, TooltipContext context, List<Component> list, TooltipFlag advanced) {
-        list.add(Component.literal("").append(getDescription()).withStyle(ChatFormatting.GRAY));
+        ComponentUtil.appendSplitDescription(list, this);
     }
 
     @Override

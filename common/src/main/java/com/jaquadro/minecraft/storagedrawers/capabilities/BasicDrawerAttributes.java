@@ -16,6 +16,7 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable
     private boolean isConversion;
     private boolean hasFillLevel;
     private boolean hasBalancedFill;
+    private int priority;
 
     @Override
     public boolean canItemLock (LockAttribute attr) {
@@ -98,6 +99,19 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable
             onAttributeChanged();
         }
 
+        return true;
+    }
+
+    @Override
+    public int getPriority () {
+        return priority;
+    }
+    @Override
+    public boolean setPriority (int priority) {
+        if (this.priority != priority) {
+            this.priority = priority;
+            onAttributeChanged();
+        }
         return true;
     }
 

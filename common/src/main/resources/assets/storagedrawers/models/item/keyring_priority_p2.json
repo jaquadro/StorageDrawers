@@ -1,0 +1,6 @@
+{
+    "parent": "item/handheld",
+    "textures": {
+        "layer0": "storagedrawers:item/drawer_key_priority_p2_ring"
+    }
+}

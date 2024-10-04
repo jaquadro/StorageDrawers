@@ -19,7 +19,7 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
     private static final ResourceLocation guiTextures1 = ModConstants.loc("textures/gui/drawers_1.png");
     private static final ResourceLocation guiTextures2 = ModConstants.loc("textures/gui/drawers_2.png");
     private static final ResourceLocation guiTextures4 = ModConstants.loc("textures/gui/drawers_4.png");
-    private static final ResourceLocation guiTexturesComp2 = ModConstants.loc("textures/gui/drawers_comp2.png");
+    private static final ResourceLocation guiTexturesComp2 = ModConstants.loc("textures/gui/drawers_comp_2.png");
     private static final ResourceLocation guiTexturesComp3 = ModConstants.loc("textures/gui/drawers_comp.png");
 
     private static final int smDisabledX = 176;
