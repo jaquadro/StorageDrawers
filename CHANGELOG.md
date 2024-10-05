@@ -1,3 +1,6 @@
+[13.7.0]
+- FABRIC: Added config support via Forge Config API Port required dependency
+
 [13.6.0]
 - Fixed item descriptions not breaking on newlines
 - Added priority key and 5 priority levels to drawers

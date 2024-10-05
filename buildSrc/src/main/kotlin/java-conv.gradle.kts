@@ -52,6 +52,12 @@ repositories {
             includeGroupAndSubgroups("curse.maven")
         }
     }
+    maven("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/") {
+        name = "Fuzs Mod Resources"
+        content {
+            includeGroupAndSubgroups("fuzs.forgeconfigapiport")
+        }
+    }
 }
 
 setOf("apiElements", "runtimeElements", "sourcesElements", "javadocElements").forEach { it: String ->

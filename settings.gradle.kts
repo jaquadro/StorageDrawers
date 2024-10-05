@@ -9,6 +9,9 @@ pluginManagement {
         maven("https://repo.spongepowered.org/repository/maven-public/") {
             name = "Sponge Snapshots"
         }
+        maven("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/") {
+            name = "Fuzs Mod Resources"
+        }
     }
 }
 

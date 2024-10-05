@@ -1,5 +1,1 @@
-- Fixed item descriptions not breaking on newlines
-- Added priority key and 5 priority levels to drawers
-- Added Remote Upgrade to connect drawers to controller remotely
-- Added Remote Group Upgrade to connect group of connected drawers to controller remotely
-- Added more config entries to disable upgrades
+- FABRIC: Added config support via Forge Config API Port required dependency

@@ -15,6 +15,8 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${Versions.fabricLoader}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${Versions.fabric}")
 
+    modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.0.8")
+
     modCompileOnlyApi("mezz.jei:jei-${Versions.minecraft}-fabric-api:19.8.2.99")
     modRuntimeOnly("mezz.jei:jei-${Versions.minecraft}-fabric:19.8.2.99")
 }
@@ -47,6 +49,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     Properties.distGameVersions.split(',').forEach { v -> mainFile.addGameVersion(v) }
     mainFile.addModLoader("Fabric")
     mainFile.addRequirement("fabric-api")
+    mainFile.addRequirement("forge-config-api-port-fabric")
 }
 
 modrinth {
@@ -62,6 +65,7 @@ modrinth {
 
     dependencies {
         required.project("fabric-api")
+        required.project("forge-config-api-port")
     }
 }
 tasks.modrinth.get().dependsOn(tasks.remapJar)
