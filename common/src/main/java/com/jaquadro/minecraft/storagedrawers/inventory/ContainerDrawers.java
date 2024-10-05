@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.gui.StorageGuiGraphics;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.texelsaurus.minecraft.chameleon.inventory.content.PositionContent;
 import com.texelsaurus.minecraft.chameleon.util.WorldUtils;
@@ -63,6 +64,9 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
 
     public ContainerDrawers (@Nullable MenuType<?> type, int windowId, Inventory playerInventory, BlockEntityDrawers tileEntity) {
         super(type, windowId);
+
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("Open BlockDrawers Container id=" + windowId + ", blockEntity=" + tileEntity);
 
         int drawerCount = 0;
 

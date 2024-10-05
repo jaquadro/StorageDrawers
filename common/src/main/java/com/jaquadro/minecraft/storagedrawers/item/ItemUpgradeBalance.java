@@ -12,6 +12,11 @@ public class ItemUpgradeBalance extends ItemUpgrade
     }
 
     @Override
+    public boolean isEnabled () {
+        return ModCommonConfig.INSTANCE.UPGRADES.enableBalanceUpgrade.get();
+    }
+
+    @Override
     @NotNull
     public Component getDescription() {
         return ModCommonConfig.INSTANCE.UPGRADES.enableBalanceUpgrade.get()

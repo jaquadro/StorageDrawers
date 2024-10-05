@@ -10,10 +10,12 @@ import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.ModSecurity;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeRemote;
 import com.texelsaurus.minecraft.chameleon.util.WorldUtils;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
@@ -73,6 +75,13 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         if (!level.isClientSide) {
             if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get() && item.isEmpty())
                 blockEntity.printDebugInfo();
+
+            if (item.getItem() instanceof ItemUpgradeRemote remote) {
+                item = remote.setBoundController(item, blockEntity);
+                player.getInventory().setItem(player.getInventory().selected, item);
+
+                player.displayClientMessage(Component.translatable("message.storagedrawers.updated_remote_binding", pos.getX(), pos.getY(), pos.getZ()), true);
+            }
 
             blockEntity.interactPutItemsIntoInventory(player);
         }

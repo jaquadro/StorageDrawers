@@ -1,5 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+
 public class ItemUpgradeRedstone extends ItemUpgrade
 {
     private static final int redstoneGroupId;
@@ -17,5 +19,10 @@ public class ItemUpgradeRedstone extends ItemUpgrade
         super(properties, groupId);
 
         this.type = type;
+    }
+
+    @Override
+    public boolean isEnabled () {
+        return ModCommonConfig.INSTANCE.UPGRADES.enableRedstoneUpgrade.get();
     }
 }

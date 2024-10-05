@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockControllerIO;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerHostData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
@@ -42,6 +43,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     private static final int PRI_EMPTY = 4;
     private static final int PRI_LOCKED_EMPTY = 5;
     private static final int PRI_DISABLED = 6;
+
+    private final ControllerHostData controllerHostData = new ControllerHostData();
 
     private static class StorageRecord
     {
@@ -166,6 +169,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     protected BlockEntityController(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
         range = ModCommonConfig.INSTANCE.GENERAL.controllerRange.get();
+
+        injectPortableData(controllerHostData);
     }
 
     public BlockEntityController(BlockPos pos, BlockState state) {
@@ -192,6 +197,27 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     @Override
     public IControlGroup getBoundControlGroup () {
         return null;
+    }
+
+    @Override
+    public List<INetworked> getBoundRemoteNodes () {
+        return controllerHostData.getRemoteNodes().toList();
+    }
+    @Override
+    public void invalidateRemoteNode (INetworked node) {
+        controllerHostData.removeRemoteNode(this, node);
+    }
+    @Override
+    public boolean addRemoteNode (INetworked node) {
+        return controllerHostData.addRemoteNode(this, node);
+    }
+    @Override
+    public void setRemoved () {
+        super.setRemoved();
+        for (var node : getBoundRemoteNodes()) {
+            invalidateRemoteNode(node);
+            node.unbindControlGroup();
+        }
     }
 
     @Override
@@ -452,7 +478,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
         resetCache();
 
-        populateNodes(getBlockPos());
+        populateNodes();
 
         flattenLists();
         drawerSlots = sortSlotRecords(drawerSlotList);
@@ -602,14 +628,25 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         }
     }
 
-    private void populateNodes (BlockPos root) {
+    private void populateNodes () {
         if (getLevel() == null)
             return;
 
         searchQueue.clear();
-        searchQueue.add(root);
-
         searchDiscovered.clear();
+
+        controllerHostData.validateRemoteNodes(this, level);
+
+        populateRoot(getBlockPos(), true);
+
+        getBoundRemoteNodes().forEach(n -> {
+            if (n.getBoundControlGroup() == this)
+                populateRoot(n.getBlockPos(), n.canRecurseSearch());
+        });
+    }
+
+    private void populateRoot (BlockPos root, boolean recursiveSearch) {
+        searchQueue.add(root);
         searchDiscovered.add(root);
 
         while (!searchQueue.isEmpty()) {
@@ -622,7 +659,11 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                 continue;
 
             Block block = getLevel().getBlockState(coord).getBlock();
-            if (!(block instanceof INetworked))
+            if (block instanceof INetworked networked) {
+                IControlGroup group = networked.getBoundControlGroup();
+                if (group != null && group != this)
+                    continue;
+            } else
                 continue;
 
             StorageRecord record = storage.get(coord);
@@ -639,14 +680,16 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             record.mark = true;
             record.distance = depth;
 
-            BlockPos[] neighbors = new BlockPos[]{
-                coord.west(), coord.east(), coord.south(), coord.north(), coord.above(), coord.below()
-            };
+            if (recursiveSearch) {
+                BlockPos[] neighbors = new BlockPos[]{
+                    coord.west(), coord.east(), coord.south(), coord.north(), coord.above(), coord.below()
+                };
 
-            for (BlockPos n : neighbors) {
-                if (!searchDiscovered.contains(n)) {
-                    searchQueue.add(n);
-                    searchDiscovered.add(n);
+                for (BlockPos n : neighbors) {
+                    if (!searchDiscovered.contains(n)) {
+                        searchQueue.add(n);
+                        searchDiscovered.add(n);
+                    }
                 }
             }
         }

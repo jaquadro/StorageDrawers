@@ -137,7 +137,15 @@ public final class ModCommonConfig extends ConfigSpec
         public final ChameleonConfig.ConfigEntry<Integer> level4Mult;
         public final ChameleonConfig.ConfigEntry<Integer> level5Mult;
 
+        public final ChameleonConfig.ConfigEntry<Boolean> enableStorageUpgrade;
+        public final ChameleonConfig.ConfigEntry<Boolean> enableFillLevelUpgrade;
+        public final ChameleonConfig.ConfigEntry<Boolean> enableRedstoneUpgrade;
+        public final ChameleonConfig.ConfigEntry<Boolean> enableIlluminationUpgrade;
+        public final ChameleonConfig.ConfigEntry<Boolean> enableVoidUpgrade;
         public final ChameleonConfig.ConfigEntry<Boolean> enableBalanceUpgrade;
+        public final ChameleonConfig.ConfigEntry<Boolean> enablePortabilityUpgrade;
+        public final ChameleonConfig.ConfigEntry<Boolean> enableRemoteUpgrade;
+        public final ChameleonConfig.ConfigEntry<Boolean> enableRemoteGroupUpgrade;
 
 
         public Upgrades () {
@@ -152,9 +160,41 @@ public final class ModCommonConfig extends ConfigSpec
             level4Mult = commonConfig.define("level4Mult", 16).build();
             level5Mult = commonConfig.define("level5Mult", 32).build();
 
+            enableStorageUpgrade = commonConfig.define("enableStorageUpgrade", true)
+                .comment("Storage upgrades increase capacity of drawers.")
+                .build();
+
+            enableFillLevelUpgrade = commonConfig.define("enableFillLevelUpgrade", true)
+                .comment("Fill level upgrades add fill bars to the faces of drawers.")
+                .build();
+
+            enableRedstoneUpgrade = commonConfig.define("enableRedstoneUpgrade", true)
+                .comment("Adds redstone output to drawers based on fill levels.")
+                .build();
+
+            enableIlluminationUpgrade = commonConfig.define("enableIlluminationUpgrade", true)
+                .comment("Renders drawer labels brighter than the surrounding environment would allow.")
+                .build();
+
+            enableVoidUpgrade = commonConfig.define("enableVoidUpgrade", true)
+                .comment("Causes drawers to accept but void compatible items when they are filled to capacity.")
+                .build();
+
             enableBalanceUpgrade = commonConfig.define("enableBalanceUpgrade", true)
                 .comment("Balance upgrades allow same-item slots to balance out their amounts when items are",
                     "added or removed from a lot.  Works across networks when acting through a controller.")
+                .build();
+
+            enablePortabilityUpgrade = commonConfig.define("enablePortabilityUpgrade", true)
+                .comment("Allows drawers with contents to be freely carried when heavy drawers is enabled.")
+                .build();
+
+            enableRemoteUpgrade = commonConfig.define("enableRemoteUpgrade", true)
+                .comment("Allows a single drawer to connect to a controller remotely.")
+                .build();
+
+            enableRemoteGroupUpgrade = commonConfig.define("enableRemoteGroupUpgrade", true)
+                .comment("Allows a drawer and all drawers connected to it to connect to a controller remotely.")
                 .build();
 
             commonConfig.popGroup();

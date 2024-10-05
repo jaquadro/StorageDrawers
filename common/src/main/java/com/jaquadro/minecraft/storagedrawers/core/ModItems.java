@@ -30,17 +30,21 @@ public final class ModItems
         DIAMOND_STORAGE_UPGRADE = ITEMS.register("diamond_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.DIAMOND, new Item.Properties())),
         EMERALD_STORAGE_UPGRADE = ITEMS.register("emerald_storage_upgrade", () -> new ItemUpgradeStorage(EnumUpgradeStorage.EMERALD, new Item.Properties())),
         ONE_STACK_UPGRADE = ITEMS.register("one_stack_upgrade", () -> new ItemUpgrade(new Item.Properties())),
-        VOID_UPGRADE = ITEMS.register("void_upgrade", () -> new ItemUpgrade(new Item.Properties())),
+        VOID_UPGRADE = ITEMS.register("void_upgrade", () -> new ItemUpgradeVoid(new Item.Properties())),
         CREATIVE_STORAGE_UPGRADE = ITEMS.register("creative_storage_upgrade", () -> new ItemUpgrade(new Item.Properties())),
         CREATIVE_VENDING_UPGRADE = ITEMS.register("creative_vending_upgrade", () -> new ItemUpgrade(new Item.Properties())),
         //CONVERSION_UPGRADE = ITEMS.register("conversion_upgrade", () -> new ItemUpgrade(new Item.Properties())),
         REDSTONE_UPGRADE = ITEMS.register("redstone_upgrade", () -> new ItemUpgradeRedstone(EnumUpgradeRedstone.COMBINED, new Item.Properties())),
         MIN_REDSTONE_UPGRADE = ITEMS.register("min_redstone_upgrade", () -> new ItemUpgradeRedstone(EnumUpgradeRedstone.MIN, new Item.Properties())),
         MAX_REDSTONE_UPGRADE = ITEMS.register("max_redstone_upgrade", () -> new ItemUpgradeRedstone(EnumUpgradeRedstone.MAX, new Item.Properties())),
-        ILLUMINATION_UPGRADE = ITEMS.register("illumination_upgrade", () -> new ItemUpgrade(new Item.Properties())),
-        FILL_LEVEL_UPGRADE = ITEMS.register("fill_level_upgrade", () -> new ItemUpgrade(new Item.Properties())),
+        ILLUMINATION_UPGRADE = ITEMS.register("illumination_upgrade", () -> new ItemUpgradeIllumination(new Item.Properties())),
+        FILL_LEVEL_UPGRADE = ITEMS.register("fill_level_upgrade", () -> new ItemUpgradeFillLevel(new Item.Properties())),
         BALANCE_FILL_UPGRADE = ITEMS.register("balance_fill_upgrade", () -> new ItemUpgradeBalance(new Item.Properties())),
         PORTABILITY_UPGRADE = ITEMS.register("portability_upgrade", () -> new ItemUpgradePortability(new Item.Properties())),
+        REMOTE_UPGRADE = ITEMS.register("remote_upgrade", () -> new ItemUpgradeRemote(false, false, new Item.Properties())),
+        REMOTE_UPGRADE_BOUND = ITEMS.register("remote_upgrade_bound", () -> new ItemUpgradeRemote(false, true, new Item.Properties())),
+        REMOTE_GROUP_UPGRADE = ITEMS.register("remote_group_upgrade", () -> new ItemUpgradeRemote(true, false, new Item.Properties())),
+        REMOTE_GROUP_UPGRADE_BOUND = ITEMS.register("remote_group_upgrade_bound", () -> new ItemUpgradeRemote(true, true, new Item.Properties())),
         UPGRADE_TEMPLATE = ITEMS.register("upgrade_template", () -> new Item(new Item.Properties())),
         DETACHED_DRAWER = ITEMS.register("detached_drawer", () -> new ItemDetachedDrawer(new Item.Properties())),
         DETACHED_DRAWER_FULL = ITEMS.register("detached_drawer_full", () -> new ItemDetachedDrawer(new Item.Properties().stacksTo(1)));
@@ -91,6 +95,8 @@ public final class ModItems
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PRIORITY_N2);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PULLER);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(DETACHED_DRAWER_FULL);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(REMOTE_UPGRADE_BOUND);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(REMOTE_GROUP_UPGRADE_BOUND);
 
         for (RegistryEntry<Block> ro : ModBlocks.BLOCKS.getEntries()) {
             if (ModBlocks.EXCLUDE_ITEMS.contains(ro.getId().getPath()))

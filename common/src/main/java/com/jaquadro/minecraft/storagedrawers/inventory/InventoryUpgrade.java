@@ -26,6 +26,9 @@ public class InventoryUpgrade implements Container
 
     @Override
     public boolean isEmpty () {
+        if (blockEntityDrawers == null)
+            return true;
+
         for (int i = 0; i < upgradeCapacity; i++) {
             if (!blockEntityDrawers.upgrades().getUpgrade(i).isEmpty())
                 return false;
@@ -37,12 +40,18 @@ public class InventoryUpgrade implements Container
     @Override
     @NotNull
     public ItemStack getItem (int slot) {
+        if (blockEntityDrawers == null)
+            return ItemStack.EMPTY;
+
         return blockEntityDrawers.upgrades().getUpgrade(slot);
     }
 
     @Override
     @NotNull
     public ItemStack removeItem (int slot, int count) {
+        if (blockEntityDrawers == null)
+            return ItemStack.EMPTY;
+
         ItemStack stack = blockEntityDrawers.upgrades().getUpgrade(slot);
         if (count > 0)
             blockEntityDrawers.upgrades().setUpgrade(slot, ItemStack.EMPTY);
@@ -58,6 +67,9 @@ public class InventoryUpgrade implements Container
 
     @Override
     public void setItem (int slot, @NotNull ItemStack item) {
+        if (blockEntityDrawers == null)
+            return;
+
         blockEntityDrawers.upgrades().setUpgrade(slot, item);
     }
 
@@ -68,11 +80,17 @@ public class InventoryUpgrade implements Container
 
     @Override
     public void setChanged () {
+        if (blockEntityDrawers == null)
+            return;
+
         blockEntityDrawers.setChanged();
     }
 
     @Override
     public boolean stillValid (@NotNull Player player) {
+        if (blockEntityDrawers == null)
+            return false;
+
         BlockPos pos = blockEntityDrawers.getBlockPos();
         if (blockEntityDrawers.getLevel() == null || blockEntityDrawers.getLevel().getBlockEntity(pos) != blockEntityDrawers)
             return false;
@@ -87,6 +105,9 @@ public class InventoryUpgrade implements Container
 
     @Override
     public boolean canPlaceItem (int slot, @NotNull ItemStack item) {
+        if (blockEntityDrawers == null)
+            return false;
+
         if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
             return false;
 
@@ -99,10 +120,16 @@ public class InventoryUpgrade implements Container
     }
 
     public int getStorageMultiplier () {
+        if (blockEntityDrawers == null)
+            return 1;
+
         return blockEntityDrawers.upgrades().getStorageMultiplier();
     }
 
     public int getStackCapacity () {
+        if (blockEntityDrawers == null)
+            return 1;
+
         try {
             return Math.multiplyExact(blockEntityDrawers.getEffectiveDrawerCapacity(), blockEntityDrawers.upgrades().getStorageMultiplier());
         } catch (ArithmeticException e) {
@@ -111,6 +138,9 @@ public class InventoryUpgrade implements Container
     }
 
     public boolean slotIsLocked (int slot) {
+        if (blockEntityDrawers == null)
+            return false;
+
         if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
             return true;
 
@@ -121,6 +151,9 @@ public class InventoryUpgrade implements Container
     }
 
     public boolean canAddUpgrade (@NotNull ItemStack item) {
+        if (blockEntityDrawers == null)
+            return false;
+
         if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
             return false;
 
@@ -128,6 +161,9 @@ public class InventoryUpgrade implements Container
     }
 
     public boolean canRemoveUpgrade (int slot) {
+        if (blockEntityDrawers == null)
+            return false;
+
         if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
             return false;
 
@@ -135,6 +171,9 @@ public class InventoryUpgrade implements Container
     }
 
     public boolean canRemoveStorageUpgrade (int slot) {
+        if (blockEntityDrawers == null)
+            return false;
+
         if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
             return false;
 
@@ -142,6 +181,9 @@ public class InventoryUpgrade implements Container
     }
 
     public boolean canSwapUpgrade (int slot, @NotNull ItemStack item) {
+        if (blockEntityDrawers == null)
+            return false;
+
         if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
             return false;
 

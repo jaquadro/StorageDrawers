@@ -54,6 +54,7 @@ public class BaseBlockEntity extends BlockEntity
         //try {
             readFixed(registries, tag);
             readPortable(registries, tag);
+            onLoadFinished();
         //}
         //catch (Throwable t) {
         //    trapLoadFailure(t, tag);
@@ -62,6 +63,8 @@ public class BaseBlockEntity extends BlockEntity
         if (level != null && level.isClientSide && dataPacketRequiresRenderUpdate())
             markBlockForRenderUpdate();
     }
+
+    protected void onLoadFinished () { }
 
     public final void read (CompoundTag tag, HolderLookup.Provider registries) {
         loadAdditional(tag, registries);

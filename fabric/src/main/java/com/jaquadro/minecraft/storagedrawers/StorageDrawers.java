@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
 public class StorageDrawers implements ModInitializer
 {
@@ -33,5 +34,10 @@ public class StorageDrawers implements ModInitializer
 
         ModCommonConfig.INSTANCE.setLoaded();
         ModClientConfig.INSTANCE.setLoaded();
+
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            for (var player : server.getPlayerList().getPlayers())
+                PlayerEventListener.onPlayerTick(player);
+        });
     }
 }

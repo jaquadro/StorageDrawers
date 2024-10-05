@@ -2,6 +2,8 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IPortable;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeRemote;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,6 +14,7 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 
 /** Punishes players holding filled drawers, if enabled in config */
 public class PlayerEventListener
@@ -36,6 +39,9 @@ public class PlayerEventListener
 		// every 3 seconds, in the END phase
 		if(event.phase != Phase.END || event.player.tickCount % 60 != 0)
 			return;
+
+		if (event.side == LogicalSide.SERVER)
+			ItemUpgradeRemote.validateInventory(event.player.getInventory(), event.player.level());
 
 		if (!ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get())
 			return;

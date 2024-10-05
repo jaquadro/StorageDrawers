@@ -2,6 +2,8 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IPortable;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeRemote;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Inventory;
@@ -35,6 +37,9 @@ public class PlayerEventListener
 		// every 3 seconds, in the END phase
 		if(event.getEntity().tickCount % 60 != 0)
 			return;
+
+		if (event.getEntity() instanceof ServerPlayer)
+			ItemUpgradeRemote.validateInventory(event.getEntity().getInventory(), event.getEntity().level());
 
 		if (!ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get())
 			return;

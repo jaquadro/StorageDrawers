@@ -2,14 +2,14 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 
-public class ItemUpgradePortability extends ItemUpgrade
+public class ItemUpgradeIllumination extends ItemUpgrade
 {
-    public ItemUpgradePortability (Properties properties) {
+    public ItemUpgradeIllumination (Properties properties) {
         super(properties);
     }
 
     @Override
     public boolean isEnabled () {
-        return ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get();
+        return ModCommonConfig.INSTANCE.UPGRADES.enableIlluminationUpgrade.get();
     }
 }

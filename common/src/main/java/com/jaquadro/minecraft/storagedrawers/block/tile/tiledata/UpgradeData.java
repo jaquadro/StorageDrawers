@@ -3,10 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
-import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeRedstone;
-import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
+import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -33,6 +30,7 @@ public class UpgradeData extends BlockEntityDataShim
     private boolean hasIllumination;
     private boolean hasFillLevel;
     private boolean hasBalanceFill;
+    private boolean hasRemote;
 
     private IDrawerAttributesModifiable attrs;
 
@@ -115,6 +113,8 @@ public class UpgradeData extends BlockEntityDataShim
             return false;
         if (!(upgrade.getItem() instanceof ItemUpgrade candidate))
             return false;
+        if (!candidate.isEnabled())
+            return false;
 
         if (candidate.getAllowMultiple())
             return true;
@@ -180,6 +180,10 @@ public class UpgradeData extends BlockEntityDataShim
         return hasBalanceFill;
     }
 
+    public boolean hasRemoteUpgrade () {
+        return hasRemote;
+    }
+
     public boolean hasPortabilityUpgrade() {
         for (ItemStack stack : upgrades) {
             if (stack.getItem() == ModItems.PORTABILITY_UPGRADE.get())
@@ -198,6 +202,38 @@ public class UpgradeData extends BlockEntityDataShim
         return -1;
     }
 
+    public ItemStack getRemoteUpgrade () {
+        if (!hasRemote)
+            return null;
+        for (ItemStack stack : upgrades) {
+            if (stack.getItem() instanceof ItemUpgradeRemote)
+                return stack;
+        }
+        return null;
+    }
+    public void unbindRemoteUpgrade () {
+        if (!hasRemote)
+            return;
+        for (int i = 0; i < upgrades.length; i++) {
+            ItemStack stack = upgrades[i];
+            if (stack.getItem() instanceof ItemUpgradeRemote remote && remote.isBound()) {
+                upgrades[i] = ItemUpgradeRemote.setUnbound(stack);
+                onUpgradeChanged(stack, upgrades[i]);
+            }
+        }
+    }
+    public void updateRemoteUpgradeBinding (ItemStack refStack) {
+        if (!hasRemote || refStack == null)
+            return;
+        for (int i = 0; i < upgrades.length; i++) {
+            ItemStack stack = upgrades[i];
+            if (stack.getItem() instanceof ItemUpgradeRemote) {
+                upgrades[i] = ItemUpgradeRemote.copyControllerBinding(refStack, upgrades[i]);
+                onUpgradeChanged(stack, upgrades[i]);
+            }
+        }
+    }
+
     private void syncUpgrades () {
         if (this.attrs == null)
             return;
@@ -213,6 +249,7 @@ public class UpgradeData extends BlockEntityDataShim
         hasIllumination = false;
         hasFillLevel = false;
         hasBalanceFill = false;
+        hasRemote = false;
 
         for (ItemStack stack : upgrades) {
             Item item = stack.getItem();
@@ -220,7 +257,7 @@ public class UpgradeData extends BlockEntityDataShim
             if (item == ModItems.ONE_STACK_UPGRADE.get())
                 hasOneStack = true;
             else if (item == ModItems.VOID_UPGRADE.get())
-                hasVoid = true;
+                hasVoid = ModCommonConfig.INSTANCE.UPGRADES.enableVoidUpgrade.get();
             //else if (item == ModItems.CONVERSION_UPGRADE.get())
             //    hasConversion = true;
             else if (item == ModItems.CREATIVE_STORAGE_UPGRADE.get())
@@ -228,11 +265,16 @@ public class UpgradeData extends BlockEntityDataShim
             else if (item == ModItems.CREATIVE_VENDING_UPGRADE.get())
                 hasVending = true;
             else if (item == ModItems.ILLUMINATION_UPGRADE.get())
-                hasIllumination = true;
+                hasIllumination = ModCommonConfig.INSTANCE.UPGRADES.enableIlluminationUpgrade.get();
             else if (item == ModItems.FILL_LEVEL_UPGRADE.get())
-                hasFillLevel = true;
+                hasFillLevel = ModCommonConfig.INSTANCE.UPGRADES.enableFillLevelUpgrade.get();
             else if (item == ModItems.BALANCE_FILL_UPGRADE.get())
-                hasBalanceFill = true;
+                hasBalanceFill = ModCommonConfig.INSTANCE.UPGRADES.enableBalanceUpgrade.get();
+            else if (item instanceof ItemUpgradeRemote remote) {
+                hasRemote = remote.isGroupUpgrade()
+                    ? ModCommonConfig.INSTANCE.UPGRADES.enableRemoteGroupUpgrade.get()
+                    : ModCommonConfig.INSTANCE.UPGRADES.enableRemoteUpgrade.get();
+            }
         }
 
         attrs.setIsVoid(hasVoid);

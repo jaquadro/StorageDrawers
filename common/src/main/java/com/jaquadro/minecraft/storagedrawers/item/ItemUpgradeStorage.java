@@ -25,8 +25,16 @@ public class ItemUpgradeStorage extends ItemUpgrade
     }
 
     @Override
+    public boolean isEnabled () {
+        return ModCommonConfig.INSTANCE.UPGRADES.enableStorageUpgrade.get();
+    }
+
+    @Override
     @NotNull
     public Component getDescription() {
+        if (!isEnabled())
+            return super.getDescription();
+
         int mult = ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(level.getLevel());
         return Component.translatable("item.storagedrawers.storage_upgrade.desc", mult);
     }

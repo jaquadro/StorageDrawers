@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public class BlockEntityControllerIO extends BaseBlockEntity implements IDrawerGroup, IControlGroup
@@ -57,6 +58,21 @@ public class BlockEntityControllerIO extends BaseBlockEntity implements IDrawerG
             return null;
 
         return controller;
+    }
+
+    @Override
+    public List<INetworked> getBoundRemoteNodes () {
+        return List.of();
+    }
+
+    @Override
+    public void invalidateRemoteNode (INetworked node) {
+
+    }
+
+    @Override
+    public boolean addRemoteNode (INetworked node) {
+        return false;
     }
 
     @Override

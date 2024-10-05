@@ -51,7 +51,13 @@ public class ItemUpgrade extends Item
 
     @NotNull
     public Component getDescription() {
-        return Component.translatable(this.getDescriptionId() + ".desc");
+        return isEnabled()
+            ? Component.translatable(this.getDescriptionId() + ".desc")
+            : Component.translatable("itemConfig.storagedrawers.disabled_upgrade").withStyle(ChatFormatting.RED);
+    }
+
+    public boolean isEnabled () {
+        return true;
     }
 
     public void setAllowMultiple (boolean allow) {
