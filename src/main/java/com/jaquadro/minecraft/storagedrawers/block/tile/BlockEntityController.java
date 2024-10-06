@@ -580,8 +580,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         populateRoot(getBlockPos(), true);
 
         getBoundRemoteNodes().forEach(n -> {
-            if (n.getBoundControlGroup() == this)
-                populateRoot(n.getBlockPos(), n.canRecurseSearch());
+            if (n.getBoundControlGroup() == this && n instanceof BlockEntity blockEntity)
+                populateRoot(blockEntity.getBlockPos(), n.canRecurseSearch());
         });
     }
 

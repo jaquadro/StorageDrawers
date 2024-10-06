@@ -88,7 +88,7 @@
     "item.storagedrawers.remote_group_upgrade.desc": "Lets connected drawer group remotely connect to controller",
     "item.storagedrawers.remote_group_upgrade.bound": "Use on controller to bind upgrade",
     "item.storagedrawers.remote_group_upgrade_bound": "Remote Upgrade",
-    "item.storagedrawers.remote_group_upgrade_bound.desc": "Lets connected rawer group remotely connect to controller. Can be used on upgraded drawer to re-bind it",
+    "item.storagedrawers.remote_group_upgrade_bound.desc": "Lets connected drawer group remotely connect to controller. Can be used on upgraded drawer to re-bind it",
     "item.storagedrawers.remote_group_upgrade_bound.bound": "Bound to controller [%d, %d, %d]",
     "item.storagedrawers.upgrade_template": "Upgrade Template",
     "item.storagedrawers.drawer_key": "Drawer Key",

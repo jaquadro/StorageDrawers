@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.framed.BlockFramedStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
 import com.jaquadro.minecraft.storagedrawers.block.framed.BlockFramedTrim;
+import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMeta;
 import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMetaFacingSized;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import net.minecraft.core.registries.Registries;
@@ -107,7 +108,7 @@ public final class ModItems
 
         register.register(blockHolder.getId().getPath(), () -> {
             Block block = blockHolder.get();
-            if (block instanceof BlockMetaFacingSized)
+            if (block instanceof BlockMeta)
                 return null;
             if (block instanceof BlockFramedStandardDrawers) {
                 return new ItemFramedDrawers(block, new Item.Properties());

@@ -23,13 +23,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -37,6 +40,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class BlockFramingTable extends HorizontalDirectionalBlock implements EntityBlock
 {
@@ -68,18 +73,32 @@ public class BlockFramingTable extends HorizontalDirectionalBlock implements Ent
 
     @Override
     public void playerWillDestroy (Level level, BlockPos pos, BlockState state, Player player) {
-        if (!level.isClientSide && player.isCreative()) {
-            EnumFramingTablePart part = state.getValue(PART);
-            if (part == EnumFramingTablePart.RIGHT) {
-                BlockPos pos2 = pos.relative(getNeighborDirection(part, state.getValue(FACING)));
-                BlockState state2 = level.getBlockState(pos2);
-                if (state2.is(this) && state2.getValue(PART) == EnumFramingTablePart.LEFT) {
-                    level.setBlock(pos2, Blocks.AIR.defaultBlockState(), 35);
-                }
-            }
+        if (!level.isClientSide ) {
+            preventCreativeDropFromLeft(level, pos, state, player);
+            if (!player.isCreative() && state.getValue(PART) != EnumFramingTablePart.RIGHT)
+                dropResources(state.setValue(PART, EnumFramingTablePart.RIGHT), level, pos, null, player, player.getMainHandItem());
         }
 
         super.playerWillDestroy(level, pos, state, player);
+    }
+
+    protected static void preventCreativeDropFromLeft (Level level, BlockPos pos, BlockState state, Player player) {
+        EnumFramingTablePart part = state.getValue(PART);
+        if (part == EnumFramingTablePart.RIGHT) {
+            BlockPos pos2 = pos.relative(getNeighborDirection(part, state.getValue(FACING)));
+            BlockState state2 = level.getBlockState(pos2);
+            if (state2.is(state.getBlock()) && state2.getValue(PART) == EnumFramingTablePart.LEFT) {
+                level.setBlock(pos2, Blocks.AIR.defaultBlockState(), 35);
+                level.levelEvent(player, 2001, pos2, Block.getId(state2));
+            }
+        } else if (part == EnumFramingTablePart.LEFT) {
+            BlockPos pos2 = pos.relative(getNeighborDirection(part, state.getValue(FACING)));
+            BlockState state2 = level.getBlockState(pos2);
+            if (state2.is(state.getBlock()) && state2.getValue(PART) == EnumFramingTablePart.RIGHT) {
+                level.setBlock(pos2, Blocks.AIR.defaultBlockState(), 35);
+                level.levelEvent(player, 2001, pos2, Block.getId(state2));
+            }
+        }
     }
 
     @Nullable

@@ -1,3 +1,12 @@
+[12.9.3]
+- Fix typo in remote upgrade description
+- Fix framing table not being on the axe minable list
+- Fix framing table breaking one block at a time
+- Fix framing table hanging game when quick-moving items
+
+[12.9.2]
+- Fix crash when using remote upgrade
+
 [12.9.1]
 - Fix startup crash
 

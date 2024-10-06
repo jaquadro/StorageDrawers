@@ -45,6 +45,10 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
         this(ModBlockEntities.FRAMING_TABLE.get(), pos, state);
     }
 
+    public static boolean isMaterialSlot (int slotIndex) {
+        return slotIndex == SLOT_SIDE || slotIndex == SLOT_TRIM || slotIndex == SLOT_FRONT;
+    }
+
     public MaterialData material () {
         return materialData;
     }
