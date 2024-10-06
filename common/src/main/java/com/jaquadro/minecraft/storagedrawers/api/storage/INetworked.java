@@ -13,12 +13,6 @@ public interface INetworked
         return null;
     }
 
-    default BlockPos getBlockPos () {
-        if (this instanceof BlockEntity entity)
-            return entity.getBlockPos();
-        return null;
-    }
-
     default boolean canRecurseSearch () {
         return true;
     }

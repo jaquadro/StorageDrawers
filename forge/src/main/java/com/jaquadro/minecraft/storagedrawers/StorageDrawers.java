@@ -8,6 +8,8 @@ import com.texelsaurus.minecraft.chameleon.ChameleonServices;
 import com.texelsaurus.minecraft.chameleon.service.ForgeConfig;
 import com.texelsaurus.minecraft.chameleon.service.ForgeNetworking;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
@@ -73,6 +75,14 @@ public class StorageDrawers
     private void setup (final FMLCommonSetupEvent event) {
         CompTierRegistry.INSTANCE.initialize();
         PlatformCapabilities.initHandlers();
+
+        //var map = BuiltInRegistries.DATA_COMPONENT_TYPE.asHolderIdMap();
+        //for (int i = 0; i < map.size(); i++)
+        //    ModServices.log.info(i + "=" + map.byId(i).get());
+
+        //var menumap = BuiltInRegistries.MENU.asHolderIdMap();
+        //for (int i = 0; i < menumap.size(); i++)
+        //    ModServices.log.info(i + "=" + menumap.byId(i).getRegisteredName());
 
         //oreDictRegistry = new OreDictRegistry();
         //renderRegistry = new RenderRegistry();

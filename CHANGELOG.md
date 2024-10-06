@@ -1,3 +1,6 @@
+[13.7.1]
+- Fix crash when using a remote upgrade
+
 [13.7.0]
 - FABRIC: Added config support via Forge Config API Port required dependency
 

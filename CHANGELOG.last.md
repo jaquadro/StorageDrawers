@@ -1,1 +1,1 @@
-- FABRIC: Added config support via Forge Config API Port required dependency
+- Fix crash when using a remote upgrade

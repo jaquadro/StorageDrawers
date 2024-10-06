@@ -54,6 +54,8 @@ dependencies {
 
     // JEI
     runtimeOnly("mezz.jei:jei-1.21-forge:19.8.2.99")
+
+    implementation("curse.maven:travelers-backpack-321117:5586782")
 }
 
 sourceSets.configureEach {
