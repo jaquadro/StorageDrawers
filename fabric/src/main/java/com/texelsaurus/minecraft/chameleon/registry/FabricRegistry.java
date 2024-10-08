@@ -29,7 +29,7 @@ public class FabricRegistry<T> implements ChameleonRegistry<T>
     }
 
     @Override
-    public void init () {
+    public void init (InitContext context) {
         for (RegistryEntry<T> entry : entries.getEntries())
             Registry.register(registry, entry.getId(), entry.get());
     }

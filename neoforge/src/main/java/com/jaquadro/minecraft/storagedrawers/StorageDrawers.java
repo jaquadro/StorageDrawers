@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.network.PlayerBoolConfigMessage;
 import com.texelsaurus.minecraft.chameleon.ChameleonServices;
+import com.texelsaurus.minecraft.chameleon.registry.NeoforgeRegistryContext;
 import com.texelsaurus.minecraft.chameleon.service.NeoforgeConfig;
 import com.texelsaurus.minecraft.chameleon.service.NeoforgeNetworking;
 import net.minecraft.client.Minecraft;
@@ -48,12 +49,14 @@ public class StorageDrawers
         //modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
         //modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.spec);
 
-        ModBlocks.init();
-        ModItems.init();
-        ModBlockEntities.init();
-        ModContainers.init();
-        ModDataComponents.init();
-        ModRecipes.init();
+        NeoforgeRegistryContext regContext = new NeoforgeRegistryContext(modEventBus);
+
+        ModBlocks.init(regContext);
+        ModItems.init(regContext);
+        ModBlockEntities.init(regContext);
+        ModContainers.init(regContext);
+        ModDataComponents.init(regContext);
+        ModRecipes.init(regContext);
 
         modEventBus.addListener(this::setup);
         //modEventBus.addListener(MessageHandler::register);
@@ -62,7 +65,7 @@ public class StorageDrawers
         modEventBus.addListener(ModCreativeTabs::init);
         modEventBus.addListener(PlatformCapabilities::register);
 
-        NeoforgeNetworking.init(MOD_ID, modEventBus, ModNetworking.INSTANCE);
+        NeoforgeNetworking.init(MOD_ID, ModNetworking.INSTANCE, regContext);
 
         NeoForge.EVENT_BUS.register(this);
         NeoForge.EVENT_BUS.register(new PlayerEventListener());

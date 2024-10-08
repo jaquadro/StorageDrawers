@@ -25,8 +25,8 @@ public class ForgeNetworking implements ChameleonNetworking
     public static PayloadProtocol<RegistryFriendlyByteBuf, CustomPacketPayload> NETWORK_CHANNEL_BUILDER = ChannelBuilder.named(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "main")).networkProtocolVersion(1).optional().payloadChannel().play();
     public static Channel<CustomPacketPayload> CHANNEL;
 
-    public static void init (ChameleonInit init) {
-        init.init();
+    public static void init (ChameleonInit init, ChameleonInit.InitContext context) {
+        init.init(context);
         CHANNEL = NETWORK_CHANNEL_BUILDER.bidirectional().build();
     }
 

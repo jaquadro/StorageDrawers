@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.components.item.ControllerBinding;
 import com.jaquadro.minecraft.storagedrawers.components.item.DrawerCountData;
 import com.jaquadro.minecraft.storagedrawers.components.item.KeyringContents;
 import com.texelsaurus.minecraft.chameleon.ChameleonServices;
+import com.texelsaurus.minecraft.chameleon.api.ChameleonInit;
 import com.texelsaurus.minecraft.chameleon.registry.ChameleonRegistry;
 import com.texelsaurus.minecraft.chameleon.registry.RegistryEntry;
 import net.minecraft.core.component.DataComponentType;
@@ -23,7 +24,7 @@ public class ModDataComponents
     public static final RegistryEntry<DataComponentType<KeyringContents>> KEYRING_CONTENTS =
         COMPONENTS.register("keyring_content", () -> DataComponentType.<KeyringContents>builder().persistent(KeyringContents.CODEC).build());
 
-    public static void init() {
-        COMPONENTS.init();
+    public static void init (ChameleonInit.InitContext context) {
+        COMPONENTS.init(context);
     }
 }

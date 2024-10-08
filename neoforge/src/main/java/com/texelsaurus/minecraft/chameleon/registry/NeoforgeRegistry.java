@@ -27,7 +27,7 @@ public class NeoforgeRegistry<T> implements ChameleonRegistry<T>
     }
 
     @Override
-    public void init () {
-        register.register(ModLoadingContext.get().getActiveContainer().getEventBus());
+    public void init (InitContext context) {
+        register.register(((NeoforgeRegistryContext)context).getEventBus());
     }
 }

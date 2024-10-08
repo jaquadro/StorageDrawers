@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.network.PlayerBoolConfigMessage;
 import com.texelsaurus.minecraft.chameleon.ChameleonServices;
+import com.texelsaurus.minecraft.chameleon.registry.ForgeRegistryContext;
 import com.texelsaurus.minecraft.chameleon.service.ForgeConfig;
 import com.texelsaurus.minecraft.chameleon.service.ForgeNetworking;
 import net.minecraft.client.Minecraft;
@@ -52,13 +53,14 @@ public class StorageDrawers
         //ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.spec);
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        ForgeRegistryContext context = new ForgeRegistryContext(bus);
 
-        ModBlocks.init();
-        ModItems.init();
-        ModBlockEntities.init();
-        ModContainers.init();
-        ModDataComponents.init();
-        ModRecipes.init();
+        ModBlocks.init(context);
+        ModItems.init(context);
+        ModBlockEntities.init(context);
+        ModContainers.init(context);
+        ModDataComponents.init(context);
+        ModRecipes.init(context);
 
         bus.addListener(this::setup);
         // bus.addListener(this::onModQueueEvent);
@@ -66,7 +68,7 @@ public class StorageDrawers
         bus.addListener(ModCreativeTabs::init);
         bus.addListener(PlatformCapabilities::register);
 
-        ForgeNetworking.init(ModNetworking.INSTANCE);
+        ForgeNetworking.init(ModNetworking.INSTANCE, context);
 
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new PlayerEventListener());
@@ -76,13 +78,13 @@ public class StorageDrawers
         CompTierRegistry.INSTANCE.initialize();
         PlatformCapabilities.initHandlers();
 
-        //var map = BuiltInRegistries.DATA_COMPONENT_TYPE.asHolderIdMap();
-        //for (int i = 0; i < map.size(); i++)
-        //    ModServices.log.info(i + "=" + map.byId(i).get());
+        var map = BuiltInRegistries.DATA_COMPONENT_TYPE.asHolderIdMap();
+        for (int i = 0; i < map.size(); i++)
+            ModServices.log.info(i + "=" + map.byId(i).get());
 
-        //var menumap = BuiltInRegistries.MENU.asHolderIdMap();
-        //for (int i = 0; i < menumap.size(); i++)
-        //    ModServices.log.info(i + "=" + menumap.byId(i).getRegisteredName());
+        var menumap = BuiltInRegistries.MENU.asHolderIdMap();
+        for (int i = 0; i < menumap.size(); i++)
+            ModServices.log.info(i + "=" + menumap.byId(i).getRegisteredName());
 
         //oreDictRegistry = new OreDictRegistry();
         //renderRegistry = new RenderRegistry();

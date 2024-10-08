@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 import com.jaquadro.minecraft.storagedrawers.ModConstants;
 import com.jaquadro.minecraft.storagedrawers.inventory.*;
 import com.texelsaurus.minecraft.chameleon.ChameleonServices;
+import com.texelsaurus.minecraft.chameleon.api.ChameleonInit;
 import com.texelsaurus.minecraft.chameleon.inventory.content.PositionContent;
 import com.texelsaurus.minecraft.chameleon.registry.ChameleonRegistry;
 import com.texelsaurus.minecraft.chameleon.registry.RegistryEntry;
@@ -24,7 +25,7 @@ public class ModContainers
     public static final RegistryEntry<MenuType<ContainerDrawersComp3>> DRAWER_CONTAINER_COMP_3 =
         CONTAINERS.register("drawer_container_comp_3", ChameleonServices.CONTAINER.getContainerSupplier(ContainerDrawersComp3::new, PositionContent.SERIALIZER));
 
-    public static void init() {
-        CONTAINERS.init();
+    public static void init (ChameleonInit.InitContext context) {
+        CONTAINERS.init(context);
     }
 }

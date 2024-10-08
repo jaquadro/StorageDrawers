@@ -2,6 +2,7 @@ package com.texelsaurus.minecraft.chameleon.service;
 
 import com.texelsaurus.minecraft.chameleon.api.ChameleonInit;
 import com.texelsaurus.minecraft.chameleon.network.ChameleonPacket;
+import com.texelsaurus.minecraft.chameleon.registry.NeoforgeRegistryContext;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -20,10 +21,10 @@ public class NeoforgeNetworking implements ChameleonNetworking
 {
     private static PayloadRegistrar registrar = null;
 
-    public static void init (String modId, IEventBus modBus, ChameleonInit init) {
-        modBus.addListener((Consumer<RegisterPayloadHandlersEvent>) event -> {
+    public static void init (String modId, ChameleonInit init, NeoforgeRegistryContext context) {
+        context.getEventBus().addListener((Consumer<RegisterPayloadHandlersEvent>) event -> {
             registrar = event.registrar(modId);
-            init.init();
+            init.init(context);
             registrar = null;
         });
     }

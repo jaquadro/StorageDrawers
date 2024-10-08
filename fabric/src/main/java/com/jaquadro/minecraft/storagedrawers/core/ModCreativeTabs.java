@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.ModConstants;
+import com.texelsaurus.minecraft.chameleon.api.ChameleonInit;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.Registry;
@@ -20,7 +21,7 @@ public class ModCreativeTabs
         .title(Component.translatable("itemGroup.storagedrawers"))
         .build();
 
-    public static void init () {
+    public static void init (ChameleonInit.InitContext context) {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, MAIN, MAIN_TAB);
 
         ItemGroupEvents.modifyEntriesEvent(MAIN).register(itemGroup -> {

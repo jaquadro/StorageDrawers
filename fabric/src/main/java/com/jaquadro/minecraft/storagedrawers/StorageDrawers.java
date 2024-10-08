@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.config.ModClientConfig;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
+import com.texelsaurus.minecraft.chameleon.api.ChameleonInit;
 import com.texelsaurus.minecraft.chameleon.service.FabricConfig;
 import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeConfigRegistry;
 import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeModConfigEvents;
@@ -27,15 +28,17 @@ public class StorageDrawers implements ModInitializer
         NeoForgeConfigRegistry.INSTANCE.register(ModConstants.MOD_ID, ModConfig.Type.COMMON, ((FabricConfig)ModCommonConfig.INSTANCE.context()).neoSpec);
         NeoForgeConfigRegistry.INSTANCE.register(ModConstants.MOD_ID, ModConfig.Type.CLIENT, ((FabricConfig)ModClientConfig.INSTANCE.context()).neoSpec);
 
-        ModBlocks.init();
-        ModItems.init();
-        ModCreativeTabs.init();
-        ModBlockEntities.init();
-        ModContainers.init();
-        ModDataComponents.init();
-        ModRecipes.init();
+        ChameleonInit.InitContext context = new ChameleonInit.InitContext();
 
-        ModNetworking.INSTANCE.init();
+        ModBlocks.init(context);
+        ModItems.init(context);
+        ModCreativeTabs.init(context);
+        ModBlockEntities.init(context);
+        ModContainers.init(context);
+        ModDataComponents.init(context);
+        ModRecipes.init(context);
+
+        ModNetworking.INSTANCE.init(context);
         CommonEvents.init();
 
         PlatformCapabilities.initHandlers();

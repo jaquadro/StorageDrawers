@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.core.recipe.AddUpgradeRecipe;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.KeyringRecipe;
 import com.jaquadro.minecraft.storagedrawers.core.recipe.UpgradeDetachedDrawerRecipe;
 import com.texelsaurus.minecraft.chameleon.ChameleonServices;
+import com.texelsaurus.minecraft.chameleon.api.ChameleonInit;
 import com.texelsaurus.minecraft.chameleon.registry.ChameleonRegistry;
 import com.texelsaurus.minecraft.chameleon.registry.RegistryEntry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,7 +20,7 @@ public class ModRecipes
     public static final RegistryEntry<RecipeSerializer<KeyringRecipe>> KEYRING_RECIPE_SERIALIZER = RECIPES.register("keyring", () -> new SimpleCraftingRecipeSerializer<>(KeyringRecipe::new));
     public static final RegistryEntry<RecipeSerializer<UpgradeDetachedDrawerRecipe>> DETACHED_UPGRADE_RECIPE_SERIALIZER = RECIPES.register("add_detached_upgrade", () -> new SimpleCraftingRecipeSerializer<>(UpgradeDetachedDrawerRecipe::new));
 
-    public static void init() {
-        RECIPES.init();
+    public static void init (ChameleonInit.InitContext context) {
+        RECIPES.init(context);
     }
 }
