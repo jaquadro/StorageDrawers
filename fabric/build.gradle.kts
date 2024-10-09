@@ -49,7 +49,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     Properties.distGameVersions.split(',').forEach { v -> mainFile.addGameVersion(v) }
     mainFile.addModLoader("Fabric")
     mainFile.addRequirement("fabric-api")
-    mainFile.addRequirement("forge-config-api-port-fabric")
+    mainFile.addOptional("forge-config-api-port-fabric")
 }
 
 modrinth {
@@ -65,7 +65,7 @@ modrinth {
 
     dependencies {
         required.project("fabric-api")
-        required.project("forge-config-api-port")
+        optional.project("forge-config-api-port")
     }
 }
 tasks.modrinth.get().dependsOn(tasks.remapJar)

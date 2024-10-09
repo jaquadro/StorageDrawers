@@ -1,28 +1,30 @@
 package com.texelsaurus.minecraft.chameleon.service;
 
+import com.jaquadro.minecraft.storagedrawers.config.ModClientConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.texelsaurus.minecraft.chameleon.config.ConfigSpec;
-import net.neoforged.neoforge.common.ModConfigSpec;
-
-// Implemented via Forge Config API Port
+import com.texelsaurus.minecraft.chameleon.config.ForgeApiConfig;
+import com.texelsaurus.minecraft.chameleon.config.StaticConfig;
+import net.fabricmc.loader.api.FabricLoader;
 
 public class FabricConfig implements ChameleonConfig
 {
-    private final ConfigSpec localSpec;
-    private final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
-    public ModConfigSpec neoSpec;
+    private ChameleonConfig configImpl;
 
     public FabricConfig () {
-        localSpec = null;
+        this(null);
     }
 
     private FabricConfig (ConfigSpec spec) {
-        localSpec = spec;
+        if (FabricLoader.getInstance().isModLoaded("forgeconfigapiport"))
+            configImpl = new ForgeApiConfig(spec);
+        else
+            configImpl = new StaticConfig(spec);
     }
 
     @Override
     public void init() {
-        localSpec.init();
-        neoSpec = BUILDER.build();
+        configImpl.init();
     }
 
     @Override
@@ -32,91 +34,26 @@ public class FabricConfig implements ChameleonConfig
 
     @Override
     public <T> ConfigEntry<T> define (String name, T defaultValue) {
-        return new ForgeConfigEntry<T>(BUILDER).name(name).defaultValue(defaultValue);
+        return configImpl.define(name, defaultValue);
     }
 
     @Override
     public <T extends Comparable<? super T>> ConfigEntry<T> defineInRange (String name, T defaultValue, T min, T max, Class<T> clazz) {
-        return new ForgeConfigEntryRange<T>(BUILDER, clazz).name(name).defaultValue(defaultValue).range(min, max);
+        return configImpl.defineInRange(name, defaultValue, min, max, clazz);
     }
 
     @Override
     public <T extends Enum<T>> ConfigEntry<T> defineEnum (String name, T defaultValue) {
-        return new ForgeConfigEntryEnum<T>(BUILDER).name(name).defaultValue(defaultValue);
+        return configImpl.defineEnum(name, defaultValue);
     }
 
     @Override
     public void pushGroup (String name) {
-        BUILDER.push(name);
+        configImpl.pushGroup(name);
     }
 
     @Override
     public void popGroup () {
-        BUILDER.pop();
-    }
-
-    public class ForgeConfigEntry<T> extends ConfigEntry<T>
-    {
-        ModConfigSpec.Builder builder;
-        ModConfigSpec.ConfigValue<T> value;
-
-
-        public ForgeConfigEntry(ModConfigSpec.Builder builder) {
-            this.builder = builder;
-        }
-
-        @Override
-        public ConfigEntry<T> build () {
-            if (comment != null)
-                builder.comment(comment);
-
-            value = define();
-            return this;
-        }
-
-        @Override
-        public T get () {
-            if (value == null)
-                return defaultValue;
-
-            return value.get();
-        }
-
-        @Override
-        public void set (T t) {
-            if (value != null)
-                value.set(t);
-        }
-
-        protected ModConfigSpec.ConfigValue<T> define() {
-            return builder.define(name, defaultValue);
-        }
-    }
-
-    public class ForgeConfigEntryRange<T extends Comparable<? super T>> extends ForgeConfigEntry<T>
-    {
-        Class<T> clazz;
-
-        public ForgeConfigEntryRange (ModConfigSpec.Builder builder, Class<T> clazz) {
-            super(builder);
-            this.clazz = clazz;
-        }
-
-        @Override
-        protected ModConfigSpec.ConfigValue<T> define () {
-            return builder.defineInRange(name, defaultValue, rangeMin, rangeMax, clazz);
-        }
-    }
-
-    public class ForgeConfigEntryEnum<T extends Enum<T>> extends ForgeConfigEntry<T>
-    {
-        public ForgeConfigEntryEnum (ModConfigSpec.Builder builder) {
-            super(builder);
-        }
-
-        @Override
-        protected ModConfigSpec.ConfigValue<T> define () {
-            return builder.defineEnum(name, defaultValue);
-        }
+        configImpl.popGroup();
     }
 }
