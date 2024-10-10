@@ -1,4 +1,1 @@
-- Fix typo in remote upgrade description
-- Fix framing table not being on the axe minable list
-- Fix framing table breaking one block at a time
-- Fix framing table hanging game when quick-moving items
+- Fix drawer puller not working when on keyring

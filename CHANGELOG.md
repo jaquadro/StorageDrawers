@@ -1,3 +1,6 @@
+[12.9.4]
+- Fix drawer puller not working when on keyring
+
 [12.9.3]
 - Fix typo in remote upgrade description
 - Fix framing table not being on the axe minable list
