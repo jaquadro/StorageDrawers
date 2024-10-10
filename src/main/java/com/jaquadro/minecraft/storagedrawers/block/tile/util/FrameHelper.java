@@ -26,13 +26,13 @@ public class FrameHelper
             return ItemStack.EMPTY;
 
         MaterialData data = new MaterialData();
-        data.setFrameBase(new ItemStack(source.getItem()));
+        data.setFrameBase(new ItemStack(source.getItem(), 1));
         if (resultBlock.supportsFrameMaterial(FrameMaterial.SIDE))
-            data.setSide(matSide);
+            data.setSide(matSide.copyWithCount(1));
         if (resultBlock.supportsFrameMaterial(FrameMaterial.TRIM))
-            data.setTrim(matTrim);
+            data.setTrim(matTrim.copyWithCount(1));
         if (resultBlock.supportsFrameMaterial(FrameMaterial.FRONT))
-            data.setFront(matFront);
+            data.setFront(matFront.copyWithCount(1));
 
         CompoundTag tag = source.getOrCreateTag().copy();
         tag = data.write(tag);

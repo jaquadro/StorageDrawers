@@ -1,3 +1,6 @@
+[12.9.5]
+- Fix framing table not respecting item stack sizes
+
 [12.9.4]
 - Fix drawer puller not working when on keyring
 

@@ -41,7 +41,7 @@ public class CraftResultSlot extends Slot
         for (int slot : inputSlots) {
             ItemStack itemTarget = inputInventory.getItem(slot);
             if (!itemTarget.isEmpty())
-                inputInventory.removeItem(slot, 1);
+                inputInventory.removeItem(slot, stack.getCount());
         }
 
         amountCrafted = 0;

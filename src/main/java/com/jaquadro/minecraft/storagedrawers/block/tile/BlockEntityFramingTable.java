@@ -91,7 +91,12 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
         if (slot < 0 || slot > getContainerSize() || amount <= 0)
             return ItemStack.EMPTY;
 
-        return getItem(slot).split(amount);
+        ItemStack ret = getItem(slot).split(amount);
+
+        rebuildResult();
+        setChanged();
+
+        return ret;
     }
 
     @Override
@@ -154,11 +159,12 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
                     MaterialData empty = new MaterialData();
                     empty.write(source.getTag());
 
-                    inputStack = source;
+                    int count = stack.getCount();
+                    inputStack = source.copyWithCount(count);
 
-                    materialData.setSide(fb.supportsFrameMaterial(FrameMaterial.SIDE) ? data.getSide() : ItemStack.EMPTY);
-                    materialData.setTrim(fb.supportsFrameMaterial(FrameMaterial.TRIM) ? data.getTrim() : ItemStack.EMPTY);
-                    materialData.setFront(fb.supportsFrameMaterial(FrameMaterial.FRONT) ? data.getFront() : ItemStack.EMPTY);
+                    materialData.setSide(fb.supportsFrameMaterial(FrameMaterial.SIDE) ? data.getSide().copyWithCount(count) : ItemStack.EMPTY);
+                    materialData.setTrim(fb.supportsFrameMaterial(FrameMaterial.TRIM) ? data.getTrim().copyWithCount(count) : ItemStack.EMPTY);
+                    materialData.setFront(fb.supportsFrameMaterial(FrameMaterial.FRONT) ? data.getFront().copyWithCount(count) : ItemStack.EMPTY);
 
                     return;
                 }
@@ -188,6 +194,16 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
                     resultStack = fsb.makeFramedItem(target, matSide, matTrim, matFront);
             }
         }
+
+        int count = resultStack.getCount();
+        if (!matSide.isEmpty())
+            count = Math.min(count, matSide.getCount());
+        if (!matTrim.isEmpty())
+            count = Math.min(count, matTrim.getCount());
+        if (!matFront.isEmpty())
+            count = Math.min(count, matFront.getCount());
+
+        resultStack.setCount(count);
     }
 
     @Override

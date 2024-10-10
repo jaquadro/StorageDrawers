@@ -1,1 +1,1 @@
-- Fix drawer puller not working when on keyring
+- Fix framing table not respecting item stack sizes
