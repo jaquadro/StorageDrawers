@@ -1,6 +1,7 @@
 package com.texelsaurus.minecraft.chameleon.service;
 
 import com.jaquadro.minecraft.storagedrawers.ModConstants;
+import com.jaquadro.minecraft.storagedrawers.client.ClientUtil;
 import com.texelsaurus.minecraft.chameleon.api.ChameleonInit;
 import com.texelsaurus.minecraft.chameleon.network.ChameleonPacket;
 import net.minecraft.client.Minecraft;
@@ -33,7 +34,10 @@ public class ForgeNetworking implements ChameleonNetworking
     @Override
     public <B extends FriendlyByteBuf, P extends ChameleonPacket> void registerPacketInternal (CustomPacketPayload.Type<P> payloadType, StreamCodec<B, P> codec, boolean clientBound) {
         BiConsumer<P, CustomPayloadEvent.Context> handler = (packet, context) -> {
-            Player player = context.getSender() != null ? context.getSender() : Minecraft.getInstance().player;
+            Player player = context.getSender();
+            if (player == null && context.isClientSide())
+                player = ClientUtil.getLocalPlayer();
+
             packet.handleMessage(player, context::enqueueWork);
             context.setPacketHandled(true);
         };

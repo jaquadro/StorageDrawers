@@ -1,2 +1,1 @@
-- FABRIC: Made dependency on Forge Config API Port optional
-  - If the mod is not installed, config loading will not be supported
+- FORGE: Fix server crash with latest 52.0.18 Forge release
