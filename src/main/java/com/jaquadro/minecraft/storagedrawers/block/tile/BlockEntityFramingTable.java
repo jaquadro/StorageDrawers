@@ -250,15 +250,31 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
         return tag;
     }
 
-    public static boolean isItemValidTarget (ItemStack stack) {
+    public boolean isItemValidTarget (ItemStack stack) {
         if (stack.isEmpty())
             return false;
 
         if (!(stack.getItem() instanceof BlockItem blockItem))
             return false;
 
-        return blockItem.getBlock() instanceof IFramedSourceBlock
-            || blockItem.getBlock() instanceof IFramedBlock;
+        if (blockItem.getBlock() instanceof IFramedBlock) {
+            MaterialData data = new MaterialData();
+            data.read(stack.getOrCreateTag());
+
+            if (!data.getSide().isEmpty() && !materialData.getSide().isEmpty())
+                return false;
+            if (!data.getTrim().isEmpty() && !materialData.getTrim().isEmpty())
+                return false;
+            if (!data.getFront().isEmpty() && !materialData.getFront().isEmpty())
+                return false;
+
+            return true;
+        }
+
+        if (blockItem.getBlock() instanceof IFramedSourceBlock)
+            return true;
+
+        return false;
     }
 
     public static boolean isItemValidMaterial (ItemStack stack) {

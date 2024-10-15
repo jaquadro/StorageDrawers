@@ -49,6 +49,12 @@ public class CraftResultSlot extends Slot
 
     @Override
     protected void onQuickCraft (@NotNull ItemStack stack, int amount) {
+        for (int slot : inputSlots) {
+            ItemStack itemTarget = inputInventory.getItem(slot);
+            if (!itemTarget.isEmpty())
+                inputInventory.removeItem(slot, amount);
+        }
+
         amountCrafted += amount;
         super.onQuickCraft(stack, amount);
     }

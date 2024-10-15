@@ -1,3 +1,10 @@
+[12.9.7]
+- Fix framing table voiding framed drawer if quick-moved to input with materials already present
+- Fix framing table collision shapes not matching block
+
+[12.9.6]
+- Fix framing table not respecting stack sizes during quick craft
+
 [12.9.5]
 - Fix framing table not respecting item stack sizes
 

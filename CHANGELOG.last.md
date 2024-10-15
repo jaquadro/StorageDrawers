@@ -1,1 +1,2 @@
-- Fix framing table not respecting item stack sizes
+- Fix framing table voiding framed drawer if quick-moved to input with materials already present
+- Fix framing table collision shapes not matching block

@@ -36,6 +36,7 @@ public class ContainerFramingTable extends AbstractContainerMenu
     private static final int OutputX = 133;
     private static final int OutputY = 35;
 
+    private final BlockEntityFramingTable blockEntity;
     private final Container tableInventory;
     private final Container craftResult;
     private final ContainerLevelAccess access;
@@ -71,6 +72,7 @@ public class ContainerFramingTable extends AbstractContainerMenu
     public ContainerFramingTable (@Nullable MenuType<?> type, int windowId, Inventory playerInventory, BlockEntityFramingTable blockEntity) {
         super(type, windowId);
 
+        this.blockEntity = blockEntity;
         tableInventory = blockEntity;
         craftResult = blockEntity;
         access = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
@@ -181,7 +183,7 @@ public class ContainerFramingTable extends AbstractContainerMenu
             }
 
             else if (slotIndex >= inventoryStart && slotIndex < hotbarEnd) {
-                if (BlockEntityFramingTable.isItemValidTarget(slotStack)) {
+                if (blockEntity.isItemValidTarget(slotStack)) {
                     if (!moveItemStackTo(slotStack, BlockEntityFramingTable.SLOT_INPUT, BlockEntityFramingTable.SLOT_INPUT + 1, false))
                         return ItemStack.EMPTY;
                 } else if (BlockEntityFramingTable.isItemValidMaterial(slotStack)) {
