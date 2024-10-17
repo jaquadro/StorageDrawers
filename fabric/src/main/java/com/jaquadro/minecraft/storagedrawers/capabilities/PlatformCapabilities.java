@@ -8,7 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityControllerIO;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
-import com.jaquadro.minecraft.storagedrawers.inventory.DrawerGroupStorage;
+import com.jaquadro.minecraft.storagedrawers.inventory.DrawerStorageImpl;
 import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import com.texelsaurus.minecraft.chameleon.capabilities.FabricCapability;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -40,11 +40,11 @@ public class PlatformCapabilities
         cast(Capabilities.ITEM_REPOSITORY).register(ModBlockEntities.CONTROLLER_IO.get(), BlockEntityControllerIO::getItemRepository);
         cast(Capabilities.ITEM_HANDLER).register(ModBlockEntities.CONTROLLER_IO.get(), DrawerItemHandler::new);
 
-        ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> new DrawerGroupStorage(entity), ModBlockEntities.STANDARD_DRAWERS_1.get());
-        ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> new DrawerGroupStorage(entity), ModBlockEntities.STANDARD_DRAWERS_2.get());
-        ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> new DrawerGroupStorage(entity), ModBlockEntities.STANDARD_DRAWERS_4.get());
-        ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> new DrawerGroupStorage(entity), ModBlockEntities.FRACTIONAL_DRAWERS_3.get());
-        ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> new DrawerGroupStorage(entity), ModBlockEntities.CONTROLLER.get());
-        ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> new DrawerGroupStorage(entity), ModBlockEntities.CONTROLLER_IO.get());
+        ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> DrawerStorageImpl.of(entity), ModBlockEntities.STANDARD_DRAWERS_1.get());
+        ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> DrawerStorageImpl.of(entity), ModBlockEntities.STANDARD_DRAWERS_2.get());
+        ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> DrawerStorageImpl.of(entity), ModBlockEntities.STANDARD_DRAWERS_4.get());
+        ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> DrawerStorageImpl.of(entity), ModBlockEntities.FRACTIONAL_DRAWERS_3.get());
+        ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> DrawerStorageImpl.of(entity), ModBlockEntities.CONTROLLER.get());
+        ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> DrawerStorageImpl.of(entity), ModBlockEntities.CONTROLLER_IO.get());
     }
 }

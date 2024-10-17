@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import java.util.Arrays;
 import java.util.Iterator;
 
+/*
 public class DrawerGroupStorage implements Storage<ItemVariant>
 {
     IDrawerGroup group;
@@ -55,3 +56,4 @@ public class DrawerGroupStorage implements Storage<ItemVariant>
             .iterator();
     }
 }
+*/
