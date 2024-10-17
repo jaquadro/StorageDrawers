@@ -1,1 +1,1 @@
-- FORGE: Fix server crash with latest 52.0.18 Forge release
+- FABRIC: Fix item transactions not working correctly with other mods

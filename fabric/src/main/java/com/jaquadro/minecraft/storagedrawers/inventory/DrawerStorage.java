@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.fabricmc.fabric.impl.transfer.TransferApiImpl;
 
 import java.util.Iterator;
-
+/*
 public class DrawerStorage extends SnapshotParticipant<IDrawer> implements Storage<ItemVariant>, StorageView<ItemVariant>
 {
     private IDrawer drawer;
@@ -110,3 +110,4 @@ public class DrawerStorage extends SnapshotParticipant<IDrawer> implements Stora
         this.snapshot = snapshot;
     }
 }
+*/
