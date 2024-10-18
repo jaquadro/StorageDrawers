@@ -1,0 +1,32 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "storagedrawers:framing_table"
+        ]
+    },
+    "criteria": {
+        "has_chest": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "tag": "storagedrawers:trim"
+                    }
+                ]
+            }
+        },
+        "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "storagedrawers:framing_table"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_chest",
+            "has_the_recipe"
+        ]
+    ]
+}

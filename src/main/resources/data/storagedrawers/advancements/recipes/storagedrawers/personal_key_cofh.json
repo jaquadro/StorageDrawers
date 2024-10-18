@@ -1,0 +1,32 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "storagedrawers:personal_key_cofh"
+        ]
+    },
+    "criteria": {
+        "has_template": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "storagedrawers:drawer_key"
+                    }
+                ]
+            }
+        },
+        "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "storagedrawers:personal_key_cofh"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_template",
+            "has_the_recipe"
+        ]
+    ]
+}

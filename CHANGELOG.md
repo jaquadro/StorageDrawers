@@ -1,3 +1,6 @@
+[12.9.8]
+- Add several missing recipe advancement entries
+
 [12.9.7]
 - Fix framing table voiding framed drawer if quick-moved to input with materials already present
 - Fix framing table collision shapes not matching block
