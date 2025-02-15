@@ -54,7 +54,7 @@
     "item.storagedrawers.diamond_storage_upgrade": "ストレージアップグレード (IV)",
     "item.storagedrawers.one_stack_upgrade": "ストレージダウングレード",
     "item.storagedrawers.one_stack_upgrade.desc": "基本ストレージを1スタックに削減します。",
-    "item.storagedrawers.void_upgrade": "ヴォイドアップグレード",
+    "item.storagedrawers.void_upgrade": "ボイドアップグレード",
     "item.storagedrawers.void_upgrade.desc": "余分なアイテムを破壊します。",
     "item.storagedrawers.creative_storage_upgrade": "クリエイティブストレージアップグレード",
     "item.storagedrawers.creative_storage_upgrade.desc": "無限に近いストレージ",
