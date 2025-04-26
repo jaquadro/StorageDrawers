@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.ModConstants;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -332,7 +333,12 @@ public class DrawerModelStore
         if (loc == null)
             return null;
 
-        return modelStore.getOrDefault(loc.toString(), null);
+        BakedModel storedModel = modelStore.get(loc.toString());
+        if (storedModel == null) {
+            return Minecraft.getInstance().getModelManager().getModel(loc);
+        } else {
+            return storedModel;
+        }
     }
 
     public static BakedModel getModel(String variant) {
