@@ -17,6 +17,8 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
+import mcp.mobius.waila.api.impl.ConfigHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -27,20 +29,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Method;
 
 import java.util.List;
 
 public class Waila extends IntegrationModule
 {
-    private static Class classConfigHandler;
-
-    private static Method methInstance;
-    private static Method methAddConfig;
-
     @Override
     public String getModID () {
         return "waila";
@@ -48,11 +46,6 @@ public class Waila extends IntegrationModule
 
     @Override
     public void init () throws Throwable {
-        classConfigHandler = Class.forName("mcp.mobius.waila.api.impl.ConfigHandler");
-
-        methInstance = classConfigHandler.getMethod("instance");
-        methAddConfig = classConfigHandler.getMethod("addConfig", String.class, String.class, String.class);
-
         FMLInterModComms.sendMessage("waila", "register", StorageDrawers.SOURCE_PATH + "integration.Waila.registerProvider");
     }
 
@@ -66,16 +59,10 @@ public class Waila extends IntegrationModule
         registrar.registerBodyProvider(provider, BlockDrawers.class);
         registrar.registerStackProvider(provider, BlockDrawers.class);
 
-        try {
-            Object configHandler = methInstance.invoke(null);
-
-            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.content", I18n.format("storageDrawers.waila.config.displayContents"), true);
-            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.stacklimit", I18n.format("storageDrawers.waila.config.displayStackLimit"), true);
-            methAddConfig.invoke(configHandler, StorageDrawers.MOD_NAME, "display.status", I18n.format("storageDrawers.waila.config.displayStatus"), true);
-        }
-        catch (Exception e) {
-            // Oh well, we couldn't hook the waila config
-            StorageDrawers.log.error("Failed to hook the Waila Config. Could not add in custom Storage Drawers related configs.");
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+            ConfigHandler.instance().addConfig(StorageDrawers.MOD_NAME, "display.content", I18n.format("storageDrawers.waila.config.displayContents"), true);
+            ConfigHandler.instance().addConfig(StorageDrawers.MOD_NAME, "display.stacklimit", I18n.format("storageDrawers.waila.config.displayStackLimit"), true);
+            ConfigHandler.instance().addConfig(StorageDrawers.MOD_NAME, "display.status", I18n.format("storageDrawers.waila.config.displayStatus"), true);
         }
     }
 

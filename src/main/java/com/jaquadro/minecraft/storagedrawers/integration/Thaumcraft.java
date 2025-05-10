@@ -184,15 +184,15 @@ public class Thaumcraft extends IntegrationModule
             GlStateManager.disableBlend();
             GlStateManager.enableLighting();
         }
-    }
 
-    private void renderQuad (BufferBuilder tessellator, int x, int y, int w, int h, int r, int g, int b, int a)
-    {
-        tessellator.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-        tessellator.pos(x + 0, y + 0, 0).tex(0, 0).color(r, g, b, a).endVertex();
-        tessellator.pos(x + 0, y + h, 0).tex(0, 1).color(r, g, b, a).endVertex();
-        tessellator.pos(x + w, y + h, 0).tex(1, 1).color(r, g, b, a).endVertex();
-        tessellator.pos(x + w, y + 0, 0).tex(1, 0).color(r, g, b, a).endVertex();
-        Tessellator.getInstance().draw();
+        private void renderQuad (BufferBuilder tessellator, int x, int y, int w, int h, int r, int g, int b, int a)
+        {
+            tessellator.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+            tessellator.pos(x + 0, y + 0, 0).tex(0, 0).color(r, g, b, a).endVertex();
+            tessellator.pos(x + 0, y + h, 0).tex(0, 1).color(r, g, b, a).endVertex();
+            tessellator.pos(x + w, y + h, 0).tex(1, 1).color(r, g, b, a).endVertex();
+            tessellator.pos(x + w, y + 0, 0).tex(1, 0).color(r, g, b, a).endVertex();
+            Tessellator.getInstance().draw();
+        }
     }
 }
