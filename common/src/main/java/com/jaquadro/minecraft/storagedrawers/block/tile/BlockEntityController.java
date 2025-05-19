@@ -707,7 +707,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         }
     }
 
-    protected IDrawerGroup getGroupForDrawerSlot (int drawerSlot) {
+    public IDrawerGroup getGroupForDrawerSlot(int drawerSlot) {
         if (drawerSlot < 0 || drawerSlot >= drawerSlotList.size())
             return null;
 
