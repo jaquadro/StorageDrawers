@@ -1,3 +1,9 @@
+[12.10.6]
+- Fixed possible server hang during chunk saving when remote upgrades in use
+- Added Spanish (es_es) translation (contrib by vatusai)
+- Added Chinese Simplified (zh_cn) translation (contrib by suoyuki, CTidy, zizunsi)
+- FABRIC: Fix void upgrade ignored when interacting with controllers (contrib by Pikachyuu)
+
 [12.10.5]
 - Change debugTrace config item default value back to false
   - If your value was already written as true, you will need to change this yourself
