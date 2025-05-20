@@ -1,106 +1,134 @@
-itemGroup.storagedrawers=Storage Drawers
-
-# Items
-item.storagedrawers.upgradeTemplate.name=Plantilla de Mejora
-item.storagedrawers.upgrade.obsidian.name=Mejora para Cajonera (I)
-item.storagedrawers.upgrade.iron.name=Mejora para Cajonera (II)
-item.storagedrawers.upgrade.gold.name=Mejora para Cajonera (III)
-item.storagedrawers.upgrade.diamond.name=Mejora para Cajonera (IV)
-item.storagedrawers.upgrade.emerald.name=Mejora para Cajonera (V)
-item.storagedrawers.upgradeStatus.level1.name=Status Mejora (I)
-item.storagedrawers.upgradeStatus.level1.description=Muestra que el cajón está lleno
-item.storagedrawers.upgradeStatus.level2.name=Status Mejora (II)
-item.storagedrawers.upgradeStatus.level2.description=Muestra que el cajón está casi lleno
-item.storagedrawers.upgradeStatus.level3.name=Status Mejora (III)
-item.storagedrawers.upgradeStatus.level3.description=Muestra el nivel de llenado
-item.storagedrawers.upgradeLock.name=Lock Upgrade
-item.storagedrawers.upgradeLock.description=Keep associated items when empty
-
-# Blocks
-tile.storagedrawers.fullDrawers2.oak.name=Cajonera de Roble 1x2
-tile.storagedrawers.fullDrawers2.spruce.name=Cajonera de Abeto 1x2
-tile.storagedrawers.fullDrawers2.birch.name=Cajonera de Abedul 1x2
-tile.storagedrawers.fullDrawers2.jungle.name=Cajonera de Selva 1x2
-tile.storagedrawers.fullDrawers2.acacia.name=Cajonera de Acacia 1x2
-tile.storagedrawers.fullDrawers2.big_oak.name=Cajonera de Roble Oscuro 1x2
-
-tile.storagedrawers.fullDrawers4.oak.name=Cajonera de Roble 2x2
-tile.storagedrawers.fullDrawers4.spruce.name=Cajonera de Abeto 2x2
-tile.storagedrawers.fullDrawers4.birch.name=Cajonera de Abedul 2x2
-tile.storagedrawers.fullDrawers4.jungle.name=Cajonera de Selva 2x2
-tile.storagedrawers.fullDrawers4.acacia.name=Cajonera de Acacia 2x2
-tile.storagedrawers.fullDrawers4.big_oak.name=Cajonera de Roble Oscuro 2x2
-
-tile.storagedrawers.halfDrawers2.oak.name=Cajonera de Roble Compacta 1x2
-tile.storagedrawers.halfDrawers2.spruce.name=Cajonera de Abeto Compacta 1x2
-tile.storagedrawers.halfDrawers2.birch.name=Cajonera de Abedul Compacta 1x2
-tile.storagedrawers.halfDrawers2.jungle.name=Cajonera de Selva Compacta 1x2
-tile.storagedrawers.halfDrawers2.acacia.name=Cajonera de Acacia Compacta 1x2
-tile.storagedrawers.halfDrawers2.big_oak.name=Cajonera de Roble Oscuro Compacta 1x2
-
-tile.storagedrawers.halfDrawers4.oak.name=Cajonera de Roble Compacta 2x2
-tile.storagedrawers.halfDrawers4.spruce.name=Cajonera de Abeto Compacta 2x2
-tile.storagedrawers.halfDrawers4.birch.name=Cajonera de Abedul Compacta 2x2
-tile.storagedrawers.halfDrawers4.jungle.name=Cajonera de Selva Compacta 2x2
-tile.storagedrawers.halfDrawers4.acacia.name=Cajonera de Acacia Compacta 2x2
-tile.storagedrawers.halfDrawers4.big_oak.name=Cajonera de Roble Oscuro Compacta 2x2
-
-tile.storagedrawers.compDrawers.name=Cajonera Compactadora
-
-storagedrawers.drawers.description=Almacena %d stacks por cajón
-storagedrawers.upgrade.description=Multiplica la capacidad por %d
-
-# Integration
-storagedrawers.waila.empty=Vacía
-storagedrawers.waila.level=Nivel de mejora: %s
-storagedrawers.waila.drawer=Cajonera #%s: %s
-storagedrawers.waila.locked=Locked
-
-# Configuration
-storagedrawers.config.title=Configuración de Storage Drawers
-
-storagedrawers.config.general=Configuración General
-storagedrawers.config.general.tooltip=Esto y aquello.
-
-storagedrawers.config.blocks=Configuración de Bloques
-storagedrawers.config.blocks.tooltip=Configura los bloques de almacenamiento individuales.
-
-storagedrawers.config.blocks.fullDrawers2=Cajoneras 1x2
-storagedrawers.config.blocks.fullDrawers4=Cajoneras 2x2
-storagedrawers.config.blocks.halfDrawers2=Cajoneras Compactas 1x2
-storagedrawers.config.blocks.halfDrawers4=Cajoneras Compactas 2x2
-storagedrawers.config.blocks.compDrawers=Cajonera Compactadora
-
-storagedrawers.config.upgrades=Configuración de las Mejoras
-storagedrawers.config.upgrades.tooltip=Configura las mejoras de capacidad individuales.
-
-storagedrawers.config.upgrades.level2Mult=Multiplicador de Capacidad (II)
-storagedrawers.config.upgrades.level3Mult=Multiplicador de Capacidad (III)
-storagedrawers.config.upgrades.level4Mult=Multiplicador de Capacidad (IV)
-storagedrawers.config.upgrades.level5Mult=Mupliplicador de Capacidad (V)
-storagedrawers.config.upgrades.level6Mult=Multiplicador de Capacidad (VI)
-
-storagedrawers.config.prop.itemRenderType=Tipo de renderizado de los ítems
-storagedrawers.config.prop.itemRenderType.tooltip=Renderiza los ítems en 3D o plano.
-storagedrawers.config.prop.enableIndicatorUpgrades=Permitir los indicadores de estado.
-storagedrawers.config.prop.enableStorageUpgrades=Permite las mejoras de capacidad.
-storagedrawers.config.prop.enableLockUpgrades=Enable Lock Upgrade
-storagedrawers.config.prop.renderStorageUpgrades=Renderiza las mejoras de capacidad.
-storagedrawers.config.prop.creativeTabVanillaWoods=Maderas de Minecraft normal en modo creativo
-storagedrawers.config.prop.creativeTabVanillaWoods.tooltip=Permite todos los tipos de madera de Minecraft normal en creativo.
-storagedrawers.config.prop.enabled=Permitido
-storagedrawers.config.prop.enabled.tooltip=Permitir el bloque en el juego.
-storagedrawers.config.prop.baseStorage=Capacidad básica.
-storagedrawers.config.prop.baseStorage.tooltip=Número de stacks permitidos en cada cajón.
-storagedrawers.config.prop.recipeOutput=Resultado de la Receta
-storagedrawers.config.prop.recipeOutput.tooltip=Número de ítems por cada crafteo.
-storagedrawers.config.prop.enableSidedInput=Enable Sided Input
-storagedrawers.config.prop.enableSidedInput.tooltip=Other blocks can insert items into drawers.
-storagedrawers.config.prop.enableSidedOutput=Enable Sided Output
-storagedrawers.config.prop.enableSidedOutput.tooltip=Other blocks can extract items from drawers.
-
-storagedrawers.config.integration=Integration
-storagedrawers.config.integration.tooltip=Configure integration with other mods.
-
-storagedrawers.config.integration.enableAE2=Enable Applied Energistics 2 Integration
-storagedrawers.config.integration.enableWaila=Enable WAILA Integration
+{
+    "block.storagedrawers.type.full_drawers_1": "%sCajón 1x1",
+    "block.storagedrawers.type.full_drawers_2": "%sCajón 1x2",
+    "block.storagedrawers.type.full_drawers_4": "%sCajón 2x2",
+    "block.storagedrawers.type.half_drawers_1": "%sMedio Cajón 1x2",
+    "block.storagedrawers.type.half_drawers_2": "%sMedio Cajón 1x2",
+    "block.storagedrawers.type.half_drawers_4": "%sMedio Cajón 2x2",
+    "block.storagedrawers.type.trim": "%s Trim",
+    "block.storagedrawers.mat.oak": "Roble",
+    "block.storagedrawers.mat.spruce": "Abeto",
+    "block.storagedrawers.mat.birch": "Abedul",
+    "block.storagedrawers.mat.jungle": "Jungla",
+    "block.storagedrawers.mat.acacia": "Acacia",
+    "block.storagedrawers.mat.dark_oak": "Roble oscuro",
+    "block.storagedrawers.mat.mangrove": "Manglar",
+    "block.storagedrawers.mat.cherry": "Cerezo",
+    "block.storagedrawers.mat.bamboo": "Bambú",
+    "block.storagedrawers.mat.crimson": "Carmesí",
+    "block.storagedrawers.mat.warped": "Distorsionada",
+    "block.storagedrawers.mat.pale_oak": "Roble pálido",
+    "block.storagedrawers.mat.framed": "Enmarcado",
+    "block.storagedrawers.compacting_drawers_2": "Caja Compactadora (2-Tier)",
+    "block.storagedrawers.compacting_drawers_3": "Caja Compactadora (3-Tier)",
+    "block.storagedrawers.compacting_half_drawers_2": "Media Caja Compactadora (2-nivel)",
+    "block.storagedrawers.compacting_half_drawers_3": "Media Caja Compactadora (3-nivel)",
+    "block.storagedrawers.framed_compacting_drawers_2": "Caja Compactadora Enmarcada (2-nivel)",
+    "block.storagedrawers.framed_compacting_drawers_3": "Caja Compactadora Enmarcada (3-nivel)",
+    "block.storagedrawers.framed_compacting_half_drawers_2": "Media Caja Compactadora Enmarcada (2-nivel)",
+    "block.storagedrawers.framed_compacting_half_drawers_3": "Media Caja Compactadora Enmarcada (3-nivel)",
+    "block.storagedrawers.controller": "Caja de Control",
+    "block.storagedrawers.controller_io": "Drawer Controller IO",
+    "block.storagedrawers.framed_controller": "Caja de control enmarcada",
+    "block.storagedrawers.framed_controller_io": "Framed Drawer Controller IO",
+    "block.storagedrawers.keybutton_drawer": "Llave de cajón",
+    "block.storagedrawers.keybutton_quantify": "Llave de cuantificación",
+    "block.storagedrawers.keybutton_concealment": "Llave de ocultación",
+    "block.storagedrawers.keybutton_personal": "Llave personal",
+    "block.storagedrawers.framing_table": "Mesa enmarcadora",
+    "config.jade.plugin_storagedrawers.main": "Cajones de Almacenamiento",
+    "config.jade.plugin_storagedrawers.display.content": "Slot Contents",
+    "config.jade.plugin_storagedrawers.display.stacklimit": "Tamaño límite",
+    "config.jade.plugin_storagedrawers.display.status": "Mejorar estado",
+    "container.storagedrawers.upgrades": "Mejoras",
+    "container.storagedrawers.framing_table": "Mesa enmarcadora",
+    "item.storagedrawers.storage_upgrade.desc": "Incrementa el almacenamiento en %d veces el valor base",
+    "item.storagedrawers.obsidian_storage_upgrade": "Mejora de Almacenamiento (I)",
+    "item.storagedrawers.iron_storage_upgrade": "Mejora de Almacenamiento (II)",
+    "item.storagedrawers.gold_storage_upgrade": "Mejora de Almacenamiento (III)",
+    "item.storagedrawers.emerald_storage_upgrade": "Mejora de Almacenamiento (V)",
+    "item.storagedrawers.diamond_storage_upgrade": "Mejora de Almacenamiento (IV)",
+    "item.storagedrawers.one_stack_upgrade": "Bajar grado de almacenamiento",
+    "item.storagedrawers.one_stack_upgrade.desc": "Reduce el almacenamiento base a una pila única",
+    "item.storagedrawers.void_upgrade": "Mejora del Vacío",
+    "item.storagedrawers.void_upgrade.desc": "Destruye objetos excedentes",
+    "item.storagedrawers.creative_storage_upgrade": "Mejora de almacenamiento creativo",
+    "item.storagedrawers.creative_storage_upgrade.desc": "Almacenamiento infinito cercano",
+    "item.storagedrawers.creative_vending_upgrade": "Mejora Creativa Vender",
+    "item.storagedrawers.creative_vending_upgrade.desc": "Retirar artículos ilimitados",
+    "item.storagedrawers.conversion_upgrade": "Mejora de conversión",
+    "item.storagedrawers.conversion_upgrade.desc": "Auto-conversión de elementos compatibles",
+    "item.storagedrawers.fill_level_upgrade": "Rellenar Nivel de Mejora",
+    "item.storagedrawers.fill_level_upgrade.desc": "Muestra que tan lleno esta el almacenamiento",
+    "item.storagedrawers.illumination_upgrade": "Mejora de iluminación",
+    "item.storagedrawers.illumination_upgrade.desc": "Ilumina las etiquetas del cajón en la oscuridad",
+    "item.storagedrawers.redstone_upgrade": "Mejora de Redstone",
+    "item.storagedrawers.redstone_upgrade.desc": "Emite señal por almacenamiento completo",
+    "item.storagedrawers.min_redstone_upgrade": "Mejora mínima de Redstone",
+    "item.storagedrawers.min_redstone_upgrade.desc": "Emite señal para el espacio menos completo",
+    "item.storagedrawers.max_redstone_upgrade": "Mejora máxima de Redstone",
+    "item.storagedrawers.max_redstone_upgrade.desc": "Emite señal para la mayor parte del espacio completo",
+    "item.storagedrawers.balance_fill_upgrade": "Mejora de relleno balanceado",
+    "item.storagedrawers.balance_fill_upgrade.desc": "Distribuir objetos de forma uniforme en espacios",
+    "item.storagedrawers.balance_fill_upgrade.warn": "No tiene efecto con la configuración actual del mod",
+    "item.storagedrawers.portability_upgrade": "Mejora de portabilidad",
+    "item.storagedrawers.portability_upgrade.desc": "Te permite llevar cajones llenos",
+    "item.storagedrawers.portability_upgrade.warn": "No tiene efecto con la configuración actual del mod",
+    "item.storagedrawers.remote_upgrade": "Mejora remota",
+    "item.storagedrawers.remote_upgrade.desc": "Permite que un cajón único se conecte de forma remota al controlador",
+    "item.storagedrawers.remote_upgrade.bound": "Usar en el controlador para enlazar la mejora",
+    "item.storagedrawers.remote_upgrade_bound": "Mejora remota",
+    "item.storagedrawers.remote_upgrade_bound.desc": "Permite una conexión remota del cajón único al controlador. Se puede usar en el cajón actualizado para volver a enlazarlo",
+    "item.storagedrawers.remote_upgrade_bound.bound": "Vinculado al controlador [%d, %d, %d]",
+    "item.storagedrawers.remote_group_upgrade": "Mejora de Grupo Remoto",
+    "item.storagedrawers.remote_group_upgrade.desc": "Permite que el grupo de cajones conectado se conecte de forma remota al controlador",
+    "item.storagedrawers.remote_group_upgrade.bound": "Usar en el controlador para enlazar la mejora",
+    "item.storagedrawers.remote_group_upgrade_bound": "Mejora remota",
+    "item.storagedrawers.remote_group_upgrade_bound.desc": "Permite conectarse de forma remota al grupo de cajones conectados al controlador. Se puede usar en el cajón actualizado para volver a enlazarlo",
+    "item.storagedrawers.remote_group_upgrade_bound.bound": "Vinculado al controlador [%d, %d, %d]",
+    "item.storagedrawers.upgrade_template": "Mejorar plantilla",
+    "item.storagedrawers.drawer_key": "Llave de cajón",
+    "item.storagedrawers.drawer_key.desc": "Bloquea y desbloquea los cajones\nMantén presionado para bloquear los cajones recién colocados",
+    "item.storagedrawers.shroud_key": "Clave de cesión",
+    "item.storagedrawers.shroud_key.desc": "Mostrar u ocultar etiquetas de artículos",
+    "item.storagedrawers.quantify_key": "Llave de cantidad",
+    "item.storagedrawers.quantify_key.desc": "Mostrar u ocultar etiquetas de cantidad almacenada",
+    "item.storagedrawers.priority_key": "Llave de prioridad",
+    "item.storagedrawers.priority_key.desc": "Pasar el cajón por los niveles de prioridad\nAgáchate y usa para ciclar la tecla",
+    "item.storagedrawers.priority_key_p1": "Llave prioritaria (+1)",
+    "item.storagedrawers.priority_key_p1.desc": "Da mayor prioridad al cajón\nAgáchate y usa para ciclar la tecla",
+    "item.storagedrawers.priority_key_p2": "Llave de prioridad (+2)",
+    "item.storagedrawers.priority_key_p2.desc": "Da al cajón la máxima prioridad\nAgáchate y usa para ciclar la tecla",
+    "item.storagedrawers.priority_key_n1": "Llave de prioridad (-1)",
+    "item.storagedrawers.priority_key_n1.desc": "Da al cajón menor prioridad\nAgáchate y usa para ciclar la tecla",
+    "item.storagedrawers.priority_key_n2": "Llave de prioridad (-2)",
+    "item.storagedrawers.priority_key_n2.desc": "Gives drawer lowest priority\nCrouch and use to cycle key",
+    "item.storagedrawers.personal_key": "Llave personal",
+    "item.storagedrawers.personal_key.desc": "Protege el acceso de otros jugadores\nno protege a los bloques de romper",
+    "item.storagedrawers.personal_key_cofh": "Llave personal (CoFH)",
+    "item.storagedrawers.personal_key_cofh.desc": "Protege el acceso de otros jugadores\nno protege a los bloques de romper",
+    "item.storagedrawers.keyring": "Llavero",
+    "item.storagedrawers.keyring.desc": "Almacenamiento para llaves\nAgregar o eliminar llaves en el inventario\nAgáchate y úsalo para recorrer las llaves.",
+    "item.storagedrawers.drawer_puller": "Tirador de cajón",
+    "item.storagedrawers.drawer_puller.desc": "Quitar un cajón de su bloque\nEl cajón separado mantendrá su contenido",
+    "item.storagedrawers.detached_drawer": "Cajón independiente",
+    "item.storagedrawers.detached_drawer.desc": "Coloca un bloque de cajón con un espacio perdido",
+    "itemConfig.storagedrawers.disabled_upgrade": "No tiene efecto con la configuración actual del mod",
+    "itemConfig.storagedrawers.disabled_tool": "No tiene efecto con la configuración actual del mod",
+    "itemGroup.storagedrawers": "Cajones de Almacenamiento",
+    "message.storagedrawers.cannot_add_upgrade": "Esa mejora no puede instalarse en este cajón",
+    "message.storagedrawers.max_upgrades": "Este cajón no puede aceptar más mejoras",
+    "message.storagedrawers.missing_slots_upgrade": "Las mejoras no pueden ser cambiadas mientras los cajones son retirados",
+    "message.storagedrawers.updated_remote_binding": "Enlace remoto actualizado al controlador [%d, %d, %d]",
+    "tooltip.storagedrawers.drawers.capacity": "Almacena pilas %d por cajón",
+    "tooltip.storagedrawers.drawers.sealed": "Contenido sellado en el interior",
+    "tooltip.storagedrawers.drawers.too_heavy": "¡Es muy pesado!",
+    "tooltip.storagedrawers.waila.empty": "Vacio",
+    "tooltip.storagedrawers.waila.drawer": "#%s: %s",
+    "tooltip.storagedrawers.waila.nolimit": "Tamaño límite: ∞",
+    "tooltip.storagedrawers.waila.limit": "Tamaño límite: %s (x%s)",
+    "tooltip.storagedrawers.waila.locked": "Bloqueado",
+    "tooltip.storagedrawers.waila.void": "Vacío",
+    "tooltip.storagedrawers.waila.protected": "Protegido",
+    "tooltip.storagedrawers.waila.balanced": "Balanceado"
+}
