@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
@@ -162,11 +163,11 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         @Override
         protected void onUpgradeChanged (ItemStack oldUpgrade, ItemStack newUpgrade) {
-            checkBoundController();
-            if (getBoundControlGroup() != null)
-                getBoundControlGroup().addRemoteNode(BlockEntityDrawers.this);
-
             if (getLevel() != null && !getLevel().isClientSide) {
+                checkBoundController();
+                if (getBoundControlGroup() != null)
+                    getBoundControlGroup().addRemoteNode(BlockEntityDrawers.this);
+
                 setChanged();
                 markBlockForUpdate();
             }
@@ -202,6 +203,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     }
 
     private void checkBoundController () {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("BlockEntityDrawers [{}] checkBoundController", getBlockPos());
+
         BlockEntityController controller = controllerData.getController(this);
         ItemStack remote = upgradeData.getRemoteUpgrade();
         if (remote == null && controller != null) {
@@ -220,7 +224,14 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
                 if (!upgradeController.addRemoteNode(this))
                     controllerData.bind(null);
             }
+
+            if (itemRemote.isBound() && controllerData.getController(this) == null)
+                upgradeData.unbindRemoteUpgrade();
         }
+    }
+
+    public void validateBoundController() {
+        checkBoundController();
     }
 
     private boolean controllerInrange (BlockPos controllerPos) {

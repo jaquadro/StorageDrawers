@@ -69,6 +69,11 @@ public class BlockEntitySlave extends BaseBlockEntity implements IDrawerGroup, I
     }
 
     @Override
+    public void validateRemoteNode (INetworked node) {
+
+    }
+
+    @Override
     public void invalidateRemoteNode (INetworked node) {
 
     }
