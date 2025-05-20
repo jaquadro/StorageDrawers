@@ -34,7 +34,7 @@ dependencies {
     runtimeOnly("mezz.jei:jei-1.21.1-neoforge:19.8.5.118")
     // JADE
     implementation("curse.maven:jade-324717:5591256")
-    implementation("curse.maven:the-one-probe-245211:5836106")
+    implementation("curse.maven:the-one-probe-245211:6106998")
 }
 
 tasks.create<TaskPublishCurseForge>("publishCurseForge") {
