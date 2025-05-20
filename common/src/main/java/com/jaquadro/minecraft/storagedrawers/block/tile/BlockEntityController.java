@@ -30,6 +30,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -212,27 +214,58 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     public List<INetworked> getBoundRemoteNodes () {
         return controllerHostData.getRemoteNodes().toList();
     }
+
+    @Override
+    public void validateRemoteNode (INetworked node) {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("Controller [{}] validating node [{}]", worldPosition, node);
+
+        controllerHostData.validateRemoteNode(this, node);
+    }
+
     @Override
     public void invalidateRemoteNode (INetworked node) {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("Controller [{}] invalidating node [{}]", worldPosition, node);
+
         controllerHostData.removeRemoteNode(this, node);
     }
+
     @Override
     public boolean addRemoteNode (INetworked node) {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("Controller [{}] add remote node [{}]", worldPosition, node);
+
         return controllerHostData.addRemoteNode(this, node);
     }
+
     @Override
     public void setRemoved () {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("controller [{}] setRemoved", worldPosition);
+
         super.setRemoved();
+        if (getLevel() == null || getLevel().isClientSide)
+            return;
+
         for (var node : getBoundRemoteNodes()) {
-            invalidateRemoteNode(node);
-            node.unbindControlGroup();
+            if (node instanceof BlockEntity blockEntity) {
+                BlockPos pos = blockEntity.getBlockPos();
+                getLevel().scheduleTick(pos, blockEntity.getBlockState().getBlock(), 1);
+            }
+            
+            //invalidateRemoteNode(node);
+            //node.unbindControlGroup();
         }
     }
 
     @Override
     public void clearRemoved () {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("controller [{}] clearRemoved", worldPosition);
+
         super.clearRemoved();
-        if (getLevel() == null)
+        if (getLevel() == null || getLevel().isClientSide)
             return;
 
         if (!getLevel().getBlockTicks().hasScheduledTick(getBlockPos(), getBlockState().getBlock()))
@@ -644,7 +677,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         searchQueue.clear();
         searchDiscovered.clear();
 
-        controllerHostData.validateRemoteNodes(this, level);
+        if (!getLevel().isClientSide)
+            controllerHostData.validateRemoteNodes(this, level);
 
         populateRoot(getBlockPos(), true);
 

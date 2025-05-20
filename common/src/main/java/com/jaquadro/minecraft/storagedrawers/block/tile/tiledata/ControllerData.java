@@ -1,6 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
+import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -58,6 +60,9 @@ public class ControllerData extends BlockEntityDataShim
     }
 
     public boolean bindCoord (BlockPos pos) {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("ControllerData [{}] bind coord [{}]", controllerCoord, pos);
+
         if (controllerCoord == null || !controllerCoord.equals(pos)) {
             controllerCoord = pos;
             return true;

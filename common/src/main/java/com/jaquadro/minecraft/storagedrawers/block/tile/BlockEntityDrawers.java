@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
@@ -167,11 +168,11 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         @Override
         protected void onUpgradeChanged (ItemStack oldUpgrade, ItemStack newUpgrade) {
-            checkBoundController();
-            if (getBoundControlGroup() != null)
-                getBoundControlGroup().addRemoteNode(BlockEntityDrawers.this);
-
             if (getLevel() != null && !getLevel().isClientSide) {
+                checkBoundController();
+                if (getBoundControlGroup() != null)
+                    getBoundControlGroup().addRemoteNode(BlockEntityDrawers.this);
+
                 setChanged();
                 markBlockForUpdate();
             }
@@ -207,6 +208,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     }
 
     private void checkBoundController () {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("BlockEntityDrawers [{}] checkBoundController", getBlockPos());
+
         BlockEntityController controller = controllerData.getController(this);
         ItemStack remote = upgradeData.getRemoteUpgrade();
         if (remote == null && controller != null) {
@@ -214,25 +218,37 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             controllerData.bind(null);
             return;
         }
+
         if (remote != null && remote.getItem() instanceof ItemUpgradeRemote itemRemote) {
             BlockEntityController upgradeController = itemRemote.getBoundController(remote, level);
             if (controller != null && controller != upgradeController)
                 controller.invalidateRemoteNode(this);
+
             if (upgradeController != null) {
                 controllerData.bind(upgradeController);
                 if (!upgradeController.addRemoteNode(this))
                     controllerData.bind(null);
             }
+
+            if (itemRemote.isBound() && controllerData.getController(this) == null)
+                upgradeData.unbindRemoteUpgrade();
         }
     }
+
+    public void validateBoundController() {
+        checkBoundController();
+    }
+
     @Override
     public boolean supportsDirectControllerLink () {
         return true;
     }
+
     @Override
     public IControlGroup getBoundControlGroup () {
         return controllerData.getController(this);
     }
+
     @Override
     public boolean canRecurseSearch () {
         ItemStack upgrade = upgradeData.getRemoteUpgrade();
@@ -242,6 +258,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             return item.isGroupUpgrade();
         return true;
     }
+
     @Override
     public void unbindControlGroup () {
         upgradeData.unbindRemoteUpgrade();
@@ -737,7 +754,11 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
     @Override
     public Component getName() {
-        return (this.name != null ? this.name : Component.translatable("block.storagedrawers.framing_table"));
+        if (this.name != null)
+            return this.name;
+
+        ItemStack stack = new ItemStack(getBlockState().getBlock());
+        return stack.getItem().getName(stack);
     }
 
     @Override

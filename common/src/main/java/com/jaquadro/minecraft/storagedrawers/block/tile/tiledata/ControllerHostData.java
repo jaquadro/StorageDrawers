@@ -1,8 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
+import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IControlGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -48,6 +50,9 @@ public class ControllerHostData extends BlockEntityDataShim
     }
 
     public void validateRemoteNodes (IControlGroup host, Level level) {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("controllerHostData [{}, size={}] validate remote notes for host [{}]", this, nodeMap.size(), host);
+
         // Use iterator directly so that entries can be removed during iteration.
         Iterator<Map.Entry<BlockPos, INetworked>> iterator = nodeMap.entrySet().iterator();
 
@@ -58,15 +63,39 @@ public class ControllerHostData extends BlockEntityDataShim
             if (entity instanceof INetworked networked) {
                 if (networked.getBoundControlGroup() == host) {
                     nodeMap.put(pos, networked);
+                    if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+                        ModServices.log.info("  put node [{} = {}]", pos, entity);
                     continue;
                 }
             }
 
             iterator.remove();
+            if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+                ModServices.log.info("  remove node [{} = {}]", pos, entity);
+        }
+    }
+
+    public void validateRemoteNode (IControlGroup host, INetworked node) {
+        if (node == null)
+            return;
+
+        if (node instanceof BlockEntity blockEntity) {
+            BlockPos pos = blockEntity.getBlockPos();
+            if (node.getBoundControlGroup() == host) {
+                nodeMap.put(pos, node);
+                if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+                    ModServices.log.info("  put node [{} = {}]", pos, node);
+                return;
+            }
+
+            nodeMap.remove(pos);
         }
     }
 
     public boolean addRemoteNode (IControlGroup host, INetworked node) {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("ControllerHostData [{}] add remote node [{}] for host [{}]", this, node, host);
+
         if (node == null)
             return false;
 
@@ -84,6 +113,9 @@ public class ControllerHostData extends BlockEntityDataShim
     }
 
     public boolean removeRemoteNode (IControlGroup host, INetworked node) {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("ControllerHostData [{}] remove node [{}] for host [{}]", this, node, host);
+
         if (node == null)
             return false;
 

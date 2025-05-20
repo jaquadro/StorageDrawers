@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
+import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.jaquadro.minecraft.storagedrawers.components.item.ControllerBinding;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
@@ -67,6 +68,9 @@ public class ItemUpgradeRemote extends ItemUpgrade
     }
 
     public static ItemStack setBoundController (ItemStack itemStack, BlockEntityController controller) {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("remote upgrade [{}] set bound controller [{}]", itemStack, controller);
+
         if (itemStack == null || controller == null)
             return itemStack;
 
@@ -83,6 +87,9 @@ public class ItemUpgradeRemote extends ItemUpgrade
     }
 
     public static ItemStack setUnbound (ItemStack itemStack) {
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("remote upgrade [{}] set unbound", itemStack);
+
         if (itemStack != null && itemStack.getItem() instanceof ItemUpgradeRemote item) {
             return new ItemStack(item.isGroupUpgrade()
                 ? ModItems.REMOTE_GROUP_UPGRADE.get()
