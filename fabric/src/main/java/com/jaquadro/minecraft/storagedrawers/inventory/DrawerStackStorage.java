@@ -4,6 +4,10 @@ import java.util.Objects;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityControllerIO;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;
@@ -45,15 +49,55 @@ public class DrawerStackStorage extends SingleStackStorage
         return storage.getDrawer(slot).getMaxCapacity(itemVariant.toStack());
     }
 
+    private IDrawerAttributes getDrawerAttributes (IDrawerGroup group) {
+        if (group == null)
+            return null;
+
+        IDrawerAttributes attr = group.getCapability(Capabilities.DRAWER_ATTRIBUTES);
+        if (attr == null && group instanceof BlockEntityDrawers)
+            attr = ((BlockEntityDrawers) group).getDrawerAttributes();
+
+        return attr;
+    }
+
+    private boolean checkControllerVoid (BlockEntityController controller) {
+        if (controller == null)
+            return false;
+
+        IDrawer drawer = storage.getDrawer(slot);
+        if (drawer == null || !drawer.isEnabled())
+            return false;
+
+        IDrawerGroup drawerGroup = controller.getGroupForDrawerSlot(slot);
+        if (drawerGroup == null)
+            return false;
+
+        IDrawerAttributes attrs = getDrawerAttributes(drawerGroup);
+        return attrs != null && attrs.isVoid();
+    }
+
     @Override
     public long insert (ItemVariant insertedVariant, long maxAmount, TransactionContext transaction) {
         if (!storage.getDrawer(slot).canItemBeStored(insertedVariant.toStack()))
             return 0;
 
         long inserted = super.insert(insertedVariant, maxAmount, transaction);
+
         if (inserted < maxAmount) {
-            IDrawerAttributes attr = storage.group.getCapability(Capabilities.DRAWER_ATTRIBUTES);
-            if (attr != null && attr.isVoid())
+            boolean isVoid;
+
+            if (storage.group instanceof BlockEntityController)
+                isVoid = checkControllerVoid((BlockEntityController) storage.group);
+            else if (storage.group instanceof BlockEntityControllerIO) {
+                BlockEntityController controller = ((BlockEntityControllerIO) storage.group).getController();
+                isVoid = checkControllerVoid(controller);
+            }
+            else {
+                IDrawerAttributes attr = getDrawerAttributes(storage.group);
+                isVoid = attr != null && attr.isVoid();
+            }
+
+            if (isVoid)
                 inserted = maxAmount;
         }
 
