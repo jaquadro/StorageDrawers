@@ -55,7 +55,6 @@ public class DrawerStackStorage extends SingleStackStorage
         
         // Try capability first
         IDrawerAttributes attr = group.getCapability(Capabilities.DRAWER_ATTRIBUTES);
-        
         // If that fails and it's a BlockEntityDrawers, get attributes directly
         if (attr == null && group instanceof BlockEntityDrawers) {
             attr = ((BlockEntityDrawers) group).getDrawerAttributes();
@@ -84,35 +83,35 @@ public class DrawerStackStorage extends SingleStackStorage
     
     @Override
     public long insert (ItemVariant insertedVariant, long maxAmount, TransactionContext transaction) {
+        if (!storage.getDrawer(slot).canItemBeStored(insertedVariant.toStack()))
+            return 0;
+
         long inserted = super.insert(insertedVariant, maxAmount, transaction);
-        
+
         if (inserted < maxAmount) {
             boolean isVoid;
 
             if (storage.group instanceof BlockEntityController) {
                 // Handle controller case
                 isVoid = checkControllerVoid((BlockEntityController) storage.group);
-            } 
+            }
             else if (storage.group instanceof BlockEntitySlave) {
                 // Handle slave case by getting its controller
                 BlockEntityController controller =
                     ((BlockEntitySlave) storage.group).getController();
                 isVoid = checkControllerVoid(controller);
-            } 
+            }
             else {
                 // Handle normal drawer case
                 IDrawerAttributes attr = getDrawerAttributes(storage.group);
                 isVoid = attr != null && attr.isVoid();
             }
-            
+
             // If we found the void attribute, accept the full amount
             if (isVoid) {
                 inserted = maxAmount;
             }
         }
-    
-        if (!storage.getDrawer(slot).canItemBeStored(insertedVariant.toStack()))
-            return 0;
 
         return inserted;
     }
