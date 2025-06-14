@@ -1,3 +1,6 @@
+[12.10.7]
+- FABRIC: Fix regression inserting items into locked drawers (contrib by Pikachyuu)
+
 [12.10.6]
 - Fixed possible server hang during chunk saving when remote upgrades in use
 - Added Spanish (es_es) translation (contrib by vatusai)
