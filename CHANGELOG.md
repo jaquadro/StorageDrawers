@@ -1,3 +1,13 @@
+[13.8.7]
+- FABRIC: Fix void upgrade ignored when interacting with controllers (contrib by Pikachyuu)
+
+[13.8.6]
+- Fixed possible server hang during chunk saving when remote upgrades in use
+- Fixed GUI names for drawers displaying as "Framing Table"
+- Added Spanish (es_es) translation (contrib by vatusai)
+- Added Chinese Simplified (zh_cn) translation (contrib by suoyuki, CTidy, zizunsi)
+- NEOFORGE: Fix server crash on load when TheOneProbe is present
+
 [13.8.5]
 - Change debugTrace config item default value back to false
   - If your value was already written as true, you will need to change this yourself

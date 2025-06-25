@@ -14,6 +14,8 @@ public interface IControlGroup
 
     List<INetworked> getBoundRemoteNodes();
 
+    void validateRemoteNode (INetworked node);
+
     void invalidateRemoteNode (INetworked node);
 
     boolean addRemoteNode (INetworked node);
