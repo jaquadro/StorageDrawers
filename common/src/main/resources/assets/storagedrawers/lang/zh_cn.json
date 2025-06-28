@@ -83,7 +83,7 @@
     "item.storagedrawers.remote_group_upgrade": "远程抽屉组升级",
     "item.storagedrawers.remote_group_upgrade.desc": "让连接的抽屉组远程连接到控制器",
     "item.storagedrawers.remote_group_upgrade.bound": "对控制器使用来绑定升级",
-    "item.storagedrawers.remote_group_upgrade_bound": "远程升级",
+    "item.storagedrawers.remote_group_upgrade_bound": "远程抽屉组升级",
     "item.storagedrawers.remote_group_upgrade_bound.desc": "让连接的抽屉组远程连接到控制器。可以在升级抽屉上使用来重新绑定它",
     "item.storagedrawers.remote_group_upgrade_bound.bound": "绑定到控制器 [%d， %d， %d]",
     "item.storagedrawers.upgrade_template": "升级模板",
