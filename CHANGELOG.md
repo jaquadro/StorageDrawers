@@ -1,3 +1,10 @@
+[15.0.3]
+- Fix remote group upgrade language key (contrib by Jack McKalling)
+- Fix framing table removing contents of drawers (contrib by ellellie)
+- Fix inventory crash after crafting drawer with upgrade
+- FABRIC: Fix blocks inserting into 2-tier compacting drawers (contrib by ellellie)
+- FABRIC: Fix model compatibility issue with ModernFix (contrib by embeddedt)
+
 [15.0.2]
 - Fixed possible server hang during chunk saving when remote upgrades in use
 - Fixed GUI names for drawers displaying as "Framing Table"

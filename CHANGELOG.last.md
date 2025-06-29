@@ -1,6 +1,5 @@
-- Fixed possible server hang during chunk saving when remote upgrades in use
-- Fixed GUI names for drawers displaying as "Framing Table"
-- Fixed framing table consuming contents of drawers (conrib by sharpedmimishee)
-- Added Spanish (es_es) translation (contrib by vatusai)
-- Added Chinese Simplified (zh_cn) translation (contrib by suoyuki, CTidy, zizunsi)
-- FABRIC: Fix void upgrade ignored when interacting with controllers (contrib by Pikachyuu)
+- Fix remote group upgrade language key (contrib by Jack McKalling)
+- Fix framing table removing contents of drawers (contrib by ellellie)
+- Fix inventory crash after crafting drawer with upgrade
+- FABRIC: Fix blocks inserting into 2-tier compacting drawers (contrib by ellellie)
+- FABRIC: Fix model compatibility issue with ModernFix (contrib by embeddedt)

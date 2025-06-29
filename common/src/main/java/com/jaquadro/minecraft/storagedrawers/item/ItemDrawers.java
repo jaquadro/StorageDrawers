@@ -40,8 +40,9 @@ public class ItemDrawers extends BlockItem implements IPortable
         Component textCapacity = Component.translatable("tooltip.storagedrawers.drawers.capacity", getCapacityForBlock(stack));
         tooltip.add(Component.literal("").append(textCapacity).withStyle(ChatFormatting.GRAY));
 
-        CustomData data = stack.get(DataComponents.BLOCK_ENTITY_DATA);
-        if (data != null) {
+        CustomData blockData = stack.get(DataComponents.BLOCK_ENTITY_DATA);
+        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
+        if (blockData != null || customData != null) {
             Component textSealed = Component.translatable("tooltip.storagedrawers.drawers.sealed");
             tooltip.add(Component.literal("").append(textSealed).withStyle(ChatFormatting.YELLOW));
         }
