@@ -1,3 +1,8 @@
+[12.10.8]
+- Fix remote group upgrade language key (contrib by Jack McKalling)
+- FABRIC: Fix blocks inserting into 2-tier compacting drawers (contrib by ellellie)
+- FABRIC: Fix model compatibility issue with ModernFix (contrib by embeddedt)
+
 [12.10.7]
 - FABRIC: Fix regression inserting items into locked drawers (contrib by Pikachyuu)
 
