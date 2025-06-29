@@ -8,6 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMetaFacingSized;
 import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMetaFacingSizedOpen;
 import com.jaquadro.minecraft.storagedrawers.block.meta.BlockMetaFacingSizedSlotted;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.Direction;
@@ -334,7 +335,12 @@ public class DrawerModelStore
         if (state == null)
             return null;
 
-        return modelStore.getOrDefault(state, null);
+        BlockStateModel storedModel = modelStore.getOrDefault(state, null);
+        if (storedModel == null) {
+            return Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(state);
+        } else {
+            return storedModel;
+        }
     }
 
     public static BlockStateModel getModel(String variant) {

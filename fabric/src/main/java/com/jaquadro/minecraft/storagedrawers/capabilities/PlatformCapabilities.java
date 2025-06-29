@@ -50,6 +50,7 @@ public class PlatformCapabilities
         ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> DrawerStorageImpl.of(entity), ModBlockEntities.STANDARD_DRAWERS_1.get());
         ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> DrawerStorageImpl.of(entity), ModBlockEntities.STANDARD_DRAWERS_2.get());
         ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> DrawerStorageImpl.of(entity), ModBlockEntities.STANDARD_DRAWERS_4.get());
+        ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> DrawerStorageImpl.of(entity), ModBlockEntities.FRACTIONAL_DRAWERS_2.get());
         ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> DrawerStorageImpl.of(entity), ModBlockEntities.FRACTIONAL_DRAWERS_3.get());
         ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> DrawerStorageImpl.of(entity), ModBlockEntities.CONTROLLER.get());
         ItemStorage.SIDED.registerForBlockEntity((entity, dir) -> DrawerStorageImpl.of(entity), ModBlockEntities.CONTROLLER_IO.get());
