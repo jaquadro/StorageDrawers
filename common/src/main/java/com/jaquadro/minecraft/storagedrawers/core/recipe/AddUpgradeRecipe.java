@@ -1,12 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.core.recipe;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.ModRecipes;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -39,9 +41,17 @@ public class AddUpgradeRecipe extends CustomRecipe
             return ItemStack.EMPTY;
         ItemStack ret = ctx.drawer.copy();
 
-        CustomData orig = ret.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
-        CustomData data = CustomData.of(ctx.data.write(registries, orig.copyTag()));
-        ret.set(DataComponents.BLOCK_ENTITY_DATA, data);
+        CustomData blockData = ret.get(DataComponents.BLOCK_ENTITY_DATA);
+        if (blockData != null) {
+            CustomData data = CustomData.of(ctx.data.write(registries, blockData.copyTag()));
+            ret.set(DataComponents.BLOCK_ENTITY_DATA, data);
+
+            return ret;
+        }
+
+        CustomData upgradeData = ret.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CustomData data = CustomData.of(ctx.data.write(registries, upgradeData.copyTag()));
+        ret.set(DataComponents.CUSTOM_DATA, data);
 
         return ret;
     }
@@ -85,9 +95,14 @@ public class AddUpgradeRecipe extends CustomRecipe
             }
         };
 
-        CustomData custom = ret.drawer.get(DataComponents.BLOCK_ENTITY_DATA);
-        if (custom != null)
-            ret.data.read(registries, custom.copyTag());
+        CustomData blocKEntityData = ret.drawer.get(DataComponents.BLOCK_ENTITY_DATA);
+        if (blocKEntityData != null)
+            ret.data.read(registries, blocKEntityData.copyTag());
+        else {
+            CustomData customData = ret.drawer.get(DataComponents.CUSTOM_DATA);
+            if (customData != null)
+                ret.data.read(registries, customData.copyTag());
+        }
 
         for (ItemStack upgrade : ret.upgrades) {
             if (upgrade.getItem() == ModItems.ONE_STACK_UPGRADE.get())

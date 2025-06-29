@@ -1,3 +1,9 @@
+[13.8.8]
+- Fix remote group upgrade language key (contrib by Jack McKalling)
+- Fix inventory crash after crafting drawer with upgrade
+- FABRIC: Fix blocks inserting into 2-tier compacting drawers (contrib by ellellie)
+- FABRIC: Fix model compatibility issue with ModernFix (contrib by embeddedt)
+
 [13.8.7]
 - FABRIC: Fix void upgrade ignored when interacting with controllers (contrib by Pikachyuu)
 
