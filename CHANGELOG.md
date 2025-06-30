@@ -1,3 +1,6 @@
+[15.0.4]
+- Fix regression in Controller IO block name
+
 [15.0.3]
 - Fix remote group upgrade language key (contrib by Jack McKalling)
 - Fix framing table removing contents of drawers (contrib by ellellie)

@@ -1,5 +1,1 @@
-- Fix remote group upgrade language key (contrib by Jack McKalling)
-- Fix framing table removing contents of drawers (contrib by ellellie)
-- Fix inventory crash after crafting drawer with upgrade
-- FABRIC: Fix blocks inserting into 2-tier compacting drawers (contrib by ellellie)
-- FABRIC: Fix model compatibility issue with ModernFix (contrib by embeddedt)
+- Fix regression in Controller IO block name
