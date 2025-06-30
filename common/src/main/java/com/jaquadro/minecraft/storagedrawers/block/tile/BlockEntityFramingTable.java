@@ -292,7 +292,7 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Nameable
 
         @Override
         public void setChanged () {
-
+            this.entity.setChanged();
         }
 
         private void setInputItem (ItemStack stack) {

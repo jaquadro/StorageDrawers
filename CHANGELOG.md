@@ -1,5 +1,6 @@
 [15.0.4]
 - Fix regression in Controller IO block name
+- Fix framing table not saving slots across world reload
 
 [15.0.3]
 - Fix remote group upgrade language key (contrib by Jack McKalling)

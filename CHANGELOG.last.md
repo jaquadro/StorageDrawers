@@ -1,1 +1,2 @@
 - Fix regression in Controller IO block name
+- Fix framing table not saving slots across world reload
