@@ -28,7 +28,7 @@
     "block.storagedrawers.framed_compacting_half_drawers_2": "Media Caja Compactadora Enmarcada (2-nivel)",
     "block.storagedrawers.framed_compacting_half_drawers_3": "Media Caja Compactadora Enmarcada (3-nivel)",
     "block.storagedrawers.controller": "Caja de Control",
-    "block.storagedrawers.controller_slave": "Drawer Controller IO",
+    "block.storagedrawers.controller_io": "Drawer Controller IO",
     "block.storagedrawers.framed_controller": "Caja de control enmarcada",
     "block.storagedrawers.framed_controller_io": "Framed Drawer Controller IO",
     "block.storagedrawers.keybutton_drawer": "Llave de cajón",

@@ -1,3 +1,6 @@
+[16.0.2]
+- Fix regression in Controller IO block name
+
 [16.0.1]
 - Fix remote group upgrade language key (contrib by Jack McKalling)
 - Fix inventory crash after crafting drawer with upgrade

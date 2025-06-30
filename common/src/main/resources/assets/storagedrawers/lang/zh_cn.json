@@ -28,7 +28,7 @@
     "block.storagedrawers.framed_compacting_half_drawers_2": "镶框小型压缩抽屉 (2层)",
     "block.storagedrawers.framed_compacting_half_drawers_3": "镶框小型压缩抽屉 (3层)",
     "block.storagedrawers.controller": "抽屉管理器",
-    "block.storagedrawers.controller_slave": "抽屉管理器传动方块",
+    "block.storagedrawers.controller_io": "抽屉管理器传动方块",
     "block.storagedrawers.framed_controller": "镶框抽屉管理器",
     "block.storagedrawers.framed_controller_io": "镶框抽屉管理器传动方块",
     "block.storagedrawers.keybutton_drawer": "绑定钥匙按钮",
