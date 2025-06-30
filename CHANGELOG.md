@@ -1,5 +1,7 @@
 [16.0.2]
 - Fix regression in Controller IO block name
+- Fix framing table not saving slots across world reload
+- FORGE: Fix rendering on key buttons
 
 [16.0.1]
 - Fix remote group upgrade language key (contrib by Jack McKalling)

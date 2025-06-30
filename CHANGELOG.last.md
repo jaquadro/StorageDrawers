@@ -1,1 +1,3 @@
 - Fix regression in Controller IO block name
+- Fix framing table not saving slots across world reload
+- FORGE: Fix rendering on key buttons
