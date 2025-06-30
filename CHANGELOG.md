@@ -1,3 +1,7 @@
+[13.8.9]
+- Fix framing table voiding contents of drawers
+- Fix framing table not saving slots on reload
+
 [13.8.8]
 - Fix remote group upgrade language key (contrib by Jack McKalling)
 - Fix inventory crash after crafting drawer with upgrade

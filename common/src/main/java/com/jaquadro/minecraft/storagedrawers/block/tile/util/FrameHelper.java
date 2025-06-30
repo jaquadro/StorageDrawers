@@ -35,7 +35,7 @@ public class FrameHelper
         if (resultBlock.supportsFrameMaterial(FrameMaterial.FRONT))
             data.setFront(matFront.copyWithCount(1));
 
-        ItemStack stack = new ItemStack((Block)resultBlock, source.getCount());
+        ItemStack stack = source.transmuteCopy(((Block) resultBlock).asItem());
         stack.set(ModDataComponents.FRAME_DATA.get(), new FrameData(data));
 
         return stack;

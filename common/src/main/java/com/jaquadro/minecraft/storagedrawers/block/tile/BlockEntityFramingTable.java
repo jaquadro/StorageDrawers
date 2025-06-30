@@ -295,7 +295,7 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Nameable
 
         @Override
         public void setChanged () {
-
+            this.entity.setChanged();
         }
 
         private void setInputItem (ItemStack stack) {
@@ -330,7 +330,7 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Nameable
                         source.remove(ModDataComponents.FRAME_DATA.get());
 
                         int count = stack.getCount();
-                        entity.inputStack = source.copyWithCount(count);
+                        entity.inputStack = stack.transmuteCopy(source.getItem());
 
                         entity.materialData.setSide(fb.supportsFrameMaterial(FrameMaterial.SIDE) ? data.side().copyWithCount(count) : ItemStack.EMPTY);
                         entity.materialData.setTrim(fb.supportsFrameMaterial(FrameMaterial.TRIM) ? data.trim().copyWithCount(count) : ItemStack.EMPTY);
