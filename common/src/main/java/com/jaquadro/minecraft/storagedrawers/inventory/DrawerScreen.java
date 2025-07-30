@@ -74,21 +74,30 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
     protected void init () {
         super.init();
 
-        if (storageGuiGraphics == null && minecraft != null) {
-            storageGuiGraphics = new StorageGuiGraphics(minecraft, minecraft.renderBuffers().bufferSource());
-        }
+        //if (storageGuiGraphics == null && minecraft != null) {
+        //    storageGuiGraphics = new StorageGuiGraphics(minecraft, minecraft.renderBuffers().bufferSource());
+        //}
     }
 
     @Override
     public void render (GuiGraphics graphics, int x, int y, float f) {
+        if (storageGuiGraphics == null || storageGuiGraphics.baseGraphics() != graphics) {
+            storageGuiGraphics = new StorageGuiGraphics(minecraft, graphics);
+        }
+
         menu.activeGuiGraphics = storageGuiGraphics;
 
-        super.render(storageGuiGraphics, x, y, f);
+        super.render(graphics, x, y, f);
 
         menu.activeGuiGraphics = null;
         storageGuiGraphics.overrideStack = ItemStack.EMPTY;
 
         this.renderTooltip(graphics, x, y);
+    }
+
+    @Override
+    protected void renderSlot (GuiGraphics guiGraphics, Slot slot) {
+        super.renderSlot(storageGuiGraphics, slot);
     }
 
     @Override

@@ -15,13 +15,17 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${Versions.fabricLoader}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${Versions.fabric}")
 
-    modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.0.8")
+    modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.1.4")
 
-    modCompileOnlyApi("mezz.jei:jei-${Versions.minecraft}-fabric-api:19.8.2.99")
-    modRuntimeOnly("mezz.jei:jei-${Versions.minecraft}-fabric:19.8.2.99")
+    modCompileOnlyApi("mezz.jei:jei-${Versions.minecraft}-fabric-api:19.21.2.313")
+    modRuntimeOnly("mezz.jei:jei-${Versions.minecraft}-fabric:19.21.2.313")
+
+    modImplementation("curse.maven:architectury-api-419699:5786326")
+    modImplementation("curse.maven:ftb-library-fabric-438495:6807432")
 }
 
 loom {
+    accessWidenerPath = file("src/main/resources/storagedrawers.fabric.accesswidener")
     mixin {
         defaultRefmapName.set("${Properties.modid}.refmap.json")
     }

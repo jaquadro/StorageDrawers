@@ -92,6 +92,7 @@ tasks {
         val properties = mapOf(
             "minecraft_version" to Versions.minecraft,
             "minecraft_version_range" to Versions.minecraftRange,
+            "minecraft_version_lower" to Versions.minecraftLower,
             "minecraft_version_upper" to Versions.minecraftUpper,
             "neo_version" to Versions.neoForge,
             "neo_version_range" to Versions.neoForgeVersionRange,
@@ -100,6 +101,7 @@ tasks {
             "loader_version_range" to Versions.neoForgeLoaderRange,
             "fabric_version" to Versions.fabric,
             "fabric_loader" to Versions.fabricLoader,
+            "fabric_loader_min" to Versions.fabricLoaderMin,
             "java_version" to Versions.java,
             "mod_id" to Properties.modid,
             "mod_name" to Properties.name,

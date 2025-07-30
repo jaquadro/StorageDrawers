@@ -1,2 +1,1 @@
-- Fix framing table voiding contents of drawers
-- Fix framing table not saving slots on reload
+- Fix GUI not rendering when FTB Library is in mod list
