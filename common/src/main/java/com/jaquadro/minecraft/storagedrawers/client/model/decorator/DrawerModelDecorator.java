@@ -11,6 +11,7 @@ import com.jaquadro.minecraft.storagedrawers.client.model.DrawerModelStore;
 import com.jaquadro.minecraft.storagedrawers.client.model.context.DrawerModelContext;
 import com.jaquadro.minecraft.storagedrawers.client.model.context.FramedModelContext;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +38,7 @@ public class DrawerModelDecorator extends ModelDecorator<DrawerModelContext>
 
     @Override
     public List<RenderType> getRenderTypes (ItemStack stack) {
-        return List.of(RenderType.cutoutMipped());
+        return List.of(Sheets.cutoutBlockSheet());
     }
 
     @Override

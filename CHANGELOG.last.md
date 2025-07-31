@@ -1,1 +1,1 @@
-- Fix GUI not rendering when FTB Library is in mod list
+- Fixed rendering of framed drawer item blocks

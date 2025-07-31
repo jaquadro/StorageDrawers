@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.client.model;
 import com.jaquadro.minecraft.storagedrawers.client.model.context.ModelContext;
 import com.jaquadro.minecraft.storagedrawers.client.model.decorator.ModelDecorator;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -87,6 +88,8 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
     public class ItemRender extends ParentModel
     {
         private ItemStack stack;
+        private List<RenderType> lastRenderTypes = new ArrayList<>();
+        private int nextRenderType;
 
         public ItemRender (ItemStack stack) {
             super(PlatformDecoratedModel.this.parent);
@@ -102,13 +105,25 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
             if (decorator.shouldRenderBase(supplier, stack))
                 quads.addAll(PlatformDecoratedModel.this.parent.getQuads(state, side, rand));
 
+            RenderType limitRenderType = (nextRenderType < lastRenderTypes.size()) ? lastRenderTypes.get(nextRenderType) : null;
             BiConsumer<BakedModel, RenderType> emitModel = (model, renderType) -> {
+                if (renderType == RenderType.solid())
+                    renderType = Sheets.solidBlockSheet();
+                else if (renderType == RenderType.cutoutMipped())
+                    renderType = Sheets.cutoutBlockSheet();
+                else if (renderType == RenderType.translucent())
+                    renderType = Sheets.translucentCullBlockSheet();
+
+                if (limitRenderType != null && limitRenderType != renderType)
+                    return;
                 if (model != null)
                     quads.addAll(model.getQuads(state, side, rand));
             };
 
             try {
                 decorator.emitItemQuads(supplier, emitModel, stack);
+                if (side == null)
+                    nextRenderType += 1;
             } catch (Exception e) {
                 return quads;
             }
@@ -133,7 +148,10 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
 
         @Override
         public List<RenderType> getRenderTypes (ItemStack itemStack, boolean fabulous) {
-            return PlatformDecoratedModel.this.getRenderTypes(itemStack, fabulous);
+            lastRenderTypes = PlatformDecoratedModel.this.getRenderTypes(itemStack, fabulous);
+            nextRenderType = 0;
+
+            return lastRenderTypes;
         }
     }
 }
