@@ -1,5 +1,6 @@
 [13.8.11]
 - Fixed rendering of framed drawer item blocks
+- Fixed shift+clicking additional blocks into framing table not updating output
 
 [13.8.10]
 - Fix GUI not rendering when FTB Library is in mod list

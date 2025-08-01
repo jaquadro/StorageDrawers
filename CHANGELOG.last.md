@@ -1,1 +1,2 @@
 - Fixed rendering of framed drawer item blocks
+- Fixed shift+clicking additional blocks into framing table not updating output

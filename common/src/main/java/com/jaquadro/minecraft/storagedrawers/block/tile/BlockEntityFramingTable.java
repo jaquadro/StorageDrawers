@@ -289,12 +289,12 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Nameable
                 case SLOT_TRIM -> entity.materialData.setTrim(stack);
             }
 
-            rebuildResult();
             setChanged();
         }
 
         @Override
         public void setChanged () {
+            rebuildResult();
             this.entity.setChanged();
         }
 
