@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -199,6 +200,12 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Nameable
             tag.putString("CustomName", Component.Serializer.toJson(name, provider));
 
         return tag;
+    }
+
+    // Forge extension
+    public AABB getRenderBoundingBox() {
+        BlockPos pos = getBlockPos();
+        return AABB.encapsulatingFullBlocks(pos.offset(-1, 0, -1), pos.offset(1, 1, 1));
     }
 
     public static class ContentProvider implements ContentMenuProvider<PositionContent>

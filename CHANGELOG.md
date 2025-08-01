@@ -4,6 +4,7 @@
 - Fixed framing tables not dropping contents when broken
 - Limit framed materials to solid opaque blocks (within reasonable heuristic)
 - Added restrictFramingMaterials config option to control new material limit
+- NEO/FORGE: Fixed items on framing table vanishing at oblique viewing angles
 
 [13.8.10]
 - Fix GUI not rendering when FTB Library is in mod list
