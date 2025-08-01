@@ -132,7 +132,26 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Nameable
             return false;
 
         BlockState state = blockItem.getBlock().defaultBlockState();
-        return state.isSolid();
+        if (state.getBlock().hasDynamicShape())
+            return false;
+
+        try {
+            // Will always throw unless overridden, which usually means it's a block that we don't
+            // want to be a valid material
+            if (state.getLightBlock(null, null) < 15)
+                return false;
+        } catch (Exception e) { }
+
+        try {
+            if (!Block.isShapeFullBlock(state.getOcclusionShape(null, null)))
+                return false;
+            if (state.propagatesSkylightDown(null, null))
+                return false;
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
