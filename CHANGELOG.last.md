@@ -1,3 +1,5 @@
 - Fixed rendering of framed drawer item blocks
 - Fixed shift+clicking additional blocks into framing table not updating output
+- Fixed framing tables not dropping contents when broken
 - Limit framed materials to solid opaque blocks (within reasonable heuristic)
+- Added restrictFramingMaterials config option to control new material limit
