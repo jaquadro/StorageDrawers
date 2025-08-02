@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -92,13 +94,21 @@ public class BlockKeyButton  extends FaceAttachedHorizontalDirectionalBlock
             level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
 
             BlockPos targetPos = pos.offset(state.getValue(FACING).getOpposite().getNormal());
+            if (state.getValue(FACE) == AttachFace.FLOOR)
+                targetPos = pos.offset(Direction.DOWN.getNormal());
+            else if (state.getValue(FACE) == AttachFace.CEILING)
+                targetPos = pos.offset(Direction.UP.getNormal());
+
             Block target = level.getBlockState(targetPos).getBlock();
             if (target instanceof BlockController controller)
                 controller.toggle(level, targetPos, player, keyType);
             else if (target instanceof BlockSlave slave) {
-                BlockController controller = slave.getController(level, pos);
-                if (controller != null)
-                    controller.toggle(level, targetPos, player, keyType);
+                BlockEntityController controller = slave.getController(level, targetPos);
+                if (controller != null) {
+                    BlockController blockController = controller.getBlock();
+                    if (blockController != null)
+                        blockController.toggle(level, controller.getBlockPos(), player, keyType);
+                }
             }
 
             return InteractionResult.sidedSuccess(level.isClientSide);

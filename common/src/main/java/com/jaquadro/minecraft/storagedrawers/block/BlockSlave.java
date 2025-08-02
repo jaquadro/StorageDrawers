@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedSourceBlock;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntitySlave;
 import com.jaquadro.minecraft.storagedrawers.block.tile.util.FrameHelper;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
@@ -23,20 +24,12 @@ public class BlockSlave extends Block implements INetworked, EntityBlock, IFrame
         super(properties);
     }
 
-    public BlockController getController(Level world, BlockPos pos) {
+    public BlockEntityController getController(Level world, BlockPos pos) {
         BlockEntitySlave blockEntity = WorldUtils.getBlockEntity(world, pos, BlockEntitySlave.class);
         if (blockEntity == null)
             return null;
 
-        BlockPos controllerPos = blockEntity.getControllerPos();
-        if (controllerPos == null)
-            return null;
-
-        Block block = world.getBlockState(controllerPos).getBlock();
-        if (block instanceof BlockController c)
-            return c;
-
-        return null;
+        return blockEntity.getController();
     }
 
     @Override

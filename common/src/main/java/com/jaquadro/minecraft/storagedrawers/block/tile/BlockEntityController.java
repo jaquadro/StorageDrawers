@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.block.BlockController;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerHostData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
@@ -183,6 +184,17 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
     public BlockEntityController(BlockPos pos, BlockState state) {
         this(ModBlockEntities.CONTROLLER.get(), pos, state);
+    }
+
+    public BlockController getBlock() {
+        if (getLevel() == null)
+            return null;
+
+        Block block = getLevel().getBlockState(getBlockPos()).getBlock();
+        if (block instanceof BlockController blockController)
+            return blockController;
+
+        return null;
     }
 
     public void printDebugInfo () {

@@ -1,3 +1,9 @@
+[12.11.2]
+- Fixed key buttons on controllers/IO
+
+[12.11.1]
+- Re-upload to fix Forge release
+
 [12.11.0]
 - Fixed rendering of framed drawer item blocks
 - Fixed shift+clicking additional blocks into framing table not updating output

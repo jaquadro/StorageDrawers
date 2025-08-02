@@ -1,6 +1,7 @@
 import com.texelsaurus.Properties
 import com.texelsaurus.Versions
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
+import org.gradle.jvm.tasks.Jar
 import net.darkhax.curseforgegradle.Constants as CFG_Constants
 
 plugins {
@@ -83,6 +84,10 @@ sourceSets.configureEach {
     val dir = layout.buildDirectory.dir("sourcesSets/$this.name")
     this.output.setResourcesDir(dir)
     this.java.destinationDirectory.set(dir)
+}
+
+tasks.named<Jar>("jar").configure {
+    finalizedBy("reobfJar")
 }
 
 tasks.create<TaskPublishCurseForge>("publishCurseForge") {
