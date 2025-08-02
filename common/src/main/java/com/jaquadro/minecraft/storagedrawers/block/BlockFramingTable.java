@@ -10,6 +10,7 @@ import com.texelsaurus.minecraft.chameleon.inventory.ContentMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -173,6 +174,17 @@ public class BlockFramingTable extends HorizontalDirectionalBlock implements Ent
 
         openUI(level, pos, player);
         return InteractionResult.CONSUME;
+    }
+
+    @Override
+    public void onRemove (BlockState state, Level level, BlockPos pos, BlockState replacementState, boolean isMoving) {
+        BlockEntityFramingTable blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityFramingTable.class);
+        if (blockEntity != null) {
+            for (int i = 0; i < BlockEntityFramingTable.SLOT_RESULT; i++)
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.inventory().getItem(i));
+        }
+
+        super.onRemove(state, level, pos, replacementState, isMoving);
     }
 
     @Nullable

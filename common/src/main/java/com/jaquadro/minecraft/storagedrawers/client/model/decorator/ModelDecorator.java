@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.client.model.decorator;
 
 import com.jaquadro.minecraft.storagedrawers.client.model.context.ModelContext;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,7 +31,7 @@ public abstract class ModelDecorator<C extends ModelContext>
     }
 
     public List<RenderType> getRenderTypes(ItemStack stack) {
-        return List.of(RenderType.solid());
+        return List.of(Sheets.solidBlockSheet());
     }
 
     public void emitQuads(Supplier<C> contextSupplier, BiConsumer<BakedModel, RenderType> emitModel) { }

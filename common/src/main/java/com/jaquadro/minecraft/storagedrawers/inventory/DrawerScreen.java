@@ -72,14 +72,14 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
     @Override
     protected void init () {
         super.init();
-
-        if (storageGuiGraphics == null && minecraft != null) {
-            storageGuiGraphics = new StorageGuiGraphics(minecraft, minecraft.renderBuffers().bufferSource());
-        }
     }
 
     @Override
     public void render (GuiGraphics graphics, int x, int y, float f) {
+        if (storageGuiGraphics == null || storageGuiGraphics.baseGraphics() != graphics) {
+            storageGuiGraphics = new StorageGuiGraphics(minecraft, graphics);
+        }
+
         menu.activeGuiGraphics = storageGuiGraphics;
 
         super.render(storageGuiGraphics, x, y, f);

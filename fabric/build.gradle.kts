@@ -23,6 +23,7 @@ dependencies {
 }
 
 loom {
+    accessWidenerPath = file("src/main/resources/storagedrawers.fabric.accesswidener")
     mixin {
         defaultRefmapName.set("${Properties.modid}.refmap.json")
     }

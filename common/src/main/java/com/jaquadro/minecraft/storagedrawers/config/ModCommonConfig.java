@@ -48,7 +48,7 @@ public final class ModCommonConfig extends ConfigSpec
         public ChameleonConfig.ConfigEntry<Boolean> forceDetachedDrawersMaxCapacityCheck;
         public ChameleonConfig.ConfigEntry<Boolean> heavyDrawers;
         public ChameleonConfig.ConfigEntry<Boolean> enablePersonalKey;
-
+        public ChameleonConfig.ConfigEntry<Boolean> restrictFramingMaterials;
 
         public ChameleonConfig.ConfigEntry<List<? extends String>> compRules;
 
@@ -98,6 +98,10 @@ public final class ModCommonConfig extends ConfigSpec
 
             enablePersonalKey = commonConfig.define("enablePersonalKey", true)
                 .comment("If enabled, players can lock drawer interactions to just themselves.")
+                .build();
+
+            restrictFramingMaterials = commonConfig.define("restrictFramingMaterials", true)
+                .comment("If enabled, limits framing materials to solid, opaque blocks [by best effort]")
                 .build();
 
             debugTrace = commonConfig.define("debugTrace", false).build();

@@ -10,6 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.client.model.DrawerModelStore;
 import com.jaquadro.minecraft.storagedrawers.client.model.SpriteReplacementModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.context.FramedModelContext;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -100,8 +101,8 @@ public abstract class MaterialModelDecorator<C extends FramedModelContext> exten
     @Override
     public List<RenderType> getRenderTypes (ItemStack stack) {
         if (shaded)
-            return List.of(RenderType.cutoutMipped(), RenderType.translucent());
-        return List.of(RenderType.cutoutMipped());
+            return List.of(Sheets.cutoutBlockSheet(), Sheets.translucentCullBlockSheet());
+        return List.of(Sheets.cutoutBlockSheet());
     }
 
     private BakedModel getReplacementModel (BakedModel baseModel, ItemStack material) {

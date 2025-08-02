@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedSourceBlock;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.CustomNameData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerFramingTable;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -137,7 +139,29 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements MenuProv
             return false;
 
         BlockState state = blockItem.getBlock().defaultBlockState();
-        return state.isSolid();
+        if (state.getBlock().hasDynamicShape())
+            return false;
+
+        if (!ModCommonConfig.INSTANCE.GENERAL.restrictFramingMaterials.get())
+            return state.isSolid();
+
+        try {
+            // Will always throw unless overridden, which usually means it's a block that we don't
+            // want to be a valid material
+            if (state.getLightBlock(null, null) < 15)
+                return false;
+        } catch (Exception e) { }
+
+        try {
+            if (!Block.isShapeFullBlock(state.getOcclusionShape(null, null)))
+                return false;
+            if (state.propagatesSkylightDown(null, null))
+                return false;
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -149,6 +173,16 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements MenuProv
     @Override
     public AbstractContainerMenu createMenu (int windowId, @NotNull Inventory playInventory, @NotNull Player player) {
         return new ContainerFramingTable(ModContainers.FRAMING_TABLE.get(), windowId, playInventory, this);
+    }
+
+    // Forge extension
+    public AABB getRenderBoundingBox() {
+        BlockPos pos = getBlockPos();
+        return BlockEntityFramingTable.encapsulatingFullBlocks(pos.offset(-1, 0, -1), pos.offset(1, 1, 1));
+    }
+
+    static AABB encapsulatingFullBlocks(BlockPos $$0, BlockPos $$1) {
+        return new AABB((double)Math.min($$0.getX(), $$1.getX()), (double)Math.min($$0.getY(), $$1.getY()), (double)Math.min($$0.getZ(), $$1.getZ()), (double)(Math.max($$0.getX(), $$1.getX()) + 1), (double)(Math.max($$0.getY(), $$1.getY()) + 1), (double)(Math.max($$0.getZ(), $$1.getZ()) + 1));
     }
 
     public static class ContentProvider implements ContentMenuProvider<PositionContent>
@@ -265,13 +299,13 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements MenuProv
                 case SLOT_TRIM -> entity.materialData.setTrim(stack);
             }
 
-            rebuildResult();
             setChanged();
         }
 
         @Override
         public void setChanged () {
-
+            rebuildResult();
+            this.entity.setChanged();
         }
 
         private void setInputItem (ItemStack stack) {

@@ -13,6 +13,7 @@
         "issues": "https://github.com/jaquadro/StorageDrawers/issues"
     },
     "description": "${mod_description}",
+    "accessWidener": "storagedrawers.fabric.accesswidener",
     "entrypoints": {
         "main": [
             "com.jaquadro.minecraft.storagedrawers.StorageDrawers"

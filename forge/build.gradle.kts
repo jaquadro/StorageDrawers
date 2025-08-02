@@ -18,6 +18,8 @@ mixin {
 
 minecraft {
     mappings("official", Versions.minecraft)
+    accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
+
     runs {
         create("client") {
             taskName("runClient")
