@@ -1,14 +1,20 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
+import com.jaquadro.minecraft.storagedrawers.block.tile.modelprops.DrawerModelProperties;
+import com.jaquadro.minecraft.storagedrawers.block.tile.modelprops.FramedModelProperties;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.client.model.context.ModelContext;
 import com.jaquadro.minecraft.storagedrawers.client.model.decorator.ModelDecorator;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.ChunkRenderTypeSet;
@@ -64,6 +70,22 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
 
     @Override
     public TextureAtlasSprite getParticleIcon (ModelData data) {
+        MaterialData matData = null;
+        if (data.has(DrawerModelProperties.MATERIAL))
+            matData = new MaterialData(data.get(DrawerModelProperties.MATERIAL));
+        else if (data.has(FramedModelProperties.MATERIAL))
+            matData = new MaterialData(data.get(FramedModelProperties.MATERIAL));
+
+        if (matData != null) {
+            ItemStack side = matData.getEffectiveSide();
+            if (side != ItemStack.EMPTY) {
+                if (side.getItem() instanceof BlockItem blockItem) {
+                    ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
+                    BakedModel model = renderer.getModel(side, null, null, 0);
+                    return model.getParticleIcon();
+                }
+            }
+        }
         return parent.getParticleIcon(data);
     }
 
