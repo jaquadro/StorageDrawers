@@ -83,7 +83,7 @@
     "item.storagedrawers.remote_group_upgrade": "Mejora de Grupo Remoto",
     "item.storagedrawers.remote_group_upgrade.desc": "Permite que el grupo de cajones conectado se conecte de forma remota al controlador",
     "item.storagedrawers.remote_group_upgrade.bound": "Usar en el controlador para enlazar la mejora",
-    "item.storagedrawers.remote_group_upgrade_bound": "Mejora de Grupo remota",
+    "item.storagedrawers.remote_group_upgrade_bound": "Mejora de Grupo Remoto",
     "item.storagedrawers.remote_group_upgrade_bound.desc": "Permite conectarse de forma remota al grupo de cajones conectados al controlador. Se puede usar en el cajón actualizado para volver a enlazarlo",
     "item.storagedrawers.remote_group_upgrade_bound.bound": "Vinculado al controlador [%d, %d, %d]",
     "item.storagedrawers.upgrade_template": "Mejorar plantilla",

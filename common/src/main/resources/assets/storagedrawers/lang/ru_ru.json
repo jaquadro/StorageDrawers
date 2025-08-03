@@ -78,7 +78,7 @@
     "item.storagedrawers.remote_group_upgrade": "Обновление удаленной группы",
     "item.storagedrawers.remote_group_upgrade.desc": "Позволяет подключенной группе ящиков удаленно подключаться к контроллеру",
     "item.storagedrawers.remote_group_upgrade.bound": "Используйте на контроллере для привязки обновления",
-    "item.storagedrawers.remote_group_upgrade_bound": "Обновление удаленного доступа (группы)",
+    "item.storagedrawers.remote_group_upgrade_bound": "Обновление удаленной группы (связанное)",
     "item.storagedrawers.remote_group_upgrade_bound.desc": "Позволяет подключенной группе ящиков удаленно подключаться к контроллеру. Может использоваться на обновленном ящике для его повторной привязки",
     "item.storagedrawers.remote_group_upgrade_bound.bound": "Привязка к контроллеру [%d, %d, %d]",
     "item.storagedrawers.upgrade_template": "Обновление шаблона",
