@@ -1,2 +1,3 @@
 - Fixed key buttons on Controller IO blocks
 - Fixed pick block not selecting matching hotbar framed blocks
+- Fixed particle icon of framed drawers not using material
