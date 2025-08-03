@@ -1,1 +1,2 @@
 - Fixed key buttons on Controller IO blocks
+- Fixed pick block not selecting matching hotbar framed blocks

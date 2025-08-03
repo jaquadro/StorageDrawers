@@ -7,6 +7,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
+import java.util.Objects;
+
 public record ControllerBinding (boolean valid, int x, int y, int z)
 {
     public static final ControllerBinding EMPTY = new ControllerBinding(false, 0, 0, 0);
@@ -37,5 +39,25 @@ public record ControllerBinding (boolean valid, int x, int y, int z)
 
     public BlockPos blockPos () {
         return new BlockPos(x, y, z);
+    }
+
+    @Override
+    public boolean equals (Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof ControllerBinding that))
+            return false;
+
+        return x == that.x && y == that.y && z == that.z && valid == that.valid;
+    }
+
+    @Override
+    public int hashCode () {
+        return Objects.hash(valid, x, y, z);
+    }
+
+    @Override
+    public String toString () {
+        return "ControllerBinding [valid=" + valid + ", x=" + x + ", y=" + y + ", z=" + z + "]";
     }
 }

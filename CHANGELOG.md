@@ -1,5 +1,6 @@
 [13.8.12]
 - Fixed key buttons on Controller IO blocks
+- Fixed pick block not selecting matching hotbar framed blocks
 
 [13.8.11]
 - Fixed rendering of framed drawer item blocks

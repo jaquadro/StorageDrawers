@@ -43,4 +43,31 @@ public record FrameData (ItemStack base, ItemStack side, ItemStack trim, ItemSta
     public MaterialData asMaterialData() {
         return new MaterialData(base, side, front, trim);
     }
+
+    @Override
+    public boolean equals (Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj instanceof FrameData frame) {
+            return ItemStack.isSameItemSameComponents(base, frame.base)
+                && ItemStack.isSameItemSameComponents(side, frame.side)
+                && ItemStack.isSameItemSameComponents(front, frame.front)
+                && ItemStack.isSameItemSameComponents(trim, frame.trim);
+        } else
+            return false;
+    }
+
+    @Override
+    public int hashCode () {
+        return 31 * ItemStack.hashItemAndComponents(base)
+            + 31 * ItemStack.hashItemAndComponents(side)
+            + 31 * ItemStack.hashItemAndComponents(trim)
+            + 31 * ItemStack.hashItemAndComponents(front);
+    }
+
+    @Override
+    public String toString () {
+        return "FrameData [base=" + base + ", side=" + side + ", trim=" + trim + ", front=" + front + "]";
+    }
 }
