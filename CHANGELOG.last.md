@@ -1,3 +1,4 @@
 - Fixed key buttons on Controller IO blocks
 - Fixed pick block not selecting matching hotbar framed blocks
+- Adjusted framed material heuristic to exclude some additional transparent blocks
 - NEO/FORGE: Fixed particle icon of framed drawers not using material
