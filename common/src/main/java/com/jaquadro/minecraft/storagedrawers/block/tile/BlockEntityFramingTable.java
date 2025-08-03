@@ -145,6 +145,9 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements MenuProv
         if (!ModCommonConfig.INSTANCE.GENERAL.restrictFramingMaterials.get())
             return state.isSolid();
 
+        if (!state.canOcclude())
+            return false;
+
         try {
             // Will always throw unless overridden, which usually means it's a block that we don't
             // want to be a valid material

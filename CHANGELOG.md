@@ -1,5 +1,6 @@
 [12.11.2]
 - Fixed key buttons on controllers/IO
+- Adjusted framed material heuristic to exclude some additional transparent blocks
 - NEO/FORGE: Fixed particle icon of framed drawers not using material
 
 [12.11.1]
