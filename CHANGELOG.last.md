@@ -1,1 +1,2 @@
 - Fixed key buttons on controllers/IO
+- NEO/FORGE: Fixed particle icon of framed drawers not using material
