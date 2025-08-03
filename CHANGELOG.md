@@ -1,3 +1,6 @@
+[13.8.12]
+- Fixed key buttons on Controller IO blocks
+
 [13.8.11]
 - Fixed rendering of framed drawer item blocks
 - Fixed shift+clicking additional blocks into framing table not updating output

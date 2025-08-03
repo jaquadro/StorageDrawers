@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -113,9 +114,12 @@ public class BlockKeyButton  extends FaceAttachedHorizontalDirectionalBlock
             if (target instanceof BlockController controller)
                 controller.toggle(level, targetPos, player, keyType);
             else if (target instanceof BlockControllerIO io) {
-                BlockController controller = io.getController(level, pos);
-                if (controller != null)
-                    controller.toggle(level, targetPos, player, keyType);
+                BlockEntityController controller = io.getController(level, targetPos);
+                if (controller != null) {
+                    BlockController blockController = controller.getBlock();
+                    if (blockController != null)
+                        blockController.toggle(level, controller.getBlockPos(), player, keyType);
+                }
             }
 
             return InteractionResult.sidedSuccess(level.isClientSide);
