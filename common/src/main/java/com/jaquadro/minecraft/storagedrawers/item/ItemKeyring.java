@@ -83,6 +83,7 @@ public class ItemKeyring extends Item
         if (targetStack.getItem() == ModItems.KEYRING.get() && contents.size() > 0) {
             ItemStack newStack = getKeyring(contents.itemCopyStream().findFirst().orElse(ItemStack.EMPTY));
             if (!newStack.isEmpty()) {
+                newStack.applyComponents(targetStack.getComponentsPatch());
                 newStack.set(ModDataComponents.KEYRING_CONTENTS.get(), contents);
                 slot.set(newStack);
             }
@@ -132,6 +133,9 @@ public class ItemKeyring extends Item
     public Optional<TooltipComponent> getTooltipImage (ItemStack stack) {
         if (stack.has(DataComponents.HIDE_TOOLTIP) || stack.has(DataComponents.HIDE_ADDITIONAL_TOOLTIP))
             return Optional.empty();
+
+        if (!stack.has(ModDataComponents.KEYRING_CONTENTS.get()))
+            return Optional.of(new KeyringTooltip(new KeyringContents(List.of())));
 
         return Optional.ofNullable(stack.get(ModDataComponents.KEYRING_CONTENTS.get())).map(KeyringTooltip::new);
     }

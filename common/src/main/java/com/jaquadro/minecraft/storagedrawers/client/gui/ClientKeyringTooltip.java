@@ -64,9 +64,9 @@ public class ClientKeyringTooltip implements ClientTooltipComponent
             blit(graphics, pX, pY, Texture.SLOT);
             graphics.renderItem(itemstack, pX + 1, pY + 1, index);
             graphics.renderItemDecorations(font, itemstack, pX + 1, pY + 1);
-            if (index == 0) {
-                AbstractContainerScreen.renderSlotHighlight(graphics, pX + 1, pY + 1, 0);
-            }
+            // if (index == 0) {
+            //     AbstractContainerScreen.renderSlotHighlight(graphics, pX + 1, pY + 1, 0);
+            // }
         }
     }
 
