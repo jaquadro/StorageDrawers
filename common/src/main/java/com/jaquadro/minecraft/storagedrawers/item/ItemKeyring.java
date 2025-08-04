@@ -212,8 +212,12 @@ public class ItemKeyring extends Item
         if (context.getPlayer().isShiftKeyDown())
             return InteractionResult.PASS;
 
-        if (key != null && key.get() != null)
-            return key.get().useOn(context);
+        if (key != null) {
+            InteractionResult result = key.get().useOn(context);
+            if (result == InteractionResult.SUCCESS)
+                context.getPlayer().getCooldowns().addCooldown(this, 5);
+            return result;
+        }
 
         return InteractionResult.PASS;
     }

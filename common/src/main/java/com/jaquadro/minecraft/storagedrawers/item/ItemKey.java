@@ -77,6 +77,9 @@ public class ItemKey extends Item
 
         handleDrawerAttributes((IDrawerAttributesModifiable)attrs);
 
+        if (context.getPlayer() != null)
+            context.getPlayer().getCooldowns().addCooldown(this, 5);
+
         return InteractionResult.SUCCESS;
     }
 

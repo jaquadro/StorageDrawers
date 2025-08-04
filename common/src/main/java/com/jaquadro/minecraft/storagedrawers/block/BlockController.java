@@ -64,6 +64,9 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
             return InteractionResult.FAIL;
 
         ItemStack item = player.getInventory().getSelected();
+        if (player.getCooldowns().isOnCooldown(item.getItem()))
+            return InteractionResult.FAIL;
+
         if (!item.isEmpty() && toggle(level, pos, player, item.getItem()))
             return InteractionResult.SUCCESS;
 
@@ -92,19 +95,22 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         if (world.isClientSide || item == null)
             return false;
 
+        Item keyItem = item;
         if (item instanceof ItemKeyring keyring)
-            item = keyring.getKey().getItem();
+            keyItem = keyring.getKey().getItem();
 
-        if (item == ModItems.DRAWER_KEY.get())
+        if (keyItem == ModItems.DRAWER_KEY.get())
             toggle(world, pos, player, EnumKeyType.DRAWER);
-        else if (item == ModItems.SHROUD_KEY.get())
+        else if (keyItem == ModItems.SHROUD_KEY.get())
             toggle(world, pos, player, EnumKeyType.CONCEALMENT);
-        else if (item == ModItems.QUANTIFY_KEY.get())
+        else if (keyItem == ModItems.QUANTIFY_KEY.get())
             toggle(world, pos, player, EnumKeyType.QUANTIFY);
-        else if (item instanceof ItemPersonalKey itemKey)
+        else if (keyItem instanceof ItemPersonalKey itemKey)
             togglePersonal(world, pos, player, itemKey.getSecurityProviderKey());
         else
             return false;
+
+        player.getCooldowns().addCooldown(item, 5);
 
         return true;
     }
