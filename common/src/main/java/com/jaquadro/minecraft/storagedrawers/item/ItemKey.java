@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -78,9 +79,11 @@ public class ItemKey extends Item
 
         handleDrawerAttributes((IDrawerAttributesModifiable)attrs);
 
+        if (context.getPlayer() != null)
+            context.getPlayer().getCooldowns().addCooldown(this, 5);
+
         return InteractionResult.SUCCESS;
     }
-
 
     protected void handleDrawerAttributes (IDrawerAttributesModifiable attrs) { }
 }

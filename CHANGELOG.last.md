@@ -3,4 +3,5 @@
 - Adjusted framed material heuristic to exclude some additional transparent blocks
 - Fixed default keyring missing tooltip
 - Fixed keyring losing custom name when adding keys
+- Add short cooldown to keys and keyrings
 - NEO/FORGE: Fixed particle icon of framed drawers not using material
