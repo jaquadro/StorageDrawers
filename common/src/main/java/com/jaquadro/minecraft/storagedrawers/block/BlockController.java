@@ -116,7 +116,6 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
             return false;
 
         player.getCooldowns().addCooldown(item, 5);
-        player.getCooldowns().addCooldown(keyItem, 5);
 
         return true;
     }
