@@ -103,6 +103,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.releaseType = Properties.distRelease
     Properties.distGameVersions.split(',').forEach { v -> mainFile.addGameVersion(v) }
     mainFile.addModLoader("Forge")
+    mainFile.addModLoader("NeoForge")
 }
 
 modrinth {
@@ -115,5 +116,6 @@ modrinth {
     gameVersions.set(Properties.distGameVersions.split(',').toList())
     uploadFile.set(tasks.jar.get())
     loaders.add("forge")
+    loaders.add("neoforge")
 }
 tasks.modrinth.get().dependsOn(tasks.jar)

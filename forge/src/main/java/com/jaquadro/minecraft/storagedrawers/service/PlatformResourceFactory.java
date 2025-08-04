@@ -31,7 +31,7 @@ public class PlatformResourceFactory implements ResourceFactory
 
     @Override
     public BlockEntityType.BlockEntitySupplier<BlockEntitySlave> createBlockEntityControllerIO () {
-        return BlockEntitySlave::new;
+        return PlatformBlockEntityControllerIO::new;
     }
 
     @Override

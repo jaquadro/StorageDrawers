@@ -1,3 +1,6 @@
+[12.11.3]
+- NEO/FORGE: Fix controller slave no longer responding to connections
+
 [12.11.2]
 - Fixed key buttons on controllers/IO
 - Adjusted framed material heuristic to exclude some additional transparent blocks

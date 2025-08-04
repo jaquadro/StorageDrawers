@@ -1,5 +1,1 @@
-- Fixed key buttons on controllers/IO
-- Adjusted framed material heuristic to exclude some additional transparent blocks
-- Fixed incorrect language entries in es_es and ru_ru (Jack-McKalling)
-- Add short cooldown to keys and keyrings
-- NEO/FORGE: Fixed particle icon of framed drawers not using material
+- NEO/FORGE: Fix controller slave no longer responding to connections
