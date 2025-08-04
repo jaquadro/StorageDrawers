@@ -1,7 +1,2 @@
-- Fixed key buttons on Controller IO blocks
-- Fixed pick block not selecting matching hotbar framed blocks
-- Adjusted framed material heuristic to exclude some additional transparent blocks
-- Fixed default keyring missing tooltip
-- Fixed keyring losing custom name when adding keys
-- Add short cooldown to keys and keyrings
-- NEO/FORGE: Fixed particle icon of framed drawers not using material
+- Fixed shading orientation for item labels
+- FABRIC: Item labels are now shaded

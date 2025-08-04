@@ -1,3 +1,7 @@
+[13.8.13]
+- Fixed shading orientation for item labels
+- FABRIC: Item labels are now shaded
+
 [13.8.12]
 - Fixed key buttons on Controller IO blocks
 - Fixed pick block not selecting matching hotbar framed blocks

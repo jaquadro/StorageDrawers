@@ -172,16 +172,8 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
         matrix.popPose();
     }
 
-    private static final Matrix3f ITEM_LIGHT_ROTATION_3D = (new Matrix3f()).rotationYXZ(.261799f, -.261799f, 0);
-    /*Util.make(() -> {
-        Matrix4f mat = (new Matrix4f()).rotationYXZ(.261799f, -.261799f, 0);
-        return mat;
-        //Quaternionf quaternion = new Quaternionf(Vector3f.XP, -15f, true);
-        //quaternion.mul(new Quaternionf(Vector3f.YP, 15f, true));
-        //return quaternion;
-    });*/
+    private static final Matrix3f ITEM_LIGHT_ROTATION_3D = (new Matrix3f()).rotationYXZ(.36f, -.36f, -.014f);
     private static final Matrix3f ITEM_LIGHT_ROTATION_FLAT = (new Matrix3f()).rotationYXZ(0, -.785398f, 0);
-    //new Quaternionf(Vector3f.XP, -45f, true);
 
     private void renderFastItem(@NotNull ItemStack itemStack, BlockState state, int slot, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Direction side) {
         BlockDrawers block = (BlockDrawers)state.getBlock();
@@ -198,12 +190,13 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
         alignRendering(matrix, side);
         matrix.translate(moveX / 16, 1 - moveY / 16, 1 - moveZ);
         matrix.mulPose((new Matrix4f()).scale(scaleX, scaleY, 0.001f));
+        matrix.last().trustedNormals = true;
 
         try {
             BakedModel itemModel = itemRenderer.getModel(itemStack, null, null, 0);
 
             if (itemModel.isGui3d())
-                matrix.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
+                matrix.last().normal().rotateYXZ(-getRotationYForSide2D(side), 0, 0).mul(ITEM_LIGHT_ROTATION_3D);
             else
                 matrix.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
 
