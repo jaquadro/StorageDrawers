@@ -1,3 +1,6 @@
+[12.11.4]
+- Possible fix for restoring detached drawer leaving drawer without a label
+
 [12.11.3]
 - NEO/FORGE: Fix controller slave no longer responding to connections
 

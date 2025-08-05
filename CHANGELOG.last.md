@@ -1,1 +1,1 @@
-- NEO/FORGE: Fix controller slave no longer responding to connections
+- Possible fix for restoring detached drawer leaving drawer without a label

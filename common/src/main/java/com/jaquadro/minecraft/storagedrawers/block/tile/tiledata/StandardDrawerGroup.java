@@ -451,8 +451,8 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
                 missing = state;
 
-                onItemChanged();
-                onAmountChanged();
+                // onItemChanged();
+                // onAmountChanged();
             }
         }
 
