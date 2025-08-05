@@ -45,18 +45,19 @@ public class DetachedDrawerContents implements TooltipComponent
 
         if (obj instanceof DetachedDrawerContents contents) {
             return ItemStack.isSameItemSameComponents(item, contents.getItem())
-                && stackLimit == contents.getStackLimit();
+                && stackLimit == contents.getStackLimit()
+                && heavy == contents.isHeavy();
         } else
             return false;
     }
 
     @Override
     public int hashCode () {
-        return ItemStack.hashItemAndComponents(getItem()) * 31 + stackLimit;
+        return ItemStack.hashItemAndComponents(getItem()) * 31 + stackLimit * 31 + (heavy ? 1 : 0);
     }
 
     @Override
     public String toString () {
-        return "DetachedDrawerContents [item=" + item + ", stackLimit=" + stackLimit + "]";
+        return "DetachedDrawerContents [item=" + item + ", stackLimit=" + stackLimit + ", heavy=" + heavy + "]";
     }
 }
