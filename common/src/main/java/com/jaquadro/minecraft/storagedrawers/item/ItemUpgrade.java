@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.util.ComponentUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -36,7 +37,7 @@ public class ItemUpgrade extends Item
 
     // TODO: Forge extension
     // @Override
-    public boolean doesSneakBypassUseItem (ItemStack stack, LevelReader level, BlockPos pos) {
+    public boolean doesSneakBypassUse (ItemStack stack, LevelReader level, BlockPos pos, Player player) {
         return true;
     }
 

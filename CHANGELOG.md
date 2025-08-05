@@ -3,6 +3,7 @@
 - Fixed detached drawers not showing contents in tooltip
 - Possible fix for restoring detached drawer leaving drawer without a label
 - FABRIC: Item labels are now shaded
+- NEO/FORGE: Shift+clicking an upgrade on a drawer will store it
 
 [13.8.12]
 - Fixed key buttons on Controller IO blocks
