@@ -2,10 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.ModConstants;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
-import com.jaquadro.minecraft.storagedrawers.components.item.ControllerBinding;
-import com.jaquadro.minecraft.storagedrawers.components.item.DrawerCountData;
-import com.jaquadro.minecraft.storagedrawers.components.item.FrameData;
-import com.jaquadro.minecraft.storagedrawers.components.item.KeyringContents;
+import com.jaquadro.minecraft.storagedrawers.components.item.*;
 import com.texelsaurus.minecraft.chameleon.ChameleonServices;
 import com.texelsaurus.minecraft.chameleon.api.ChameleonInit;
 import com.texelsaurus.minecraft.chameleon.registry.ChameleonRegistry;
@@ -30,6 +27,9 @@ public class ModDataComponents
     public static final RegistryEntry<DataComponentType<FrameData>> FRAME_DATA =
         COMPONENTS.register("frame_data", () -> DataComponentType.<FrameData>builder()
             .persistent(FrameData.CODEC).networkSynchronized(FrameData.STREAM_CODEC).build());
+
+    public static final RegistryEntry<DataComponentType<DetachedDrawerContents>> DETACHED_DRAWER_CONTENTS =
+        COMPONENTS.register("detached_drawer_content", () -> DataComponentType.<DetachedDrawerContents>builder().persistent(DetachedDrawerContents.CODEC).build());
 
     public static void init (ChameleonInit.InitContext context) {
         COMPONENTS.init(context);

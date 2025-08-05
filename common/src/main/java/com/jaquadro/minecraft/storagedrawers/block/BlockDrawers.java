@@ -9,7 +9,9 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
+import com.jaquadro.minecraft.storagedrawers.components.item.DetachedDrawerContents;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.ModSecurity;
 import com.jaquadro.minecraft.storagedrawers.item.*;
@@ -467,8 +469,13 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         if (ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get() && !group.upgrades().hasPortabilityUpgrade())
             data.setIsHeavy(true);
 
+        // TODO: Move away from CUSTOM_DATA
         ItemStack stack = new ItemStack(baseItem, 1);
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(data.serializeNBT(level.registryAccess())));
+
+        ItemStack savedItem = data.getStoredItemPrototype().copyWithCount(data.getStoredItemCount());
+        DetachedDrawerContents contents = new DetachedDrawerContents(savedItem, cap, data.isHeavy());
+        stack.set(ModDataComponents.DETACHED_DRAWER_CONTENTS.get(), contents);
 
         return stack;
     }

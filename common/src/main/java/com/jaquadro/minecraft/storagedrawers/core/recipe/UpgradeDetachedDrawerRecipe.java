@@ -1,7 +1,9 @@
 package com.jaquadro.minecraft.storagedrawers.core.recipe;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
+import com.jaquadro.minecraft.storagedrawers.components.item.DetachedDrawerContents;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.ModRecipes;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDetachedDrawer;
@@ -53,7 +55,13 @@ public class UpgradeDetachedDrawerRecipe extends CustomRecipe
             data.setStorageMultiplier(data.getStorageMultiplier() + addedCap);
         }
 
+        // TODO: Move away from CUSTOM_DATA
         ret.set(DataComponents.CUSTOM_DATA, CustomData.of(data.serializeNBT(access)));
+
+        ItemStack savedItem = data.getStoredItemPrototype().copyWithCount(data.getStoredItemCount());
+        DetachedDrawerContents contents = new DetachedDrawerContents(savedItem, cap, data.isHeavy());
+        ret.set(ModDataComponents.DETACHED_DRAWER_CONTENTS.get(), contents);
+
         return ret;
     }
 

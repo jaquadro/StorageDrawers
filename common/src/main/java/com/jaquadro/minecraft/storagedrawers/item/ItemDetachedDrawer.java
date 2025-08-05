@@ -2,8 +2,12 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IPortable;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
+import com.jaquadro.minecraft.storagedrawers.components.item.DetachedDrawerContents;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.DetachedDrawerTooltip;
+import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.KeyringTooltip;
 import com.jaquadro.minecraft.storagedrawers.util.ComponentUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
@@ -31,6 +35,10 @@ public class ItemDetachedDrawer extends Item implements IPortable
 
         DetachedDrawerData data = new DetachedDrawerData();
         data.setStorageMultiplier(ModCommonConfig.INSTANCE.GENERAL.baseStackStorage.get() * 8);
+
+        ItemStack savedItem = data.getStoredItemPrototype().copyWithCount(data.getStoredItemCount());
+        DetachedDrawerContents contents = new DetachedDrawerContents(savedItem, data.getStorageMultiplier(), data.isHeavy());
+        stack.set(ModDataComponents.DETACHED_DRAWER_CONTENTS.get(), contents);
 
         // TODO: registry argh!
         //stack.setTag(data.serializeNBT());
@@ -65,17 +73,13 @@ public class ItemDetachedDrawer extends Item implements IPortable
 
     @Override
     public Optional<TooltipComponent> getTooltipImage (ItemStack stack) {
-        CustomData cdata = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        if (stack.has(DataComponents.HIDE_TOOLTIP) || stack.has(DataComponents.HIDE_ADDITIONAL_TOOLTIP))
+            return Optional.empty();
 
-        // TODO: Get around registry
-        /*
-        DetachedDrawerData data = new DetachedDrawerData(cdata.copyTag());
-        ItemStack innerStack = data.getStoredItemPrototype().copy();
-        innerStack.setCount(data.getStoredItemCount());
-        return Optional.of(new DetachedDrawerTooltip(data, innerStack, data.getStorageMultiplier()));
-        */
+        if (!stack.has(ModDataComponents.DETACHED_DRAWER_CONTENTS.get()))
+            return Optional.empty();
 
-        return super.getTooltipImage(stack);
+        return Optional.ofNullable(stack.get(ModDataComponents.DETACHED_DRAWER_CONTENTS.get())).map(DetachedDrawerTooltip::new);
     }
 
     @Override
