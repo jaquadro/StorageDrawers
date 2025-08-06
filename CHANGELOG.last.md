@@ -1,1 +1,2 @@
 - Possible fix for restoring detached drawer leaving drawer without a label
+- Prevent drawers with contents being able to stack if contents identical

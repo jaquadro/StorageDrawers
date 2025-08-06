@@ -488,7 +488,11 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
             data.setIsHeavy(true);
 
         ItemStack stack = new ItemStack(baseItem, 1);
-        stack.setTag(data.serializeNBT());
+        CompoundTag tag = data.serializeNBT();
+        if (!drawer.isEmpty())
+            tag.putInt("drawer_content_rand", (int)Math.floor(Math.random() * 1000000));
+
+        stack.setTag(tag);
 
         return stack;
     }
@@ -529,21 +533,25 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         if (data == null)
             data = new CompoundTag();
 
-        boolean hasContents = false;
+        boolean hasUpgradeContents = false;
+        boolean hasItemContents = false;
         for (int i = 0; i < tile.getGroup().getDrawerCount(); i++) {
             IDrawer drawer = tile.getGroup().getDrawer(i);
             if (!drawer.isEmpty() || drawer.isMissing())
-                hasContents = true;
+                hasItemContents = true;
         }
         for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {
             if (!tile.upgrades().getUpgrade(i).isEmpty())
-                hasContents = true;
+                hasUpgradeContents = true;
         }
 
-        if (hasContents) {
+        if (hasItemContents || hasUpgradeContents) {
             CompoundTag tiledata = tile.saveWithoutMetadata();
 
             data.put("tile", tiledata);
+            if (hasItemContents)
+                data.putInt("drawer_content_rand", (int)Math.floor(Math.random() * 1000000));
+
             drop.setTag(data);
         }
 
