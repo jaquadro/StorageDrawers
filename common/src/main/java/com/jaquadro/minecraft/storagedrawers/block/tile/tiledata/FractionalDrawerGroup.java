@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
+import com.jaquadro.minecraft.storagedrawers.config.StorageBlacklist;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.CompactingHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
@@ -348,9 +349,12 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             return !protoStack[slot].isEmpty();
         }
 
-        public boolean canItemBeStored (int slot, @NotNull ItemStack itemPrototype, Predicate<ItemStack> predicate) {
+        public boolean canItemBeStored (int slot, @NotNull ItemStack itemPrototype, Predicate<ItemStack> predicate, boolean manualStore) {
+            if (StorageBlacklist.INSTANCE.isBlacklisted(itemPrototype))
+                return false;
+
             IDrawerAttributes attrs = getAttributes();
-            if (protoStack[slot].isEmpty() && protoStack[0].isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
+            if (protoStack[slot].isEmpty() && protoStack[0].isEmpty() && (manualStore || !attrs.isItemLocked(LockAttribute.LOCK_EMPTY)))
                 return true;
 
             if (predicate == null)
@@ -671,8 +675,13 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         }
 
         @Override
-        public boolean canItemBeStored(@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
-            return storage.canItemBeStored(slot, itemPrototype, matchPredicate);
+        public boolean canItemBeStored (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+            return storage.canItemBeStored(slot, itemPrototype, matchPredicate, false);
+        }
+
+        @Override
+        public boolean canItemBeStoredManual (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+            return storage.canItemBeStored(slot, itemPrototype, matchPredicate, true);
         }
 
         @Override
