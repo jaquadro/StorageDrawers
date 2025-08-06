@@ -103,6 +103,11 @@ public class ItemDrawers extends BlockItem implements IPortable
         return 0;
     }
 
+    @Override
+    public boolean canFitInsideContainerItems () {
+        return false;
+    }
+
     // TODO: Forge extension
     // @Override
     public boolean doesSneakBypassUse (ItemStack stack, LevelReader level, BlockPos pos, Player player) {

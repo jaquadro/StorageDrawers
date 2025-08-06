@@ -83,6 +83,11 @@ public class ItemDetachedDrawer extends Item implements IPortable
     }
 
     @Override
+    public boolean canFitInsideContainerItems () {
+        return false;
+    }
+
+    @Override
     public boolean isHeavy(HolderLookup.Provider provider, @NotNull ItemStack stack) {
         if (stack.getItem() != this)
             return false;
