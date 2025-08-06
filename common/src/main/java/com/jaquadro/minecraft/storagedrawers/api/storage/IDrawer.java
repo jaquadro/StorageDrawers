@@ -141,6 +141,10 @@ public interface IDrawer
         return canItemBeStored(itemPrototype, null);
     }
 
+    default boolean canItemBeStoredManual (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+        return canItemBeStored(itemPrototype, matchPredicate);
+    }
+
     /**
      * Gets whether or not an item of the given type and data can be extracted from this drawer using a custom matching
      * predicate.  If matchPredicate is null, the drawer's default item matching rules are applied instead.

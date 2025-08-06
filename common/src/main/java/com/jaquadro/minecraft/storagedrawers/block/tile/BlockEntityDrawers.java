@@ -504,11 +504,11 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         if (!drawer.isEnabled())
             return 0;
 
+        if (!drawer.canItemBeStoredManual(stack, null))
+            return 0;
+
         if (drawer.isEmpty())
             drawer = drawer.setStoredItem(stack);
-
-        if (!drawer.canItemBeStored(stack))
-            return 0;
 
         int countAdded = Math.min(count, stack.getCount());
         if (!drawerAttributes.isVoid())

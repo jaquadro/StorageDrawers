@@ -77,6 +77,7 @@ public class StorageDrawers
 
     private void setup (final FMLCommonSetupEvent event) {
         CompTierRegistry.INSTANCE.initialize();
+        StorageBlacklist.INSTANCE.initialize();
         PlatformCapabilities.initHandlers();
 
         var map = BuiltInRegistries.DATA_COMPONENT_TYPE.asHolderIdMap();

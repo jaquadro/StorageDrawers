@@ -52,6 +52,9 @@ public final class ModCommonConfig extends ConfigSpec
 
         public ChameleonConfig.ConfigEntry<List<? extends String>> compRules;
 
+        public ChameleonConfig.ConfigEntry<Boolean> enableStoreFilledDrawers;
+        public ChameleonConfig.ConfigEntry<List<? extends String>> storeBlacklist;
+
         public General() {
             commonConfig.pushGroup("General");
 
@@ -105,6 +108,14 @@ public final class ModCommonConfig extends ConfigSpec
                 .build();
 
             debugTrace = commonConfig.define("debugTrace", false).build();
+
+            enableStoreFilledDrawers = commonConfig.define("enableStoreFilledDrawers", false)
+                .comment("If enabled, allows drawers with contents to be stored in another drawer block")
+                .build();
+            storeBlacklist = commonConfig.defineList("storeBlacklist", Arrays.asList("storagedrawers:creative_vending_upgrade"), null)
+                .comment("", "Each entry should be a namespace or fully namespaced item, e.g. minecraft:cobblestone",
+                    "Any items on the blacklist are prevented from being stored in drawers")
+                .build();
 
             compRules = commonConfig.defineList("compactingRules", test, obj -> CompTierRegistry.validateRuleSyntax((String)obj)).build();
 

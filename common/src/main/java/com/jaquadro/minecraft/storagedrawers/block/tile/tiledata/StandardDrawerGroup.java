@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
+import com.jaquadro.minecraft.storagedrawers.config.StorageBlacklist;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackTagMatcher;
@@ -350,11 +351,23 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
 
         @Override
         public boolean canItemBeStored (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+            return canItemBeStored(itemPrototype, matchPredicate, false);
+        }
+
+        @Override
+        public boolean canItemBeStoredManual (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate) {
+            return canItemBeStored(itemPrototype, matchPredicate, true);
+        }
+
+        private boolean canItemBeStored (@NotNull ItemStack itemPrototype, Predicate<ItemStack> matchPredicate, boolean manualStore) {
             if (isMissing())
                 return false;
 
+            if (StorageBlacklist.INSTANCE.isBlacklisted(itemPrototype))
+                return false;
+
             IDrawerAttributes attrs = getAttributes();
-            if (protoStack.isEmpty() && !attrs.isItemLocked(LockAttribute.LOCK_EMPTY))
+            if (protoStack.isEmpty() && (manualStore || !attrs.isItemLocked(LockAttribute.LOCK_EMPTY)))
                 return true;
 
             if (matchPredicate == null)
