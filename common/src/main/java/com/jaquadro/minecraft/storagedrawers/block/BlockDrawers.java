@@ -533,21 +533,23 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         if (tile == null)
             return drop;
 
-        boolean hasContents = false;
+        boolean hasUpgradeContents = false;
+        boolean hasItemContents = false;
         for (int i = 0; i < tile.getGroup().getDrawerCount(); i++) {
             IDrawer drawer = tile.getGroup().getDrawer(i);
             if (!drawer.isEmpty() || drawer.isMissing())
-                hasContents = true;
+                hasItemContents = true;
         }
         for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {
             if (!tile.upgrades().getUpgrade(i).isEmpty())
-                hasContents = true;
+                hasUpgradeContents = true;
         }
 
-        if (hasContents) {
+        if (hasItemContents || hasUpgradeContents) {
             CompoundTag tiledata = tile.saveWithId(tile.getLevel().registryAccess());
             drop.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tiledata));
-            drop.set(DataComponents.MAX_STACK_SIZE, 1);
+            if (hasItemContents)
+                drop.set(DataComponents.MAX_STACK_SIZE, 1);
         }
 
         if (tile.hasCustomName())
