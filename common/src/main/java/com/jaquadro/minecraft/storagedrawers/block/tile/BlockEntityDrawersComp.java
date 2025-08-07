@@ -1,8 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.ModServices;
+import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.FractionalDrawerGroup;
@@ -18,6 +20,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
 {
@@ -89,7 +93,7 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
         return false;
     }
 
-    private class GroupData extends FractionalDrawerGroup
+    private class GroupData extends FractionalDrawerGroup implements IProtectable
     {
         public GroupData (int slotCount) {
             super(slotCount);
@@ -152,6 +156,26 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
             if (capability == null || level == null)
                 return null;
             return capability.getCapability(level, getBlockPos());
+        }
+
+        @Override
+        public UUID getOwner () {
+            return BlockEntityDrawersComp.this.getOwner();
+        }
+
+        @Override
+        public boolean setOwner (UUID owner) {
+            return BlockEntityDrawersComp.this.setOwner(owner);
+        }
+
+        @Override
+        public ISecurityProvider getSecurityProvider () {
+            return BlockEntityDrawersComp.this.getSecurityProvider();
+        }
+
+        @Override
+        public boolean setSecurityProvider (ISecurityProvider provder) {
+            return BlockEntityDrawersComp.this.setSecurityProvider(provder);
         }
     }
 

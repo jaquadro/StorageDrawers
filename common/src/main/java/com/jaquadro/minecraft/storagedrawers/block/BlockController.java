@@ -38,6 +38,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
+import java.util.Objects;
 
 public class BlockController extends HorizontalDirectionalBlock implements INetworked, EntityBlock, IFramedSourceBlock
 {
@@ -141,6 +142,11 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         BlockEntityController blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);
         if (blockEntity == null)
             return;
+
+        if (Objects.equals(providerKey, "unlock")) {
+            blockEntity.clearProtection();
+            return;
+        }
 
         ISecurityProvider provider = ModSecurity.registry.getProvider(providerKey);
         blockEntity.toggleProtection(player.getGameProfile(), provider);

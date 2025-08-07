@@ -4,3 +4,4 @@
 - Added config option to prevent storing filled drawers in drawers
 - Added config option to blacklist items or namespaces from being stored
 - Fixed scheduled tick exceptions showing in logs
+- Added admin personal key to unlock any player's drawers (creative/no-recipe)
