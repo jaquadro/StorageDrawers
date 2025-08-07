@@ -1,10 +1,14 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.texelsaurus.minecraft.chameleon.util.WorldUtils;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -33,6 +37,12 @@ public class CommonEvents
             }
 
             return InteractionResult.PASS;
+        });
+
+        ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, world) -> {
+            if (blockEntity instanceof BlockEntityController controller) {
+                controller.onEntityLoad();
+            }
         });
 
         /*UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {

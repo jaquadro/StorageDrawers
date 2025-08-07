@@ -17,6 +17,12 @@ public class PlatformBlockEntityController extends BlockEntityController
         super(pos, state);
     }
 
+    @Override
+    public void onLoad () {
+        super.onLoad();
+        onEntityLoad();
+    }
+
     @NotNull
     @Override
     public ModelData getModelData () {
