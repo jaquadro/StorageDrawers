@@ -260,7 +260,12 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         for (var node : getBoundRemoteNodes()) {
             if (node instanceof BlockEntity blockEntity) {
                 BlockPos pos = blockEntity.getBlockPos();
-                getLevel().scheduleTick(pos, blockEntity.getBlockState().getBlock(), 1);
+                try {
+                    if (getLevel().isLoaded(pos))
+                        getLevel().scheduleTick(pos, blockEntity.getBlockState().getBlock(), 1);
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
 
             //invalidateRemoteNode(node);
@@ -268,17 +273,20 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         }
     }
 
-    @Override
-    public void clearRemoved () {
+    public void onEntityLoad () {
         if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
-            ModServices.log.info("controller [{}] clearRemoved", worldPosition);
+            ModServices.log.info("controller [{}] onEntityLoad", worldPosition);
 
-        super.clearRemoved();
         if (getLevel() == null || getLevel().isClientSide)
             return;
 
-        if (!getLevel().getBlockTicks().hasScheduledTick(getBlockPos(), getBlockState().getBlock()))
-            getLevel().scheduleTick(getBlockPos(), getBlockState().getBlock(), 1);
+        BlockPos pos = getBlockPos();
+        try {
+            if (!getLevel().getBlockTicks().hasScheduledTick(pos, getBlockState().getBlock()))
+                getLevel().scheduleTick(pos, getBlockState().getBlock(), 1);
+        } catch (Exception e) {
+            // Ignore
+        }
     }
 
     @Override
