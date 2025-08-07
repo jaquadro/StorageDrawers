@@ -111,6 +111,8 @@
     "item.storagedrawers.personal_key.desc": "Protect access from other players\nDoes not protect blocks from breaking",
     "item.storagedrawers.personal_key_cofh": "Personal Key (CoFH)",
     "item.storagedrawers.personal_key_cofh.desc": "Protect access from other players\nDoes not protect blocks from breaking",
+    "item.storagedrawers.personal_key_unlock": "Personal Key (Admin)",
+    "item.storagedrawres.personal_key_unlock.desc": "Unlocks any drawer locked by another player's personal key",
     "item.storagedrawers.keyring": "Keyring",
     "item.storagedrawers.keyring.desc": "Storage for keys\nAdd or remove keys in inventory\nCrouch and use to cycle keys",
     "item.storagedrawers.drawer_puller": "Drawer Puller",

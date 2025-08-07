@@ -308,6 +308,10 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
                 blockEntity.setOwner(context.player.getUUID());
                 blockEntity.setSecurityProvider(provider);
             }
+            else if (Objects.equals(securityKey, "unlock")) {
+                blockEntity.setOwner(null);
+                blockEntity.setSecurityProvider(null);
+            }
             else if (SecurityManager.hasOwnership(context.player.getGameProfile(), blockEntity)) {
                 blockEntity.setOwner(null);
                 blockEntity.setSecurityProvider(null);

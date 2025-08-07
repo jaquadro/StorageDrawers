@@ -421,6 +421,18 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         }
     }
 
+    public void clearProtection () {
+        for (StorageRecord record : storage.values()) {
+            if (record.storage == null)
+                continue;
+
+            if (record.storage instanceof IProtectable protectable) {
+                protectable.setOwner(null);
+                protectable.setSecurityProvider(null);
+            }
+        }
+    }
+
     /*
     public void toggleShroud (GameProfile profile) {
         Boolean template = null;
