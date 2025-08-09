@@ -19,13 +19,16 @@ import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public final class ModBlocks
 {
     public static final ChameleonRegistry<Block> BLOCKS = ChameleonServices.REGISTRY.create(BuiltInRegistries.BLOCK, ModConstants.MOD_ID);
+    private static final Set<ChameleonRegistry<Block>> EXTERNAL_REGISTRIES = new HashSet<>();
 
     public static final List<String> EXCLUDE_ITEMS = new ArrayList<>();
 
@@ -189,6 +192,10 @@ public final class ModBlocks
         KEYBUTTON_CONCEALMENT = BLOCKS.register("keybutton_concealment",
             () -> new BlockKeyButton(Properties.of().sound(SoundType.STONE), EnumKeyType.CONCEALMENT));
 
+    public static void tryAddExternalRegistry (ChameleonRegistry<Block> registry) {
+        EXTERNAL_REGISTRIES.add(registry);
+    }
+
     private ModBlocks() {}
 
     static ResourceLocation modLoc (String name) {
@@ -295,7 +302,11 @@ public final class ModBlocks
     }
 
     private static <B extends Block> Stream<B> getBlocksOfType(Class<B> blockClass) {
-        return BLOCKS.getEntries().stream().map(RegistryEntry::get).filter(blockClass::isInstance).map(blockClass::cast);
+        Stream<RegistryEntry<Block>> stream = BLOCKS.getEntries().stream();
+        if (!EXTERNAL_REGISTRIES.isEmpty())
+            stream = Stream.concat(stream, EXTERNAL_REGISTRIES.stream().flatMap(r -> r.getEntries().stream()));
+
+        return stream.map(RegistryEntry::get).filter(blockClass::isInstance).map(blockClass::cast);
     }
 
     public static Stream<BlockDrawers> getDrawers() {

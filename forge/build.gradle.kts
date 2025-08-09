@@ -75,6 +75,7 @@ dependencies {
     implementation(fg.deobf("curse.maven:immersive-engineering-231951:5224387"))
 
     //implementation(fg.deobf("curse.maven:fluid-drawers-legacy-597669:5340725"))
+    implementation(fg.deobf("curse.maven:storage-drawers-extras-254879:6861321"))
 
     // JEI
     //runtimeOnly("mezz.jei:jei-1.21-forge:19.8.2.99")

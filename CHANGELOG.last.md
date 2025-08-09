@@ -1,7 +1,1 @@
-- Possible fix for restoring detached drawer leaving drawer without a label
-- Prevent drawers with contents being able to stack if contents identical
-- Prevent drawers from being stored in bundles and shulker boxes
-- Added config option to prevent storing filled drawers in drawers
-- Added config option to blacklist items or namespaces from being stored
-- Fixed scheduled tick exceptions showing in logs
-- Added admin personal key to unlock any player's drawers (creative/no-recipe)
+- Fixed drawers from Storage Drawers Extras not rendering items

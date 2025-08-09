@@ -1,3 +1,6 @@
+[12.11.5]
+- Fixed drawers from Storage Drawers Extras not rendering items
+
 [12.11.4]
 - Possible fix for restoring detached drawer leaving drawer without a label
 - Prevent drawers with contents being able to stack if contents identical

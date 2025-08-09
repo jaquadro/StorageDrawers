@@ -27,6 +27,8 @@ public class ModBlockVariants
     }
 
     public static void registerVariant(ChameleonRegistry<Block> register, VariantData data) {
+        ModBlocks.tryAddExternalRegistry(register);
+
         data.blockFull1 = ModBlocks.registerWoodenDrawerBlock(register, data.material, 1, false);
         data.blockFull2 = ModBlocks.registerWoodenDrawerBlock(register, data.material, 2, false);
         data.blockFull4 = ModBlocks.registerWoodenDrawerBlock(register, data.material, 4, false);
