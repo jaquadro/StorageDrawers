@@ -47,7 +47,7 @@ public class StorageDrawers
     public StorageDrawers () {
         ModCommonConfig.INSTANCE.context().init(ModConstants.MOD_ID, ChameleonConfig.Type.COMMON);
         ModClientConfig.INSTANCE.context().init(ModConstants.MOD_ID, ChameleonConfig.Type.CLIENT);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ((ForgeConfig)ModCommonConfig.INSTANCE.context()).forgeSpec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ((ForgeConfig)ModCommonConfig.INSTANCE.context()).forgeSpec, "storagedrawers-common.v2.toml");
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ((ForgeConfig)ModClientConfig.INSTANCE.context()).forgeSpec);
 
         //ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
@@ -78,6 +78,7 @@ public class StorageDrawers
     private void setup (final FMLCommonSetupEvent event) {
         CompTierRegistry.INSTANCE.initialize();
         StorageBlacklist.INSTANCE.initialize();
+        MaterialBlacklist.INSTANCE.initialize();
         PlatformCapabilities.initHandlers();
 
         var map = BuiltInRegistries.DATA_COMPONENT_TYPE.asHolderIdMap();

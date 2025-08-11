@@ -23,6 +23,14 @@ public class ItemUpgradeRedstone extends ItemUpgrade
 
     @Override
     public boolean isEnabled () {
-        return ModCommonConfig.INSTANCE.UPGRADES.enableRedstoneUpgrade.get();
+        if (!ModCommonConfig.INSTANCE.UPGRADES.redstoneUpgrade.enableUpgrade.get())
+            return false;
+
+        if (type == EnumUpgradeRedstone.MAX)
+            return ModCommonConfig.INSTANCE.UPGRADES.redstoneUpgrade.enableMax.get();
+        else if (type == EnumUpgradeRedstone.MIN)
+            return ModCommonConfig.INSTANCE.UPGRADES.redstoneUpgrade.enableMin.get();
+
+        return true;
     }
 }

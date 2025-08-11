@@ -3,6 +3,7 @@ package com.texelsaurus.minecraft.chameleon.config;
 import com.texelsaurus.minecraft.chameleon.config.ConfigSpec;
 import com.texelsaurus.minecraft.chameleon.service.ChameleonConfig;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -60,6 +61,16 @@ public class StaticConfig implements ChameleonConfig
 
     @Override
     public void popGroup () {
+
+    }
+
+    @Override
+    public void comment (String comment) {
+
+    }
+
+    @Override
+    public void comment (String... comment) {
 
     }
 

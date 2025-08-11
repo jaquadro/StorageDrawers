@@ -310,7 +310,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         if (upgradeData.hasOneStackUpgrade())
             return 1;
 
-        return getDrawerCapacity() * ModCommonConfig.INSTANCE.GENERAL.baseStackStorage.get();
+        return getDrawerCapacity() * ModCommonConfig.INSTANCE.DRAWERS.baseStackStorage.get();
     }
 
     protected boolean emptySlotCanBeCleared (int slot) {
@@ -320,7 +320,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
     @Override
     public UUID getOwner () {
-        if (!ModCommonConfig.INSTANCE.GENERAL.enablePersonalKey.get())
+        if (!ModCommonConfig.INSTANCE.TOOLS.personalKey.enable.get())
             return null;
 
         return owner;
@@ -328,7 +328,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
     @Override
     public boolean setOwner (UUID owner) {
-        if (!ModCommonConfig.INSTANCE.GENERAL.enablePersonalKey.get())
+        if (!ModCommonConfig.INSTANCE.TOOLS.personalKey.enable.get())
             return false;
 
         if ((this.owner != null && !this.owner.equals(owner)) || (owner != null && !owner.equals(this.owner))) {
@@ -349,7 +349,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
     @Override
     public boolean setSecurityProvider (ISecurityProvider provider) {
-        if (!ModCommonConfig.INSTANCE.GENERAL.enablePersonalKey.get())
+        if (!ModCommonConfig.INSTANCE.TOOLS.personalKey.enable.get())
             return false;
 
         String newKey = (provider == null) ? null : provider.getProviderID();
@@ -595,7 +595,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         if (count > drawer.getMaxCapacity(proto))
             return false;
 
-        if (ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get()) {
+        if (ModCommonConfig.INSTANCE.DRAWERS.detached.forceMaxCapacityCheck.get()) {
             int cap = getEffectiveDrawerCapacity() * upgradeData.getStorageMultiplier();
             if (data.getStorageMultiplier() < cap)
                 return false;

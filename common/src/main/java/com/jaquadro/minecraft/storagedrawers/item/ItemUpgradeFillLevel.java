@@ -10,6 +10,6 @@ public class ItemUpgradeFillLevel extends ItemUpgrade
 
     @Override
     public boolean isEnabled () {
-        return ModCommonConfig.INSTANCE.UPGRADES.enableFillLevelUpgrade.get();
+        return ModCommonConfig.INSTANCE.UPGRADES.fillLevelUpgrade.enableUpgrade.get();
     }
 }

@@ -15,7 +15,6 @@ import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.storage.StorageUtil;
 import com.jaquadro.minecraft.storagedrawers.util.ItemCollectionRegistry;
@@ -31,8 +30,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -171,7 +168,6 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     private final ItemCollectionRegistry<SlotRecord> drawerPrimaryLookup = new ItemCollectionRegistry<>();
 
     protected int[] drawerSlots = new int[0];
-    private final int range;
 
     private long lastUpdateTime;
     private long lastClickTime;
@@ -179,7 +175,6 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
     protected BlockEntityController(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
-        range = ModCommonConfig.INSTANCE.GENERAL.controllerRange.get();
 
         injectPortableData(controllerHostData);
         injectPortableData(materialData);
@@ -202,7 +197,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
     public void printDebugInfo () {
         ModServices.log.info("Controller at " + worldPosition);
-        ModServices.log.info("  Range: " + range + " blocks");
+        ModServices.log.info("  Range: " + ModCommonConfig.INSTANCE.CONTROLLER.controllerRange.get() + " blocks");
         ModServices.log.info("  Stored records: " + storage.size() + ", slot list: " + drawerSlots.length);
         ModServices.log.info("  Ticks since last update: " + (getLevel() == null ? "null" : (getLevel().getGameTime() - lastUpdateTime)));
     }
@@ -712,15 +707,22 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         if (!getLevel().isClientSide)
             controllerHostData.validateRemoteNodes(this, level);
 
-        populateRoot(getBlockPos(), true);
+        int globalRange = ModCommonConfig.INSTANCE.CONTROLLER.controllerRange.get();
+        int remoteRange = Math.min(globalRange, ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.maxRange.get());
+        int remoteGroupRange = Math.min(globalRange, ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.maxGroupRange.get());
+
+        populateRoot(getBlockPos(), globalRange, true);
 
         getBoundRemoteNodes().forEach(n -> {
-            if (n.getBoundControlGroup() == this && n instanceof BlockEntity blockEntity)
-                populateRoot(blockEntity.getBlockPos(), n.canRecurseSearch());
+            if (n.getBoundControlGroup() == this && n instanceof BlockEntity blockEntity) {
+                boolean recurse = n.canRecurseSearch();
+                int range = recurse ? remoteGroupRange : remoteRange;
+                populateRoot(blockEntity.getBlockPos(), range, recurse);
+            }
         });
     }
 
-    private void populateRoot (BlockPos root, boolean recursiveSearch) {
+    private void populateRoot (BlockPos root, int range, boolean recursiveSearch) {
         searchQueue.add(root);
         searchDiscovered.add(root);
 

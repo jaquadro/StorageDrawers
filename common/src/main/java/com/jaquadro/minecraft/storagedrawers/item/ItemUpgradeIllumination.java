@@ -10,6 +10,6 @@ public class ItemUpgradeIllumination extends ItemUpgrade
 
     @Override
     public boolean isEnabled () {
-        return ModCommonConfig.INSTANCE.UPGRADES.enableIlluminationUpgrade.get();
+        return ModCommonConfig.INSTANCE.UPGRADES.illuminationUpgrade.enableUpgrade.get();
     }
 }

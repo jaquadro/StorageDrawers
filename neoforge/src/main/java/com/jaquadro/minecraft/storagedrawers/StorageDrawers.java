@@ -44,8 +44,9 @@ public class StorageDrawers
     public StorageDrawers (ModContainer modContainer, IEventBus modEventBus) {
         ModCommonConfig.INSTANCE.context().init(ModConstants.MOD_ID, ChameleonConfig.Type.COMMON);
         ModClientConfig.INSTANCE.context().init(ModConstants.MOD_ID, ChameleonConfig.Type.CLIENT);
-        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, ((NeoforgeConfig)ModCommonConfig.INSTANCE.context()).neoSpec);
+        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, ((NeoforgeConfig) ModCommonConfig.INSTANCE.context()).neoSpec, "storagedrawers-common.v2.toml");
         modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.CLIENT, ((NeoforgeConfig)ModClientConfig.INSTANCE.context()).neoSpec);
+
 
         //modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
         //modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.spec);
@@ -76,6 +77,7 @@ public class StorageDrawers
         //compRegistry = new CompTierRegistry();
         CompTierRegistry.INSTANCE.initialize();
         StorageBlacklist.INSTANCE.initialize();
+        MaterialBlacklist.INSTANCE.initialize();
 
         //oreDictRegistry = new OreDictRegistry();
         //renderRegistry = new RenderRegistry();

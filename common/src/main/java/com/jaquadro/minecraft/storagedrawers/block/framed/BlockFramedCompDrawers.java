@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block.framed;
 
+import com.jaquadro.minecraft.storagedrawers.api.config.IDrawerConfig;
 import com.jaquadro.minecraft.storagedrawers.api.framing.FrameMaterial;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
@@ -7,6 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.components.item.FrameData;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
@@ -20,10 +22,16 @@ import org.jetbrains.annotations.Nullable;
 
 public class BlockFramedCompDrawers extends BlockCompDrawers implements IFramedBlock
 {
+    public BlockFramedCompDrawers (int drawerCount, boolean halfDepth, IDrawerConfig drawerConfig, Properties properties) {
+        super(drawerCount, halfDepth, drawerConfig, properties);
+    }
+
+    @Deprecated
     public BlockFramedCompDrawers (int drawerCount, boolean halfDepth, int storageUnits, Properties properties) {
         super(drawerCount, halfDepth, storageUnits, properties);
     }
 
+    @Deprecated
     public BlockFramedCompDrawers (int drawerCount, boolean halfDepth, Properties properties) {
         super(drawerCount, halfDepth, properties);
     }

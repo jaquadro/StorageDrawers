@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -24,13 +25,9 @@ public class ItemPersonalKey extends ItemKey
     }
 
     @Override
-    @NotNull
-    public Component getDescription() {
-        if (securityProvider != null) {
-            if (securityProvider.equals("cofh") /* && !LocalIntegrationRegistry.isModLoaded("cofh_core") */)
-                return Component.translatable("itemConfig.storagedrawers.disabled_upgrade").withStyle(ChatFormatting.RED);
-        }
-
-        return super.getDescription();
+    public boolean isEnabled () {
+        if (securityProvider != null && securityProvider.equals("cofh"))
+            return false;
+        return ModCommonConfig.INSTANCE.TOOLS.personalKey.enable.get();
     }
 }

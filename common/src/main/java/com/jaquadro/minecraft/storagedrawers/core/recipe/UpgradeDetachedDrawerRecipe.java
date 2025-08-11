@@ -51,7 +51,8 @@ public class UpgradeDetachedDrawerRecipe extends CustomRecipe
             data = new DetachedDrawerData();
             data.setStorageMultiplier(cap);
         } else {
-            int addedCap = ctx.storageMult * ModCommonConfig.INSTANCE.GENERAL.baseStackStorage.get() * 8;
+            int addedCap = ctx.storageMult * ModCommonConfig.INSTANCE.DRAWERS.baseStackStorage.get()
+                * ModCommonConfig.INSTANCE.DRAWERS.fullDrawers1x1.unitsPerSlot.get();
             data.setStorageMultiplier(data.getStorageMultiplier() + addedCap);
         }
 

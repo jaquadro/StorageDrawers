@@ -3,6 +3,7 @@ package com.texelsaurus.minecraft.chameleon.service;
 import com.texelsaurus.minecraft.chameleon.config.ConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -61,6 +62,16 @@ public class ForgeConfig implements ChameleonConfig
         BUILDER.pop();
     }
 
+    @Override
+    public void comment (String comment) {
+        BUILDER.comment(" " + comment);
+    }
+
+    @Override
+    public void comment (String... comment) {
+        BUILDER.comment(Arrays.stream(comment).map(s -> " " + s).toArray(String[]::new));
+    }
+
     public class ForgeConfigEntry<T> extends ConfigEntry<T>
     {
         ForgeConfigSpec.Builder builder;
@@ -74,7 +85,7 @@ public class ForgeConfig implements ChameleonConfig
         @Override
         public ConfigEntry<T> build () {
             if (comment != null)
-                builder.comment(comment);
+                builder.comment(Arrays.stream(comment).map(s -> " " + s).toArray(String[]::new));
 
             value = define();
             return this;

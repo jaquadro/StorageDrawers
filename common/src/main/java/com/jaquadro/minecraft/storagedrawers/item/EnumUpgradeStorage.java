@@ -6,10 +6,12 @@ import org.jetbrains.annotations.NotNull;
 public enum EnumUpgradeStorage implements StringRepresentable
 {
     OBSIDIAN(0, 1, "obsidian", "obsidian"),
-    IRON(1, 2, "iron", "iron"),
-    GOLD(2, 3, "gold", "gold"),
-    DIAMOND(3, 4, "diamond", "diamond"),
-    EMERALD(4, 5, "emerald", "emerald");
+    IRON(1, 3, "iron", "iron"),
+    GOLD(2, 4, "gold", "gold"),
+    DIAMOND(3, 6, "diamond", "diamond"),
+    EMERALD(4, 5, "emerald", "emerald"),
+    COPPER(5, 2, "copper", "copper"),
+    NETHERITE(6, 7, "netherite", "netherite");
 
     private static final EnumUpgradeStorage[] META_LOOKUP;
     private static final EnumUpgradeStorage[] LEVEL_LOOKUP;

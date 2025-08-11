@@ -20,8 +20,8 @@ public class DrawerOverlay {
     public boolean respectQuantifyKey;
 
     public DrawerOverlay() {
-        showStackRemainder = ModCommonConfig.INSTANCE.INTEGRATION.wailaStackRemainder.get();
-        respectQuantifyKey = ModCommonConfig.INSTANCE.INTEGRATION.wailaRespectQuantifyKey.get();
+        showStackRemainder = ModCommonConfig.INSTANCE.INTEGRATION.waila.stackRemainder.get();
+        respectQuantifyKey = ModCommonConfig.INSTANCE.INTEGRATION.waila.respectQuantifyKey.get();
     }
 
     public List<Component> getOverlay(final BlockEntityDrawers tile) {

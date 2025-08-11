@@ -3,7 +3,6 @@ package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IControlGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
-import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;

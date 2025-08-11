@@ -26,7 +26,7 @@ public class ItemUpgradeStorage extends ItemUpgrade
 
     @Override
     public boolean isEnabled () {
-        return ModCommonConfig.INSTANCE.UPGRADES.enableStorageUpgrade.get();
+        return ModCommonConfig.INSTANCE.UPGRADES.getStorageUpgrade(level.getLevel()).enableUpgrade.get();
     }
 
     @Override

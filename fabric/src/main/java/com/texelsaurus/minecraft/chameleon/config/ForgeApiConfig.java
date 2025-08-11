@@ -5,6 +5,7 @@ import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeConfigRegistry;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -31,8 +32,9 @@ public class ForgeApiConfig implements ChameleonConfig
 
         neoSpec = BUILDER.build();
 
+        // TODO: Elevate filename into API
         if (type == Type.COMMON)
-            NeoForgeConfigRegistry.INSTANCE.register(modId, ModConfig.Type.COMMON, neoSpec);
+            NeoForgeConfigRegistry.INSTANCE.register(modId, ModConfig.Type.COMMON, neoSpec, "storagedrawers-common.v2.toml");
         else if (type == Type.CLIENT)
             NeoForgeConfigRegistry.INSTANCE.register(modId, ModConfig.Type.CLIENT, neoSpec);
 
@@ -75,6 +77,16 @@ public class ForgeApiConfig implements ChameleonConfig
         BUILDER.pop();
     }
 
+    @Override
+    public void comment (String comment) {
+        BUILDER.comment(" " + comment);
+    }
+
+    @Override
+    public void comment (String... comment) {
+        BUILDER.comment(Arrays.stream(comment).map(s -> " " + s).toArray(String[]::new));
+    }
+
     public class ForgeConfigEntry<T> extends ConfigEntry<T>
     {
         ModConfigSpec.Builder builder;
@@ -88,7 +100,7 @@ public class ForgeApiConfig implements ChameleonConfig
         @Override
         public ConfigEntry<T> build () {
             if (comment != null)
-                builder.comment(comment);
+                builder.comment(Arrays.stream(comment).map(s -> " " + s).toArray(String[]::new));
 
             value = define();
             return this;

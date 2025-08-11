@@ -1,12 +1,11 @@
 package com.texelsaurus.minecraft.chameleon.service;
 
-import com.jaquadro.minecraft.storagedrawers.config.ModClientConfig;
-import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.texelsaurus.minecraft.chameleon.config.ConfigSpec;
 import com.texelsaurus.minecraft.chameleon.config.ForgeApiConfig;
 import com.texelsaurus.minecraft.chameleon.config.StaticConfig;
 import net.fabricmc.loader.api.FabricLoader;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -63,5 +62,15 @@ public class FabricConfig implements ChameleonConfig
     @Override
     public void popGroup () {
         configImpl.popGroup();
+    }
+
+    @Override
+    public void comment (String comment) {
+        configImpl.comment(comment);
+    }
+
+    @Override
+    public void comment (String... comment) {
+        configImpl.comment(comment);
     }
 }

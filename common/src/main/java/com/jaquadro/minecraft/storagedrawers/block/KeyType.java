@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 
@@ -27,6 +28,20 @@ public record KeyType (String name)
 
     public String name() {
         return this.name;
+    }
+
+    public boolean isEnabled () {
+        boolean keyEnabled = false;
+        if (this == KeyType.DRAWER)
+            keyEnabled = ModCommonConfig.INSTANCE.TOOLS.drawerKey.enable.get();
+        else if (this == KeyType.QUANTIFY)
+            keyEnabled = ModCommonConfig.INSTANCE.TOOLS.quantifyKey.enable.get();
+        else if (this == KeyType.CONCEALMENT)
+            keyEnabled = ModCommonConfig.INSTANCE.TOOLS.concealmentKey.enable.get();
+        else if (this == KeyType.PERSONAL)
+            keyEnabled = ModCommonConfig.INSTANCE.TOOLS.personalKey.enable.get();
+
+        return keyEnabled;
     }
 
     static {

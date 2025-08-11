@@ -42,7 +42,7 @@ public class ClientDetachedDrawerTooltip implements ClientTooltipComponent
 
     @Override
     public void renderImage(Font font, int pX, int pY, GuiGraphics graphics) {
-        boolean forceCapCheck = ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get();
+        boolean forceCapCheck = ModCommonConfig.INSTANCE.DRAWERS.detached.forceMaxCapacityCheck.get();
         int bgY = forceCapCheck ? 0 : 24;
         graphics.blit(BACKGROUND_SPRITE, pX, pY, 0, bgY, this.backgroundWidth(), this.backgroundHeight(), 128, 64);
 

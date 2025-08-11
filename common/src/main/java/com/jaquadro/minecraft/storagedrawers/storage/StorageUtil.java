@@ -4,7 +4,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
-import com.texelsaurus.minecraft.chameleon.ChameleonServices;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class StorageUtil
     }
 
     public static void rebalanceDrawers (Stream<IDrawer> drawers) {
-        if (!ModCommonConfig.INSTANCE.UPGRADES.enableBalanceUpgrade.get())
+        if (!ModCommonConfig.INSTANCE.UPGRADES.balanceUpgrade.enableUpgrade.get())
             return;
 
         List<IDrawer> balanceDrawers = new ArrayList<>();

@@ -39,7 +39,7 @@ public class CompTierRegistry
     public void initialize () {
         initialized = true;
 
-        if (ModCommonConfig.INSTANCE.GENERAL.enableExtraCompactingRules.get()) {
+        if (ModCommonConfig.INSTANCE.DRAWERS.compacting.enableExtraCompactingRules.get()) {
             register(new ItemStack(Blocks.CLAY), new ItemStack(Items.CLAY_BALL), 4);
             register(new ItemStack(Blocks.SNOW_BLOCK), new ItemStack(Items.SNOWBALL), 4);
             register(new ItemStack(Blocks.GLOWSTONE), new ItemStack(Items.GLOWSTONE_DUST), 4);
@@ -55,7 +55,7 @@ public class CompTierRegistry
             // }
         }
 
-        ModCommonConfig.INSTANCE.onLoad(() -> ModCommonConfig.INSTANCE.GENERAL.compRules.get().forEach(this::register));
+        ModCommonConfig.INSTANCE.onLoad(() -> ModCommonConfig.INSTANCE.DRAWERS.compacting.compRules.get().forEach(this::register));
 
         for (String rule : pendingRules) {
             register(rule);

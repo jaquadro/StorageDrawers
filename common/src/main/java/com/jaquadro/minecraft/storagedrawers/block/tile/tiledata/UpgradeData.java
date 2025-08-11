@@ -255,25 +255,26 @@ public class UpgradeData extends BlockEntityDataShim
             Item item = stack.getItem();
 
             if (item == ModItems.ONE_STACK_UPGRADE.get())
-                hasOneStack = true;
+                hasOneStack = ModCommonConfig.INSTANCE.UPGRADES.oneStackUpgrade.enableUpgrade.get();
             else if (item == ModItems.VOID_UPGRADE.get())
-                hasVoid = ModCommonConfig.INSTANCE.UPGRADES.enableVoidUpgrade.get();
+                hasVoid = ModCommonConfig.INSTANCE.UPGRADES.voidUgrade.enableUpgrade.get();
             else if (item == ModItems.CONVERSION_UPGRADE.get())
-                hasConversion = true;
+                hasConversion = ModCommonConfig.INSTANCE.UPGRADES.conversionUpgrade.enableUpgrade.get();
             else if (item == ModItems.CREATIVE_STORAGE_UPGRADE.get())
-                hasUnlimited = true;
+                hasUnlimited = ModCommonConfig.INSTANCE.UPGRADES.creativeStorageUpgrade.enableUpgrade.get();
             else if (item == ModItems.CREATIVE_VENDING_UPGRADE.get())
-                hasVending = true;
+                hasVending = ModCommonConfig.INSTANCE.UPGRADES.creativeVendingUpgrade.enableUpgrade.get();
             else if (item == ModItems.ILLUMINATION_UPGRADE.get())
-                hasIllumination = ModCommonConfig.INSTANCE.UPGRADES.enableIlluminationUpgrade.get();
+                hasIllumination = ModCommonConfig.INSTANCE.UPGRADES.illuminationUpgrade.enableUpgrade.get();
             else if (item == ModItems.FILL_LEVEL_UPGRADE.get())
-                hasFillLevel = ModCommonConfig.INSTANCE.UPGRADES.enableFillLevelUpgrade.get();
+                hasFillLevel = ModCommonConfig.INSTANCE.UPGRADES.fillLevelUpgrade.enableUpgrade.get();
             else if (item == ModItems.BALANCE_FILL_UPGRADE.get())
-                hasBalanceFill = ModCommonConfig.INSTANCE.UPGRADES.enableBalanceUpgrade.get();
+                hasBalanceFill = ModCommonConfig.INSTANCE.UPGRADES.balanceUpgrade.enableUpgrade.get();
             else if (item instanceof ItemUpgradeRemote remote) {
+                boolean enable = ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.enableUpgrade.get();
                 hasRemote = remote.isGroupUpgrade()
-                    ? ModCommonConfig.INSTANCE.UPGRADES.enableRemoteGroupUpgrade.get()
-                    : ModCommonConfig.INSTANCE.UPGRADES.enableRemoteUpgrade.get();
+                    ? ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.enableGroup.get() && enable
+                    : enable;
             }
         }
 

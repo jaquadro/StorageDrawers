@@ -3,7 +3,6 @@ package com.jaquadro.minecraft.storagedrawers.core;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IPortable;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeRemote;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,7 +27,7 @@ public class PlayerEventListener
 
 	@SubscribeEvent
 	public void onPlayerPickup(EntityItemPickupEvent event) {
-		if (!ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get())
+		if (!ModCommonConfig.INSTANCE.DRAWERS.anyHeavyDrawers())
 			return;
 
 		checkItemDebuf(event.getItem().getItem(), event.getEntity());
@@ -43,7 +42,7 @@ public class PlayerEventListener
 		if (event.side == LogicalSide.SERVER)
 			ItemUpgradeRemote.validateInventory(event.player.getInventory(), event.player.level());
 
-		if (!ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get())
+		if (!ModCommonConfig.INSTANCE.DRAWERS.anyHeavyDrawers())
 			return;
 
 		for(var s : event.player.getAllSlots()) {

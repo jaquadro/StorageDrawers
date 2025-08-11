@@ -25,6 +25,8 @@ public interface ChameleonConfig
 
     <T> ConfigEntry<List<? extends T>> defineList(String name, List<? extends T> defaultList, Predicate<Object> elementValidator);
 
+    void comment(String comment);
+    void comment(String... comment);
     void pushGroup(String name);
     void popGroup();
 
@@ -37,7 +39,7 @@ public interface ChameleonConfig
     abstract class ConfigEntry<T> implements Supplier<T>, Consumer<T>
     {
         protected String name;
-        protected String comment;
+        protected String[] comment;
         protected T defaultValue;
         protected T rangeMin;
         protected T rangeMax;
@@ -53,7 +55,7 @@ public interface ChameleonConfig
         }
 
         public ConfigEntry<T> comment(String... comment) {
-            this.comment = String.join("\n", comment);
+            this.comment = comment;
             return this;
         }
 

@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedSourceBlock;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.components.item.FrameData;
+import com.jaquadro.minecraft.storagedrawers.config.MaterialBlacklist;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
@@ -20,7 +21,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -28,12 +28,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BannerPatternLayers;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class BlockEntityFramingTable extends BaseBlockEntity implements Nameable
@@ -153,30 +150,40 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Nameable
             return false;
 
         BlockState state = blockItem.getBlock().defaultBlockState();
-        if (state.getBlock().hasDynamicShape())
-            return false;
 
-        if (!ModCommonConfig.INSTANCE.GENERAL.restrictFramingMaterials.get())
-            return state.isSolid();
-
-        if (!state.canOcclude())
-            return false;
-
-        try {
-            // Will always throw unless overridden, which usually means it's a block that we don't
-            // want to be a valid material
-            if (state.getLightBlock(null, null) < 15)
+        if (ModCommonConfig.INSTANCE.DRAWERS.framed.enforceSolidMaterials.get()) {
+            if (state.getBlock().hasDynamicShape())
                 return false;
-        } catch (Exception e) { }
 
-        try {
-            if (!Block.isShapeFullBlock(state.getOcclusionShape(null, null)))
-                return false;
-            if (state.propagatesSkylightDown(null, null))
-                return false;
-        } catch (Exception e) {
-            return false;
+            try {
+                if (!Block.isShapeFullBlock(state.getOcclusionShape(null, null)))
+                    return false;
+            } catch (Exception e) { }
         }
+
+        if (ModCommonConfig.INSTANCE.DRAWERS.framed.enforceOpaqueMaterials.get()) {
+            if (!state.canOcclude())
+                return false;
+
+            try {
+                // Will always throw unless overridden, which usually means it's a block that we don't
+                // want to be a valid material
+                if (state.getLightBlock(null, null) < 15)
+                    return false;
+            } catch (Exception e) { }
+
+            try {
+                if (!Block.isShapeFullBlock(state.getOcclusionShape(null, null)))
+                    return false;
+                if (state.propagatesSkylightDown(null, null))
+                    return false;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        if (MaterialBlacklist.INSTANCE.isBlacklisted(stack))
+            return false;
 
         return true;
     }

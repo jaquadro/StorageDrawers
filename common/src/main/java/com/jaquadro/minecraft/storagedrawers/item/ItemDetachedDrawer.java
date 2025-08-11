@@ -7,7 +7,6 @@ import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.DetachedDrawerTooltip;
-import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.KeyringTooltip;
 import com.jaquadro.minecraft.storagedrawers.util.ComponentUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
@@ -34,7 +33,7 @@ public class ItemDetachedDrawer extends Item implements IPortable
         ItemStack stack = new ItemStack(this);
 
         DetachedDrawerData data = new DetachedDrawerData();
-        data.setStorageMultiplier(ModCommonConfig.INSTANCE.GENERAL.baseStackStorage.get() * 8);
+        data.setStorageMultiplier(ModCommonConfig.INSTANCE.DRAWERS.baseStackStorage.get() * 8);
 
         ItemStack savedItem = data.getStoredItemPrototype().copyWithCount(data.getStoredItemCount());
         DetachedDrawerContents contents = new DetachedDrawerContents(savedItem, data.getStorageMultiplier(), data.isHeavy());
@@ -51,7 +50,7 @@ public class ItemDetachedDrawer extends Item implements IPortable
         super.appendHoverText(stack, context, tooltip, flagIn);
         ComponentUtil.appendSplitDescription(tooltip, this);
 
-        if (ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get() && isHeavy(context.registries(), stack)) {
+        if (ModCommonConfig.INSTANCE.DRAWERS.detached.heavyDrawers.get() && isHeavy(context.registries(), stack)) {
             tooltip.add(Component.translatable("tooltip.storagedrawers.drawers.too_heavy").withStyle(ChatFormatting.RED));
         }
     }
@@ -66,7 +65,7 @@ public class ItemDetachedDrawer extends Item implements IPortable
 
     @NotNull
     public Component getDescription() {
-        return ModCommonConfig.INSTANCE.GENERAL.enableDetachedDrawers.get()
+        return ModCommonConfig.INSTANCE.DRAWERS.detached.enable.get()
             ? Component.translatable(this.getDescriptionId() + ".desc")
             : Component.translatable("itemConfig.storagedrawers.disabled_tool").withStyle(ChatFormatting.RED);
     }
@@ -84,7 +83,7 @@ public class ItemDetachedDrawer extends Item implements IPortable
 
     @Override
     public boolean canFitInsideContainerItems () {
-        return false;
+        return ModCommonConfig.INSTANCE.DRAWERS.detached.canStoreInContainers.get();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -100,6 +101,9 @@ public class BlockKeyButton  extends FaceAttachedHorizontalDirectionalBlock
         if (state.getValue(POWERED)) {
             return InteractionResult.CONSUME;
         } else {
+            if (!keyType.isEnabled())
+                return InteractionResult.PASS;
+
             this.press(state, level, pos);
             this.playSound(player, level, pos, true);
             level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
