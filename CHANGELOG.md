@@ -1,3 +1,6 @@
+[3.9.2]
+- Fixed placing framed drawer on table with existing materials voiding the drawer
+
 [3.9.1]
 - Updated framed rendering to properly support cutout/translucent materials.
 - Added client config entry to disable translucent material rendering.

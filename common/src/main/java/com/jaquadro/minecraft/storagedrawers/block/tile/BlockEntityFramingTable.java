@@ -107,19 +107,20 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Nameable
         if (blockItem.getBlock() instanceof IFramedBlock) {
             FrameData data = stack.getOrDefault(ModDataComponents.FRAME_DATA.get(), FrameData.EMPTY);
 
-            /*if (!data.side().isEmpty() && !materialData.getSide().isEmpty())
+            if (!data.side().isEmpty() && !materialData.getSide().isEmpty())
                 return false;
             if (!data.trim().isEmpty() && !materialData.getTrim().isEmpty())
                 return false;
             if (!data.front().isEmpty() && !materialData.getFront().isEmpty())
-                return false;*/
+                return false;
 
-            if (!testTargetFrameMaterial(data.side(), materialData.getSide(), stack.getCount(), inventory().getItem(SLOT_SIDE).getCount()))
+            // TODO: For potential use in supporting unpacking drawer into table with existing mats
+            /*if (!testTargetFrameMaterial(data.side(), materialData.getSide(), stack.getCount(), inventory().getItem(SLOT_SIDE).getCount()))
                 return false;
             if (!testTargetFrameMaterial(data.front(), materialData.getFront(), stack.getCount(), inventory().getItem(SLOT_FRONT).getCount()))
                 return false;
             if (!testTargetFrameMaterial(data.trim(), materialData.getTrim(), stack.getCount(), inventory().getItem(SLOT_TRIM).getCount()))
-                return false;
+                return false;*/
 
             return true;
         }
