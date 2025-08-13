@@ -19,6 +19,10 @@ public class DrawerModelContext extends FramedModelContext
         super(state);
     }
 
+    public DrawerModelContext (BlockState state, RenderType renderType) {
+        super(state, renderType);
+    }
+
     public DrawerModelContext (BlockState state, Direction direction, RandomSource randomSource, RenderType renderType) {
         super(state, direction, randomSource, renderType);
     }

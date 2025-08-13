@@ -7,6 +7,8 @@ import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersComp;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityTrim;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.components.item.FrameData;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
@@ -14,6 +16,7 @@ import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
@@ -76,5 +79,20 @@ public class BlockFramedCompDrawers extends BlockCompDrawers implements IFramedB
     @Override
     public boolean supportsFrameMaterial (FrameMaterial material) {
         return true;
+    }
+
+    protected float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
+        if (isHalfDepth())
+            return 1f;
+
+        BlockEntityDrawersComp tile = WorldUtils.getBlockEntity(level, pos, BlockEntityDrawersComp.class);
+        if (tile == null)
+            return 1f;
+
+        MaterialData data = tile.material();
+        if (data == null)
+            return 1f;
+
+        return data.allMatOpaque() ? 0.8f : 1f;
     }
 }

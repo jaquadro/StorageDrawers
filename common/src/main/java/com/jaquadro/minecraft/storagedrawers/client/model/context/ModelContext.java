@@ -27,6 +27,13 @@ public class ModelContext
         renderType = null;
     }
 
+    public ModelContext (BlockState state, RenderType renderType) {
+        this.state = state;
+        direction = null;
+        randomSource = null;
+        this.renderType = renderType;
+    }
+
     public ModelContext (BlockState state, Direction direction, RandomSource randomSource, RenderType renderType) {
         this.state = state;
         this.direction = direction;

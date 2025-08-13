@@ -14,6 +14,10 @@ public class FramedModelContext extends ModelContext
         super(state, direction, randomSource, renderType);
     }
 
+    public FramedModelContext (BlockState state, RenderType renderType) {
+        super(state, renderType);
+    }
+
     public FramedModelContext (BlockState state) {
         super(state);
     }

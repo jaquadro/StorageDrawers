@@ -1,0 +1,12 @@
+{
+    "parent": "storagedrawers:block/half_drawers_nocull",
+    "textures": {
+        "particle": "#front",
+        "down": "#top",
+        "up": "#top",
+        "north": "#front",
+        "east": "#side",
+        "south": "#back",
+        "west": "#side"
+    }
+}

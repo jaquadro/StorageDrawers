@@ -124,12 +124,13 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
         public List<BakedQuad> getQuads (@Nullable BlockState state, @Nullable Direction side, RandomSource rand) {
             List<BakedQuad> quads = new ArrayList<>();
 
-            Supplier<C> supplier = () -> PlatformDecoratedModel.this.contextSupplier.makeContext(stack);
+            RenderType limitRenderType = (nextRenderType < lastRenderTypes.size()) ? lastRenderTypes.get(nextRenderType) : null;
+
+            Supplier<C> supplier = () -> PlatformDecoratedModel.this.contextSupplier.makeContext(stack, limitRenderType);
             ModelDecorator<C> decorator = PlatformDecoratedModel.this.decorator;
             if (decorator.shouldRenderBase(supplier, stack))
                 quads.addAll(PlatformDecoratedModel.this.parent.getQuads(state, side, rand));
 
-            RenderType limitRenderType = (nextRenderType < lastRenderTypes.size()) ? lastRenderTypes.get(nextRenderType) : null;
             BiConsumer<BakedModel, RenderType> emitModel = (model, renderType) -> {
                 if (renderType == RenderType.solid())
                     renderType = Sheets.solidBlockSheet();

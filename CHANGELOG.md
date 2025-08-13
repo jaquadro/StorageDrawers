@@ -1,3 +1,8 @@
+[3.9.1]
+- Updated framed rendering to properly support cutout/translucent materials.
+- Added client config entry to disable translucent material rendering.
+- Framed blocks do not occlude light
+
 [3.9.0]
 - New config file (storagedrawers-common-v2.toml)
 - Reworked storage tiers
@@ -7,7 +12,6 @@ WARNING: This release REPLACES the existing storage drawers config file.
 The original file will be left unchanged, but it will not be read from.
 If you've changed your config, take a look at the new storagedrawers-common-v2.toml
 file and make any changes you need.  The options available are not 1:1 with the old config.
-
 
 [13.8.13]
 - Fixed shading orientation for item labels
