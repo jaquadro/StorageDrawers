@@ -31,13 +31,14 @@ neoForge {
 
 dependencies {
     // JEI
-    runtimeOnly("mezz.jei:jei-1.21.1-neoforge:19.8.5.118")
+    runtimeOnly("mezz.jei:jei-1.21.1-neoforge:19.14.1.144")
     // JADE
     implementation("curse.maven:jade-324717:5591256")
     implementation("curse.maven:the-one-probe-245211:6106998")
 
     implementation("curse.maven:architectury-api-419699:5786327")
     implementation("curse.maven:ftb-library-forge-404465:6807431")
+    implementation("curse.maven:configured-457570:5873783")
 }
 
 tasks.create<TaskPublishCurseForge>("publishCurseForge") {

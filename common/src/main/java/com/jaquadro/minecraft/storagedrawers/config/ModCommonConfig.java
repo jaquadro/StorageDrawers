@@ -238,13 +238,14 @@ public final class ModCommonConfig extends ConfigSpec
                 super(name, comment);
 
                 enable = commonConfig.define("enable", true)
-                    .comment("Allows crafting framed drawers.");
+                    .comment("Allows crafting framed drawers.  Disabling does not remove existing framed drawers.");
 
                 enforceSolidMaterials = commonConfig.define("enforceSolidMaterials", true)
                     .comment("", "Attempts to only allow solid, full-cube blocks to be used as materials.",
-                        "This check may still allow non-solid blocks if the blocks' properties indicate they should be solid but are not.");
+                        "This check may still allow non-solid blocks if the blocks' properties indicate they should be solid but are not.",
+                        "Some non-solid blocks are also counted as non-opaque, and may be restricted by that setting as well.");
 
-                enforceOpaqueMaterials = commonConfig.define("enforceOpaqueMaterials", true)
+                enforceOpaqueMaterials = commonConfig.define("enforceOpaqueMaterials", false)
                     .comment("", "Attempts to only allow fully opaque blocks to be used as materials.",
                         "This check may still allow non-opaque blocks if the blocks' properties indicate they should be opaque but are not.");
 

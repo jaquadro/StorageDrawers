@@ -3,6 +3,8 @@
 - Added client config entry to disable translucent material rendering.
 - Framed blocks do not occlude light
 - Fixed remote upgrade ranges not defaulting to controller range
+- Reduced amount of blocks covered by the enforce opaque rendering option
+- Defaulted enforce opaque rendering option to off
 
 [3.9.0]
 - New config file (storagedrawers-common-v2.toml)
