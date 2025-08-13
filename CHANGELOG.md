@@ -5,6 +5,7 @@
 - Fixed remote upgrade ranges not defaulting to controller range
 - Reduced amount of blocks covered by the enforce opaque rendering option
 - Defaulted enforce opaque rendering option to off
+- Fixed drawers with remote upgrades not maintaining link when moved by external mods
 
 [3.9.0]
 - New config file (storagedrawers-common-v2.toml)

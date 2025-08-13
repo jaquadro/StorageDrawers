@@ -18,6 +18,12 @@ public abstract class PlatformBlockEntityDrawersStandard extends BlockEntityDraw
             super(pos, state);
         }
 
+        @Override
+        public void onLoad () {
+            super.onLoad();
+            onEntityLoad();
+        }
+
         @NotNull
         @Override
         public ModelData getModelData () {
@@ -36,6 +42,12 @@ public abstract class PlatformBlockEntityDrawersStandard extends BlockEntityDraw
             super(pos, state);
         }
 
+        @Override
+        public void onLoad () {
+            super.onLoad();
+            onEntityLoad();
+        }
+
         @NotNull
         @Override
         public ModelData getModelData () {
@@ -52,6 +64,12 @@ public abstract class PlatformBlockEntityDrawersStandard extends BlockEntityDraw
     public static class Slot4 extends BlockEntityDrawersStandard.Slot4 {
         public Slot4 (BlockPos pos, BlockState state) {
             super(pos, state);
+        }
+
+        @Override
+        public void onLoad () {
+            super.onLoad();
+            onEntityLoad();
         }
 
         @NotNull
