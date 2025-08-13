@@ -371,10 +371,9 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Nameable
 
                     ItemStack source = data.base();
                     if (!source.isEmpty()) {
-                        source.remove(ModDataComponents.FRAME_DATA.get());
-
                         int count = stack.getCount();
                         entity.inputStack = stack.transmuteCopy(source.getItem());
+                        entity.inputStack.remove(ModDataComponents.FRAME_DATA.get());
 
                         entity.materialData.setSide(fb.supportsFrameMaterial(FrameMaterial.SIDE) ? data.side().copyWithCount(count) : ItemStack.EMPTY);
                         entity.materialData.setTrim(fb.supportsFrameMaterial(FrameMaterial.TRIM) ? data.trim().copyWithCount(count) : ItemStack.EMPTY);
