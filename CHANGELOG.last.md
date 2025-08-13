@@ -1,6 +1,7 @@
 - Updated framed rendering to properly support cutout/translucent materials.
 - Added client config entry to disable translucent material rendering.
 - Framed blocks do not occlude light
+- Fixed remote upgrade ranges not defaulting to controller range
 
 WARNING: This release REPLACES the existing storage drawers config file.
 The original file will be left unchanged, but it will not be read from.

@@ -708,8 +708,11 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             controllerHostData.validateRemoteNodes(this, level);
 
         int globalRange = ModCommonConfig.INSTANCE.CONTROLLER.controllerRange.get();
-        int remoteRange = Math.min(globalRange, ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.maxRange.get());
-        int remoteGroupRange = Math.min(globalRange, ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.maxGroupRange.get());
+        int confRemoteRange = ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.maxRange.get();
+        int confRemoteGroupRange = ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.maxGroupRange.get();
+
+        int remoteRange = confRemoteRange > 0 ? Math.min(globalRange, confRemoteRange) : globalRange;
+        int remoteGroupRange = confRemoteGroupRange > 0 ? Math.min(globalRange, confRemoteGroupRange) : globalRange;
 
         populateRoot(getBlockPos(), globalRange, true);
 

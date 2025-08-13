@@ -2,6 +2,7 @@
 - Updated framed rendering to properly support cutout/translucent materials.
 - Added client config entry to disable translucent material rendering.
 - Framed blocks do not occlude light
+- Fixed remote upgrade ranges not defaulting to controller range
 
 [3.9.0]
 - New config file (storagedrawers-common-v2.toml)
