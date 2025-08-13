@@ -103,8 +103,8 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
                 return false;
 
             if (upgrade.getItem() == ModItems.ONE_STACK_UPGRADE.get()) {
-                int lostStackCapacity = upgradeData.getStorageMultiplier() * (getEffectiveDrawerCapacity() - 1);
-                return stackCapacityCheck(lostStackCapacity);
+                int currentUpgradeMult = upgradeData.getStorageMultiplier();
+                return stackCapacityCheck(currentUpgradeMult);
             }
 
             return true;
@@ -117,14 +117,12 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
             ItemStack upgrade = getUpgrade(slot);
             if (upgrade.getItem() instanceof ItemUpgradeStorage) {
-                int storageLevel = ((ItemUpgradeStorage) upgrade.getItem()).level.getLevel();
-                int storageMult = ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(storageLevel);
-                int effectiveStorageMult = upgradeData.getStorageMultiplier();
-                if (effectiveStorageMult == storageMult)
-                    storageMult--;
+                int currentUpgradeMult = upgradeData.getStorageMultiplier();
 
-                int addedStackCapacity = storageMult * getEffectiveDrawerCapacity();
-                return stackCapacityCheck(addedStackCapacity);
+                int remLevel = ((ItemUpgradeStorage) upgrade.getItem()).level.getLevel();
+                int remMult = ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(remLevel);
+
+                return stackCapacityCheck(getDrawerCapacity() * (currentUpgradeMult - remMult));
             }
 
             return true;
@@ -150,20 +148,14 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
             // New item is a downgrade
             int currentUpgradeMult = upgradeData.getStorageMultiplier();
-            int storageLevel = ((ItemUpgradeStorage) upgrade.getItem()).level.getLevel();
-            int storageMult = ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(storageLevel);
 
-            // The below first calculates the amount of stacks to remove if the multiplier stayed the same, then adds the removed multiplier,
-            // which results in the amount of stacks (storage) to remove. The addition would be multiplied by
-            // the stacks to scale to, but in this case, that is 1.
+            int remLevel = ((ItemUpgradeStorage) upgrade.getItem()).level.getLevel();
+            int remMult = ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(remLevel);
 
-            // We need the below removed stacks calculation to be less than or equal to
-            // currentUpgradeMult * getEffectiveDrawerCapacity - 1, as otherwise, the calculated stacks to remove will be equal
-            // to the current max stack size of the drawer, which will result in a calculation of 0 stacks.
+            int addLevel = ((ItemUpgradeStorage) add.getItem()).level.getLevel();
+            int addMult = ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(addLevel);
 
-            int removedStacks = Math.min(currentUpgradeMult * getEffectiveDrawerCapacity() - 1,
-                currentUpgradeMult * (getEffectiveDrawerCapacity() - 1) + storageMult);
-            return stackCapacityCheck(removedStacks);
+            return stackCapacityCheck(getDrawerCapacity() * (currentUpgradeMult - remMult + addMult));
         }
 
         @Override
@@ -184,8 +176,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
                 if (!drawer.isEnabled() || drawer.isEmpty())
                     continue;
 
-                int addedItemCapacity = stackCapacity * drawer.getStoredItemStackSize();
-                if (drawer.getMaxCapacity() - addedItemCapacity < drawer.getStoredItemCount())
+                int currentCount = drawer.getStoredItemCount();
+                int newMaxCapacity = stackCapacity * drawer.getStoredItemStackSize();
+                if (currentCount > newMaxCapacity)
                     return false;
             }
 

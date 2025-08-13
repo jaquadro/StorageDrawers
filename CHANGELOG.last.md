@@ -5,6 +5,7 @@
 - Reduced amount of blocks covered by the enforce opaque rendering option
 - Defaulted enforce opaque rendering option to off
 - Fixed drawers with remote upgrades not maintaining link when moved by external mods
+- NEO/FORGE: Fixed upgrade swapping not working when moving to smaller storage upgrades
 
 WARNING: This release REPLACES the existing storage drawers config file.
 The original file will be left unchanged, but it will not be read from.
