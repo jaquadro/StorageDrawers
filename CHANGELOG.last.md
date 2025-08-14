@@ -1,3 +1,4 @@
+- Fixed framing table leaving extra component on unframed drawer
 - Fixed drawers with remote upgrades not maintaining link when moved by external mods
 - Piglins love keys
 - Removed space in dist jar

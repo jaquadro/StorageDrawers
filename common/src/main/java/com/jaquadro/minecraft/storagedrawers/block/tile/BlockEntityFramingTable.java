@@ -343,10 +343,10 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements MenuProv
                     if (!source.isEmpty()) {
                         source.setTag(stack.getOrCreateTag().copy());
                         MaterialData empty = new MaterialData();
-                        empty.write(source.getTag());
 
                         int count = stack.getCount();
                         entity.inputStack = source.copyWithCount(count);
+                        entity.inputStack.setTag(empty.write(entity.inputStack.getTag()));
 
                         entity.materialData.setSide(fb.supportsFrameMaterial(FrameMaterial.SIDE) ? data.getSide().copyWithCount(count) : ItemStack.EMPTY);
                         entity.materialData.setTrim(fb.supportsFrameMaterial(FrameMaterial.TRIM) ? data.getTrim().copyWithCount(count) : ItemStack.EMPTY);
