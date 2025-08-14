@@ -1,1 +1,2 @@
+- Fixed drawers with remote upgrades not maintaining link when moved by external mods
 - NEO/FORGE: Fixed upgrade swapping not working when moving to smaller storage upgrades

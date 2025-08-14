@@ -227,14 +227,19 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         checkBoundController();
     }
 
-    private boolean controllerInrange (BlockPos controllerPos) {
-        BlockPos pos = getBlockPos();
-        int distX = Math.abs(controllerPos.getX() - pos.getX());
-        int distY = Math.abs(controllerPos.getY() - pos.getY());
-        int distZ = Math.abs(controllerPos.getZ() - pos.getZ());
+    public void onEntityLoad () {
+        try {
+            if (getLevel() == null || getLevel().isClientSide)
+                return;
 
-        int range = ModCommonConfig.INSTANCE.GENERAL.controllerRange.get();
-        return distX <= range && distY <= range && distZ <= range;
+            BlockPos pos = getBlockPos();
+            try {
+                if (!getLevel().getBlockTicks().hasScheduledTick(pos, getBlockState().getBlock()))
+                    getLevel().scheduleTick(pos, getBlockState().getBlock(), 1);
+            } catch (Exception e) {
+                // Ignore
+            }
+        } catch (Exception e) { }
     }
 
     @Override
