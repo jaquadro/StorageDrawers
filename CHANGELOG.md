@@ -1,5 +1,7 @@
 [12.11.6]
 - Fixed drawers with remote upgrades not maintaining link when moved by external mods
+- Piglins love keys
+- Removed space in dist jar
 - NEO/FORGE: Fixed upgrade swapping not working when moving to smaller storage upgrades
 
 [12.11.5]
