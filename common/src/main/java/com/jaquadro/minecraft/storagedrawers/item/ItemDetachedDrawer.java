@@ -33,7 +33,7 @@ public class ItemDetachedDrawer extends Item implements IPortable
         ItemStack stack = new ItemStack(this);
 
         DetachedDrawerData data = new DetachedDrawerData();
-        data.setStorageMultiplier(ModCommonConfig.INSTANCE.DRAWERS.baseStackStorage.get() * 8);
+        data.setStorageMultiplier(ModCommonConfig.INSTANCE.DRAWERS.getBaseStackStorage() * 32);
 
         ItemStack savedItem = data.getStoredItemPrototype().copyWithCount(data.getStoredItemCount());
         DetachedDrawerContents contents = new DetachedDrawerContents(savedItem, data.getStorageMultiplier(), data.isHeavy());

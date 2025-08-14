@@ -2,6 +2,7 @@
 - Fixed framing table leaving extra component on unframed drawer
 - Fixed crash pulling drawer with >99 items
 - Fixed crash pulling/creating empty drawer
+- Fixed startup crash when Epic Fight or other specific mods are present
 - Piglins love keys
 - Removed space in dist jar
 

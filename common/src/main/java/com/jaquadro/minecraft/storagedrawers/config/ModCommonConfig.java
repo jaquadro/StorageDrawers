@@ -353,6 +353,10 @@ public final class ModCommonConfig extends ConfigSpec
         public boolean anyHeavyDrawers() {
             return filled.heavyDrawers.get() || detached.heavyDrawers.get();
         }
+
+        public int getBaseStackStorage() {
+            return isLoaded() ? baseStackStorage.get() : 1;
+        }
     }
 
     public class Controller {
