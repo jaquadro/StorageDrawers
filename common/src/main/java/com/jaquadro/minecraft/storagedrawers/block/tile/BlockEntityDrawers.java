@@ -12,7 +12,9 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerD
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.components.item.DetachedDrawerContents;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.ModSecurity;
 import com.jaquadro.minecraft.storagedrawers.inventory.*;
@@ -593,19 +595,18 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         if (detachedDrawer.isEmpty())
             return false;
 
-        CustomData customdata = detachedDrawer.get(DataComponents.CUSTOM_DATA);
-        CompoundTag tag = customdata != null ? customdata.copyTag() : new CompoundTag();
+        DetachedDrawerContents contents = detachedDrawer.getOrDefault(ModDataComponents.DETACHED_DRAWER_CONTENTS.get(),
+            DetachedDrawerContents.EMPTY);
 
-        DetachedDrawerData data = new DetachedDrawerData(level.registryAccess(), tag);
-        ItemStack proto = data.getStoredItemPrototype();
-        int count = data.getStoredItemCount();
+        int count = contents.getItemCount();
+        ItemStack proto = contents.getItemPrototype();
 
         if (count > drawer.getMaxCapacity(proto))
             return false;
 
         if (ModCommonConfig.INSTANCE.DRAWERS.detached.forceMaxCapacityCheck.get()) {
             int cap = getEffectiveDrawerCapacity() * upgradeData.getStorageMultiplier();
-            if (data.getStorageMultiplier() < cap)
+            if (contents.getStackLimit() < cap)
                 return false;
         }
 
