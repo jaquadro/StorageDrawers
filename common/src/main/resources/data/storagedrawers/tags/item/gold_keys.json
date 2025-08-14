@@ -1,0 +1,16 @@
+{
+    "replace": false,
+    "values": [
+        "storagedrawers:drawer_key",
+        "storagedrawers:quantify_key",
+        "storagedrawers:shroud_key",
+        "storagedrawers:personal_key",
+        "storagedrawers:personal_key_cofh",
+        "storagedrawers:personal_key_unlock",
+        "storagedrawers:priority_key",
+        "storagedrawers:priority_key_p1",
+        "storagedrawers:priority_key_p2",
+        "storagedrawers:priority_key_n1",
+        "storagedrawers:priority_key_n2"
+    ]
+}

@@ -3,6 +3,8 @@
 - Fixed framing table leaving extra component on unframed drawer
 - Fixed crash pulling drawer with >99 items
 - Fixed crash pulling/creating empty drawer
+- Piglins love keys
+- Removed space in dist jar
 
 [3.9.1]
 - Updated framed rendering to properly support cutout/translucent materials.

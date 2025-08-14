@@ -12,7 +12,7 @@ plugins {
     `maven-publish`
 }
 
-base.archivesName.set("${Properties.name}-${project.name.lowercase()}-${Versions.minecraft}")
+base.archivesName.set("${Properties.filename}-${project.name.lowercase()}-${Versions.minecraft}")
 version = Versions.mod
 group = Properties.group
 
@@ -105,6 +105,7 @@ tasks {
             "java_version" to Versions.java,
             "mod_id" to Properties.modid,
             "mod_name" to Properties.name,
+            "mod_filename" to Properties.filename,
             "mod_license" to Properties.license,
             "mod_version" to Versions.mod,
             "mod_authors" to Properties.author,

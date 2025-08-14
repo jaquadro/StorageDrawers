@@ -3,6 +3,7 @@ package com.texelsaurus;
 object Properties {
     const val group = "com.texelsaurus.minecraft.storagedrawers"
     const val name = "Storage Drawers"
+    const val filename = "StorageDrawers"
     const val author = "Texelsaur"
     const val modid = "storagedrawers"
     const val curseProjectId = "223852"

@@ -1,0 +1,8 @@
+{
+    "replace": false,
+    "values": [
+        "#storagedrawers:gold_keyrings",
+        "storagedrawers:keyring",
+        "storagedrawers:keyring_puller"
+    ]
+}
