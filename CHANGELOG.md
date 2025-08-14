@@ -1,3 +1,6 @@
+[12.11.6]
+- NEO/FORGE: Fixed upgrade swapping not working when moving to smaller storage upgrades
+
 [12.11.5]
 - Fixed drawers from Storage Drawers Extras not rendering items
 

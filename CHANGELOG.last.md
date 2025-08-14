@@ -1,1 +1,1 @@
-- Fixed drawers from Storage Drawers Extras not rendering items
+- NEO/FORGE: Fixed upgrade swapping not working when moving to smaller storage upgrades

@@ -86,8 +86,8 @@ public class UpgradeData extends BlockEntityDataShim
 
             ItemUpgradeStorage target = (ItemUpgradeStorage)prevUpgrade.getItem();
             ItemUpgradeStorage source = (ItemUpgradeStorage)upgrade.getItem();
-            if (source.level.getLevel() <= target.level.getLevel())
-                return false;
+            //if (source.level.getLevel() <= target.level.getLevel())
+            //    return false;
         }
 
         upgrades[slot] = ItemStack.EMPTY;
