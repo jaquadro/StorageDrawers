@@ -35,7 +35,7 @@ public class FramedModelProperties implements ModelContextSupplier<FramedModelCo
     }
 
     @Override
-    public FramedModelContext makeContext (ItemStack stack) {
+    public FramedModelContext makeContext (ItemStack stack, RenderType renderType) {
         MaterialData data = new MaterialData();
         data.read(stack.getOrCreateTag());
 
@@ -43,7 +43,7 @@ public class FramedModelProperties implements ModelContextSupplier<FramedModelCo
         if (stack.getItem() instanceof BlockItem blockItem)
             block = blockItem.getBlock();
 
-        return new FramedModelContext(block.defaultBlockState())
+        return new FramedModelContext(block.defaultBlockState(), renderType)
             .materialData(data);
     }
 }

@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.client.model.DrawerModelStore;
 import com.jaquadro.minecraft.storagedrawers.client.model.SpriteReplacementModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.context.FramedModelContext;
+import com.jaquadro.minecraft.storagedrawers.config.ModClientConfig;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.BakedModel;
@@ -70,8 +71,12 @@ public abstract class MaterialModelDecorator<C extends FramedModelContext> exten
         MaterialData matData = context.materialData();
         if (matData != null && !matData.getEffectiveSide().isEmpty()) {
             RenderType renderType = context.renderType();
-            if (renderType == null || renderType == RenderType.cutoutMipped())
-                emitFramedQuads(context, emitModel);
+            boolean shouldRender = renderType == null || renderType == RenderType.cutoutMipped() || renderType == Sheets.cutoutBlockSheet();
+            if (ModClientConfig.INSTANCE.RENDER.framedDrawers.renderTranslucentMaterials.get())
+                shouldRender = shouldRender || renderType == RenderType.translucent() || renderType == Sheets.translucentItemSheet();
+
+            if (shouldRender)
+                emitFramedQuads(context, emitModel, renderType);
             if (shaded && (renderType == null || renderType == RenderType.translucent()))
                 emitFramedOverlayQuads(context, emitModel);
         }
@@ -85,7 +90,13 @@ public abstract class MaterialModelDecorator<C extends FramedModelContext> exten
 
         MaterialData matData = context.materialData();
         if (matData != null && !matData.getEffectiveSide().isEmpty()) {
-            emitFramedQuads(context, emitModel);
+            RenderType renderType = context.renderType();
+            boolean shouldRender = renderType == null || renderType == RenderType.cutoutMipped() || renderType == Sheets.cutoutBlockSheet();
+            if (ModClientConfig.INSTANCE.RENDER.framedDrawers.renderTranslucentMaterials.get())
+                shouldRender = shouldRender || renderType == RenderType.translucent() || renderType == Sheets.translucentCullBlockSheet();
+
+            if (shouldRender)
+                emitFramedQuads(context, emitModel, renderType);
             if (shaded)
                 emitFramedOverlayQuads(context, emitModel);
         }
@@ -126,26 +137,31 @@ public abstract class MaterialModelDecorator<C extends FramedModelContext> exten
         return replacedModel;
     }
 
-    public void emitFramedQuads(FramedModelContext context, BiConsumer<BakedModel, RenderType> emitModel) {
+    public void emitFramedQuads(FramedModelContext context, BiConsumer<BakedModel, RenderType> emitModel, RenderType renderType) {
         Block block = context.state().getBlock();
+
+        boolean renderTrans = ModClientConfig.INSTANCE.RENDER.framedDrawers.renderTranslucentMaterials.get();
+        boolean checkOpaque = renderTrans && renderType != null;
+        boolean opaquePass = renderType == RenderType.cutoutMipped() || renderType == Sheets.cutoutBlockSheet();
 
         if (block instanceof IFramedBlock fb) {
             MaterialData matData = context.materialData();
             if (matData != null && !matData.isEmpty()) {
-                if (matSet.sidePart() != null && fb.supportsFrameMaterial(FrameMaterial.SIDE)) {
-                    emitModel.accept(getReplacementModel(getStoreModel(context, matSet.sidePart()),
-                        matData.getEffectiveSide()), RenderType.cutoutMipped());
-                }
+                BiConsumer<ItemStack, DrawerModelStore.DynamicPart> emitPart = (item, part) -> {
+                    boolean opaque = matData.isMatOpaque(item);
+                    RenderType render = (!renderTrans || opaque)
+                        ? RenderType.cutoutMipped() : RenderType.translucent();
+                    if (!checkOpaque || opaquePass == opaque)
+                        emitModel.accept(getReplacementModel(getStoreModel(context, part),
+                            item), renderType == null ? render : renderType);
+                };
 
-                if (matSet.trimPart() != null && fb.supportsFrameMaterial(FrameMaterial.TRIM)) {
-                    emitModel.accept(getReplacementModel(getStoreModel(context, matSet.trimPart()),
-                        matData.getEffectiveTrim()), RenderType.cutoutMipped());
-                }
-
-                if (matSet.frontPart() != null && fb.supportsFrameMaterial(FrameMaterial.FRONT)) {
-                    emitModel.accept(getReplacementModel(getStoreModel(context, matSet.frontPart()),
-                        matData.getEffectiveFront()), RenderType.cutoutMipped());
-                }
+                if (matSet.sidePart() != null && fb.supportsFrameMaterial(FrameMaterial.SIDE))
+                    emitPart.accept(matData.getEffectiveSide(), matSet.sidePart());
+                if (matSet.trimPart() != null && fb.supportsFrameMaterial(FrameMaterial.TRIM))
+                    emitPart.accept(matData.getEffectiveTrim(), matSet.trimPart());
+                if (matSet.frontPart() != null && fb.supportsFrameMaterial(FrameMaterial.FRONT))
+                    emitPart.accept(matData.getEffectiveFront(), matSet.frontPart());
             }
         }
     }

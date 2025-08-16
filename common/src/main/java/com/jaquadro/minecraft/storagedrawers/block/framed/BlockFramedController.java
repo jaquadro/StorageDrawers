@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
 import com.jaquadro.minecraft.storagedrawers.block.BlockController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -81,5 +82,17 @@ public class BlockFramedController extends BlockController implements IFramedBlo
     @Override
     public boolean supportsFrameMaterial (FrameMaterial material) {
         return true;
+    }
+
+    public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
+        BlockEntityController tile = WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);
+        if (tile == null)
+            return 1f;
+
+        MaterialData data = tile.material();
+        if (data == null)
+            return 1f;
+
+        return data.allMatOpaque() ? 0.8f : 1f;
     }
 }

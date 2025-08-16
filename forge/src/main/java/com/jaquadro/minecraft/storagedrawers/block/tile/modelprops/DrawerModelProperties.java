@@ -46,7 +46,7 @@ public class DrawerModelProperties implements ModelContextSupplier<DrawerModelCo
     }
 
     @Override
-    public DrawerModelContext makeContext (ItemStack stack) {
+    public DrawerModelContext makeContext (ItemStack stack, RenderType renderType) {
         MaterialData data = new MaterialData();
         data.read(stack.getOrCreateTag());
 
@@ -54,7 +54,7 @@ public class DrawerModelProperties implements ModelContextSupplier<DrawerModelCo
         if (stack.getItem() instanceof BlockItem blockItem)
             block = blockItem.getBlock();
 
-        return new DrawerModelContext(block.defaultBlockState())
+        return new DrawerModelContext(block.defaultBlockState(), renderType)
             .materialData(data);
     }
 }

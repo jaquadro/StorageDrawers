@@ -13,5 +13,9 @@ public interface ModelContextSupplier<C extends ModelContext>
 {
     C makeContext(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, @Nullable RenderType type);
 
-    C makeContext(ItemStack stack);
+    C makeContext(ItemStack stack, RenderType renderType);
+
+    default C makeContext(ItemStack stack) {
+        return makeContext(stack, null);
+    }
 }

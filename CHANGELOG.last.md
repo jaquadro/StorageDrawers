@@ -1,6 +1,9 @@
 - New config file (storagedrawers-common-v2.toml)
 - Reworked storage tiers
 - Added copper and netherite storage upgrades
+- Updated framed rendering to properly support cutout/translucent materials.
+- Added client config entry to disable translucent material rendering.
+- Framed blocks do not occlude light
 - Fixed invalid entries in gold_keyrings tag
 
 WARNING: This release REPLACES the existing storage drawers config file.

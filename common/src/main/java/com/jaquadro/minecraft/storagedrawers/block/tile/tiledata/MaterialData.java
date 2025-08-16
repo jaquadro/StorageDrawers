@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 import com.jaquadro.minecraft.storagedrawers.api.framing.FrameMaterial;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedMaterials;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -72,6 +73,18 @@ public class MaterialData extends BlockEntityDataShim implements IFramedMaterial
     @NotNull
     public ItemStack getEffectiveTrim () {
         return !materialTrim.isEmpty() ? materialTrim : materialSide;
+    }
+
+    public boolean isMatOpaque (ItemStack mat) {
+        if (mat.getItem() instanceof BlockItem blockItem)
+            return blockItem.getBlock().defaultBlockState().canOcclude();
+        return false;
+    }
+
+    public boolean allMatOpaque () {
+        return isMatOpaque(materialSide)
+            && (materialFront.isEmpty() || isMatOpaque(materialFront))
+            && (materialTrim.isEmpty() || isMatOpaque(materialTrim));
     }
 
     public void setFrameBase (@NotNull ItemStack frameBase) {

@@ -139,9 +139,9 @@ public final class ModBlocks
     public static final RegistryEntry<BlockSlave> CONTROLLER_SLAVE = registerControllerSlaveBlock("controller_slave");
 
     public static final RegistryEntry<BlockFramedController> FRAMED_CONTROLLER = BLOCKS.register("framed_controller",
-        () -> new BlockFramedController(getStoneBlockProperties()));
+        () -> new BlockFramedController(getStoneBlockProperties().noOcclusion()));
     public static final RegistryEntry<BlockFramedControllerIO> FRAMED_CONTROLLER_IO = BLOCKS.register("framed_controller_io",
-        () -> new BlockFramedControllerIO(getStoneBlockProperties()));
+        () -> new BlockFramedControllerIO(getStoneBlockProperties().noOcclusion()));
 
     public static final RegistryEntry<BlockFramingTable> FRAMING_TABLE = registerFramingTableBlock("framing_table");
 
@@ -242,7 +242,7 @@ public final class ModBlocks
 
     static RegistryEntry<BlockFramedStandardDrawers> registerFramedDrawerBlock(String name, int drawerCount, boolean halfDepth) {
         Supplier<IDrawerConfig> config = getStandardConfig(drawerCount, halfDepth);
-        return BLOCKS.register(name, () -> (BlockFramedStandardDrawers)new BlockFramedStandardDrawers(drawerCount, halfDepth, config, getWoodenDrawerBlockProperties()).setMatKey("framed"));
+        return BLOCKS.register(name, () -> (BlockFramedStandardDrawers)new BlockFramedStandardDrawers(drawerCount, halfDepth, config, getWoodenDrawerBlockProperties().noOcclusion()).setMatKey("framed"));
     }
 
     static RegistryEntry<BlockCompDrawers> registerCompactingDrawerBlock(String name, int drawerCount, boolean halfDepth) {
@@ -252,7 +252,7 @@ public final class ModBlocks
 
     static RegistryEntry<BlockFramedCompDrawers> registerFramedCompactingDrawerBlock(String name, int drawerCount, boolean halfDepth) {
         Supplier<IDrawerConfig> config = getCompConfig(halfDepth);
-        return BLOCKS.register(name, () -> new BlockFramedCompDrawers(drawerCount, halfDepth, config, getStoneDrawerBlockProperties()));
+        return BLOCKS.register(name, () -> new BlockFramedCompDrawers(drawerCount, halfDepth, config, getStoneDrawerBlockProperties().noOcclusion()));
     }
 
     static RegistryEntry<BlockTrim> registerTrimBlock(ResourceLocation name) {
@@ -269,7 +269,7 @@ public final class ModBlocks
     }
 
     static RegistryEntry<BlockFramedTrim> registerFramedTrimBlock(String name) {
-        return BLOCKS.register(name, () -> (BlockFramedTrim)new BlockFramedTrim(getWoodenDrawerBlockProperties()).setMatKey("framed"));
+        return BLOCKS.register(name, () -> (BlockFramedTrim)new BlockFramedTrim(getWoodenDrawerBlockProperties().noOcclusion()).setMatKey("framed"));
     }
 
     static RegistryEntry<BlockController> registerControllerBlock(String name) {

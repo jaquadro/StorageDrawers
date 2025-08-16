@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersComp;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -83,5 +84,20 @@ public class BlockFramedCompDrawers extends BlockCompDrawers implements IFramedB
     @Override
     public boolean supportsFrameMaterial (FrameMaterial material) {
         return true;
+    }
+
+    public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
+        if (isHalfDepth())
+            return 1f;
+
+        BlockEntityDrawersComp tile = WorldUtils.getBlockEntity(level, pos, BlockEntityDrawersComp.class);
+        if (tile == null)
+            return 1f;
+
+        MaterialData data = tile.material();
+        if (data == null)
+            return 1f;
+
+        return data.allMatOpaque() ? 0.8f : 1f;
     }
 }

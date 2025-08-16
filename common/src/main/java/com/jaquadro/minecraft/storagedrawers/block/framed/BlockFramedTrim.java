@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityTrim;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -98,5 +99,17 @@ public class BlockFramedTrim extends BlockTrim implements EntityBlock, IFramedBl
             case SIDE, TRIM -> true;
             case FRONT -> false;
         };
+    }
+
+    public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
+        BlockEntityTrim tile = WorldUtils.getBlockEntity(level, pos, BlockEntityTrim.class);
+        if (tile == null)
+            return 1f;
+
+        MaterialData data = tile.material();
+        if (data == null)
+            return 1f;
+
+        return data.allMatOpaque() ? 0.8f : 1f;
     }
 }

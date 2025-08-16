@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntitySlave;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -84,5 +85,17 @@ public class BlockFramedControllerIO extends BlockSlave implements IFramedBlock
             case SIDE, TRIM -> true;
             case FRONT -> false;
         };
+    }
+
+    public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
+        BlockEntitySlave tile = WorldUtils.getBlockEntity(level, pos, BlockEntitySlave.class);
+        if (tile == null)
+            return 1f;
+
+        MaterialData data = tile.material();
+        if (data == null)
+            return 1f;
+
+        return data.allMatOpaque() ? 0.8f : 1f;
     }
 }

@@ -7,6 +7,8 @@ import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
 import com.jaquadro.minecraft.storagedrawers.api.storage.BlockType;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersStandard;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -91,39 +93,18 @@ public class BlockFramedStandardDrawers extends BlockStandardDrawers implements 
         return true;
     }
 
-    /*
-    @Override
-    @Nonnull
-    protected ItemStack getMainDrop (IBlockAccess world, BlockPos pos, IBlockState state) {
-        TileEntityDrawers tile = getTileEntity(world, pos);
+    public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
+        if (isHalfDepth())
+            return 1f;
+
+        BlockEntityDrawersStandard tile = WorldUtils.getBlockEntity(level, pos, BlockEntityDrawersStandard.class);
         if (tile == null)
-            return ItemCustomDrawers.makeItemStack(state, 1, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
+            return 1f;
 
-        ItemStack drop = ItemCustomDrawers.makeItemStack(state, 1, tile.material().getSide(), tile.material().getTrim(), tile.material().getFront());
-        if (drop.isEmpty())
-            return ItemStack.EMPTY;
-
-        NBTTagCompound data = drop.getTagCompound();
+        MaterialData data = tile.material();
         if (data == null)
-            data = new NBTTagCompound();
+            return 1f;
 
-        if (tile.isSealed()) {
-            NBTTagCompound tiledata = new NBTTagCompound();
-            tile.writeToNBT(tiledata);
-            data.setTag("tile", tiledata);
-        }
-
-        drop.setTagCompound(data);
-        return drop;
+        return data.allMatOpaque() ? 0.8f : 1f;
     }
-
-    @Override
-    public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        TileEntityDrawers tile = getTileEntity(world, pos);
-        if (tile != null && tile.material().getSide().isEmpty())
-            return false;
-
-        return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
-    }
-    */
 }
