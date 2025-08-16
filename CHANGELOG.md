@@ -1,5 +1,6 @@
 [13.9.3]
 - Fixed invalid gold_keyrings tag entries
+- Renamed several list config entries for consistency with 1.20.1, check your values
 
 [13.9.2]
 - Fixed placing framed drawer on table with existing materials voiding the drawer

@@ -249,9 +249,9 @@ public final class ModCommonConfig extends ConfigSpec
                     .comment("", "Attempts to only allow fully opaque blocks to be used as materials.",
                         "This check may still allow non-opaque blocks if the blocks' properties indicate they should be opaque but are not.");
 
-                materialBlacklist = commonConfig.defineList("materialBlacklist", new ArrayList<String>(), null)
+                materialBlacklist = commonConfig.defineList("materialDenyList", new ArrayList<String>(), null)
                     .comment("", "Each entry should be a namespace or fully namespaced block, e.g. minecraft:cobblestone",
-                        "Any items on the blacklist are prevented from being used as any drawer material.");
+                        "Any items on the deny list are prevented from being used as any drawer material.");
             }
 
             @Override
@@ -275,9 +275,9 @@ public final class ModCommonConfig extends ConfigSpec
             public Storage (String name, String... comment) {
                 super(name, comment);
 
-                storeBlacklist = commonConfig.defineList("storeBlacklist", Arrays.asList("storagedrawers:creative_vending_upgrade"), null)
+                storeBlacklist = commonConfig.defineList("storeDenyList", Arrays.asList("storagedrawers:creative_vending_upgrade"), null)
                     .comment("", "Each entry should be a namespace or fully namespaced item, e.g. minecraft:cobblestone",
-                        "Any items on the blacklist are prevented from being stored in drawers");
+                        "Any items on the deny list are prevented from being stored in drawers");
             }
 
             @Override
@@ -430,23 +430,23 @@ public final class ModCommonConfig extends ConfigSpec
             public ConversionUpgrade (String upgradeName, String... comment) {
                 super(upgradeName, comment);
 
-                oreTypes = commonConfig.defineList("oreTypeWhitelist", Arrays.asList(
+                oreTypes = commonConfig.defineList("oreTypeAllowList", Arrays.asList(
                         "forge:storage_blocks", "forge:ingots", "forge:nuggets"), null)
-                    .comment("", "Each type will be combined with each material to create a set of whitelist entries.",
+                    .comment("", "Each type will be combined with each material to create a set of allow list entries.",
                         "This is mainly a convenience for common ore-based materials.");
 
-                oreMaterials = commonConfig.defineList("oreMaterialWhitelist", Arrays.asList(
+                oreMaterials = commonConfig.defineList("oreMaterialAllowList", Arrays.asList(
                         "aluminum", "constantan", "steel", "uranium", "invar", "tin", "lead", "silver", "platinum", "nickel", "osmium", "bronze", "electrum"), null)
-                    .comment("", "Each type will be combined with each material to create a set of whitelist entries.",
+                    .comment("", "Each type will be combined with each material to create a set of allow list entries.",
                         "This is mainly a convenience for common ore-based materials.");
 
-                tagWhitelist = commonConfig.defineList("tagWhitelist", new ArrayList<String>(), null)
-                    .comment("", "Each whitelist entry should be a fully namespaced tag, e.g. c:ingots/copper");
+                tagWhitelist = commonConfig.defineList("tagAllowList", new ArrayList<String>(), null)
+                    .comment("", "Each allow list entry should be a fully namespaced tag, e.g. c:ingots/copper");
 
-                tagBlacklist = commonConfig.defineList("tagBlacklist", new ArrayList<String>(), null)
-                    .comment("", "Each blacklist entry should be a fully namespaced tag, e.g. c:ingots/copper.",
-                        "All items not on the whitelist are blacklisted implicitly.  This can be used to exclude",
-                        "specific entries created from the ore whitelist set.");
+                tagBlacklist = commonConfig.defineList("tagDenyList", new ArrayList<String>(), null)
+                    .comment("", "Each deny list entry should be a fully namespaced tag, e.g. c:ingots/copper.",
+                        "All items not on the allow list are denied implicitly.  This can be used to exclude",
+                        "specific entries created from the ore allow list set.");
 
                 itemEquivGroups = commonConfig.defineList("itemEquivalenceGroups", new ArrayList<String>(), null)
                     .comment("", "Each entry is a semicolon-separated list of fully-namespaced items. All items within the",
