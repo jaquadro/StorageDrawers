@@ -74,10 +74,10 @@ public class StorageDrawers
     }
 
     private void setup (final FMLCommonSetupEvent event) {
-        //compRegistry = new CompTierRegistry();
         CompTierRegistry.INSTANCE.initialize();
         StorageBlacklist.INSTANCE.initialize();
         MaterialBlacklist.INSTANCE.initialize();
+        ConversionRegistry.INSTANCE.initialize();
 
         //oreDictRegistry = new OreDictRegistry();
         //renderRegistry = new RenderRegistry();

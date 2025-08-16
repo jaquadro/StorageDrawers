@@ -41,5 +41,6 @@ public class StorageDrawers implements ModInitializer
         CompTierRegistry.INSTANCE.initialize();
         StorageBlacklist.INSTANCE.initialize();
         MaterialBlacklist.INSTANCE.initialize();
+        ConversionRegistry.INSTANCE.initialize();
     }
 }

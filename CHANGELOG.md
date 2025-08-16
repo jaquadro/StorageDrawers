@@ -1,5 +1,8 @@
 [13.9.4]
 - Fixed meta blockstate loading errors (though they were harmless)
+- Fixed conversion rules not loading
+- Fixed incorrect default ore types in conversion config
+- Added option to disable logging startup rules, deny lists, etc.
 
 [13.9.3]
 - Fixed invalid gold_keyrings tag entries

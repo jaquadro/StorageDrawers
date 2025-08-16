@@ -1,1 +1,4 @@
 - Fixed meta blockstate loading errors (though they were harmless)
+- Fixed conversion rules not loading
+- Fixed incorrect default ore types in conversion config
+- Added option to disable logging startup rules, deny lists, etc.

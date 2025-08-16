@@ -36,11 +36,13 @@ public class StorageBlacklist extends ConfigItemList
 
     @Override
     protected void logRegisterNamespace (@NotNull String namespace) {
-        ModServices.log.info("New denied storage namespace " + namespace);
+        if (ModCommonConfig.INSTANCE.GENERAL.logStartupActivity.get())
+            ModServices.log.info("New denied storage namespace " + namespace);
     }
 
     @Override
     protected void logRegisterItem (@NotNull ItemStack item) {
-        ModServices.log.info("New denied storage item " + item.getItem());
+        if (ModCommonConfig.INSTANCE.GENERAL.logStartupActivity.get())
+            ModServices.log.info("New denied storage item " + item.getItem());
     }
 }

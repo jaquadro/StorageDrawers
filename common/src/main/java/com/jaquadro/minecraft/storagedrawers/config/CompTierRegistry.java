@@ -77,7 +77,8 @@ public class CompTierRegistry
 
         records.add(r);
 
-        ModServices.log.info("New compacting rule " + convRate + " " + lower.getItem() + " = 1 " + upper.getItem());
+        if (ModCommonConfig.INSTANCE.GENERAL.logStartupActivity.get())
+            ModServices.log.info("New compacting rule " + convRate + " " + lower.getItem() + " = 1 " + upper.getItem());
 
         return true;
     }
