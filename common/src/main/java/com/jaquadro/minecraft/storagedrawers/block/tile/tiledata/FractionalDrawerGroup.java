@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.config.StorageBlacklist;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.CompactingHelper;
@@ -441,24 +442,28 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
             Stack<CompactingHelper.Result> resultStack = new Stack<>();
 
             ItemStack lookupTarget = itemPrototype;
-            for (int i = 0; i < slotCount - 1; i++) {
-                CompactingHelper.Result lookup = compacting.findHigherTier(lookupTarget);
-                if (lookup.getStack().isEmpty())
-                    break;
-
-                resultStack.push(lookup);
-                lookupTarget = lookup.getStack();
-            }
-
             int index = 0;
-            for (int n = resultStack.size(); index < n; index++) {
-                CompactingHelper.Result result = resultStack.pop();
-                populateRawSlot(index, result.getStack(), result.getSize());
-                group.log("Picked candidate " + result.getStack().toString() + " with conv=" + result.getSize());
 
-                for (int i = 0; i < index; i++) {
-                    convRate[i] *= result.getSize();
-                    cachedConvRate[i] = convRate[i];
+            if (ModCommonConfig.INSTANCE.DRAWERS.compacting.enabled.get()) {
+                for (int i = 0; i < slotCount - 1; i++) {
+                    CompactingHelper.Result lookup = compacting.findHigherTier(lookupTarget);
+                    if (lookup.getStack().isEmpty())
+                        break;
+
+                    resultStack.push(lookup);
+                    lookupTarget = lookup.getStack();
+                }
+
+
+                for (int n = resultStack.size(); index < n; index++) {
+                    CompactingHelper.Result result = resultStack.pop();
+                    populateRawSlot(index, result.getStack(), result.getSize());
+                    group.log("Picked candidate " + result.getStack().toString() + " with conv=" + result.getSize());
+
+                    for (int i = 0; i < index; i++) {
+                        convRate[i] *= result.getSize();
+                        cachedConvRate[i] = convRate[i];
+                    }
                 }
             }
 
@@ -467,22 +472,24 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
 
             populateRawSlot(index++, itemPrototype, 1);
 
-            lookupTarget = itemPrototype;
-            for (; index < slotCount; index++) {
-                CompactingHelper.Result lookup = compacting.findLowerTier(lookupTarget);
-                ItemStack itemStack = lookup.getStack();
-                if (!itemStack.isEmpty()) {
-                    populateRawSlot(index, itemStack, 1);
-                    group.log("Picked candidate " + itemStack + " with conv=" + lookup.getSize());
+            if (ModCommonConfig.INSTANCE.DRAWERS.compacting.enabled.get()) {
+                lookupTarget = itemPrototype;
+                for (; index < slotCount; index++) {
+                    CompactingHelper.Result lookup = compacting.findLowerTier(lookupTarget);
+                    ItemStack itemStack = lookup.getStack();
+                    if (!itemStack.isEmpty()) {
+                        populateRawSlot(index, itemStack, 1);
+                        group.log("Picked candidate " + itemStack + " with conv=" + lookup.getSize());
 
-                    for (int i = 0; i < index; i++) {
-                        convRate[i] *= lookup.getSize();
-                        cachedConvRate[i] = convRate[i];
+                        for (int i = 0; i < index; i++) {
+                            convRate[i] *= lookup.getSize();
+                            cachedConvRate[i] = convRate[i];
+                        }
+                    } else {
+                        populateRawSlot(index, ItemStack.EMPTY, 0);
                     }
-                } else {
-                    populateRawSlot(index, ItemStack.EMPTY, 0);
+                    lookupTarget = itemStack;
                 }
-                lookupTarget = itemStack;
             }
         }
 

@@ -89,6 +89,9 @@ public class BlockKeyButton  extends FaceAttachedHorizontalDirectionalBlock
         if (state.getValue(POWERED)) {
             return InteractionResult.CONSUME;
         } else {
+            if (!keyType.isEnabled())
+                return InteractionResult.PASS;
+
             this.press(state, level, pos);
             this.playSound(player, level, pos, true);
             level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);

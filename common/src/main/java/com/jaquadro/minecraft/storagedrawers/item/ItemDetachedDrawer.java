@@ -30,7 +30,7 @@ public class ItemDetachedDrawer extends Item implements IPortable
         ItemStack stack = new ItemStack(this);
 
         DetachedDrawerData data = new DetachedDrawerData();
-        data.setStorageMultiplier(ModCommonConfig.INSTANCE.GENERAL.getBaseStackStorage() * 8);
+        data.setStorageMultiplier(ModCommonConfig.INSTANCE.DRAWERS.getBaseStackStorage() * 8);
         stack.setTag(data.serializeNBT());
 
         return stack;
@@ -41,7 +41,7 @@ public class ItemDetachedDrawer extends Item implements IPortable
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         ComponentUtil.appendSplitDescription(tooltip, this);
 
-        if (ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get() && isHeavy(stack)) {
+        if (ModCommonConfig.INSTANCE.DRAWERS.detached.heavyDrawers.get() && isHeavy(stack)) {
             tooltip.add(Component.translatable("tooltip.storagedrawers.drawers.too_heavy").withStyle(ChatFormatting.RED));
         }
     }
@@ -56,7 +56,7 @@ public class ItemDetachedDrawer extends Item implements IPortable
 
     @NotNull
     public Component getDescription() {
-        return ModCommonConfig.INSTANCE.GENERAL.enableDetachedDrawers.get()
+        return ModCommonConfig.INSTANCE.DRAWERS.detached.enable.get()
             ? Component.translatable(this.getDescriptionId() + ".desc")
             : Component.translatable("itemConfig.storagedrawers.disabled_tool").withStyle(ChatFormatting.RED);
     }
@@ -71,7 +71,7 @@ public class ItemDetachedDrawer extends Item implements IPortable
 
     @Override
     public boolean canFitInsideContainerItems () {
-        return false;
+        return ModCommonConfig.INSTANCE.DRAWERS.detached.canStoreInContainers.get();
     }
 
     @Override

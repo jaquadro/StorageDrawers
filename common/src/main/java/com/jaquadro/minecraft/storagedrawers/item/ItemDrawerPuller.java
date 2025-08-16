@@ -12,10 +12,7 @@ public class ItemDrawerPuller extends ItemKey
     }
 
     @Override
-    @NotNull
-    public Component getDescription() {
-        return ModCommonConfig.INSTANCE.GENERAL.enableDetachedDrawers.get()
-            ? Component.translatable("item.storagedrawers.drawer_puller.desc")
-            : Component.translatable("itemConfig.storagedrawers.disabled_tool").withStyle(ChatFormatting.RED);
+    public boolean isEnabled () {
+        return ModCommonConfig.INSTANCE.DRAWERS.detached.enable.get();
     }
 }

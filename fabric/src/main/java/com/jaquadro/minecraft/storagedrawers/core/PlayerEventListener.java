@@ -25,7 +25,7 @@ public class PlayerEventListener
 
         ItemUpgradeRemote.validateInventory(player.getInventory(), player.level());
 
-        if (!ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get())
+        if (!ModCommonConfig.INSTANCE.DRAWERS.anyHeavyDrawers())
             return;
 
         for(var s : player.getAllSlots()) {

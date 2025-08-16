@@ -2,14 +2,14 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 
-public class ItemUpgradeIllumination extends ItemUpgrade
+public class ItemUpgradeOneStack extends ItemUpgrade
 {
-    public ItemUpgradeIllumination (Properties properties) {
+    public ItemUpgradeOneStack (Properties properties) {
         super(properties);
     }
 
     @Override
     public boolean isEnabled () {
-        return ModCommonConfig.INSTANCE.UPGRADES.illuminationUpgrade.enableUpgrade.get();
+        return ModCommonConfig.INSTANCE.UPGRADES.oneStackUpgrade.enableUpgrade.get();
     }
 }

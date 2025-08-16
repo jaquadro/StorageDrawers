@@ -38,10 +38,13 @@ public class ItemUpgradeRemote extends ItemUpgrade
 
     @Override
     public boolean isEnabled () {
+        if (!ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.enableUpgrade.get())
+            return false;
+
         if (groupUpgrade)
-            return ModCommonConfig.INSTANCE.UPGRADES.enableRemoteGroupUpgrade.get();
-        else
-            return ModCommonConfig.INSTANCE.UPGRADES.enableRemoteUpgrade.get();
+            return ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.enableGroup.get();
+
+        return true;
     }
 
     @Override

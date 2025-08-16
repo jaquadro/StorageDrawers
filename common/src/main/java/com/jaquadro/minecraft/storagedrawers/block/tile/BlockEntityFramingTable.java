@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedSourceBlock;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.CustomNameData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
+import com.jaquadro.minecraft.storagedrawers.config.MaterialBlacklist;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
@@ -139,30 +140,24 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements MenuProv
             return false;
 
         BlockState state = blockItem.getBlock().defaultBlockState();
-        if (state.getBlock().hasDynamicShape())
-            return false;
 
-        if (!ModCommonConfig.INSTANCE.GENERAL.restrictFramingMaterials.get())
-            return state.isSolid();
-
-        if (!state.canOcclude())
-            return false;
-
-        try {
-            // Will always throw unless overridden, which usually means it's a block that we don't
-            // want to be a valid material
-            if (state.getLightBlock(null, null) < 15)
+        if (ModCommonConfig.INSTANCE.DRAWERS.framed.enforceSolidMaterials.get()) {
+            if (state.getBlock().hasDynamicShape())
                 return false;
-        } catch (Exception e) { }
 
-        try {
-            if (!Block.isShapeFullBlock(state.getOcclusionShape(null, null)))
-                return false;
-            if (state.propagatesSkylightDown(null, null))
-                return false;
-        } catch (Exception e) {
-            return false;
+            try {
+                if (!Block.isShapeFullBlock(state.getOcclusionShape(null, null)))
+                    return false;
+            } catch (Exception e) { }
         }
+
+        if (ModCommonConfig.INSTANCE.DRAWERS.framed.enforceOpaqueMaterials.get()) {
+            if (!state.canOcclude())
+                return false;
+        }
+
+        if (MaterialBlacklist.INSTANCE.isBlacklisted(stack))
+            return false;
 
         return true;
     }

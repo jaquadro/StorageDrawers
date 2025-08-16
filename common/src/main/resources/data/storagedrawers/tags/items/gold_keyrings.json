@@ -7,10 +7,10 @@
         "storagedrawers:keyring_personal",
         "storagedrawers:keyring_personal_cofh",
         "storagedrawers:keyring_personal_unlock",
-        "storagedrawers:keyring_personal_priority",
-        "storagedrawers:keyring_personal_priority_p1",
-        "storagedrawers:keyring_personal_priority_p2",
-        "storagedrawers:keyring_personal_priority_n1",
-        "storagedrawers:keyring_personal_priority_n2"
+        "storagedrawers:keyring_priority",
+        "storagedrawers:keyring_priority_p1",
+        "storagedrawers:keyring_priority_p2",
+        "storagedrawers:keyring_priority_n1",
+        "storagedrawers:keyring_priority_n2"
     ]
 }

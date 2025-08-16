@@ -47,7 +47,7 @@ public class ItemDrawers extends BlockItem implements IPortable
             tooltip.add(Component.literal("").append(textSealed).withStyle(ChatFormatting.YELLOW));
         }
 
-        if (ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get() && isHeavy(stack)) {
+        if (ModCommonConfig.INSTANCE.DRAWERS.filled.heavyDrawers.get() && isHeavy(stack)) {
             tooltip.add(Component.translatable("tooltip.storagedrawers.drawers.too_heavy").withStyle(ChatFormatting.RED));
         }
 
@@ -97,7 +97,7 @@ public class ItemDrawers extends BlockItem implements IPortable
     private int getCapacityForBlock (@NotNull ItemStack itemStack) {
         Block block = Block.byItem(itemStack.getItem());
         if (block instanceof BlockDrawers blockDrawers) {
-            return blockDrawers.getStorageUnits() * ModCommonConfig.INSTANCE.GENERAL.getBaseStackStorage();
+            return blockDrawers.getStorageUnits() * ModCommonConfig.INSTANCE.DRAWERS.baseStackStorage.get();
         }
 
         return 0;
@@ -105,7 +105,7 @@ public class ItemDrawers extends BlockItem implements IPortable
 
     @Override
     public boolean canFitInsideContainerItems () {
-        return false;
+        return ModCommonConfig.INSTANCE.DRAWERS.filled.canStoreInContainers.get();
     }
 
     // TODO: Forge Extension

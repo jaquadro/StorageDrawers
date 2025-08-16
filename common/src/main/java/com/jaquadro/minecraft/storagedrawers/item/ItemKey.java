@@ -8,6 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifi
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
 import com.jaquadro.minecraft.storagedrawers.util.ComponentUtil;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -48,11 +49,16 @@ public class ItemKey extends Item
     public void appendHoverText (@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         ComponentUtil.appendSplitDescription(tooltip, this);
+
+        if (!isEnabled())
+            tooltip.add(Component.translatable("itemConfig.storagedrawers.disabled_tool")
+                .withStyle(ChatFormatting.YELLOW));
     }
 
     @NotNull
     public Component getDescription() {
-        return Component.translatable(this.getDescriptionId() + ".desc");
+        return isEnabled()
+            ? Component.translatable(this.getDescriptionId() + ".desc") : Component.empty();
     }
 
     // TODO: Forge Extension
@@ -64,6 +70,9 @@ public class ItemKey extends Item
     @Override
     @NotNull
     public InteractionResult useOn (UseOnContext context) {
+        if (!isEnabled())
+            return InteractionResult.PASS;
+
         BlockEntity blockEntity = WorldUtils.getBlockEntity(context.getLevel(), context.getClickedPos(), BlockEntity.class);
         if (blockEntity == null)
             return InteractionResult.PASS;
@@ -83,6 +92,9 @@ public class ItemKey extends Item
         return InteractionResult.SUCCESS;
     }
 
-
     protected void handleDrawerAttributes (IDrawerAttributesModifiable attrs) { }
+
+    public boolean isEnabled () {
+        return true;
+    }
 }

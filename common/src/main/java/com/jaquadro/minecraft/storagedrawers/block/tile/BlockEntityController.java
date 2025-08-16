@@ -168,7 +168,6 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     private final ItemCollectionRegistry<SlotRecord> drawerPrimaryLookup = new ItemCollectionRegistry<>();
 
     protected int[] drawerSlots = new int[0];
-    private final int range;
 
     private long lastUpdateTime;
     private long lastClickTime;
@@ -176,7 +175,6 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
     protected BlockEntityController(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
-        range = ModCommonConfig.INSTANCE.GENERAL.controllerRange.get();
 
         injectPortableData(controllerHostData);
         injectPortableData(materialData);
@@ -199,7 +197,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
     public void printDebugInfo () {
         ModServices.log.info("Controller at " + worldPosition);
-        ModServices.log.info("  Range: " + range + " blocks");
+        ModServices.log.info("  Range: " + ModCommonConfig.INSTANCE.CONTROLLER.controllerRange.get() + " blocks");
         ModServices.log.info("  Stored records: " + storage.size() + ", slot list: " + drawerSlots.length);
         ModServices.log.info("  Ticks since last update: " + (getLevel() == null ? "null" : (getLevel().getGameTime() - lastUpdateTime)));
     }
@@ -707,15 +705,25 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         if (!getLevel().isClientSide)
             controllerHostData.validateRemoteNodes(this, level);
 
-        populateRoot(getBlockPos(), true);
+        int globalRange = ModCommonConfig.INSTANCE.CONTROLLER.controllerRange.get();
+        int confRemoteRange = ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.maxRange.get();
+        int confRemoteGroupRange = ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.maxGroupRange.get();
+
+        int remoteRange = confRemoteRange > 0 ? Math.min(globalRange, confRemoteRange) : globalRange;
+        int remoteGroupRange = confRemoteGroupRange > 0 ? Math.min(globalRange, confRemoteGroupRange) : globalRange;
+
+        populateRoot(getBlockPos(), globalRange, true);
 
         getBoundRemoteNodes().forEach(n -> {
-            if (n.getBoundControlGroup() == this && n instanceof BlockEntity blockEntity)
-                populateRoot(blockEntity.getBlockPos(), n.canRecurseSearch());
+            if (n.getBoundControlGroup() == this && n instanceof BlockEntity blockEntity) {
+                boolean recurse = n.canRecurseSearch();
+                int range = recurse ? remoteGroupRange : remoteRange;
+                populateRoot(blockEntity.getBlockPos(), range, recurse);
+            }
         });
     }
 
-    private void populateRoot (BlockPos root, boolean recursiveSearch) {
+    private void populateRoot (BlockPos root, int range, boolean recursiveSearch) {
         searchQueue.add(root);
         searchDiscovered.add(root);
 

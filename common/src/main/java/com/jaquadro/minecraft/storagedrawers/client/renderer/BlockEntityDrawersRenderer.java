@@ -7,6 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawersComp;
 import com.jaquadro.minecraft.storagedrawers.config.ModClientConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.util.CountFormatter;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -74,10 +75,11 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
 
         itemRenderer = Minecraft.getInstance().getItemRenderer();
 
-        if (blockEntityDrawers.upgrades().hasIlluminationUpgrade()) {
-            int blockLight = Math.max(combinedLight % 65536, 208);
-            combinedLight = (combinedLight & 0xFFFF0000) | blockLight;
-        }
+        int enforcedLightLevel = blockEntityDrawers.upgrades().hasIlluminationUpgrade()
+            ? ModCommonConfig.INSTANCE.UPGRADES.illuminationUpgrade.illuminationLevel.get()
+            : ModCommonConfig.INSTANCE.UPGRADES.illuminationUpgrade.minIlluminationLevel.get();
+        int blockLight = Math.max(combinedLight % 65536, enforcedLightLevel * 16);
+        combinedLight = (combinedLight & 0xFFFF0000) | blockLight;
 
         if (!blockEntityDrawers.getDrawerAttributes().isConcealed())
             renderFastItemSet(blockEntityDrawers, state, matrix, buffer, combinedLight, combinedOverlay, side, partialTickTime, distance);

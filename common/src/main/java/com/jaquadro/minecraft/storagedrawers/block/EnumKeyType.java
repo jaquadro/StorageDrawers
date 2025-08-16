@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.block;
 
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +40,20 @@ public enum EnumKeyType implements StringRepresentable
     @Override
     public String toString () {
         return getSerializedName();
+    }
+
+    public boolean isEnabled () {
+        boolean keyEnabled = false;
+        if (this == EnumKeyType.DRAWER)
+            keyEnabled = ModCommonConfig.INSTANCE.TOOLS.drawerKey.enable.get();
+        else if (this == EnumKeyType.QUANTIFY)
+            keyEnabled = ModCommonConfig.INSTANCE.TOOLS.quantifyKey.enable.get();
+        else if (this == EnumKeyType.CONCEALMENT)
+            keyEnabled = ModCommonConfig.INSTANCE.TOOLS.concealmentKey.enable.get();
+        else if (this == EnumKeyType.PERSONAL)
+            keyEnabled = ModCommonConfig.INSTANCE.TOOLS.personalKey.enable.get();
+
+        return keyEnabled;
     }
 
     static {

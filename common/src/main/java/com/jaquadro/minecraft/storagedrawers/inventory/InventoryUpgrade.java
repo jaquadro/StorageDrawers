@@ -107,7 +107,7 @@ public class InventoryUpgrade implements Container
     public boolean canPlaceItem (int slot, @NotNull ItemStack item) {
         if (blockEntityDrawers == null)
             return false;
-        if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
+        if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.DRAWERS.detached.forceMaxCapacityCheck.get())
             return false;
 
         return blockEntityDrawers.upgrades().canAddUpgrade(item);
@@ -139,7 +139,7 @@ public class InventoryUpgrade implements Container
     public boolean slotIsLocked (int slot) {
         if (blockEntityDrawers == null)
             return false;
-        if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
+        if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.DRAWERS.detached.forceMaxCapacityCheck.get())
             return true;
 
         if (!getItem(slot).isEmpty())
@@ -151,7 +151,7 @@ public class InventoryUpgrade implements Container
     public boolean canAddUpgrade (@NotNull ItemStack item) {
         if (blockEntityDrawers == null)
             return false;
-        if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
+        if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.DRAWERS.detached.forceMaxCapacityCheck.get())
             return false;
 
         return blockEntityDrawers.upgrades().canAddUpgrade(item);
@@ -160,7 +160,7 @@ public class InventoryUpgrade implements Container
     public boolean canRemoveUpgrade (int slot) {
         if (blockEntityDrawers == null)
             return false;
-        if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
+        if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.DRAWERS.detached.forceMaxCapacityCheck.get())
             return false;
 
         return blockEntityDrawers.upgrades().canRemoveUpgrade(slot);
@@ -169,7 +169,7 @@ public class InventoryUpgrade implements Container
     public boolean canRemoveStorageUpgrade (int slot) {
         if (blockEntityDrawers == null)
             return false;
-        if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
+        if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.DRAWERS.detached.forceMaxCapacityCheck.get())
             return false;
 
         return blockEntityDrawers.upgrades().canRemoveUpgrade(slot);
@@ -178,7 +178,7 @@ public class InventoryUpgrade implements Container
     public boolean canSwapUpgrade (int slot, @NotNull ItemStack item) {
         if (blockEntityDrawers == null)
             return false;
-        if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get())
+        if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.DRAWERS.detached.forceMaxCapacityCheck.get())
             return false;
 
         return blockEntityDrawers.upgrades().canSwapUpgrade(slot, item);

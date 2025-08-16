@@ -9,7 +9,6 @@ import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import com.texelsaurus.minecraft.chameleon.inventory.content.PositionContent;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

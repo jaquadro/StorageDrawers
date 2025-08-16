@@ -10,6 +10,6 @@ public class ItemUpgradeVoid extends ItemUpgrade
 
     @Override
     public boolean isEnabled () {
-        return ModCommonConfig.INSTANCE.UPGRADES.enableVoidUpgrade.get();
+        return ModCommonConfig.INSTANCE.UPGRADES.voidUgrade.enableUpgrade.get();
     }
 }

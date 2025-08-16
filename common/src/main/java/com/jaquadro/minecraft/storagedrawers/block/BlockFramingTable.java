@@ -198,6 +198,9 @@ public class BlockFramingTable extends HorizontalDirectionalBlock implements Ent
     }
 
     private void openUI(Level level, BlockPos pos, Player player) {
+        if (!ModCommonConfig.INSTANCE.GENERAL.enableUI.get() || !ModCommonConfig.INSTANCE.DRAWERS.framed.enable.get())
+            return;
+
         MenuProvider provider = level.getBlockState(pos).getMenuProvider(level, pos);
         if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
             ModServices.log.info("Open BlockDrawers UI " + pos);

@@ -62,4 +62,14 @@ public class FabricConfig implements ChameleonConfig
     public void popGroup () {
         configImpl.popGroup();
     }
+
+    @Override
+    public void comment (String comment) {
+        configImpl.comment(comment);
+    }
+
+    @Override
+    public void comment (String... comment) {
+        configImpl.comment(comment);
+    }
 }

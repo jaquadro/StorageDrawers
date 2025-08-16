@@ -63,6 +63,16 @@ public class StaticConfig implements ChameleonConfig
 
     }
 
+    @Override
+    public void comment (String comment) {
+
+    }
+
+    @Override
+    public void comment (String... comment) {
+
+    }
+
     public static class FabricConfigEntry<T> extends ConfigEntry<T>
     {
         public FabricConfigEntry () { }

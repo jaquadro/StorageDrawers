@@ -22,15 +22,15 @@ public class ConversionRegistry
 
     public ConversionRegistry () {
         ModCommonConfig.INSTANCE.onLoad(() -> {
-            ModCommonConfig.INSTANCE.CONVERSION.tagWhitelist.get().forEach(this::addWhitelist);
-            ModCommonConfig.INSTANCE.CONVERSION.tagBlacklist.get().forEach(this::addBlacklist);
+            ModCommonConfig.INSTANCE.UPGRADES.conversionUpgrade.tagWhitelist.get().forEach(this::addWhitelist);
+            ModCommonConfig.INSTANCE.UPGRADES.conversionUpgrade.tagBlacklist.get().forEach(this::addBlacklist);
 
-            for (String oreType : ModCommonConfig.INSTANCE.CONVERSION.oreTypes.get()) {
-                for (String oreMat : ModCommonConfig.INSTANCE.CONVERSION.oreMaterials.get())
+            for (String oreType : ModCommonConfig.INSTANCE.UPGRADES.conversionUpgrade.oreTypes.get()) {
+                for (String oreMat : ModCommonConfig.INSTANCE.UPGRADES.conversionUpgrade.oreMaterials.get())
                     addWhitelist(oreType + "/" + oreMat);
             }
 
-            for (String entry : ModCommonConfig.INSTANCE.CONVERSION.itemEquivGroups.get())
+            for (String entry : ModCommonConfig.INSTANCE.UPGRADES.conversionUpgrade.itemEquivGroups.get())
                 addEquivGroup(entry);
         });
     }

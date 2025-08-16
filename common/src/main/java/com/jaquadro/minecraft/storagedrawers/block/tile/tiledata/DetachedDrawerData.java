@@ -146,7 +146,7 @@ public class DetachedDrawerData implements IDrawer
         if (nbt.contains("StorageMult"))
             storageMult = nbt.getInt("StorageMult");
         else
-            storageMult = ModCommonConfig.INSTANCE.GENERAL.baseStackStorage.get() * 8;
+            storageMult = ModCommonConfig.INSTANCE.DRAWERS.baseStackStorage.get() * 8;
 
         if (nbt.contains("Heavy"))
             setIsHeavy(nbt.getBoolean("Heavy"));

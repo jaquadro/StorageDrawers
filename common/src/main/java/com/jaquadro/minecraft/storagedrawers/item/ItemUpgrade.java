@@ -43,14 +43,18 @@ public class ItemUpgrade extends Item
 
     @Override
     public void appendHoverText (@NotNull ItemStack itemStack, @Nullable Level world, List<Component> list, TooltipFlag advanced) {
+        super.appendHoverText(itemStack, world, list, advanced);
         ComponentUtil.appendSplitDescription(list, this);
+
+        if (!isEnabled())
+            list.add(Component.translatable("itemConfig.storagedrawers.disabled_upgrade")
+                .withStyle(ChatFormatting.YELLOW));
     }
 
     @NotNull
     public Component getDescription() {
         return isEnabled()
-            ? Component.translatable(this.getDescriptionId() + ".desc")
-            : Component.translatable("itemConfig.storagedrawers.disabled_upgrade").withStyle(ChatFormatting.RED);
+            ? Component.translatable(this.getDescriptionId() + ".desc") : Component.empty();
     }
 
     // TODO: Forge extension

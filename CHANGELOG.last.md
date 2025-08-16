@@ -1,5 +1,9 @@
-- Fixed framing table leaving extra component on unframed drawer
-- Fixed drawers with remote upgrades not maintaining link when moved by external mods
-- Piglins love keys
-- Removed space in dist jar
-- NEO/FORGE: Fixed upgrade swapping not working when moving to smaller storage upgrades
+- New config file (storagedrawers-common-v2.toml)
+- Reworked storage tiers
+- Added copper and netherite storage upgrades
+- Fixed invalid entries in gold_keyrings tag
+
+WARNING: This release REPLACES the existing storage drawers config file.
+The original file will be left unchanged, but it will not be read from.
+If you've changed your config, take a look at the new storagedrawers-common-v2.toml
+file and make any changes you need.  The options available are not 1:1 with the old config.

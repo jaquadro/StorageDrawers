@@ -42,7 +42,7 @@ public class StorageUtil
     }
 
     public static void rebalanceDrawers (Stream<IDrawer> drawers) {
-        if (!ModCommonConfig.INSTANCE.UPGRADES.enableBalanceUpgrade.get())
+        if (!ModCommonConfig.INSTANCE.UPGRADES.balanceUpgrade.enableUpgrade.get())
             return;
 
         List<IDrawer> balanceDrawers = new ArrayList<>();

@@ -12,6 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.ModSecurity;
+import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeRemote;
@@ -100,6 +101,9 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         if (item instanceof ItemKeyring keyring)
             keyItem = keyring.getKey().getItem();
 
+        if (keyItem instanceof ItemKey itemKey && !itemKey.isEnabled())
+            return false;
+
         if (keyItem == ModItems.DRAWER_KEY.get())
             toggle(world, pos, player, EnumKeyType.DRAWER);
         else if (keyItem == ModItems.SHROUD_KEY.get())
@@ -120,6 +124,9 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         if (level.isClientSide)
             return;
 
+        if (!keyType.isEnabled())
+            return;
+
         BlockEntityController blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);
         if (blockEntity == null)
             return;
@@ -137,6 +144,9 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
 
     public void togglePersonal (@NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, String providerKey) {
         if (level.isClientSide)
+            return;
+
+        if (!ModCommonConfig.INSTANCE.TOOLS.personalKey.enable.get())
             return;
 
         BlockEntityController blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);

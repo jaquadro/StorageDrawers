@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import net.minecraft.world.item.Item;
 
 
@@ -16,5 +17,10 @@ public class ItemDrawerKey extends ItemKey
         boolean locked = attrs.isItemLocked(LockAttribute.LOCK_POPULATED);
         attrs.setItemLocked(LockAttribute.LOCK_EMPTY, !locked);
         attrs.setItemLocked(LockAttribute.LOCK_POPULATED, !locked);
+    }
+
+    @Override
+    public boolean isEnabled () {
+        return ModCommonConfig.INSTANCE.TOOLS.drawerKey.enable.get();
     }
 }

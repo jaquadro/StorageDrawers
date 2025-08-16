@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.ModConstants;
 import com.jaquadro.minecraft.storagedrawers.ModServices;
+import com.jaquadro.minecraft.storagedrawers.api.config.IDrawerConfig;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
@@ -70,7 +71,10 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
 
     private final int drawerCount;
     private final boolean halfDepth;
-    private final int storageUnits;
+    private final IDrawerConfig drawerConfig;
+
+    // Deprecated
+    private int storageUnits;
 
     public final AABB[] slotGeometry;
     public final AABB[] countGeometry;
@@ -80,14 +84,15 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
 
     private long ignoreEventTime;
 
-    public BlockDrawers (int drawerCount, boolean halfDepth, int storageUnits, BlockBehaviour.Properties properties) {
+    public BlockDrawers (int drawerCount, boolean halfDepth, IDrawerConfig drawerConfig, BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(stateDefinition.any()
             .setValue(FACING, Direction.NORTH));
 
         this.drawerCount = drawerCount;
         this.halfDepth = halfDepth;
-        this.storageUnits = storageUnits;
+        this.drawerConfig = drawerConfig;
+        this.storageUnits = 0;
 
         slotGeometry = new AABB[drawerCount];
         countGeometry = new AABB[drawerCount];
@@ -102,6 +107,13 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
             indGeometry[i] = new AABB(0, 0, 0, 0, 0, 0);
             indBaseGeometry[i] = new AABB(0, 0, 0, 0, 0, 0);
         }
+    }
+
+    @Deprecated
+    public BlockDrawers (int drawerCount, boolean halfDepth, int storageUnits, Properties properties) {
+        this(drawerCount, halfDepth, null, properties);
+
+        this.storageUnits = storageUnits;
     }
 
     @Override
@@ -131,7 +143,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
     }
 
     public int getStorageUnits () {
-        return storageUnits;
+        return drawerConfig != null ? drawerConfig.getUnitsPerSlot() : storageUnits;
     }
 
     public String getNameTypeKey () {
@@ -189,7 +201,11 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
                 key = itemKeyring.getKey().getItem();
         }
 
-        if (key != null) {
+        boolean keyEnabled = true;
+        if (key instanceof ItemKey itemKey)
+            keyEnabled = itemKey.isEnabled();
+
+        if (key != null && keyEnabled) {
             IDrawerAttributes _attrs = blockEntity.getCapability(Capabilities.DRAWER_ATTRIBUTES);
             if (_attrs == null)
                 _attrs = EmptyDrawerAttributes.EMPTY;
@@ -232,7 +248,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
 
         // Drawer UI
         if (item.isEmpty()) {
-            if (ModCommonConfig.INSTANCE.GENERAL.enableUI.get() && !context.level.isClientSide && context.player.isShiftKeyDown()) {
+            if (!context.level.isClientSide && context.player.isShiftKeyDown()) {
                 openUI(context);
                 return Optional.of(InteractionResult.SUCCESS);
             }
@@ -254,7 +270,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
             keyItem = keyring.getKey();
 
         // Drawer pulling
-        if (ModCommonConfig.INSTANCE.GENERAL.enableDetachedDrawers.get() && context.slot >= 0) {
+        if (ModCommonConfig.INSTANCE.DRAWERS.detached.enable.get() && context.slot >= 0) {
             if (item.getItem() == ModItems.DRAWER_PULLER.get() || (keyItem != null && keyItem.getItem() == ModItems.DRAWER_PULLER.get())) {
                 this.interactPullDrawer(context);
                 return Optional.of(InteractionResult.SUCCESS);
@@ -298,6 +314,9 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
 
         // Personal Key
         if (item.getItem() instanceof ItemPersonalKey || (keyItem != null && keyItem.getItem() instanceof ItemPersonalKey)) {
+            if (!ModCommonConfig.INSTANCE.TOOLS.personalKey.enable.get())
+                return Optional.of(InteractionResult.PASS);
+
             if (keyItem != null)
                 item = keyItem;
 
@@ -329,7 +348,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
 
         // Drawer upgrades
         if (item.getItem() instanceof ItemUpgrade && !context.player.isShiftKeyDown()) {
-            if (entity.getGroup().hasMissingDrawers() && ModCommonConfig.INSTANCE.GENERAL.forceDetachedDrawersMaxCapacityCheck.get()) {
+            if (entity.getGroup().hasMissingDrawers() && ModCommonConfig.INSTANCE.DRAWERS.detached.forceMaxCapacityCheck.get()) {
                 if (!context.level.isClientSide)
                     context.player.displayClientMessage(Component.translatable("message.storagedrawers.missing_slots_upgrade"), true);
 
@@ -377,6 +396,9 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
     }
 
     private void openUI(InteractContext context) {
+        if (!ModCommonConfig.INSTANCE.GENERAL.enableUI.get())
+            return;
+
         MenuProvider provider = context.state.getMenuProvider(context.level, context.pos);
         if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
             ModServices.log.info("Open BlockDrawers UI " + context.pos);
@@ -489,7 +511,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         if (drawer.isEmpty())
             baseItem = ModItems.DETACHED_DRAWER.get();
 
-        if (ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get() && !group.upgrades().hasPortabilityUpgrade())
+        if (ModCommonConfig.INSTANCE.DRAWERS.detached.heavyDrawers.get() && !group.upgrades().hasPortabilityUpgrade())
             data.setIsHeavy(true);
 
         ItemStack stack = new ItemStack(baseItem, 1);
@@ -569,7 +591,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
     @Override
     @SuppressWarnings("deprecation")
     public boolean isSignalSource (@NotNull BlockState state) {
-        return !ModCommonConfig.INSTANCE.GENERAL.enableAnalogRedstone.get();
+        return !ModCommonConfig.INSTANCE.UPGRADES.redstoneUpgrade.analogOutput.get();
     }
 
     @Override

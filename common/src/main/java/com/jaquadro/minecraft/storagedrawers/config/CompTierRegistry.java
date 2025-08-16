@@ -39,7 +39,7 @@ public class CompTierRegistry
     public void initialize () {
         initialized = true;
 
-        if (ModCommonConfig.INSTANCE.GENERAL.enableExtraCompactingRules.get()) {
+        if (ModCommonConfig.INSTANCE.DRAWERS.compacting.enableExtraCompactingRules.get()) {
             register(new ItemStack(Blocks.CLAY), new ItemStack(Items.CLAY_BALL), 4);
             register(new ItemStack(Blocks.SNOW_BLOCK), new ItemStack(Items.SNOWBALL), 4);
             register(new ItemStack(Blocks.GLOWSTONE), new ItemStack(Items.GLOWSTONE_DUST), 4);
@@ -50,12 +50,12 @@ public class CompTierRegistry
             register(new ItemStack(Blocks.MELON), new ItemStack(Items.MELON_SLICE), 9);
 
             // if (!ModList.get().isLoaded("extrautilities")) {
-            //    register(new ItemStack(Blocks.SANDSTONE), new ItemStack(Blocks.SAND), 4);
-            //    register(new ItemStack(Blocks.RED_SANDSTONE), new ItemStack(Blocks.RED_SAND, 1), 4);
+            //     register(new ItemStack(Blocks.SANDSTONE), new ItemStack(Blocks.SAND), 4);
+            //     register(new ItemStack(Blocks.RED_SANDSTONE), new ItemStack(Blocks.RED_SAND, 1), 4);
             // }
         }
 
-        ModCommonConfig.INSTANCE.onLoad(() -> ModCommonConfig.INSTANCE.GENERAL.compRules.get().forEach(this::register));
+        ModCommonConfig.INSTANCE.onLoad(() -> ModCommonConfig.INSTANCE.DRAWERS.compacting.compRules.get().forEach(this::register));
 
         for (String rule : pendingRules) {
             register(rule);
@@ -77,7 +77,7 @@ public class CompTierRegistry
 
         records.add(r);
 
-        ModServices.log.info("New compacting rule " + convRate + " " + lower.getItem().toString() + " = 1 " + upper.getItem().toString());
+        ModServices.log.info("New compacting rule " + convRate + " " + lower.getItem() + " = 1 " + upper.getItem());
 
         return true;
     }

@@ -27,7 +27,7 @@ public class PlayerEventListener
 
 	@SubscribeEvent
 	public void onPlayerPickup(EntityItemPickupEvent event) {
-		if (!ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get())
+		if (!ModCommonConfig.INSTANCE.DRAWERS.anyHeavyDrawers())
 			return;
 
 		checkItemDebuf(event.getItem().getItem(), event.getEntity());
@@ -42,7 +42,7 @@ public class PlayerEventListener
 		if (event.side == LogicalSide.SERVER)
 			ItemUpgradeRemote.validateInventory(event.player.getInventory(), event.player.level());
 
-		if (!ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get())
+		if (!ModCommonConfig.INSTANCE.DRAWERS.anyHeavyDrawers())
 			return;
 
 		for(var s : event.player.getAllSlots()) {
