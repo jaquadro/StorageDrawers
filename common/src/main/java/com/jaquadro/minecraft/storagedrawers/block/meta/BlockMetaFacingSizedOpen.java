@@ -6,16 +6,33 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
-public class BlockMetaFacingSizedOpen extends BlockMetaFacingSized
+public abstract class BlockMetaFacingSizedOpen
 {
-    public static final EnumProperty<EnumCompDrawer> SLOTS = EnumProperty.create("slots", EnumCompDrawer.class);
+    public static class Open2 extends BlockMetaFacingSized {
+        public static final EnumProperty<EnumCompDrawer> SLOTS =
+            EnumProperty.create("slots", EnumCompDrawer.class, EnumCompDrawer.OPEN1, EnumCompDrawer.OPEN2);
 
-    public BlockMetaFacingSizedOpen (Properties properties) {
-        super(properties);
+        public Open2 (Properties properties) {
+            super(properties);
+        }
+
+        @Override
+        protected void createBlockStateDefinition (StateDefinition.Builder<Block, BlockState> builder) {
+            builder.add(FACING).add(HALF).add(SLOTS);
+        }
     }
 
-    @Override
-    protected void createBlockStateDefinition (StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING).add(HALF).add(SLOTS);
+    public static class Open3 extends BlockMetaFacingSized {
+        public static final EnumProperty<EnumCompDrawer> SLOTS =
+            EnumProperty.create("slots", EnumCompDrawer.class, EnumCompDrawer.OPEN1, EnumCompDrawer.OPEN2, EnumCompDrawer.OPEN3);
+
+        public Open3 (Properties properties) {
+            super(properties);
+        }
+
+        @Override
+        protected void createBlockStateDefinition (StateDefinition.Builder<Block, BlockState> builder) {
+            builder.add(FACING).add(HALF).add(SLOTS);
+        }
     }
 }

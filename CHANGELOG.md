@@ -1,3 +1,6 @@
+[13.9.4]
+- Fixed meta blockstate loading errors (though they were harmless)
+
 [13.9.3]
 - Fixed invalid gold_keyrings tag entries
 - Renamed several list config entries for consistency with 1.20.1, check your values
