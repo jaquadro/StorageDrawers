@@ -26,13 +26,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class BlockStandardDrawers extends BlockDrawers implements IFramedSourceBlock
 {
     private String matKey = null;
     private String matNamespace = ModConstants.MOD_ID;
 
-    public BlockStandardDrawers (int drawerCount, boolean halfDepth, IDrawerConfig drawerConfig, Properties properties) {
+    public BlockStandardDrawers (int drawerCount, boolean halfDepth, Supplier<IDrawerConfig> drawerConfig, Properties properties) {
         super(drawerCount, halfDepth, drawerConfig, properties);
     }
 

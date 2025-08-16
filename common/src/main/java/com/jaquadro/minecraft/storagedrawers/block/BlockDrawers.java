@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, EntityBlock
 {
@@ -71,7 +72,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
 
     private final int drawerCount;
     private final boolean halfDepth;
-    private final IDrawerConfig drawerConfig;
+    private final Supplier<IDrawerConfig> drawerConfig;
 
     // Deprecated
     private int storageUnits;
@@ -84,7 +85,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
 
     private long ignoreEventTime;
 
-    public BlockDrawers (int drawerCount, boolean halfDepth, IDrawerConfig drawerConfig, BlockBehaviour.Properties properties) {
+    public BlockDrawers (int drawerCount, boolean halfDepth, Supplier<IDrawerConfig> drawerConfig, BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(stateDefinition.any()
             .setValue(FACING, Direction.NORTH));
@@ -143,7 +144,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
     }
 
     public int getStorageUnits () {
-        return drawerConfig != null ? drawerConfig.getUnitsPerSlot() : storageUnits;
+        return drawerConfig != null ? drawerConfig.get().getUnitsPerSlot() : storageUnits;
     }
 
     public String getNameTypeKey () {

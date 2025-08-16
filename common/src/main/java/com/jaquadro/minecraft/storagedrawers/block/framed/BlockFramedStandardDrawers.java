@@ -19,9 +19,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 public class BlockFramedStandardDrawers extends BlockStandardDrawers implements IFramedBlock
 {
-    public BlockFramedStandardDrawers (int drawerCount, boolean halfDepth, IDrawerConfig drawerConfig, BlockBehaviour.Properties properties) {
+    public BlockFramedStandardDrawers (int drawerCount, boolean halfDepth, Supplier<IDrawerConfig> drawerConfig, BlockBehaviour.Properties properties) {
         super(drawerCount, halfDepth, drawerConfig, properties);
     }
 

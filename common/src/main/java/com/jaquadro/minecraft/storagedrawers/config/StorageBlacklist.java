@@ -25,7 +25,7 @@ public class StorageBlacklist extends ConfigItemList
 
         if (!canStore) {
             CompoundTag tag = stack.getTag();
-            if (tag.contains("tile"))
+            if (tag != null && tag.contains("tile"))
                 return true;
         }
 

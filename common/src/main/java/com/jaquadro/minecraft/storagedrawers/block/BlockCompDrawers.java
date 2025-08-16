@@ -24,11 +24,13 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Supplier;
+
 public class BlockCompDrawers extends BlockDrawers implements INetworked, IFramedSourceBlock
 {
     public static final EnumProperty<EnumCompDrawer> SLOTS = EnumProperty.create("slots", EnumCompDrawer.class);
 
-    public BlockCompDrawers (int drawerCount, boolean halfDepth, IDrawerConfig drawerConfig, BlockBehaviour.Properties properties) {
+    public BlockCompDrawers (int drawerCount, boolean halfDepth, Supplier<IDrawerConfig> drawerConfig, BlockBehaviour.Properties properties) {
         super(drawerCount, halfDepth, drawerConfig, properties);
     }
 
