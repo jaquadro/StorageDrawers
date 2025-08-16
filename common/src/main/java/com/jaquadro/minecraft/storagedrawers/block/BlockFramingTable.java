@@ -31,8 +31,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BlockFramingTable extends HorizontalDirectionalBlock implements EntityBlock
 {
@@ -49,7 +47,6 @@ public class BlockFramingTable extends HorizontalDirectionalBlock implements Ent
     protected static final VoxelShape TABLE_SHAPE_SOUTH = Shapes.or(TABLE_TOP, TABLE_BOTTOM_SOUTH);
     protected static final VoxelShape TABLE_SHAPE_WEST = Shapes.or(TABLE_TOP, TABLE_BOTTOM_WEST);
     protected static final VoxelShape TABLE_SHAPE_EAST = Shapes.or(TABLE_TOP, TABLE_BOTTOM_EAST);
-    private static final Logger log = LoggerFactory.getLogger(BlockFramingTable.class);
 
     public BlockFramingTable (BlockBehaviour.Properties properties) {
         super(properties);

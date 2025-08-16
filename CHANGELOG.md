@@ -1,4 +1,7 @@
-[3.9.2]
+[13.9.3]
+- Fixed invalid gold_keyrings tag entries
+
+[13.9.2]
 - Fixed placing framed drawer on table with existing materials voiding the drawer
 - Fixed framing table leaving extra component on unframed drawer
 - Fixed crash pulling drawer with >99 items
@@ -7,7 +10,7 @@
 - Piglins love keys
 - Removed space in dist jar
 
-[3.9.1]
+[13.9.1]
 - Updated framed rendering to properly support cutout/translucent materials.
 - Added client config entry to disable translucent material rendering.
 - Framed blocks do not occlude light
@@ -17,7 +20,7 @@
 - Fixed drawers with remote upgrades not maintaining link when moved by external mods
 - NEO/FORGE: Fixed upgrade swapping not working when moving to smaller storage upgrades
 
-[3.9.0]
+[13.9.0]
 - New config file (storagedrawers-common-v2.toml)
 - Reworked storage tiers
   - Added copper and netherite storage upgrades
