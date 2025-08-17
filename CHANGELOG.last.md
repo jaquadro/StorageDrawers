@@ -2,3 +2,4 @@
 - Fixed conversion rules not loading
 - Fixed incorrect default ore types in conversion config
 - Added option to disable logging startup rules, deny lists, etc.
+- Fixed swapping upgrade with stack count > 1 voiding extra items
