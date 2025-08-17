@@ -180,6 +180,8 @@ public class InventoryUpgrade implements Container
             return false;
         if (blockEntityDrawers.hasMissingDrawers() && ModCommonConfig.INSTANCE.DRAWERS.detached.forceMaxCapacityCheck.get())
             return false;
+        if (item.getCount() > 1)
+            return false;
 
         return blockEntityDrawers.upgrades().canSwapUpgrade(slot, item);
     }
