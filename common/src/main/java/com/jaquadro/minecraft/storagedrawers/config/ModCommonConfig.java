@@ -65,6 +65,7 @@ public final class ModCommonConfig extends ConfigSpec
     public class General {
         public ChameleonConfig.ConfigEntry<Boolean> debugTrace;
         public ChameleonConfig.ConfigEntry<Boolean> enableUI;
+        public ChameleonConfig.ConfigEntry<Boolean> logStartupActivity;
         public ChameleonConfig.ConfigEntry<Integer> configVersion;
 
         public General() {
@@ -78,6 +79,10 @@ public final class ModCommonConfig extends ConfigSpec
             enableUI = commonConfig.define("enableUI", true)
                 .comment("", "Whether blocks with UI components are allowed to open them.",
                     "Disabling UI will restrict some mod functionality.").build();
+
+            logStartupActivity = commonConfig.define("logStartupActivity", true)
+                .comment("", "Whether to log actions such as adding rules or deny list entries.",
+                    "You may wish to disable this if you've added many such entries.").build();
 
             configVersion = commonConfig.define("configVersion", 2)
                 .comment("", "Internal use to record what version the config file was first written with.").build();

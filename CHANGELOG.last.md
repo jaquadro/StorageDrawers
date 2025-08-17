@@ -1,4 +1,6 @@
 - Fixed meta blockstate loading errors (though they were harmless)
+- Fixed conversion rules not loading
+- Added option to disable logging startup rules, deny lists, etc.
 
 WARNING: This release REPLACES the existing storage drawers config file.
 The original file will be left unchanged, but it will not be read from.
