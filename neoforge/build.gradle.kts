@@ -38,6 +38,8 @@ dependencies {
 
     implementation("curse.maven:architectury-api-419699:5786327")
     implementation("curse.maven:ftb-library-forge-404465:6807431")
+    implementation("curse.maven:ftb-chunks-forge-314906:6504893")
+    implementation("curse.maven:ftb-teams-forge-404468:6119437")
     // implementation("curse.maven:configured-457570:5873783")
     // implementation("curse.maven:carry-on-274259:5649344")
     // implementation("curse.maven:epic-fight-mod-405076:6816063")

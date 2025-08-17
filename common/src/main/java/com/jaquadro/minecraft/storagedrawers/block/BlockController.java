@@ -75,6 +75,9 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         if (player.getCooldowns().isOnCooldown(item.getItem()))
             return InteractionResult.FAIL;
 
+        if (level.isClientSide())
+            return InteractionResult.SUCCESS;
+
         if (!item.isEmpty() && toggle(level, pos, player, item.getItem()))
             return InteractionResult.SUCCESS;
 
