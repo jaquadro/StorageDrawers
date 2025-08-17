@@ -2,6 +2,7 @@
 - Fixed conversion rules not loading
 - Added option to disable logging startup rules, deny lists, etc.
 - Fixed swapping upgrade with stack count > 1 voiding extra items
+- Improved consistency with claimed/protected chunks (e.g. via FTB Chunks)
 
 WARNING: This release REPLACES the existing storage drawers config file.
 The original file will be left unchanged, but it will not be read from.
