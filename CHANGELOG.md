@@ -1,3 +1,6 @@
+[12.12.1]
+- Fixed meta blockstate loading errors (though they were harmless)
+
 [12.12.0]
 - New config file (storagedrawers-common-v2.toml)
 - Reworked storage tiers

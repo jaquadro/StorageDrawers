@@ -151,8 +151,8 @@ public final class ModBlocks
         META_LOCKED_CLAIMED = registerMetaFacingSizedBlock("meta_locked_claimed"),
         META_VOID = registerMetaFacingSizedBlock("meta_void"),
         META_SHROUD = registerMetaFacingSizedBlock("meta_shroud"),
-        META_INDICATOR = registerMetaFacingSizedSlottedBlock("meta_indicator"),
-        META_COMP_INDICATOR = registerMetaFacingSizedSlottedBlock("meta_comp_indicator"),
+        META_INDICATOR = registerMetaFacingSizedSlotted124Block("meta_indicator"),
+        META_COMP_INDICATOR = registerMetaFacingSizedSlotted23Block("meta_comp_indicator"),
         META_PRIORITY_P1 = registerMetaFacingSizedBlock("meta_priority_p1"),
         META_PRIORITY_P2 = registerMetaFacingSizedBlock("meta_priority_p2"),
         META_PRIORITY_N1 = registerMetaFacingSizedBlock("meta_priority_n1"),
@@ -164,10 +164,10 @@ public final class ModBlocks
         META_MISSING_4_2 = registerMetaFacingSizedBlock("meta_missing_slot_4_2"),
         META_MISSING_4_3 = registerMetaFacingSizedBlock("meta_missing_slot_4_3"),
         META_MISSING_4_4 = registerMetaFacingSizedBlock("meta_missing_slot_4_4"),
-        META_FRAMED_DRAWERS_SIDE = registerMetaFacingSizedSlottedBlock("meta_framed_drawers_side"),
-        META_FRAMED_DRAWERS_TRIM = registerMetaFacingSizedSlottedBlock("meta_framed_drawers_trim"),
-        META_FRAMED_DRAWERS_FRONT = registerMetaFacingSizedSlottedBlock("meta_framed_drawers_front"),
-        META_FRAMED_DRAWERS_SHADING = registerMetaFacingSizedSlottedBlock("meta_framed_drawers_shading"),
+        META_FRAMED_DRAWERS_SIDE = registerMetaFacingSizedSlotted124Block("meta_framed_drawers_side"),
+        META_FRAMED_DRAWERS_TRIM = registerMetaFacingSizedSlotted124Block("meta_framed_drawers_trim"),
+        META_FRAMED_DRAWERS_FRONT = registerMetaFacingSizedSlotted124Block("meta_framed_drawers_front"),
+        META_FRAMED_DRAWERS_SHADING = registerMetaFacingSizedSlotted124Block("meta_framed_drawers_shading"),
         META_FRAMED_TRIM_SIDE = registerMetaBlock("meta_framed_trim_side"),
         META_FRAMED_TRIM_TRIM = registerMetaBlock("meta_framed_trim_trim"),
         META_FRAMED_CONTROLLER_SIDE = registerMetaFacingBlock("meta_framed_controller_side"),
@@ -177,14 +177,14 @@ public final class ModBlocks
         META_FRAMED_CONTROLLER_IO_SIDE = registerMetaBlock("meta_framed_controller_io_side"),
         META_FRAMED_CONTROLLER_IO_TRIM = registerMetaBlock("meta_framed_controller_io_trim"),
         META_FRAMED_CONTROLLER_IO_SHADING = registerMetaBlock("meta_framed_controller_io_shading"),
-        META_FRAMED_COMPDRAWERS_2_SIDE = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_2_side"),
-        META_FRAMED_COMPDRAWERS_2_TRIM = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_2_trim"),
-        META_FRAMED_COMPDRAWERS_2_FRONT = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_2_front"),
-        META_FRAMED_COMPDRAWERS_2_SHADING = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_2_shading"),
-        META_FRAMED_COMPDRAWERS_3_SIDE = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_3_side"),
-        META_FRAMED_COMPDRAWERS_3_TRIM = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_3_trim"),
-        META_FRAMED_COMPDRAWERS_3_FRONT = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_3_front"),
-        META_FRAMED_COMPDRAWERS_3_SHADING = registerMetaFacingSizedOpenBlock("meta_framed_compdrawers_3_shading");
+        META_FRAMED_COMPDRAWERS_2_SIDE = registerMetaFacingSizedOpen2Block("meta_framed_compdrawers_2_side"),
+        META_FRAMED_COMPDRAWERS_2_TRIM = registerMetaFacingSizedOpen2Block("meta_framed_compdrawers_2_trim"),
+        META_FRAMED_COMPDRAWERS_2_FRONT = registerMetaFacingSizedOpen2Block("meta_framed_compdrawers_2_front"),
+        META_FRAMED_COMPDRAWERS_2_SHADING = registerMetaFacingSizedOpen2Block("meta_framed_compdrawers_2_shading"),
+        META_FRAMED_COMPDRAWERS_3_SIDE = registerMetaFacingSizedOpen3Block("meta_framed_compdrawers_3_side"),
+        META_FRAMED_COMPDRAWERS_3_TRIM = registerMetaFacingSizedOpen3Block("meta_framed_compdrawers_3_trim"),
+        META_FRAMED_COMPDRAWERS_3_FRONT = registerMetaFacingSizedOpen3Block("meta_framed_compdrawers_3_front"),
+        META_FRAMED_COMPDRAWERS_3_SHADING = registerMetaFacingSizedOpen3Block("meta_framed_compdrawers_3_shading");
 
     public static final RegistryEntry<BlockKeyButton>
         KEYBUTTON_DRAWER = BLOCKS.register("keybutton_drawer",
@@ -299,14 +299,24 @@ public final class ModBlocks
         return BLOCKS.register(name, () -> new BlockMetaFacingSized(Properties.of().air()));
     }
 
-    static RegistryEntry<BlockMeta> registerMetaFacingSizedSlottedBlock (String name) {
+    static RegistryEntry<BlockMeta> registerMetaFacingSizedSlotted23Block (String name) {
         EXCLUDE_ITEMS.add(name);
-        return BLOCKS.register(name, () -> new BlockMetaFacingSizedSlotted(Properties.of().air()));
+        return BLOCKS.register(name, () -> new BlockMetaFacingSizedSlotted.Slots23(Properties.of().air()));
     }
 
-    static RegistryEntry<BlockMeta> registerMetaFacingSizedOpenBlock (String name) {
+    static RegistryEntry<BlockMeta> registerMetaFacingSizedSlotted124Block (String name) {
         EXCLUDE_ITEMS.add(name);
-        return BLOCKS.register(name, () -> new BlockMetaFacingSizedOpen(Properties.of().air()));
+        return BLOCKS.register(name, () -> new BlockMetaFacingSizedSlotted.Slots124(Properties.of().air()));
+    }
+
+    static RegistryEntry<BlockMeta> registerMetaFacingSizedOpen2Block (String name) {
+        EXCLUDE_ITEMS.add(name);
+        return BLOCKS.register(name, () -> new BlockMetaFacingSizedOpen.Open2(Properties.of().air()));
+    }
+
+    static RegistryEntry<BlockMeta> registerMetaFacingSizedOpen3Block (String name) {
+        EXCLUDE_ITEMS.add(name);
+        return BLOCKS.register(name, () -> new BlockMetaFacingSizedOpen.Open3(Properties.of().air()));
     }
 
     static Properties getWoodenBlockProperties() {
