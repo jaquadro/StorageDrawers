@@ -113,6 +113,8 @@
     "item.storagedrawers.personal_key.desc": "Protect access from other players\nDoes not protect blocks from breaking",
     "item.storagedrawers.personal_key_cofh": "Personal Key (CoFH)",
     "item.storagedrawers.personal_key_cofh.desc": "Protect access from other players\nDoes not protect blocks from breaking",
+    "item.storagedrawers.personal_key_ftb": "Personal Key (FTB)",
+    "item.storagedrawers.personal_key_ftb.desc": "Protect access from other players\nAllows access to your team",
     "item.storagedrawers.personal_key_unlock": "Personal Key (Admin)",
     "item.storagedrawers.personal_key_unlock.desc": "Unlocks any drawer locked by another player's personal key",
     "item.storagedrawers.keyring": "Keyring",

@@ -16,6 +16,7 @@ import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeRemote;
+import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.texelsaurus.minecraft.chameleon.util.WorldUtils;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -23,6 +24,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -66,6 +68,9 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
     @Override
     @NotNull
     public InteractionResult useWithoutItem (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
+        if (!SecurityManager.canInteract(player, InteractionHand.MAIN_HAND, pos))
+            return InteractionResult.PASS;
+
         Direction blockDir = state.getValue(FACING);
         BlockEntityController blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);
         if (blockEntity == null)

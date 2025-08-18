@@ -735,11 +735,15 @@ public final class ModCommonConfig extends ConfigSpec
     public class Integration {
 
         public class Waila extends ConfigSection {
+            public final ChameleonConfig.ConfigEntry<Boolean> enable;
             public final ChameleonConfig.ConfigEntry<Boolean> stackRemainder;
             public final ChameleonConfig.ConfigEntry<Boolean> respectQuantifyKey;
 
             public Waila (String name, String... comment) {
                 super(name, comment);
+
+                enable = commonConfig.define("enable", true)
+                    .comment("Enables Jade integration if mod is present.");
 
                 stackRemainder = commonConfig.define("stackRemainder", true)
                     .comment("When true, shows quantity as NxS + R (by stack size) rather than count");
@@ -751,6 +755,7 @@ public final class ModCommonConfig extends ConfigSpec
             @Override
             protected void buildEntries () {
                 super.buildEntries();
+                enable.build();
                 stackRemainder.build();
                 respectQuantifyKey.build();
             }
@@ -762,11 +767,72 @@ public final class ModCommonConfig extends ConfigSpec
             }
         }
 
+        public class FTBChunks extends ConfigSection {
+            public final ChameleonConfig.ConfigEntry<Boolean> enable;
+
+            public FTBChunks (String name, String... comment) {
+                super(name, comment);
+
+                enable = commonConfig.define("enable", true)
+                    .comment("Enables FTB Chunks integration if mod is present.");
+            }
+
+            @Override
+            protected void buildEntries () {
+                super.buildEntries();
+                enable.build();
+            }
+
+            @Override
+            public FTBChunks build () {
+                super.build();
+                return this;
+            }
+        }
+
+        public class FTBTeams extends ConfigSection {
+            public final ChameleonConfig.ConfigEntry<Boolean> enable;
+            public final ChameleonConfig.ConfigEntry<Boolean> enableCycleRecipe;
+
+            public FTBTeams (String name, String... comment) {
+                super(name, comment);
+
+                enable = commonConfig.define("enable", true)
+                    .comment("Enables FTB Teams integration if mod is present.");
+
+                enableCycleRecipe = commonConfig.define("enableCycleRecipe", true)
+                    .comment("", "Enables recipe to obtain key from another supported personal key in crafting grid.");
+            }
+
+            @Override
+            protected void buildEntries () {
+                super.buildEntries();
+                enable.build();
+                enableCycleRecipe.build();
+            }
+
+            @Override
+            public FTBTeams build () {
+                super.build();
+                return this;
+            }
+        }
+
         public Waila waila;
+        public FTBChunks ftbChunks;
+        public FTBTeams ftbTeams;
 
         public Integration () {
             commonConfig.comment("Configuration around integration with third party mods.");
             commonConfig.pushGroup("Integration");
+
+            ftbChunks = new FTBChunks("FTBChunks",
+                "Configuration around the FTB Chunks mod.",
+                "Improves support for claimed chunks.").build();
+
+            ftbTeams = new FTBTeams("FTBTeams",
+                "Configuration around the FTB Teams mod.",
+                "Adds support for a teams personal key.").build();
 
             waila = new Waila("WAILA",
                 "Configuration around the WAILA/HWYLA/Jade family of block inspection mods.").build();

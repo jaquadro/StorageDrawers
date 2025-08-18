@@ -1,0 +1,36 @@
+package com.jaquadro.minecraft.storagedrawers.integration;
+
+public abstract class IntegrationModule
+{
+    public abstract String getModID ();
+
+    public boolean versionCheck () {
+        String pattern = versionPattern();
+        if (pattern == null)
+            return true;
+
+        return true;
+
+        /*ModContainer mod = ModList.get().getModContainerById(pattern).orElse(null);
+        if (mod != null) {
+            try {
+                VersionRange validVersions = VersionRange.createFromVersionSpec(pattern);
+                ArtifactVersion version = mod.getModInfo().getVersion();
+                return validVersions.containsVersion(version);
+            }
+            catch (InvalidVersionSpecificationException e) {
+                return false;
+            }
+        }
+
+        return false;*/
+    }
+
+    protected String versionPattern () {
+        return null;
+    }
+
+    public abstract void init () throws Throwable;
+
+    public abstract void postInit ();
+}

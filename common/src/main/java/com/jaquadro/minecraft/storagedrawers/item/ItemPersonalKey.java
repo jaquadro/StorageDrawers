@@ -2,6 +2,8 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModSecurity;
+import com.jaquadro.minecraft.storagedrawers.security.SecurityRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -26,8 +28,10 @@ public class ItemPersonalKey extends ItemKey
 
     @Override
     public boolean isEnabled () {
-        if (securityProvider != null && securityProvider.equals("cofh"))
-            return false;
+        if (securityProvider != null) {
+            if (ModSecurity.registry.getProvider(securityProvider) == null)
+                return false;
+        }
         return ModCommonConfig.INSTANCE.TOOLS.personalKey.enable.get();
     }
 }

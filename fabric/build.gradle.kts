@@ -22,7 +22,9 @@ dependencies {
 
     modImplementation("curse.maven:architectury-api-419699:5786326")
     modImplementation("curse.maven:ftb-library-fabric-438495:6807432")
-    modImplementation("curse.maven:configured-457570:5873787")
+    modImplementation("curse.maven:ftb-chunks-fabric-472657:6504892")
+    modImplementation("curse.maven:ftb-teams-fabric-438497:6119436")
+    // modImplementation("curse.maven:configured-457570:5873787")
 }
 
 loom {

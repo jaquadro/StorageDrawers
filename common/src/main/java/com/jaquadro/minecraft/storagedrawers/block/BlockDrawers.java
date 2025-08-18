@@ -260,16 +260,28 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
     public Optional<InteractionResult> useSlot (InteractContext context) {
         ItemStack item = context.player.getItemInHand(InteractionHand.MAIN_HAND);
 
-        BlockEntityDrawers blockEntity = context.getCheckedEntity(BlockEntityDrawers.class);
-        if (!SecurityManager.hasAccess(context.player, blockEntity))
-            return Optional.of(InteractionResult.PASS);
-
-        if (context.level.isClientSide())
-            return Optional.of(InteractionResult.SUCCESS);
-
         ItemStack keyItem = null;
         if (item.getItem() instanceof ItemKeyring keyring)
             keyItem = keyring.getKey();
+
+        BlockEntityDrawers blockEntity = context.getCheckedEntity(BlockEntityDrawers.class);
+        if (!SecurityManager.hasAccess(context.player, blockEntity)) {
+            // Admin key unlocking
+            if (item.getItem() instanceof ItemPersonalKey || (keyItem != null && keyItem.getItem() instanceof ItemPersonalKey)) {
+                if (keyItem != null)
+                    item = keyItem;
+
+                ItemPersonalKey pk = (ItemPersonalKey) item.getItem();
+                if (Objects.equals(pk.getSecurityProviderKey(), "unlock")) {
+                    blockEntity.setOwner(null);
+                    blockEntity.setSecurityProvider(null);
+                }
+            }
+            return Optional.of(InteractionResult.SUCCESS);
+        }
+
+        if (context.level.isClientSide())
+            return Optional.of(InteractionResult.SUCCESS);
 
         // Drawer pulling
         if (ModCommonConfig.INSTANCE.DRAWERS.detached.enable.get() && context.slot >= 0) {
@@ -427,6 +439,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         if (!SecurityManager.hasAccess(context.player, blockEntityDrawers))
             return InteractionResult.PASS;
 
+        // This causes a double-withdrawl if the selected hotbar slot is empty
         if (context.level.isClientSide())
             return InteractionResult.SUCCESS;
 

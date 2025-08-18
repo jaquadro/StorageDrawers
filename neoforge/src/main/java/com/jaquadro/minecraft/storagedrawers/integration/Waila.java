@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ModClientConfig;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +18,8 @@ public class Waila implements IWailaPlugin
 {
     @Override
     public void registerClient (IWailaClientRegistration registration) {
-        if (!ModClientConfig.INSTANCE.INTEGRATION.enableWaila.get())
+        if (!ModCommonConfig.INSTANCE.INTEGRATION.waila.enable.get()
+            || !ModClientConfig.INSTANCE.INTEGRATION.enableWaila.get())
             return;
 
         registration.addConfig(StorageDrawers.rl("display.content"), true);

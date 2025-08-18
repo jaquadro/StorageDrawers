@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.capabilities.PlatformCapabilities;
 import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
 import com.jaquadro.minecraft.storagedrawers.core.ModCreativeTabs;
+import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
 import com.texelsaurus.minecraft.chameleon.api.ChameleonInit;
 import com.texelsaurus.minecraft.chameleon.service.ChameleonConfig;
 import net.fabricmc.api.ModInitializer;
@@ -42,5 +43,9 @@ public class StorageDrawers implements ModInitializer
         StorageBlacklist.INSTANCE.initialize();
         MaterialBlacklist.INSTANCE.initialize();
         ConversionRegistry.INSTANCE.initialize();
+
+        LocalIntegrationRegistry.initialize();
+        LocalIntegrationRegistry.instance().init();
+        LocalIntegrationRegistry.instance().postInit();
     }
 }

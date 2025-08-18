@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.config.PlayerConfig;
+import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,6 +34,9 @@ public abstract class FaceSlotBlock extends HorizontalDirectionalBlock implement
     }
 
     public InteractionResult rightAction (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
+        if (!SecurityManager.canInteract(player, InteractionHand.MAIN_HAND, pos))
+            return InteractionResult.PASS;
+
         int slot = getFaceSlot(state, hit);
         InteractContext context = new InteractContext(state, level, pos, player, hit, slot);
 
@@ -58,6 +62,9 @@ public abstract class FaceSlotBlock extends HorizontalDirectionalBlock implement
     }
 
     public InteractionResult leftAction (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
+        if (!SecurityManager.canInteract(player, InteractionHand.MAIN_HAND, pos))
+            return InteractionResult.PASS;
+
         int slot = getFaceSlot(state, hit);
         InteractContext context = new InteractContext(state, level, pos, player, hit, slot);
 

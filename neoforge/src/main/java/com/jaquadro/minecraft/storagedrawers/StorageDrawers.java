@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.PlatformCapabilities;
 import com.jaquadro.minecraft.storagedrawers.config.*;
 import com.jaquadro.minecraft.storagedrawers.core.*;
+import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistry;
 import com.jaquadro.minecraft.storagedrawers.network.PlayerBoolConfigMessage;
 import com.texelsaurus.minecraft.chameleon.ChameleonServices;
 import com.texelsaurus.minecraft.chameleon.registry.NeoforgeRegistryContext;
@@ -78,6 +79,10 @@ public class StorageDrawers
         StorageBlacklist.INSTANCE.initialize();
         MaterialBlacklist.INSTANCE.initialize();
         ConversionRegistry.INSTANCE.initialize();
+
+        LocalIntegrationRegistry.initialize();
+        LocalIntegrationRegistry.instance().init();
+        LocalIntegrationRegistry.instance().postInit();
 
         //oreDictRegistry = new OreDictRegistry();
         //renderRegistry = new RenderRegistry();
