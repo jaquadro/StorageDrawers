@@ -1,10 +1,2 @@
-- Fixed meta blockstate loading errors (though they were harmless)
-- Fixed conversion rules not loading
-- Fixed incorrect default ore types in conversion config
-- Added option to disable logging startup rules, deny lists, etc.
-- Fixed swapping upgrade with stack count > 1 voiding extra items
-- Fixed admin key not locking if you don't own the drawer
-- Improved consistency with claimed/protected chunks (e.g. via FTB Chunks)
-- Added FTB variant of Personal Key to support team access
-- NEOFROGE/FABRIC: Added FTB Chunks support
-- NEOFORGE/FABRIC: Added FTB Teams support
+- Fixed remote upgrades showing bound description when not bound
+- Fixed admin key description indicating it's disabled

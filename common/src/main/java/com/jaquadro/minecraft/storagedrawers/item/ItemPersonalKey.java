@@ -28,7 +28,7 @@ public class ItemPersonalKey extends ItemKey
 
     @Override
     public boolean isEnabled () {
-        if (securityProvider != null) {
+        if (securityProvider != null && !securityProvider.equals("unlock")) {
             if (ModSecurity.registry.getProvider(securityProvider) == null)
                 return false;
         }

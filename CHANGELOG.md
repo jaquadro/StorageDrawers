@@ -1,4 +1,8 @@
-[13.9.4]
+[13.10.1]
+- Fixed remote upgrades showing bound description when not bound
+- Fixed admin key description indicating it's disabled
+
+[13.10.0]
 - Fixed meta blockstate loading errors (though they were harmless)
 - Fixed conversion rules not loading
 - Fixed incorrect default ore types in conversion config

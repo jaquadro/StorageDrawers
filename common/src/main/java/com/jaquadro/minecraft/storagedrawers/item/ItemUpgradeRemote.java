@@ -54,9 +54,6 @@ public class ItemUpgradeRemote extends ItemUpgrade
         if (pos != null)
             tooltip.add(Component.translatable(getDescriptionId() + ".bound", pos.getX(), pos.getY(), pos.getZ())
                 .withStyle(ChatFormatting.YELLOW));
-        else
-            tooltip.add(Component.translatable(getDescriptionId() + ".bound")
-                .withStyle(ChatFormatting.RED));
     }
 
     public static BlockPos getBoundPosition (ItemStack itemStack) {
