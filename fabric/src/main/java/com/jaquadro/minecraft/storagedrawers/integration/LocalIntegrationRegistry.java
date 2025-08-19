@@ -1,11 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.ModConstants;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
-import com.jaquadro.minecraft.storagedrawers.integration.cofh.CoFHModule;
 import com.jaquadro.minecraft.storagedrawers.integration.ftb.FTBChunksModule;
 import com.jaquadro.minecraft.storagedrawers.integration.ftb.FTBTeamsModule;
-import net.minecraftforge.fml.ModList;
+import net.fabricmc.loader.api.FabricLoader;
 
 public class LocalIntegrationRegistry
 {
@@ -13,18 +12,16 @@ public class LocalIntegrationRegistry
 
     public static void initialize () {
         IntegrationRegistry reg = instance();
-        if (ModList.get().isLoaded("cofh_core") && ModCommonConfig.INSTANCE.INTEGRATION.cofhCore.enable.get())
-            reg.add(new CoFHModule());
-        if (ModList.get().isLoaded("ftbteams") && ModCommonConfig.INSTANCE.INTEGRATION.ftbTeams.enable.get())
+        if (FabricLoader.getInstance().isModLoaded("ftbteams") && ModCommonConfig.INSTANCE.INTEGRATION.ftbTeams.enable.get())
             reg.add(new FTBTeamsModule());
-        if (ModList.get().isLoaded("ftbchunks") && ModCommonConfig.INSTANCE.INTEGRATION.ftbChunks.enable.get())
+        if (FabricLoader.getInstance().isModLoaded("ftbchunks") && ModCommonConfig.INSTANCE.INTEGRATION.ftbChunks.enable.get())
             reg.add(new FTBChunksModule());
     }
 
     private final IntegrationRegistry registry;
 
     private LocalIntegrationRegistry () {
-        registry = new IntegrationRegistry(StorageDrawers.MOD_ID);
+        registry = new IntegrationRegistry(ModConstants.MOD_ID);
     }
 
     public static boolean isModLoaded (String modid) {

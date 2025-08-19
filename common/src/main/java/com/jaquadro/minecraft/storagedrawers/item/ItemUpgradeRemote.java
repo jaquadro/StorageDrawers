@@ -55,9 +55,6 @@ public class ItemUpgradeRemote extends ItemUpgrade
         if (pos != null)
             list.add(Component.translatable(getDescriptionId() + ".bound", pos.getX(), pos.getY(), pos.getZ())
                 .withStyle(ChatFormatting.YELLOW));
-        else
-            list.add(Component.translatable(getDescriptionId() + ".bound")
-                .withStyle(ChatFormatting.RED));
     }
 
     public static BlockPos getBoundPosition (ItemStack itemStack) {

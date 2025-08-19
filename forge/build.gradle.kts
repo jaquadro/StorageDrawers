@@ -77,6 +77,11 @@ dependencies {
     //implementation(fg.deobf("curse.maven:fluid-drawers-legacy-597669:5340725"))
     implementation(fg.deobf("curse.maven:storage-drawers-extras-254879:6861321"))
 
+    implementation(fg.deobf("curse.maven:architectury-api-419699:5137938"))
+    implementation(fg.deobf("curse.maven:ftb-library-forge-404465:6807424"))
+    implementation(fg.deobf("curse.maven:ftb-chunks-forge-314906:6431735"))
+    implementation(fg.deobf("curse.maven:ftb-teams-forge-404468:6130786"))
+
     // JEI
     //runtimeOnly("mezz.jei:jei-1.21-forge:19.8.2.99")
 }

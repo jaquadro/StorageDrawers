@@ -16,6 +16,7 @@ import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeRemote;
+import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -60,6 +61,9 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
     @Override
     @NotNull
     public InteractionResult use (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        if (!SecurityManager.canInteract(player, InteractionHand.MAIN_HAND, pos))
+            return InteractionResult.PASS;
+
         Direction blockDir = state.getValue(FACING);
         BlockEntityController blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);
         if (blockEntity == null)

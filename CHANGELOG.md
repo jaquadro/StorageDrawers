@@ -1,9 +1,14 @@
-[12.12.1]
+[12.13.0]
 - Fixed meta blockstate loading errors (though they were harmless)
 - Fixed conversion rules not loading
 - Added option to disable logging startup rules, deny lists, etc.
 - Fixed swapping upgrade with stack count > 1 voiding extra items
+- Fixed admin key not locking if you don't own the drawer
 - Improved consistency with claimed/protected chunks (e.g. via FTB Chunks)
+- Added FTB variant of Personal Key to support team access
+- Fixed remote upgrades showing bound description when not bound
+- Added FTB Chunks support
+- Added FTB Teams support
 
 [12.12.0]
 - New config file (storagedrawers-common-v2.toml)
