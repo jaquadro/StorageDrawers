@@ -1,0 +1,14 @@
+{
+    "name": "Void Upgrade",
+    "icon": "storagedrawers:void_upgrade",
+    "category": "storagedrawers:upgrades",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "The void upgrade allows a drawer to continue accepting items beyond its capacity, deleting the excess."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:void_upgrade"
+        }
+    ]
+}

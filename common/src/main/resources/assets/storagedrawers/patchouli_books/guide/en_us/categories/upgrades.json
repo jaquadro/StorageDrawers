@@ -1,0 +1,5 @@
+{
+    "name": "Upgrades",
+    "description": "Upgrades that can be installed in drawers",
+    "icon": "storagedrawers:upgrade_template"
+}

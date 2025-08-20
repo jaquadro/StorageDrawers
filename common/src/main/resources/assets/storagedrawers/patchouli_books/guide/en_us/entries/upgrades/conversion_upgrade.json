@@ -1,0 +1,15 @@
+{
+    "name": "Conversion Upgrade",
+    "icon": "storagedrawers:conversion_upgrade",
+    "category": "storagedrawers:upgrades",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "The conversion upgrade allows a drawer to accept multiple variants of 'equivalent' items, converting them all to the type stored in the drawer.$(p)This is useful for solving the 'metals' problem of nuggets, ingots, etc., and some of these rules are part of the default configuration."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:conversion_upgrade",
+            "text": "Any other item equivalence rules must be set in the mod's configuration file."
+        }
+    ]
+}

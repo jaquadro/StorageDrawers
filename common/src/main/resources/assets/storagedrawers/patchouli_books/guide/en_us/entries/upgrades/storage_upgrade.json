@@ -1,0 +1,39 @@
+{
+    "name": "Storage Upgrades",
+    "icon": "storagedrawers:emerald_storage_upgrade",
+    "category": "storagedrawers:upgrades",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "Storage upgrades increase the capacity of drawers, with higher-tier upgrades adding more space.$(br2)If multiple storage upgrades are placed, their storage multipliers are added together."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:obsidian_storage_upgrade",
+            "text": "Obsidian upgrades increase storage by 2x the base amount.$(br2)Obsidian upgrades also give drawers blast resistance."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:copper_storage_upgrade",
+            "text": "Copper upgrades increase storage by 4x the base amount."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:iron_storage_upgrade",
+            "text": "Iron upgrades increase storage by 8x the base amount."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:gold_storage_upgrade",
+            "text": "Gold upgrades increase storage by 16x the base amount."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:emerald_storage_upgrade",
+            "text": "Emerald upgrades increase storage by 64x the base amount."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:diamond_storage_upgrade",
+            "text": "Diamond upgrades increase storage by 256x the base amount."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:netherite_storage_upgrade",
+            "text": "Netherite upgrades increase storage by 2048x the base amount."
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "name": "Concealment Key",
+    "icon": "storagedrawers:shroud_key",
+    "category": "storagedrawers:tools",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "The concealment key is used to toggle the display of item labels on the front of drawers.$(p)This is mainly intended as an optimization if too many rendered labels are affecting performance."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:concealment_key"
+        }
+    ]
+}

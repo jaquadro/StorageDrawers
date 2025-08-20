@@ -1,0 +1,23 @@
+{
+    "name": "Redstone Upgrades",
+    "icon": "storagedrawers:redstone_upgrade",
+    "category": "storagedrawers:upgrades",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "Redstone upgrades allow drawer blocks to emit a redstone signal based on how full they are.$(br2)They come in 3 flavors, which is relevant to any blocks with more than one slot."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:redstone_upgrade",
+            "text": "The normal redstone upgrade reports the average fill level across all slots."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:min_redstone_upgrade",
+            "text": "The min redstone upgrade reports the minimum fill level across all slots."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:max_redstone_upgrade",
+            "text": "The max redstone upgrade reports the maximum fill level across all slots."
+        }
+    ]
+}

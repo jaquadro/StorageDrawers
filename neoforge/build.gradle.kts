@@ -43,6 +43,8 @@ dependencies {
     // implementation("curse.maven:configured-457570:5873783")
     // implementation("curse.maven:carry-on-274259:5649344")
     // implementation("curse.maven:epic-fight-mod-405076:6816063")
+
+    runtimeOnly("curse.maven:patchouli-306770:6842247")
 }
 
 tasks.create<TaskPublishCurseForge>("publishCurseForge") {

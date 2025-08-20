@@ -1,0 +1,8 @@
+{
+    "name": "item.storagedrawers.guide",
+    "landing_text": "storagedrawers.landing",
+    "version": 1,
+    "creative_tab": "minecraft:tools_and_utilities",
+    "use_resource_pack": true,
+    "show_progress": false
+}

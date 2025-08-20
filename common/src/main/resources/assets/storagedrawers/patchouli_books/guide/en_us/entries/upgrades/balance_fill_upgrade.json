@@ -1,0 +1,29 @@
+{
+    "name": "Balance Fill Upgrade",
+    "icon": "storagedrawers:balance_fill_upgrade",
+    "category": "storagedrawers:upgrades",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "When a drawer has multiple slots with the same kind of item, a balance fill upgrade will cause the contents of those slots to be balanced every time an item is added or removed.$(p)These upgrades form part of an advanced organization technique when combined with drawer splitting or detached drawers."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:balance_fill_upgrade",
+            "text": "See the next page for additional detail on how this upgrade behaves on a controller network."
+        }, {
+            "type": "patchouli:text",
+            "text": "If multiple drawers on the same controller network have a balance fill upgrade installed and one or more slots with the same item, then adding or removing items through the controller (or one of its IO blocks) will rebalance across all the member blocks.$(p)Interacting with a drawer directly will not affect other blocks on the network."
+        }, {
+            "type": "patchouli:image",
+            "images": ["storagedrawers:textures/gui/entries/balance_fill.png"],
+            "border": true,
+            "text": "Inserting stone into the controller would balance all 8 slots."
+        }, {
+            "type": "patchouli:text",
+            "text": "Networked balanced drawers may be useful in specific automation setups.$(p)For example: keeping two distant drawers equally stocked from a central feed inserting through the controller."
+        }, {
+            "type": "patchouli:text",
+            "text": "Within a single drawer block, the upgrade can provide a quick way to empty a half or quarter of a large amount of item.$(p)Try either splitting the drawer or assigning a same-item to another slot, and then detaching the drawer after triggering the balance.$(p)The detached drawer can be disposed of, moved to another block, or given away."
+        }
+    ]
+}

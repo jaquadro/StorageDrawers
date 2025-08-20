@@ -1,0 +1,14 @@
+{
+    "name": "Fill Level Upgrade",
+    "icon": "storagedrawers:fill_level_upgrade",
+    "category": "storagedrawers:upgrades",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "The fill level upgrade adds fill bars on each drawer, showing visually how full the drawer is."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:fill_level_upgrade"
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "name": "Quantify Key",
+    "icon": "storagedrawers:quantify_key",
+    "category": "storagedrawers:tools",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "The quantify key is used to toggle an item count display on the front of drawers."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:quantify_key"
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "name": "Drawer Key",
+    "icon": "storagedrawers:drawer_key",
+    "category": "storagedrawers:tools",
+    "pages": [
+        {
+            "type": "patchouli:spotlight",
+            "item": "storagedrawers:drawer_key",
+            "text": "The drawer key is used to lock a drawer to the items it already contains.$(p)When a locked drawer slot runs out of items, it will not lose its item association.$(p)Empty slots in locked drawers will ignore sided input, only accepting manually placed items."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:drawer_key"
+        }
+    ]
+}

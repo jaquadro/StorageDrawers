@@ -144,5 +144,9 @@
     "tooltip.storagedrawers.waila.locked": "Locked",
     "tooltip.storagedrawers.waila.void": "Void",
     "tooltip.storagedrawers.waila.protected": "Protected",
-    "tooltip.storagedrawers.waila.balanced": "Balanced"
+    "tooltip.storagedrawers.waila.balanced": "Balanced",
+
+    "item.storagedrawers.guide": "Storage Guide",
+    "storagedrawers.landing": "Your guide to better organization with Storage Drawers."
+
 }

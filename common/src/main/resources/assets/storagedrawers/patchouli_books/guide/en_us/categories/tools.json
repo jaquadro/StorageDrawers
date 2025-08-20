@@ -1,0 +1,5 @@
+{
+    "name": "Keys and Tools",
+    "description": "Keys are reusable tools for toggling different drawer properties that are not handled by the upgrade system.$(p)Keys affect states like locking, display, ownership, and priority.$(p)Most keys can also be used on controllers to act on all drawers on a network.",
+    "icon": "storagedrawers:drawer_key"
+}

@@ -1,0 +1,14 @@
+{
+    "name": "One Stack Upgrade",
+    "icon": "storagedrawers:one_stack_upgrade",
+    "category": "storagedrawers:upgrades",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "The one stack 'upgrade' is actually a storage downgrade.  It reduces a drawer's base storage value to a single stack.$(p)If other storage upgrades are added, they will work off of the single stack base value."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:one_stack_upgrade"
+        }
+    ]
+}
