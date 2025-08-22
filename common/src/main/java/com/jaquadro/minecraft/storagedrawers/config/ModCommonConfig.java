@@ -765,8 +765,31 @@ public final class ModCommonConfig extends ConfigSpec
             }
         }
 
+        public class QuantifyKey extends Key {
+            public final ChameleonConfig.ConfigEntry<Boolean> showDefault;
+
+            public QuantifyKey (String name, String... comment) {
+                super(name, comment);
+
+                showDefault = commonConfig.define("showDefault", false)
+                    .comment("", "Show labels by default on newly placed drawers.");
+            }
+
+            @Override
+            protected void buildEntries () {
+                super.buildEntries();
+                showDefault.build();
+            }
+
+            @Override
+            public QuantifyKey build () {
+                super.build();
+                return this;
+            }
+        }
+
         public Key drawerKey;
-        public Key quantifyKey;
+        public QuantifyKey quantifyKey;
         public Key concealmentKey;
         public Key personalKey;
         public Key priorityKey;
@@ -778,7 +801,7 @@ public final class ModCommonConfig extends ConfigSpec
             drawerKey = new Key("DrawerKey",
                 "Drawer keys are used to lock drawers to the items they already hold.").build();
 
-            quantifyKey = new Key("QuantifyKey",
+            quantifyKey = new QuantifyKey("QuantifyKey",
                 "Quantify keys are used to show or hide the count of items on the face of drawers.").build();
 
             concealmentKey = new Key("ConcealmentKey",

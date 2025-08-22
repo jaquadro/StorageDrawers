@@ -1,9 +1,12 @@
 [13.10.1]
+- Added hopper upgrade
+- Added magnet upgrades
+
+[13.10.1]
 - Fixed remote upgrades showing bound description when not bound
 - Fixed admin key description indicating it's disabled
 - Added bamboo as a default compacting rule
-- Added hopper upgrade
-- Added magnet upgrades
+- Added config option to show quantify labels by default
 
 [13.10.0]
 - Fixed meta blockstate loading errors (though they were harmless)

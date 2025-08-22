@@ -228,9 +228,9 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         if (key instanceof ItemKey itemKey)
             keyEnabled = itemKey.isEnabled();
 
-        if (key != null && keyEnabled) {
-            IDrawerAttributes _attrs = blockEntity.getCapability(Capabilities.DRAWER_ATTRIBUTES);
-            if (_attrs instanceof IDrawerAttributesModifiable attrs) {
+        IDrawerAttributes _attrs = blockEntity.getCapability(Capabilities.DRAWER_ATTRIBUTES);
+        if (_attrs instanceof IDrawerAttributesModifiable attrs) {
+            if (key != null && keyEnabled) {
                 if (key == ModItems.DRAWER_KEY.get()) {
                     attrs.setItemLocked(LockAttribute.LOCK_EMPTY, true);
                     attrs.setItemLocked(LockAttribute.LOCK_POPULATED, true);
@@ -239,6 +239,9 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
                 else if (key == ModItems.SHROUD_KEY.get())
                     attrs.setIsConcealed(true);
             }
+
+            if (ModCommonConfig.INSTANCE.TOOLS.quantifyKey.showDefault.get())
+                attrs.setIsShowingQuantity(true);
         }
     }
 
