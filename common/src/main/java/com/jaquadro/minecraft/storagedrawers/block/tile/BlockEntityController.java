@@ -259,8 +259,10 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             if (node instanceof BlockEntity blockEntity) {
                 BlockPos pos = blockEntity.getBlockPos();
                 try {
-                    if (getLevel().isLoaded(pos))
+                    if (getLevel().isLoaded(pos)) {
+                        node.scheduleValidation();
                         getLevel().scheduleTick(pos, blockEntity.getBlockState().getBlock(), 1);
+                    }
                 } catch (Exception e) {
                     // Ignore
                 }

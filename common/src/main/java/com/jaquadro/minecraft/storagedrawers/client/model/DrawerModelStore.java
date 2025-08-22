@@ -35,6 +35,7 @@ public class DrawerModelStore
         PRIORITY_P2("priority_p2"),
         PRIORITY_N1("priority_n1"),
         PRIORITY_N2("priority_n2"),
+        HOPPER("hopper"),
         MISSING_1("missing_1"),
         MISSING_2("missing_2"),
         MISSING_3("missing_3"),
@@ -188,6 +189,7 @@ public class DrawerModelStore
             addOverlay(getVariant(DynamicPart.LOCK_CLAIM, dir, half), new ModelResourceLocation(ModConstants.loc("meta_locked_claimed"), getVariant(dir, half)));
             addOverlay(getVariant(DynamicPart.VOID, dir, half), new ModelResourceLocation(ModConstants.loc("meta_void"), getVariant(dir, half)));
             addOverlay(getVariant(DynamicPart.SHROUD, dir, half), new ModelResourceLocation(ModConstants.loc("meta_shroud"), getVariant(dir, half)));
+            addOverlay(getVariant(DynamicPart.HOPPER), new ModelResourceLocation(ModConstants.loc("meta_hopper"), getVariant()));
 
             addOverlay(getVariant(DynamicPart.INDICATOR, dir, half, 1), new ModelResourceLocation(ModConstants.loc("meta_indicator"), getVariant(dir, half, 1)));
             addOverlay(getVariant(DynamicPart.INDICATOR, dir, half, 2), new ModelResourceLocation(ModConstants.loc("meta_indicator"), getVariant(dir, half, 2)));

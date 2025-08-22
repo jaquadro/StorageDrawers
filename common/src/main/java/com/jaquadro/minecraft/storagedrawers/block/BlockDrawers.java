@@ -11,6 +11,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerD
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
 import com.jaquadro.minecraft.storagedrawers.components.item.DetachedDrawerContents;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.ModSecurity;
@@ -31,6 +32,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -42,6 +44,10 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -68,6 +74,11 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
     private static final VoxelShape AABB_SOUTH_HALF = Block.box(0, 0, 0, 16, 16, 8);
     private static final VoxelShape AABB_WEST_HALF = Block.box(8, 0, 0, 16, 16, 16);
     private static final VoxelShape AABB_EAST_HALF = Block.box(0, 0, 0, 8, 16, 16);
+    private static final VoxelShape HOPPER_INSIDE = Block.box(2, 12, 2, 14, 16, 14);
+    private static final VoxelShape AABB_NORTH_HOPPER = Shapes.join(AABB_NORTH_FULL, HOPPER_INSIDE, BooleanOp.ONLY_FIRST);
+    private static final VoxelShape AABB_SOUTH_HOPPER = Shapes.join(AABB_SOUTH_FULL, HOPPER_INSIDE, BooleanOp.ONLY_FIRST);
+    private static final VoxelShape AABB_WEST_HOPPER = Shapes.join(AABB_WEST_FULL, HOPPER_INSIDE, BooleanOp.ONLY_FIRST);
+    private static final VoxelShape AABB_EAST_HOPPER = Shapes.join(AABB_EAST_FULL, HOPPER_INSIDE, BooleanOp.ONLY_FIRST);
 
     private static final Map<UUID, Long> lastLeftClick = new HashMap<>();
 
@@ -157,6 +168,16 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
     @NotNull
     public VoxelShape getShape (@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         Direction direction = state.getValue(FACING);
+        BlockEntityDrawers blockEntity = WorldUtils.getBlockEntity(worldIn, pos, BlockEntityDrawers.class);
+        if (blockEntity != null && blockEntity.getDrawerAttributes().isHopper()) {
+            return switch (direction) {
+                case EAST -> AABB_EAST_HOPPER;
+                case WEST -> AABB_WEST_HOPPER;
+                case SOUTH -> AABB_SOUTH_HOPPER;
+                default -> AABB_NORTH_HOPPER;
+            };
+        }
+
         switch (direction) {
             case EAST:
                 return halfDepth ? AABB_EAST_HALF : AABB_EAST_FULL;
@@ -661,6 +682,22 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
     }
 
     @Override
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        BlockEntityDrawers blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityDrawers.class);
+        if (blockEntity != null && blockEntity.getDrawerAttributes().isHopper())
+            blockEntity.entityInside(level, pos, state, entity);
+    }
+
+    @Override
+    protected VoxelShape getInteractionShape (BlockState state, BlockGetter blockGetter, BlockPos pos) {
+        BlockEntityDrawers blockEntity = WorldUtils.getBlockEntity(blockGetter, pos, BlockEntityDrawers.class);
+        if (blockEntity != null && blockEntity.getDrawerAttributes().isHopper())
+            return HOPPER_INSIDE;
+
+        return super.getInteractionShape(state, blockGetter, pos);
+    }
+
+    @Override
     protected void tick (@NotNull BlockState state, @NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull RandomSource rand) {
         if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
             ModServices.log.info("BlockDrawers [{}] tick", pos);
@@ -672,6 +709,14 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         if (blockEntity == null)
             return;
 
+        // Tick hopper
+        IDrawerAttributes attribs = blockEntity.getDrawerAttributes();
+        if (attribs.isHopper() || attribs.isMagnet()) {
+            int nextTick = blockEntity.pushItemsTick(world, pos, state) ? 5 : rand.nextInt(20, 30);
+            world.scheduleTick(pos, state.getBlock(), nextTick);
+        }
+
+        // Only validates if validation is scheduled on entity
         blockEntity.validateBoundController();
     }
 }

@@ -96,6 +96,8 @@ public class DrawerModelDecorator extends ModelDecorator<DrawerModelContext>
                 emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.INDICATOR, dir, half, count), RenderType.cutoutMipped());
             }
         }
+        if (attr.isHopper())
+            emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.HOPPER), RenderType.cutoutMipped());
         if (block instanceof BlockStandardDrawers) {
             IDrawerGroup group = context.group();
             if (group != null) {

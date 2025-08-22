@@ -64,4 +64,12 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
     default boolean setIsBalancedFill (boolean state) {
         return false;
     }
+
+    default boolean setIsHopper (boolean state) {
+        return false;
+    }
+
+    default boolean setIsMagnet (boolean state) {
+        return false;
+    }
 }

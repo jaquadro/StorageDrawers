@@ -158,6 +158,7 @@ public final class ModBlocks
         META_PRIORITY_P2 = registerMetaFacingSizedBlock("meta_priority_p2"),
         META_PRIORITY_N1 = registerMetaFacingSizedBlock("meta_priority_n1"),
         META_PRIORITY_N2 = registerMetaFacingSizedBlock("meta_priority_n2"),
+        META_HOPPER = registerMetaBlock("meta_hopper"),
         META_MISSING_1_1 = registerMetaFacingSizedBlock("meta_missing_slot_1_1"),
         META_MISSING_2_1 = registerMetaFacingSizedBlock("meta_missing_slot_2_1"),
         META_MISSING_2_2 = registerMetaFacingSizedBlock("meta_missing_slot_2_2"),

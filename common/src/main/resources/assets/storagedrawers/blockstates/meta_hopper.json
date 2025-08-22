@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "storagedrawers:block/full_drawers_hopper" }
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "top": "storagedrawers:block/indicator/hopper_top"
+    },
+    "elements": [ {
+        "from": [ 1, 15, 1 ],
+        "to": [ 15, 16.01, 15 ],
+        "faces": {
+            "up": { "uv": [ 0, 0, 16, 16 ], "texture": "#top", "cullface": "top" }
+        }
+    } ]
+}

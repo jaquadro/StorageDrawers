@@ -575,6 +575,61 @@ public final class ModCommonConfig extends ConfigSpec
             }
         }
 
+        public class MagnetUpgrade extends Upgrade
+        {
+            public final ChameleonConfig.ConfigEntry<Boolean> enableLevel2;
+            public final ChameleonConfig.ConfigEntry<Boolean> enableLevel3;
+            public final ChameleonConfig.ConfigEntry<Boolean> additiveRange;
+            public final ChameleonConfig.ConfigEntry<List<? extends Integer>> level1Range ;
+            public final ChameleonConfig.ConfigEntry<List<? extends Integer>> level2Range ;
+            public final ChameleonConfig.ConfigEntry<List<? extends Integer>> level3Range ;
+            public final ChameleonConfig.ConfigEntry<List<? extends Integer>> maxRange ;
+
+            public MagnetUpgrade (String upgradeName, String... comment) {
+                super(upgradeName, comment);
+
+                enableLevel2 = commonConfig.define("enableLevel2", true)
+                    .comment("", "Enables a more powerful tier-2 magnet upgrade.");
+
+                enableLevel3 = commonConfig.define("enableLevel3", true)
+                    .comment("", "Enables a more powerful tier-3 magnet upgrade.");
+
+                additiveRange = commonConfig.define("additiveRange", true)
+                    .comment("", "When multiple magnet upgrades are used, their ranges are added together.");
+
+                level1Range = commonConfig.defineList("level1Range", Arrays.asList(1, 1, 0), null)
+                    .comment("", "Range is blocks out from drawer as: [horizontal, up, down]");
+
+                level2Range = commonConfig.defineList("level2Range", Arrays.asList(4, 2, 0), null)
+                    .comment("", "Range is blocks out from drawer as: [horizontal, up, down]");
+
+                level3Range = commonConfig.defineList("level3Range", Arrays.asList(8, 3, 0), null)
+                    .comment("", "Range is blocks out from drawer as: [horizontal, up, down]");
+
+                maxRange = commonConfig.defineList("maxRange", Arrays.asList(24, 8, 0), null)
+                    .comment("", "Range is blocks out from drawer as: [horizontal, up, down]",
+                        "If ranges from multiple upgrades are added, they are not allowed to exceed these values.");
+            }
+
+            @Override
+            protected void buildEntries () {
+                super.buildEntries();
+                enableLevel2.build();
+                enableLevel3.build();
+                additiveRange.build();
+                level1Range.build();
+                level2Range.build();
+                level3Range.build();
+                maxRange.build();
+            }
+
+            @Override
+            public MagnetUpgrade build () {
+                super.build();
+                return this;
+            }
+        }
+
         public final StorageTierUpgrade obsidianStorage;
         public final StorageTierUpgrade copperStorage;
         public final StorageTierUpgrade ironStorage;
@@ -589,6 +644,8 @@ public final class ModCommonConfig extends ConfigSpec
         public final Upgrade balanceUpgrade;
         public final Upgrade fillLevelUpgrade;
         public final IlluminationUpgrade illuminationUpgrade;
+        public final Upgrade hopperUpgrade;
+        public final MagnetUpgrade magnetUpgrade;
         public final Upgrade oneStackUpgrade;
         public final Upgrade portabilityUpgrade;
         public final RedstoneUpgrade redstoneUpgrade;
@@ -631,6 +688,12 @@ public final class ModCommonConfig extends ConfigSpec
 
             illuminationUpgrade = new IlluminationUpgrade("Illumination",
                 "Renders drawer labels brighter than surrounding environment would allow.").build();
+
+            hopperUpgrade = new Upgrade("Hopper",
+                "Collects matching items through its top like a vanilla hopper.").build();
+
+            magnetUpgrade = new MagnetUpgrade("Magnet",
+                "Collects nearby matching items by teleporting them instantly to the drawer").build();
 
             oneStackUpgrade = new Upgrade("OneStack",
                 "Restricts capacity of drawer to one stack.").build();

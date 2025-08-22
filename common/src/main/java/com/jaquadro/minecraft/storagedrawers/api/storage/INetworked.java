@@ -18,4 +18,6 @@ public interface INetworked
     }
 
     default void unbindControlGroup () { }
+
+    default void scheduleValidation () { }
 }
