@@ -1,13 +1,5 @@
-- Fixed meta blockstate loading errors (though they were harmless)
-- Fixed conversion rules not loading
-- Added option to disable logging startup rules, deny lists, etc.
-- Fixed swapping upgrade with stack count > 1 voiding extra items
-- Fixed admin key not locking if you don't own the drawer
-- Improved consistency with claimed/protected chunks (e.g. via FTB Chunks)
-- Added FTB variant of Personal Key to support team access
-- Fixed remote upgrades showing bound description when not bound
-- Added FTB Chunks support
-- Added FTB Teams support
+- Added bamboo as a default compacting rule
+- Added config option to show quantify labels by default
 
 WARNING: This release REPLACES the existing storage drawers config file.
 The original file will be left unchanged, but it will not be read from.

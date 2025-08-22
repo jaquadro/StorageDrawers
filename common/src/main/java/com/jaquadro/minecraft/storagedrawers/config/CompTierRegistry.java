@@ -48,6 +48,7 @@ public class CompTierRegistry
             register(new ItemStack(Blocks.NETHER_WART_BLOCK), new ItemStack(Items.NETHER_WART), 9);
             register(new ItemStack(Blocks.QUARTZ_BLOCK), new ItemStack(Items.QUARTZ), 4);
             register(new ItemStack(Blocks.MELON), new ItemStack(Items.MELON_SLICE), 9);
+            register(new ItemStack(Blocks.BAMBOO_BLOCK), new ItemStack(Items.BAMBOO), 9);
 
             // if (!ModList.get().isLoaded("extrautilities")) {
             //     register(new ItemStack(Blocks.SANDSTONE), new ItemStack(Blocks.SAND), 4);

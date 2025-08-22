@@ -1,3 +1,7 @@
+[12.13.1]
+- Added bamboo as a default compacting rule
+- Added config option to show quantify labels by default
+
 [12.13.0]
 - Fixed meta blockstate loading errors (though they were harmless)
 - Fixed conversion rules not loading
