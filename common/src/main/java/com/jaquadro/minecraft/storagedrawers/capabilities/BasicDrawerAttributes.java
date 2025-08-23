@@ -18,6 +18,7 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable
     private boolean hasBalancedFill;
     private boolean isHopper;
     private boolean isMagnet;
+    private boolean isSuspended;
     private int priority;
 
     @Override
@@ -201,6 +202,21 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable
     public boolean setIsMagnet (boolean state) {
         if (isMagnet != state) {
             isMagnet = state;
+            onAttributeChanged();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean isSuspended () {
+        return isSuspended;
+    }
+
+    @Override
+    public boolean setIsSuspended (boolean state) {
+        if (isSuspended != state) {
+            isSuspended = state;
             onAttributeChanged();
         }
 

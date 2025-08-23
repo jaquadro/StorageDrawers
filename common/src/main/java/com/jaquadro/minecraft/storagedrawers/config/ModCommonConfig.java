@@ -793,6 +793,7 @@ public final class ModCommonConfig extends ConfigSpec
         public Key concealmentKey;
         public Key personalKey;
         public Key priorityKey;
+        public Key suspendKey;
 
         public Tools () {
             commonConfig.comment("Configuration around tools, namely the various 'keys' that can be used on drawers.");
@@ -813,6 +814,9 @@ public final class ModCommonConfig extends ConfigSpec
 
             priorityKey = new Key("PriorityKey",
                 "Priority keys change the priority of drawers when finding a compatible slot to insert items into.").build();
+
+            suspendKey = new Key("SuspendKey",
+                "Suspend keys stop external interaction, e.g. from hopper or magnet upgrades.").build();
 
             commonConfig.popGroup();
         }

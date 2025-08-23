@@ -29,6 +29,10 @@ public class DrawerItemRepository implements IItemRepository
         if (group == null)
             return records;
 
+        IDrawerAttributes attrs = group.getCapability(Capabilities.DRAWER_ATTRIBUTES);
+        if (attrs != null && attrs.isSuspended())
+            return records;
+
         for (int slot : group.getAccessibleDrawerSlots()) {
             IDrawer drawer = group.getDrawer(slot);
             if (drawer.isEmpty())
@@ -45,6 +49,13 @@ public class DrawerItemRepository implements IItemRepository
     @Override
     public ItemStack insertItem (@NotNull ItemStack stack, boolean simulate, Predicate<ItemStack> predicate) {
         int amount = stack.getCount();
+
+        IDrawerAttributes attrs = group.getCapability(Capabilities.DRAWER_ATTRIBUTES);
+        if (attrs == null)
+            attrs = EmptyDrawerAttributes.EMPTY;
+
+        if (attrs.isSuspended())
+            return stackResult(stack, amount);
 
         // First use strict capacity check
         for (int slot : group.getAccessibleDrawerSlots()) {
@@ -90,10 +101,6 @@ public class DrawerItemRepository implements IItemRepository
             }
         }
 
-        IDrawerAttributes attrs = group.getCapability(Capabilities.DRAWER_ATTRIBUTES);
-        if (attrs == null)
-            attrs = EmptyDrawerAttributes.EMPTY;
-
         if (!simulate && attrs.isBalancedFill() && !attrs.isUnlimitedVending())
             StorageUtil.rebalanceDrawers(group, stack);
 
@@ -106,6 +113,13 @@ public class DrawerItemRepository implements IItemRepository
     @Override
     public ItemStack extractItem (@NotNull ItemStack stack, int amount, boolean simulate, Predicate<ItemStack> predicate) {
         int remaining = amount;
+
+        IDrawerAttributes attrs = group.getCapability(Capabilities.DRAWER_ATTRIBUTES);
+        if (attrs == null)
+            attrs = EmptyDrawerAttributes.EMPTY;
+
+        if (attrs.isSuspended())
+            return ItemStack.EMPTY;
 
         for (int slot : group.getAccessibleDrawerSlots()) {
             IDrawer drawer = group.getDrawer(slot);
@@ -122,10 +136,6 @@ public class DrawerItemRepository implements IItemRepository
                 break;
         }
 
-        IDrawerAttributes attrs = group.getCapability(Capabilities.DRAWER_ATTRIBUTES);
-        if (attrs == null)
-            attrs = EmptyDrawerAttributes.EMPTY;
-
         if (!simulate && attrs.isBalancedFill() && !attrs.isUnlimitedVending())
             StorageUtil.rebalanceDrawers(group, stack);
 
@@ -136,6 +146,9 @@ public class DrawerItemRepository implements IItemRepository
 
     @Override
     public int getStoredItemCount (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
+        if (isSuspended())
+            return 0;
+
         long count = 0;
         for (int slot : group.getAccessibleDrawerSlots()) {
             IDrawer drawer = group.getDrawer(slot);
@@ -152,6 +165,9 @@ public class DrawerItemRepository implements IItemRepository
 
     @Override
     public int getRemainingItemCapacity (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
+        if (isSuspended())
+            return 0;
+
         long remainder = 0;
         for (int slot : group.getAccessibleDrawerSlots()) {
             IDrawer drawer = group.getDrawer(slot);
@@ -168,6 +184,9 @@ public class DrawerItemRepository implements IItemRepository
 
     @Override
     public int getItemCapacity (@NotNull ItemStack stack, Predicate<ItemStack> predicate) {
+        if (isSuspended())
+            return 0;
+
         long capacity = 0;
         for (int slot : group.getAccessibleDrawerSlots()) {
             IDrawer drawer = group.getDrawer(slot);
@@ -200,5 +219,13 @@ public class DrawerItemRepository implements IItemRepository
         ItemStack result = stack.copy();
         result.setCount(amount);
         return result;
+    }
+
+    protected boolean isSuspended () {
+        IDrawerAttributes attrs = group.getCapability(Capabilities.DRAWER_ATTRIBUTES);
+        if (attrs == null)
+            attrs = EmptyDrawerAttributes.EMPTY;
+
+        return attrs.isSuspended();
     }
 }

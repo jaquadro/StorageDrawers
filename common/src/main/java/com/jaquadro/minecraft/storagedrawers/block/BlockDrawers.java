@@ -238,6 +238,8 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
                     attrs.setIsShowingQuantity(true);
                 else if (key == ModItems.SHROUD_KEY.get())
                     attrs.setIsConcealed(true);
+                else if (key == ModItems.SUSPEND_KEY.get())
+                    attrs.setIsSuspended(true);
             }
 
             if (ModCommonConfig.INSTANCE.TOOLS.quantifyKey.showDefault.get())

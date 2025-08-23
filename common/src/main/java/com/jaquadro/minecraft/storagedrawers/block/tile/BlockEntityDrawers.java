@@ -539,7 +539,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.getCount());
 
-        if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade())
+        if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade() && !drawerAttributes.isSuspended())
             StorageUtil.rebalanceDrawers(getGroup(), slot);
 
         if (isRedstone() && getLevel() != null) {
@@ -570,7 +570,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         drawer.setStoredItemCount(drawer.getStoredItemCount() + countAdded);
         stack.shrink(countAdded);
 
-        if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade())
+        if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade() && !drawerAttributes.isSuspended())
             StorageUtil.rebalanceDrawers(getGroup(), slot);
 
         return countAdded;
@@ -656,7 +656,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         drawer.setDetached(false);
         drawer.setStoredItem(proto, count);
 
-        if (drawerAttributes.isBalancedFill())
+        if (drawerAttributes.isBalancedFill() && !drawerAttributes.isSuspended())
             StorageUtil.rebalanceDrawers(getGroup(), slot);
 
         return true;
@@ -702,6 +702,11 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         else
             drawerAttributes.setPriority(0);
 
+        if (tag.contains("Sus"))
+            drawerAttributes.setIsSuspended(tag.getBoolean("Sus"));
+        else
+            drawerAttributes.setIsSuspended(false);
+
         if (tag.contains("CustomName", 8))
             name = parseCustomNameSafe(tag.getString("CustomName"), provider);
 
@@ -738,6 +743,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         if (drawerAttributes.getPriority() != 0)
             tag.putInt("Pri", drawerAttributes.getPriority());
+
+        if (drawerAttributes.isSuspended())
+            tag.putBoolean("Sus", true);
 
         if (name != null)
             tag.putString("CustomName", Component.Serializer.toJson(name, provider));
@@ -845,7 +853,10 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     }
 
     public boolean pushItemsTick(Level level, BlockPos pos, BlockState state) {
-        if (!getDrawerAttributes().isHopper() && !getDrawerAttributes().isMagnet())
+        IDrawerAttributes attr = getDrawerAttributes();
+        if (attr.isSuspended())
+            return false;
+        if (!attr.isHopper() && !attr.isMagnet())
             return false;
 
         boolean added = suckInItems(level);

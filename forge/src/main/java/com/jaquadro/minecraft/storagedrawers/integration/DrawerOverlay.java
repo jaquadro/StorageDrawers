@@ -109,6 +109,10 @@ public class DrawerOverlay {
             attribs.add(Component.translatable("tooltip.storagedrawers.waila.balanced"));
         if (tile.getOwner() != null)
             attribs.add(Component.translatable("tooltip.storagedrawers.waila.protected"));
+        if (attr.isMagnet())
+            attribs.add(Component.translatable("tooltip.storagedrawers.waila.magnetic"));
+        if (attr.isSuspended())
+            attribs.add(Component.translatable("tooltip.storagedrawers.waila.suspended"));
 
         if (!attribs.isEmpty())
             result.add(attribs.stream().reduce((a, b) ->

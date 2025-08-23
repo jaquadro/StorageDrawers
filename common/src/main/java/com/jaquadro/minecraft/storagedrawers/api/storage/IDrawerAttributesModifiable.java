@@ -72,4 +72,6 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
     default boolean setIsMagnet (boolean state) {
         return false;
     }
+
+    default boolean setIsSuspended (boolean state) { return false; }
 }

@@ -16,6 +16,7 @@ public record KeyType (String name)
     public static final KeyType CONCEALMENT;
     public static final KeyType PERSONAL;
     public static final KeyType QUANTIFY;
+    public static final KeyType SUSPEND;
 
     public static KeyType register(KeyType type) {
         TYPES.put(type.name, type);
@@ -40,6 +41,8 @@ public record KeyType (String name)
             keyEnabled = ModCommonConfig.INSTANCE.TOOLS.concealmentKey.enable.get();
         else if (this == KeyType.PERSONAL)
             keyEnabled = ModCommonConfig.INSTANCE.TOOLS.personalKey.enable.get();
+        else if (this == KeyType.SUSPEND)
+            keyEnabled = ModCommonConfig.INSTANCE.TOOLS.suspendKey.enable.get();
 
         return keyEnabled;
     }
@@ -50,5 +53,6 @@ public record KeyType (String name)
         CONCEALMENT = register(new KeyType("concealment"));
         PERSONAL = register(new KeyType("personal"));
         QUANTIFY = register(new KeyType("quantify"));
+        SUSPEND = register(new KeyType("suspend"));
     }
 }
