@@ -1,6 +1,8 @@
-[13.10.1]
+[13.11.0]
 - Added hopper upgrade
 - Added magnet upgrades
+- Added nl_nl translation (Jack McKalling)
+- Updated translations from latest crowdin export
 
 [13.10.1]
 - Fixed remote upgrades showing bound description when not bound
