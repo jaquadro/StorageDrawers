@@ -52,10 +52,12 @@ public class DrawerModelDecorator extends ModelDecorator<DrawerModelContext>
 
     public void emitDecoratedQuads(DrawerModelContext context, BiConsumer<BakedModel, RenderType> emitModel) {
         Direction dir = context.state().getValue(BlockDrawers.FACING);
-        boolean half = false;
+        boolean drawerHalf = false;
         Block block = context.state().getBlock();
         if (block instanceof BlockDrawers drawers)
-            half = drawers.isHalfDepth();
+            drawerHalf = drawers.isHalfDepth();
+
+        boolean half = drawerHalf;
 
         IDrawerAttributes attr = context.attr();
         if (attr == null)
@@ -73,7 +75,33 @@ public class DrawerModelDecorator extends ModelDecorator<DrawerModelContext>
         else if (isClaimed)
             emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.CLAIM, dir, half), RenderType.cutoutMipped());
 
-        DrawerModelStore.DynamicPart priorityPart = switch (attr.getPriority()) {
+        BiConsumer<DrawerModelStore.DynamicPart, Integer> emitIcon = (part, index) -> {
+            emitModel.accept(DrawerModelStore.getReplacementModel(
+                    DrawerModelStore.DynamicPart.RIGHT_LABEL, dir, half, index, part),
+                RenderType.cutoutMipped());
+        };
+
+        int iconIndex = 1;
+        int priority = attr.getPriority();;
+
+        if (attr.isVoid())
+            emitIcon.accept(DrawerModelStore.DynamicPart.VOID_ICON, iconIndex++);
+        if (priority == -2)
+            emitIcon.accept(DrawerModelStore.DynamicPart.PRIORITY_N2_ICON, iconIndex++);
+        if (priority == -1)
+            emitIcon.accept(DrawerModelStore.DynamicPart.PRIORITY_N1_ICON, iconIndex++);
+        if (priority == 1)
+            emitIcon.accept(DrawerModelStore.DynamicPart.PRIORITY_P1_ICON, iconIndex++);
+        if (priority == 2)
+            emitIcon.accept(DrawerModelStore.DynamicPart.PRIORITY_P2_ICON, iconIndex++);
+        if (attr.isMagnet())
+            emitIcon.accept(DrawerModelStore.DynamicPart.MAGNET_ICON, iconIndex++);
+        if (attr.isConcealed())
+            emitIcon.accept(DrawerModelStore.DynamicPart.SHROUD_ICON, iconIndex++);
+        if (attr.isSuspended())
+            emitIcon.accept(DrawerModelStore.DynamicPart.SUSPEND_ICON, iconIndex++);
+
+        /*DrawerModelStore.DynamicPart priorityPart = switch (attr.getPriority()) {
             case 1 -> DrawerModelStore.DynamicPart.PRIORITY_P1;
             case 2 -> DrawerModelStore.DynamicPart.PRIORITY_P2;
             case -1 -> DrawerModelStore.DynamicPart.PRIORITY_N1;
@@ -81,12 +109,12 @@ public class DrawerModelDecorator extends ModelDecorator<DrawerModelContext>
             default -> null;
         };
         if (priorityPart != null)
-            emitModel.accept(DrawerModelStore.getModel(priorityPart, dir, half), RenderType.cutoutMipped());
+            emitModel.accept(DrawerModelStore.getModel(priorityPart, dir, half), RenderType.cutoutMipped());*/
 
-        if (attr.isVoid())
-            emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.VOID, dir, half), RenderType.cutoutMipped());
-        if (attr.isConcealed())
-            emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.SHROUD, dir, half), RenderType.cutoutMipped());
+        //if (attr.isVoid())
+        //    emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.VOID, dir, half), RenderType.cutoutMipped());
+        //if (attr.isConcealed())
+        //    emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.SHROUD, dir, half), RenderType.cutoutMipped());
         if (attr.hasFillLevel()) {
             if (block instanceof BlockCompDrawers compBlock) {
                 int count = compBlock.getDrawerCount();

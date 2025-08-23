@@ -27,6 +27,14 @@ public class DrawerModelStore
         LOCK("lock"),
         CLAIM("claim"),
         LOCK_CLAIM("lock_claim"),
+        VOID_ICON("void_icon"),
+        SHROUD_ICON("shroud_icon"),
+        SUSPEND_ICON("suspend_icon"),
+        MAGNET_ICON("magnet_icon"),
+        PRIORITY_P1_ICON("priority_p1_icon"),
+        PRIORITY_P2_ICON("priority_p2_icon"),
+        PRIORITY_N1_ICON("priority_n1_icon"),
+        PRIORITY_N2_ICON("priority_n2_icon"),
         VOID("void"),
         SHROUD("shroud"),
         INDICATOR("indicator"),
@@ -35,6 +43,7 @@ public class DrawerModelStore
         PRIORITY_P2("priority_p2"),
         PRIORITY_N1("priority_n1"),
         PRIORITY_N2("priority_n2"),
+        RIGHT_LABEL("right_label"),
         HOPPER("hopper"),
         MISSING_1("missing_1"),
         MISSING_2("missing_2"),
@@ -183,13 +192,27 @@ public class DrawerModelStore
             });
         }
 
+        public void add () {
+            addOverlay(getVariant(DynamicPart.VOID_ICON), new ModelResourceLocation(ModConstants.loc("meta_void_icon"), getVariant()));
+            addOverlay(getVariant(DynamicPart.SHROUD_ICON), new ModelResourceLocation(ModConstants.loc("meta_shroud_icon"), getVariant()));
+            addOverlay(getVariant(DynamicPart.SUSPEND_ICON), new ModelResourceLocation(ModConstants.loc("meta_suspend_icon"), getVariant()));
+            addOverlay(getVariant(DynamicPart.MAGNET_ICON), new ModelResourceLocation(ModConstants.loc("meta_magnet_icon"), getVariant()));
+            addOverlay(getVariant(DynamicPart.PRIORITY_P1_ICON), new ModelResourceLocation(ModConstants.loc("meta_priority_p1_icon"), getVariant()));
+            addOverlay(getVariant(DynamicPart.PRIORITY_P2_ICON), new ModelResourceLocation(ModConstants.loc("meta_priority_p2_icon"), getVariant()));
+            addOverlay(getVariant(DynamicPart.PRIORITY_N1_ICON), new ModelResourceLocation(ModConstants.loc("meta_priority_n1_icon"), getVariant()));
+            addOverlay(getVariant(DynamicPart.PRIORITY_N2_ICON), new ModelResourceLocation(ModConstants.loc("meta_priority_n2_icon"), getVariant()));
+            addOverlay(getVariant(DynamicPart.HOPPER), new ModelResourceLocation(ModConstants.loc("meta_hopper"), getVariant()));
+        }
+
         public void add (Direction dir, boolean half) {
             addOverlay(getVariant(DynamicPart.LOCK, dir, half), new ModelResourceLocation(ModConstants.loc("meta_locked"), getVariant(dir, half)));
             addOverlay(getVariant(DynamicPart.CLAIM, dir, half), new ModelResourceLocation(ModConstants.loc("meta_claimed"), getVariant(dir, half)));
             addOverlay(getVariant(DynamicPart.LOCK_CLAIM, dir, half), new ModelResourceLocation(ModConstants.loc("meta_locked_claimed"), getVariant(dir, half)));
             addOverlay(getVariant(DynamicPart.VOID, dir, half), new ModelResourceLocation(ModConstants.loc("meta_void"), getVariant(dir, half)));
             addOverlay(getVariant(DynamicPart.SHROUD, dir, half), new ModelResourceLocation(ModConstants.loc("meta_shroud"), getVariant(dir, half)));
-            addOverlay(getVariant(DynamicPart.HOPPER), new ModelResourceLocation(ModConstants.loc("meta_hopper"), getVariant()));
+
+            for (int i = 1; i <= 6; i++)
+                addOverlay(getSlotVariant(DynamicPart.RIGHT_LABEL, dir, half, i), new ModelResourceLocation(ModConstants.loc("meta_right_label"), getSlotVariant(dir, half, i)));
 
             addOverlay(getVariant(DynamicPart.INDICATOR, dir, half, 1), new ModelResourceLocation(ModConstants.loc("meta_indicator"), getVariant(dir, half, 1)));
             addOverlay(getVariant(DynamicPart.INDICATOR, dir, half, 2), new ModelResourceLocation(ModConstants.loc("meta_indicator"), getVariant(dir, half, 2)));
@@ -264,6 +287,8 @@ public class DrawerModelStore
     }
 
     static {
+        INSTANCE.add();
+
         for (int i = 0; i < 4; i++) {
             Direction dir = Direction.from2DDataValue(i);
 
@@ -299,6 +324,10 @@ public class DrawerModelStore
         return "facing=" + dir.getName() + ",half=" + half + ",slots=" + slots;
     }
 
+    static String getSlotVariant(Direction dir, boolean half, int slot) {
+        return "facing=" + dir.getName() + ",half=" + half + ",slot=" + slot;
+    }
+
     static String getVariant(DynamicPart part) {
         return "part=" + part.getName();
     }
@@ -317,6 +346,10 @@ public class DrawerModelStore
 
     static String getVariant(DynamicPart part, Direction dir, boolean half, EnumCompDrawer slots) {
         return "part=" + part.getName() + ",facing=" + dir.getName() + ",half=" + half + ",slots=" + slots;
+    }
+
+    static String getSlotVariant(DynamicPart part, Direction dir, boolean half, int slot) {
+        return "part=" + part.getName() + ",facing=" + dir.getName() + ",half=" + half + ",slot=" + slot;
     }
 
     public static Stream<ModelResourceLocation> getModelLocations() {
@@ -366,5 +399,29 @@ public class DrawerModelStore
 
     public static BakedModel getModel(DynamicPart part, Direction dir, boolean half, EnumCompDrawer slots) {
         return getModel(getVariant(part, dir, half, slots));
+    }
+
+    public static BakedModel getReplacementModel(ModelResourceLocation loc, ModelResourceLocation replaceLoc) {
+        String key = loc.toString() + ":" + replaceLoc.toString();
+        if (modelStore.containsKey(key))
+            return modelStore.get(key);
+
+        BakedModel model = getModel(loc);
+        BakedModel replacementModel = getModel(replaceLoc);
+        if (replacementModel == null)
+            return model;
+
+        BakedModel merged = new SpriteReplacementModel(model, replacementModel);
+        modelStore.put(key, merged);
+        return merged;
+    }
+
+    public static BakedModel getReplacementModel(String variant, String replaceVariant) {
+        return getReplacementModel(INSTANCE.overlays.getOrDefault(variant, null),
+            INSTANCE.overlays.getOrDefault(replaceVariant, null));
+    }
+
+    public static BakedModel getReplacementModel(DynamicPart part, Direction dir, boolean half, int slot, DynamicPart iconPart) {
+        return getReplacementModel(getSlotVariant(part, dir, half, slot), getVariant(iconPart));
     }
 }

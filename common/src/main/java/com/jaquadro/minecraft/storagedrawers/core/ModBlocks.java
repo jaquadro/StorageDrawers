@@ -150,6 +150,14 @@ public final class ModBlocks
         META_LOCKED = registerMetaFacingSizedBlock("meta_locked"),
         META_CLAIMED = registerMetaFacingSizedBlock("meta_claimed"),
         META_LOCKED_CLAIMED = registerMetaFacingSizedBlock("meta_locked_claimed"),
+        META_VOID_ICON = registerMetaBlock("meta_void_icon"),
+        META_SHROUD_ICON = registerMetaBlock("meta_shroud_icon"),
+        META_SUSPEND_ICON = registerMetaBlock("meta_suspend_icon"),
+        META_MAGNET_ICON = registerMetaBlock("meta_magnet_icon"),
+        META_PRIORITY_P1_ICON = registerMetaBlock("meta_priority_p1_icon"),
+        META_PRIORITY_P2_ICON = registerMetaBlock("meta_priority_p2_icon"),
+        META_PRIORITY_N1_ICON = registerMetaBlock("meta_priority_n1_icon"),
+        META_PRIORITY_N2_ICON = registerMetaBlock("meta_priority_n2_icon"),
         META_VOID = registerMetaFacingSizedBlock("meta_void"),
         META_SHROUD = registerMetaFacingSizedBlock("meta_shroud"),
         META_INDICATOR = registerMetaFacingSizedSlotted124Block("meta_indicator"),
@@ -158,6 +166,7 @@ public final class ModBlocks
         META_PRIORITY_P2 = registerMetaFacingSizedBlock("meta_priority_p2"),
         META_PRIORITY_N1 = registerMetaFacingSizedBlock("meta_priority_n1"),
         META_PRIORITY_N2 = registerMetaFacingSizedBlock("meta_priority_n2"),
+        META_RIGHT_LABEL = registerMetaFacingSizedLabelBlock("meta_right_label"),
         META_HOPPER = registerMetaBlock("meta_hopper"),
         META_MISSING_1_1 = registerMetaFacingSizedBlock("meta_missing_slot_1_1"),
         META_MISSING_2_1 = registerMetaFacingSizedBlock("meta_missing_slot_2_1"),
@@ -301,6 +310,11 @@ public final class ModBlocks
     static RegistryEntry<BlockMeta> registerMetaFacingSizedSlotted124Block (String name) {
         EXCLUDE_ITEMS.add(name);
         return BLOCKS.register(name, () -> new BlockMetaFacingSizedSlotted.Slots124(Properties.of().air()));
+    }
+
+    static RegistryEntry<BlockMeta> registerMetaFacingSizedLabelBlock (String name) {
+        EXCLUDE_ITEMS.add(name);
+        return BLOCKS.register(name, () -> new BlockMetaFacingSizedSlotted.Label(Properties.of().air()));
     }
 
     static RegistryEntry<BlockMeta> registerMetaFacingSizedOpen2Block (String name) {
