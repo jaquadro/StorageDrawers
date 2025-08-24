@@ -34,4 +34,17 @@ public abstract class BlockMetaFacingSizedSlotted
             builder.add(FACING).add(HALF).add(SLOTS);
         }
     }
+
+    public static class Label extends BlockMetaFacingSized {
+        public static final IntegerProperty SLOT = IntegerProperty.create("slot", 1, 6);
+
+        public Label (BlockBehaviour.Properties properties) {
+            super(properties);
+        }
+
+        @Override
+        protected void createBlockStateDefinition (StateDefinition.Builder<Block, BlockState> builder) {
+            builder.add(FACING).add(HALF).add(SLOT);
+        }
+    }
 }

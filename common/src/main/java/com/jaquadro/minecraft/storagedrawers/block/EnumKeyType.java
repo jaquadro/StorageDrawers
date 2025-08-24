@@ -9,7 +9,8 @@ public enum EnumKeyType implements StringRepresentable
     DRAWER(0, "drawer"),
     CONCEALMENT(1, "concealment"),
     PERSONAL(2, "personal"),
-    QUANTIFY(3, "quantify");
+    QUANTIFY(3, "quantify"),
+    SUSPEND(4, "suspend");
 
     private static final EnumKeyType[] META_LOOKUP;
 
@@ -52,6 +53,8 @@ public enum EnumKeyType implements StringRepresentable
             keyEnabled = ModCommonConfig.INSTANCE.TOOLS.concealmentKey.enable.get();
         else if (this == EnumKeyType.PERSONAL)
             keyEnabled = ModCommonConfig.INSTANCE.TOOLS.personalKey.enable.get();
+        else if (this == EnumKeyType.SUSPEND)
+            keyEnabled = ModCommonConfig.INSTANCE.TOOLS.suspendKey.enable.get();
 
         return keyEnabled;
     }

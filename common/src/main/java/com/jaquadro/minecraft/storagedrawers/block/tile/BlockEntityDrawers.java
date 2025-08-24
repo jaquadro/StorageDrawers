@@ -6,9 +6,11 @@ import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.MagnetDim;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.*;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.ModSecurity;
@@ -27,21 +29,31 @@ import com.texelsaurus.minecraft.chameleon.inventory.ContentMenuProvider;
 import com.texelsaurus.minecraft.chameleon.inventory.content.PositionContent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup, IProtectable, INetworked, IFramedBlockEntity /*, INameable */
@@ -64,6 +76,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     private long lastClickTime;
     private UUID lastClickUUID;
     private boolean loading;
+
+    private AABB SUCK_AABB = Block.box(0.0, 11.0, 0.0, 16.0, 32.0, 16.0).toAabbs().get(0);
+    private AABB MAGNET_AABB = AABB.of(BoundingBox.fromCorners(Vec3i.ZERO, Vec3i.ZERO));
 
     private class DrawerAttributes extends BasicDrawerAttributes
     {
@@ -160,6 +175,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
                 if (getBoundControlGroup() != null)
                     getBoundControlGroup().addRemoteNode(BlockEntityDrawers.this);
 
+                refreshMagnetBound();
+                scheduleConditionalTick(1);
+
                 setChanged();
                 markBlockForUpdate();
             }
@@ -199,6 +217,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
             ModServices.log.info("BlockEntityDrawers [{}] checkBoundController", getBlockPos());
 
+        controllerData.setNeedsValidation(false);
         BlockEntityController controller = controllerData.getController(this);
         ItemStack remote = upgradeData.getRemoteUpgrade();
         if (remote == null && controller != null) {
@@ -224,7 +243,8 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     }
 
     public void validateBoundController() {
-        checkBoundController();
+        if (controllerData.needsValidation())
+            checkBoundController();
     }
 
     public void onEntityLoad () {
@@ -234,11 +254,22 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
             BlockPos pos = getBlockPos();
             try {
-                if (!getLevel().getBlockTicks().hasScheduledTick(pos, getBlockState().getBlock()))
-                    getLevel().scheduleTick(pos, getBlockState().getBlock(), 1);
+                controllerData.setNeedsValidation(true);
+                scheduleConditionalTick(1);
             } catch (Exception e) {
                 // Ignore
             }
+        } catch (Exception e) { }
+    }
+
+    private void scheduleConditionalTick (int tick) {
+        try {
+            BlockPos pos = getBlockPos();
+            if (getLevel() == null || getLevel().isClientSide() ||
+                getLevel().getBlockTicks().hasScheduledTick(pos, getBlockState().getBlock()))
+                return;
+
+            getLevel().scheduleTick(pos, getBlockState().getBlock(), tick);
         } catch (Exception e) { }
     }
 
@@ -267,6 +298,11 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     @Override
     public void unbindControlGroup () {
         upgradeData.unbindRemoteUpgrade();
+    }
+
+    @Override
+    public void scheduleValidation () {
+        controllerData.setNeedsValidation(true);
     }
 
     @NotNull
@@ -374,8 +410,22 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     }
 
     protected void onAttributeChanged () {
+        scheduleConditionalTick(1);
         //requestModelDataUpdate();
         //refreshModelData();
+    }
+
+    private void refreshMagnetBound () {
+        if (!upgradeData.hasMagnetUpgrade()) {
+            MAGNET_AABB = AABB.of(BoundingBox.fromCorners(Vec3i.ZERO, Vec3i.ZERO));
+            return;
+        }
+
+        int h = upgradeData.getMagnetRange(MagnetDim.HORIZONTAL);
+        int up = upgradeData.getMagnetRange(MagnetDim.UP);
+        int down = upgradeData.getMagnetRange(MagnetDim.DOWN);
+
+        MAGNET_AABB = Shapes.box(-h, down, -h, h + 1, up + 1, h + 1).toAabbs().get(0);
     }
 
     /*public boolean isSealed () {
@@ -495,7 +545,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.getCount());
 
-        if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade())
+        if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade() && !drawerAttributes.isSuspended())
             StorageUtil.rebalanceDrawers(getGroup(), slot);
 
         if (isRedstone() && getLevel() != null) {
@@ -526,7 +576,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         drawer.setStoredItemCount(drawer.getStoredItemCount() + countAdded);
         stack.shrink(countAdded);
 
-        if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade())
+        if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade() && !drawerAttributes.isSuspended())
             StorageUtil.rebalanceDrawers(getGroup(), slot);
 
         return countAdded;
@@ -610,7 +660,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         drawer.setDetached(false);
         drawer.setStoredItem(proto, count);
 
-        if (drawerAttributes.isBalancedFill())
+        if (drawerAttributes.isBalancedFill() && !drawerAttributes.isSuspended())
             StorageUtil.rebalanceDrawers(getGroup(), slot);
 
         return true;
@@ -660,6 +710,13 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         else
             drawerAttributes.setPriority(0);
 
+        if (tag.contains("Sus"))
+            drawerAttributes.setIsSuspended(tag.getBoolean("Sus"));
+        else
+            drawerAttributes.setIsSuspended(false);
+
+        refreshMagnetBound();
+
         loading = false;
     }
 
@@ -694,6 +751,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         if (drawerAttributes.getPriority() != 0)
             tag.putInt("Pri", drawerAttributes.getPriority());
+
+        if (drawerAttributes.isSuspended())
+            tag.putBoolean("Sus", true);
 
         return tag;
     }
@@ -788,6 +848,88 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         if (capability == null || level == null)
             return null;
         return capability.getCapability(level, getBlockPos());
+    }
+
+    public boolean pushItemsTick(Level level, BlockPos pos, BlockState state) {
+        IDrawerAttributes attr = getDrawerAttributes();
+        if (attr.isSuspended())
+            return false;
+        if (!attr.isHopper() && !attr.isMagnet())
+            return false;
+
+        boolean added = suckInItems(level);
+        if (added)
+            setChanged(level, pos, state);
+
+        return added;
+    }
+
+    public void entityInside(Level level, BlockPos pos, BlockState state, Entity entity) {
+        if (level.isClientSide)
+            return;
+
+        if (!(entity instanceof ItemEntity itementity))
+            return;
+
+        if (itementity.getItem().isEmpty() || !entity.getBoundingBox().move(-pos.getX(), -pos.getY(), -pos.getZ()).intersects(SUCK_AABB))
+            return;
+
+        addItemEntity(itementity);
+    }
+
+    private boolean suckInItems(Level level) {
+        BlockPos pos = getBlockPos();
+        BlockPos blockpos = BlockPos.containing(pos.getX(), pos.getY() + 1.0, pos.getZ());
+        BlockState blockstate = level.getBlockState(blockpos);
+
+        if (!upgradeData.hasMagnetUpgrade()) {
+            if (blockstate.isCollisionShapeFullBlock(level, blockpos))
+                return false;
+        }
+
+        for (ItemEntity item : getItemEntitiesInRange(level)) {
+            if (addItemEntity(item))
+                return true;
+        }
+
+        return false;
+    }
+
+    private List<ItemEntity> getItemEntitiesInRange (Level level) {
+        BlockPos pos = getBlockPos();
+        AABB aabb = (upgradeData.hasMagnetUpgrade() ? MAGNET_AABB : SUCK_AABB).move(pos);
+        return level.getEntitiesOfClass(ItemEntity.class, aabb, EntitySelector.ENTITY_STILL_ALIVE);
+    }
+
+    private boolean addItemEntity (ItemEntity itemEntity) {
+        ItemStack itemstack = itemEntity.getItem().copy();
+
+        IDrawerGroup group = getGroup(this);
+
+        for (int i = 0; i < group.getDrawerCount(); i++) {
+            if (group.getDrawer(i).isEmpty()) {
+                IDrawerAttributes attr = group.getCapability(Capabilities.DRAWER_ATTRIBUTES);
+                if (attr != null && attr.isItemLocked(LockAttribute.LOCK_EMPTY))
+                    continue;
+            }
+
+            putItemsIntoSlot(i, itemstack, itemstack.getCount());
+            if (itemstack.isEmpty())
+                break;
+        }
+
+        if (itemstack.isEmpty()) {
+            itemEntity.setItem(ItemStack.EMPTY);
+            itemEntity.discard();
+            return true;
+        }
+
+        if (itemEntity.getItem().getCount() != itemstack.getCount()) {
+            itemEntity.setItem(itemstack);
+            return true;
+        }
+
+        return false;
     }
 
     public static class ContentProvider implements ContentMenuProvider<PositionContent>

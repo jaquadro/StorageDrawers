@@ -134,7 +134,7 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         }
 
         @NotNull
-        IDrawerAttributes getAttributes() {
+        public IDrawerAttributes getAttributes() {
             if (cachedAttrs != null)
                 return cachedAttrs;
 
@@ -719,6 +719,11 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         @Override
         public boolean isSmallestUnit() {
             return storage.isSmallestUnit(slot);
+        }
+
+        @Override
+        public @NotNull IDrawerAttributes getAttributes () {
+            return storage.getAttributes();
         }
 
         @Override

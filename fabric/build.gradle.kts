@@ -22,10 +22,10 @@ dependencies {
     //modCompileOnlyApi("mezz.jei:jei-${Versions.minecraft}-fabric-api:19.8.2.99")
     //modRuntimeOnly("mezz.jei:jei-${Versions.minecraft}-fabric:19.8.2.99")
 
-    modImplementation("curse.maven:architectury-api-419699:5137936")
-    modImplementation("curse.maven:ftb-library-fabric-438495:6807422")
-    modImplementation("curse.maven:ftb-chunks-fabric-472657:6431734")
-    modImplementation("curse.maven:ftb-teams-fabric-438497:6130783")
+    modCompileOnly("curse.maven:architectury-api-419699:5137936")
+    modCompileOnly("curse.maven:ftb-library-fabric-438495:6807422")
+    modCompileOnly("curse.maven:ftb-chunks-fabric-472657:6431734")
+    modCompileOnly("curse.maven:ftb-teams-fabric-438497:6130783")
 }
 
 loom {

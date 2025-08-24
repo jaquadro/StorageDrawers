@@ -6,6 +6,7 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
 {
     /**
      * Sets whether or not the drawer is currently concealed.
+     *
      * @return false if the operation is not supported, true otherwise.
      */
     default boolean setIsConcealed (boolean state) {
@@ -15,6 +16,7 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
     /**
      * Sets the lock state of a drawer or group for the given lock attribute.
      * If canItemLock returns false, this is a no-op.
+     *
      * @return false if the operation is not supported, true otherwise.
      */
     default boolean setItemLocked (LockAttribute attr, boolean isLocked) {
@@ -23,6 +25,7 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
 
     /**
      * Sets whether or not the drawer is currently quantified.
+     *
      * @return false if the operation is not supported, true otherwise.
      */
     default boolean setIsShowingQuantity (boolean state) {
@@ -31,6 +34,7 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
 
     /**
      * Sets whether or not the drawer is currently sealed.
+     *
      * @return false if the operation is not supported, true otherwise.
      */
     default boolean setIsSealed (boolean state) {
@@ -61,5 +65,19 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
         return false;
     }
 
-    default boolean setIsBalancedFill (boolean state) { return false; }
+    default boolean setIsBalancedFill (boolean state) {
+        return false;
+    }
+
+    default boolean setIsHopper (boolean state) {
+        return false;
+    }
+
+    default boolean setIsMagnet (boolean state) {
+        return false;
+    }
+
+    default boolean setIsSuspended (boolean state) {
+        return false;
+    }
 }

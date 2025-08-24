@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " H ",
+        "/X/",
+        "///"
+    ],
+    "key": {
+        "/": { "item": "minecraft:stick" },
+        "H": { "item": "minecraft:hopper" },
+        "X": { "item": "storagedrawers:upgrade_template" }
+    },
+    "result": { "item": "storagedrawers:hopper_upgrade" }
+}

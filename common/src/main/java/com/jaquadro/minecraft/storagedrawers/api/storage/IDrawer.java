@@ -182,6 +182,11 @@ public interface IDrawer
 
     default void setDetached (boolean state) { }
 
+    @NotNull
+    default IDrawerAttributes getAttributes () {
+        return EmptyDrawerAttributes.EMPTY;
+    }
+
     // TODO: Default implementation removed in 1.21
     default IDrawer copy () {
         return null;

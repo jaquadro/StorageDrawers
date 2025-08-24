@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile.tiledata;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.MagnetDim;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.*;
@@ -18,6 +19,9 @@ public class UpgradeData extends BlockEntityDataShim
 {
     protected final ItemStack[] upgrades;
     private int storageMultiplier;
+    private int[] magnetRange;
+    private int magnetActiveRate;
+    private int magnetIdleRate;
     private EnumUpgradeRedstone redstoneType;
 
     // TODO: Do we need to provide these?
@@ -29,6 +33,8 @@ public class UpgradeData extends BlockEntityDataShim
     private boolean hasIllumination;
     private boolean hasFillLevel;
     private boolean hasBalanceFill;
+    private boolean hasHopper;
+    private boolean hasMagnet;
     private boolean hasRemote;
 
     private IDrawerAttributesModifiable attrs;
@@ -38,6 +44,7 @@ public class UpgradeData extends BlockEntityDataShim
         Arrays.fill(upgrades, ItemStack.EMPTY);
 
         syncStorageMultiplier();
+        syncMagnetRange();
     }
 
     public void setDrawerAttributes (IDrawerAttributesModifiable attrs) {
@@ -151,6 +158,22 @@ public class UpgradeData extends BlockEntityDataShim
         return storageMultiplier;
     }
 
+    public int getMagnetRange (MagnetDim dim) {
+        return switch (dim) {
+            case HORIZONTAL -> magnetRange[0];
+            case UP -> magnetRange[1];
+            case DOWN -> magnetRange[2];
+        };
+    }
+
+    public int getMagnetActiveRate () {
+        return magnetActiveRate;
+    }
+
+    public int getMagnetIdleRate () {
+        return magnetIdleRate;
+    }
+
     public EnumUpgradeRedstone getRedstoneType () {
         return redstoneType;
     }
@@ -178,6 +201,10 @@ public class UpgradeData extends BlockEntityDataShim
     public boolean hasbalancedFillUpgrade () {
         return hasBalanceFill;
     }
+
+    public boolean hasHopperUpgrade () { return hasHopper; }
+
+    public boolean hasMagnetUpgrade () { return hasMagnet; }
 
     public boolean hasRemoteUpgrade () {
         return hasRemote;
@@ -245,6 +272,7 @@ public class UpgradeData extends BlockEntityDataShim
 
         syncStorageMultiplier();
         syncRedstoneLevel();
+        syncMagnetRange();
 
         hasOneStack = false;
         hasVoid = false;
@@ -254,6 +282,7 @@ public class UpgradeData extends BlockEntityDataShim
         hasIllumination = false;
         hasFillLevel = false;
         hasBalanceFill = false;
+        hasHopper = false;
         hasRemote = false;
 
         for (ItemStack stack : upgrades) {
@@ -275,6 +304,8 @@ public class UpgradeData extends BlockEntityDataShim
                 hasFillLevel = ModCommonConfig.INSTANCE.UPGRADES.fillLevelUpgrade.enableUpgrade.get();
             else if (item == ModItems.BALANCE_FILL_UPGRADE.get())
                 hasBalanceFill = ModCommonConfig.INSTANCE.UPGRADES.balanceUpgrade.enableUpgrade.get();
+            else if (item == ModItems.HOPPER_UPGRADE.get())
+                hasHopper = ModCommonConfig.INSTANCE.UPGRADES.hopperUpgrade.enableUpgrade.get();
             else if (item instanceof ItemUpgradeRemote remote) {
                 boolean enable = ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.enableUpgrade.get();
                 hasRemote = remote.isGroupUpgrade()
@@ -289,6 +320,8 @@ public class UpgradeData extends BlockEntityDataShim
         attrs.setIsUnlimitedStorage(hasUnlimited);
         attrs.setIsUnlimitedVending(hasVending);
         attrs.setIsBalancedFill(hasBalanceFill);
+        attrs.setIsHopper(hasHopper);
+        attrs.setIsMagnet(hasMagnet);
     }
 
     private void syncStorageMultiplier () {
@@ -303,6 +336,33 @@ public class UpgradeData extends BlockEntityDataShim
 
         if (storageMultiplier == 0)
             storageMultiplier = ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(0);
+    }
+
+    private void syncMagnetRange () {
+        if (magnetRange == null || magnetRange.length != 3)
+            magnetRange = new int[3];
+
+        Arrays.fill(magnetRange, 0);
+        hasMagnet = false;
+
+        int highestTier = 0;
+        for (ItemStack stack : upgrades) {
+            if (stack.getItem() instanceof ItemUpgradeMagnet itemMagnet) {
+                if (!itemMagnet.isEnabled())
+                    continue;
+
+                hasMagnet = true;
+                magnetRange[0] += itemMagnet.getHorzRange();
+                magnetRange[1] += itemMagnet.getUpRange();
+                magnetRange[2] += itemMagnet.getDownRange();
+
+                if (itemMagnet.type.getLevel() > highestTier) {
+                    highestTier = itemMagnet.type.getLevel();
+                    magnetActiveRate = itemMagnet.getActiveSpeed();
+                    magnetIdleRate = itemMagnet.getIdleSpeed();
+                }
+            }
+        }
     }
 
     private void syncRedstoneLevel () {

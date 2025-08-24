@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "C/C",
+        "/X/",
+        "C/C"
+    ],
+    "key": {
+        "/": { "item": "minecraft:iron_bars" },
+        "C": { "item": "minecraft:copper_ingot" },
+        "X": { "item": "storagedrawers:hopper_upgrade" }
+    },
+    "result": { "item": "storagedrawers:magnet_upgrade" }
+}

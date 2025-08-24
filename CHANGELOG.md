@@ -1,3 +1,9 @@
+[12.14.0]
+- Added Hopper Upgrade
+- Added Magnet upgrades
+- Added Pause Key
+- Updated translations from latest crowdin export
+
 [12.13.1]
 - Added bamboo as a default compacting rule
 - Added config option to show quantify labels by default

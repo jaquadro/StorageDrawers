@@ -29,6 +29,11 @@ public class SpriteReplacementModel extends ParentModel
         this.sprite = sprite;
     }
 
+    public SpriteReplacementModel (@NotNull BakedModel parent, BakedModel replacement) {
+        super(parent);
+        this.sprite = replacement.getParticleIcon();
+    }
+
     public SpriteReplacementModel (@NotNull BakedModel parent, ItemStack stack) {
         super(parent);
 

@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:block/cross",
+    "textures": {
+        "cross": "storagedrawers:block/indicator/void_icon"
+    }
+}

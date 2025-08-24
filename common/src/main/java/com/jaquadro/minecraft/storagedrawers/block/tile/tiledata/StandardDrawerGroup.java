@@ -135,8 +135,9 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             matcher = data.matcher;
         }
 
+        @Override
         @NotNull
-        IDrawerAttributes getAttributes() {
+        public IDrawerAttributes getAttributes() {
             if (cachedAttrs != null)
                 return cachedAttrs;
 
