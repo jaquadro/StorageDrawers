@@ -76,9 +76,11 @@
     "item.storagedrawers.portability_upgrade.desc": "允许你携带已填充的抽屉",
     "item.storagedrawers.portability_upgrade.warn": "在当前的模组配置下没有效果",
     "item.storagedrawers.hopper_upgrade": "Hopper Upgrade",
-    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like item collection",
+    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like in-world item collection",
     "item.storagedrawers.magnet_upgrade": "Magnet Upgrade (I)",
     "item.storagedrawers.magnet_upgrade.desc": "Collect items around drawers",
+    "item.storagedrawers.magnet_upgrade.range": "Adds %s collecting range",
+    "item.storagedrawers.magnet_upgrade.speed": "Collects %d stack per %dt",
     "item.storagedrawers.magnet_upgrade_2": "Magnet Upgrade (II)",
     "item.storagedrawers.magnet_upgrade_3": "Magnet Upgrade (III)",
     "item.storagedrawers.remote_upgrade": "远程升级",
@@ -100,6 +102,8 @@
     "item.storagedrawers.shroud_key.desc": "显示或隐藏物品图标",
     "item.storagedrawers.quantify_key": "量化钥匙",
     "item.storagedrawers.quantify_key.desc": "显示或隐藏存储数量",
+    "item.storagedrawers.suspend_key": "Pause Key",
+    "item.storagedrawers.suspend_key.desc": "Pauses controller I/O\nand most upgrade actions",
     "item.storagedrawers.priority_key": "优先级钥匙",
     "item.storagedrawers.priority_key.desc": "根据优先级循环抽屉\n潜行时使用以循环切换钥匙的优先级",
     "item.storagedrawers.priority_key_p1": "优先级钥匙 (+1)",
@@ -141,5 +145,6 @@
     "tooltip.storagedrawers.waila.locked": "锁定",
     "tooltip.storagedrawers.waila.void": "虚空",
     "tooltip.storagedrawers.waila.protected": "保护",
-    "tooltip.storagedrawers.waila.balanced": "平衡"
+    "tooltip.storagedrawers.waila.suspended": "Paused",
+    "tooltip.storagedrawers.waila.magnetic": "Magnetic"
 }

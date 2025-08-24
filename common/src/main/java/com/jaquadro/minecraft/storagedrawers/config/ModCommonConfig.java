@@ -575,52 +575,72 @@ public final class ModCommonConfig extends ConfigSpec
             }
         }
 
-        public class MagnetUpgrade extends Upgrade
-        {
-            public final ChameleonConfig.ConfigEntry<Boolean> enableLevel2;
-            public final ChameleonConfig.ConfigEntry<Boolean> enableLevel3;
-            public final ChameleonConfig.ConfigEntry<Boolean> additiveRange;
-            public final ChameleonConfig.ConfigEntry<List<? extends Integer>> level1Range ;
-            public final ChameleonConfig.ConfigEntry<List<? extends Integer>> level2Range ;
-            public final ChameleonConfig.ConfigEntry<List<? extends Integer>> level3Range ;
-            public final ChameleonConfig.ConfigEntry<List<? extends Integer>> maxRange ;
+        public class MagnetTierUpgrade extends Upgrade {
+            public final ChameleonConfig.ConfigEntry<List<? extends Integer>> range;
+            public final ChameleonConfig.ConfigEntry<Integer> activeSpeed;
+            public final ChameleonConfig.ConfigEntry<Integer> idleSpeed;
 
-            public MagnetUpgrade (String upgradeName, String... comment) {
+            public MagnetTierUpgrade (String upgradeName, List<Integer> defaultRange, int defaultSpeed, String... comment) {
                 super(upgradeName, comment);
 
-                enableLevel2 = commonConfig.define("enableLevel2", true)
-                    .comment("", "Enables a more powerful tier-2 magnet upgrade.");
-
-                enableLevel3 = commonConfig.define("enableLevel3", true)
-                    .comment("", "Enables a more powerful tier-3 magnet upgrade.");
-
-                additiveRange = commonConfig.define("additiveRange", true)
-                    .comment("", "When multiple magnet upgrades are used, their ranges are added together.");
-
-                level1Range = commonConfig.defineList("level1Range", Arrays.asList(1, 1, 0), null)
+                range = commonConfig.defineList("range", defaultRange, null)
                     .comment("", "Range is blocks out from drawer as: [horizontal, up, down]");
 
-                level2Range = commonConfig.defineList("level2Range", Arrays.asList(4, 2, 0), null)
-                    .comment("", "Range is blocks out from drawer as: [horizontal, up, down]");
+                activeSpeed = commonConfig.define("activeSpeed", defaultSpeed)
+                    .comment("", "Ticks between active collection when this is the highest upgrade tier.");
 
-                level3Range = commonConfig.defineList("level3Range", Arrays.asList(8, 3, 0), null)
-                    .comment("", "Range is blocks out from drawer as: [horizontal, up, down]");
-
-                maxRange = commonConfig.defineList("maxRange", Arrays.asList(24, 8, 0), null)
-                    .comment("", "Range is blocks out from drawer as: [horizontal, up, down]",
-                        "If ranges from multiple upgrades are added, they are not allowed to exceed these values.");
+                idleSpeed = commonConfig.define("idleSpeed", 20)
+                    .comment("", "Ticks between collection checks when this is the highest upgrade tier.",
+                        "Collection is idle when items have not been collected within the last idleSpeed interval.");
             }
 
             @Override
             protected void buildEntries () {
                 super.buildEntries();
-                enableLevel2.build();
-                enableLevel3.build();
+                range.build();
+                activeSpeed.build();
+                idleSpeed.build();
+            }
+
+            @Override
+            public MagnetTierUpgrade build () {
+                super.build();
+                return this;
+            }
+        }
+
+        public class MagnetUpgrade extends Upgrade
+        {
+            public final ChameleonConfig.ConfigEntry<Boolean> additiveRange;
+            public final ChameleonConfig.ConfigEntry<List<? extends Integer>> maxRange ;
+
+            public final MagnetTierUpgrade tier1;
+            public final MagnetTierUpgrade tier2;
+            public final MagnetTierUpgrade tier3;
+
+            public MagnetUpgrade (String upgradeName, String... comment) {
+                super(upgradeName, comment);
+
+                additiveRange = commonConfig.define("additiveRange", true)
+                    .comment("", "When multiple magnet upgrades are used, their ranges are added together.");
+
+                maxRange = commonConfig.defineList("maxRange", Arrays.asList(24, 8, 0), null)
+                    .comment("", "Range is blocks out from drawer as: [horizontal, up, down]",
+                        "If ranges from multiple upgrades are added, they are not allowed to exceed these values.");
+
+                tier1 = new MagnetTierUpgrade("Level1", Arrays.asList(1, 1, 0), 20);
+                tier2 = new MagnetTierUpgrade("Level2", Arrays.asList(4, 2, 0), 10);
+                tier3 = new MagnetTierUpgrade("Level3", Arrays.asList(8, 3, 0), 5);
+            }
+
+            @Override
+            protected void buildEntries () {
+                super.buildEntries();
                 additiveRange.build();
-                level1Range.build();
-                level2Range.build();
-                level3Range.build();
                 maxRange.build();
+                tier1.build();
+                tier2.build();
+                tier3.build();
             }
 
             @Override

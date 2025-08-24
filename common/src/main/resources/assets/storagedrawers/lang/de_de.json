@@ -76,9 +76,11 @@
     "item.storagedrawers.portability_upgrade.desc": "Ermöglicht es dir, gefüllte Schubladen zu tragen",
     "item.storagedrawers.portability_upgrade.warn": "Hat keine Auswirkung mit aktueller Mod-Konfiguration",
     "item.storagedrawers.hopper_upgrade": "Hopper Upgrade",
-    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like item collection",
+    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like in-world item collection",
     "item.storagedrawers.magnet_upgrade": "Magnet Upgrade (I)",
     "item.storagedrawers.magnet_upgrade.desc": "Collect items around drawers",
+    "item.storagedrawers.magnet_upgrade.range": "Adds %s collecting range",
+    "item.storagedrawers.magnet_upgrade.speed": "Collects %d stack per %dt",
     "item.storagedrawers.magnet_upgrade_2": "Magnet Upgrade (II)",
     "item.storagedrawers.magnet_upgrade_3": "Magnet Upgrade (III)",
     "item.storagedrawers.remote_upgrade": "Fernzugriffsaufrüstung",
@@ -100,6 +102,8 @@
     "item.storagedrawers.shroud_key.desc": "Zeigt oder verbirgt Itemsymbole",
     "item.storagedrawers.quantify_key": "Mengenschlüssel",
     "item.storagedrawers.quantify_key.desc": "Zeigt oder verbirgt die Anzahl gelagerter Items",
+    "item.storagedrawers.suspend_key": "Pause Key",
+    "item.storagedrawers.suspend_key.desc": "Pauses controller I/O\nand most upgrade actions",
     "item.storagedrawers.priority_key": "Prioritätsschlüssel",
     "item.storagedrawers.priority_key.desc": "Wechselt die Prioritätsstufe der Schublade\nSchleichen und Benutzen-Taste drücken zum Anwenden",
     "item.storagedrawers.priority_key_p1": "Prioritätsschlüssel (+1)",
@@ -141,5 +145,6 @@
     "tooltip.storagedrawers.waila.locked": "Abgeschlossen",
     "tooltip.storagedrawers.waila.void": "Leere",
     "tooltip.storagedrawers.waila.protected": "Geschützt",
-    "tooltip.storagedrawers.waila.balanced": "Ausgeglichen"
+    "tooltip.storagedrawers.waila.suspended": "Paused",
+    "tooltip.storagedrawers.waila.magnetic": "Magnetic"
 }

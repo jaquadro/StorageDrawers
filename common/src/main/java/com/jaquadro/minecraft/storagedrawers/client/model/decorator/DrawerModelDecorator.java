@@ -101,20 +101,6 @@ public class DrawerModelDecorator extends ModelDecorator<DrawerModelContext>
         if (attr.isSuspended())
             emitIcon.accept(DrawerModelStore.DynamicPart.SUSPEND_ICON, iconIndex++);
 
-        /*DrawerModelStore.DynamicPart priorityPart = switch (attr.getPriority()) {
-            case 1 -> DrawerModelStore.DynamicPart.PRIORITY_P1;
-            case 2 -> DrawerModelStore.DynamicPart.PRIORITY_P2;
-            case -1 -> DrawerModelStore.DynamicPart.PRIORITY_N1;
-            case -2 -> DrawerModelStore.DynamicPart.PRIORITY_N2;
-            default -> null;
-        };
-        if (priorityPart != null)
-            emitModel.accept(DrawerModelStore.getModel(priorityPart, dir, half), RenderType.cutoutMipped());*/
-
-        //if (attr.isVoid())
-        //    emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.VOID, dir, half), RenderType.cutoutMipped());
-        //if (attr.isConcealed())
-        //    emitModel.accept(DrawerModelStore.getModel(DrawerModelStore.DynamicPart.SHROUD, dir, half), RenderType.cutoutMipped());
         if (attr.hasFillLevel()) {
             if (block instanceof BlockCompDrawers compBlock) {
                 int count = compBlock.getDrawerCount();

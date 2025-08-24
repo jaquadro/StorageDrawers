@@ -5,24 +5,30 @@ import org.jetbrains.annotations.NotNull;
 
 public enum EnumUpgradeMagnet implements StringRepresentable
 {
-    LEVEL1(0, "level1", "level1"),
-    LEVEL2(1, "level2", "level2"),
-    LEVEL3(2, "level3", "level3");
+    LEVEL1(0, 1, "level1", "level1"),
+    LEVEL2(1, 2, "level2", "level2"),
+    LEVEL3(2, 3, "level3", "level3");
 
     private static final EnumUpgradeMagnet[] META_LOOKUP;
 
     private final int meta;
+    private final int level;
     private final String name;
     private final String unlocalizedName;
 
-    EnumUpgradeMagnet (int meta, String name, String unlocalizedName) {
+    EnumUpgradeMagnet (int meta, int level, String name, String unlocalizedName) {
         this.meta = meta;
+        this.level = level;
         this.name = name;
         this.unlocalizedName = unlocalizedName;
     }
 
     public int getMetadata () {
         return meta;
+    }
+
+    public int getLevel () {
+        return level;
     }
 
     public String getUnlocalizedName () {

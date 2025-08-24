@@ -76,9 +76,11 @@
     "item.storagedrawers.portability_upgrade.desc": "Permite que as gavetas sejam carregadas com itens dentro",
     "item.storagedrawers.portability_upgrade.warn": "Essa melhoria foi desativada nas configurações",
     "item.storagedrawers.hopper_upgrade": "Hopper Upgrade",
-    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like item collection",
+    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like in-world item collection",
     "item.storagedrawers.magnet_upgrade": "Magnet Upgrade (I)",
     "item.storagedrawers.magnet_upgrade.desc": "Collect items around drawers",
+    "item.storagedrawers.magnet_upgrade.range": "Adds %s collecting range",
+    "item.storagedrawers.magnet_upgrade.speed": "Collects %d stack per %dt",
     "item.storagedrawers.magnet_upgrade_2": "Magnet Upgrade (II)",
     "item.storagedrawers.magnet_upgrade_3": "Magnet Upgrade (III)",
     "item.storagedrawers.remote_upgrade": "Melhoria de conexão remota",
@@ -100,6 +102,8 @@
     "item.storagedrawers.shroud_key.desc": "Muda a exibição do rótulo da gaveta",
     "item.storagedrawers.quantify_key": "Chave de quantidade",
     "item.storagedrawers.quantify_key.desc": "Muda a exibição da quantidade de itens na gaveta",
+    "item.storagedrawers.suspend_key": "Pause Key",
+    "item.storagedrawers.suspend_key.desc": "Pauses controller I/O\nand most upgrade actions",
     "item.storagedrawers.priority_key": "Chave de prioridade",
     "item.storagedrawers.priority_key.desc": "Muda o nível de prioridade da gaveta\nAgache e clique para mudar",
     "item.storagedrawers.priority_key_p1": "Chave de prioridade (+1)",
@@ -141,5 +145,6 @@
     "tooltip.storagedrawers.waila.locked": "Trancada",
     "tooltip.storagedrawers.waila.void": "Em vácuo",
     "tooltip.storagedrawers.waila.protected": "Protegida",
-    "tooltip.storagedrawers.waila.balanced": "Uniformizada"
+    "tooltip.storagedrawers.waila.suspended": "Paused",
+    "tooltip.storagedrawers.waila.magnetic": "Magnetic"
 }

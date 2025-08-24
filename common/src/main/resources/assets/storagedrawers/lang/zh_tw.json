@@ -76,9 +76,11 @@
     "item.storagedrawers.portability_upgrade.desc": "允許移動收納中的抽屜櫃。",
     "item.storagedrawers.portability_upgrade.warn": "Has no effect with current mod configuration",
     "item.storagedrawers.hopper_upgrade": "Hopper Upgrade",
-    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like item collection",
+    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like in-world item collection",
     "item.storagedrawers.magnet_upgrade": "Magnet Upgrade (I)",
     "item.storagedrawers.magnet_upgrade.desc": "Collect items around drawers",
+    "item.storagedrawers.magnet_upgrade.range": "Adds %s collecting range",
+    "item.storagedrawers.magnet_upgrade.speed": "Collects %d stack per %dt",
     "item.storagedrawers.magnet_upgrade_2": "Magnet Upgrade (II)",
     "item.storagedrawers.magnet_upgrade_3": "Magnet Upgrade (III)",
     "item.storagedrawers.remote_upgrade": "單一雲端升級",
@@ -100,6 +102,8 @@
     "item.storagedrawers.shroud_key.desc": "顯示隱藏物品。",
     "item.storagedrawers.quantify_key": "量化鑰匙",
     "item.storagedrawers.quantify_key.desc": "顯示或隱藏收納容量。",
+    "item.storagedrawers.suspend_key": "Pause Key",
+    "item.storagedrawers.suspend_key.desc": "Pauses controller I/O\nand most upgrade actions",
     "item.storagedrawers.priority_key": "優先鑰匙",
     "item.storagedrawers.priority_key.desc": "一般優先瀏覽抽屜，蹲下並使用滾輪瀏覽。",
     "item.storagedrawers.priority_key_p1": "優先＋１鑰匙",
@@ -141,5 +145,6 @@
     "tooltip.storagedrawers.waila.locked": "固定物品",
     "tooltip.storagedrawers.waila.void": "垃圾桶",
     "tooltip.storagedrawers.waila.protected": "物品保護",
-    "tooltip.storagedrawers.waila.balanced": "物品平均"
+    "tooltip.storagedrawers.waila.suspended": "Paused",
+    "tooltip.storagedrawers.waila.magnetic": "Magnetic"
 }

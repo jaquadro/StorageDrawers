@@ -76,9 +76,11 @@
     "item.storagedrawers.portability_upgrade.desc": "アイテムの入ったドロワーの運搬を可能にします。",
     "item.storagedrawers.portability_upgrade.warn": "現在のmod設定では効果がありません。",
     "item.storagedrawers.hopper_upgrade": "Hopper Upgrade",
-    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like item collection",
+    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like in-world item collection",
     "item.storagedrawers.magnet_upgrade": "Magnet Upgrade (I)",
     "item.storagedrawers.magnet_upgrade.desc": "Collect items around drawers",
+    "item.storagedrawers.magnet_upgrade.range": "Adds %s collecting range",
+    "item.storagedrawers.magnet_upgrade.speed": "Collects %d stack per %dt",
     "item.storagedrawers.magnet_upgrade_2": "Magnet Upgrade (II)",
     "item.storagedrawers.magnet_upgrade_3": "Magnet Upgrade (III)",
     "item.storagedrawers.remote_upgrade": "リモートアップグレード",
@@ -100,6 +102,8 @@
     "item.storagedrawers.shroud_key.desc": "アイテムラベルを表示または非表示にします。",
     "item.storagedrawers.quantify_key": "測量キー",
     "item.storagedrawers.quantify_key.desc": "保管数のラベルを表示または非表示にします。",
+    "item.storagedrawers.suspend_key": "Pause Key",
+    "item.storagedrawers.suspend_key.desc": "Pauses controller I/O\nand most upgrade actions",
     "item.storagedrawers.priority_key": "優先キー",
     "item.storagedrawers.priority_key.desc": "ドロワーの優先度を切り替えます。\nまた、しゃがんで使うとキーを切り替えます。",
     "item.storagedrawers.priority_key_p1": "優先キー (+1)",
@@ -141,5 +145,6 @@
     "tooltip.storagedrawers.waila.locked": "ロック済み",
     "tooltip.storagedrawers.waila.void": "ヴォイド",
     "tooltip.storagedrawers.waila.protected": "保護済み",
-    "tooltip.storagedrawers.waila.balanced": "均等化済み"
+    "tooltip.storagedrawers.waila.suspended": "Paused",
+    "tooltip.storagedrawers.waila.magnetic": "Magnetic"
 }

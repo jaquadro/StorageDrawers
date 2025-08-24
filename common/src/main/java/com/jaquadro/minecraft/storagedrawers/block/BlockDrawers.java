@@ -8,6 +8,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
 import com.jaquadro.minecraft.storagedrawers.components.item.DetachedDrawerContents;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
@@ -717,7 +718,11 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         // Tick hopper
         IDrawerAttributes attribs = blockEntity.getDrawerAttributes();
         if (attribs.isHopper() || attribs.isMagnet()) {
-            int nextTick = blockEntity.pushItemsTick(world, pos, state) ? 5 : rand.nextInt(20, 30);
+            UpgradeData upgrades = blockEntity.upgrades();
+            int idleRate = upgrades.getMagnetIdleRate();
+            int nextTick = blockEntity.pushItemsTick(world, pos, state)
+                ? upgrades.getMagnetActiveRate()
+                : rand.nextInt(idleRate, idleRate + 5);
             world.scheduleTick(pos, state.getBlock(), nextTick);
         }
 

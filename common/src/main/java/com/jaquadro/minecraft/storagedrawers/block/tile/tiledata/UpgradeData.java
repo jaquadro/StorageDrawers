@@ -21,6 +21,8 @@ public class UpgradeData extends BlockEntityDataShim
     protected final ItemStack[] upgrades;
     private int storageMultiplier;
     private int[] magnetRange;
+    private int magnetActiveRate;
+    private int magnetIdleRate;
     private EnumUpgradeRedstone redstoneType;
 
     // TODO: Do we need to provide these?
@@ -163,6 +165,14 @@ public class UpgradeData extends BlockEntityDataShim
             case MagnetDim.UP -> magnetRange[1];
             case MagnetDim.DOWN -> magnetRange[2];
         };
+    }
+
+    public int getMagnetActiveRate () {
+        return magnetActiveRate;
+    }
+
+    public int getMagnetIdleRate () {
+        return magnetIdleRate;
     }
 
     public EnumUpgradeRedstone getRedstoneType () {
@@ -330,6 +340,7 @@ public class UpgradeData extends BlockEntityDataShim
         Arrays.fill(magnetRange, 0);
         hasMagnet = false;
 
+        int highestTier = 0;
         for (ItemStack stack : upgrades) {
             if (stack.getItem() instanceof ItemUpgradeMagnet itemMagnet) {
                 if (!itemMagnet.isEnabled())
@@ -339,6 +350,12 @@ public class UpgradeData extends BlockEntityDataShim
                 magnetRange[0] += itemMagnet.getHorzRange();
                 magnetRange[1] += itemMagnet.getUpRange();
                 magnetRange[2] += itemMagnet.getDownRange();
+
+                if (itemMagnet.type.getLevel() > highestTier) {
+                    highestTier = itemMagnet.type.getLevel();
+                    magnetActiveRate = itemMagnet.getActiveSpeed();
+                    magnetIdleRate = itemMagnet.getIdleSpeed();
+                }
             }
         }
     }

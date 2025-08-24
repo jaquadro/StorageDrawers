@@ -1,8 +1,16 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemUpgradeMagnet extends ItemUpgrade
 {
@@ -34,16 +42,50 @@ public class ItemUpgradeMagnet extends ItemUpgrade
     }
 
     @Override
+    public void appendHoverText (ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltip, flag);
+
+        String rangeId = ModItems.MAGNET_UPGRADE.get().getDescriptionId() + ".range";
+        tooltip.add(Component.translatable(rangeId, buildRangeString()).withStyle(ChatFormatting.DARK_GRAY));
+
+        String rateId = ModItems.MAGNET_UPGRADE.get().getDescriptionId() + ".speed";
+        int activeSpeed = getActiveSpeed();
+        tooltip.add(Component.translatable(rateId, 1, activeSpeed).withStyle(ChatFormatting.DARK_GRAY));
+    }
+
+    private String buildRangeString () {
+        ArrayList<String> result = new ArrayList<>();
+        int hRange = getHorzRange();
+        int upRange = getUpRange();
+        int downRange = getDownRange();
+
+        if (hRange == upRange && hRange == downRange)
+            return Integer.toString(hRange);
+
+        if (hRange > 0)
+            result.add(hRange + "↔");
+        if (upRange > 0)
+            result.add(upRange + "↑");
+        if (downRange > 0)
+            result.add(downRange + "↓");
+
+        return String.join(", ", result);
+    }
+
+    @Override
     public boolean isEnabled () {
         if (!ModCommonConfig.INSTANCE.UPGRADES.magnetUpgrade.enableUpgrade.get())
             return false;
 
-        if (type == EnumUpgradeMagnet.LEVEL2)
-            return ModCommonConfig.INSTANCE.UPGRADES.magnetUpgrade.enableLevel2.get();
-        else if (type == EnumUpgradeMagnet.LEVEL3)
-            return ModCommonConfig.INSTANCE.UPGRADES.magnetUpgrade.enableLevel3.get();
+        return getConfig().enableUpgrade.get();
+    }
 
-        return true;
+    public int getActiveSpeed () {
+        return getConfig().activeSpeed.get();
+    }
+
+    public int getIdleSpeed () {
+        return getConfig().idleSpeed.get();
     }
 
     public int getHorzRange () {
@@ -59,10 +101,14 @@ public class ItemUpgradeMagnet extends ItemUpgrade
     }
 
     private int getIndexedRange (int index) {
+        return getConfig().range.get().get(index);
+    }
+
+    private ModCommonConfig.Upgrades.MagnetTierUpgrade getConfig () {
         return switch (type) {
-            case LEVEL1 -> ModCommonConfig.INSTANCE.UPGRADES.magnetUpgrade.level1Range.get().get(index);
-            case LEVEL2 -> ModCommonConfig.INSTANCE.UPGRADES.magnetUpgrade.level2Range.get().get(index);
-            case LEVEL3 -> ModCommonConfig.INSTANCE.UPGRADES.magnetUpgrade.level3Range.get().get(index);
+            case LEVEL1 -> ModCommonConfig.INSTANCE.UPGRADES.magnetUpgrade.tier1;
+            case LEVEL2 -> ModCommonConfig.INSTANCE.UPGRADES.magnetUpgrade.tier2;
+            case LEVEL3 -> ModCommonConfig.INSTANCE.UPGRADES.magnetUpgrade.tier3;
         };
     }
 }

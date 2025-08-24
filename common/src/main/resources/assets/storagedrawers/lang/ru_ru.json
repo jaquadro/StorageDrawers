@@ -76,9 +76,11 @@
     "item.storagedrawers.portability_upgrade.desc": "Позволяет переносить заполненные ящики",
     "item.storagedrawers.portability_upgrade.warn": "Ничего не делает с текущими настройками мода",
     "item.storagedrawers.hopper_upgrade": "Hopper Upgrade",
-    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like item collection",
+    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like in-world item collection",
     "item.storagedrawers.magnet_upgrade": "Magnet Upgrade (I)",
     "item.storagedrawers.magnet_upgrade.desc": "Collect items around drawers",
+    "item.storagedrawers.magnet_upgrade.range": "Adds %s collecting range",
+    "item.storagedrawers.magnet_upgrade.speed": "Collects %d stack per %dt",
     "item.storagedrawers.magnet_upgrade_2": "Magnet Upgrade (II)",
     "item.storagedrawers.magnet_upgrade_3": "Magnet Upgrade (III)",
     "item.storagedrawers.remote_upgrade": "Улучшение \"Удалённый доступ\"",
@@ -100,6 +102,8 @@
     "item.storagedrawers.shroud_key.desc": "Показать или скрыть надписи предметов",
     "item.storagedrawers.quantify_key": "Ключ подсчёта",
     "item.storagedrawers.quantify_key.desc": "Показать или скрыть надписи о количестве хранимых предметов",
+    "item.storagedrawers.suspend_key": "Pause Key",
+    "item.storagedrawers.suspend_key.desc": "Pauses controller I/O\nand most upgrade actions",
     "item.storagedrawers.priority_key": "Ключ приоритета",
     "item.storagedrawers.priority_key.desc": "Переключает уровень приоритета для ящика\nКрасться и использовать, чтобы переключить приоритет ключа",
     "item.storagedrawers.priority_key_p1": "Ключ приоритета (+1)",
@@ -141,5 +145,6 @@
     "tooltip.storagedrawers.waila.locked": "Закрытый",
     "tooltip.storagedrawers.waila.void": "Пустота",
     "tooltip.storagedrawers.waila.protected": "Защищенный",
-    "tooltip.storagedrawers.waila.balanced": "Равномерный"
+    "tooltip.storagedrawers.waila.suspended": "Paused",
+    "tooltip.storagedrawers.waila.magnetic": "Magnetic"
 }

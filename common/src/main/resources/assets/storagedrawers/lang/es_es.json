@@ -76,9 +76,11 @@
     "item.storagedrawers.portability_upgrade.desc": "Te permite llevar cajones llenos",
     "item.storagedrawers.portability_upgrade.warn": "No tiene efecto con la configuración actual del mod",
     "item.storagedrawers.hopper_upgrade": "Hopper Upgrade",
-    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like item collection",
+    "item.storagedrawers.hopper_upgrade.desc": "Hopper-like in-world item collection",
     "item.storagedrawers.magnet_upgrade": "Magnet Upgrade (I)",
     "item.storagedrawers.magnet_upgrade.desc": "Collect items around drawers",
+    "item.storagedrawers.magnet_upgrade.range": "Adds %s collecting range",
+    "item.storagedrawers.magnet_upgrade.speed": "Collects %d stack per %dt",
     "item.storagedrawers.magnet_upgrade_2": "Magnet Upgrade (II)",
     "item.storagedrawers.magnet_upgrade_3": "Magnet Upgrade (III)",
     "item.storagedrawers.remote_upgrade": "Mejora remota",
@@ -100,6 +102,8 @@
     "item.storagedrawers.shroud_key.desc": "Mostrar u ocultar etiquetas de artículos",
     "item.storagedrawers.quantify_key": "Llave de cantidad",
     "item.storagedrawers.quantify_key.desc": "Mostrar u ocultar etiquetas de cantidad almacenada",
+    "item.storagedrawers.suspend_key": "Pause Key",
+    "item.storagedrawers.suspend_key.desc": "Pauses controller I/O\nand most upgrade actions",
     "item.storagedrawers.priority_key": "Llave de prioridad",
     "item.storagedrawers.priority_key.desc": "Pasar el cajón por los niveles de prioridad\nAgáchate y usa para ciclar la tecla",
     "item.storagedrawers.priority_key_p1": "Llave prioritaria (+1)",
@@ -141,5 +145,6 @@
     "tooltip.storagedrawers.waila.locked": "Bloqueado",
     "tooltip.storagedrawers.waila.void": "Vacío",
     "tooltip.storagedrawers.waila.protected": "Protegido",
-    "tooltip.storagedrawers.waila.balanced": "Balanceado"
+    "tooltip.storagedrawers.waila.suspended": "Paused",
+    "tooltip.storagedrawers.waila.magnetic": "Magnetic"
 }
