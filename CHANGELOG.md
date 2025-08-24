@@ -2,6 +2,7 @@
 - Fixed configuration of hopper and magnet upgrades
 - Fixed configuration of pause key
 - Removed redundant magnet configuration
+- Fixed empty tag left on empty keyrings
 
 [13.11.0]
 - Added Hopper Upgrade

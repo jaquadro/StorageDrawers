@@ -60,8 +60,12 @@ public class ItemKeyring extends Item
             ItemStack removed = mutable.removeOne();
             if (removed != null) {
                 access.set(removed);
-                contents = mutable.toImmutable();
-                targetStack.set(ModDataComponents.KEYRING_CONTENTS.get(), contents);
+                if (mutable.size() == 0)
+                    targetStack.remove(ModDataComponents.KEYRING_CONTENTS.get());
+                else {
+                    contents = mutable.toImmutable();
+                    targetStack.set(ModDataComponents.KEYRING_CONTENTS.get(), contents);
+                }
             }
 
             if (getContents(targetStack).findAny().isEmpty()) {
