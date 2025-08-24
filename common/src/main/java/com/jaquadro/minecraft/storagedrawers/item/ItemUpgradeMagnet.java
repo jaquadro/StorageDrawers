@@ -44,6 +44,8 @@ public class ItemUpgradeMagnet extends ItemUpgrade
     @Override
     public void appendHoverText (ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
+        if (!isEnabled())
+            return;
 
         String rangeId = ModItems.MAGNET_UPGRADE.get().getDescriptionId() + ".range";
         tooltip.add(Component.translatable(rangeId, buildRangeString()).withStyle(ChatFormatting.DARK_GRAY));
@@ -74,9 +76,6 @@ public class ItemUpgradeMagnet extends ItemUpgrade
 
     @Override
     public boolean isEnabled () {
-        if (!ModCommonConfig.INSTANCE.UPGRADES.magnetUpgrade.enableUpgrade.get())
-            return false;
-
         return getConfig().enableUpgrade.get();
     }
 

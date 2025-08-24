@@ -16,6 +16,6 @@ public class ItemSuspendKey extends ItemKey
 
     @Override
     public boolean isEnabled () {
-        return ModCommonConfig.INSTANCE.TOOLS.concealmentKey.enable.get();
+        return ModCommonConfig.INSTANCE.TOOLS.suspendKey.enable.get();
     }
 }

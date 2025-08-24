@@ -609,7 +609,7 @@ public final class ModCommonConfig extends ConfigSpec
             }
         }
 
-        public class MagnetUpgrade extends Upgrade
+        public class MagnetUpgrade extends ConfigSection
         {
             public final ChameleonConfig.ConfigEntry<Boolean> additiveRange;
             public final ChameleonConfig.ConfigEntry<List<? extends Integer>> maxRange ;
@@ -835,7 +835,7 @@ public final class ModCommonConfig extends ConfigSpec
             priorityKey = new Key("PriorityKey",
                 "Priority keys change the priority of drawers when finding a compatible slot to insert items into.").build();
 
-            suspendKey = new Key("SuspendKey",
+            suspendKey = new Key("PauseKey",
                 "Suspend keys stop external interaction, e.g. from hopper or magnet upgrades.").build();
 
             commonConfig.popGroup();

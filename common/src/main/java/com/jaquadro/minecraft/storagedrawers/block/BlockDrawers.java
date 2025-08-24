@@ -690,8 +690,11 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
     @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         BlockEntityDrawers blockEntity = WorldUtils.getBlockEntity(level, pos, BlockEntityDrawers.class);
-        if (blockEntity != null && blockEntity.getDrawerAttributes().isHopper())
-            blockEntity.entityInside(level, pos, state, entity);
+        if (blockEntity != null) {
+            IDrawerAttributes attr = blockEntity.getDrawerAttributes();
+            if (attr.isHopper() && !attr.isSuspended())
+                blockEntity.entityInside(level, pos, state, entity);
+        }
     }
 
     @Override
@@ -719,11 +722,16 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         IDrawerAttributes attribs = blockEntity.getDrawerAttributes();
         if (attribs.isHopper() || attribs.isMagnet()) {
             UpgradeData upgrades = blockEntity.upgrades();
-            int idleRate = upgrades.getMagnetIdleRate();
-            int nextTick = blockEntity.pushItemsTick(world, pos, state)
-                ? upgrades.getMagnetActiveRate()
-                : rand.nextInt(idleRate, idleRate + 5);
-            world.scheduleTick(pos, state.getBlock(), nextTick);
+            int tickTime = 20;
+
+            if (attribs.isMagnet()) {
+                int idleRate = upgrades.getMagnetIdleRate();
+                tickTime = blockEntity.pushItemsTick(world, pos, state)
+                    ? upgrades.getMagnetActiveRate()
+                    : rand.nextInt(idleRate, idleRate + 5);
+            }
+
+            world.scheduleTick(pos, state.getBlock(), tickTime);
         }
 
         // Only validates if validation is scheduled on entity

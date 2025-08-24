@@ -300,7 +300,7 @@ public class UpgradeData extends BlockEntityDataShim
             else if (item == ModItems.BALANCE_FILL_UPGRADE.get())
                 hasBalanceFill = ModCommonConfig.INSTANCE.UPGRADES.balanceUpgrade.enableUpgrade.get();
             else if (item == ModItems.HOPPER_UPGRADE.get())
-                hasHopper = ModCommonConfig.INSTANCE.UPGRADES.balanceUpgrade.enableUpgrade.get();
+                hasHopper = ModCommonConfig.INSTANCE.UPGRADES.hopperUpgrade.enableUpgrade.get();
             else if (item instanceof ItemUpgradeRemote remote) {
                 boolean enable = ModCommonConfig.INSTANCE.UPGRADES.remoteUpgrade.enableUpgrade.get();
                 hasRemote = remote.isGroupUpgrade()

@@ -1,3 +1,8 @@
+[13.11.1]
+- Fixed configuration of hopper and magnet upgrades
+- Fixed configuration of pause key
+- Removed redundant magnet configuration
+
 [13.11.0]
 - Added Hopper Upgrade
 - Added Magnet upgrades

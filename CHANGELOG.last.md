@@ -1,5 +1,3 @@
-- Added Hopper Upgrade
-- Added Magnet upgrades
-- Added Pause Key
-- Added nl_nl translation (Jack McKalling)
-- Updated translations from latest crowdin export
+- Fixed configuration of hopper and magnet upgrades
+- Fixed configuration of pause key
+- Removed redundant magnet configuration
