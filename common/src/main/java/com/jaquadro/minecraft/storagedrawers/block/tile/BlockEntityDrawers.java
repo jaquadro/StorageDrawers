@@ -52,9 +52,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup, IProtectable, INetworked, IFramedBlockEntity /*, INameable */
 {
@@ -62,6 +61,8 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     private final MaterialData materialData = new MaterialData();
     private final UpgradeData upgradeData = new DrawerUpgradeData();
     private final ControllerData controllerData = new ControllerData();
+
+    private final Set<IControlGroup> softBoundControlGroups = new HashSet<>();
 
     //public final ControllerData controllerData = new ControllerData();
 
@@ -281,6 +282,17 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     @Override
     public IControlGroup getBoundControlGroup () {
         return controllerData.getController(this);
+    }
+
+    @Override
+    public Set<IControlGroup> getSoftBoundControlGroups () {
+        softBoundControlGroups.removeIf(cg -> !cg.isSoftBindingValid(getBlockPos(), getGroup()));
+        return softBoundControlGroups;
+    }
+
+    @Override
+    public void softBindControlGroup (IControlGroup group) {
+        softBoundControlGroups.add(group);
     }
 
     @Override
@@ -536,6 +548,11 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
     @NotNull
     public ItemStack takeItemsFromSlot (int slot, int count) {
+        return takeItemsFromSlot(slot, count, null);
+    }
+
+    @NotNull
+    public ItemStack takeItemsFromSlot (int slot, int count, Player player) {
         IDrawer drawer = getGroup().getDrawer(slot);
         if (!drawer.isEnabled() || drawer.isEmpty())
             return ItemStack.EMPTY;
@@ -546,7 +563,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         drawer.setStoredItemCount(drawer.getStoredItemCount() - stack.getCount());
 
         if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade() && !drawerAttributes.isSuspended())
-            StorageUtil.rebalanceDrawers(getGroup(), slot);
+            StorageUtil.rebalanceDrawers(getGroup(), slot, player);
 
         if (isRedstone() && getLevel() != null) {
             getLevel().updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
@@ -559,6 +576,10 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     }
 
     public int putItemsIntoSlot (int slot, @NotNull ItemStack stack, int count) {
+        return putItemsIntoSlot(slot, stack, count, null);
+    }
+
+    public int putItemsIntoSlot (int slot, @NotNull ItemStack stack, int count, Player player) {
         IDrawer drawer = getGroup().getDrawer(slot);
         if (!drawer.isEnabled())
             return 0;
@@ -577,7 +598,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         stack.shrink(countAdded);
 
         if (upgradeData.hasbalancedFillUpgrade() && !upgradeData.hasVendingUpgrade() && !drawerAttributes.isSuspended())
-            StorageUtil.rebalanceDrawers(getGroup(), slot);
+            StorageUtil.rebalanceDrawers(getGroup(), slot, player);
 
         return countAdded;
     }
@@ -590,7 +611,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         int count = 0;
         ItemStack playerStack = player.getInventory().getSelected();
         if (!playerStack.isEmpty())
-            count = putItemsIntoSlot(slot, playerStack, playerStack.getCount());
+            count = putItemsIntoSlot(slot, playerStack, playerStack.getCount(), player);
 
         return count;
     }
@@ -605,7 +626,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             for (int i = 0, n = player.getInventory().getContainerSize(); i < n; i++) {
                 ItemStack subStack = player.getInventory().getItem(i);
                 if (!subStack.isEmpty()) {
-                    int subCount = putItemsIntoSlot(slot, subStack, subStack.getCount());
+                    int subCount = putItemsIntoSlot(slot, subStack, subStack.getCount(), player);
                     if (subCount > 0 && subStack.getCount() == 0)
                         player.getInventory().setItem(i, ItemStack.EMPTY);
 
@@ -637,6 +658,10 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     }
 
     public boolean interactReplaceDrawer (int slot, ItemStack detachedDrawer) {
+        return interactReplaceDrawer(slot, detachedDrawer, null);
+    }
+
+    public boolean interactReplaceDrawer (int slot, ItemStack detachedDrawer, Player player) {
         IDrawer drawer = getDrawer(slot);
         if (!drawer.isMissing())
             return false;
@@ -661,7 +686,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         drawer.setStoredItem(proto, count);
 
         if (drawerAttributes.isBalancedFill() && !drawerAttributes.isSuspended())
-            StorageUtil.rebalanceDrawers(getGroup(), slot);
+            StorageUtil.rebalanceDrawers(getGroup(), slot, player);
 
         return true;
     }

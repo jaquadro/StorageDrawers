@@ -1,4 +1,1 @@
-- Added Hopper Upgrade
-- Added Magnet upgrades
-- Added Pause Key
-- Updated translations from latest crowdin export
+- Balance upgrade works fully across controller networks

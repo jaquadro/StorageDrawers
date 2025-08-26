@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface IControlGroup
     void invalidateRemoteNode (INetworked node);
 
     boolean addRemoteNode (INetworked node);
+
+    boolean isSoftBindingValid (BlockPos pos, IDrawerGroup node);
 }
