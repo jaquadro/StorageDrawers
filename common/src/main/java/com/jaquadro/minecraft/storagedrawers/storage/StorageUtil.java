@@ -83,14 +83,32 @@ public class StorageUtil
             return;
 
         List<IDrawer> balanceDrawers = drawers.filter(IDrawer::isEnabled).toList();
+        if (balanceDrawers.size() <= 1)
+            return;
+
         int aggCount = balanceDrawers.stream().mapToInt(IDrawer::getStoredItemCount).sum();
+        List<Integer> balanceCapacity = balanceDrawers.stream().map(IDrawer::getMaxCapacity).toList();
+        int[] newAmount = new int[balanceCapacity.size()];
 
-        if (balanceDrawers.size() > 1) {
-            int dist = aggCount / balanceDrawers.size();
-            int remainder = aggCount - (dist * balanceDrawers.size());
+        while (aggCount > 0) {
+            int availDrawers = 0;
+            for (int i = 0; i < balanceCapacity.size(); i++) {
+                if (newAmount[i] < balanceCapacity.get(i))
+                    availDrawers += 1;
+            }
 
-            for (int i = 0; i < balanceDrawers.size(); i++)
-                balanceDrawers.get(i).setStoredItemCount(dist + (i < remainder ? 1 : 0));
+            int dist = aggCount / availDrawers;
+            int remainder = aggCount - (dist * availDrawers);
+
+            for (int i = 0; i < balanceDrawers.size(); i++) {
+                int remaining = balanceCapacity.get(i) - newAmount[i];
+                int toAdd = Math.min(remaining, dist + (i < remainder ? 1 : 0));
+                newAmount[i] += toAdd;
+                aggCount -= toAdd;
+            }
         }
+
+        for (int i = 0; i < balanceDrawers.size(); i++)
+            balanceDrawers.get(i).setStoredItemCount(newAmount[i]);
     }
 }
