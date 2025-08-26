@@ -474,9 +474,9 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
 
         ItemStack item;
         if (altAction)
-            item = blockEntityDrawers.takeItemsFromSlot(context.slot, drawer.getStoredItemStackSize());
+            item = blockEntityDrawers.takeItemsFromSlot(context.slot, drawer.getStoredItemStackSize(), context.player);
         else
-            item = blockEntityDrawers.takeItemsFromSlot(context.slot, 1);
+            item = blockEntityDrawers.takeItemsFromSlot(context.slot, 1, context.player);
 
         if (!item.isEmpty()) {
             if (!context.player.getInventory().add(item)) {
@@ -515,7 +515,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         if (entity == null)
             return false;
 
-        if (!entity.interactReplaceDrawer(context.slot, detachedDrawer))
+        if (!entity.interactReplaceDrawer(context.slot, detachedDrawer, context.player))
             return false;
 
         if (detachedDrawer.getItem() == ModItems.DETACHED_DRAWER.get()) {

@@ -1,3 +1,6 @@
+[13.11.2]
+- Balance upgrade works fully across controller networks
+
 [13.11.1]
 - Fixed configuration of hopper and magnet upgrades
 - Fixed configuration of pause key

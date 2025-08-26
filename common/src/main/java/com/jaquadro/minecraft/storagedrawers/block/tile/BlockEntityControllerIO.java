@@ -65,6 +65,15 @@ public class BlockEntityControllerIO extends BaseBlockEntity implements IDrawerG
     }
 
     @Override
+    public boolean isSoftBindingValid (BlockPos pos, IDrawerGroup node) {
+        IControlGroup group = getBoundControlGroup();
+        if (group != null)
+            return group.isSoftBindingValid(pos, node);
+
+        return false;
+    }
+
+    @Override
     public List<INetworked> getBoundRemoteNodes () {
         return List.of();
     }

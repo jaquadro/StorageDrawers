@@ -273,6 +273,18 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         }
     }
 
+    @Override
+    public boolean isSoftBindingValid (BlockPos pos, IDrawerGroup node) {
+        if (isRemoved())
+            return false;
+
+        StorageRecord record = storage.get(pos);
+        if (record == null)
+            return false;
+
+        return record.storage == node;
+    }
+
     public void onEntityLoad () {
         if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
             ModServices.log.info("controller [{}] onEntityLoad", worldPosition);
@@ -682,7 +694,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
             ((BlockEntityControllerIO) blockEntity).bindController(getBlockPos());
         }
-        else if (blockEntity instanceof BlockEntityDrawers) {
+        else if (blockEntity instanceof BlockEntityDrawers blockEntityDrawers) {
             IDrawerGroup group = ((BlockEntityDrawers) blockEntity).getGroup();
             if (record.storage == group)
                 return;
@@ -692,6 +704,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
             record.storage = group;
             record.drawerStorageSize = group.getDrawerCount();
+
+            blockEntityDrawers.softBindControlGroup(this);
 
             for (int i = 0, n = record.drawerStorageSize; i < n; i++)
                 drawerSlotList.add(new SlotRecord(group, coord, i));
@@ -708,6 +722,9 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
             record.storage = group;
             record.drawerStorageSize = group.getDrawerCount();
+
+            if (group instanceof INetworked netGroup)
+                netGroup.softBindControlGroup(this);
 
             for (int i = 0, n = record.drawerStorageSize; i < n; i++)
                 drawerSlotList.add(new SlotRecord(group, coord, i));
@@ -875,6 +892,41 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         if (capability == null || level == null)
             return null;
         return capability.getCapability(level, getBlockPos());
+    }
+
+    public Stream<IDrawer> getBalanceDrawers (@NotNull ItemStack stack, Player player) {
+        Collection<SlotRecord> primaryRecords = drawerPrimaryLookup.getEntries(stack.getItem());
+        if (primaryRecords == null)
+            return Stream.empty();
+
+        return primaryRecords.stream().map(r -> {
+            IDrawerGroup candidateGroup = getGroupForSlotRecord(r);
+            if (candidateGroup == null)
+                return Drawers.DISABLED;
+
+            IDrawer drawer = candidateGroup.getDrawer(r.slot);
+            if (drawer.isEmpty())
+                return Drawers.DISABLED;
+
+            if (player != null && candidateGroup instanceof IProtectable prot) {
+                if (!SecurityManager.hasAccess(player, prot))
+                    return Drawers.DISABLED;
+            }
+
+            return drawer;
+        }).filter(drawer -> {
+            if (!drawer.isEnabled())
+                return false;
+
+            IDrawerAttributes attr = drawer.getAttributes();
+            if (!attr.isBalancedFill() || attr.isSuspended())
+                return false;
+
+            if (!ItemStack.isSameItemSameComponents(stack, drawer.getStoredItemPrototype()))
+                return false;
+
+            return true;
+        });
     }
 
     /*

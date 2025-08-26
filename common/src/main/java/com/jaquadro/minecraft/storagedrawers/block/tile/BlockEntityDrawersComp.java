@@ -2,8 +2,10 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IControlGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
@@ -21,6 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Set;
 import java.util.UUID;
 
 public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
@@ -85,7 +88,7 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
         return false;
     }
 
-    protected class GroupData extends FractionalDrawerGroup implements IProtectable
+    protected class GroupData extends FractionalDrawerGroup implements IProtectable, INetworked
     {
         public GroupData (int slotCount) {
             super(slotCount);
@@ -168,6 +171,16 @@ public abstract class BlockEntityDrawersComp extends BlockEntityDrawers
         @Override
         public boolean setSecurityProvider (ISecurityProvider provder) {
             return BlockEntityDrawersComp.this.setSecurityProvider(provder);
+        }
+
+        @Override
+        public IControlGroup getBoundControlGroup () {
+            return BlockEntityDrawersComp.this.getBoundControlGroup();
+        }
+
+        @Override
+        public Set<IControlGroup> getSoftBoundControlGroups () {
+            return BlockEntityDrawersComp.super.getSoftBoundControlGroups();
         }
     }
 
