@@ -33,7 +33,7 @@ public class StorageUtil
         if (stack.isEmpty())
             return;
 
-        if (group instanceof INetworked networked) {
+        if (group instanceof INetworked networked && onNetwork(group)) {
             rebalanceDrawers(getRebalanceDrawers(networked, stack, player));
             return;
         }
@@ -49,6 +49,17 @@ public class StorageUtil
         }
 
         rebalanceDrawers(drawers.stream());
+    }
+
+    private static boolean onNetwork (IDrawerGroup group) {
+        if (!(group instanceof INetworked node))
+            return false;
+
+        IControlGroup bind = node.getBoundControlGroup();
+        if (bind != null)
+            return true;
+
+        return !node.getSoftBoundControlGroups().isEmpty();
     }
 
     private static Stream<IDrawer> getRebalanceDrawers (INetworked node, ItemStack stack, Player player) {
