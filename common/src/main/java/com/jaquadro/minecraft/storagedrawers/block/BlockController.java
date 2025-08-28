@@ -123,6 +123,8 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
             toggle(world, pos, player, KeyType.CONCEALMENT);
         else if (keyItem == ModItems.QUANTIFY_KEY.get())
             toggle(world, pos, player, KeyType.QUANTIFY);
+        else if (keyItem == ModItems.SUSPEND_KEY.get())
+            toggle(world, pos, player, KeyType.SUSPEND);
         else if (keyItem instanceof ItemPersonalKey itemKey)
             togglePersonal(world, pos, player, itemKey.getSecurityProviderKey());
         else
@@ -152,6 +154,8 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
                 controlAttrs.toggleConcealed();
             else if (keyType == KeyType.QUANTIFY)
                 controlAttrs.toggleIsShowingQuantity();
+            else if (keyType == KeyType.SUSPEND)
+                controlAttrs.toggleIsSuspended();
         }
     }
 

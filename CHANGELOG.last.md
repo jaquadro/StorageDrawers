@@ -1,2 +1,1 @@
-- Fixed remote upgrades showing bound description when not bound
-- Fixed admin key description indicating it's disabled
+- Balance upgrade works fully across controller networks

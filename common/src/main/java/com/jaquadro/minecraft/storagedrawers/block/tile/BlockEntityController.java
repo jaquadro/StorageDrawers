@@ -259,8 +259,10 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             if (node instanceof BlockEntity blockEntity) {
                 BlockPos pos = blockEntity.getBlockPos();
                 try {
-                    if (getLevel().isLoaded(pos))
+                    if (getLevel().isLoaded(pos)) {
+                        node.scheduleValidation();
                         getLevel().scheduleTick(pos, blockEntity.getBlockState().getBlock(), 1);
+                    }
                 } catch (Exception e) {
                     // Ignore
                 }
@@ -269,6 +271,18 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             //invalidateRemoteNode(node);
             //node.unbindControlGroup();
         }
+    }
+
+    @Override
+    public boolean isSoftBindingValid (BlockPos pos, IDrawerGroup node) {
+        if (isRemoved())
+            return false;
+
+        StorageRecord record = storage.get(pos);
+        if (record == null)
+            return false;
+
+        return record.storage == node;
     }
 
     public void onEntityLoad () {
@@ -358,6 +372,14 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         }
 
         @Override
+        public boolean setIsSuspended (boolean state) {
+            getSlotsValidAttributes(player).forEach(record -> {
+                record.setIsSuspended(state);
+            });
+            return true;
+        }
+
+        @Override
         public boolean setItemLocked (EnumSet<LockAttribute> attributes, LockAttribute attr, boolean isLocked) {
             getSlotsValidAttributes(player).forEach(record -> {
                 for (LockAttribute a : attributes)
@@ -377,6 +399,13 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         public boolean toggleIsShowingQuantity () {
             getSlotsValidAttributes(player).findFirst().ifPresent(template ->
                 setIsShowingQuantity(!template.isShowingQuantity()));
+            return true;
+        }
+
+        @Override
+        public boolean toggleIsSuspended () {
+            getSlotsValidAttributes(player).findFirst().ifPresent(template ->
+                setIsSuspended(!template.isSuspended()));
             return true;
         }
 
@@ -665,7 +694,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
             ((BlockEntityControllerIO) blockEntity).bindController(getBlockPos());
         }
-        else if (blockEntity instanceof BlockEntityDrawers) {
+        else if (blockEntity instanceof BlockEntityDrawers blockEntityDrawers) {
             IDrawerGroup group = ((BlockEntityDrawers) blockEntity).getGroup();
             if (record.storage == group)
                 return;
@@ -675,6 +704,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
             record.storage = group;
             record.drawerStorageSize = group.getDrawerCount();
+
+            blockEntityDrawers.softBindControlGroup(this);
 
             for (int i = 0, n = record.drawerStorageSize; i < n; i++)
                 drawerSlotList.add(new SlotRecord(group, coord, i));
@@ -691,6 +722,9 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
 
             record.storage = group;
             record.drawerStorageSize = group.getDrawerCount();
+
+            if (group instanceof INetworked netGroup)
+                netGroup.softBindControlGroup(this);
 
             for (int i = 0, n = record.drawerStorageSize; i < n; i++)
                 drawerSlotList.add(new SlotRecord(group, coord, i));
@@ -860,6 +894,41 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         return capability.getCapability(level, getBlockPos());
     }
 
+    public Stream<IDrawer> getBalanceDrawers (@NotNull ItemStack stack, Player player) {
+        Collection<SlotRecord> primaryRecords = drawerPrimaryLookup.getEntries(stack.getItem());
+        if (primaryRecords == null)
+            return Stream.empty();
+
+        return primaryRecords.stream().map(r -> {
+            IDrawerGroup candidateGroup = getGroupForSlotRecord(r);
+            if (candidateGroup == null)
+                return Drawers.DISABLED;
+
+            IDrawer drawer = candidateGroup.getDrawer(r.slot);
+            if (drawer.isEmpty())
+                return Drawers.DISABLED;
+
+            if (player != null && candidateGroup instanceof IProtectable prot) {
+                if (!SecurityManager.hasAccess(player, prot))
+                    return Drawers.DISABLED;
+            }
+
+            return drawer;
+        }).filter(drawer -> {
+            if (!drawer.isEnabled())
+                return false;
+
+            IDrawerAttributes attr = drawer.getAttributes();
+            if (!attr.isBalancedFill() || attr.isSuspended())
+                return false;
+
+            if (!ItemStack.isSameItemSameComponents(stack, drawer.getStoredItemPrototype()))
+                return false;
+
+            return true;
+        });
+    }
+
     /*
     public <T> T getCapability(@NotNull BlockCapability<T, Void> capability) {
         if (level == null)
@@ -897,8 +966,10 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                     if (!hasAccess(candidateGroup, drawer))
                         continue;
 
-                    IDrawerAttributes attrs = getAttributes(candidateGroup);
-                    if (attrs != null && attrs.isBalancedFill())
+                    IDrawerAttributes attrs = drawer.getAttributes();
+                    if (attrs.isSuspended())
+                        continue;
+                    if (attrs.isBalancedFill())
                         rebalance.add(drawer);
 
                     if (amount == 0)
@@ -931,6 +1002,10 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                         if (!hasAccess(candidateGroup, drawer))
                             continue;
 
+                        IDrawerAttributes attrs = drawer.getAttributes();
+                        if (attrs.isSuspended())
+                            continue;
+
                         amount = (simulate)
                             ? Math.max(amount - drawer.getAcceptingRemainingCapacity(), 0)
                             : drawer.adjustStoredItemCount(amount);
@@ -948,8 +1023,15 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                         continue;
                     if (!testPredicateInsert(drawer, stack, predicate))
                         continue;
-                    if (!hasAccess(getGroupForDrawerSlot(slot), drawer))
+
+                    IDrawerGroup group = getGroupForDrawerSlot(slot);
+                    if (!hasAccess(group, drawer))
                         continue;
+
+                    IDrawerAttributes attrs = drawer.getAttributes();
+                    if (attrs.isSuspended())
+                        continue;
+
                     if (simulate && checkedSlots.contains(slot))
                         continue;
 
@@ -996,8 +1078,10 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                     if (!hasAccess(candidateGroup, drawer))
                         continue;
 
-                    IDrawerAttributes attrs = getAttributes(candidateGroup);
-                    if (attrs != null && attrs.isBalancedFill())
+                    IDrawerAttributes attrs = drawer.getAttributes();
+                    if (attrs.isSuspended())
+                        continue;
+                    if (attrs.isBalancedFill())
                         rebalance.add(drawer);
 
                     if (remaining == 0)
@@ -1019,6 +1103,15 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                         continue;
                     if (!testPredicateExtract(drawer, stack, predicate))
                         continue;
+
+                    IDrawerGroup group = getGroupForDrawerSlot(slot);
+                    if (!hasAccess(group, drawer))
+                        continue;
+
+                    IDrawerAttributes attrs = drawer.getAttributes();
+                    if (attrs.isSuspended())
+                        continue;
+
                     if (simulate && checkedSlots.contains(slot))
                         continue;
 

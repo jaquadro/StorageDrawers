@@ -42,4 +42,12 @@ public interface IDrawerAttributesGroupControl
     default boolean setIsShowingQuantity (boolean state) {
         return false;
     }
+
+    default boolean toggleIsSuspended () {
+        return false;
+    }
+
+    default boolean setIsSuspended (boolean state) {
+        return false;
+    }
 }

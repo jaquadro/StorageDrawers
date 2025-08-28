@@ -1,0 +1,13 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "particle": "storagedrawers:block/indicator/void_icon"
+    },
+    "elements": [ {
+        "from": [ 5, 15, -0.02 ],
+        "to": [ 6, 16, 16],
+        "faces": {
+            "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#particle", "cullface": "north" }
+        }
+    } ]
+}

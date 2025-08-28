@@ -2,8 +2,10 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IControlGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
@@ -13,6 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Set;
 import java.util.UUID;
 
 public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
@@ -87,7 +90,7 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
         }
     }
 
-    private class GroupData extends StandardDrawerGroup implements IProtectable
+    private class GroupData extends StandardDrawerGroup implements IProtectable, INetworked
     {
         public GroupData (int slotCount) {
             super(slotCount);
@@ -130,6 +133,16 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
         @Override
         public boolean setSecurityProvider (ISecurityProvider provder) {
             return BlockEntityDrawersStandard.this.setSecurityProvider(provder);
+        }
+
+        @Override
+        public IControlGroup getBoundControlGroup () {
+            return BlockEntityDrawersStandard.this.getBoundControlGroup();
+        }
+
+        @Override
+        public Set<IControlGroup> getSoftBoundControlGroups () {
+            return BlockEntityDrawersStandard.this.getSoftBoundControlGroups();
         }
     }
 

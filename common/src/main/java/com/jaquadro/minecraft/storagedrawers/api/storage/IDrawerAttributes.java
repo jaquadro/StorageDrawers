@@ -73,4 +73,10 @@ public interface IDrawerAttributes
     default boolean isBalancedFill () {
         return false;
     }
+
+    default boolean isHopper () { return false; }
+
+    default boolean isMagnet () { return false; }
+
+    default boolean isSuspended () { return false; }
 }

@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:block/cross",
+    "textures": {
+        "cross": "storagedrawers:block/indicator/priority_p2_icon"
+    }
+}

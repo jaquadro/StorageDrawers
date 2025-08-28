@@ -154,6 +154,11 @@ public class Drawers
         }
 
         @Override
+        public @NotNull IDrawerAttributes getAttributes () {
+            return wrapped.getAttributes();
+        }
+
+        @Override
         public IDrawer copy () {
             return new WrappedDrawer(wrapped);
         }

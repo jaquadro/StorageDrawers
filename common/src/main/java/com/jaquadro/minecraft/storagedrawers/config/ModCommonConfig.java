@@ -575,6 +575,81 @@ public final class ModCommonConfig extends ConfigSpec
             }
         }
 
+        public class MagnetTierUpgrade extends Upgrade {
+            public final ChameleonConfig.ConfigEntry<List<? extends Integer>> range;
+            public final ChameleonConfig.ConfigEntry<Integer> activeSpeed;
+            public final ChameleonConfig.ConfigEntry<Integer> idleSpeed;
+
+            public MagnetTierUpgrade (String upgradeName, List<Integer> defaultRange, int defaultSpeed, String... comment) {
+                super(upgradeName, comment);
+
+                range = commonConfig.defineList("range", defaultRange, null)
+                    .comment("", "Range is blocks out from drawer as: [horizontal, up, down]");
+
+                activeSpeed = commonConfig.define("activeSpeed", defaultSpeed)
+                    .comment("", "Ticks between active collection when this is the highest upgrade tier.");
+
+                idleSpeed = commonConfig.define("idleSpeed", 20)
+                    .comment("", "Ticks between collection checks when this is the highest upgrade tier.",
+                        "Collection is idle when items have not been collected within the last idleSpeed interval.");
+            }
+
+            @Override
+            protected void buildEntries () {
+                super.buildEntries();
+                range.build();
+                activeSpeed.build();
+                idleSpeed.build();
+            }
+
+            @Override
+            public MagnetTierUpgrade build () {
+                super.build();
+                return this;
+            }
+        }
+
+        public class MagnetUpgrade extends ConfigSection
+        {
+            public final ChameleonConfig.ConfigEntry<Boolean> additiveRange;
+            public final ChameleonConfig.ConfigEntry<List<? extends Integer>> maxRange ;
+
+            public final MagnetTierUpgrade tier1;
+            public final MagnetTierUpgrade tier2;
+            public final MagnetTierUpgrade tier3;
+
+            public MagnetUpgrade (String upgradeName, String... comment) {
+                super(upgradeName, comment);
+
+                additiveRange = commonConfig.define("additiveRange", true)
+                    .comment("", "When multiple magnet upgrades are used, their ranges are added together.");
+
+                maxRange = commonConfig.defineList("maxRange", Arrays.asList(24, 8, 0), null)
+                    .comment("", "Range is blocks out from drawer as: [horizontal, up, down]",
+                        "If ranges from multiple upgrades are added, they are not allowed to exceed these values.");
+
+                tier1 = new MagnetTierUpgrade("Level1", Arrays.asList(1, 1, 0), 20);
+                tier2 = new MagnetTierUpgrade("Level2", Arrays.asList(4, 2, 0), 10);
+                tier3 = new MagnetTierUpgrade("Level3", Arrays.asList(8, 3, 0), 5);
+            }
+
+            @Override
+            protected void buildEntries () {
+                super.buildEntries();
+                additiveRange.build();
+                maxRange.build();
+                tier1.build();
+                tier2.build();
+                tier3.build();
+            }
+
+            @Override
+            public MagnetUpgrade build () {
+                super.build();
+                return this;
+            }
+        }
+
         public final StorageTierUpgrade obsidianStorage;
         public final StorageTierUpgrade copperStorage;
         public final StorageTierUpgrade ironStorage;
@@ -589,6 +664,8 @@ public final class ModCommonConfig extends ConfigSpec
         public final Upgrade balanceUpgrade;
         public final Upgrade fillLevelUpgrade;
         public final IlluminationUpgrade illuminationUpgrade;
+        public final Upgrade hopperUpgrade;
+        public final MagnetUpgrade magnetUpgrade;
         public final Upgrade oneStackUpgrade;
         public final Upgrade portabilityUpgrade;
         public final RedstoneUpgrade redstoneUpgrade;
@@ -631,6 +708,12 @@ public final class ModCommonConfig extends ConfigSpec
 
             illuminationUpgrade = new IlluminationUpgrade("Illumination",
                 "Renders drawer labels brighter than surrounding environment would allow.").build();
+
+            hopperUpgrade = new Upgrade("Hopper",
+                "Collects matching items through its top like a vanilla hopper.").build();
+
+            magnetUpgrade = new MagnetUpgrade("Magnet",
+                "Collects nearby matching items by teleporting them instantly to the drawer").build();
 
             oneStackUpgrade = new Upgrade("OneStack",
                 "Restricts capacity of drawer to one stack.").build();
@@ -702,11 +785,35 @@ public final class ModCommonConfig extends ConfigSpec
             }
         }
 
+        public class QuantifyKey extends Key {
+            public final ChameleonConfig.ConfigEntry<Boolean> showDefault;
+
+            public QuantifyKey (String name, String... comment) {
+                super(name, comment);
+
+                showDefault = commonConfig.define("showDefault", false)
+                    .comment("", "Show labels by default on newly placed drawers.");
+            }
+
+            @Override
+            protected void buildEntries () {
+                super.buildEntries();
+                showDefault.build();
+            }
+
+            @Override
+            public QuantifyKey build () {
+                super.build();
+                return this;
+            }
+        }
+
         public Key drawerKey;
-        public Key quantifyKey;
+        public QuantifyKey quantifyKey;
         public Key concealmentKey;
         public Key personalKey;
         public Key priorityKey;
+        public Key suspendKey;
 
         public Tools () {
             commonConfig.comment("Configuration around tools, namely the various 'keys' that can be used on drawers.");
@@ -715,7 +822,7 @@ public final class ModCommonConfig extends ConfigSpec
             drawerKey = new Key("DrawerKey",
                 "Drawer keys are used to lock drawers to the items they already hold.").build();
 
-            quantifyKey = new Key("QuantifyKey",
+            quantifyKey = new QuantifyKey("QuantifyKey",
                 "Quantify keys are used to show or hide the count of items on the face of drawers.").build();
 
             concealmentKey = new Key("ConcealmentKey",
@@ -727,6 +834,9 @@ public final class ModCommonConfig extends ConfigSpec
 
             priorityKey = new Key("PriorityKey",
                 "Priority keys change the priority of drawers when finding a compatible slot to insert items into.").build();
+
+            suspendKey = new Key("PauseKey",
+                "Suspend keys stop external interaction, e.g. from hopper or magnet upgrades.").build();
 
             commonConfig.popGroup();
         }

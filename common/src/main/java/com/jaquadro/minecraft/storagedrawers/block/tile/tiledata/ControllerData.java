@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public class ControllerData extends BlockEntityDataShim
 {
     private BlockPos controllerCoord;
+    private boolean needsValidation;
 
     @Override
     public void read (HolderLookup.Provider provider, CompoundTag tag) {
@@ -20,6 +21,10 @@ public class ControllerData extends BlockEntityDataShim
             CompoundTag ctag = tag.getCompound("Controller");
             controllerCoord = new BlockPos(ctag.getInt("x"), ctag.getInt("y"), ctag.getInt("z"));
         }
+
+        needsValidation = false;
+        if (tag.contains("Validate"))
+            needsValidation = tag.getBoolean("Validate");
     }
 
     @Override
@@ -31,6 +36,9 @@ public class ControllerData extends BlockEntityDataShim
             ctag.putInt("z", controllerCoord.getZ());
             tag.put("Controller", ctag);
         }
+
+        if (needsValidation)
+            tag.putBoolean("Validate", needsValidation);
 
         return tag;
     }
@@ -69,5 +77,13 @@ public class ControllerData extends BlockEntityDataShim
         }
 
         return false;
+    }
+
+    public boolean needsValidation () {
+        return needsValidation;
+    }
+
+    public void setNeedsValidation (boolean state) {
+        needsValidation = state;
     }
 }

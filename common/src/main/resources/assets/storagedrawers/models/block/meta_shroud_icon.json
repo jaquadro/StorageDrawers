@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:block/cross",
+    "textures": {
+        "cross": "storagedrawers:block/indicator/shroud_icon"
+    }
+}

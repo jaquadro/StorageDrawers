@@ -1,6 +1,24 @@
+[13.11.2]
+- Balance upgrade works fully across controller networks
+
+[13.11.1]
+- Fixed configuration of hopper and magnet upgrades
+- Fixed configuration of pause key
+- Removed redundant magnet configuration
+- Fixed empty tag left on empty keyrings
+
+[13.11.0]
+- Added Hopper Upgrade
+- Added Magnet upgrades
+- Added Pause Key
+- Added nl_nl translation (Jack McKalling)
+- Updated translations from latest crowdin export
+
 [13.10.1]
 - Fixed remote upgrades showing bound description when not bound
 - Fixed admin key description indicating it's disabled
+- Added bamboo as a default compacting rule
+- Added config option to show quantify labels by default
 
 [13.10.0]
 - Fixed meta blockstate loading errors (though they were harmless)

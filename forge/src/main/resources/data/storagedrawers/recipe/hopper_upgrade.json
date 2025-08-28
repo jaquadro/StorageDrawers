@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " H ",
+        "/X/",
+        "///"
+    ],
+    "key": {
+        "/": { "tag": "forge:rods/wooden" },
+        "H": { "item": "minecraft:hopper" },
+        "X": { "item": "storagedrawers:upgrade_template" }
+    },
+    "result": { "id": "storagedrawers:hopper_upgrade" }
+}

@@ -2,7 +2,9 @@ package com.jaquadro.minecraft.storagedrawers.capabilities;
 
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemHandler;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
+import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +19,7 @@ public class DrawerItemHandler implements IItemHandler
 
     @Override
     public int getSlots () {
-        if (!group.isGroupValid())
+        if (!group.isGroupValid() || isSuspended())
             return 0;
         return group.getDrawerCount() + 1;
     }
@@ -25,7 +27,7 @@ public class DrawerItemHandler implements IItemHandler
     @Override
     @NotNull
     public ItemStack getStackInSlot (int slot) {
-        if (!group.isGroupValid())
+        if (!group.isGroupValid() || isSuspended())
             return ItemStack.EMPTY;
         if (slotIsVirtual(slot))
             return ItemStack.EMPTY;
@@ -35,7 +37,7 @@ public class DrawerItemHandler implements IItemHandler
         slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
 
         IDrawer drawer = group.getDrawer(slot);
-        if (!drawer.isEnabled() || drawer.isEmpty())
+        if (!drawer.isEnabled() || drawer.isEmpty() || drawer.getAttributes().isSuspended())
             return ItemStack.EMPTY;
 
         ItemStack stack = drawer.getStoredItemPrototype().copy();
@@ -47,7 +49,7 @@ public class DrawerItemHandler implements IItemHandler
     @Override
     @NotNull
     public ItemStack insertItem (int slot, @NotNull ItemStack stack, boolean simulate) {
-        if (!group.isGroupValid())
+        if (!group.isGroupValid() || isSuspended())
             return stack;
 
         if (slotIsVirtual(slot)) {
@@ -94,7 +96,7 @@ public class DrawerItemHandler implements IItemHandler
     @NotNull
     private ItemStack insertItemInternal (int slot, @NotNull ItemStack stack, boolean simulate) {
         IDrawer drawer = group.getDrawer(slot);
-        if (!drawer.canItemBeStored(stack))
+        if (drawer.getAttributes().isSuspended() || !drawer.canItemBeStored(stack))
             return stack;
 
         if (drawer.isEmpty() && !simulate)
@@ -116,7 +118,7 @@ public class DrawerItemHandler implements IItemHandler
     @Override
     @NotNull
     public ItemStack extractItem (int slot, int amount, boolean simulate) {
-        if (!group.isGroupValid())
+        if (!group.isGroupValid() || isSuspended())
             return ItemStack.EMPTY;
         if (slotIsVirtual(slot))
             return ItemStack.EMPTY;
@@ -126,7 +128,7 @@ public class DrawerItemHandler implements IItemHandler
         slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
 
         IDrawer drawer = group.getDrawer(slot);
-        if (!drawer.isEnabled() || drawer.isEmpty() || drawer.getStoredItemCount() == 0)
+        if (!drawer.isEnabled() || drawer.isEmpty() || drawer.getAttributes().isSuspended() || drawer.getStoredItemCount() == 0)
             return ItemStack.EMPTY;
 
         @NotNull ItemStack prototype = drawer.getStoredItemPrototype();
@@ -139,7 +141,7 @@ public class DrawerItemHandler implements IItemHandler
 
     @Override
     public int getSlotLimit (int slot) {
-        if (!group.isGroupValid())
+        if (!group.isGroupValid() || isSuspended())
             return 0;
         if (slotIsVirtual(slot))
             return Integer.MAX_VALUE;
@@ -149,7 +151,7 @@ public class DrawerItemHandler implements IItemHandler
         slot = (slot >= 0 && slot < order.length) ? order[slot] : -1;
 
         IDrawer drawer = group.getDrawer(slot);
-        if (!drawer.isEnabled())
+        if (!drawer.isEnabled() || drawer.getAttributes().isSuspended())
             return 0;
         if (drawer.isEmpty())
             return drawer.getMaxCapacity(ItemStack.EMPTY);
@@ -161,6 +163,14 @@ public class DrawerItemHandler implements IItemHandler
     // TODO: Implement proper
     public boolean isItemValid (int slot, @NotNull ItemStack stack) {
         return true;
+    }
+
+    protected boolean isSuspended () {
+        IDrawerAttributes attrs = group.getCapability(Capabilities.DRAWER_ATTRIBUTES);
+        if (attrs == null)
+            attrs = EmptyDrawerAttributes.EMPTY;
+
+        return attrs.isSuspended();
     }
 
     private boolean slotIsVirtual (int slot) {

@@ -3,6 +3,7 @@ package com.texelsaurus.minecraft.chameleon;
 import com.texelsaurus.minecraft.chameleon.service.*;
 
 import java.util.ServiceLoader;
+import java.util.stream.Collectors;
 
 public final class ChameleonServices
 {
@@ -14,7 +15,13 @@ public final class ChameleonServices
     public static final ChameleonPlatform PLATFORM = load(ChameleonPlatform.class);
 
     private static <T> T load(Class<T> clazz) {
-        final T service = ServiceLoader.load(clazz).findFirst().orElseThrow();
+        var providers = ServiceLoader.load(clazz, clazz.getClassLoader()).stream().toList();
+        if (providers.size() != 1) {
+            throw new IllegalStateException("Found " + providers.size() + " providers for " + clazz.getName() + ": " +
+                providers.stream().map(p -> p.type().getName()).collect(Collectors.joining(", ", "[", "]")));
+        }
+
+        final T service = providers.get(0).get();
         return service;
     }
 }
