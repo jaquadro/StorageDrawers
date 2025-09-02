@@ -12,10 +12,10 @@
             "recipe2": "storagedrawers:remote_group_upgrade"
         }, {
             "type": "patchouli:text",
-            "text": "The singular variant of the upgrade will connect the single drawer that has the upgrade.$(p)The group variant will connect the drawer as well as any other drawers that have a connected path to it."
+            "text": "The singular variant of the upgrade will connect the single drawer that has the upgrade.$(p)The group variant will connect the drawer as well as any other drawers that have a connected path to it.$(p)Any existing singular variant can be upgraded to the group variant by crafting it with two ender pearls."
         }, {
             "type": "patchouli:text",
-            "text": "Before using a remote upgrade, it must first be 'bound' to a controller, by using the item directly on a controller block like a tool.$(p)If the controller is broken, the upgrade will lose its binding.$(p)An upgrade can be re-bound at any time by using it on another controller."
+            "text": "Before using any variant of remote upgrade, it must first be 'bound' to a controller, by using the item directly on a controller block like a tool.$(p)If the controller is broken, the upgrade will lose its binding.$(p)An upgrade can be re-bound at any time by using it on another controller."
         }, {
             "type": "patchouli:text",
             "text": "A bound remote upgrade item can also be used on other drawer blocks that already have a remote upgrade, which will rebind those drawers without needing to remove the upgrade.$(p)This can be helpful if the drawers ever lose their binding."

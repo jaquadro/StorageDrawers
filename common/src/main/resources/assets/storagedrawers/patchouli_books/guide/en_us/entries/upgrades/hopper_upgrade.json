@@ -5,7 +5,7 @@
     "pages": [
         {
             "type": "patchouli:text",
-            "text": "The hopper upgrade lets drawers collect physical items in the world through the top of the block, the same way hoppers would.$(p)The items assigned to the drawers act as a filter.  Only stored items will be collected, unless there is an empty unlocked slot available."
+            "text": "The hopper upgrade lets a drawer collect physical items in the world through the top of the block, the same way hoppers would.$(p)The items assigned to the drawer act as a filter. Only stored items will be collected, unless there is an empty unlocked slot available."
         }, {
             "type": "patchouli:crafting",
             "recipe": "storagedrawers:hopper_upgrade"
