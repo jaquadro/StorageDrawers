@@ -1,0 +1,23 @@
+{
+    "name": "Magnet Upgrades",
+    "icon": "storagedrawers:magnet_upgrade",
+    "category": "storagedrawers:upgrades",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "Magnet upgrades are an evolution of the hopper upgrade and teleport items from a distance around them.$(p)The upgrades come in several strengths the affect their speed and collection radius.  If multiple upgrades are used, their ranges will be added together, up to an upper limit."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:magnet_upgrade",
+            "text": "The base level magnet upgrade collects a stack of items every 20 ticks with a range of 1."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:magnet_upgrade_2",
+            "text": "The second level magnet upgrade collects a stack of items every 10 ticks with a range of 4."
+        }, {
+            "type": "patchouli:crafting",
+            "recipe": "storagedrawers:magnet_upgrade_3",
+            "text": "The third level magnet upgrade collects a stack of items every 5 ticks with a range of 8."
+        }
+    ]
+}

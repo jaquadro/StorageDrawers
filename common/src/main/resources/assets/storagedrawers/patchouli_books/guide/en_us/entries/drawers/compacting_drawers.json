@@ -1,0 +1,19 @@
+{
+  "name": "Compacting Drawers",
+  "icon": "storagedrawers:compacting_drawers_3",
+  "category": "storagedrawers:drawers",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Compacting drawers are a special type of drawer that automatically compacts items like coal or ingots into their more compressed form, but allows easy access to the less-compressed forms as well.$(p)Storage limits are based on the amount of the most-compressed item held."
+    }, {
+      "type": "patchouli:crafting",
+      "recipe": "storagedrawers:compacting_drawers_3",
+      "recipe2": "storagedrawers:compacting_half_drawers_3"
+    }, {
+      "type": "patchouli:crafting",
+      "recipe": "storagedrawers:compacting_drawers_2",
+      "recipe2": "storagedrawers:compacting_half_drawers_2"
+    }
+  ]
+}

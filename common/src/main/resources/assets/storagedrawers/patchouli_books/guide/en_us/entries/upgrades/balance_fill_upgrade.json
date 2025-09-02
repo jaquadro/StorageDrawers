@@ -12,7 +12,7 @@
             "text": "See the next page for additional detail on how this upgrade behaves on a controller network."
         }, {
             "type": "patchouli:text",
-            "text": "If multiple drawers on the same controller network have a balance fill upgrade installed and one or more slots with the same item, then adding or removing items through the controller (or one of its IO blocks) will rebalance across all the member blocks.$(p)Interacting with a drawer directly will not affect other blocks on the network."
+            "text": "If multiple drawers on the same controller network have a balance fill upgrade installed and one or more slots with the same item, then adding or removing items will rebalance across all the member blocks."
         }, {
             "type": "patchouli:image",
             "images": ["storagedrawers:textures/gui/entries/balance_fill.png"],
