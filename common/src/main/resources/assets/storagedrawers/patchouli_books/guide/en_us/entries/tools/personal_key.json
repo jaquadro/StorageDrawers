@@ -6,21 +6,21 @@
         {
             "type": "patchouli:spotlight",
             "item": "storagedrawers:personal_key",
-            "text": "The personal key is used to take ownership of drawers, which locks them to the owning player.$(p)layers can't interact with blocks owned by another player, though they can still break them.$(p)Variations of this key exist to allow team-based ownership."
+            "text": "The personal key is used to take ownership of drawers, which locks them to the owning player.$(p)Players can't interact with blocks owned by another player, though they can still break them.$(p)Variations of this key exist to allow team-based ownership."
         }, {
             "type": "patchouli:crafting",
             "recipe": "storagedrawers:personal_key"
         }, {
             "type": "patchouli:spotlight",
             "item": "storagedrawers:personal_key_cofh",
-            "text": "The CoFH personal key locks drawers to your CoFH friends list.  Any players on your friends list will also be able to interact with your owned blocks."
+            "text": "The CoFH personal key locks drawers to your CoFH friends list. Any players on your friends list will also be able to interact with your owned blocks."
         }, {
             "type": "patchouli:crafting",
             "recipe": "storagedrawers:personal_key_cofh"
         }, {
             "type": "patchouli:spotlight",
             "item": "storagedrawers:personal_key_ftb",
-            "text": "The FTB personal key locks drawers to your FTB team.  Any players on your team list will also be able to interact with your owned blocks."
+            "text": "The FTB personal key locks drawers to your FTB team. Any players on your team list will also be able to interact with your owned blocks."
         }, {
             "type": "patchouli:crafting",
             "recipe": "storagedrawers:personal_key_ftb"

@@ -9,7 +9,7 @@
         }, {
             "type": "patchouli:crafting",
             "recipe": "storagedrawers:balance_fill_upgrade",
-            "text": "See the next page for additional detail on how this upgrade behaves on a controller network."
+            "text": "See the next page for additional details on how this upgrade behaves on a controller network."
         }, {
             "type": "patchouli:text",
             "text": "If multiple drawers on the same controller network have a balance fill upgrade installed and one or more slots with the same item, then adding or removing items will rebalance across all the member blocks."
@@ -23,7 +23,7 @@
             "text": "Networked balanced drawers may be useful in specific automation setups.$(p)For example: keeping two distant drawers equally stocked from a central feed inserting through the controller."
         }, {
             "type": "patchouli:text",
-            "text": "Within a single drawer block, the upgrade can provide a quick way to empty a half or quarter of a large amount of item.$(p)Try either splitting the drawer or assigning a same-item to another slot, and then detaching the drawer after triggering the balance.$(p)The detached drawer can be disposed of, moved to another block, or given away."
+            "text": "Within a single drawer block, the upgrade can provide a quick way to isolate a half or quarter of a large amount of items.$(p)Try either splitting the drawer or assigning a same-item to another slot, and then detaching the drawer after triggering the balance.$(p)The detached drawer can be disposed of, moved to another block, or given away."
         }
     ]
 }

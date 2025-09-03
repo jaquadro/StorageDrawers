@@ -5,7 +5,7 @@
     "pages": [
         {
             "type": "patchouli:text",
-            "text": "Redstone upgrades allow drawer blocks to emit a redstone signal based on how full they are.$(br2)They come in 3 flavors, which is relevant to any blocks with more than one slot."
+            "text": "Redstone upgrades allow drawer blocks to emit a redstone signal based on how full they are.$(br2)They come in 3 flavors, which only differ in behavior in blocks with more than one slot."
         }, {
             "type": "patchouli:crafting",
             "recipe": "storagedrawers:redstone_upgrade",

@@ -5,10 +5,10 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Unlike normal inventories, items are not added or removed from a UI in Storage Drawers.  Instead, drawers have one or more slots on their front that hold items.  Different combinations of left and right clicking, plus sneaking, are used to add or remove items."
+      "text": "Unlike normal inventories, items are not added or removed from a UI in Storage Drawers. Instead, drawers have one or more slots on their front that hold items. Different combinations of left and right clicking, plus sneaking, are used to add or remove items."
     }, {
       "type": "patchouli:text",
-      "text": "The basic actions include: $(li)Right-click: Insert held stack of items into slot.$(li)Double-right-click: Insert all compatible items from inventory into slot.$(li)Left-click: Take one item from slot.$(li)Shift+left-click: Take on stack from slot.$()$(p)Finally, shift+right-click with an empty hand will open the drawer's UI."
+      "text": "The basic actions include: $(li)Right-click: Insert held stack of items into slot.$(li)Double-right-click: Insert all compatible items from inventory into slot.$(li)Left-click: Take one item from slot.$(li)Shift+left-click: Take one stack from slot.$()$(p)Finally, shift+right-click with an empty hand will open the drawer's UI. Here you can view stored contents and change the drawer's upgrades."
     }
   ]
 }

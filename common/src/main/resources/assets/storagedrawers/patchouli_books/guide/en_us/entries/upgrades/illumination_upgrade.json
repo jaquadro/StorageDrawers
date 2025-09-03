@@ -5,7 +5,7 @@
     "pages": [
         {
             "type": "patchouli:text",
-            "text": "The illumination upgrade will show bright labels and counts on drawers even in dark places."
+            "text": "The illumination upgrade will show bright labels and counters on drawers even in dark places."
         }, {
             "type": "patchouli:crafting",
             "recipe": "storagedrawers:illumination_upgrade"

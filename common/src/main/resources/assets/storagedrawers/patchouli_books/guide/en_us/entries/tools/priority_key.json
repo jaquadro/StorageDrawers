@@ -6,11 +6,11 @@
         {
             "type": "patchouli:spotlight",
             "item": "storagedrawers:priority_key,storagedrawers:priority_key_p1,storagedrawers:priority_key_p2,storagedrawers:priority_key_n1,storagedrawers:priority_key_n2",
-            "text": "The priority key changes a drawer's priority to one of 5 levels.  In order from lowest to highest they are: -2, -1, 0, 1, 2, represented by blue or red arrows.$(p)In controller networks, blocks that have the same priority by normal network rules are further distinguished by their priority level."
+            "text": "The priority key changes a drawer's priority to one of 5 levels. In order from lowest to highest they are: -2, -1, 0, 1, 2, represented by blue or red arrows.$(p)In controller networks, blocks that have the same priority by normal network rules are further distinguished by their priority level."
         }, {
             "type": "patchouli:crafting",
             "recipe": "storagedrawers:priority_key",
-            "text": "While holding a priority key, hold $(k:sneak) + $(k:use) to cycle between all priority levels"
+            "text": "While holding a priority key, press or hold $(k:sneak) + $(k:use) to cycle between all priority levels"
         }
     ]
 }
