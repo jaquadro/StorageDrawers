@@ -623,7 +623,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         int count = 0;
         if (!drawer.isEmpty()) {
-            for (int i = 0, n = player.getInventory().getContainerSize(); i < n; i++) {
+            for (int i = 0, n = Inventory.INVENTORY_SIZE; i < n; i++) {
                 ItemStack subStack = player.getInventory().getItem(i);
                 if (!subStack.isEmpty()) {
                     int subCount = putItemsIntoSlot(slot, subStack, subStack.getCount(), player);

@@ -1,6 +1,7 @@
 [12.14.1]
 - Balance upgrade works fully across controller networks
 - Fixed additive and maxRange magnet upgrade config values
+- Fixed double-click inserting equipped items
 
 [12.14.0]
 - Added Hopper Upgrade
