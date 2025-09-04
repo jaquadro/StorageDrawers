@@ -1,3 +1,7 @@
+[12.14.1]
+- Balance upgrade works fully across controller networks
+- Fixed additive and maxRange magnet upgrade config values
+
 [12.14.0]
 - Added Hopper Upgrade
 - Added Magnet upgrades

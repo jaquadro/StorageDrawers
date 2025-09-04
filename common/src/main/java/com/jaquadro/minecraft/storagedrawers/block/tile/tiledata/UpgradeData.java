@@ -352,9 +352,15 @@ public class UpgradeData extends BlockEntityDataShim
                     continue;
 
                 hasMagnet = true;
-                magnetRange[0] += itemMagnet.getHorzRange();
-                magnetRange[1] += itemMagnet.getUpRange();
-                magnetRange[2] += itemMagnet.getDownRange();
+                if (ModCommonConfig.INSTANCE.UPGRADES.magnetUpgrade.additiveRange.get()) {
+                    magnetRange[0] += itemMagnet.getHorzRange();
+                    magnetRange[1] += itemMagnet.getUpRange();
+                    magnetRange[2] += itemMagnet.getDownRange();
+                } else {
+                    magnetRange[0] += Math.max(magnetRange[0], itemMagnet.getHorzRange());
+                    magnetRange[1] += Math.max(magnetRange[1], itemMagnet.getUpRange());
+                    magnetRange[2] += Math.max(magnetRange[2], itemMagnet.getDownRange());
+                }
 
                 if (itemMagnet.type.getLevel() > highestTier) {
                     highestTier = itemMagnet.type.getLevel();
@@ -363,6 +369,10 @@ public class UpgradeData extends BlockEntityDataShim
                 }
             }
         }
+
+        var maxRange = ModCommonConfig.INSTANCE.UPGRADES.magnetUpgrade.maxRange.get();
+        for (int i = 0, n = Math.min(maxRange.size(), magnetRange.length); i < n; i++)
+            magnetRange[i] = Math.min(magnetRange[i], maxRange.get(i));
     }
 
     private void syncRedstoneLevel () {

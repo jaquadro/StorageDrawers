@@ -1,1 +1,2 @@
 - Balance upgrade works fully across controller networks
+- Fixed additive and maxRange magnet upgrade config values
