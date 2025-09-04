@@ -24,6 +24,7 @@ import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -322,7 +323,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             }
         }
         else {
-            for (int i = 0, n = player.getInventory().getContainerSize(); i < n; i++) {
+            for (int i = 0, n = Inventory.INVENTORY_SIZE; i < n; i++) {
                 ItemStack subStack = player.getInventory().getItem(i);
                 if (!subStack.isEmpty()) {
                     count += insertItems(subStack, player);
