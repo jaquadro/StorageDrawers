@@ -279,7 +279,12 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
                 return Integer.MAX_VALUE / convRate[slot];
 
             int maxSize = ItemStackHelper.getMaxStackSize(baseStack());
-            return maxSize * group.getStackCapacity() * (baseRate() / convRate[slot]);
+            try {
+                int cap = Math.multiplyExact(maxSize * baseRate(), group.getStackCapacity());
+                return cap / convRate[slot];
+            } catch (ArithmeticException e) {
+                return Integer.MAX_VALUE / convRate[slot];
+            }
         }
 
         public int getMaxCapacity (int slot, @NotNull ItemStack itemPrototype) {
@@ -294,7 +299,12 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
                 int itemStackLimit = 64;
                 if (!itemPrototype.isEmpty())
                     itemStackLimit = ItemStackHelper.getMaxStackSize(itemPrototype);
-                return itemStackLimit * group.getStackCapacity();
+
+                try {
+                    return Math.multiplyExact(itemStackLimit, group.getStackCapacity());
+                } catch (ArithmeticException e) {
+                    return Integer.MAX_VALUE;
+                }
             }
 
             if (ItemStackMatcher.areItemsEqual(protoStack[slot], itemPrototype)) // TODO: ItemStackOreMatcher
