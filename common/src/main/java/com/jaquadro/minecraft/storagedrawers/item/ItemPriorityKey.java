@@ -6,6 +6,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
@@ -30,7 +31,7 @@ public class ItemPriorityKey extends ItemKey
     }
 
     @Override
-    protected void handleDrawerAttributes (IDrawerAttributesModifiable attrs) {
+    protected void handleDrawerAttributes (IDrawerAttributesModifiable attrs, UseOnContext context) {
         if (level == 0)
             attrs.setPriority(priorityLookup.getOrDefault(attrs.getPriority(), this).getNextKey().level);
         else {

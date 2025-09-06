@@ -82,6 +82,9 @@ dependencies {
     implementation(fg.deobf("curse.maven:ftb-chunks-forge-314906:6431735"))
     implementation(fg.deobf("curse.maven:ftb-teams-forge-404468:6130786"))
 
+    implementation(fg.deobf("curse.maven:bookshelf-228525:5423987"))
+    implementation(fg.deobf("curse.maven:botany-pots-353928:6348581"))
+
     // JEI
     //runtimeOnly("mezz.jei:jei-1.21-forge:19.8.2.99")
 }

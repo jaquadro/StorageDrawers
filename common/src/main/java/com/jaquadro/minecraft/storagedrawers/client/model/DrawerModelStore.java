@@ -34,6 +34,10 @@ public class DrawerModelStore
         PRIORITY_P2_ICON("priority_p2_icon"),
         PRIORITY_N1_ICON("priority_n1_icon"),
         PRIORITY_N2_ICON("priority_n2_icon"),
+        SIDED_INPUT_ICON("sided_input_icon"),
+        SIDED_OUTPUT_ICON("sided_output_icon"),
+        SIDED_BOTH_ICON("sided_both_icon"),
+        SIDED_NONE_ICON("sided_none_icon"),
         INDICATOR("indicator"),
         INDICATOR_COMP("indicator_comp"),
         RIGHT_LABEL("right_label"),
@@ -42,6 +46,7 @@ public class DrawerModelStore
         MISSING_2("missing_2"),
         MISSING_3("missing_3"),
         MISSING_4("missing_4"),
+        SIDED_CONNECTION("sided_connection"),
         FRAMED_DRAWERS_SIDE("framed_drawers_side"),
         FRAMED_DRAWERS_TRIM("framed_drawers_trim"),
         FRAMED_DRAWERS_FRONT("framed_drawers_front"),
@@ -194,6 +199,10 @@ public class DrawerModelStore
             addOverlay(getVariant(DynamicPart.PRIORITY_P2_ICON), new ModelResourceLocation(ModConstants.loc("meta_priority_p2_icon"), getVariant()));
             addOverlay(getVariant(DynamicPart.PRIORITY_N1_ICON), new ModelResourceLocation(ModConstants.loc("meta_priority_n1_icon"), getVariant()));
             addOverlay(getVariant(DynamicPart.PRIORITY_N2_ICON), new ModelResourceLocation(ModConstants.loc("meta_priority_n2_icon"), getVariant()));
+            addOverlay(getVariant(DynamicPart.SIDED_INPUT_ICON), new ModelResourceLocation(ModConstants.loc("meta_sided_input_icon"), getVariant()));
+            addOverlay(getVariant(DynamicPart.SIDED_OUTPUT_ICON), new ModelResourceLocation(ModConstants.loc("meta_sided_output_icon"), getVariant()));
+            addOverlay(getVariant(DynamicPart.SIDED_BOTH_ICON), new ModelResourceLocation(ModConstants.loc("meta_sided_both_icon"), getVariant()));
+            addOverlay(getVariant(DynamicPart.SIDED_NONE_ICON), new ModelResourceLocation(ModConstants.loc("meta_sided_none_icon"), getVariant()));
             addOverlay(getVariant(DynamicPart.HOPPER), new ModelResourceLocation(ModConstants.loc("meta_hopper"), getVariant()));
         }
 
@@ -261,6 +270,10 @@ public class DrawerModelStore
             }
         }
 
+        public void add3D (Direction dir, boolean half) {
+            addOverlay(getVariant(DynamicPart.SIDED_CONNECTION, dir, half), new ModelResourceLocation(ModConstants.loc("meta_sided_connection"), getVariant(dir, half)));
+        }
+
         void addOverlay(String variant, ModelResourceLocation loc) {
             overlays.put(variant, addLocation(loc));
         }
@@ -280,6 +293,13 @@ public class DrawerModelStore
 
             INSTANCE.add(dir, true);
             INSTANCE.add(dir, false);
+        }
+
+        for (int i = 0; i < 6; i++) {
+            Direction dir = Direction.from3DDataValue(i);
+
+            INSTANCE.add3D(dir, true);
+            INSTANCE.add3D(dir, false);
         }
     }
 
@@ -405,6 +425,10 @@ public class DrawerModelStore
     public static BakedModel getReplacementModel(String variant, String replaceVariant) {
         return getReplacementModel(INSTANCE.overlays.getOrDefault(variant, null),
             INSTANCE.overlays.getOrDefault(replaceVariant, null));
+    }
+
+    public static BakedModel getReplacementModel(DynamicPart part, Direction dir, boolean half, DynamicPart iconPart) {
+        return getReplacementModel(getVariant(part, dir, half), getVariant(iconPart));
     }
 
     public static BakedModel getReplacementModel(DynamicPart part, Direction dir, boolean half, int slot, DynamicPart iconPart) {

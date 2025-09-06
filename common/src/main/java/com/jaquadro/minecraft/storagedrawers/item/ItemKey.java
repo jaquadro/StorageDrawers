@@ -10,6 +10,7 @@ import com.jaquadro.minecraft.storagedrawers.util.ComponentUtil;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -84,7 +85,7 @@ public class ItemKey extends Item
         if (!(attrs instanceof IDrawerAttributesModifiable))
             return InteractionResult.PASS;
 
-        handleDrawerAttributes((IDrawerAttributesModifiable)attrs);
+        handleDrawerAttributes((IDrawerAttributesModifiable)attrs, context);
 
         if (context.getPlayer() != null)
             context.getPlayer().getCooldowns().addCooldown(this, 5);
@@ -92,7 +93,7 @@ public class ItemKey extends Item
         return InteractionResult.SUCCESS;
     }
 
-    protected void handleDrawerAttributes (IDrawerAttributesModifiable attrs) { }
+    protected void handleDrawerAttributes (IDrawerAttributesModifiable attrs, UseOnContext context) { }
 
     public boolean isEnabled () {
         return true;

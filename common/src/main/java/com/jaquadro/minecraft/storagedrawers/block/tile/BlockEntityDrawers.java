@@ -61,6 +61,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     private final MaterialData materialData = new MaterialData();
     private final UpgradeData upgradeData = new DrawerUpgradeData();
     private final ControllerData controllerData = new ControllerData();
+    private final SidedConnectData sidedConnectData = new SidedConnectData();
 
     private final Set<IControlGroup> softBoundControlGroups = new HashSet<>();
 
@@ -206,12 +207,14 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         drawerAttributes = new DrawerAttributes();
 
         upgradeData.setDrawerAttributes(drawerAttributes);
+        sidedConnectData.setDrawerAttributes(drawerAttributes);
 
         injectPortableData(customNameData);
         injectPortableData(upgradeData);
         injectPortableData(controllerData);
 
         injectData(materialData);
+        injectData(sidedConnectData);
     }
 
     private void checkBoundController () {
@@ -344,6 +347,10 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     @Override
     public MaterialData material () {
         return materialData;
+    }
+
+    public SidedConnectData sidedConnections () {
+        return sidedConnectData;
     }
 
     public CustomNameData customName () {

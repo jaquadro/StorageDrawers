@@ -811,6 +811,7 @@ public final class ModCommonConfig extends ConfigSpec
         public Key drawerKey;
         public QuantifyKey quantifyKey;
         public Key concealmentKey;
+        public Key connectionKey;
         public Key personalKey;
         public Key priorityKey;
         public Key suspendKey;
@@ -834,6 +835,10 @@ public final class ModCommonConfig extends ConfigSpec
 
             priorityKey = new Key("PriorityKey",
                 "Priority keys change the priority of drawers when finding a compatible slot to insert items into.").build();
+
+            connectionKey = new Key("ConnectionKey",
+                "Connection keys change the input/output mode of individual drawer faces",
+                "with respect to external inventories or to push/pull upgrades.").build();
 
             suspendKey = new Key("PauseKey",
                 "Suspend keys stop external interaction, e.g. from hopper or magnet upgrades.").build();

@@ -1,6 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
 import com.jaquadro.minecraft.storagedrawers.ModConstants;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ConnectionMode;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
 import com.jaquadro.minecraft.storagedrawers.block.framed.BlockFramedStandardDrawers;
@@ -73,6 +74,11 @@ public final class ModItems
         PRIORITY_KEY_P2 = ITEMS.register("priority_key_p2", () -> new ItemPriorityKey(2, -1, new Item.Properties())),
         PRIORITY_KEY_N1 = ITEMS.register("priority_key_n1", () -> new ItemPriorityKey(-1, -2, new Item.Properties())),
         PRIORITY_KEY_N2 = ITEMS.register("priority_key_n2", () -> new ItemPriorityKey(-2, 0, new Item.Properties())),
+        CONNECTION_KEY = ITEMS.register("connection_key", () -> new ItemConnectionKey(ConnectionMode.DEFAULT, new Item.Properties())),
+        CONNECTION_KEY_INPUT = ITEMS.register("connection_key_input", () -> new ItemConnectionKey(ConnectionMode.INPUT, new Item.Properties())),
+        CONNECTION_KEY_OUTPUT = ITEMS.register("connection_key_output", () -> new ItemConnectionKey(ConnectionMode.OUTPUT, new Item.Properties())),
+        CONNECTION_KEY_BOTH = ITEMS.register("connection_key_both", () -> new ItemConnectionKey(ConnectionMode.BOTH, new Item.Properties())),
+        CONNECTION_KEY_NONE = ITEMS.register("connection_key_none", () -> new ItemConnectionKey(ConnectionMode.NONE, new Item.Properties())),
         DRAWER_PULLER = ITEMS.register("drawer_puller", () -> new ItemDrawerPuller(new Item.Properties()));
 
     public static final RegistryEntry<? extends ItemKeyring>
@@ -100,6 +106,10 @@ public final class ModItems
         EXCLUDE_ITEMS_CREATIVE_TAB.add(PRIORITY_KEY_N2);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(PRIORITY_KEY_P1);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(PRIORITY_KEY_P2);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(CONNECTION_KEY_INPUT);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(CONNECTION_KEY_OUTPUT);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(CONNECTION_KEY_BOTH);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(CONNECTION_KEY_NONE);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_DRAWER);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_QUANTIFY);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_SHROUD);

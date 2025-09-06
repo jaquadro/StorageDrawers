@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+import net.minecraft.world.item.context.UseOnContext;
 
 public class ItemSuspendKey extends ItemKey
 {
@@ -10,7 +11,7 @@ public class ItemSuspendKey extends ItemKey
     }
 
     @Override
-    protected void handleDrawerAttributes (IDrawerAttributesModifiable attrs) {
+    protected void handleDrawerAttributes (IDrawerAttributesModifiable attrs, UseOnContext context) {
         attrs.setIsSuspended(!attrs.isSuspended());
     }
 

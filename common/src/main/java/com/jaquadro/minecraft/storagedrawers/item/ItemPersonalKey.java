@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModSecurity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.UseOnContext;
 import org.jetbrains.annotations.NotNull;
 
 public class ItemPersonalKey extends ItemKey
@@ -18,7 +19,7 @@ public class ItemPersonalKey extends ItemKey
     }
 
     @Override
-    protected void handleDrawerAttributes (IDrawerAttributesModifiable attrs) {
+    protected void handleDrawerAttributes (IDrawerAttributesModifiable attrs, UseOnContext context) {
         attrs.setIsShowingQuantity(!attrs.isShowingQuantity());
     }
 

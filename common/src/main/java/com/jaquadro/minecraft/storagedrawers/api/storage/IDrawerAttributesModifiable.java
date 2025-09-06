@@ -1,6 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ConnectionMode;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import net.minecraft.core.Direction;
 
 public interface IDrawerAttributesModifiable extends IDrawerAttributes
 {
@@ -78,6 +80,10 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
     }
 
     default boolean setIsSuspended (boolean state) {
+        return false;
+    }
+
+    default boolean setSidedConnectionMode (Direction dir, ConnectionMode mode) {
         return false;
     }
 }

@@ -1,9 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.capabilities;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesModifiable;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ConnectionMode;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
+import net.minecraft.core.Direction;
 
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BasicDrawerAttributes implements IDrawerAttributesModifiable
 {
@@ -20,6 +24,7 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable
     private boolean isMagnet;
     private boolean isSuspended;
     private int priority;
+    private Map<Direction, ConnectionMode> sidedConnections = new HashMap<>();
 
     @Override
     public boolean canItemLock (LockAttribute attr) {
@@ -219,6 +224,26 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable
     public boolean setIsSuspended (boolean state) {
         if (isSuspended != state) {
             isSuspended = state;
+            onAttributeChanged();
+        }
+
+        return true;
+    }
+
+    @Override
+    public ConnectionMode getSidedConnectionMode (Direction dir) {
+        return sidedConnections.getOrDefault(dir, ConnectionMode.DEFAULT);
+    }
+
+    @Override
+    public boolean setSidedConnectionMode (Direction dir, ConnectionMode mode) {
+        ConnectionMode cur = sidedConnections.getOrDefault(dir, ConnectionMode.DEFAULT);
+        if (cur != mode) {
+            if (mode == ConnectionMode.DEFAULT)
+                sidedConnections.remove(dir);
+            else
+                sidedConnections.put(dir, mode);
+
             onAttributeChanged();
         }
 
