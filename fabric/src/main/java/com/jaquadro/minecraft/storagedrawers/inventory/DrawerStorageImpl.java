@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.ArrayList;
@@ -17,20 +18,32 @@ import java.util.Map;
 
 public class DrawerStorageImpl extends CombinedStorage<ItemVariant, SingleSlotStorage<ItemVariant>> implements SlottedStorage<ItemVariant>
 {
-    private static final Map<IDrawerGroup, DrawerStorageImpl> WRAPPERS = new MapMaker().weakValues().makeMap();
+    public record DrawerGroupKey(IDrawerGroup drawer, Direction direction) { }
 
-    public static DrawerStorageImpl of (IDrawerGroup group) {
-        DrawerStorageImpl storage = WRAPPERS.computeIfAbsent(group, DrawerStorageImpl::new);
+    private static final Map<DrawerGroupKey, DrawerStorageImpl> WRAPPERS = new MapMaker().weakValues().makeMap();
+
+    public static DrawerStorageImpl of (IDrawerGroup group, Direction dir) {
+        DrawerStorageImpl storage = WRAPPERS.computeIfAbsent(new DrawerGroupKey(group, dir), DrawerStorageImpl::new);
         storage.resizeSlotList();
         return storage;
     }
 
+    public static DrawerStorageImpl of (IDrawerGroup group) {
+        return of(group, null);
+    }
+
     final IDrawerGroup group;
+    final Direction side;
     final List<DrawerStackStorage> backingList;
 
-    public DrawerStorageImpl (IDrawerGroup group) {
+    public DrawerStorageImpl (DrawerGroupKey key) {
+        this(key.drawer, key.direction);
+    }
+
+    private DrawerStorageImpl (IDrawerGroup group, Direction dir) {
         super(Collections.emptyList());
         this.group = group;
+        this.side = dir;
         backingList = new ArrayList<>();
     }
 

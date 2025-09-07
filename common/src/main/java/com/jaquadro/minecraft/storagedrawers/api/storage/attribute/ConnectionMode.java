@@ -3,8 +3,6 @@ package com.jaquadro.minecraft.storagedrawers.api.storage.attribute;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.SidedConnectData;
 import net.minecraft.util.StringRepresentable;
 
-import javax.annotation.Nullable;
-
 public enum ConnectionMode implements StringRepresentable
 {
     DEFAULT(0, 2, "default", true, true, false, false),
@@ -62,8 +60,7 @@ public enum ConnectionMode implements StringRepresentable
         return intCanPull;
     }
 
-    @Nullable
-    public static ConnectionMode byName (@Nullable String name) {
+    public static ConnectionMode byName (String name) {
         return CODEC.byName(name);
     }
 

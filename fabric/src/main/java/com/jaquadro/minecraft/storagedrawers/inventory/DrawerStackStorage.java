@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributesProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
@@ -83,6 +84,11 @@ public class DrawerStackStorage extends SingleStackStorage
     
     @Override
     public long insert (ItemVariant insertedVariant, long maxAmount, TransactionContext transaction) {
+        if (storage.group instanceof IDrawerAttributesProvider attrProvider) {
+            if (storage.side != null && !attrProvider.getDrawerAttributes().getSidedConnectionModeAbs(storage.side).canExtPush())
+                return 0;
+        }
+
         if (!storage.getDrawer(slot).canItemBeStored(insertedVariant.toStack()))
             return 0;
 
@@ -118,6 +124,11 @@ public class DrawerStackStorage extends SingleStackStorage
 
     @Override
     public long extract (ItemVariant variant, long maxAmount, TransactionContext transaction) {
+        if (storage.group instanceof IDrawerAttributesProvider attrProvider) {
+            if (storage.side != null && !attrProvider.getDrawerAttributes().getSidedConnectionModeAbs(storage.side).canExtPull())
+                return 0;
+        }
+
         if (!storage.getDrawer(slot).canItemBeExtracted(variant.toStack()))
             return 0;
 
