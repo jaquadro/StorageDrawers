@@ -83,4 +83,8 @@ public interface IDrawerAttributes
     default ConnectionMode getSidedConnectionMode (Direction dir) {
         return ConnectionMode.DEFAULT;
     }
+
+    default ConnectionMode getSidedConnectionModeAbs (Direction dir) {
+        return ConnectionMode.DEFAULT;
+    }
 }

@@ -13,6 +13,7 @@ import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import com.texelsaurus.minecraft.chameleon.capabilities.ForgeCapability;
 import com.texelsaurus.minecraft.chameleon.capabilities.IForgeCapability;
 import com.texelsaurus.minecraft.chameleon.service.ForgeCapabilities;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -54,6 +55,14 @@ public class PlatformCapabilities
         return cap.getCapability(blockEntity);
     }
 
+    public static <T> T getCapability(Capability<T> capability, BlockEntity blockEntity, Direction dir) {
+        if (!nativeMap.containsKey(capability))
+            return null;
+
+        ForgeCapability<T> cap = nativeMap.get(capability);
+        return cap.getCapability(blockEntity, dir);
+    }
+
     public static void register (RegisterCapabilitiesEvent event) {
         event.register(IDrawerAttributes.class);
         event.register(IDrawerGroup.class);
@@ -77,19 +86,19 @@ public class PlatformCapabilities
             cast(Capabilities.DRAWER_ATTRIBUTES).register(entity, e -> BlockEntityDrawers.getDrawerAttributes(e));
             cast(Capabilities.DRAWER_GROUP).register(entity, e -> BlockEntityDrawers.getGroup(e));
             cast(Capabilities.ITEM_REPOSITORY).register(entity, DrawerItemRepository::new);
-            cast(Capabilities.ITEM_HANDLER).register(entity, DrawerItemHandler::new);
+            cast(Capabilities.ITEM_HANDLER).register(entity, DrawerItemHandler::createDirectionalHandler);
 
-            cast(ITEM_HANDLER).register(entity, PlatformDrawerItemHandler::new);
+            cast(ITEM_HANDLER).register(entity, PlatformDrawerItemHandler::createDirectionalHandler);
         });
 
         cast(Capabilities.DRAWER_GROUP).register(ModBlockEntities.CONTROLLER.get(), e -> e);
         cast(Capabilities.ITEM_REPOSITORY).register(ModBlockEntities.CONTROLLER.get(), BlockEntityController::getItemRepository);
-        cast(Capabilities.ITEM_HANDLER).register(ModBlockEntities.CONTROLLER.get(), DrawerItemHandler::new);
+        cast(Capabilities.ITEM_HANDLER).register(ModBlockEntities.CONTROLLER.get(), DrawerItemHandler::createHandler);
         cast(ITEM_HANDLER).register(ModBlockEntities.CONTROLLER.get(), PlatformDrawerItemHandler::new);
 
         cast(Capabilities.DRAWER_GROUP).register(ModBlockEntities.CONTROLLER_IO.get(), e -> e);
         cast(Capabilities.ITEM_REPOSITORY).register(ModBlockEntities.CONTROLLER_IO.get(), BlockEntitySlave::getItemRepository);
-        cast(Capabilities.ITEM_HANDLER).register(ModBlockEntities.CONTROLLER_IO.get(), DrawerItemHandler::new);
+        cast(Capabilities.ITEM_HANDLER).register(ModBlockEntities.CONTROLLER_IO.get(), DrawerItemHandler::createHandler);
         cast(ITEM_HANDLER).register(ModBlockEntities.CONTROLLER_IO.get(), PlatformDrawerItemHandler::new);
     }
 }

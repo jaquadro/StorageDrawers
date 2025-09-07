@@ -38,9 +38,9 @@ public class ItemConnectionKey extends ItemKey
             Direction blockDir = Direction.NORTH;
             BlockState state = context.getLevel().getBlockState(context.getClickedPos());
             if (state.hasProperty(HorizontalDirectionalBlock.FACING))
-                blockDir = state.getValue(HorizontalDirectionalBlock.FACING);
+                blockDir = state.getValue(HorizontalDirectionalBlock.FACING).getOpposite();
 
-            dir = Direction.fromYRot(blockDir.toYRot() + dir.toYRot());
+            dir = Direction.fromYRot(dir.toYRot() - blockDir.toYRot());
         }
         ConnectionMode curMode = attrs.getSidedConnectionMode(dir);
 

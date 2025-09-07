@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.ConnectionMode;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.MagnetDim;
@@ -29,12 +30,12 @@ import com.texelsaurus.minecraft.chameleon.inventory.ContentMenuProvider;
 import com.texelsaurus.minecraft.chameleon.inventory.content.PositionContent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -44,6 +45,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -53,9 +55,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup, IProtectable, INetworked, IFramedBlockEntity /*, INameable */
+public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup, IProtectable, INetworked, IFramedBlockEntity, IDrawerAttributesProvider
 {
     private final CustomNameData customNameData = new CustomNameData();
     private final MaterialData materialData = new MaterialData();
@@ -100,6 +101,21 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
                 setChanged();
                 markBlockForUpdate();
             }
+        }
+
+        @Override
+        public ConnectionMode getSidedConnectionModeAbs (Direction dir) {
+            if (getLevel() == null)
+                return ConnectionMode.DEFAULT;
+
+            if (dir != Direction.UP && dir != Direction.DOWN) {
+                BlockState state = getLevel().getBlockState(getBlockPos());
+                Direction blockDir = state.getValue(HorizontalDirectionalBlock.FACING).getOpposite();
+
+                dir = Direction.fromYRot(dir.toYRot() - blockDir.toYRot());
+            }
+
+            return getSidedConnectionMode(dir);
         }
     }
 

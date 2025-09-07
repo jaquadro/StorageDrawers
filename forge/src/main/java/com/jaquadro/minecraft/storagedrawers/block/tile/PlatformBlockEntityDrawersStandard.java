@@ -46,7 +46,7 @@ public abstract class PlatformBlockEntityDrawersStandard extends BlockEntityDraw
             if (!PlatformCapabilities.hasCapability(cap))
                 return LazyOptional.empty();
 
-            return LazyOptional.of(() -> PlatformCapabilities.getCapability(cap, this));
+            return LazyOptional.of(() -> PlatformCapabilities.getCapability(cap, this, side));
         }
     }
 
@@ -78,7 +78,7 @@ public abstract class PlatformBlockEntityDrawersStandard extends BlockEntityDraw
             if (!PlatformCapabilities.hasCapability(cap))
                 return LazyOptional.empty();
 
-            return LazyOptional.of(() -> PlatformCapabilities.getCapability(cap, this));
+            return LazyOptional.of(() -> PlatformCapabilities.getCapability(cap, this, side));
         }
     }
 
@@ -110,7 +110,7 @@ public abstract class PlatformBlockEntityDrawersStandard extends BlockEntityDraw
             if (!PlatformCapabilities.hasCapability(cap))
                 return LazyOptional.empty();
 
-            return LazyOptional.of(() -> PlatformCapabilities.getCapability(cap, this));
+            return LazyOptional.of(() -> PlatformCapabilities.getCapability(cap, this, side));
         }
     }
 }

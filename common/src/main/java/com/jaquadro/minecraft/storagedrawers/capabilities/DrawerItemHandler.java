@@ -2,19 +2,32 @@ package com.jaquadro.minecraft.storagedrawers.capabilities;
 
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemHandler;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
-import com.jaquadro.minecraft.storagedrawers.api.storage.EmptyDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.storage.*;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class DrawerItemHandler implements IItemHandler
 {
     private final IDrawerGroup group;
+    private final Direction side;
 
     public DrawerItemHandler (IDrawerGroup group) {
         this.group = group;
+        this.side = null;
+    }
+
+    protected DrawerItemHandler (IDrawerGroup group, Direction dir) {
+        this.group = group;
+        this.side = dir;
+    }
+
+    public static DrawerItemHandler createHandler (IDrawerGroup group) {
+        return new DrawerItemHandler(group);
+    }
+
+    public static DrawerItemHandler createDirectionalHandler (IDrawerGroup group, Direction dir) {
+        return new DrawerItemHandler(group, dir);
     }
 
     @Override
@@ -52,6 +65,11 @@ public class DrawerItemHandler implements IItemHandler
         if (!group.isGroupValid() || isSuspended())
             return stack;
 
+        if (group instanceof IDrawerAttributesProvider attrProvider) {
+            if (side != null && !attrProvider.getDrawerAttributes().getSidedConnectionModeAbs(side).canExtPush())
+                return stack;
+        }
+
         if (slotIsVirtual(slot)) {
             // TODO: Why was ItemConversion check needed here?
             // if (CommonConfig.GENERAL.enableItemConversion.get())
@@ -68,6 +86,9 @@ public class DrawerItemHandler implements IItemHandler
         // TODO: Why was ItemConversion check needed here?
         if (orderedSlot > 0 /* && CommonConfig.GENERAL.enableItemConversion.get() */) {
             IDrawer drawer = group.getDrawer(orderedSlot);
+            if (side != null && !drawer.getAttributes().getSidedConnectionModeAbs(side).canExtPush())
+                return stack;
+
             if (drawer.isEnabled() && drawer.isEmpty()) {
                 IDrawer prevDrawer = group.getDrawer(prevSlot);
                 if (!prevDrawer.isEnabled() || !prevDrawer.isEmpty())
@@ -97,6 +118,8 @@ public class DrawerItemHandler implements IItemHandler
     private ItemStack insertItemInternal (int slot, @NotNull ItemStack stack, boolean simulate) {
         IDrawer drawer = group.getDrawer(slot);
         if (drawer.getAttributes().isSuspended() || !drawer.canItemBeStored(stack))
+            return stack;
+        if (side != null && !drawer.getAttributes().getSidedConnectionModeAbs(side).canExtPush())
             return stack;
 
         if (drawer.isEmpty() && !simulate)
@@ -129,6 +152,8 @@ public class DrawerItemHandler implements IItemHandler
 
         IDrawer drawer = group.getDrawer(slot);
         if (!drawer.isEnabled() || drawer.isEmpty() || drawer.getAttributes().isSuspended() || drawer.getStoredItemCount() == 0)
+            return ItemStack.EMPTY;
+        if (side != null && !drawer.getAttributes().getSidedConnectionModeAbs(side).canExtPull())
             return ItemStack.EMPTY;
 
         @NotNull ItemStack prototype = drawer.getStoredItemPrototype();

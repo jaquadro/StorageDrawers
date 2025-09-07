@@ -4,6 +4,7 @@ import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import com.texelsaurus.minecraft.chameleon.capabilities.ForgeCapability;
 import com.texelsaurus.minecraft.chameleon.capabilities.IForgeCapability;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class ForgeCapabilities implements ChameleonCapabilities
@@ -65,7 +67,28 @@ public class ForgeCapabilities implements ChameleonCapabilities
         }
 
         @Override
+        public <BE extends BlockEntity> T getCapability (BE blockEntity, Direction dir) {
+            if (cap != null)
+                return cap.getCapability(blockEntity, dir);
+
+            cap = (IForgeCapability<T>) capabilties.getOrDefault(id, null);
+            if (cap != null)
+                return cap.getCapability(blockEntity, dir);
+
+            return null;
+        }
+
+        @Override
         public <BE extends BlockEntity> void register (BlockEntityType<BE> entity, Function<BE, T> provider) {
+            if (cap == null)
+                cap = (IForgeCapability<T>) capabilties.getOrDefault(id, null);
+
+            if (cap != null)
+                cap.register(entity, provider);
+        }
+
+        @Override
+        public <BE extends BlockEntity> void register (BlockEntityType<BE> entity, BiFunction<BE, Direction, T> provider) {
             if (cap == null)
                 cap = (IForgeCapability<T>) capabilties.getOrDefault(id, null);
 

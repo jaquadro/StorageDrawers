@@ -1,9 +1,7 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IControlGroup;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
+import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.StandardDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
@@ -97,7 +95,7 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
         };
     }
 
-    private class GroupData extends StandardDrawerGroup implements IProtectable, INetworked
+    private class GroupData extends StandardDrawerGroup implements IProtectable, INetworked, IDrawerAttributesProvider
     {
         public GroupData (int slotCount) {
             super(slotCount);
@@ -150,6 +148,11 @@ public abstract class BlockEntityDrawersStandard extends BlockEntityDrawers
         @Override
         public Set<IControlGroup> getSoftBoundControlGroups () {
             return BlockEntityDrawersStandard.this.getSoftBoundControlGroups();
+        }
+
+        @Override
+        public IDrawerAttributes getDrawerAttributes () {
+            return BlockEntityDrawersStandard.this.getDrawerAttributes();
         }
     }
 
