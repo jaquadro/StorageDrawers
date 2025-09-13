@@ -1,1 +1,1 @@
-- Fixed item dupe from integer overflow
+- FORGE: Let capability checks fall back to parent

@@ -1,3 +1,6 @@
+[12.14.3]
+- FORGE: Let capability checks fall back to parent
+
 [12.14.2]
 - Fixed item dupe from integer overflow
 
