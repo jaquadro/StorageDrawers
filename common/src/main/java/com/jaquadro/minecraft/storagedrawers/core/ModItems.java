@@ -52,6 +52,8 @@ public final class ModItems
         MAGNET_UPGRADE = ITEMS.register("magnet_upgrade", () -> new ItemUpgradeMagnet(EnumUpgradeMagnet.LEVEL1, new Item.Properties())),
         MAGNET_UPGRADE_2 = ITEMS.register("magnet_upgrade_2", () -> new ItemUpgradeMagnet(EnumUpgradeMagnet.LEVEL2, new Item.Properties())),
         MAGNET_UPGRADE_3 = ITEMS.register("magnet_upgrade_3", () -> new ItemUpgradeMagnet(EnumUpgradeMagnet.LEVEL3, new Item.Properties())),
+        PULL_UPGRADE = ITEMS.register("pull_upgrade", () -> new ItemUpgradePull(new Item.Properties())),
+        PUSH_UPGRADE = ITEMS.register("push_upgrade", () -> new ItemUpgradePush(new Item.Properties())),
         REMOTE_UPGRADE = ITEMS.register("remote_upgrade", () -> new ItemUpgradeRemote(false, false, new Item.Properties())),
         REMOTE_UPGRADE_BOUND = ITEMS.register("remote_upgrade_bound", () -> new ItemUpgradeRemote(false, true, new Item.Properties())),
         REMOTE_GROUP_UPGRADE = ITEMS.register("remote_group_upgrade", () -> new ItemUpgradeRemote(true, false, new Item.Properties())),

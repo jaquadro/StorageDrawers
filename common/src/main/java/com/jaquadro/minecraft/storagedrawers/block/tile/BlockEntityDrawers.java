@@ -36,6 +36,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -45,8 +47,11 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
@@ -910,6 +915,29 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             setChanged(level, pos, state);
 
         return added;
+    }
+
+    public boolean tryPushItems(Level level, BlockPos pos, BlockState state) {
+
+    }
+
+    private static Container getContainerAt (Level level, BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        Block block = state.getBlock();
+        Container container = null;
+
+        if (block instanceof WorldlyContainerHolder holder)
+            container = holder.getContainer(state, level, pos);
+        else if (state.hasBlockEntity()) {
+            BlockEntity entity = level.getBlockEntity(pos);
+            if (entity instanceof Container c) {
+                container = c;
+                if (container instanceof ChestBlockEntity && block instanceof ChestBlock chestBlock)
+                    container = ChestBlock.getContainer(chestBlock, state, level, pos, true);
+            }
+        }
+
+        return container;
     }
 
     public void entityInside(Level level, BlockPos pos, BlockState state, Entity entity) {
