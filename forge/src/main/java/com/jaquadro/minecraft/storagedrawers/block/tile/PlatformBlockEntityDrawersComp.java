@@ -44,7 +44,7 @@ public abstract class PlatformBlockEntityDrawersComp extends BlockEntityDrawersC
         @Override
         public @NotNull <T> LazyOptional<T> getCapability (@NotNull Capability<T> cap, @Nullable Direction side) {
             if (!PlatformCapabilities.hasCapability(cap))
-                return LazyOptional.empty();
+                return super.getCapability(cap, side);
 
             return LazyOptional.of(() -> PlatformCapabilities.getCapability(cap, this, side));
         }
@@ -76,7 +76,7 @@ public abstract class PlatformBlockEntityDrawersComp extends BlockEntityDrawersC
         @Override
         public @NotNull <T> LazyOptional<T> getCapability (@NotNull Capability<T> cap, @Nullable Direction side) {
             if (!PlatformCapabilities.hasCapability(cap))
-                return LazyOptional.empty();
+                return super.getCapability(cap, side);
 
             return LazyOptional.of(() -> PlatformCapabilities.getCapability(cap, this, side));
         }

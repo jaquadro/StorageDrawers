@@ -1,1 +1,2 @@
-- Fixed item dupe from integer overflow
+- Added dropMode and dropStackLimit config entries
+- FORGE: Let capability checks fall back to parent

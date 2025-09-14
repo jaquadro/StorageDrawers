@@ -1,3 +1,7 @@
+[12.14.3]
+- Added dropMode and dropStackLimit config entries
+- FORGE: Let capability checks fall back to parent
+
 [12.14.2]
 - Fixed item dupe from integer overflow
 

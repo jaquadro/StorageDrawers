@@ -2,6 +2,9 @@ package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
+import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -13,13 +16,26 @@ public class DrawerInventoryHelper
 {
     private static final Random RANDOM = new Random();
 
-    public static void dropInventoryItems (Level world, BlockPos pos, IDrawerGroup group) {
-        for (int i = 0; i < group.getDrawerCount(); i++) {
-            IDrawer drawer = group.getDrawer(i);
-            if (!drawer.isEnabled())
-                continue;
+    public static void dropUpgradeItems (Level level, BlockPos pos, UpgradeData upgrades) {
+        for (int i = 0; i < upgrades.getSlotCount(); i++) {
+            ItemStack stack = upgrades.getUpgrade(i);
+            if (!stack.isEmpty() && stack.getItem() != ModItems.CREATIVE_VENDING_UPGRADE.get())
+                spawnItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
 
-            while (drawer.getStoredItemCount() > 0) {
+            upgrades.setUpgrade(i, ItemStack.EMPTY);
+        }
+    }
+
+    public static void dropInventoryItems (Level world, BlockPos pos, IDrawerGroup group) {
+        int remainingStacks = ModCommonConfig.INSTANCE.DRAWERS.storage.dropStackLimit.get();
+
+        while (remainingStacks > 0) {
+            int remainingStart = remainingStacks;
+            for (int i = 0; i < group.getDrawerCount(); i++) {
+                IDrawer drawer = group.getDrawer(i);
+                if (!drawer.isEnabled() || drawer.getStoredItemCount() == 0 || remainingStacks == 0)
+                    continue;
+
                 ItemStack stack = drawer.getStoredItemPrototype().copy();
                 int storedCount = drawer.getStoredItemCount();
                 int stackLimit = stack.getMaxStackSize();
@@ -27,11 +43,15 @@ public class DrawerInventoryHelper
 
                 stack.setCount(stackSize);
                 if (stack.isEmpty())
-                    break;
+                    continue;
 
                 spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
                 drawer.adjustStoredItemCount(-stackSize);
+                remainingStacks -= 1;
             }
+
+            if (remainingStart == remainingStacks)
+                break;
         }
     }
 
