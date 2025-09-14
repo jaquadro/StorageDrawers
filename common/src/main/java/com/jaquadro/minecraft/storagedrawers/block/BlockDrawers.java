@@ -16,6 +16,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.ModSecurity;
+import com.jaquadro.minecraft.storagedrawers.inventory.DrawerInventoryHelper;
 import com.jaquadro.minecraft.storagedrawers.item.*;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.texelsaurus.minecraft.chameleon.inventory.ContentMenuProvider;
@@ -607,23 +608,25 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         if (tile == null)
             return drop;
 
-        boolean hasUpgradeContents = false;
-        boolean hasItemContents = false;
-        for (int i = 0; i < tile.getGroup().getDrawerCount(); i++) {
-            IDrawer drawer = tile.getGroup().getDrawer(i);
-            if (!drawer.isEmpty() || drawer.isMissing())
-                hasItemContents = true;
-        }
-        for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {
-            if (!tile.upgrades().getUpgrade(i).isEmpty())
-                hasUpgradeContents = true;
-        }
+        if (ModCommonConfig.INSTANCE.DRAWERS.storage.dropMode.get() == ModCommonConfig.DropMode.KEEP) {
+            boolean hasUpgradeContents = false;
+            boolean hasItemContents = false;
+            for (int i = 0; i < tile.getGroup().getDrawerCount(); i++) {
+                IDrawer drawer = tile.getGroup().getDrawer(i);
+                if (!drawer.isEmpty() || drawer.isMissing())
+                    hasItemContents = true;
+            }
+            for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {
+                if (!tile.upgrades().getUpgrade(i).isEmpty())
+                    hasUpgradeContents = true;
+            }
 
-        if (hasItemContents || hasUpgradeContents) {
-            CompoundTag tiledata = tile.saveWithId(tile.getLevel().registryAccess());
-            drop.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tiledata));
-            if (hasItemContents)
-                drop.set(DataComponents.MAX_STACK_SIZE, 1);
+            if (hasItemContents || hasUpgradeContents) {
+                CompoundTag tiledata = tile.saveWithId(tile.getLevel().registryAccess());
+                drop.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tiledata));
+                if (hasItemContents)
+                    drop.set(DataComponents.MAX_STACK_SIZE, 1);
+            }
         }
 
         if (tile.hasCustomName())
@@ -658,10 +661,20 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
 
     @SuppressWarnings("deprecation")
     @Override
-    public void onRemove(BlockState p_51538_, Level p_51539_, BlockPos p_51540_, BlockState p_51541_, boolean p_51542_) {
-        if (!p_51538_.is(p_51541_.getBlock())) {
-            p_51539_.updateNeighbourForOutputSignal(p_51540_, this);
-            super.onRemove(p_51538_, p_51539_, p_51540_, p_51541_, p_51542_);
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean flag) {
+        if (!state.is(newState.getBlock())) {
+            level.updateNeighbourForOutputSignal(pos, this);
+
+            if (ModCommonConfig.INSTANCE.DRAWERS.storage.dropMode.get() == ModCommonConfig.DropMode.DROP) {
+                BlockEntityDrawers entity = com.jaquadro.minecraft.storagedrawers.util.WorldUtils.getBlockEntity(level, pos, BlockEntityDrawers.class);
+                if (entity != null) {
+                    DrawerInventoryHelper.dropUpgradeItems(level, pos, entity.upgrades());
+                    if (!entity.getDrawerAttributes().isUnlimitedVending())
+                        DrawerInventoryHelper.dropInventoryItems(level, pos, entity.getGroup());
+                }
+            }
+
+            super.onRemove(state, level, pos, newState, flag);
         }
     }
 

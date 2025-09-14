@@ -276,6 +276,8 @@ public final class ModCommonConfig extends ConfigSpec
 
         public class Storage extends ConfigSection {
             public ChameleonConfig.ConfigEntry<List<? extends String>> storeBlacklist;
+            public ChameleonConfig.ConfigEntry<DropMode> dropMode;
+            public ChameleonConfig.ConfigEntry<Integer> dropStackLimit;
 
             public Storage (String name, String... comment) {
                 super(name, comment);
@@ -283,11 +285,23 @@ public final class ModCommonConfig extends ConfigSpec
                 storeBlacklist = commonConfig.defineList("storeDenyList", Arrays.asList("storagedrawers:creative_vending_upgrade"), null)
                     .comment("", "Each entry should be a namespace or fully namespaced item, e.g. minecraft:cobblestone",
                         "Any items on the deny list are prevented from being stored in drawers");
+
+                dropMode = commonConfig.defineEnum("dropMode", DropMode.KEEP)
+                    .comment("", "What a drawer should do with its items when broken.  Acceptable values are:",
+                        "KEEP: Drawer retains all items in the dropped item, like shulker boxes.  This is the default behavior.",
+                        "DROP: Drawer drops items into the world, up to the dropStackLimit value.  Stored items over that limit are voided.",
+                        "VOID: Drawer voids all items when dropped.");
+
+                dropStackLimit = commonConfig.define("dropStackLimit", 32)
+                    .comment("", "If dropMode is set to DROP, this is the maximum number of stacks that can be spilled into the world",
+                        "from the entire block.  By default, this is set to the amount a vanilla chest could drop.");
             }
 
             @Override
             protected void buildEntries () {
                 storeBlacklist.build();
+                dropMode.build();
+                dropStackLimit.build();
             }
 
             @Override
@@ -965,6 +979,23 @@ public final class ModCommonConfig extends ConfigSpec
                 return Mode.ALL;
 
             return LIST;
+        }
+    }
+
+    public enum DropMode {
+        KEEP,
+        DROP,
+        VOID;
+
+        public static DropMode fromValueIgnoreCase (String value) {
+            if (value.compareToIgnoreCase("KEEP") == 0)
+                return DropMode.KEEP;
+            else if (value.compareToIgnoreCase("DROP") == 0)
+                return DropMode.DROP;
+            else if (value.compareToIgnoreCase("VOID") == 0)
+                return DropMode.VOID;
+
+            return KEEP;
         }
     }
 }

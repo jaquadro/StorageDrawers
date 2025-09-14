@@ -1,4 +1,5 @@
 [13.11.4]
+- Added dropMode and dropStackLimit config entries
 - FORGE: Let capability checks fall back to parent
 
 [13.11.3]
