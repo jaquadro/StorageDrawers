@@ -42,6 +42,10 @@ public class PlatformCapabilities
         return (IForgeCapability<T>) cap;
     }
 
+    public static <T> boolean hasCapability(Capability<T> capability) {
+        return nativeMap.containsKey(capability);
+    }
+
     public static <T> T getCapability(Capability<T> capability, BlockEntity blockEntity) {
         if (!nativeMap.containsKey(capability))
             return null;
