@@ -19,6 +19,7 @@ import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers1;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers2;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawers4;
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerDrawersComp3;
+import com.jaquadro.minecraft.storagedrawers.inventory.external.ContainerHelper;
 import com.jaquadro.minecraft.storagedrawers.item.EnumUpgradeRedstone;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeRemote;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgradeStorage;
@@ -36,7 +37,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -84,6 +87,11 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     private long lastClickTime;
     private UUID lastClickUUID;
     private boolean loading;
+
+    private int hopperTickCooldown;
+    private int magnetTickCooldown;
+    private int pushTickCooldown;
+    private int pullTickCooldown;
 
     private AABB SUCK_AABB = Block.box(0.0, 11.0, 0.0, 16.0, 32.0, 16.0).toAabbs().get(0);
     private AABB MAGNET_AABB = AABB.of(BoundingBox.fromCorners(Vec3i.ZERO, Vec3i.ZERO));
@@ -903,41 +911,159 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         return capability.getCapability(level, getBlockPos());
     }
 
-    public boolean pushItemsTick(Level level, BlockPos pos, BlockState state) {
-        IDrawerAttributes attr = getDrawerAttributes();
-        if (attr.isSuspended())
-            return false;
-        if (!attr.isHopper() && !attr.isMagnet())
-            return false;
+    private int updateTickCooldown () {
+        int nextTick = Math.min(magnetTickCooldown, pushTickCooldown);
+        nextTick = Math.min(nextTick, pullTickCooldown);
+        nextTick = Math.min(nextTick, hopperTickCooldown);
 
-        boolean added = suckInItems(level);
-        if (added)
+        hopperTickCooldown -= nextTick;
+        magnetTickCooldown -= nextTick;
+        pushTickCooldown -= nextTick;
+        pullTickCooldown -= nextTick;
+
+        return nextTick;
+    }
+
+    public int updateTick (Level level, BlockPos pos, BlockState state, RandomSource rand) {
+        IDrawerAttributes attr = getDrawerAttributes();
+
+        boolean changed = false;
+        if (attr.isMagnet())
+            changed |= updateMagnetTick(level, pos, state, rand);
+        else if (attr.isHopper())
+            changed |= updateHopperTick(level, pos, state, rand);
+
+        if (attr.isPush())
+            changed |= updatePushTick(level, pos, state, rand);
+        if (attr.isPull())
+            changed |= updatePullTick(level, pos, state, rand);
+
+        if (changed)
             setChanged(level, pos, state);
 
-        return added;
+        return updateTickCooldown();
     }
 
-    public boolean tryPushItems(Level level, BlockPos pos, BlockState state) {
+    private boolean updateHopperTick (Level level, BlockPos pos, BlockState state, RandomSource rand) {
+        BlockPos blockpos = BlockPos.containing(pos.getX(), pos.getY() + 1.0, pos.getZ());
+        BlockState blockstate = level.getBlockState(blockpos);
 
+        IDrawerAttributes attr = getDrawerAttributes();
+        if (attr.isSuspended())
+            hopperTickCooldown = 20;
+
+        if (hopperTickCooldown > 0)
+            return false;
+
+        hopperTickCooldown = 20;
+        if (blockstate.isCollisionShapeFullBlock(level, blockpos))
+            return false;
+
+        for (ItemEntity item : getItemEntitiesInRange(level)) {
+            if (addItemEntity(item))
+                return true;
+        }
+
+        hopperTickCooldown = rand.nextInt(hopperTickCooldown, hopperTickCooldown + 5);
+        return false;
     }
 
-    private static Container getContainerAt (Level level, BlockPos pos) {
-        BlockState state = level.getBlockState(pos);
-        Block block = state.getBlock();
-        Container container = null;
+    private boolean updateMagnetTick (Level level, BlockPos pos, BlockState state, RandomSource rand) {
+        IDrawerAttributes attr = getDrawerAttributes();
+        if (attr.isSuspended())
+            magnetTickCooldown = upgradeData.getMagnetIdleRate();
 
-        if (block instanceof WorldlyContainerHolder holder)
-            container = holder.getContainer(state, level, pos);
-        else if (state.hasBlockEntity()) {
-            BlockEntity entity = level.getBlockEntity(pos);
-            if (entity instanceof Container c) {
-                container = c;
-                if (container instanceof ChestBlockEntity && block instanceof ChestBlock chestBlock)
-                    container = ChestBlock.getContainer(chestBlock, state, level, pos, true);
+        if (magnetTickCooldown > 0)
+            return false;
+
+        for (ItemEntity item : getItemEntitiesInRange(level)) {
+            if (addItemEntity(item)) {
+                magnetTickCooldown = upgradeData.getMagnetActiveRate();
+                return true;
             }
         }
 
-        return container;
+        magnetTickCooldown = upgradeData.getMagnetIdleRate();
+        magnetTickCooldown = rand.nextInt(magnetTickCooldown, magnetTickCooldown + 5);
+        return false;
+    }
+
+    private boolean updatePushTick (Level level, BlockPos pos, BlockState state, RandomSource rand) {
+        IDrawerAttributes attr = getDrawerAttributes();
+        if (attr.isSuspended())
+            pushTickCooldown = upgradeData.getPushIdleRate();
+
+        if (pushTickCooldown > 0)
+            return false;
+
+        if (tryPushItems(level, pos, state)) {
+            pushTickCooldown = upgradeData.getPushActiveRate();
+            return true;
+        }
+
+        pushTickCooldown = upgradeData.getPushIdleRate();
+        pushTickCooldown = rand.nextInt(pushTickCooldown, pushTickCooldown + 5);
+        return false;
+    }
+
+    private boolean updatePullTick (Level level, BlockPos pos, BlockState state, RandomSource rand) {
+        IDrawerAttributes attr = getDrawerAttributes();
+        if (attr.isSuspended())
+            pullTickCooldown = upgradeData.getPullIdleRate();
+
+        if (pullTickCooldown > 0)
+            return false;
+
+        if (tryPullItems(level, pos, state)) {
+            pullTickCooldown = upgradeData.getPullActiveRate();
+            return true;
+        }
+
+        pullTickCooldown = upgradeData.getPullIdleRate();
+        pullTickCooldown = rand.nextInt(pullTickCooldown, pullTickCooldown + 5);
+        return false;
+    }
+
+    public boolean tryPushItems(Level level, BlockPos pos, BlockState state) {
+        for (Direction dir : Direction.values()) {
+            ConnectionMode mode = getDrawerAttributes().getSidedConnectionModeAbs(dir);
+            if (!mode.canIntPush())
+                continue;
+
+            Container container = ContainerHelper.getContainerAt(level, pos.relative(dir));
+            if (container == null)
+                continue;
+
+            IDrawerGroup group = getGroup();
+            for (int i = 0; i < group.getDrawerCount(); i++) {
+                IDrawer drawer = group.getDrawer(i);
+                if (ContainerHelper.addItemFromDrawer(drawer, container, dir))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean tryPullItems(Level level, BlockPos pos, BlockState state) {
+        for (Direction dir : Direction.values()) {
+            ConnectionMode mode = getDrawerAttributes().getSidedConnectionModeAbs(dir);
+            if (!mode.canIntPull())
+                continue;
+
+            Container container = ContainerHelper.getContainerAt(level, pos.relative(dir));
+            if (container == null)
+                continue;
+
+            IDrawerGroup group = getGroup();
+            for (int i = 0; i < group.getDrawerCount(); i++) {
+                IDrawer drawer = group.getDrawer(i);
+                if (ContainerHelper.takeItemIntoDrawer(drawer, container, dir))
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     public void entityInside(Level level, BlockPos pos, BlockState state, Entity entity) {
@@ -951,24 +1077,6 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             return;
 
         addItemEntity(itementity);
-    }
-
-    private boolean suckInItems(Level level) {
-        BlockPos pos = getBlockPos();
-        BlockPos blockpos = BlockPos.containing(pos.getX(), pos.getY() + 1.0, pos.getZ());
-        BlockState blockstate = level.getBlockState(blockpos);
-
-        if (!upgradeData.hasMagnetUpgrade()) {
-            if (blockstate.isCollisionShapeFullBlock(level, blockpos))
-                return false;
-        }
-
-        for (ItemEntity item : getItemEntitiesInRange(level)) {
-            if (addItemEntity(item))
-                return true;
-        }
-
-        return false;
     }
 
     private List<ItemEntity> getItemEntitiesInRange (Level level) {

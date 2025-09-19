@@ -589,6 +589,99 @@ public final class ModCommonConfig extends ConfigSpec
             }
         }
 
+        public class ItemTransferUpgrade extends Upgrade {
+            public final ChameleonConfig.ConfigEntry<Integer> itemRate;
+            public final ChameleonConfig.ConfigEntry<Integer> activeSpeed;
+            public final ChameleonConfig.ConfigEntry<Integer> idleSpeed;
+
+            public ItemTransferUpgrade (String upgradeName, int defaultItemRate, String... comment) {
+                super(upgradeName, comment);
+
+                itemRate = commonConfig.define("itemRate", defaultItemRate)
+                    .comment("", "The number of items transferred at a time.",
+                        "Rate will be capped at a given item's max stack size.");
+
+                activeSpeed = commonConfig.define("activeSpeed", 20)
+                    .comment("", "Ticks between active item transfers when this is the highest upgrade tier.");
+
+                idleSpeed = commonConfig.define("idleSpeed", 20)
+                    .comment("", "Ticks between item transfer checks when this is the highest upgrade tier.",
+                        "Item transfer is idle when items have not been transferred within the last idleSpeed interval.");
+            }
+
+            @Override
+            protected void buildEntries () {
+                super.buildEntries();
+                itemRate.build();
+                activeSpeed.build();
+                idleSpeed.build();
+            }
+
+            @Override
+            public ItemTransferUpgrade build () {
+                super.build();
+                return this;
+            }
+        }
+
+        public class PushUpgrade extends ConfigSection
+        {
+            public final ItemTransferUpgrade tier1;
+            public final ItemTransferUpgrade tier2;
+            public final ItemTransferUpgrade tier3;
+
+            public PushUpgrade (String upgradeName, String... comment) {
+                super(upgradeName, comment);
+
+                tier1 = new ItemTransferUpgrade("Level1", 1);
+                tier2 = new ItemTransferUpgrade("Level2", 8);
+                tier3 = new ItemTransferUpgrade("Level3", 64);
+            }
+
+            @Override
+            protected void buildEntries () {
+                super.buildEntries();
+                tier1.build();
+                tier2.build();
+                tier3.build();
+            }
+
+            @Override
+            public PushUpgrade build () {
+                super.build();
+                return this;
+            }
+        }
+
+        public class PullUpgrade extends ConfigSection
+        {
+            public final ItemTransferUpgrade tier1;
+            public final ItemTransferUpgrade tier2;
+            public final ItemTransferUpgrade tier3;
+
+            public PullUpgrade (String upgradeName, String... comment) {
+                super(upgradeName, comment);
+
+                tier1 = new ItemTransferUpgrade("Level1", 1);
+                tier2 = new ItemTransferUpgrade("Level2", 8);
+                tier3 = new ItemTransferUpgrade("Level3", 64);
+            }
+
+            @Override
+            protected void buildEntries () {
+                super.buildEntries();
+                tier1.build();
+                tier2.build();
+                tier3.build();
+            }
+
+            @Override
+            public PullUpgrade build () {
+                super.build();
+                return this;
+            }
+        }
+
         public class MagnetTierUpgrade extends Upgrade {
             public final ChameleonConfig.ConfigEntry<List<? extends Integer>> range;
             public final ChameleonConfig.ConfigEntry<Integer> activeSpeed;
@@ -680,6 +773,8 @@ public final class ModCommonConfig extends ConfigSpec
         public final IlluminationUpgrade illuminationUpgrade;
         public final Upgrade hopperUpgrade;
         public final MagnetUpgrade magnetUpgrade;
+        public final PushUpgrade pushUpgrade;
+        public final PullUpgrade pullUpgrade;
         public final Upgrade oneStackUpgrade;
         public final Upgrade portabilityUpgrade;
         public final RedstoneUpgrade redstoneUpgrade;
@@ -727,7 +822,13 @@ public final class ModCommonConfig extends ConfigSpec
                 "Collects matching items through its top like a vanilla hopper.").build();
 
             magnetUpgrade = new MagnetUpgrade("Magnet",
-                "Collects nearby matching items by teleporting them instantly to the drawer").build();
+                "Collects nearby matching items by teleporting them instantly to the drawer.").build();
+
+            pushUpgrade = new PushUpgrade("Push",
+                "Drawers will try to push items into adjacent inventories.").build();
+
+            pullUpgrade = new PullUpgrade("Pull",
+                "Drawers will try to pull items from adjacent inventories.").build();
 
             oneStackUpgrade = new Upgrade("OneStack",
                 "Restricts capacity of drawer to one stack.").build();

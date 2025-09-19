@@ -729,20 +729,11 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         if (blockEntity == null)
             return;
 
-        // Tick hopper
+        // Tick item transfer upgrades
         IDrawerAttributes attribs = blockEntity.getDrawerAttributes();
-        if (attribs.isHopper() || attribs.isMagnet()) {
-            UpgradeData upgrades = blockEntity.upgrades();
-            int tickTime = 20;
-
-            if (attribs.isMagnet()) {
-                int idleRate = upgrades.getMagnetIdleRate();
-                tickTime = blockEntity.pushItemsTick(world, pos, state)
-                    ? upgrades.getMagnetActiveRate()
-                    : rand.nextInt(idleRate, idleRate + 5);
-            }
-
-            world.scheduleTick(pos, state.getBlock(), tickTime);
+        if (attribs.isHopper() || attribs.isMagnet() || attribs.isPush() || attribs.isPull()) {
+            int nextTick = blockEntity.updateTick(world, pos, state, rand);
+            world.scheduleTick(pos, state.getBlock(), nextTick);
         }
 
         // Only validates if validation is scheduled on entity

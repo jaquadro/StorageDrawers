@@ -79,6 +79,14 @@ public interface IDrawerAttributesModifiable extends IDrawerAttributes
         return false;
     }
 
+    default boolean setIsPush (boolean state) {
+        return false;
+    }
+
+    default boolean setIsPull (boolean state) {
+        return false;
+    }
+
     default boolean setIsSuspended (boolean state) {
         return false;
     }

@@ -22,6 +22,12 @@ public class UpgradeData extends BlockEntityDataShim
     private int[] magnetRange;
     private int magnetActiveRate;
     private int magnetIdleRate;
+    private int pushItemRate;
+    private int pushActiveRate;
+    private int pushIdleRate;
+    private int pullItemRate;
+    private int pullActiveRate;
+    private int pullIdleRate;
     private EnumUpgradeRedstone redstoneType;
 
     // TODO: Do we need to provide these?
@@ -36,6 +42,8 @@ public class UpgradeData extends BlockEntityDataShim
     private boolean hasHopper;
     private boolean hasMagnet;
     private boolean hasRemote;
+    private boolean hasPush;
+    private boolean hasPull;
 
     private IDrawerAttributesModifiable attrs;
 
@@ -45,6 +53,8 @@ public class UpgradeData extends BlockEntityDataShim
 
         syncStorageMultiplier();
         syncMagnetRange();
+        syncPush();
+        syncPull();
     }
 
     public void setDrawerAttributes (IDrawerAttributesModifiable attrs) {
@@ -174,6 +184,30 @@ public class UpgradeData extends BlockEntityDataShim
         return magnetIdleRate;
     }
 
+    public int getPushItemRate () {
+        return pushItemRate;
+    }
+
+    public int getPushActiveRate () {
+        return pushActiveRate;
+    }
+
+    public int getPushIdleRate () {
+        return pushIdleRate;
+    }
+
+    public int getPullItemRate () {
+        return pullItemRate;
+    }
+
+    public int getPullActiveRate () {
+        return pullActiveRate;
+    }
+
+    public int getPullIdleRate () {
+        return pullIdleRate;
+    }
+
     public EnumUpgradeRedstone getRedstoneType () {
         return redstoneType;
     }
@@ -205,6 +239,10 @@ public class UpgradeData extends BlockEntityDataShim
     public boolean hasHopperUpgrade () { return hasHopper; }
 
     public boolean hasMagnetUpgrade () { return hasMagnet; }
+
+    public boolean hasPushUpgrade () { return hasPush; }
+
+    public boolean hasPullUpgrade () { return hasPull; }
 
     public boolean hasRemoteUpgrade () {
         return hasRemote;
@@ -273,6 +311,8 @@ public class UpgradeData extends BlockEntityDataShim
         syncStorageMultiplier();
         syncRedstoneLevel();
         syncMagnetRange();
+        syncPush();
+        syncPull();
 
         hasOneStack = false;
         hasVoid = false;
@@ -322,6 +362,8 @@ public class UpgradeData extends BlockEntityDataShim
         attrs.setIsBalancedFill(hasBalanceFill);
         attrs.setIsHopper(hasHopper);
         attrs.setIsMagnet(hasMagnet);
+        attrs.setIsPush(hasPush);
+        attrs.setIsPull(hasPull);
     }
 
     private void syncStorageMultiplier () {
@@ -336,6 +378,52 @@ public class UpgradeData extends BlockEntityDataShim
 
         if (storageMultiplier == 0)
             storageMultiplier = ModCommonConfig.INSTANCE.UPGRADES.getLevelMult(0);
+    }
+
+    private void syncPush () {
+        hasPush = false;
+        pushItemRate = 0;
+        pushActiveRate = 0;
+        pushIdleRate = 0;
+
+        int highestTier = 0;
+        for (ItemStack stack : upgrades) {
+            if (stack.getItem() instanceof ItemUpgradePush item) {
+                if (!item.isEnabled())
+                    continue;
+
+                hasPush = true;
+                if (item.level > highestTier) {
+                    highestTier = item.level;
+                    pushItemRate = item.getItemRate();
+                    pushActiveRate = item.getActiveSpeed();
+                    pushIdleRate = item.getIdleSpeed();
+                }
+            }
+        }
+    }
+
+    private void syncPull () {
+        hasPull = false;
+        pullItemRate = 0;
+        pullActiveRate = 0;
+        pullIdleRate = 0;
+
+        int highestTier = 0;
+        for (ItemStack stack : upgrades) {
+            if (stack.getItem() instanceof ItemUpgradePull item) {
+                if (!item.isEnabled())
+                    continue;
+
+                hasPull = true;
+                if (item.level > highestTier) {
+                    highestTier = item.level;
+                    pullItemRate = item.getItemRate();
+                    pullActiveRate = item.getActiveSpeed();
+                    pullIdleRate = item.getIdleSpeed();
+                }
+            }
+        }
     }
 
     private void syncMagnetRange () {

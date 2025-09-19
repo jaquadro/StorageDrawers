@@ -15,6 +15,13 @@ public class SidedConnectData extends BlockEntityDataShim
         this.attrs = attrs;
     }
 
+    public ConnectionMode getConnectionMode (Direction dir) {
+        if (attrs != null)
+            return attrs.getSidedConnectionMode(dir);
+
+        return ConnectionMode.DEFAULT;
+    }
+
     public void setConnectionMode (Direction dir, ConnectionMode mode) {
         if (attrs != null)
             attrs.setSidedConnectionMode(dir, mode);

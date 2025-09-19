@@ -22,6 +22,8 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable
     private boolean hasBalancedFill;
     private boolean isHopper;
     private boolean isMagnet;
+    private boolean isPush;
+    private boolean isPull;
     private boolean isSuspended;
     private int priority;
     private Map<Direction, ConnectionMode> sidedConnections = new HashMap<>();
@@ -209,6 +211,36 @@ public class BasicDrawerAttributes implements IDrawerAttributesModifiable
     public boolean setIsMagnet (boolean state) {
         if (isMagnet != state) {
             isMagnet = state;
+            onAttributeChanged();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean isPush () {
+        return isPush;
+    }
+
+    @Override
+    public boolean setIsPush (boolean state) {
+        if (isPush != state) {
+            isPush = state;
+            onAttributeChanged();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean isPull () {
+        return isPull;
+    }
+
+    @Override
+    public boolean setIsPull (boolean state) {
+        if (isPull != state) {
+            isPull = state;
             onAttributeChanged();
         }
 

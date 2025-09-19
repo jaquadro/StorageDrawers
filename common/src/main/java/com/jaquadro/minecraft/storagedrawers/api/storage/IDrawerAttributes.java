@@ -78,6 +78,10 @@ public interface IDrawerAttributes
 
     default boolean isMagnet () { return false; }
 
+    default boolean isPush () { return false; }
+
+    default boolean isPull () { return false; }
+
     default boolean isSuspended () { return false; }
 
     default ConnectionMode getSidedConnectionMode (Direction dir) {
