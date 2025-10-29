@@ -29,7 +29,7 @@
     "block.storagedrawers.framed_compacting_half_drawers_2": "裱框二階壓縮抽屜架",
     "block.storagedrawers.framed_compacting_half_drawers_3": "裱框三階壓縮抽屜架",
     "block.storagedrawers.controller": "抽屜控制器",
-    "block.storagedrawers.controller_slave": "附屬抽屜控制器",
+    "block.storagedrawers.controller_io": "附屬抽屜控制器",
     "block.storagedrawers.framed_controller": "裱框抽屜控制器",
     "block.storagedrawers.framed_controller_io": "裱框附屬抽屜控制器",
     "block.storagedrawers.keybutton_drawer": "抽屜櫃鑰匙孔",
