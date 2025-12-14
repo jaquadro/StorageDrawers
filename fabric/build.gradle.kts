@@ -16,7 +16,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${Versions.fabric}")
 
     modCompileOnly("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.9.6")
-
+    modCompileOnly("curse.maven:jade-324717:7132429")
     //modCompileOnlyApi("mezz.jei:jei-${Versions.minecraft}-fabric-api:19.8.2.99")
     //modRuntimeOnly("mezz.jei:jei-${Versions.minecraft}-fabric:19.8.2.99")
 }
