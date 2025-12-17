@@ -12,7 +12,6 @@ import java.util.List;
 public final class ModCommonConfig extends ConfigSpec
 {
     public static ModCommonConfig INSTANCE = new ModCommonConfig();
-
     private final ChameleonConfig commonConfig;
     public General GENERAL;
     public Drawers DRAWERS;

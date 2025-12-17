@@ -13,6 +13,9 @@ minecraft {
 
 dependencies {
     compileOnly("org.spongepowered:mixin:0.8.5")
+    // This is just the eventbus implementation from neoforge, it does not require
+    // the rest of neoforge.
+    api("net.neoforged:bus:8.0.5")
 }
 
 configurations {

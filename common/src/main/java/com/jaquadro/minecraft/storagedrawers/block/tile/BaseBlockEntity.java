@@ -1,6 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.block.tile;
 
+import com.jaquadro.minecraft.storagedrawers.api.event.INetworkedLoadedEvent;
+import com.jaquadro.minecraft.storagedrawers.api.event.INetworkedUnloadedEvent;
+import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.BlockEntityDataShim;
+import com.jaquadro.minecraft.storagedrawers.core.ModINetworkedLocations;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +31,22 @@ public class BaseBlockEntity extends BlockEntity
 
     public BaseBlockEntity (BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
+    }
+
+    @Override
+    public void setRemoved () {
+        BlockPos pos = getBlockPos();
+        super.setRemoved();
+        if (this instanceof INetworked && getLevel() != null && !getLevel().isClientSide()) {
+            ModINetworkedLocations.EVENT_BUS.post(new INetworkedUnloadedEvent(this, pos));
+        }
+    }
+
+    public void onEntityLoad() {
+        if (this instanceof INetworked && getLevel() != null && !getLevel().isClientSide()) {
+            BlockPos ourPos = getBlockPos();
+            ModINetworkedLocations.EVENT_BUS.post(new INetworkedLoadedEvent(this, ourPos));
+        }
     }
 
     public boolean hasDataPacket () {
