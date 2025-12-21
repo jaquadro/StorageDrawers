@@ -2,6 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 
 import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
+import com.jaquadro.minecraft.storagedrawers.api.event.INetworkedUnloadedEvent;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.*;
@@ -17,7 +18,7 @@ import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
 import com.jaquadro.minecraft.storagedrawers.capabilities.DrawerItemRepository;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+import com.jaquadro.minecraft.storagedrawers.core.ModINetworkedLocations;
 import com.jaquadro.minecraft.storagedrawers.security.SecurityManager;
 import com.jaquadro.minecraft.storagedrawers.storage.StorageUtil;
 import com.jaquadro.minecraft.storagedrawers.util.ItemCollectionRegistry;
@@ -25,8 +26,6 @@ import com.texelsaurus.minecraft.chameleon.util.WorldUtils;
 import com.mojang.authlib.GameProfile;
 import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -117,8 +116,6 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         }
     }
 
-    private final Queue<BlockPos> searchQueue = new LinkedList<>();
-    private final Set<BlockPos> searchDiscovered = new HashSet<>();
     private final Comparator<SlotRecord> slotRecordComparator = (o1, o2) -> {
         if (o1.priorityGroup != o2.priorityGroup)
             return o2.priorityGroup - o1.priorityGroup;
@@ -298,10 +295,12 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         return record.storage == node;
     }
 
+    @Override
     public void onEntityLoad () {
         if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
             ModServices.log.info("controller [{}] onEntityLoad", worldPosition);
 
+        super.onEntityLoad();
         if (getLevel() == null || getLevel().isClientSide())
             return;
 
@@ -753,9 +752,6 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         if (getLevel() == null)
             return;
 
-        searchQueue.clear();
-        searchDiscovered.clear();
-
         if (!getLevel().isClientSide())
             controllerHostData.validateRemoteNodes(this, level);
 
@@ -766,33 +762,33 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         int remoteRange = confRemoteRange > 0 ? Math.min(globalRange, confRemoteRange) : globalRange;
         int remoteGroupRange = confRemoteGroupRange > 0 ? Math.min(globalRange, confRemoteGroupRange) : globalRange;
 
-        populateRoot(getBlockPos(), globalRange, true);
+        populateRoot(getBlockPos(), globalRange);
 
         getBoundRemoteNodes().forEach(n -> {
             if (n.getBoundControlGroup() == this && n instanceof BlockEntity blockEntity) {
                 boolean recurse = n.canRecurseSearch();
                 int range = recurse ? remoteGroupRange : remoteRange;
-                populateRoot(blockEntity.getBlockPos(), range, recurse);
+                populateRoot(blockEntity.getBlockPos(), range);
             }
         });
     }
 
-    private void populateRoot (BlockPos root, int range, boolean recursiveSearch) {
-        searchQueue.add(root);
-        searchDiscovered.add(root);
+    private void populateRoot (BlockPos root, int range) {
 
         BlockPos origin = getBlockPos();
 
-        while (!searchQueue.isEmpty()) {
-            BlockPos coord = searchQueue.remove();
-            int depth = Math.max(Math.max(Math.abs(coord.getX() - origin.getX()), Math.abs(coord.getY() - origin.getY())), Math.abs(coord.getZ() - origin.getZ()));
-            if (depth > range)
+        // Ask for the drawer locations that are in range
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("Controller [{}] searching for drawers in range {}", origin, range);
+
+        var networkedThingsInRange = ModINetworkedLocations.getINetworkedLocationsInRange(origin, range);
+        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
+            ModServices.log.info("Controller [{}] found {} drawers in range", origin, networkedThingsInRange.size());
+        for (var pos: networkedThingsInRange) {
+            if (!getLevel().isLoaded(pos))
                 continue;
 
-            if (!getLevel().isLoaded(coord))
-                continue;
-
-            Block block = getLevel().getBlockState(coord).getBlock();
+            Block block = getLevel().getBlockState(pos).getBlock();
             if (block instanceof INetworked networked) {
                 IControlGroup group = networked.getBoundControlGroup();
                 if (group != null && group != this)
@@ -800,32 +796,19 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             } else
                 continue;
 
-            StorageRecord record = storage.get(coord);
+            StorageRecord record = storage.get(pos);
             if (record == null) {
                 record = new StorageRecord();
-                storage.put(coord, record);
+                storage.put(pos, record);
             }
 
             if (block instanceof BlockControllerIO) {
-                WorldUtils.getBlockEntity(getLevel(), coord, BlockEntityControllerIO.class);
+                WorldUtils.getBlockEntity(getLevel(), pos, BlockEntityControllerIO.class);
             }
 
-            updateRecordInfo(coord, record, getLevel().getBlockEntity(coord));
+            updateRecordInfo(pos, record, getLevel().getBlockEntity(pos));
             record.mark = true;
-            record.distance = depth;
-
-            if (recursiveSearch) {
-                BlockPos[] neighbors = new BlockPos[]{
-                    coord.west(), coord.east(), coord.south(), coord.north(), coord.above(), coord.below()
-                };
-
-                for (BlockPos n : neighbors) {
-                    if (!searchDiscovered.contains(n)) {
-                        searchQueue.add(n);
-                        searchDiscovered.add(n);
-                    }
-                }
-            }
+            record.distance = Math.max(Math.max(Math.abs(pos.getX() - origin.getX()), Math.abs(pos.getY() - origin.getY())), Math.abs(pos.getZ() - origin.getZ()));
         }
     }
 

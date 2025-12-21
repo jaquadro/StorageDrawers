@@ -53,6 +53,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
     // annotationProcessor("net.minecraftforge:eventbus-validator:7.0-beta.7")
     implementation("net.sf.jopt-simple:jopt-simple:5.0.4") { version { strictly("5.0.4") } }
+    implementation("net.neoforged:bus:8.0.5")
 
     // JEI
     //runtimeOnly("mezz.jei:jei-1.21-forge:19.8.2.99")

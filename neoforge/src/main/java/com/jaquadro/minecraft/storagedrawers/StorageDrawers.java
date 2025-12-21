@@ -59,6 +59,7 @@ public class StorageDrawers
         ModContainers.init(regContext);
         ModDataComponents.init(regContext);
         ModRecipes.init(regContext);
+        ModINetworkedLocations.init(regContext);
 
         modEventBus.addListener(this::setup);
         //modEventBus.addListener(MessageHandler::register);

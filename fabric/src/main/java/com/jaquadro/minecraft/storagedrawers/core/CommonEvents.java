@@ -1,6 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.core;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.tile.BaseBlockEntity;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.texelsaurus.minecraft.chameleon.util.WorldUtils;
@@ -39,10 +41,9 @@ public class CommonEvents
         });
 
         ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, world) -> {
-            if (blockEntity instanceof BlockEntityController controller)
-                controller.onEntityLoad();
-            else if (blockEntity instanceof BlockEntityDrawers drawers)
-                drawers.onEntityLoad();
+            if (blockEntity instanceof BaseBlockEntity bbe) {
+                bbe.onEntityLoad();
+            }
         });
 
         /*UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {

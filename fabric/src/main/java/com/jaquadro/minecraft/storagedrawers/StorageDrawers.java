@@ -28,6 +28,7 @@ public class StorageDrawers implements ModInitializer
         ModContainers.init(context);
         ModDataComponents.init(context);
         ModRecipes.init(context);
+        ModINetworkedLocations.init(context);
 
         ModNetworking.INSTANCE.init(context);
         CommonEvents.init();
