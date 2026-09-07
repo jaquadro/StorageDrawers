@@ -15,7 +15,7 @@ public abstract class IntegrationModule
         if (pattern == null)
             return true;
 
-        ModContainer mod = ModList.get().getModContainerById(pattern).orElse(null);
+        ModContainer mod = ModList.getModContainerById(pattern).orElse(null);
         if (mod != null) {
             try {
                 VersionRange validVersions = VersionRange.createFromVersionSpec(pattern);

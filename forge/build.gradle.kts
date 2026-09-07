@@ -1,69 +1,54 @@
 import com.texelsaurus.Properties
 import com.texelsaurus.Versions
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
-import net.darkhax.curseforgegradle.Constants as CFG_Constants
+import net.minecraftforge.gradle.ForgeGradleExtension
+import net.minecraftforge.gradle.MinecraftExtensionForProject
+import net.minecraftforge.gradle.SlimeLauncherOptions
+import org.gradle.api.NamedDomainObjectContainer
 
 plugins {
     id("modloader-conv")
-    id("net.minecraftforge.gradle") version ("[6.0.46,6.2)")
-    id("org.spongepowered.mixin") version ("0.7-SNAPSHOT")
+    id("net.minecraftforge.gradle") version ("[7.0.17,8)")
+    id("net.minecraftforge.accesstransformers") version ("5.0.3")
     id("com.modrinth.minotaur")
 }
 
-/*
-mixin {
-    config("${Properties.modid}.mixins.json")
+val mcExt = extensions.getByName("minecraft") as MinecraftExtensionForProject
+val fgExt = extensions.getByName("fg") as ForgeGradleExtension
+
+mcExt.accessTransformer.from(file("src/main/resources/META-INF/accesstransformer.cfg"))
+
+@Suppress("UNCHECKED_CAST")
+val forgeRuns = mcExt.javaClass.getMethod("getRuns").apply { isAccessible = true }
+    .invoke(mcExt) as NamedDomainObjectContainer<SlimeLauncherOptions>
+
+val mainSourceSet = extensions.getByType(org.gradle.api.tasks.SourceSetContainer::class.java)
+    .getByName("main")
+forgeRuns.configureEach {
+    workingDir.set(layout.projectDirectory.dir("run"))
+    mods { create(Properties.modid).source(mainSourceSet) }
 }
-*/
+forgeRuns.register("client")
+forgeRuns.register("server") { args("--nogui") }
 
-minecraft {
-    mappings("official", Versions.minecraft)
-    reobf = false
-    accessTransformer("src/main/resources/META-INF/accesstransformer.cfg");
-    runs {
-        create("client") {
-            taskName("runClient")
-            workingDirectory(project.file("run"))
-            ideaModule("${rootProject.name}.${project.name}.main")
-            //args("-mixin.config=${Properties.modid}.mixins.json")
-            mods {
-                create(Properties.modid) {
-                    source(sourceSets.main.get())
-                }
-            }
-        }
+sourceSets.configureEach {
+    val dir = layout.buildDirectory.dir("sourceSets/$name")
+    output.setResourcesDir(dir)
+    java.destinationDirectory.set(dir)
+}
 
-        create("server") {
-            taskName("runServer")
-            workingDirectory(project.file("run"))
-            ideaModule("${rootProject.name}.${project.name}.main")
-            args("--nogui")
-            //args("-mixin.config=${Properties.modid}.mixins.json")
-            mods {
-                create(Properties.modid) {
-                    source(sourceSets.main.get())
-                }
-            }
-        }
-    }
+repositories {
+    mcExt.mavenizer(this)
+    maven(fgExt.forgeMaven)
+    maven(fgExt.minecraftLibsMaven)
+    mavenCentral()
 }
 
 dependencies {
-    "minecraft"("net.minecraftforge:forge:${Versions.minecraft}-${Versions.forge}")
-    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
-    // annotationProcessor("net.minecraftforge:eventbus-validator:7.0-beta.7")
-    implementation("net.sf.jopt-simple:jopt-simple:5.0.4") { version { strictly("5.0.4") } }
+    "implementation"(mcExt.dependency("net.minecraftforge:forge:${Versions.minecraft}-${Versions.forge}").asProvider())
+    "annotationProcessor"("net.minecraftforge:eventbus-validator:7.0.6")
 
-    // JEI
-    //runtimeOnly("mezz.jei:jei-1.21-forge:19.8.2.99")
-
-    //implementation("curse.maven:travelers-backpack-321117:5586782")
-}
-
-sourceSets.configureEach {
-    val dir = layout.buildDirectory.dir("sourcesSets/$this.name")
-    this.output.setResourcesDir(dir)
-    this.java.destinationDirectory.set(dir)
+    // RIP JEI for Forge
 }
 
 tasks.create<TaskPublishCurseForge>("publishCurseForge") {
@@ -73,7 +58,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     apiToken = System.getenv("CURSEFORGE_API_KEY") ?: "debug_key"
 
     val mainFile = upload(Properties.curseProjectId, tasks.jar.get().archiveFile)
-    mainFile.displayName = "${Properties.name}-${Versions.minecraft}-forge-$version"
+    mainFile.displayName = "${Properties.name}-forge-$version"
     mainFile.changelogType = "markdown"
     mainFile.changelog = File(rootDir, "CHANGELOG.last.md").readText()
     mainFile.releaseType = Properties.distRelease
@@ -85,8 +70,8 @@ modrinth {
     token.set(System.getenv("MODRINTH_API_KEY") ?: "debug_key")
     projectId.set(Properties.modrinthProjectId)
     changelog.set(File(rootDir, "CHANGELOG.last.md").readText())
-    versionName.set("${Properties.name}-${Versions.minecraft}-forge-$version")
-    versionNumber.set("${Versions.minecraft}-${Versions.mod}")
+    versionName.set("${Properties.name}-forge-$version")
+    versionNumber.set(Versions.mod)
     versionType.set(Properties.distRelease)
     gameVersions.set(Properties.distGameVersions.split(',').toList())
     uploadFile.set(tasks.jar.get())

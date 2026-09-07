@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,20 +53,13 @@ public class PlatformCapabilities
         return cap.getCapability(blockEntity);
     }
 
-    public static void register (RegisterCapabilitiesEvent event) {
-        event.register(IDrawerAttributes.class);
-        event.register(IDrawerGroup.class);
-        event.register(IItemRepository.class);
-        event.register(IItemHandler.class);
-
+    public static void initHandlers() {
         nativeMap.put(NATIVE_DRAWER_ATTRIBUTES, DRAWER_ATTRIBUTES);
         nativeMap.put(NATIVE_DRAWER_GROUP, DRAWER_GROUP);
         nativeMap.put(NATIVE_ITEM_REPOSITORY, ITEM_REPOSITORY);
         nativeMap.put(NATIVE_ITEM_HANDLER, ITEM_HANDLER);
         nativeMap.put(NATIVE_FORGE_ITEM_HANDLER, ITEM_HANDLER);
-    }
 
-    public static void initHandlers() {
         ForgeCapabilities.reigsterCapability(DRAWER_ATTRIBUTES);
         ForgeCapabilities.reigsterCapability(DRAWER_GROUP);
         ForgeCapabilities.reigsterCapability(ITEM_REPOSITORY);

@@ -15,12 +15,12 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -69,25 +69,21 @@ public class StorageDrawers
         FMLCommonSetupEvent.getBus(busGroup).addListener(this::setup);
         ModConfigEvent.Loading.getBus(busGroup).addListener(this::onModConfigEvent);
         RegisterEvent.getBus(busGroup).addListener(ModCreativeTabs::init);
-        RegisterCapabilitiesEvent.getBus(busGroup).addListener(PlatformCapabilities::register);
 
         PlayerEvent.PlayerLoggedOutEvent.BUS.addListener(this::onPlayerDisconnect);
         EntityJoinLevelEvent.BUS.addListener(this::onEntityJoinWorldEvent);
+        ServerAboutToStartEvent.BUS.addListener(this::onServerAboutToStart);
 
         ForgeNetworking.init(ModNetworking.INSTANCE, context);
 
         //MinecraftForge.EVENT_BUS.register(this);
         //MinecraftForge.EVENT_BUS.register(new PlayerEventListener());
 
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClientModBusSubscriber::registerItemModels);
+        if (FMLEnvironment.dist == Dist.CLIENT)
+            ClientModBusSubscriber.registerItemModels();
     }
 
     private void setup (final FMLCommonSetupEvent event) {
-        CompTierRegistry.INSTANCE.initialize();
-        StorageBlacklist.INSTANCE.initialize();
-        MaterialBlacklist.INSTANCE.initialize();
-        ConversionRegistry.INSTANCE.initialize();
-
         PlatformCapabilities.initHandlers();
 
         //oreDictRegistry = new OreDictRegistry();
@@ -109,6 +105,20 @@ public class StorageDrawers
         InterModComms.sendTo("theoneprobe", "getTheOneProbe", () -> new TheOneProbe());
     }
     */
+
+    private static boolean gameplayRegistriesInitialized = false;
+
+    public void onServerAboutToStart(ServerAboutToStartEvent event) {
+        if (gameplayRegistriesInitialized)
+            return;
+
+        gameplayRegistriesInitialized = true;
+
+        CompTierRegistry.INSTANCE.initialize();
+        StorageBlacklist.INSTANCE.initialize();
+        MaterialBlacklist.INSTANCE.initialize();
+        ConversionRegistry.INSTANCE.initialize();
+    }
 
     private void onModConfigEvent(final ModConfigEvent event) {
         if (event.getConfig().getType() == ModConfig.Type.COMMON)

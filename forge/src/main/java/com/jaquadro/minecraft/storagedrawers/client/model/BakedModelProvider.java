@@ -7,7 +7,7 @@ import com.jaquadro.minecraft.storagedrawers.client.model.context.FramedModelCon
 import com.jaquadro.minecraft.storagedrawers.client.model.decorator.CombinedModelDecorator;
 import com.jaquadro.minecraft.storagedrawers.client.model.decorator.DrawerModelDecorator;
 import com.jaquadro.minecraft.storagedrawers.client.model.decorator.MaterialModelDecorator;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 
 public class BakedModelProvider
 {
