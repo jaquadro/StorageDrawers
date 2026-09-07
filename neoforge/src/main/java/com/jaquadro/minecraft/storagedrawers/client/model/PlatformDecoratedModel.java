@@ -2,43 +2,36 @@ package com.jaquadro.minecraft.storagedrawers.client.model;
 
 import com.google.common.base.Suppliers;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.modelprops.DrawerModelProperties;
-import com.jaquadro.minecraft.storagedrawers.block.tile.modelprops.FramedModelProperties;
 import com.jaquadro.minecraft.storagedrawers.block.tile.modelprops.RenderDataProvider;
-import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.client.model.context.ModelContext;
 import com.jaquadro.minecraft.storagedrawers.client.model.decorator.ModelDecorator;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.block.model.TextureSlots;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.*;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ResolvedModel;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.sprite.TextureSlots;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ItemOwner;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.client.model.DynamicBlockStateModel;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4fc;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
@@ -58,7 +51,7 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
     }
 
     @Override
-    public void collectParts (BlockAndTintGetter level, BlockPos blockPos, BlockState state, RandomSource randomSource, List<BlockModelPart> list) {
+    public void collectParts (BlockAndTintGetter level, BlockPos blockPos, BlockState state, RandomSource randomSource, List<BlockStateModelPart> list) {
         BlockEntity entity = level.getBlockEntity(blockPos);
         if (entity instanceof RenderDataProvider renderProvider) {
             Object renderData = renderProvider.getRenderData();
@@ -81,38 +74,12 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
         }
     }
 
-    @Override
-    public TextureAtlasSprite particleIcon (BlockAndTintGetter level, BlockPos pos, BlockState state) {
-        BlockEntity entity = level.getBlockEntity(pos);
-        if (entity instanceof RenderDataProvider renderProvider) {
-            Object renderData = renderProvider.getRenderData();
-            MaterialData matData = null;
-            if (renderData instanceof DrawerModelProperties drawerProps)
-                matData = new MaterialData(drawerProps.material);
-            else if (renderData instanceof FramedModelProperties frameProps)
-                matData = new MaterialData(frameProps.material);
-
-            if (matData != null) {
-                ItemStack side = matData.getEffectiveSide();
-                if (side != ItemStack.EMPTY) {
-                    if (side.getItem() instanceof BlockItem blockItem) {
-                        BlockStateModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(blockItem.getBlock().defaultBlockState());
-                        return model.particleIcon();
-                    }
-                }
-            }
-        }
-
-        return super.particleIcon(level, pos, state);
-    }
-
     public static class PlatformDecoratedItemModel implements ItemModel
     {
         private final Identifier location;
         private final String variant;
         private final ModelRenderProperties properties;
         private final Supplier<Vector3fc[]> extents;
-        private final Map<MaterialData, BlockStateModel> modelCache = new HashMap<>();
 
         PlatformDecoratedModel<?> parent;
         BlockStateModel model;
@@ -171,33 +138,18 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
             }
 
             if (model != null) {
-                List<BlockModelPart> parts = new ArrayList<>();
+                List<BlockStateModelPart> parts = new ArrayList<>();
                 model.collectParts(null, parts);
-                Map<ChunkSectionLayer, ItemStackRenderState.LayerRenderState> layers = new HashMap<>();
-                for (BlockModelPart part : parts) {
-                    ChunkSectionLayer partType = part.getRenderType(state);
-                    if (!layers.containsKey(partType)) {
-                        ItemStackRenderState.LayerRenderState renderState = itemStackRenderState.newLayer();
-                        layers.put(partType, renderState);
 
-                        RenderType itemRenderType = null;
-                        if (partType == ChunkSectionLayer.SOLID)
-                            itemRenderType = Sheets.solidBlockSheet();
-                        if (partType == ChunkSectionLayer.CUTOUT)
-                            itemRenderType = Sheets.cutoutBlockSheet();
-                        else if (partType == ChunkSectionLayer.TRANSLUCENT)
-                            itemRenderType = Sheets.translucentBlockItemSheet();
+                ItemStackRenderState.LayerRenderState layer = itemStackRenderState.newLayer();
+                layer.setExtents(extents);
+                properties.applyToLayer(layer, itemDisplayContext);
 
-                        renderState.setRenderType(itemRenderType);
-                        renderState.setExtents(extents);
-                    }
-
-                    ItemStackRenderState.LayerRenderState layer = layers.get(partType);
-                    properties.applyToLayer(layer, itemDisplayContext);
-
-                    layer.prepareQuadList().addAll(part.getQuads(null));
+                List<BakedQuad> quadList = layer.prepareQuadList();
+                for (BlockStateModelPart part : parts) {
+                    quadList.addAll(part.getQuads(null));
                     for (Direction direction : Direction.values())
-                        layer.prepareQuadList().addAll(part.getQuads(direction));
+                        quadList.addAll(part.getQuads(direction));
                 }
             }
         }
@@ -221,7 +173,7 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
             }
 
             @Override
-            public ItemModel bake (BakingContext bakingContext) {
+            public ItemModel bake (BakingContext bakingContext, Matrix4fc transformation) {
                 ModelBaker modelbaker = bakingContext.blockModelBaker();
                 ResolvedModel resolvedmodel = modelbaker.getModel(Identifier.fromNamespaceAndPath(StorageDrawers.MOD_ID, "block/oak_full_drawers_2"));
                 TextureSlots textureslots = resolvedmodel.getTopTextureSlots();
@@ -249,7 +201,7 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
         }
 
         @Override
-        public void collectParts (RandomSource randomSource, List<BlockModelPart> list) {
+        public void collectParts (RandomSource randomSource, List<BlockStateModelPart> list) {
             Supplier<C> supplier = () -> parent.contextSupplier.makeContext(stack);
             ModelDecorator<C> decorator = parent.decorator;
             if (decorator.shouldRenderBase(supplier, stack))

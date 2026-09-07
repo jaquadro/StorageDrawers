@@ -31,9 +31,9 @@ neoForge {
 
 dependencies {
     // JEI
-    // runtimeOnly("mezz.jei:jei-1.21.9-neoforge:25.0.0.2")
-    // JADE
-    //compileOnly("curse.maven:jade-324717:7313008")
+    runtimeOnly("mezz.jei:jei-${Versions.minecraft}-neoforge:29.36.0.96")
+    // JADE - Jade-mc26.1-NeoForge-26.1.10 (MC 26.1/26.1.1/26.1.2)
+    implementation("curse.maven:jade-324717:8651070")
 }
 
 tasks.create<TaskPublishCurseForge>("publishCurseForge") {
@@ -43,7 +43,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     apiToken = System.getenv("CURSEFORGE_API_KEY") ?: "debug_key"
 
     val mainFile = upload(Properties.curseProjectId, tasks.jar.get().archiveFile)
-    mainFile.displayName = "${Properties.name}-${Versions.minecraft}-neoforge-$version"
+    mainFile.displayName = "${Properties.name}-neoforge-$version"
     mainFile.changelogType = "markdown"
     mainFile.changelog = File(rootDir, "CHANGELOG.last.md").readText()
     mainFile.releaseType = Properties.distRelease
@@ -55,8 +55,8 @@ modrinth {
     token.set(System.getenv("MODRINTH_API_KEY") ?: "debug_key")
     projectId.set(Properties.modrinthProjectId)
     changelog.set(File(rootDir, "CHANGELOG.last.md").readText())
-    versionName.set("${Properties.name}-${Versions.minecraft}-neoforge-$version")
-    versionNumber.set("${Versions.minecraft}-${Versions.mod}")
+    versionName.set("${Properties.name}-neoforge-$version")
+    versionNumber.set(Versions.mod)
     versionType.set(Properties.distRelease)
     gameVersions.set(Properties.distGameVersions.split(','))
     uploadFile.set(tasks.jar.get())

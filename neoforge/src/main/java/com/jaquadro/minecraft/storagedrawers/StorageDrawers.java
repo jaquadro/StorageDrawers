@@ -23,6 +23,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -74,12 +75,6 @@ public class StorageDrawers
     }
 
     private void setup (final FMLCommonSetupEvent event) {
-        //compRegistry = new CompTierRegistry();
-        CompTierRegistry.INSTANCE.initialize();
-        StorageBlacklist.INSTANCE.initialize();
-        MaterialBlacklist.INSTANCE.initialize();
-        ConversionRegistry.INSTANCE.initialize();
-
         LocalIntegrationRegistry.initialize();
         LocalIntegrationRegistry.instance().init();
         LocalIntegrationRegistry.instance().postInit();
@@ -106,6 +101,21 @@ public class StorageDrawers
             ModCommonConfig.INSTANCE.setLoaded();
         if (event.getConfig().getType() == ModConfig.Type.CLIENT)
             ModClientConfig.INSTANCE.setLoaded();
+    }
+
+    private static boolean gameplayRegistriesInitialized = false;
+
+    @SubscribeEvent
+    public void onServerAboutToStart(ServerAboutToStartEvent event) {
+        if (gameplayRegistriesInitialized)
+            return;
+
+        gameplayRegistriesInitialized = true;
+
+        CompTierRegistry.INSTANCE.initialize();
+        StorageBlacklist.INSTANCE.initialize();
+        MaterialBlacklist.INSTANCE.initialize();
+        ConversionRegistry.INSTANCE.initialize();
     }
 
     @SubscribeEvent
