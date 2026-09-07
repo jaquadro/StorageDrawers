@@ -12,7 +12,7 @@ import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.item.ItemModels;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.registries.BuiltInRegistries;

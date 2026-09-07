@@ -3,8 +3,8 @@ package com.jaquadro.minecraft.storagedrawers.core;
 import com.jaquadro.minecraft.storagedrawers.ModConstants;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.texelsaurus.minecraft.chameleon.api.ChameleonInit;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 public class ModCreativeTabs
 {
     private static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath(ModConstants.MOD_ID, "storagedrawers"));
-    private static final CreativeModeTab MAIN_TAB = FabricItemGroup.builder()
+    private static final CreativeModeTab MAIN_TAB = FabricCreativeModeTab.builder()
         .icon(() -> new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2.get()))
         .title(Component.translatable("itemGroup.storagedrawers"))
         .build();
@@ -26,7 +26,7 @@ public class ModCreativeTabs
     public static void init (ChameleonInit.InitContext context) {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, MAIN, MAIN_TAB);
 
-        ItemGroupEvents.modifyEntriesEvent(MAIN).register(itemGroup -> {
+        CreativeModeTabEvents.modifyOutputEvent(MAIN).register(output -> {
             ModItems.ITEMS.getEntries().forEach((reg) -> {
                 if (reg == null)
                     return;
@@ -37,7 +37,7 @@ public class ModCreativeTabs
                         return;
                 }
 
-                itemGroup.accept(new ItemStack(reg.get()));
+                output.accept(new ItemStack(reg.get()));
             });
         });
     }

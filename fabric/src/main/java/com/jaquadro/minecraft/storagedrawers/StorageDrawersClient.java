@@ -16,13 +16,10 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.ClientTooltipComponentCallback;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.level.block.Block;
 
 @Environment(EnvType.CLIENT)
 public class StorageDrawersClient implements ClientModInitializer
@@ -34,11 +31,6 @@ public class StorageDrawersClient implements ClientModInitializer
 
         ModelLoadingPlugin.register(new ModelLoadPlugin());
 
-        ModBlocks.getDrawers().forEach(block ->
-            BlockRenderLayerMap.putBlock(block, ChunkSectionLayer.CUTOUT));
-        ModBlocks.getFramedBlocks().forEach(block ->
-            BlockRenderLayerMap.putBlock((Block)block, ChunkSectionLayer.CUTOUT));
-
         MenuScreens.register(ModContainers.DRAWER_CONTAINER_1.get(), DrawerScreen.Slot1::new);
         MenuScreens.register(ModContainers.DRAWER_CONTAINER_2.get(), DrawerScreen.Slot2::new);
         MenuScreens.register(ModContainers.DRAWER_CONTAINER_4.get(), DrawerScreen.Slot4::new);
@@ -46,7 +38,7 @@ public class StorageDrawersClient implements ClientModInitializer
         MenuScreens.register(ModContainers.DRAWER_CONTAINER_COMP_3.get(), DrawerScreen.Compacting3::new);
         MenuScreens.register(ModContainers.FRAMING_TABLE.get(), FramingTableScreen::new);
 
-        TooltipComponentCallback.EVENT.register((TooltipComponent data) -> {
+        ClientTooltipComponentCallback.EVENT.register((TooltipComponent data) -> {
             if (data instanceof DetachedDrawerTooltip)
                 return new ClientDetachedDrawerTooltip(((DetachedDrawerTooltip) data).contents());
             if (data instanceof KeyringTooltip)

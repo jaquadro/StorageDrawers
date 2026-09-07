@@ -8,11 +8,14 @@ import com.jaquadro.minecraft.storagedrawers.integration.LocalIntegrationRegistr
 import com.texelsaurus.minecraft.chameleon.api.ChameleonInit;
 import com.texelsaurus.minecraft.chameleon.service.ChameleonConfig;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
 public class StorageDrawers implements ModInitializer
 {
     public static final Api api = new Api();
+
+    private static boolean gameplayRegistriesInitialized = false;
 
     @Override
     public void onInitialize () {
@@ -39,10 +42,16 @@ public class StorageDrawers implements ModInitializer
                 PlayerEventListener.onPlayerTick(player);
         });
 
-        CompTierRegistry.INSTANCE.initialize();
-        StorageBlacklist.INSTANCE.initialize();
-        MaterialBlacklist.INSTANCE.initialize();
-        ConversionRegistry.INSTANCE.initialize();
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
+            if (gameplayRegistriesInitialized)
+                return;
+            gameplayRegistriesInitialized = true;
+
+            CompTierRegistry.INSTANCE.initialize();
+            StorageBlacklist.INSTANCE.initialize();
+            MaterialBlacklist.INSTANCE.initialize();
+            ConversionRegistry.INSTANCE.initialize();
+        });
 
         LocalIntegrationRegistry.initialize();
         LocalIntegrationRegistry.instance().init();

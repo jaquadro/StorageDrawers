@@ -14,10 +14,10 @@ dependencies {
     implementation("net.fabricmc:fabric-loader:${Versions.fabricLoader}")
     implementation("net.fabricmc.fabric-api:fabric-api:${Versions.fabric}")
 
-    //compileOnly("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.11.0")
+    compileOnly("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:26.1.5")
 
-    //modCompileOnlyApi("mezz.jei:jei-${Versions.minecraft}-fabric-api:19.8.2.99")
-    //modRuntimeOnly("mezz.jei:jei-${Versions.minecraft}-fabric:19.8.2.99")
+    // JEI (non-remap loom: plain runtimeOnly, no mod* prefix)
+    runtimeOnly("mezz.jei:jei-${Versions.minecraft}-fabric:29.36.0.96")
 }
 
 loom {
@@ -39,7 +39,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     apiToken = System.getenv("CURSEFORGE_API_KEY") ?: "debug_key"
 
     val mainFile = upload(Properties.curseProjectId, tasks.jar.get().archiveFile)
-    mainFile.displayName = "${Properties.name}-${Versions.minecraft}-fabric-$version"
+    mainFile.displayName = "${Properties.name}-fabric-$version"
     mainFile.changelogType = "markdown"
     mainFile.changelog = File(rootDir, "CHANGELOG.last.md").readText()
     mainFile.releaseType = Properties.distRelease
@@ -53,8 +53,8 @@ modrinth {
     token.set(System.getenv("MODRINTH_API_KEY") ?: "debug_key")
     projectId.set(Properties.modrinthProjectId)
     changelog.set(File(rootDir, "CHANGELOG.last.md").readText())
-    versionName.set("${Properties.name}-${Versions.minecraft}-fabric-$version")
-    versionNumber.set("${Versions.minecraft}-${Versions.mod}")
+    versionName.set("${Properties.name}-fabric-$version")
+    versionNumber.set(Versions.mod)
     versionType.set(Properties.distRelease)
     gameVersions.set(Properties.distGameVersions.split(','))
     uploadFile.set(tasks.jar.get())

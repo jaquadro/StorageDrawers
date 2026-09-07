@@ -17,11 +17,11 @@ public class FabricNetworking implements ChameleonNetworking
     @Override
     public <B extends FriendlyByteBuf, P extends ChameleonPacket> void registerPacketInternal (CustomPacketPayload.Type<P> payloadType, StreamCodec<B, P> codec, boolean clientBound) {
         if (clientBound) {
-            PayloadTypeRegistry.playS2C().register(payloadType, (StreamCodec<FriendlyByteBuf, P>) codec);
+            PayloadTypeRegistry.clientboundPlay().register(payloadType, (StreamCodec<FriendlyByteBuf, P>) codec);
             if (ChameleonServices.PLATFORM.isPhysicalClient())
                 FabricClient.registerPacket(payloadType);
         } else {
-            PayloadTypeRegistry.playC2S().register(payloadType, (StreamCodec<FriendlyByteBuf, P>)codec);
+            PayloadTypeRegistry.serverboundPlay().register(payloadType, (StreamCodec<FriendlyByteBuf, P>)codec);
             ServerPlayNetworking.registerGlobalReceiver(payloadType, (packet, context) ->
                 packet.handleMessage(context.player(), context.player().level().getServer()::execute));
         }

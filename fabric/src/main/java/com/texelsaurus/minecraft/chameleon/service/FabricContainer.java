@@ -3,8 +3,9 @@ package com.texelsaurus.minecraft.chameleon.service;
 import com.texelsaurus.minecraft.chameleon.inventory.ContainerContent;
 import com.texelsaurus.minecraft.chameleon.inventory.ContainerContentSerializer;
 import com.texelsaurus.minecraft.chameleon.inventory.ContentMenuProvider;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType;
+import net.fabricmc.fabric.api.menu.v1.FabricMenuProvider;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -32,7 +33,7 @@ public class FabricContainer implements ChameleonContainer
                 buf -> Optional.ofNullable(serializer.from(buf))
             );
 
-        return () -> new ExtendedScreenHandlerType<>((id, inventory, data) -> {
+        return () -> new ExtendedMenuType<>((id, inventory, data) -> {
             if (serializer != null)
                 return factory.create(id, inventory, data);
 
@@ -45,7 +46,7 @@ public class FabricContainer implements ChameleonContainer
         player.openMenu(new PlatformContainerFactory<>(menuProvider));
     }
 
-    private record PlatformContainerFactory<T extends ContainerContent<T>> (ContentMenuProvider<T> provider) implements ExtendedScreenHandlerFactory<Optional<T>>
+    private record PlatformContainerFactory<T extends ContainerContent<T>> (ContentMenuProvider<T> provider) implements ExtendedMenuProvider<Optional<T>>, FabricMenuProvider
     {
         @Override
         public Component getDisplayName () {
