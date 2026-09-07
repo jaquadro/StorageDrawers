@@ -308,7 +308,7 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         BlockPos pos = getBlockPos();
         try {
             if (getLevel().getBlockTicks() instanceof LevelTicks<Block> levelTicks) {
-                long tickLoc = ChunkPos.asLong(pos);
+                long tickLoc = ChunkPos.pack(pos);
                 if (levelTicks.allContainers.get(tickLoc) != null) {
                     if (!getLevel().getBlockTicks().hasScheduledTick(pos, getBlockState().getBlock()))
                         getLevel().scheduleTick(pos, getBlockState().getBlock(), 1);

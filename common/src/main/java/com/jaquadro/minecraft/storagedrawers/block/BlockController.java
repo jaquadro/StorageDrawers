@@ -97,7 +97,7 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
                 item = remote.setBoundController(item, blockEntity);
                 player.getInventory().setItem(player.getInventory().getSelectedSlot(), item);
 
-                player.displayClientMessage(Component.translatable("message.storagedrawers.updated_remote_binding", pos.getX(), pos.getY(), pos.getZ()), true);
+                player.sendOverlayMessage(Component.translatable("message.storagedrawers.updated_remote_binding", pos.getX(), pos.getY(), pos.getZ()));
             }
 
             blockEntity.interactPutItemsIntoInventory(player);

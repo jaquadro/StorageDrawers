@@ -21,12 +21,12 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Style;
@@ -60,6 +60,7 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
     public void extractRenderState (BlockEntityDrawers blockEntity, DrawersRenderState renderState, float partialTick, Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumbleOverlay) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPos, crumbleOverlay);
 
+        renderState.blockState = blockEntity.getBlockState();
         renderState.cameraPos = cameraPos;
         renderState.enforcedLightLevel = blockEntity.upgrades().hasIlluminationUpgrade()
             ? ModCommonConfig.INSTANCE.UPGRADES.illuminationUpgrade.illuminationLevel.get()
@@ -258,11 +259,11 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
         public static final Identifier TEXTURE_IND_COMP_3 = ModConstants.loc("block/indicator/indicator_comp_on");
         public static final Identifier TEXTURE_IND_COMP_2 = ModConstants.loc("block/indicator/indicator_comp2_on");
 
-        public static final Material MAT_IND_1 = new Material(TextureAtlas.LOCATION_BLOCKS, TEXTURE_IND_1);
-        public static final Material MAT_IND_2 = new Material(TextureAtlas.LOCATION_BLOCKS, TEXTURE_IND_2);
-        public static final Material MAT_IND_4 = new Material(TextureAtlas.LOCATION_BLOCKS, TEXTURE_IND_4);
-        public static final Material MAT_IND_COMP_3 = new Material(TextureAtlas.LOCATION_BLOCKS, TEXTURE_IND_COMP_3);
-        public static final Material MAT_IND_COMP_2 = new Material(TextureAtlas.LOCATION_BLOCKS, TEXTURE_IND_COMP_2);
+        public static final SpriteId MAT_IND_1 = new SpriteId(TextureAtlas.LOCATION_BLOCKS, TEXTURE_IND_1);
+        public static final SpriteId MAT_IND_2 = new SpriteId(TextureAtlas.LOCATION_BLOCKS, TEXTURE_IND_2);
+        public static final SpriteId MAT_IND_4 = new SpriteId(TextureAtlas.LOCATION_BLOCKS, TEXTURE_IND_4);
+        public static final SpriteId MAT_IND_COMP_3 = new SpriteId(TextureAtlas.LOCATION_BLOCKS, TEXTURE_IND_COMP_3);
+        public static final SpriteId MAT_IND_COMP_2 = new SpriteId(TextureAtlas.LOCATION_BLOCKS, TEXTURE_IND_COMP_2);
 
         DrawersRenderState renderState;
 
@@ -279,7 +280,7 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
             if (renderState.blockState.getBlock() instanceof BlockCompDrawers)
                 count = 1;
 
-            Material mat = MAT_IND_1;
+            SpriteId mat = MAT_IND_1;
             if (renderState.blockState.getBlock() instanceof BlockCompDrawers)
                 mat = renderState.items.size() == 2 ? MAT_IND_COMP_2 : MAT_IND_COMP_3;
             else if (count == 2)

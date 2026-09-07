@@ -348,7 +348,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
                 if (item.getCount() <= 0)
                     context.player.getInventory().setItem(context.player.getInventory().getSelectedSlot(), ItemStack.EMPTY);
                 context.level.playSound(null, context.pos, SoundEvents.WOOD_PLACE, SoundSource.PLAYERS, .2f,
-                    ((context.level.random.nextFloat() - context.level.random.nextFloat()) * .7f + 1) * 2);
+                    ((context.level.getRandom().nextFloat() - context.level.getRandom().nextFloat()) * .7f + 1) * 2);
             }
 
             return Optional.of(InteractionResult.SUCCESS);
@@ -364,7 +364,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
                 if (item.getCount() <= 0)
                     context.player.getInventory().setItem(context.player.getInventory().getSelectedSlot(), ItemStack.EMPTY);
                 context.level.playSound(null, context.pos, SoundEvents.WOOD_PLACE, SoundSource.PLAYERS, .2f,
-                    ((context.level.random.nextFloat() - context.level.random.nextFloat()) * .7f + 1) * 2);
+                    ((context.level.getRandom().nextFloat() - context.level.getRandom().nextFloat()) * .7f + 1) * 2);
             }
 
             return Optional.of(InteractionResult.SUCCESS);
@@ -408,7 +408,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         if (item.getItem() instanceof ItemUpgrade && !context.player.isShiftKeyDown()) {
             if (entity.getGroup().hasMissingDrawers() && ModCommonConfig.INSTANCE.DRAWERS.detached.forceMaxCapacityCheck.get()) {
                 if (!context.level.isClientSide())
-                    context.player.displayClientMessage(Component.translatable("message.storagedrawers.missing_slots_upgrade"), true);
+                    context.player.sendOverlayMessage(Component.translatable("message.storagedrawers.missing_slots_upgrade"));
 
                 return Optional.of(InteractionResult.PASS);
             }
@@ -419,7 +419,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
                     entity.upgrades().updateRemoteUpgradeBinding(item);
                     BlockPos pos = ItemUpgradeRemote.getBoundPosition(item);
                     if (pos != null)
-                        context.player.displayClientMessage(Component.translatable("message.storagedrawers.updated_remote_binding", pos.getX(), pos.getY(), pos.getZ()), true);
+                        context.player.sendOverlayMessage(Component.translatable("message.storagedrawers.updated_remote_binding", pos.getX(), pos.getY(), pos.getZ()));
 
                     return Optional.of(InteractionResult.SUCCESS);
                 }
@@ -427,14 +427,14 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
 
             if (!entity.upgrades().canAddUpgrade(item)) {
                 if (!context.level.isClientSide())
-                    context.player.displayClientMessage(Component.translatable("message.storagedrawers.cannot_add_upgrade"), true);
+                    context.player.sendOverlayMessage(Component.translatable("message.storagedrawers.cannot_add_upgrade"));
 
                 return Optional.of(InteractionResult.PASS);
             }
 
             if (!entity.upgrades().addUpgrade(item)) {
                 if (!context.level.isClientSide())
-                    context.player.displayClientMessage(Component.translatable("message.storagedrawers.max_upgrades"), true);
+                    context.player.sendOverlayMessage(Component.translatable("message.storagedrawers.max_upgrades"));
 
                 return Optional.of(InteractionResult.PASS);
             }
@@ -500,7 +500,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
                 context.level.sendBlockUpdated(context.pos, context.state, context.state, Block.UPDATE_ALL);
             } else
                 context.level.playSound(null, context.pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
-                    ((context.level.random.nextFloat() - context.level.random.nextFloat()) * .7f + 1) * 2);
+                    ((context.level.getRandom().nextFloat() - context.level.getRandom().nextFloat()) * .7f + 1) * 2);
         }
 
         return InteractionResult.SUCCESS;
@@ -580,7 +580,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
             }
             else
                 context.level.playSound(null, context.pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
-                    ((context.level.random.nextFloat() - context.level.random.nextFloat()) * .7f + 1) * 2);
+                    ((context.level.getRandom().nextFloat() - context.level.getRandom().nextFloat()) * .7f + 1) * 2);
         }
     }
 

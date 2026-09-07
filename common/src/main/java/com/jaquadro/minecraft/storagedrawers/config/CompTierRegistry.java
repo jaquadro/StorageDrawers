@@ -37,6 +37,9 @@ public class CompTierRegistry
     public CompTierRegistry () { }
 
     public void initialize () {
+        if (initialized)
+            return;
+
         initialized = true;
 
         if (ModCommonConfig.INSTANCE.DRAWERS.compacting.enableExtraCompactingRules.get()) {

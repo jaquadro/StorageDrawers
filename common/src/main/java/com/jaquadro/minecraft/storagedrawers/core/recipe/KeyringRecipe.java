@@ -6,29 +6,38 @@ import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.ModRecipes;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKey;
 import com.jaquadro.minecraft.storagedrawers.item.ItemKeyring;
-import net.minecraft.core.HolderLookup;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class KeyringRecipe extends ShapedRecipe
+public class KeyringRecipe extends CustomRecipe
 {
-    public KeyringRecipe (CraftingBookCategory cat) {
-        super("", cat, pattern(), new ItemStack(ModItems.KEYRING.get()));
-    }
+    public static final MapCodec<KeyringRecipe> MAP_CODEC = MapCodec.unit(KeyringRecipe::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, KeyringRecipe> STREAM_CODEC = StreamCodec.of((buf, recipe) -> {}, buf -> new KeyringRecipe());
 
-    private static ShapedRecipePattern pattern () {
-        return ShapedRecipePattern.of(Map.of(
+    private static final ShapedRecipePattern PATTERN = ShapedRecipePattern.of(Map.of(
             'X', Ingredient.of(Items.IRON_NUGGET),
             '#', Ingredient.of(ModItems.getKeys())),
-            " X ", "X#X", " X ");
+        " X ", "X#X", " X ");
+
+    public KeyringRecipe () {
+        super();
     }
 
     @Override
-    public ItemStack assemble (CraftingInput inv, HolderLookup.Provider registries) {
+    public boolean matches (CraftingInput inv, Level level) {
+        return PATTERN.matches(inv);
+    }
+
+    @Override
+    public ItemStack assemble (CraftingInput inv) {
         ItemStack center = inv.getItem(4);
         if (center.isEmpty() || !(center.getItem() instanceof ItemKey))
             return ItemStack.EMPTY;
@@ -49,7 +58,7 @@ public class KeyringRecipe extends ShapedRecipe
     }
 
     @Override
-    public RecipeSerializer<? extends ShapedRecipe> getSerializer () {
+    public RecipeSerializer<? extends CustomRecipe> getSerializer () {
         return ModRecipes.KEYRING_RECIPE_SERIALIZER.get();
     }
 }

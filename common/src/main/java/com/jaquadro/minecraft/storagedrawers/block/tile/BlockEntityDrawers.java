@@ -273,7 +273,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             BlockPos pos = getBlockPos();
             try {
                 if (getLevel().getBlockTicks() instanceof LevelTicks<Block> levelTicks) {
-                    long tickLoc = ChunkPos.asLong(pos);
+                    long tickLoc = ChunkPos.pack(pos);
                     if (levelTicks.allContainers.get(tickLoc) != null) {
                         controllerData.setNeedsValidation(true);
                         scheduleConditionalTick(1);

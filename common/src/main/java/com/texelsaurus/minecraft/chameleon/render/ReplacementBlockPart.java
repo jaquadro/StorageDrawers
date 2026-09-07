@@ -1,9 +1,10 @@
 package com.texelsaurus.minecraft.chameleon.render;
 
 import net.minecraft.client.model.geom.builders.UVPair;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,11 +13,11 @@ import java.util.List;
 
 public abstract class ReplacementBlockPart implements ChameleonBlockModelPart
 {
-    protected BlockModelPart parent;
+    protected BlockStateModelPart parent;
     private TextureAtlasSprite sprite;
     private List<BakedQuad> quads = new ArrayList<>();
 
-    public ReplacementBlockPart(BlockModelPart part, TextureAtlasSprite sprite) {
+    public ReplacementBlockPart(BlockStateModelPart part, TextureAtlasSprite sprite) {
         parent = part;
         this.sprite = sprite;
 
@@ -26,8 +27,8 @@ public abstract class ReplacementBlockPart implements ChameleonBlockModelPart
         }
     }
 
-    public ReplacementBlockPart (BlockModelPart parent, BlockModelPart replacement) {
-        this(parent, replacement.particleIcon());
+    public ReplacementBlockPart (BlockStateModelPart parent, BlockStateModelPart replacement) {
+        this(parent, replacement.particleMaterial().sprite());
     }
 
     @Override
@@ -41,11 +42,16 @@ public abstract class ReplacementBlockPart implements ChameleonBlockModelPart
     }
 
     @Override
-    public TextureAtlasSprite particleIcon () {
+    public Material.Baked particleMaterial () {
         if (sprite == null)
-            return parent.particleIcon();
+            return parent.particleMaterial();
 
-        return sprite;
+        return new Material.Baked(sprite, false);
+    }
+
+    @Override
+    public int materialFlags () {
+        return parent.materialFlags();
     }
 
     BakedQuad remapQuad (BakedQuad quad, TextureAtlasSprite sprite) {
@@ -54,16 +60,21 @@ public abstract class ReplacementBlockPart implements ChameleonBlockModelPart
         long uv2 = remapPackedUV(quad, quad.packedUV2());
         long uv3 = remapPackedUV(quad, quad.packedUV3());
 
+        BakedQuad.MaterialInfo info = quad.materialInfo();
+        BakedQuad.MaterialInfo newInfo = new BakedQuad.MaterialInfo(
+            sprite, info.layer(), info.itemRenderType(), info.tintIndex(), info.shade(), info.lightEmission());
+
         return new BakedQuad(quad.position0(), quad.position1(), quad.position2(), quad.position3(),
             uv0, uv1, uv2, uv3,
-            quad.tintIndex(), quad.direction(), sprite, quad.shade(), quad.lightEmission());
+            quad.direction(), newInfo);
     }
 
     private long remapPackedUV(BakedQuad quad, long packedUV) {
         float u = UVPair.unpackU(packedUV);
         float v = UVPair.unpackV(packedUV);
-        float mapU = sprite.getU(getUnInterpolatedU(quad.sprite(), u));
-        float mapV = sprite.getV(getUnInterpolatedV(quad.sprite(), v));
+        TextureAtlasSprite parentSprite = quad.materialInfo().sprite();
+        float mapU = sprite.getU(getUnInterpolatedU(parentSprite, u));
+        float mapV = sprite.getV(getUnInterpolatedV(parentSprite, v));
 
         return UVPair.pack(mapU, mapV);
     }

@@ -1,8 +1,8 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,12 +18,17 @@ public class ParentModel implements BlockStateModel
     }
 
     @Override
-    public void collectParts (RandomSource randomSource, List<BlockModelPart> list) {
+    public void collectParts (RandomSource randomSource, List<BlockStateModelPart> list) {
         parent.collectParts(randomSource, list);
     }
 
     @Override
-    public TextureAtlasSprite particleIcon () {
-        return parent.particleIcon();
+    public Material.Baked particleMaterial () {
+        return parent.particleMaterial();
+    }
+
+    @Override
+    public int materialFlags () {
+        return parent.materialFlags();
     }
 }

@@ -3,30 +3,37 @@ package com.jaquadro.minecraft.storagedrawers.core.recipe;
 import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.ModRecipes;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.Level;
 
 import java.util.Map;
-import java.util.Optional;
 
-public class RemoteGroupUpgradeRecipe extends ShapedRecipe
+public class RemoteGroupUpgradeRecipe extends CustomRecipe
 {
-    public RemoteGroupUpgradeRecipe (CraftingBookCategory cat) {
-        super("", cat, pattern(), new ItemStack(ModItems.REMOTE_GROUP_UPGRADE_BOUND.get()));
-    }
+    public static final MapCodec<RemoteGroupUpgradeRecipe> MAP_CODEC = MapCodec.unit(RemoteGroupUpgradeRecipe::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, RemoteGroupUpgradeRecipe> STREAM_CODEC = StreamCodec.of((buf, recipe) -> {}, buf -> new RemoteGroupUpgradeRecipe());
 
-    private static ShapedRecipePattern pattern () {
-        return ShapedRecipePattern.of(Map.of(
-                'X', Ingredient.of(Items.ENDER_PEARL),
-                '#', Ingredient.of(ModItems.REMOTE_UPGRADE_BOUND.get())),
-            "X#X");
+    private static final ShapedRecipePattern PATTERN = ShapedRecipePattern.of(Map.of(
+            'X', Ingredient.of(Items.ENDER_PEARL),
+            '#', Ingredient.of(ModItems.REMOTE_UPGRADE_BOUND.get())),
+        "X#X");
+
+    public RemoteGroupUpgradeRecipe () {
+        super();
     }
 
     @Override
-    public ItemStack assemble (CraftingInput inv, HolderLookup.Provider registries) {
+    public boolean matches (CraftingInput inv, Level level) {
+        return PATTERN.matches(inv);
+    }
+
+    @Override
+    public ItemStack assemble (CraftingInput inv) {
         ItemStack center = inv.getItem(1);
         if (center == ItemStack.EMPTY)
             center = inv.getItem(4);
@@ -43,7 +50,7 @@ public class RemoteGroupUpgradeRecipe extends ShapedRecipe
     }
 
     @Override
-    public RecipeSerializer<? extends ShapedRecipe>  getSerializer () {
+    public RecipeSerializer<? extends CustomRecipe> getSerializer () {
         return ModRecipes.REMOTE_GROUP_UPGRADE_SERIALIZER.get();
     }
 }

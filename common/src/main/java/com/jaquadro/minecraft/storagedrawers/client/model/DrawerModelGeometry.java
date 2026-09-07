@@ -5,9 +5,9 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BlockElement;
-import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.renderer.block.model.SimpleUnbakedGeometry;
+import net.minecraft.client.resources.model.cuboid.CuboidModelElement;
+import net.minecraft.client.resources.model.cuboid.CuboidModel;
+import net.minecraft.client.resources.model.cuboid.UnbakedCuboidGeometry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.phys.AABB;
@@ -90,10 +90,10 @@ public class DrawerModelGeometry
                                              Identifier locationInd,
                                              Identifier locationIndBase,
                                              BlockDrawers... blocks) {
-        List<BlockElement> slotGeo = getElements(getBlockModel(locationIcon));
-        List<BlockElement> countGeo = getElements(getBlockModel(locationCount));
-        List<BlockElement> indicatorGeo = getElements(getBlockModel(locationInd));
-        List<BlockElement> indicatorBaseGeo = getElements(getBlockModel(locationIndBase));
+        List<CuboidModelElement> slotGeo = getElements(getBlockModel(locationIcon));
+        List<CuboidModelElement> countGeo = getElements(getBlockModel(locationCount));
+        List<CuboidModelElement> indicatorGeo = getElements(getBlockModel(locationInd));
+        List<CuboidModelElement> indicatorBaseGeo = getElements(getBlockModel(locationIndBase));
 
         for (BlockDrawers block : blocks) {
             if (block == null)
@@ -106,7 +106,7 @@ public class DrawerModelGeometry
         }
     }
 
-    private static void populateGeometryData (BlockDrawers block, List<BlockElement> info, BlockDrawers.GeometryType type) {
+    private static void populateGeometryData (BlockDrawers block, List<CuboidModelElement> info, BlockDrawers.GeometryType type) {
         if (block == null || info == null)
             return;
 
@@ -129,13 +129,13 @@ public class DrawerModelGeometry
         }
     }
 
-    private static BlockModel getBlockModel (Identifier location) {
+    private static CuboidModel getBlockModel (Identifier location) {
         Resource iresource = null;
         Reader reader = null;
         try {
             iresource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(location);
             reader = new InputStreamReader(iresource.open(), StandardCharsets.UTF_8);
-            return BlockModel.fromStream(reader);
+            return CuboidModel.fromStream(reader);
         } catch (IOException e) {
             return null;
         } finally {
@@ -143,11 +143,11 @@ public class DrawerModelGeometry
         }
     }
 
-    private static List<BlockElement> getElements (BlockModel model) {
+    private static List<CuboidModelElement> getElements (CuboidModel model) {
         if (model == null)
             return new ArrayList<>();
 
-        if (model.geometry() instanceof SimpleUnbakedGeometry geo)
+        if (model.geometry() instanceof UnbakedCuboidGeometry geo)
             return geo.elements();
         else
             return new ArrayList<>();

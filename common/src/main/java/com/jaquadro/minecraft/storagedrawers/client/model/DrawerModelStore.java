@@ -6,8 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.block.EnumCompDrawer;
 import com.jaquadro.minecraft.storagedrawers.block.meta.*;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.BlockModelShaper;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -368,7 +367,7 @@ public class DrawerModelStore
 
         BlockStateModel storedModel = modelStore.getOrDefault(state, null);
         if (storedModel == null) {
-            return Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(state);
+            return Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(state);
         } else {
             return storedModel;
         }

@@ -5,8 +5,11 @@ import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.core.ModRecipes;
 import com.jaquadro.minecraft.storagedrawers.item.ItemDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
@@ -28,18 +31,25 @@ import java.util.List;
 
 public class AddUpgradeRecipe extends CustomRecipe
 {
-    public AddUpgradeRecipe (CraftingBookCategory cat) {
-        super(cat);
+    public static final MapCodec<AddUpgradeRecipe> MAP_CODEC = MapCodec.unit(AddUpgradeRecipe::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, AddUpgradeRecipe> STREAM_CODEC = StreamCodec.of((buf, recipe) -> {}, buf -> new AddUpgradeRecipe());
+
+    private HolderLookup.Provider capturedRegistries;
+
+    public AddUpgradeRecipe () {
+        super();
     }
 
     @Override
     public boolean matches(@NotNull CraftingInput inv, @NotNull Level world) {
+        capturedRegistries = world.registryAccess();
         return findContext(inv, world.registryAccess()) != null;
     }
 
     @Override
     @NotNull
-    public ItemStack assemble(@NotNull CraftingInput inv, HolderLookup.Provider registries) {
+    public ItemStack assemble(@NotNull CraftingInput inv) {
+        HolderLookup.Provider registries = capturedRegistries;
         Context ctx = findContext(inv, registries);
         if (ctx == null)
             return ItemStack.EMPTY;

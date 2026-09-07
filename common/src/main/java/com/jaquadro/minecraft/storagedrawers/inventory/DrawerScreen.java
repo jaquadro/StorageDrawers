@@ -1,13 +1,16 @@
 package com.jaquadro.minecraft.storagedrawers.inventory;
 
 import com.jaquadro.minecraft.storagedrawers.ModConstants;
-import com.jaquadro.minecraft.storagedrawers.client.gui.StorageGuiGraphics;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -26,16 +29,12 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
     private static final int smDisabledY = 0;
     private static final int smMissingY = 16;
 
-    private static StorageGuiGraphics storageGuiGraphics;
-
     private final Identifier background;
     private final Inventory inventory;
 
     public DrawerScreen(ContainerDrawers container, Inventory playerInv, Component name, Identifier bg) {
-        super(container, playerInv, name);
+        super(container, playerInv, name, 176, 199);
 
-        imageWidth = 176;
-        imageHeight = 199;
         background = bg;
         inventory = playerInv;
     }
@@ -76,33 +75,19 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
     }
 
     @Override
-    public void render (GuiGraphics graphics, int x, int y, float f) {
-        if (storageGuiGraphics == null || storageGuiGraphics.baseGraphics() != graphics) {
-            storageGuiGraphics = new StorageGuiGraphics(minecraft, graphics, x, y);
-        }
-
-        menu.activeGuiGraphics = storageGuiGraphics;
-
-        super.render(storageGuiGraphics, x, y, f);
-
-        menu.activeGuiGraphics = null;
-        storageGuiGraphics.overrideStack = ItemStack.EMPTY;
-
-        this.renderTooltip(graphics, x, y);
-    }
-
-    @Override
-    protected void renderLabels (GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.drawString(this.font, this.title, 8, 6, 0xFF404040, false);
-        graphics.drawString(this.font, I18n.get("container.storagedrawers.upgrades"), 8, 75, 0xFF404040, false);
-        graphics.drawString(this.font, this.inventory.getDisplayName().getString(), 8, this.imageHeight - 96 + 2, 0xFF404040, false);
+    protected void extractLabels (GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        graphics.text(this.font, this.title, 8, 6, 0xFF404040, false);
+        graphics.text(this.font, I18n.get("container.storagedrawers.upgrades"), 8, 75, 0xFF404040, false);
+        graphics.text(this.font, this.inventory.getDisplayName().getString(), 8, this.imageHeight - 96 + 2, 0xFF404040, false);
 
         String mult = Integer.toString(menu.getStackCapacity());
-        graphics.drawString(this.font, mult, 161 - mult.length() * 6, 42, 0xFF404040, false);
+        graphics.text(this.font, mult, 161 - mult.length() * 6, 42, 0xFF404040, false);
     }
 
     @Override
-    protected void renderBg (GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+    public void extractBackground (GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
+
         int guiX = (width - imageWidth) / 2;
         int guiY = (height - imageHeight) / 2;
         graphics.blit(RenderPipelines.GUI_TEXTURED, background, guiX, guiY, 0, 0, imageWidth, imageHeight, 256, 256);
@@ -124,6 +109,76 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
             if (locked)
                 graphics.blit(RenderPipelines.GUI_TEXTURED, background, guiX + slot.x, guiY + slot.y, smDisabledX, smDisabledY, 16, 16, 256, 256);
         }
+    }
+
+    @Override
+    protected void extractSlot (GuiGraphicsExtractor graphics, Slot slot, int mouseX, int mouseY) {
+        if (!(slot instanceof SlotDrawer)) {
+            super.extractSlot(graphics, slot, mouseX, mouseY);
+            return;
+        }
+
+        ItemStack item = slot.getItem();
+        if (item.isEmpty())
+            return;
+
+        graphics.item(item, slot.x, slot.y);
+
+        graphics.pose().pushMatrix();
+        renderDrawerBar(graphics, item, slot.x, slot.y);
+        renderDrawerCooldown(graphics, item, slot.x, slot.y);
+        renderDrawerCount(graphics, this.font, item, slot.x, slot.y);
+        graphics.pose().popMatrix();
+    }
+
+    private void renderDrawerBar (GuiGraphicsExtractor graphics, ItemStack stack, int x, int y) {
+        if (stack.isBarVisible()) {
+            int offX = x + 2;
+            int offY = y + 13;
+            graphics.fill(RenderPipelines.GUI, offX, offY, offX + 13, offY + 2, -16777216);
+            graphics.fill(RenderPipelines.GUI, offX, offY, offX + stack.getBarWidth(), offY + 1, ARGB.opaque(stack.getBarColor()));
+        }
+    }
+
+    private void renderDrawerCooldown (GuiGraphicsExtractor graphics, ItemStack stack, int x, int y) {
+        LocalPlayer player = this.minecraft.player;
+        float f = player == null ? 0.0F : player.getCooldowns().getCooldownPercent(stack, this.minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true));
+        if (f > 0.0F) {
+            int y1 = y + Mth.floor(16.0F * (1.0F - f));
+            int y2 = y1 + Mth.ceil(16.0F * f);
+            graphics.fill(RenderPipelines.GUI, x, y1, x + 16, y2, Integer.MAX_VALUE);
+        }
+    }
+
+    private void renderDrawerCount (GuiGraphicsExtractor graphics, Font font, ItemStack stack, int x, int y) {
+        stack = ItemStackHelper.decodeItemStack(stack);
+
+        int stackSize = stack.getCount();
+        float scale = 0.5f;
+
+        String text;
+        if (stackSize >= 100000000)
+            text = String.format("%.0fM", stackSize / 1000000f);
+        else if (stackSize >= 1000000)
+            text = String.format("%.1fM", stackSize / 1000000f);
+        else if (stackSize >= 100000)
+            text = String.format("%.0fK", stackSize / 1000f);
+        else if (stackSize >= 10000)
+            text = String.format("%.1fK", stackSize / 1000f);
+        else
+            text = String.valueOf(stackSize);
+
+        int textX = (int)((x + 16 - font.width(text) * scale) / scale) - 1;
+        int textY = (int)((y + 16 - 7 * scale) / scale) - 1;
+
+        int color = 0xFFFFFFFF;
+        if (stackSize == 0)
+            color = (255 << 16) | (96 << 8) | (96);
+
+        graphics.pose().pushMatrix();
+        graphics.pose().scale(scale, scale);
+        graphics.text(font, text, textX, textY, color, true);
+        graphics.pose().popMatrix();
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
-import com.jaquadro.minecraft.storagedrawers.client.gui.StorageGuiGraphics;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.item.ItemUpgrade;
 import com.texelsaurus.minecraft.chameleon.inventory.content.PositionContent;
@@ -41,8 +40,6 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
     private final List<Slot> upgradeSlots;
     private final List<Slot> playerSlots;
     private final List<Slot> hotbarSlots;
-
-    public StorageGuiGraphics activeGuiGraphics;
 
     private final boolean isRemote;
 
@@ -96,11 +93,6 @@ public abstract class ContainerDrawers extends AbstractContainerMenu
             hotbarSlots.add(addSlot(new Slot(playerInventory, i, InventoryX + i * 18, HotbarY)));
 
         isRemote = playerInventory.player.level().isClientSide();
-    }
-
-    public void setLastAccessedItem (ItemStack stack) {
-        if (isRemote && activeGuiGraphics != null)
-            activeGuiGraphics.overrideStack = stack;
     }
 
     protected int getStorageSlotX (int slot) {

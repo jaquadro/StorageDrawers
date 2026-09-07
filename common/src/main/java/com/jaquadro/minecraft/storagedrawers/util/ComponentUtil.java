@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 public class ComponentUtil
 {
     public static List<MutableComponent> getSplitDescription (Item item) {
-        Component description = item.getName();
+        Component description = Component.translatable(item.getDescriptionId());
         if (description.equals(Component.empty()))
             return new LinkedList<>();
 

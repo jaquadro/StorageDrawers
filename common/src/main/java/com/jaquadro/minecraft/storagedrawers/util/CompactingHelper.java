@@ -136,7 +136,7 @@ public class CompactingHelper
                 ItemStack output;
                 List<Optional<Ingredient>> ingredients;
                 if (recipe.value() instanceof ShapedRecipe shaped) {
-                    output = shaped.result;
+                    output = shaped.result.create();
                     ingredients = shaped.pattern.ingredients();
                 } else
                     continue;
@@ -188,7 +188,7 @@ public class CompactingHelper
         if (world instanceof ServerLevel serverWorld) {
             for (RecipeHolder<CraftingRecipe> recipe : serverWorld.recipeAccess().recipes.getRecipesFor(RecipeType.CRAFTING, input, world).toList()) {
                 if (recipe.value().matches(input, world)) {
-                    ItemStack result = recipe.value().assemble(input, world.registryAccess());
+                    ItemStack result = recipe.value().assemble(input);
                     if (!result.isEmpty())
                         candidates.add(result);
                 }

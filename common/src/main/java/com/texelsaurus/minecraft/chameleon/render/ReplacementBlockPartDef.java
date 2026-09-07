@@ -1,19 +1,19 @@
 package com.texelsaurus.minecraft.chameleon.render;
 
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 public class ReplacementBlockPartDef
 {
-    private BlockModelPart part;
+    private BlockStateModelPart part;
     private TextureAtlasSprite sprite;
 
-    public ReplacementBlockPartDef (BlockModelPart part, TextureAtlasSprite sprite) {
+    public ReplacementBlockPartDef (BlockStateModelPart part, TextureAtlasSprite sprite) {
         this.part = part;
         this.sprite = sprite;
     }
 
-    public BlockModelPart getPart () {
+    public BlockStateModelPart getPart () {
         return part;
     }
 

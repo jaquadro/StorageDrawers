@@ -185,7 +185,7 @@ public class ItemKeyring extends Item
         KeyringContents contents = entity.getItem().get(ModDataComponents.KEYRING_CONTENTS.get());
         if (contents != null) {
             entity.getItem().set(ModDataComponents.KEYRING_CONTENTS.get(), KeyringContents.EMPTY);
-            ItemUtils.onContainerDestroyed(entity, contents.itemsCopy());
+            ItemUtils.onContainerDestroyed(entity, contents.itemCopyStream());
         }
     }
 

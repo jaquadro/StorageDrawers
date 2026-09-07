@@ -23,8 +23,7 @@ public enum DecoratorRenderType
     }
 
     public static DecoratorRenderType fromItemType (RenderType renderType) {
-        if (renderType == Sheets.solidBlockSheet())
-            return DecoratorRenderType.SOLID;
+        // 26.1.2 merged the solid item sheet into the cutout one; SOLID geometry renders via cutout.
         if (renderType == Sheets.cutoutBlockSheet())
             return DecoratorRenderType.CUTOUT;
         if (renderType == Sheets.translucentBlockItemSheet())
@@ -48,7 +47,7 @@ public enum DecoratorRenderType
             return null;
 
         return switch (renderType) {
-            case SOLID -> Sheets.solidBlockSheet();
+            case SOLID -> Sheets.cutoutBlockSheet();
             case CUTOUT -> Sheets.cutoutBlockSheet();
             case TRANSLUCENT -> Sheets.translucentBlockItemSheet();
         };
