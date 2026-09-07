@@ -1,6 +1,6 @@
 package thaumcraft.api.golems.parts;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import thaumcraft.api.golems.IGolemAPI;
 
 /**
@@ -16,23 +16,23 @@ import thaumcraft.api.golems.IGolemAPI;
  */
 public class PartModel {
 	
-	private ResourceLocation objModel;
-	private ResourceLocation texture;	
+	private Identifier objModel;
+	private Identifier texture;	
 	private EnumAttachPoint attachPoint;
 	
 	public enum EnumAttachPoint { ARMS, LEGS, BODY, HEAD; }
 	
-	public PartModel(ResourceLocation objModel, ResourceLocation objTexture, EnumAttachPoint attachPoint) {
+	public PartModel(Identifier objModel, Identifier objTexture, EnumAttachPoint attachPoint) {
 		this.objModel = objModel;
 		this.texture = objTexture;
 		this.attachPoint = attachPoint;
 	}
 
-	public ResourceLocation getObjModel() {
+	public Identifier getObjModel() {
 		return objModel;
 	}
 
-	public ResourceLocation getTexture() {
+	public Identifier getTexture() {
 		return texture;
 	}
 

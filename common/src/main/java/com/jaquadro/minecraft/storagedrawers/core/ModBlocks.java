@@ -15,7 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -210,8 +210,8 @@ public final class ModBlocks
 
     private ModBlocks() {}
 
-    static ResourceLocation modLoc (String name) {
-        return ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, name);
+    static Identifier modLoc (String name) {
+        return Identifier.fromNamespaceAndPath(ModConstants.MOD_ID, name);
     }
 
     static ResourceKey<Block> modKey (String name) {
@@ -235,7 +235,7 @@ public final class ModBlocks
         return halfDepth ? base.halfCompacting : base.fullCompacting;
     }
 
-    static RegistryEntry<BlockStandardDrawers> registerWoodenDrawerBlock(ResourceLocation name, int drawerCount, boolean halfDepth) {
+    static RegistryEntry<BlockStandardDrawers> registerWoodenDrawerBlock(Identifier name, int drawerCount, boolean halfDepth) {
         return registerWoodenDrawerBlock(BLOCKS, name, drawerCount, halfDepth);
     }
 
@@ -244,7 +244,7 @@ public final class ModBlocks
         return register.register(name, () -> new BlockStandardDrawers(drawerCount, halfDepth, config, getWoodenDrawerBlockProperties().setId(modKey(name))));
     }
 
-    static RegistryEntry<BlockStandardDrawers> registerWoodenDrawerBlock(ChameleonRegistry<Block> register, ResourceLocation material, int drawerCount, boolean halfDepth) {
+    static RegistryEntry<BlockStandardDrawers> registerWoodenDrawerBlock(ChameleonRegistry<Block> register, Identifier material, int drawerCount, boolean halfDepth) {
         String name = material.getPath() + (halfDepth ? "_half_drawers_" : "_full_drawers_") + drawerCount;
         IDrawerConfig config = getStandardConfig(drawerCount, halfDepth);
         return register.register(name, () -> new BlockStandardDrawers(drawerCount, halfDepth, config, getWoodenDrawerBlockProperties().setId(modKey(name))).setMatKey(material));
@@ -265,7 +265,7 @@ public final class ModBlocks
         return BLOCKS.register(name, () -> new BlockFramedCompDrawers(drawerCount, halfDepth, config, getStoneDrawerBlockProperties().setId(modKey(name)).noOcclusion()));
     }
 
-    static RegistryEntry<BlockTrim> registerTrimBlock(ResourceLocation name) {
+    static RegistryEntry<BlockTrim> registerTrimBlock(Identifier name) {
         return registerTrimBlock(BLOCKS, name);
     }
 
@@ -273,7 +273,7 @@ public final class ModBlocks
         return register.register(name, () -> new BlockTrim(getWoodenBlockProperties().setId(modKey(name))));
     }
 
-    static RegistryEntry<BlockTrim> registerTrimBlock(ChameleonRegistry<Block> register, ResourceLocation material) {
+    static RegistryEntry<BlockTrim> registerTrimBlock(ChameleonRegistry<Block> register, Identifier material) {
         String name = material.getPath() + "_trim";
         return register.register(name, () -> new BlockTrim(getWoodenBlockProperties().setId(modKey(name))).setMatKey(material));
     }

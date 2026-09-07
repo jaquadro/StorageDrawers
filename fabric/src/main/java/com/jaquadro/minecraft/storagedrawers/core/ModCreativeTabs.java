@@ -10,14 +10,14 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
 public class ModCreativeTabs
 {
-    private static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "storagedrawers"));
+    private static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath(ModConstants.MOD_ID, "storagedrawers"));
     private static final CreativeModeTab MAIN_TAB = FabricItemGroup.builder()
         .icon(() -> new ItemStack(ModBlocks.OAK_FULL_DRAWERS_2.get()))
         .title(Component.translatable("itemGroup.storagedrawers"))

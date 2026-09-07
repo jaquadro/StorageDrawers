@@ -5,7 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.config.ModClientConfig;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,8 +51,8 @@ public class Waila implements IWailaPlugin
         }
 
         @Override
-        public ResourceLocation getUid () {
-            return ResourceLocation.fromNamespaceAndPath(StorageDrawers.MOD_ID, "main");
+        public Identifier getUid () {
+            return Identifier.fromNamespaceAndPath(StorageDrawers.MOD_ID, "main");
         }
     }
 }

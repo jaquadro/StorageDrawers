@@ -17,7 +17,7 @@ version = Versions.mod
 group = Properties.group
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_21.majorVersion))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(Versions.java.toInt()))
     withSourcesJar()
     withJavadocJar()
 }

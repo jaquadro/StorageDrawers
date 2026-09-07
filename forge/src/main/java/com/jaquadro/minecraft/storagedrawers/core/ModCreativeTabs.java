@@ -5,7 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -13,7 +13,7 @@ import net.minecraftforge.registries.RegisterEvent;
 
 public class ModCreativeTabs
 {
-    private static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(StorageDrawers.MOD_ID, "storagedrawers"));
+    private static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath(StorageDrawers.MOD_ID, "storagedrawers"));
 
     public static void init (RegisterEvent event) {
         event.register(Registries.CREATIVE_MODE_TAB, helper -> {

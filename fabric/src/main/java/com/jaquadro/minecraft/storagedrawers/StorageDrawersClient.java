@@ -35,9 +35,9 @@ public class StorageDrawersClient implements ClientModInitializer
         ModelLoadingPlugin.register(new ModelLoadPlugin());
 
         ModBlocks.getDrawers().forEach(block ->
-            BlockRenderLayerMap.putBlock(block, ChunkSectionLayer.CUTOUT_MIPPED));
+            BlockRenderLayerMap.putBlock(block, ChunkSectionLayer.CUTOUT));
         ModBlocks.getFramedBlocks().forEach(block ->
-            BlockRenderLayerMap.putBlock((Block)block, ChunkSectionLayer.CUTOUT_MIPPED));
+            BlockRenderLayerMap.putBlock((Block)block, ChunkSectionLayer.CUTOUT));
 
         MenuScreens.register(ModContainers.DRAWER_CONTAINER_1.get(), DrawerScreen.Slot1::new);
         MenuScreens.register(ModContainers.DRAWER_CONTAINER_2.get(), DrawerScreen.Slot2::new);

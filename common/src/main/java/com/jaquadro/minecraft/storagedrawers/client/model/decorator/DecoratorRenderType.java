@@ -1,6 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.client.model.decorator;
 
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 
@@ -16,7 +16,7 @@ public enum DecoratorRenderType
 
         return switch (renderType) {
             case SOLID -> DecoratorRenderType.SOLID;
-            case CUTOUT, CUTOUT_MIPPED -> DecoratorRenderType.CUTOUT;
+            case CUTOUT -> DecoratorRenderType.CUTOUT;
             case TRANSLUCENT -> DecoratorRenderType.TRANSLUCENT;
             default -> null;
         };
@@ -27,7 +27,7 @@ public enum DecoratorRenderType
             return DecoratorRenderType.SOLID;
         if (renderType == Sheets.cutoutBlockSheet())
             return DecoratorRenderType.CUTOUT;
-        if (renderType == Sheets.translucentItemSheet())
+        if (renderType == Sheets.translucentBlockItemSheet())
             return DecoratorRenderType.TRANSLUCENT;
         return null;
     }
@@ -38,7 +38,7 @@ public enum DecoratorRenderType
 
         return switch (renderType) {
             case SOLID -> ChunkSectionLayer.SOLID;
-            case CUTOUT -> ChunkSectionLayer.CUTOUT_MIPPED;
+            case CUTOUT -> ChunkSectionLayer.CUTOUT;
             case TRANSLUCENT -> ChunkSectionLayer.TRANSLUCENT;
         };
     }
@@ -50,7 +50,7 @@ public enum DecoratorRenderType
         return switch (renderType) {
             case SOLID -> Sheets.solidBlockSheet();
             case CUTOUT -> Sheets.cutoutBlockSheet();
-            case TRANSLUCENT -> Sheets.translucentItemSheet();
+            case TRANSLUCENT -> Sheets.translucentBlockItemSheet();
         };
     }
 }

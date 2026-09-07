@@ -5,7 +5,7 @@
         "indicator": "storagedrawers:block/indicator/indicator_comp_off",
         "indicatorOn": "storagedrawers:block/indicator/indicator_comp_on"
     },
-    "render_type": "cutout_mipped",
+    "render_type": "cutout",
     "elements": [ {
         "from": [ 1, 1, 0.99 ],
         "to": [ 15, 15, 16],

@@ -3,7 +3,7 @@ package thaumcraft.api.research;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 public class ResearchCategoryList {
 	
@@ -20,20 +20,20 @@ public class ResearchCategoryList {
     public int maxDisplayRow;
     
     /** display variables **/
-    public ResourceLocation icon;
-    public ResourceLocation background;
-    public ResourceLocation background2;
+    public Identifier icon;
+    public Identifier background;
+    public Identifier background2;
     
     public String researchKey;
 	
-	public ResearchCategoryList(String researchKey, ResourceLocation icon, ResourceLocation background) {
+	public ResearchCategoryList(String researchKey, Identifier icon, Identifier background) {
 		this.researchKey = researchKey;
 		this.icon = icon;
 		this.background = background;
 		this.background2 = null;
 	}
 	
-	public ResearchCategoryList(String researchKey, ResourceLocation icon, ResourceLocation background, ResourceLocation background2) {
+	public ResearchCategoryList(String researchKey, Identifier icon, Identifier background, Identifier background2) {
 		this.researchKey = researchKey;
 		this.icon = icon;
 		this.background = background;

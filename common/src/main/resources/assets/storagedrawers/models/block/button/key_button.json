@@ -1,5 +1,5 @@
 {
-    "render_type": "minecraft:cutout_mipped",
+    "render_type": "minecraft:cutout",
     "textures": {
         "particle": "#texture"
     },

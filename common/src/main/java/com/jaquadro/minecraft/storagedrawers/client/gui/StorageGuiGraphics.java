@@ -21,15 +21,15 @@ public class StorageGuiGraphics extends GuiGraphics
     @NotNull
     public ItemStack overrideStack;
 
-    public StorageGuiGraphics (Minecraft minecraft, GuiRenderState renderState) {
-        super(minecraft, renderState);
+    public StorageGuiGraphics (Minecraft minecraft, GuiRenderState renderState, int mouseX, int mouseY) {
+        super(minecraft, renderState, mouseX, mouseY);
 
         this.minecraft = minecraft;
         overrideStack = ItemStack.EMPTY;
     }
 
-    public StorageGuiGraphics (Minecraft minecraft, GuiGraphics graphics) {
-        super(minecraft, graphics.pose(), minecraft.gameRenderer.guiRenderState);
+    public StorageGuiGraphics (Minecraft minecraft, GuiGraphics graphics, int mouseX, int mouseY) {
+        super(minecraft, graphics.pose(), minecraft.gameRenderer.guiRenderState, mouseX, mouseY);
 
         this.baseGraphics = graphics;
         this.minecraft = minecraft;

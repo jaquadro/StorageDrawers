@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.StatCollector;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
@@ -32,7 +32,7 @@ public class ResearchPage {
 	
 	public String text=null;
 	public String research=null;
-	public ResourceLocation image=null;
+	public Identifier image=null;
 	public AspectList aspects=null;
 	public Object recipe=null;
 	public Object recipeOutput=null;
@@ -146,7 +146,7 @@ public class ResearchPage {
 	 * @param image
 	 * @param caption this can (but does not have to) be a reference to a localization variable, not the actual text.
 	 */
-	public ResearchPage(ResourceLocation image, String caption) {
+	public ResearchPage(Identifier image, String caption) {
 		this.type = PageType.IMAGE;
 		this.image = image;
 		this.text = caption;

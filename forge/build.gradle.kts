@@ -5,7 +5,7 @@ import net.darkhax.curseforgegradle.Constants as CFG_Constants
 
 plugins {
     id("modloader-conv")
-    id("net.minecraftforge.gradle") version ("[6.0.36,6.2)")
+    id("net.minecraftforge.gradle") version ("[6.0.46,6.2)")
     id("org.spongepowered.mixin") version ("0.7-SNAPSHOT")
     id("com.modrinth.minotaur")
 }

@@ -8,13 +8,12 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public class ClientDetachedDrawerTooltip implements ClientTooltipComponent
 {
-    private static final ResourceLocation BACKGROUND_SPRITE = ModConstants.loc("textures/gui/detached_tooltip.png");
+    private static final Identifier BACKGROUND_SPRITE = ModConstants.loc("textures/gui/detached_tooltip.png");
 
     private final ItemStack item;
     private final int stackLimit;

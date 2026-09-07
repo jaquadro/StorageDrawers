@@ -1,14 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers.client.model.decorator;
 
 import com.jaquadro.minecraft.storagedrawers.client.model.context.ModelContext;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 

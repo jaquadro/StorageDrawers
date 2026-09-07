@@ -4,17 +4,16 @@ import com.jaquadro.minecraft.storagedrawers.ModConstants;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public class FramingTableScreen extends AbstractContainerScreen<ContainerFramingTable>
 {
-    private static final ResourceLocation guiTextires = ModConstants.loc("textures/gui/framing.png");
+    private static final Identifier guiTextires = ModConstants.loc("textures/gui/framing.png");
 
-    private final ResourceLocation background;
+    private final Identifier background;
     private final Inventory inventory;
 
     public FramingTableScreen (ContainerFramingTable container, Inventory playerInv, Component name) {

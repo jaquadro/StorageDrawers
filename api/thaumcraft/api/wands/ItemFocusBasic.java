@@ -14,7 +14,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import thaumcraft.api.aspects.Aspect;
@@ -22,7 +22,7 @@ import thaumcraft.api.aspects.AspectList;
 
 public class ItemFocusBasic extends Item {
 	
-	public ItemFocusBasic (String id, ResourceLocation texture, int renderColor)
+	public ItemFocusBasic (String id, Identifier texture, int renderColor)
     {
         super();
         maxStackSize = 1;
@@ -36,7 +36,7 @@ public class ItemFocusBasic extends Item {
 	
 	public ItemFocusBasic (String id, int renderColor)
     {
-        this(id,new ResourceLocation("thaumcraft","items/wand/focus"), renderColor);
+        this(id,new Identifier("thaumcraft","items/wand/focus"), renderColor);
     }
 	
 	public static LinkedHashMap<String,ItemFocusBasic> foci = new LinkedHashMap<String,ItemFocusBasic>();
@@ -53,9 +53,9 @@ public class ItemFocusBasic extends Item {
 	/**
 	 * Texture used to render the cap on the wand
 	 */
-	private ResourceLocation texture;	
+	private Identifier texture;	
 	
-	public ResourceLocation getFocusTexture() {
+	public Identifier getFocusTexture() {
 		return texture;
 	}
 	

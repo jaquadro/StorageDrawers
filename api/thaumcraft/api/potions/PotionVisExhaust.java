@@ -3,7 +3,7 @@ package thaumcraft.api.potions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -14,7 +14,7 @@ public class PotionVisExhaust extends Potion
     
     public PotionVisExhaust(boolean par2, int par3)
     {
-    	super(new ResourceLocation("vis_exhaust"),par2,par3);
+    	super(new Identifier("vis_exhaust"),par2,par3);
     	setIconIndex(0, 0);
     }
     
@@ -37,7 +37,7 @@ public class PotionVisExhaust extends Potion
 		return super.getStatusIconIndex();
 	}
 	
-	static final ResourceLocation rl = new ResourceLocation("thaumcraft","textures/misc/potions.png");
+	static final Identifier rl = new Identifier("thaumcraft","textures/misc/potions.png");
 	
 	@Override
 	public void performEffect(EntityLivingBase target, int par2) {

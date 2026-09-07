@@ -1,7 +1,7 @@
 package thaumcraft.api.golems.parts;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.StatCollector;
 import thaumcraft.api.golems.EnumGolemTrait;
 
@@ -15,7 +15,7 @@ public class GolemMaterial {
 	/**
 	 * The actual base model texture file that will be used for this material. 
 	 */
-	public ResourceLocation texture;
+	public Identifier texture;
 	/**
 	 * The color applied to the item model used by the golem placer and builder.
 	 */
@@ -27,7 +27,7 @@ public class GolemMaterial {
 	public ItemStack componentMechanism;
 	public EnumGolemTrait[] traits;
 	
-	public GolemMaterial(String key,String[] research,ResourceLocation texture, int itemColor,
+	public GolemMaterial(String key,String[] research,Identifier texture, int itemColor,
 			int hp, int armor, int damage, ItemStack compb, ItemStack compm, EnumGolemTrait[] tags) {
 		
 		this.key = key;

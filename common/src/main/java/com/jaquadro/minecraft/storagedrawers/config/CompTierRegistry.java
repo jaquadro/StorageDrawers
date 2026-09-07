@@ -2,7 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.config;
 
 import com.jaquadro.minecraft.storagedrawers.ModServices;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -89,8 +89,8 @@ public class CompTierRegistry
         if (parts.length != 3)
             return false;
 
-        ResourceLocation upperResource = ResourceLocation.tryParse(parts[0]);
-        ResourceLocation lowerResource = ResourceLocation.tryParse(parts[1]);
+        Identifier upperResource = Identifier.tryParse(parts[0]);
+        Identifier lowerResource = Identifier.tryParse(parts[1]);
         if (upperResource == null || lowerResource == null)
             return false;
 
@@ -117,10 +117,10 @@ public class CompTierRegistry
         if (parts.length != 3)
             return false;
 
-        ResourceLocation upperResource = ResourceLocation.parse(parts[0]);
+        Identifier upperResource = Identifier.parse(parts[0]);
         Item upperItem = BuiltInRegistries.ITEM.getValue(upperResource);
 
-        ResourceLocation lowerResource = ResourceLocation.parse(parts[1]);
+        Identifier lowerResource = Identifier.parse(parts[1]);
         Item lowerItem = BuiltInRegistries.ITEM.getValue(lowerResource);
 
         try {

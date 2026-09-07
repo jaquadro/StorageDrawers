@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.SimpleUnbakedGeometry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.phys.AABB;
 import org.apache.commons.io.IOUtils;
@@ -85,10 +85,10 @@ public class DrawerModelGeometry
             ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockCompDrawers.class, 3, true).toArray(BlockDrawers[]::new));
     }
 
-    private static void populateGeometryData(ResourceLocation locationIcon,
-                                             ResourceLocation locationCount,
-                                             ResourceLocation locationInd,
-                                             ResourceLocation locationIndBase,
+    private static void populateGeometryData(Identifier locationIcon,
+                                             Identifier locationCount,
+                                             Identifier locationInd,
+                                             Identifier locationIndBase,
                                              BlockDrawers... blocks) {
         List<BlockElement> slotGeo = getElements(getBlockModel(locationIcon));
         List<BlockElement> countGeo = getElements(getBlockModel(locationCount));
@@ -129,7 +129,7 @@ public class DrawerModelGeometry
         }
     }
 
-    private static BlockModel getBlockModel (ResourceLocation location) {
+    private static BlockModel getBlockModel (Identifier location) {
         Resource iresource = null;
         Reader reader = null;
         try {

@@ -4,16 +4,16 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockTrim;
 import com.texelsaurus.minecraft.chameleon.registry.ChameleonRegistry;
 import com.texelsaurus.minecraft.chameleon.registry.RegistryEntry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
 public class ModBlockVariants
 {
     public static class VariantData {
-        ResourceLocation material;
+        Identifier material;
 
-        public VariantData(ResourceLocation material) {
+        public VariantData(Identifier material) {
             this.material = material;
         }
 

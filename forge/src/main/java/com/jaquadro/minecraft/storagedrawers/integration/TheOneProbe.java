@@ -6,7 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.config.ClientConfig;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import mcjty.theoneprobe.api.*;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,7 +24,7 @@ public class TheOneProbe implements Function<ITheOneProbe, Void> {
 
     private static class DrawerProbeProvider implements IProbeInfoProvider {
         @Override
-        public ResourceLocation getID() {
+        public Identifier getID() {
             return StorageDrawers.rl("drawerprobe");
         }
 

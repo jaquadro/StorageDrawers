@@ -7,7 +7,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 public record CountUpdateMessage(int x, int y, int z, int slot, int count) implements ChameleonPacket
 {
-    public static final Type<CountUpdateMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "count_update"));
+    public static final Type<CountUpdateMessage> TYPE = new Type<>(Identifier.fromNamespaceAndPath(ModConstants.MOD_ID, "count_update"));
 
     public static final StreamCodec<FriendlyByteBuf, CountUpdateMessage> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.INT,

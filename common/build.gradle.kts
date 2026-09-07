@@ -3,7 +3,7 @@ import com.texelsaurus.Properties
 
 plugins {
     id("java-conv")
-    id("org.spongepowered.gradle.vanilla") version "0.2.1-SNAPSHOT"
+    id("org.spongepowered.gradle.vanilla") version "0.3.2"
 }
 
 minecraft {

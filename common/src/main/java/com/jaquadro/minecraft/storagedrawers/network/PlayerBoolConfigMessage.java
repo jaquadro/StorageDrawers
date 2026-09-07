@@ -8,7 +8,7 @@ import com.texelsaurus.minecraft.chameleon.network.ChameleonPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 
 public record PlayerBoolConfigMessage(String uuid, String key, boolean value) implements ChameleonPacket
 {
-    public static final Type<PlayerBoolConfigMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "player_bool_config"));
+    public static final Type<PlayerBoolConfigMessage> TYPE = new Type<>(Identifier.fromNamespaceAndPath(ModConstants.MOD_ID, "player_bool_config"));
 
     public static final StreamCodec<FriendlyByteBuf, PlayerBoolConfigMessage> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.STRING_UTF8,

@@ -1,22 +1,22 @@
 package com.texelsaurus.minecraft.chameleon.registry;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Supplier;
 
 public class FabricRegistryEntry<T> implements RegistryEntry<T>
 {
-    private final ResourceLocation loc;
+    private final Identifier loc;
     private final Supplier<T> objSupplier;
     private T obj;
 
-    public FabricRegistryEntry(ResourceLocation loc, Supplier<T> supplier) {
+    public FabricRegistryEntry(Identifier loc, Supplier<T> supplier) {
         this.loc = loc;
         this.objSupplier = supplier;
     }
 
     @Override
-    public ResourceLocation getId () {
+    public Identifier getId () {
         return loc;
     }
 

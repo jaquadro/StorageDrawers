@@ -17,7 +17,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -63,7 +63,7 @@ public class BlockStandardDrawers extends BlockDrawers implements IFramedSourceB
         return halfDepth ? 4 / drawerCount : 8 / drawerCount;
     }
 
-    public BlockStandardDrawers setMatKey (ResourceLocation material) {
+    public BlockStandardDrawers setMatKey (Identifier material) {
         this.matNamespace = material.getNamespace();
         this.matKey = material.getPath();
         return this;

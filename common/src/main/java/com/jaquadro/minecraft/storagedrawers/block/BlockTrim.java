@@ -5,7 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedSourceBlock;
 import com.jaquadro.minecraft.storagedrawers.api.storage.INetworked;
 import com.jaquadro.minecraft.storagedrawers.block.tile.util.FrameHelper;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +19,7 @@ public class BlockTrim extends Block implements INetworked, IFramedSourceBlock
         super(properties);
     }
 
-    public BlockTrim setMatKey (ResourceLocation material) {
+    public BlockTrim setMatKey (Identifier material) {
         this.matNamespace = material.getNamespace();
         this.matKey = material.getPath();
         return this;

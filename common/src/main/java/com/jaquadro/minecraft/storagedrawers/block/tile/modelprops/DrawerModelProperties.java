@@ -9,8 +9,6 @@ import com.jaquadro.minecraft.storagedrawers.client.model.ModelContextSupplier;
 import com.jaquadro.minecraft.storagedrawers.client.model.context.DrawerModelContext;
 import com.jaquadro.minecraft.storagedrawers.components.item.FrameData;
 import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;

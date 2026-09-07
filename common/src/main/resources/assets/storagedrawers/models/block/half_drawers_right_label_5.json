@@ -3,7 +3,7 @@
     "textures": {
         "particle": "storagedrawers:block/indicator/void_icon"
     },
-    "render_type": "cutout_mipped",
+    "render_type": "cutout",
     "elements": [ {
         "from": [ 4, 15, 7.98 ],
         "to": [ 5, 16, 16],
