@@ -967,69 +967,69 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
             Collection<SlotRecord> primaryRecords = drawerPrimaryLookup.getEntries(stack.getItem());
             Set<Integer> checkedSlots = (simulate) ? new HashSet<>() : null;
             List<IDrawer> rebalance = new ArrayList<>();
+            boolean needRebalance = false;
 
             int amount = stack.getCount();
-            if (primaryRecords != null) {
-                // First test by strict remaining capacity
+            
+            if (primaryRecords != null && amount > 0) {
+                record PossibleDrawer(IDrawer drawer, SlotRecord record) {}
+                var possibleDrawers = new ArrayList<PossibleDrawer>();
+
+                // This loop assumes that capacity does not affect predicates in a way
+                // that things can strictly fit but not loosely fit.
+                // This is currently true, and I can't think of a useful predicate that would
+                // make it untrue, but if it becomes untrue, the set of valid drawers
+                // would change between the first test loop and the second.
                 for (SlotRecord record : primaryRecords) {
-                    IDrawerGroup candidateGroup = getGroupForSlotRecord(record);
-                    if (candidateGroup == null)
-                        continue;
+                    IDrawer drawer = getValidDrawer(stack, predicate, record);
 
-                    IDrawer drawer = candidateGroup.getDrawer(record.slot);
-                    if (drawer.isEmpty())
-                        continue;
-                    if (!testPredicateInsert(drawer, stack, predicate))
-                        continue;
-                    if (!hasAccess(candidateGroup, drawer))
-                        continue;
-
-                    IDrawerAttributes attrs = drawer.getAttributes();
-                    if (attrs.isSuspended())
-                        continue;
-                    if (attrs.isBalancedFill())
+                    // We handle empty drawers below.
+                    if (drawer == null || drawer.isEmpty()) continue;
+                    possibleDrawers.add(new PossibleDrawer(drawer, record));
+                    // If we put an item in any drawer that has balanced fill, all
+                    // the drawers with balanced fill will need to be adjusted.
+                    // We add them here, and check if we placed an item in the loops below.
+                    if (drawer.getAttributes().isBalancedFill())
                         rebalance.add(drawer);
+                }
+                // First test by strict remaining capacity
+                for (var possibleDrawer : possibleDrawers) {
+                    int amountBefore = amount;
+                    int adjusted = Math.min(amount, possibleDrawer.drawer.getRemainingCapacity());
 
-                    if (amount == 0)
-                        continue;
-
-                    int adjusted = Math.min(amount, drawer.getRemainingCapacity());
                     amount = (simulate)
-                        ? Math.max(amount - drawer.getRemainingCapacity(), 0)
-                        : (amount - adjusted) + drawer.adjustStoredItemCount(adjusted);
-
-                    if (amount == 0)
-                        continue;
+                        ? Math.max(amount - possibleDrawer.drawer.getRemainingCapacity(), 0)
+                        : (amount - adjusted) + possibleDrawer.drawer.adjustStoredItemCount(adjusted);
 
                     if (simulate)
-                        checkedSlots.add(record.index);
+                        checkedSlots.add(possibleDrawer.record.index);
+
+                    // If we placed anything in a rebalancing drawer, mark the need to rebalance
+                    if (!needRebalance && amountBefore != amount && possibleDrawer.drawer.getAttributes().isBalancedFill())
+                        needRebalance = true;
+
+                    // Once we have fit all the items, we do not need to continue.
+                    if (amount == 0)
+                        break;
                 }
 
-                // Then relax to available capacity
+                // Then relax to available capacity if needed
                 if (amount > 0) {
-                    for (SlotRecord record : primaryRecords) {
-                        IDrawerGroup candidateGroup = getGroupForSlotRecord(record);
-                        if (candidateGroup == null)
-                            continue;
-
-                        IDrawer drawer = candidateGroup.getDrawer(record.slot);
-                        if (drawer.isEmpty())
-                            continue;
-                        if (!testPredicateInsert(drawer, stack, predicate))
-                            continue;
-                        if (!hasAccess(candidateGroup, drawer))
-                            continue;
-
-                        IDrawerAttributes attrs = drawer.getAttributes();
-                        if (attrs.isSuspended())
-                            continue;
-
+                    for (var possibleDrawer : possibleDrawers) {
+                        int amountBefore = amount;
                         amount = (simulate)
-                            ? Math.max(amount - drawer.getAcceptingRemainingCapacity(), 0)
-                            : drawer.adjustStoredItemCount(amount);
+                            ? Math.max(amount - possibleDrawer.drawer.getAcceptingRemainingCapacity(), 0)
+                            : possibleDrawer.drawer.adjustStoredItemCount(amount);
 
                         if (simulate)
-                            checkedSlots.add(record.index);
+                            checkedSlots.add(possibleDrawer.record.index);
+
+                        if (!needRebalance && amountBefore != amount && possibleDrawer.drawer.getAttributes().isBalancedFill())
+                            needRebalance = true;
+
+                        // Once we have fit all the items, we do not need to continue.
+                        if (amount == 0)
+                            break;
                     }
                 }
             }
@@ -1039,19 +1039,8 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                     IDrawer drawer = getDrawer(slot);
                     if (!drawer.isEnabled())
                         continue;
-                    if (!testPredicateInsert(drawer, stack, predicate))
+                    if (!isValidDrawer(stack, predicate, drawer, getGroupForDrawerSlot(slot)))
                         continue;
-                    if (!hasAccess(getGroupForDrawerSlot(slot), drawer))
-                        continue;
-
-                    IDrawerGroup group = getGroupForDrawerSlot(slot);
-                    if (!hasAccess(group, drawer))
-                        continue;
-
-                    IDrawerAttributes attrs = drawer.getAttributes();
-                    if (attrs.isSuspended())
-                        continue;
-
                     if (simulate && checkedSlots.contains(slot))
                         continue;
 
@@ -1062,18 +1051,41 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
                     amount = (simulate)
                         ? Math.max(amount - (empty ? drawer.getAcceptingMaxCapacity(stack) : drawer.getAcceptingRemainingCapacity()), 0)
                         : drawer.adjustStoredItemCount(amount);
-
+                    // Once we have fit all the items, we do not need to continue.
                     if (amount == 0)
                         break;
                 }
             }
 
-            if (!rebalance.isEmpty())
+            if (needRebalance && !rebalance.isEmpty())
                 StorageUtil.rebalanceDrawers(rebalance.stream());
 
             return (amount == 0)
                 ? ItemStack.EMPTY
                 : stackResult(stack, amount);
+        }
+
+        private @Nullable IDrawer getValidDrawer(@NotNull ItemStack stack, Predicate<ItemStack> predicate, SlotRecord record) {
+            IDrawerGroup candidateGroup = getGroupForSlotRecord(record);
+            if (candidateGroup == null)
+                return null;
+            IDrawer drawer = candidateGroup.getDrawer(record.slot);
+            if (!isValidDrawer(stack, predicate, drawer, candidateGroup)) return null;
+            return drawer;
+        }
+
+        private boolean isValidDrawer(@NotNull ItemStack stack, Predicate<ItemStack> predicate, IDrawer drawer, IDrawerGroup candidateGroup) {
+            if (!testPredicateInsert(drawer, stack, predicate))
+                return false;
+
+            if (!hasAccess(candidateGroup, drawer))
+                return false;
+
+            IDrawerAttributes attrs = drawer.getAttributes();
+            if (attrs.isSuspended())
+                return false;
+
+            return true;
         }
 
         @NotNull
