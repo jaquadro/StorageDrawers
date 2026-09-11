@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityControllerIO;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
+import com.jaquadro.minecraft.storagedrawers.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -134,5 +135,33 @@ public class DrawerStackStorage extends SingleStackStorage
             setStack(original);
         } else
             original.setCount(0);
+
+        rebalanceBalancedFill();
+    }
+
+    private void rebalanceBalancedFill () {
+        IDrawer drawer = storage.getDrawer(slot);
+        if (drawer == null || !drawer.isEnabled())
+            return;
+
+        IDrawerAttributes attrs = drawer.getAttributes();
+        if (attrs == null || !attrs.isBalancedFill() || attrs.isUnlimitedVending() || attrs.isSuspended())
+            return;
+
+        ItemStack proto = drawer.getStoredItemPrototype();
+        if (proto.isEmpty())
+            proto = lastReleasedSnapshot;
+        if (proto == null || proto.isEmpty())
+            return;
+
+        if (storage.group instanceof BlockEntityController controller)
+            StorageUtil.rebalanceDrawers(controller.getBalanceDrawers(proto, null));
+        else if (storage.group instanceof BlockEntityControllerIO controllerIO) {
+            BlockEntityController controller = controllerIO.getController();
+            if (controller != null)
+                StorageUtil.rebalanceDrawers(controller.getBalanceDrawers(proto, null));
+        }
+        else
+            StorageUtil.rebalanceDrawers(storage.group, proto);
     }
 }
