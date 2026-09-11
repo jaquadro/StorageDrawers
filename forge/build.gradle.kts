@@ -79,6 +79,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.releaseType = Properties.distRelease
     Properties.distGameVersions.split(',').forEach { v -> mainFile.addGameVersion(v) }
     mainFile.addModLoader("Forge")
+    mainFile.addEnvironment("Client", "Server")
 }
 
 modrinth {
