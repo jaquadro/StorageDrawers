@@ -11,5 +11,5 @@ object Properties {
     const val description = "Interactive compartment storage for your workshops"
     const val license = "MIT"
     const val distRelease = "release"
-    const val distGameVersions = "26.1,26.1.1,26.1.2"
+    const val distGameVersions = "26.2"
 }

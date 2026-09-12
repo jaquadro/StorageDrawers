@@ -14,11 +14,11 @@ dependencies {
     implementation("net.fabricmc:fabric-loader:${Versions.fabricLoader}")
     implementation("net.fabricmc.fabric-api:fabric-api:${Versions.fabric}")
 
-    compileOnly("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:26.1.5")
-    implementation("curse.maven:jade-324717:8856979")
+    compileOnly("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:26.2.1")
+    implementation("curse.maven:jade-324717:8650785")
 
     // JEI (non-remap loom: plain runtimeOnly, no mod* prefix)
-    runtimeOnly("mezz.jei:jei-${Versions.minecraft}-fabric:29.36.0.96")
+    runtimeOnly("mezz.jei:jei-${Versions.minecraft}-fabric:30.32.0.215")
 }
 
 loom {
