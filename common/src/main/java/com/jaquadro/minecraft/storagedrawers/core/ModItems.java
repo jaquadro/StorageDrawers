@@ -102,6 +102,11 @@ public final class ModItems
         KEYRING_PRIORITY_P2 = ITEMS.register("keyring_priority_p2", () -> new ItemKeyring(PRIORITY_KEY_P2, new Item.Properties().stacksTo(1))),
         KEYRING_PRIORITY_N1 = ITEMS.register("keyring_priority_n1", () -> new ItemKeyring(PRIORITY_KEY_N1, new Item.Properties().stacksTo(1))),
         KEYRING_PRIORITY_N2 = ITEMS.register("keyring_priority_n2", () -> new ItemKeyring(PRIORITY_KEY_N2, new Item.Properties().stacksTo(1))),
+        KEYRING_CONNECTION = ITEMS.register("keyring_connection", () -> new ItemKeyring(CONNECTION_KEY, new Item.Properties().stacksTo(1))),
+        KEYRING_CONNECTION_INPUT = ITEMS.register("keyring_connection_input", () -> new ItemKeyring(CONNECTION_KEY_INPUT, new Item.Properties().stacksTo(1))),
+        KEYRING_CONNECTION_OUTPUT = ITEMS.register("keyring_connection_output", () -> new ItemKeyring(CONNECTION_KEY_OUTPUT, new Item.Properties().stacksTo(1))),
+        KEYRING_CONNECTION_BOTH = ITEMS.register("keyring_connection_both", () -> new ItemKeyring(CONNECTION_KEY_BOTH, new Item.Properties().stacksTo(1))),
+        KEYRING_CONNECTION_NONE = ITEMS.register("keyring_connection_none", () -> new ItemKeyring(CONNECTION_KEY_NONE, new Item.Properties().stacksTo(1))),
         KEYRING_PULLER = ITEMS.register("keyring_puller", () -> new ItemKeyring(DRAWER_PULLER, new Item.Properties().stacksTo(1)));
 
     private ModItems () {
@@ -129,6 +134,11 @@ public final class ModItems
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PRIORITY_P2);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PRIORITY_N1);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PRIORITY_N2);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_CONNECTION);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_CONNECTION_INPUT);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_CONNECTION_OUTPUT);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_CONNECTION_BOTH);
+        EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_CONNECTION_NONE);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(KEYRING_PULLER);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(DETACHED_DRAWER_FULL);
         EXCLUDE_ITEMS_CREATIVE_TAB.add(REMOTE_UPGRADE_BOUND);

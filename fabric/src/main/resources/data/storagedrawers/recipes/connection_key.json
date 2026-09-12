@@ -1,0 +1,8 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        { "item": "storagedrawers:drawer_key" },
+        { "item": "minecraft:hopper" }
+    ],
+    "result": { "item": "storagedrawers:connection_key" }
+}

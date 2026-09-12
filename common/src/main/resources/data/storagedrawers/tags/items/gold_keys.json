@@ -11,6 +11,11 @@
         "storagedrawers:priority_key_p1",
         "storagedrawers:priority_key_p2",
         "storagedrawers:priority_key_n1",
-        "storagedrawers:priority_key_n2"
+        "storagedrawers:priority_key_n2",
+        "storagedrawers:connection_key",
+        "storagedrawers:connection_key_input",
+        "storagedrawers:connection_key_output",
+        "storagedrawers:connection_key_both",
+        "storagedrawers:connection_key_none"
     ]
 }

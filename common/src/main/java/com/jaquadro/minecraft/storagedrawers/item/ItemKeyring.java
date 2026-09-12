@@ -254,6 +254,10 @@ public class ItemKeyring extends Item
 
         ItemStack nextItem = list.get(index);
         ItemStack keyring = getKeyring(nextItem);
+
+        if (keyring.isEmpty())
+            return stack;
+
         keyring.setTag(stack.getTag());
 
         return keyring;

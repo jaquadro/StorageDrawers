@@ -11,6 +11,11 @@
         "storagedrawers:keyring_priority_p1",
         "storagedrawers:keyring_priority_p2",
         "storagedrawers:keyring_priority_n1",
-        "storagedrawers:keyring_priority_n2"
+        "storagedrawers:keyring_priority_n2",
+        "storagedrawers:keyring_connection",
+        "storagedrawers:keyring_connection_input",
+        "storagedrawers:keyring_connection_output",
+        "storagedrawers:keyring_connection_both",
+        "storagedrawers:keyring_connection_none"
     ]
 }
