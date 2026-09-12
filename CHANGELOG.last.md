@@ -1,2 +1,6 @@
-- Added dropMode and dropStackLimit config entries
-- FORGE: Let capability checks fall back to parent
+- Added sided input/output control
+- Added IO key to configure sided input
+- Added push and pull upgrades
+- Small efficiency improvement in network check (Thanks dberlin)
+- Improved efficiency of item insertion to controller (Thanks dberlin)
+- FABRIC: Fixed custom drawer rendering under Sodium (Thanks BONNe)
