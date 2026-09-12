@@ -10,6 +10,6 @@ repositories {
 
 dependencies {
     gradleApi()
-    implementation(group = "net.darkhax.curseforgegradle", name = "CurseForgeGradle", version = "1.0.10")
+    implementation(group = "net.darkhax.curseforgegradle", name = "CurseForgeGradle", version = "1.1.26")
     implementation(group = "com.modrinth.minotaur", name = "Minotaur", version = "2.8.+")
 }

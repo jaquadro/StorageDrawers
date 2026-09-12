@@ -60,8 +60,9 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.releaseType = Properties.distRelease
     Properties.distGameVersions.split(',').forEach { v -> mainFile.addGameVersion(v) }
     mainFile.addModLoader("Fabric")
+    mainFile.addEnvironment("Client", "Server")
     mainFile.addRequirement("fabric-api")
-    mainFile.addOptional("forge-config-api-port-fabric")
+    mainFile.addOptional("forge-config-api-port")
 }
 
 modrinth {
