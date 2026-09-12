@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers;
 
+import com.jaquadro.minecraft.storagedrawers.service.ItemTransferService;
 import com.jaquadro.minecraft.storagedrawers.service.ResourceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,7 @@ public class ModServices
     public static final Logger log = LogManager.getLogger();
 
     public static final ResourceFactory RESOURCE_FACTORY = load(ResourceFactory.class);
+    public static final ItemTransferService ITEM_TRANSFER = load(ItemTransferService.class);
 
     private static <T> T load(Class<T> clazz) {
         final T service = ServiceLoader.load(clazz).findFirst().orElseThrow();

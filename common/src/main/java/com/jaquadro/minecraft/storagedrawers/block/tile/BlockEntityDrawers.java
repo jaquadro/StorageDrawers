@@ -912,14 +912,26 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     }
 
     private int updateTickCooldown () {
-        int nextTick = Math.min(magnetTickCooldown, pushTickCooldown);
-        nextTick = Math.min(nextTick, pullTickCooldown);
-        nextTick = Math.min(nextTick, hopperTickCooldown);
+        IDrawerAttributes attr = getDrawerAttributes();
+        int nextTick = Integer.MAX_VALUE;
+        if (attr.isMagnet())
+            nextTick = Math.min(nextTick, magnetTickCooldown);
+        if (attr.isHopper())
+            nextTick = Math.min(nextTick, hopperTickCooldown);
+        if (attr.isPush())
+            nextTick = Math.min(nextTick, pushTickCooldown);
+        if (attr.isPull())
+            nextTick = Math.min(nextTick, pullTickCooldown);
 
-        hopperTickCooldown -= nextTick;
-        magnetTickCooldown -= nextTick;
-        pushTickCooldown -= nextTick;
-        pullTickCooldown -= nextTick;
+        if (nextTick == Integer.MAX_VALUE)
+            nextTick = 20;
+
+        nextTick = Math.max(nextTick, 1);
+
+        hopperTickCooldown = Math.max(0, hopperTickCooldown - nextTick);
+        magnetTickCooldown = Math.max(0, magnetTickCooldown - nextTick);
+        pushTickCooldown = Math.max(0, pushTickCooldown - nextTick);
+        pullTickCooldown = Math.max(0, pullTickCooldown - nextTick);
 
         return nextTick;
     }
@@ -1030,14 +1042,19 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             if (!mode.canIntPush())
                 continue;
 
-            Container container = ContainerHelper.getContainerAt(level, pos.relative(dir));
-            if (container == null)
+            BlockPos targetPos = pos.relative(dir);
+            Container container = ContainerHelper.getContainerAt(level, targetPos);
+            if (container == null) {
+                BlockEntity target = level.getBlockEntity(targetPos);
+                if (target != null && ModServices.ITEM_TRANSFER.pushItems(getGroup(), upgradeData.getPushItemRate(), target, dir.getOpposite()))
+                    return true;
                 continue;
+            }
 
             IDrawerGroup group = getGroup();
             for (int i = 0; i < group.getDrawerCount(); i++) {
                 IDrawer drawer = group.getDrawer(i);
-                if (ContainerHelper.addItemFromDrawer(drawer, container, dir))
+                if (ContainerHelper.addItemFromDrawer(drawer, container, dir, upgradeData.getPushItemRate()))
                     return true;
             }
         }
@@ -1051,14 +1068,19 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
             if (!mode.canIntPull())
                 continue;
 
-            Container container = ContainerHelper.getContainerAt(level, pos.relative(dir));
-            if (container == null)
+            BlockPos targetPos = pos.relative(dir);
+            Container container = ContainerHelper.getContainerAt(level, targetPos);
+            if (container == null) {
+                BlockEntity target = level.getBlockEntity(targetPos);
+                if (target != null && ModServices.ITEM_TRANSFER.pullItems(getGroup(), upgradeData.getPullItemRate(), target, dir.getOpposite()))
+                    return true;
                 continue;
+            }
 
             IDrawerGroup group = getGroup();
             for (int i = 0; i < group.getDrawerCount(); i++) {
                 IDrawer drawer = group.getDrawer(i);
-                if (ContainerHelper.takeItemIntoDrawer(drawer, container, dir))
+                if (ContainerHelper.takeItemIntoDrawer(drawer, container, dir, upgradeData.getPullItemRate()))
                     return true;
             }
         }

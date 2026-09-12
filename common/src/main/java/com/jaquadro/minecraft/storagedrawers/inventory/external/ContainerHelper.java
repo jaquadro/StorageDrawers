@@ -62,12 +62,14 @@ public class ContainerHelper
         return true;
     }
 
-    public static boolean addItemFromDrawer (IDrawer drawer, Container container, Direction dir) {
+    public static boolean addItemFromDrawer (IDrawer drawer, Container container, Direction dir, int itemRate) {
         if (!drawer.isEnabled() || drawer.isEmpty() || drawer.getAttributes().isSuspended())
             return false;
 
         int pushCount = Math.min(drawer.getStoredItemCount(), drawer.getStoredItemPrototype().getMaxStackSize());
-        pushCount = Math.min(pushCount, 1);
+        pushCount = Math.min(pushCount, itemRate);
+        if (pushCount <= 0)
+            return false;
 
         ItemStack stack = drawer.getStoredItemPrototype().copyWithCount(pushCount);
         stack = ContainerHelper.addItem(container, stack, dir);
@@ -127,12 +129,14 @@ public class ContainerHelper
         return stack;
     }
 
-    public static boolean takeItemIntoDrawer (IDrawer drawer, Container container, Direction dir) {
+    public static boolean takeItemIntoDrawer (IDrawer drawer, Container container, Direction dir, int itemRate) {
         if (!drawer.isEnabled() || drawer.isEmpty() || drawer.getAttributes().isSuspended())
             return false;
 
         int pullCount = Math.min(drawer.getAcceptingRemainingCapacity(), drawer.getStoredItemPrototype().getMaxStackSize());
-        pullCount = Math.min(pullCount, 1);
+        pullCount = Math.min(pullCount, itemRate);
+        if (pullCount <= 0)
+            return false;
 
         ItemStack stack = drawer.getStoredItemPrototype().copyWithCount(pullCount);
         stack = ContainerHelper.takeItem(container, stack, dir);

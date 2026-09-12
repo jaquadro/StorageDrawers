@@ -1,6 +1,16 @@
 package com.jaquadro.minecraft.storagedrawers.item;
 
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
+import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ItemUpgradePull extends ItemUpgrade
 {
@@ -25,6 +35,24 @@ public class ItemUpgradePull extends ItemUpgrade
     @Override
     public boolean isEnabled () {
         return getConfig().enableUpgrade.get();
+    }
+
+    @Override
+    public Component getDescription() {
+        if (!isEnabled())
+            return super.getDescription();
+
+        return Component.translatable("item.storagedrawers.pull_upgrade.desc");
+    }
+
+    @Override
+    public void appendHoverText (@NotNull ItemStack itemStack, @Nullable Level world, List<Component> list, TooltipFlag advanced) {
+        super.appendHoverText(itemStack, world, list, advanced);
+        if (!isEnabled())
+            return;
+
+        String rateId = ModItems.PULL_UPGRADE.get().getDescriptionId() + ".rate";
+        list.add(Component.translatable(rateId, getItemRate(), getActiveSpeed()).withStyle(ChatFormatting.DARK_GRAY));
     }
 
     public int getActiveSpeed () {

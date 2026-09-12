@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "C/C",
+        "/X/",
+        "C/C"
+    ],
+    "key": {
+        "/": { "item": "minecraft:redstone" },
+        "C": { "tag": "forge:ingots/iron" },
+        "X": { "item": "storagedrawers:push_upgrade" }
+    },
+    "result": { "item": "storagedrawers:push_upgrade_2" }
+}

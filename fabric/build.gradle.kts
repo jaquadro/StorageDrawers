@@ -27,6 +27,7 @@ dependencies {
     modCompileOnly("curse.maven:ftb-chunks-fabric-472657:6431734")
     modCompileOnly("curse.maven:ftb-teams-fabric-438497:6130783")
 
+    // Testing
     modImplementation("curse.maven:bookshelf-228525:5423988")
     modImplementation("curse.maven:botany-pots-353928:6348582")
 }
