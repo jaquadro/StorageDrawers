@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class PlatformCapabilities
 {
-    static final Capability<net.minecraftforge.items.IItemHandler> NATIVE_FORGE_ITEM_HANDLER = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<net.minecraftforge.items.IItemHandler> NATIVE_FORGE_ITEM_HANDLER = CapabilityManager.get(new CapabilityToken<>(){});
 
     static final Capability<IDrawerAttributes> NATIVE_DRAWER_ATTRIBUTES = CapabilityManager.get(new CapabilityToken<>(){});
     static final Capability<IDrawerGroup> NATIVE_DRAWER_GROUP = CapabilityManager.get(new CapabilityToken<>(){});
