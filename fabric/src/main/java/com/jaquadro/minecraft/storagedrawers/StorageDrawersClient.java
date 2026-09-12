@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers;
 import com.jaquadro.minecraft.storagedrawers.client.gui.ClientDetachedDrawerTooltip;
 import com.jaquadro.minecraft.storagedrawers.client.gui.ClientKeyringTooltip;
 import com.jaquadro.minecraft.storagedrawers.client.model.ModelLoadPlugin;
+import com.jaquadro.minecraft.storagedrawers.client.model.PlatformDecoratedModel;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.BlockEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.BlockEntityFramingRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
@@ -19,6 +20,7 @@ import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.rendering.v1.ClientTooltipComponentCallback;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.item.ItemModels;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 @Environment(EnvType.CLIENT)
@@ -28,6 +30,11 @@ public class StorageDrawersClient implements ClientModInitializer
     public void onInitializeClient () {
         ModBlockEntities.DRAWER_TYPES.forEach(ro -> BlockEntityRenderers.register(ro.get(), BlockEntityDrawersRenderer::new));
         BlockEntityRenderers.register(ModBlockEntities.FRAMING_TABLE.get(), BlockEntityFramingRenderer::new);
+
+        // Register model mapper on initialization
+        ItemModels.ID_MAPPER.put(
+            ModConstants.loc("framed_block"), PlatformDecoratedModel.PlatformDecoratedItemModel.Unbaked.MAP_CODEC
+        );
 
         ModelLoadingPlugin.register(new ModelLoadPlugin());
 

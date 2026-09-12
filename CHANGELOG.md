@@ -1,3 +1,20 @@
+[26.1.0.1]
+- Fixed custom item stack amounts not being respected in all places
+- Small efficiency improvement in network check (Thanks dberlin)
+- Improved efficiency of item insertion to controller (Thanks dberlin)
+- NEOFORGE: Fixed balance upgrade not taking effect through item interface
+- NEOFORGE: Fixed item interface not working reliably
+- FABRIC: Fixed balance upgrade not taking effect through item interface
+- FABRIC: Added back WAILA (Jade) support (Thanks dberlin)
+- FABRIC: Fixed custom drawer rendering under Sodium (Thanks BONNe)
+- FABRIC: Fixed compatibility with Continuity mod (Thanks BONNe)
+
+[26.1.0.0]
+- Updated to 26.1
+
+[20.0.0]
+- Updated to 1.21.11
+
 [19.1.1]
 - Restored rendering of fill indicators
 

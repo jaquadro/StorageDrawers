@@ -75,6 +75,10 @@ public class DrawerItemHandler implements IItemHandler
             }
         }
 
+        IDrawer target = group.getDrawer(orderedSlot);
+        if (target.isEnabled() && target.getAttributes().isBalancedFill())
+            return insertItemFullScan(stack, simulate);
+
         return insertItemInternal(orderedSlot, stack, simulate);
     }
 

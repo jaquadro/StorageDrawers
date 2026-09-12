@@ -20,6 +20,9 @@
         ],
         "client": [
             "com.jaquadro.minecraft.storagedrawers.StorageDrawersClient"
+        ],
+        "jade": [
+            "com.jaquadro.minecraft.storagedrawers.integration.Waila"
         ]
     },
     "depends": {

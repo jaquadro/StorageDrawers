@@ -12,7 +12,7 @@ plugins {
     `maven-publish`
 }
 
-base.archivesName.set("${Properties.filename}-${project.name.lowercase()}-${Versions.minecraft}")
+base.archivesName.set("${Properties.filename}-${project.name.lowercase()}")
 version = Versions.mod
 group = Properties.group
 
@@ -63,7 +63,7 @@ repositories {
 setOf("apiElements", "runtimeElements", "sourcesElements", "javadocElements").forEach { it: String ->
     configurations.getByName(it).outgoing {
         capability("$group:${base.archivesName.get()}:$version")
-        capability("$group:${Properties.modid}-${project.name}-${Versions.minecraft}:$version")
+        capability("$group:${Properties.modid}-${project.name}:$version")
         capability("$group:${Properties.modid}:$version")
     }
     publishing.publications {

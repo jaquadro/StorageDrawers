@@ -15,6 +15,7 @@ dependencies {
     implementation("net.fabricmc.fabric-api:fabric-api:${Versions.fabric}")
 
     compileOnly("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:26.1.5")
+    implementation("curse.maven:jade-324717:8856979")
 
     // JEI (non-remap loom: plain runtimeOnly, no mod* prefix)
     runtimeOnly("mezz.jei:jei-${Versions.minecraft}-fabric:29.36.0.96")
@@ -45,6 +46,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.releaseType = Properties.distRelease
     Properties.distGameVersions.split(',').forEach { v -> mainFile.addGameVersion(v) }
     mainFile.addModLoader("Fabric")
+    mainFile.addEnvironment("Client", "Server")
     mainFile.addRequirement("fabric-api")
     mainFile.addOptional("forge-config-api-port")
 }
@@ -54,7 +56,7 @@ modrinth {
     projectId.set(Properties.modrinthProjectId)
     changelog.set(File(rootDir, "CHANGELOG.last.md").readText())
     versionName.set("${Properties.name}-fabric-$version")
-    versionNumber.set(Versions.mod)
+    versionNumber.set("${Versions.mod}+fabric")
     versionType.set(Properties.distRelease)
     gameVersions.set(Properties.distGameVersions.split(','))
     uploadFile.set(tasks.jar.get())

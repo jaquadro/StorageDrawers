@@ -64,6 +64,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.releaseType = Properties.distRelease
     Properties.distGameVersions.split(',').forEach { v -> mainFile.addGameVersion(v) }
     mainFile.addModLoader("Forge")
+    mainFile.addEnvironment("Client", "Server")
 }
 
 modrinth {
@@ -71,7 +72,7 @@ modrinth {
     projectId.set(Properties.modrinthProjectId)
     changelog.set(File(rootDir, "CHANGELOG.last.md").readText())
     versionName.set("${Properties.name}-forge-$version")
-    versionNumber.set(Versions.mod)
+    versionNumber.set("${Versions.mod}+forge")
     versionType.set(Properties.distRelease)
     gameVersions.set(Properties.distGameVersions.split(',').toList())
     uploadFile.set(tasks.jar.get())
