@@ -10,6 +10,8 @@ license="${mod_license}"
     version="${mod_version}"
     displayName="${mod_name}"
     description='''${mod_description}'''
+    authors="${mod_authors}"
+    iconFile="storagedrawers:textures/block/drawers_oak_front_2.png"
 
 [[dependencies.${mod_id}]]
     modId="minecraft"
