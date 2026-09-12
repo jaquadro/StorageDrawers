@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -181,7 +181,7 @@ public class DrawerModelStore
                     targetBlocks.addAll(mcBlock.getStateDefinition().getPossibleStates());
 
                     // TODO: How handle inventory?
-                    //ModelResourceLocation invLoc = new ModelResourceLocation(BuiltInRegistries.BLOCK.getKey(mcBlock), "inventory");
+                    //ModelIdentifier invLoc = new ModelIdentifier(BuiltInRegistries.BLOCK.getKey(mcBlock), "inventory");
                     //targetBlocks.add(invLoc.toString());
                 }
             });
@@ -419,7 +419,7 @@ public class DrawerModelStore
         if (replacementModel == null)
             return model;
 
-        BlockStateModel merged = new SpriteReplacementModel(model, replacementModel, ChunkSectionLayer.CUTOUT_MIPPED);
+        BlockStateModel merged = new SpriteReplacementModel(model, replacementModel, ChunkSectionLayer.CUTOUT);
         store.put(replaceLoc, merged);
         return merged;
     }

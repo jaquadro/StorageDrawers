@@ -26,7 +26,7 @@ import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.entity.LivingEntity;
@@ -44,6 +44,7 @@ import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -121,7 +122,7 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
 
     public static class PlatformDecoratedItemModel implements ItemModel
     {
-        ResourceLocation location;
+        Identifier location;
         String variant;
         PlatformDecoratedModel<?> parent;
         ItemRender<ModelContext> model;
@@ -129,9 +130,9 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
         BlockState state;
         ModelRenderProperties properties;
 
-        private final Supplier<Vector3f[]> extents;
+        private final Supplier<Vector3fc[]> extents;
 
-        public PlatformDecoratedItemModel (ResourceLocation location, String variant, ModelRenderProperties properties) {
+        public PlatformDecoratedItemModel (Identifier location, String variant, ModelRenderProperties properties) {
             this.location = location;
             this.variant = variant;
             this.properties = properties;
@@ -215,10 +216,10 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
             return parsed.map(v -> state.setValue(property, v)).orElse(state);
         }
 
-        public record Unbaked (ResourceLocation model, String variant) implements ItemModel.Unbaked {
+        public record Unbaked (Identifier model, String variant) implements ItemModel.Unbaked {
             public static final MapCodec<PlatformDecoratedItemModel.Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec((builder) ->
                 builder.group(
-                    ResourceLocation.CODEC.fieldOf("model").forGetter(PlatformDecoratedItemModel.Unbaked::model),
+                    Identifier.CODEC.fieldOf("model").forGetter(PlatformDecoratedItemModel.Unbaked::model),
                     Codec.STRING.fieldOf("variant").forGetter(PlatformDecoratedItemModel.Unbaked::variant)
                 ).apply(builder, PlatformDecoratedItemModel.Unbaked::new)
             );
@@ -231,7 +232,7 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
             @Override
             public ItemModel bake (BakingContext bakingContext) {
                 ModelBaker modelbaker = bakingContext.blockModelBaker();
-                ResolvedModel resolvedmodel = modelbaker.getModel(ResourceLocation.fromNamespaceAndPath(StorageDrawers.MOD_ID, "block/oak_full_drawers_2"));
+                ResolvedModel resolvedmodel = modelbaker.getModel(Identifier.fromNamespaceAndPath(StorageDrawers.MOD_ID, "block/oak_full_drawers_2"));
                 TextureSlots textureslots = resolvedmodel.getTopTextureSlots();
 
                 ModelRenderProperties modelrenderproperties = ModelRenderProperties.fromResolvedModel(modelbaker, resolvedmodel, textureslots);

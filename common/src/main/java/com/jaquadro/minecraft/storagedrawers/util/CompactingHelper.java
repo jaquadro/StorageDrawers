@@ -6,7 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
@@ -200,10 +200,10 @@ public class CompactingHelper
 
     @NotNull
     private ItemStack findMatchingModCandidate (@NotNull ItemStack reference, List<Item> candidates) {
-        ResourceLocation referenceName = BuiltInRegistries.ITEM.getKey(reference.getItem());
+        Identifier referenceName = BuiltInRegistries.ITEM.getKey(reference.getItem());
         if (referenceName != null) {
             for (Item candidate : candidates) {
-                ResourceLocation matchName = BuiltInRegistries.ITEM.getKey(candidate);
+                Identifier matchName = BuiltInRegistries.ITEM.getKey(candidate);
                 if (matchName != null) {
                     if (referenceName.getNamespace().equals(matchName.getPath()))
                         return new ItemStack(candidate);

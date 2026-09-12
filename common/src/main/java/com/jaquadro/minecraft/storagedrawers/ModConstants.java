@@ -1,12 +1,12 @@
 package com.jaquadro.minecraft.storagedrawers;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class ModConstants
 {
     public static final String MOD_ID = "storagedrawers";
 
-    public static ResourceLocation loc(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    public static Identifier loc(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 }

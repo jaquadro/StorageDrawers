@@ -65,6 +65,9 @@ public class ControllerData extends BlockEntityDataShim
         if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
             ModServices.log.info("ControllerData [{}] bind coord [{}]", controllerCoord, pos);
 
+        if (controllerCoord == null && pos == null)
+            return false;
+
         if (controllerCoord == null || !controllerCoord.equals(pos)) {
             controllerCoord = pos;
             return true;

@@ -33,7 +33,7 @@ dependencies {
     // JEI
     // runtimeOnly("mezz.jei:jei-1.21.9-neoforge:25.0.0.2")
     // JADE
-    compileOnly("curse.maven:jade-324717:7056468")
+    compileOnly("curse.maven:jade-324717:7313008")
 }
 
 tasks.create<TaskPublishCurseForge>("publishCurseForge") {
@@ -49,6 +49,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.releaseType = Properties.distRelease
     Properties.distGameVersions.split(',').forEach { v -> mainFile.addGameVersion(v) }
     mainFile.addModLoader("NeoForge")
+    mainFile.addEnvironment("Client", "Server")
 }
 
 modrinth {

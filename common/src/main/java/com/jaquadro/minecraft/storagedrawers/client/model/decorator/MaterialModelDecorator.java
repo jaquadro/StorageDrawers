@@ -10,13 +10,11 @@ import com.jaquadro.minecraft.storagedrawers.client.model.DrawerModelStore;
 import com.jaquadro.minecraft.storagedrawers.client.model.SpriteReplacementModel;
 import com.jaquadro.minecraft.storagedrawers.client.model.context.FramedModelContext;
 import com.jaquadro.minecraft.storagedrawers.config.ModClientConfig;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,7 +31,7 @@ public abstract class MaterialModelDecorator<C extends FramedModelContext> exten
     protected final DrawerModelStore.FrameMatSet matSet;
     protected final boolean shaded;
 
-    private static final Map<BlockStateModel, Map<ResourceLocation, BlockStateModel>> replacementCache = new HashMap<>();
+    private static final Map<BlockStateModel, Map<Identifier, BlockStateModel>> replacementCache = new HashMap<>();
 
     private static final List<DecoratorRenderType> defaultRenderList = List.of(DecoratorRenderType.SOLID);
     private static final List<DecoratorRenderType> defaultShadedRenderList = List.of(DecoratorRenderType.SOLID, DecoratorRenderType.TRANSLUCENT);
@@ -112,7 +110,7 @@ public abstract class MaterialModelDecorator<C extends FramedModelContext> exten
     }
 
     private BlockStateModel getReplacementModel (BlockStateModel baseModel, ItemStack material, DecoratorRenderType renderType) {
-        Map<ResourceLocation, BlockStateModel> matCache;
+        Map<Identifier, BlockStateModel> matCache;
         if (replacementCache.containsKey(baseModel))
             matCache = replacementCache.get(baseModel);
         else {
@@ -120,7 +118,7 @@ public abstract class MaterialModelDecorator<C extends FramedModelContext> exten
             replacementCache.put(baseModel, matCache);
         }
 
-        ResourceLocation matName = BuiltInRegistries.ITEM.getKey(material.getItem());
+        Identifier matName = BuiltInRegistries.ITEM.getKey(material.getItem());
         BlockStateModel replacedModel = null;
         if (matCache.containsKey(matName))
             replacedModel = matCache.get(matName);

@@ -2,7 +2,7 @@ package com.jaquadro.minecraft.storagedrawers.config;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +42,7 @@ public class ConfigItemList
         if(!listedNamespaces.isEmpty()) {
             ResourceKey<Item> resourceKey = BuiltInRegistries.ITEM.getResourceKey(item).orElse(null);
             if (resourceKey != null) {
-                String namespace = resourceKey.location().getNamespace();
+                String namespace = resourceKey.identifier().getNamespace();
                 if (listedNamespaces.contains(namespace))
                     return true;
             }
@@ -93,7 +93,7 @@ public class ConfigItemList
         if (parts.length == 1)
             return registerNamespace(parts[0]);
 
-        ResourceLocation resource = ResourceLocation.parse(entry);
+        Identifier resource = Identifier.parse(entry);
         Item item = BuiltInRegistries.ITEM.getValue(resource);
 
         return registerItem(new ItemStack(item));

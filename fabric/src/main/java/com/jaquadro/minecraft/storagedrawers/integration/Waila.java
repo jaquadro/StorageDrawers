@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.integration;
 
+import com.jaquadro.minecraft.storagedrawers.ModConstants;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
@@ -14,7 +15,7 @@ import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.Element;
 import snownee.jade.impl.ui.ItemStackElement;
 
-@WailaPlugin(StorageDrawers.MOD_ID)
+@WailaPlugin(ModConstants.MOD_ID)
 public class Waila implements IWailaPlugin
 {
     @Override
@@ -52,7 +53,7 @@ public class Waila implements IWailaPlugin
 
         @Override
         public Identifier getUid () {
-            return Identifier.fromNamespaceAndPath(StorageDrawers.MOD_ID, "main");
+            return Identifier.fromNamespaceAndPath(ModConstants.MOD_ID, "main");
         }
     }
 }

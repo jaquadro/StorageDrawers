@@ -1,7 +1,7 @@
 package com.texelsaurus.minecraft.chameleon.registry;
 
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Collection;
 import java.util.function.Supplier;
@@ -19,7 +19,7 @@ public class FabricRegistry<T> implements ChameleonRegistry<T>
 
     @Override
     public <C extends T> RegistryEntry<C> register (String id, Supplier<C> supplier) {
-        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(modid, id);
+        Identifier loc = Identifier.fromNamespaceAndPath(modid, id);
         return entries.add(new FabricRegistryEntry<>(loc,supplier));
     }
 

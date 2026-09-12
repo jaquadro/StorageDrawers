@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import thaumcraft.api.aspects.Aspect;
 
 /**
@@ -47,7 +47,7 @@ public class WandCap {
 	/**
 	 * The texture that will be used for the ingame wand cap
 	 */
-	ResourceLocation texture;
+	Identifier texture;
 	
 	/**
 	 * the actual item that makes up this cap and will be used to generate the wand recipes
@@ -56,7 +56,7 @@ public class WandCap {
 	
 	public static LinkedHashMap<String,WandCap> caps = new LinkedHashMap<String,WandCap>();
 
-	public WandCap (String tag, float discount, int charge, ItemStack item, int craftCost, ResourceLocation texture) {
+	public WandCap (String tag, float discount, int charge, ItemStack item, int craftCost, Identifier texture) {
 		this.setTag(tag);
 		this.baseCostModifier = discount;
 		this.specialCostModifierAspects = null;
@@ -67,7 +67,7 @@ public class WandCap {
 		caps.put(tag, this);
 	}
 	
-	public WandCap (String tag, float discount, int charge, List<Aspect> specialAspects, float discountSpecial, ItemStack item, int craftCost, ResourceLocation texture) {
+	public WandCap (String tag, float discount, int charge, List<Aspect> specialAspects, float discountSpecial, ItemStack item, int craftCost, Identifier texture) {
 		this.setTag(tag);
 		this.baseCostModifier = discount;
 		this.specialCostModifierAspects = specialAspects;
@@ -95,11 +95,11 @@ public class WandCap {
 		return chargeBonus;
 	}
 
-	public ResourceLocation getTexture() {
+	public Identifier getTexture() {
 		return texture;
 	}
 
-	public void setTexture(ResourceLocation texture) {
+	public void setTexture(Identifier texture) {
 		this.texture = texture;
 	}
 

@@ -1,7 +1,7 @@
 package thaumcraft.api.research;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.StatCollector;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
@@ -56,7 +56,7 @@ public class ResearchItem
     /**
      * the icon to be used for this research 
      */
-    public final ResourceLocation[] icon_resource;
+    public final Identifier[] icon_resource;
     
     /**
      * How large the research grid is. Valid values are 1 to 3.
@@ -127,8 +127,8 @@ public class ResearchItem
     	this.key = key;
     	this.category = category;
     	this.tags = tags;    	
-    	if (icon[0] instanceof ResourceLocation) {
-    		ResourceLocation[] t = new ResourceLocation[icon.length];
+    	if (icon[0] instanceof Identifier) {
+    		Identifier[] t = new Identifier[icon.length];
     		System.arraycopy(icon, 0, t, 0, icon.length);
     		this.icon_resource = t;
     	} else this.icon_resource = null;

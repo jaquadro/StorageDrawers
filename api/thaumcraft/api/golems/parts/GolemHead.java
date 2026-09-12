@@ -1,6 +1,6 @@
 package thaumcraft.api.golems.parts;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.StatCollector;
 import thaumcraft.api.golems.EnumGolemTrait;
 
@@ -14,13 +14,13 @@ public class GolemHead {
 	/**
 	 * The icon used in the golem builder 
 	 */
-	public ResourceLocation icon;
+	public Identifier icon;
 	public Object[] components;
 	public EnumGolemTrait[] traits;
 	public IHeadFunction function; 
 	public PartModel model;
 	
-	public GolemHead(String key,String[] research,ResourceLocation icon, PartModel model, Object[] comp, EnumGolemTrait[] tags) {
+	public GolemHead(String key,String[] research,Identifier icon, PartModel model, Object[] comp, EnumGolemTrait[] tags) {
 		this.key = key;
 		this.research=research;
 		this.icon=icon;
@@ -30,7 +30,7 @@ public class GolemHead {
 		this.function = null;		
 	}
 	
-	public GolemHead(String key,String[] research,ResourceLocation icon, PartModel model, Object[] comp, IHeadFunction function, EnumGolemTrait[] tags) {
+	public GolemHead(String key,String[] research,Identifier icon, PartModel model, Object[] comp, IHeadFunction function, EnumGolemTrait[] tags) {
 		this(key,research,icon,model,comp,tags);
 		this.function=function;
 	}

@@ -3,5 +3,5 @@
     "textures": {
         "cross": "storagedrawers:block/indicator/shroud_icon"
     },
-    "render_type": "cutout_mipped"
+    "render_type": "cutout"
 }

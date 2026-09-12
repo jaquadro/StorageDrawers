@@ -9,7 +9,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -23,7 +23,7 @@ import java.util.function.BiConsumer;
 
 public class ForgeNetworking implements ChameleonNetworking
 {
-    public static PayloadProtocol<RegistryFriendlyByteBuf, CustomPacketPayload> NETWORK_CHANNEL_BUILDER = ChannelBuilder.named(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "main")).networkProtocolVersion(1).optional().payloadChannel().play();
+    public static PayloadProtocol<RegistryFriendlyByteBuf, CustomPacketPayload> NETWORK_CHANNEL_BUILDER = ChannelBuilder.named(Identifier.fromNamespaceAndPath(ModConstants.MOD_ID, "main")).networkProtocolVersion(1).optional().payloadChannel().play();
     public static Channel<CustomPacketPayload> CHANNEL;
 
     public static void init (ChameleonInit init, ChameleonInit.InitContext context) {

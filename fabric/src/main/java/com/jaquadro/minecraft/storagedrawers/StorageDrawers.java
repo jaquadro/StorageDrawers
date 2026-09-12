@@ -9,6 +9,7 @@ import com.texelsaurus.minecraft.chameleon.api.ChameleonInit;
 import com.texelsaurus.minecraft.chameleon.service.ChameleonConfig;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.resources.Identifier;
 
 public class StorageDrawers implements ModInitializer
 {
@@ -47,5 +48,9 @@ public class StorageDrawers implements ModInitializer
         LocalIntegrationRegistry.initialize();
         LocalIntegrationRegistry.instance().init();
         LocalIntegrationRegistry.instance().postInit();
+    }
+
+    public static Identifier rl(String path) {
+        return Identifier.fromNamespaceAndPath(ModConstants.MOD_ID, path);
     }
 }

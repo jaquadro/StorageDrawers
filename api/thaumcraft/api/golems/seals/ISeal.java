@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -44,7 +44,7 @@ public interface ISeal {
 	 * @return icon used to render the seal in world. Usually the same as your seal placer item icon.
 	 * If it is not the same you will have to manually stitch it into the texture atlas.
 	 */
-	public ResourceLocation getSealIcon();
+	public Identifier getSealIcon();
 
 	public void onRemoval(World world, BlockPos pos, EnumFacing side);	
 	

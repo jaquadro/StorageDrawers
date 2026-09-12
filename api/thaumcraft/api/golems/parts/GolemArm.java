@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.ai.EntityAIArrowAttack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.StatCollector;
 import thaumcraft.api.golems.EnumGolemTrait;
 import thaumcraft.api.golems.IGolemAPI;
@@ -19,13 +19,13 @@ public class GolemArm {
 	/**
 	 * The icon used in the golem builder 
 	 */
-	public ResourceLocation icon;
+	public Identifier icon;
 	public Object[] components;
 	public EnumGolemTrait[] traits;
 	public IArmFunction function; 	
 	public PartModel model;
 	
-	public GolemArm(String key,String[] research,ResourceLocation icon, PartModel model, Object[] comp, EnumGolemTrait[] tags) {
+	public GolemArm(String key,String[] research,Identifier icon, PartModel model, Object[] comp, EnumGolemTrait[] tags) {
 		this.key = key;
 		this.research=research;
 		this.icon=icon;
@@ -35,7 +35,7 @@ public class GolemArm {
 		this.function = null;
 	}
 	
-	public GolemArm(String key,String[] research,ResourceLocation icon, PartModel model, Object[] comp, IArmFunction function, EnumGolemTrait[] tags) {
+	public GolemArm(String key,String[] research,Identifier icon, PartModel model, Object[] comp, IArmFunction function, EnumGolemTrait[] tags) {
 		this(key,research,icon,model,comp,tags);
 		this.function = function;
 	}

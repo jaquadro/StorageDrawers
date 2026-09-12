@@ -4,7 +4,7 @@
         "particle": "storagedrawers:block/indicator/lock_claim_icon",
         "lock": "storagedrawers:block/indicator/lock_claim_icon"
     },
-    "render_type": "cutout_mipped",
+    "render_type": "cutout",
     "elements": [ {
         "from": [ 7.5, 15, -0.02 ],
         "to": [ 8.5, 16, 16],

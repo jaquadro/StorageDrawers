@@ -11,7 +11,7 @@ import com.texelsaurus.minecraft.chameleon.service.ChameleonConfig;
 import com.texelsaurus.minecraft.chameleon.service.ForgeConfig;
 import com.texelsaurus.minecraft.chameleon.service.ForgeNetworking;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -135,7 +135,7 @@ public class StorageDrawers
         }
     }
 
-    public static ResourceLocation rl(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    public static Identifier rl(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 }

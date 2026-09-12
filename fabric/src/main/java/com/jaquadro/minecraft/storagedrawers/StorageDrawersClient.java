@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers;
 import com.jaquadro.minecraft.storagedrawers.client.gui.ClientDetachedDrawerTooltip;
 import com.jaquadro.minecraft.storagedrawers.client.gui.ClientKeyringTooltip;
 import com.jaquadro.minecraft.storagedrawers.client.model.ModelLoadPlugin;
+import com.jaquadro.minecraft.storagedrawers.client.model.PlatformDecoratedModel;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.BlockEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.BlockEntityFramingRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
@@ -21,6 +22,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.item.ItemModels;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.level.block.Block;
 
@@ -32,12 +34,17 @@ public class StorageDrawersClient implements ClientModInitializer
         ModBlockEntities.DRAWER_TYPES.forEach(ro -> BlockEntityRenderers.register(ro.get(), BlockEntityDrawersRenderer::new));
         BlockEntityRenderers.register(ModBlockEntities.FRAMING_TABLE.get(), BlockEntityFramingRenderer::new);
 
+        // Register model mapper on initialization
+        ItemModels.ID_MAPPER.put(
+            ModConstants.loc("framed_block"), PlatformDecoratedModel.PlatformDecoratedItemModel.Unbaked.MAP_CODEC
+        );
+
         ModelLoadingPlugin.register(new ModelLoadPlugin());
 
         ModBlocks.getDrawers().forEach(block ->
-            BlockRenderLayerMap.putBlock(block, ChunkSectionLayer.CUTOUT_MIPPED));
+            BlockRenderLayerMap.putBlock(block, ChunkSectionLayer.CUTOUT));
         ModBlocks.getFramedBlocks().forEach(block ->
-            BlockRenderLayerMap.putBlock((Block)block, ChunkSectionLayer.CUTOUT_MIPPED));
+            BlockRenderLayerMap.putBlock((Block)block, ChunkSectionLayer.TRANSLUCENT));
 
         MenuScreens.register(ModContainers.DRAWER_CONTAINER_1.get(), DrawerScreen.Slot1::new);
         MenuScreens.register(ModContainers.DRAWER_CONTAINER_2.get(), DrawerScreen.Slot2::new);

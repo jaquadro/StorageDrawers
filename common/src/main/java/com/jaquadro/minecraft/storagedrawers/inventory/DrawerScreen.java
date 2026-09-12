@@ -5,10 +5,9 @@ import com.jaquadro.minecraft.storagedrawers.client.gui.StorageGuiGraphics;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -17,11 +16,11 @@ import java.util.List;
 
 public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
 {
-    private static final ResourceLocation guiTextures1 = ModConstants.loc("textures/gui/drawers_1.png");
-    private static final ResourceLocation guiTextures2 = ModConstants.loc("textures/gui/drawers_2.png");
-    private static final ResourceLocation guiTextures4 = ModConstants.loc("textures/gui/drawers_4.png");
-    private static final ResourceLocation guiTexturesComp2 = ModConstants.loc("textures/gui/drawers_comp_2.png");
-    private static final ResourceLocation guiTexturesComp3 = ModConstants.loc("textures/gui/drawers_comp.png");
+    private static final Identifier guiTextures1 = ModConstants.loc("textures/gui/drawers_1.png");
+    private static final Identifier guiTextures2 = ModConstants.loc("textures/gui/drawers_2.png");
+    private static final Identifier guiTextures4 = ModConstants.loc("textures/gui/drawers_4.png");
+    private static final Identifier guiTexturesComp2 = ModConstants.loc("textures/gui/drawers_comp_2.png");
+    private static final Identifier guiTexturesComp3 = ModConstants.loc("textures/gui/drawers_comp.png");
 
     private static final int smDisabledX = 176;
     private static final int smDisabledY = 0;
@@ -29,10 +28,10 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
 
     private static StorageGuiGraphics storageGuiGraphics;
 
-    private final ResourceLocation background;
+    private final Identifier background;
     private final Inventory inventory;
 
-    public DrawerScreen(ContainerDrawers container, Inventory playerInv, Component name, ResourceLocation bg) {
+    public DrawerScreen(ContainerDrawers container, Inventory playerInv, Component name, Identifier bg) {
         super(container, playerInv, name);
 
         imageWidth = 176;
@@ -79,7 +78,7 @@ public class DrawerScreen extends AbstractContainerScreen<ContainerDrawers>
     @Override
     public void render (GuiGraphics graphics, int x, int y, float f) {
         if (storageGuiGraphics == null || storageGuiGraphics.baseGraphics() != graphics) {
-            storageGuiGraphics = new StorageGuiGraphics(minecraft, graphics);
+            storageGuiGraphics = new StorageGuiGraphics(minecraft, graphics, x, y);
         }
 
         menu.activeGuiGraphics = storageGuiGraphics;

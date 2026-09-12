@@ -3,7 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.config;
 import com.jaquadro.minecraft.storagedrawers.ModServices;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +20,7 @@ public class ConversionRegistry
 
     private Set<TagKey<Item>> tagWhitelist = new HashSet<>();
     private Set<TagKey<Item>> tagBlacklist = new HashSet<>();
-    private List<Set<ResourceLocation>> equivGroups = new ArrayList<>();
+    private List<Set<Identifier>> equivGroups = new ArrayList<>();
 
     public ConversionRegistry () { }
 
@@ -56,10 +56,10 @@ public class ConversionRegistry
     }
 
     public boolean addBlacklist (String namespace, String path) {
-        return addBlacklist(ResourceLocation.fromNamespaceAndPath(namespace, path));
+        return addBlacklist(Identifier.fromNamespaceAndPath(namespace, path));
     }
 
-    public boolean addBlacklist (ResourceLocation entry) {
+    public boolean addBlacklist (Identifier entry) {
         if (entry == null)
             return false;
 
@@ -84,10 +84,10 @@ public class ConversionRegistry
     }
 
     public boolean addWhitelist (String namespace, String path, boolean log) {
-        return addWhitelist(ResourceLocation.fromNamespaceAndPath(namespace, path), log);
+        return addWhitelist(Identifier.fromNamespaceAndPath(namespace, path), log);
     }
 
-    public boolean addWhitelist (ResourceLocation entry, boolean log) {
+    public boolean addWhitelist (Identifier entry, boolean log) {
         if (entry == null)
             return false;
 
@@ -101,14 +101,14 @@ public class ConversionRegistry
 
     public void addEquivGroup (String entry) {
         String[] items = entry.split(";\\s*");
-        Set<ResourceLocation> group = new HashSet<>();
+        Set<Identifier> group = new HashSet<>();
 
         for (String item : items) {
             String[] parts = item.split(":");
             if (parts.length != 2)
                 continue;
 
-            ResourceLocation key = ResourceLocation.fromNamespaceAndPath(parts[0], parts[1]);
+            Identifier key = Identifier.fromNamespaceAndPath(parts[0], parts[1]);
             group.add(key);
         }
 
@@ -121,10 +121,10 @@ public class ConversionRegistry
     }
 
     public boolean itemsShareEquivGroup (Item item1, Item item2) {
-        ResourceLocation key1 = BuiltInRegistries.ITEM.getKey(item1);
-        ResourceLocation key2 = BuiltInRegistries.ITEM.getKey(item2);
+        Identifier key1 = BuiltInRegistries.ITEM.getKey(item1);
+        Identifier key2 = BuiltInRegistries.ITEM.getKey(item2);
 
-        for (Set<ResourceLocation> group : equivGroups) {
+        for (Set<Identifier> group : equivGroups) {
             if (!group.contains(key1))
                 continue;
 
@@ -136,14 +136,14 @@ public class ConversionRegistry
     }
 
     public List<ItemStack> getEquivItems (Item item) {
-        ResourceLocation key = BuiltInRegistries.ITEM.getKey(item);
+        Identifier key = BuiltInRegistries.ITEM.getKey(item);
         List<ItemStack> items = new ArrayList<>();
 
-        for (Set<ResourceLocation> group : equivGroups) {
+        for (Set<Identifier> group : equivGroups) {
             if (!group.contains(key))
                 continue;
 
-            for (ResourceLocation entry : group) {
+            for (Identifier entry : group) {
                 Item other = BuiltInRegistries.ITEM.getValue(entry);
                 items.add(new ItemStack(other));
             }

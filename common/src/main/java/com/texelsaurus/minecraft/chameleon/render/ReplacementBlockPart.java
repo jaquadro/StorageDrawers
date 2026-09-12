@@ -1,13 +1,10 @@
 package com.texelsaurus.minecraft.chameleon.render;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
+import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -52,16 +49,23 @@ public abstract class ReplacementBlockPart implements ChameleonBlockModelPart
     }
 
     BakedQuad remapQuad (BakedQuad quad, TextureAtlasSprite sprite) {
-        int[] vertices = quad.vertices().clone();
+        long uv0 = remapPackedUV(quad, quad.packedUV0());
+        long uv1 = remapPackedUV(quad, quad.packedUV1());
+        long uv2 = remapPackedUV(quad, quad.packedUV2());
+        long uv3 = remapPackedUV(quad, quad.packedUV3());
 
-        for(int i = 0; i < 4; ++i) {
-            int blk = DefaultVertexFormat.BLOCK.getVertexSize() / 4 * i;
-            int offset = DefaultVertexFormat.BLOCK.getOffset(VertexFormatElement.UV) / 4;
-            vertices[blk + offset] = Float.floatToRawIntBits(sprite.getU(getUnInterpolatedU(quad.sprite(), Float.intBitsToFloat(vertices[blk + offset]))));
-            vertices[blk + offset + 1] = Float.floatToRawIntBits(sprite.getV(getUnInterpolatedV(quad.sprite(), Float.intBitsToFloat(vertices[blk + offset + 1]))));
-        }
+        return new BakedQuad(quad.position0(), quad.position1(), quad.position2(), quad.position3(),
+            uv0, uv1, uv2, uv3,
+            quad.tintIndex(), quad.direction(), sprite, quad.shade(), quad.lightEmission());
+    }
 
-        return new BakedQuad(vertices, quad.tintIndex(), quad.direction(), sprite, quad.shade(), quad.lightEmission());
+    private long remapPackedUV(BakedQuad quad, long packedUV) {
+        float u = UVPair.unpackU(packedUV);
+        float v = UVPair.unpackV(packedUV);
+        float mapU = sprite.getU(getUnInterpolatedU(quad.sprite(), u));
+        float mapV = sprite.getV(getUnInterpolatedV(quad.sprite(), v));
+
+        return UVPair.pack(mapU, mapV);
     }
 
     private float getUnInterpolatedU(TextureAtlasSprite sprite, float u) {

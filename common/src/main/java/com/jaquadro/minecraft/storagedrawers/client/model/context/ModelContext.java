@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.client.model.context;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;

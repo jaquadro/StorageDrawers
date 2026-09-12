@@ -3,7 +3,7 @@ package thaumcraft.api.research;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.common.FMLLog;
 
@@ -54,7 +54,7 @@ public class ResearchCategories {
 	 * @param background the resource location of the background image to use for this category
 	 * @return the name of the research linked to this key
 	 */
-	public static void registerCategory(String key, String researchkey, ResourceLocation icon, ResourceLocation background) {
+	public static void registerCategory(String key, String researchkey, Identifier icon, Identifier background) {
 		if (getResearchList(key)==null) {
 			ResearchCategoryList rl = new ResearchCategoryList(researchkey, icon, background);
 			researchCategories.put(key, rl);
@@ -70,7 +70,7 @@ public class ResearchCategories {
 	 * @param background2 the resource location of the foreground image that lies between the background and icons
 	 * @return the name of the research linked to this key
 	 */
-	public static void registerCategory(String key, String researchkey, ResourceLocation icon, ResourceLocation background, ResourceLocation background2) {
+	public static void registerCategory(String key, String researchkey, Identifier icon, Identifier background, Identifier background2) {
 		if (getResearchList(key)==null) {
 			ResearchCategoryList rl = new ResearchCategoryList(researchkey, icon, background, background2);
 			researchCategories.put(key, rl);

@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import thaumcraft.api.damagesource.DamageSourceThaumcraft;
@@ -17,7 +17,7 @@ public class PotionFluxTaint extends Potion
     
     public PotionFluxTaint(boolean par2, int par3)
     {
-    	super(new ResourceLocation("flux_taint"),par2,par3);
+    	super(new Identifier("flux_taint"),par2,par3);
     	setIconIndex(0, 0);
     }
     
@@ -40,7 +40,7 @@ public class PotionFluxTaint extends Potion
 		return super.getStatusIconIndex();
 	}
 	
-	static final ResourceLocation rl = new ResourceLocation("thaumcraft","textures/misc/potions.png");
+	static final Identifier rl = new Identifier("thaumcraft","textures/misc/potions.png");
 	
 	@Override
 	public void performEffect(EntityLivingBase target, int par2) {

@@ -3,7 +3,7 @@ package thaumcraft.api.wands;
 import java.util.LinkedHashMap;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 /**
  * 
@@ -31,7 +31,7 @@ public class WandRod {
 	/**
 	 * The texture that will be used for the ingame wand rod
 	 */
-	protected ResourceLocation texture;
+	protected Identifier texture;
 	
 	/**
 	 * the actual item that makes up this rod and will be used to generate the wand recipes
@@ -59,7 +59,7 @@ public class WandRod {
 		return rods.get(tag);
 	}
 	
-	public WandRod (String tag, int capacity, ItemStack item, int craftCost, ResourceLocation texture) {
+	public WandRod (String tag, int capacity, ItemStack item, int craftCost, Identifier texture) {
 		this.setTag(tag);
 		this.capacity = capacity;
 		this.texture = texture;
@@ -68,7 +68,7 @@ public class WandRod {
 		rods.put(tag, this);
 	}
 	
-	public WandRod (String tag, int capacity, ItemStack item, int craftCost, IWandRodOnUpdate onUpdate, ResourceLocation texture) {
+	public WandRod (String tag, int capacity, ItemStack item, int craftCost, IWandRodOnUpdate onUpdate, Identifier texture) {
 		this.setTag(tag);
 		this.capacity = capacity;
 		this.texture = texture;
@@ -94,11 +94,11 @@ public class WandRod {
 		this.capacity = capacity;
 	}
 
-	public ResourceLocation getTexture() {
+	public Identifier getTexture() {
 		return texture;
 	}
 
-	public void setTexture(ResourceLocation texture) {
+	public void setTexture(Identifier texture) {
 		this.texture = texture;
 	}
 
@@ -150,6 +150,6 @@ public class WandRod {
 	}
 
 	//  Some examples:
-	//	WandRod WAND_ROD_WOOD = new WandRod("wood",250,new ItemStack(Item.stick),1,new ResourceLocation("thaumcraft","items/wand/cap_iron_mat"));
-	//	WandRod WAND_ROD_BLAZE = new WandRod("blaze",750,new ItemStack(Item.blazeRod),7,new ResourceLocation("thaumcraft","items/wand/rod_blaze_mat"),new WandRodBlazeOnUpdate());
+	//	WandRod WAND_ROD_WOOD = new WandRod("wood",250,new ItemStack(Item.stick),1,new Identifier("thaumcraft","items/wand/cap_iron_mat"));
+	//	WandRod WAND_ROD_BLAZE = new WandRod("blaze",750,new ItemStack(Item.blazeRod),7,new Identifier("thaumcraft","items/wand/rod_blaze_mat"),new WandRodBlazeOnUpdate());
 }

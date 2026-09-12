@@ -9,6 +9,7 @@ import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityControllerIO;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
+import com.jaquadro.minecraft.storagedrawers.storage.StorageUtil;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -58,7 +59,7 @@ public class DrawerGroupResourceHandler implements ResourceHandler<ItemResource>
     }
 
     DrawerWrapper getDrawerWrapper (int index) {
-        Objects.checkIndex(index, this.size());
+        Objects.checkIndex(index, this.size);
         return this.drawerWrappers.get(index);
     }
 
@@ -131,7 +132,7 @@ public class DrawerGroupResourceHandler implements ResourceHandler<ItemResource>
 
         @Override
         public ItemResource getResource (int index) {
-            if (isGroupValid())
+            if (!isGroupValid())
                 return ItemResource.EMPTY;
 
             return super.getResource(index);
@@ -247,6 +248,41 @@ public class DrawerGroupResourceHandler implements ResourceHandler<ItemResource>
                 return 0;
 
             return super.extract(index, resource, amount, transaction);
+        }
+
+        @Override
+        protected void onRootCommit (ItemStack original) {
+            super.onRootCommit(original);
+            rebalanceBalancedFill(original);
+        }
+
+        private void rebalanceBalancedFill (ItemStack original) {
+            if (!isGroupValid())
+                return;
+
+            IDrawer drawer = group.getDrawer(slot);
+            if (drawer == null || !drawer.isEnabled())
+                return;
+
+            IDrawerAttributes attrs = drawer.getAttributes();
+            if (attrs == null || !attrs.isBalancedFill() || attrs.isUnlimitedVending() || attrs.isSuspended())
+                return;
+
+            ItemStack proto = drawer.getStoredItemPrototype();
+            if (proto.isEmpty())
+                proto = original;
+            if (proto == null || proto.isEmpty())
+                return;
+
+            if (group instanceof BlockEntityController controller)
+                StorageUtil.rebalanceDrawers(controller.getBalanceDrawers(proto, null));
+            else if (group instanceof BlockEntityControllerIO controllerIO) {
+                BlockEntityController controller = controllerIO.getController();
+                if (controller != null)
+                    StorageUtil.rebalanceDrawers(controller.getBalanceDrawers(proto, null));
+            }
+            else
+                StorageUtil.rebalanceDrawers(group, proto);
         }
     }
 }

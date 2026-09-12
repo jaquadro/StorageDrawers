@@ -4,7 +4,7 @@ import com.texelsaurus.minecraft.chameleon.capabilities.ChameleonCapability;
 import com.texelsaurus.minecraft.chameleon.capabilities.FabricCapability;
 import com.texelsaurus.minecraft.chameleon.capabilities.IFabricCapability;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -15,10 +15,10 @@ import java.util.function.Function;
 
 public class FabricCapabilities implements ChameleonCapabilities
 {
-    private static Map<ResourceLocation, IFabricCapability> capabilties = new HashMap<>();
+    private static Map<Identifier, IFabricCapability> capabilties = new HashMap<>();
 
     @Override
-    public <T, C> ChameleonCapability<T> create (ResourceLocation location, Class<T> clazz, Class<C> context) {
+    public <T, C> ChameleonCapability<T> create (Identifier location, Class<T> clazz, Class<C> context) {
         return new DeferredCapability<>(location);
     }
 
@@ -28,15 +28,15 @@ public class FabricCapabilities implements ChameleonCapabilities
 
     private class DeferredCapability<T> implements IFabricCapability<T>
     {
-        private ResourceLocation id;
+        private Identifier id;
         private IFabricCapability<T> cap;
 
-        public DeferredCapability (ResourceLocation id) {
+        public DeferredCapability (Identifier id) {
             this.id = id;
         }
 
         @Override
-        public ResourceLocation id () {
+        public Identifier id () {
             return id;
         }
 

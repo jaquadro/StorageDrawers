@@ -4,7 +4,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
