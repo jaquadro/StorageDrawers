@@ -37,6 +37,8 @@ public class DrawerGroupResourceHandler implements ResourceHandler<ItemResource>
     }
 
     static DrawerGroupResourceHandler internalOf (IDrawerGroup group) {
+        refreshControllerCache(group);
+
         DrawerGroupResourceHandler storage = WRAPPERS.computeIfAbsent(group, DrawerGroupResourceHandler::new);
 
         storage.resizeSlotList();
@@ -44,6 +46,19 @@ public class DrawerGroupResourceHandler implements ResourceHandler<ItemResource>
         storage.suspended = storage.isSuspended();
 
         return storage;
+    }
+
+    private static void refreshControllerCache (IDrawerGroup group) {
+        if (group instanceof BlockEntityController controller) {
+            controller.updateCache();
+            return;
+        }
+
+        if (group instanceof BlockEntityControllerIO controllerIO) {
+            BlockEntityController controller = controllerIO.getController();
+            if (controller != null)
+                controller.updateCache();
+        }
     }
 
     DrawerGroupResourceHandler (IDrawerGroup group) {

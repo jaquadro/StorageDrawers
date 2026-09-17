@@ -1,3 +1,7 @@
+[26.1.0.2]
+- Fixed controller ignoring input with item in hand (by Kawamoux)
+- NEOFORGE: Fixed controller not depositing into empty drawers (by Kawamoux)
+
 [26.1.0.1]
 - Fixed custom item stack amounts not being respected in all places
 - Small efficiency improvement in network check (Thanks dberlin)
