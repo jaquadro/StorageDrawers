@@ -23,6 +23,9 @@
         ],
         "jade": [
             "com.jaquadro.minecraft.storagedrawers.integration.Waila"
+        ],
+        "rei_client": [
+            "com.jaquadro.minecraft.storagedrawers.integration.rei.StorageDrawersREIPlugin"
         ]
     },
     "depends": {

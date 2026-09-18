@@ -1,2 +1,4 @@
+- Excluded framed drawers, full keyrings, etc. from REI listing
+- Fixed suspend key showing broken texture in keyring
 - Fixed controller ignoring input with item in hand (by Kawamoux)
 - NEOFORGE: Fixed controller not depositing into empty drawers (by Kawamoux)

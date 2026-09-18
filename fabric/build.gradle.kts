@@ -17,8 +17,11 @@ dependencies {
     compileOnly("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:26.1.5")
     implementation("curse.maven:jade-324717:8856979")
 
-    // JEI (non-remap loom: plain runtimeOnly, no mod* prefix)
     runtimeOnly("mezz.jei:jei-${Versions.minecraft}-fabric:29.36.0.96")
+
+    // REI
+    compileOnly("curse.maven:roughly-enough-items-310111:8271476")
+    compileOnly("curse.maven:architectury-api-419699:8851237")
 }
 
 loom {

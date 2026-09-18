@@ -34,6 +34,10 @@ dependencies {
     runtimeOnly("mezz.jei:jei-${Versions.minecraft}-neoforge:29.36.0.96")
     // JADE - Jade-mc26.1-NeoForge-26.1.10 (MC 26.1/26.1.1/26.1.2)
     implementation("curse.maven:jade-324717:8651070")
+
+    // REI
+    compileOnly("curse.maven:roughly-enough-items-310111:8271478")
+    compileOnly("curse.maven:architectury-api-419699:8851236")
 }
 
 tasks.create<TaskPublishCurseForge>("publishCurseForge") {
