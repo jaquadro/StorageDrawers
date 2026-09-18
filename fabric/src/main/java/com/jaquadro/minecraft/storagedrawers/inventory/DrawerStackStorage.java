@@ -33,6 +33,9 @@ public class DrawerStackStorage extends SingleStackStorage
 
     @Override
     protected ItemStack getStack () {
+        if (!isAccessible())
+            return ItemStack.EMPTY;
+
         IDrawer drawer = storage.getDrawer(slot);
         return drawer.getStoredItemPrototype().copyWithCount(drawer.getStoredItemCount());
     }
@@ -47,7 +50,18 @@ public class DrawerStackStorage extends SingleStackStorage
 
     @Override
     protected int getCapacity (ItemVariant itemVariant) {
+        if (!isAccessible())
+            return 0;
+
         return storage.getDrawer(slot).getMaxCapacity(itemVariant.toStack());
+    }
+
+    private boolean isAccessible () {
+        if (!storage.group.isGroupValid())
+            return false;
+
+        IDrawerAttributes attrs = storage.group.getCapability(Capabilities.DRAWER_ATTRIBUTES);
+        return attrs == null || !attrs.isSuspended();
     }
 
     private IDrawerAttributes getDrawerAttributes (IDrawerGroup group) {
@@ -79,6 +93,8 @@ public class DrawerStackStorage extends SingleStackStorage
 
     @Override
     public long insert (ItemVariant insertedVariant, long maxAmount, TransactionContext transaction) {
+        if (!isAccessible())
+            return 0;
         if (!storage.getDrawer(slot).canItemBeStored(insertedVariant.toStack()))
             return 0;
 
@@ -107,6 +123,8 @@ public class DrawerStackStorage extends SingleStackStorage
 
     @Override
     public long extract (ItemVariant variant, long maxAmount, TransactionContext transaction) {
+        if (!isAccessible())
+            return 0;
         if (!storage.getDrawer(slot).canItemBeExtracted(variant.toStack()))
             return 0;
 

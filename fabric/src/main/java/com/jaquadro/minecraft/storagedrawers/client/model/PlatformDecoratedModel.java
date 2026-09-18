@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBaker;
@@ -131,7 +132,9 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
         Renderer render = Renderer.get();
 
         MutableMesh builder = render.mutableMesh();
-        QuadEmitter quadEmit = builder.emitter().chunkLayer(DecoratorRenderType.toChunkType(renderType));
+        QuadEmitter quadEmit = builder.emitter();
+
+        ChunkSectionLayer chunkLayer = DecoratorRenderType.toChunkType(renderType);
 
         List<BlockStateModelPart> parts = new ArrayList<>();
         model.collectParts(randomSource, parts);
@@ -139,10 +142,10 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
         for (BlockStateModelPart part : parts) {
             for (var d : Direction.values()) {
                 for (var quad : part.getQuads(d))
-                    quadEmit.fromBakedQuad(quad).emit();
+                    quadEmit.fromBakedQuad(quad).chunkLayer(chunkLayer).emit();
             }
             for (var quad : part.getQuads(null))
-                quadEmit.fromBakedQuad(quad).emit();
+                quadEmit.fromBakedQuad(quad).chunkLayer(chunkLayer).emit();
         }
 
         return builder.immutableCopy();
@@ -200,15 +203,15 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
                 }
             }
 
-            if ((stack == null || !ItemStack.isSameItemSameComponents(stack, itemStack)) && parent != null) {
-                stack = itemStack;
-                model = new PlatformDecoratedModel<>(parent, itemStack);
-            }
-
             if (parent == null) {
                 BlockStateModel stored = ItemModelStore.models.get(state);
                 if (stored instanceof PlatformDecoratedModel<?> p)
                     parent = p;
+            }
+
+            if (parent != null && (stack == null || model == null || !ItemStack.isSameItemSameComponents(stack, itemStack))) {
+                stack = itemStack;
+                model = new PlatformDecoratedModel<>(parent, itemStack);
             }
 
             if (model != null) {
@@ -226,6 +229,10 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
                         if (m != null)
                             m.collectParts(null, parts);
                     };
+
+                    if (renderType == DecoratorRenderType.SOLID && pd.decorator.shouldRenderBase(supplier, stack))
+                        emitModel.accept(pd.parent);
+
                     pd.decorator.emitItemQuads(supplier, emitModel, stack, renderType);
 
                     for (BlockStateModelPart part : parts) {

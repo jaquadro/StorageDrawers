@@ -20,12 +20,15 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.WeakHashMap;
 
 public abstract class FaceSlotBlock extends HorizontalDirectionalBlock implements INetworked, EntityBlock
 {
-    private long ignoreEventTime;
-    private long ignoreEventThresh = 2;
+    // Per-player action debounce
+    private static final Map<UUID, Long> lastLeftActionTick = new WeakHashMap<>();
 
     protected FaceSlotBlock (Properties properties) {
         super(properties);
@@ -66,11 +69,12 @@ public abstract class FaceSlotBlock extends HorizontalDirectionalBlock implement
         int slot = getFaceSlot(state, hit);
         InteractContext context = new InteractContext(state, level, pos, player, hit, slot);
 
-        /*if (level.getGameTime() - ignoreEventTime < ignoreEventThresh) {
-            ignoreEventTime = level.getGameTime();
-            return InteractionResult.FAIL;
+        if (!level.isClientSide() && slot >= 0) {
+            long now = level.getGameTime();
+            Long last = lastLeftActionTick.put(player.getUUID(), now);
+            if (last != null && now - last <= 1)
+                return InteractionResult.FAIL;
         }
-        ignoreEventTime = level.getGameTime();*/
 
         boolean altAction = PlayerConfig.getInvertShift(player) != player.isShiftKeyDown();
 

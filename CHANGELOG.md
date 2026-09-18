@@ -1,8 +1,13 @@
 [26.1.0.2]
 - Excluded framed drawers, full keyrings, etc. from REI listing
 - Fixed suspend key showing broken texture in keyring
+- Fixed double widthdraw from empty hand in survival (mostly)
 - Fixed controller ignoring input with item in hand (by Kawamoux)
 - NEOFORGE: Fixed controller not depositing into empty drawers (by Kawamoux)
+- FABRIC: Fixed storage interface ignoring suspend status
+- FABRIC: Fixed translucent framed drawers not initially rendering in hotbar
+- FABRIC: Fixed cutout framed drawers rendering opaque in world
+- FABRIC: Fixed continuous item withdraw in creative mode
 
 [26.1.0.1]
 - Fixed custom item stack amounts not being respected in all places
