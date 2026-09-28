@@ -40,9 +40,11 @@ public class ForgeCapability<T> implements IForgeCapability<T>
         if (blockEntity == null)
             return null;
         BlockEntityType<?> type = blockEntity.getType();
-        if (!handlers.containsKey(type))
-            return null;
-        return handlers.get(type).apply(blockEntity);
+        if (handlers.containsKey(type))
+            return handlers.get(type).apply(blockEntity);
+        if (dirHandlers.containsKey(type))
+            return dirHandlers.get(type).apply(blockEntity, null);
+        return null;
     }
 
     @Override

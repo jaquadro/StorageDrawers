@@ -1,3 +1,6 @@
+[12.15.1]
+- NEO/FORGE: Fixed crash caused by missing unsided storage interface
+
 [12.15.0]
 - Added sided input/output control
 - Added IO key to configure sided input

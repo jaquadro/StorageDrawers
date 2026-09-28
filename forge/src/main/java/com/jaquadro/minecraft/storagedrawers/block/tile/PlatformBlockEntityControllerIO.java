@@ -28,6 +28,7 @@ public class PlatformBlockEntityControllerIO extends BlockEntitySlave
         if (!PlatformCapabilities.hasCapability(cap))
             return super.getCapability(cap, side);
 
-        return LazyOptional.of(() -> PlatformCapabilities.getCapability(cap, this));
+        T value = PlatformCapabilities.getCapability(cap, this);
+        return value == null ? LazyOptional.empty() : LazyOptional.of(() -> value);
     }
 }
