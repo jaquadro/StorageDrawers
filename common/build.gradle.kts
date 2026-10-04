@@ -13,6 +13,7 @@ minecraft {
 
 dependencies {
     compileOnly("org.spongepowered:mixin:0.8.5")
+    testImplementation("junit:junit:4.13.2")
 }
 
 configurations {
