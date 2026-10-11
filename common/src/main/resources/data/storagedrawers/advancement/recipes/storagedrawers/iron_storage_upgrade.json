@@ -19,7 +19,7 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "storagedrawers:iron_storage_upgrade"
+                "recipes": "storagedrawers:iron_storage_upgrade"
             }
         }
     },

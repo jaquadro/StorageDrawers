@@ -279,8 +279,10 @@ public final class ModBlocks
     }
 
     static RegistryEntry<BlockFramedTrim> registerFramedTrimBlock(String name) {
-        return BLOCKS.register(name, () -> (BlockFramedTrim)new BlockFramedTrim(
-            getWoodenDrawerBlockProperties().setId(modKey(name)).noOcclusion().isViewBlocking((a, b, c) -> false)).setMatKey("framed"));
+        return BLOCKS.register(name, () -> {
+            Properties props = getWoodenDrawerBlockProperties().setId(modKey(name)).noOcclusion().isViewBlocking((a, b, c, d) -> false);
+            return (BlockFramedTrim)new BlockFramedTrim(props).setMatKey("framed");
+        });
     }
 
     static RegistryEntry<BlockController> registerControllerBlock(String name) {

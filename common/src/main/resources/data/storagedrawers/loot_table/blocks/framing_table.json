@@ -9,9 +9,9 @@
                     "name": "storagedrawers:framing_table",
                     "conditions": [
                         {
-                            "block": "storagedrawers:framing_table",
-                            "condition": "minecraft:block_state_property",
-                            "properties": {
+                            "condition": "minecraft:match_block",
+                            "blocks": "storagedrawers:framing_table",
+                            "state": {
                                 "part": "right"
                             }
                         }

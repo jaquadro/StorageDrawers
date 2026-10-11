@@ -30,11 +30,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class BlockKeyButton  extends FaceAttachedHorizontalDirectionalBlock
 {
-    public static final MapCodec<BlockKeyButton> CODEC = RecordCodecBuilder.mapCodec((inst) -> inst.group(
-        KeyType.CODEC.fieldOf("key_type").forGetter(block -> block.keyType),
-        propertiesCodec()
-    ).apply(inst, BlockKeyButton::new));
-
     public static final BooleanProperty POWERED;
     protected static final VoxelShape CEILING_AABB_X;
     protected static final VoxelShape CEILING_AABB_Z;
@@ -63,10 +58,6 @@ public class BlockKeyButton  extends FaceAttachedHorizontalDirectionalBlock
             .setValue(POWERED, false)
             .setValue(FACE, AttachFace.WALL));
         this.keyType = keyType;
-    }
-
-    public MapCodec<BlockKeyButton> codec() {
-        return CODEC;
     }
 
     @Override

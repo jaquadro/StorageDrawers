@@ -1,3 +1,15 @@
+[26.3.0.2]
+- NEOFORGE: Fixed compatibility with >= 26.3.0.37-beta
+
+[26.3.0.1]
+- Fixed data regression in 26.3 patch update
+
+[26.3.0.0]
+- Updated to 26.3
+
+[26.2.0.0]
+- Updated to 26.2
+
 [26.1.0.1]
 - Fixed custom item stack amounts not being respected in all places
 - Small efficiency improvement in network check (Thanks dberlin)

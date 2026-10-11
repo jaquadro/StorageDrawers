@@ -29,13 +29,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class BlockCompDrawers extends BlockDrawers implements INetworked, IFramedSourceBlock
 {
-    public static final MapCodec<BlockCompDrawers> CODEC = RecordCodecBuilder.mapCodec(instance ->
-        instance.group(
-            Codec.INT.fieldOf("storageUnits").forGetter(BlockDrawers::getStorageUnits),
-            propertiesCodec()
-        ).apply(instance, BlockCompDrawers::new)
-    );
-
     public static final EnumProperty<EnumCompDrawer> SLOTS = EnumProperty.create("slots", EnumCompDrawer.class);
 
     public BlockCompDrawers (int drawerCount, boolean halfDepth, IDrawerConfig drawerConfig, BlockBehaviour.Properties properties) {
@@ -65,11 +58,6 @@ public class BlockCompDrawers extends BlockDrawers implements INetworked, IFrame
     @Deprecated
     public BlockCompDrawers (Properties properties) {
         this(3, false, properties);
-    }
-
-    @Override
-    public MapCodec<BlockCompDrawers> codec() {
-        return CODEC;
     }
 
     @Override

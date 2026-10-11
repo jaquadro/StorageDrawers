@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.client.resources.model.sprite.TextureSlots;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -156,12 +157,13 @@ public class PlatformDecoratedModel<C extends ModelContext> extends ParentModel 
                 layer.setExtents(extents);
                 properties.applyToLayer(layer, itemDisplayContext);
 
-                List<BakedQuad> quadList = layer.prepareQuadList();
+                List<BakedQuad> quadList = new ArrayList<>();
                 for (BlockStateModelPart part : parts) {
                     quadList.addAll(part.getQuads(null));
                     for (Direction direction : Direction.values())
                         quadList.addAll(part.getQuads(direction));
                 }
+                layer.setQuads(ItemQuads.split(quadList));
             }
         }
 

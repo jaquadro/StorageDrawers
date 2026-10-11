@@ -2,7 +2,7 @@
     "parent": "minecraft:recipes/root",
     "rewards": {
         "recipes": [
-            "storagedrawers:shroud_key"
+            "storagedrawers:concealment_key"
         ]
     },
     "criteria": {
@@ -19,7 +19,7 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "storagedrawers:shroud_key"
+                "recipes": "storagedrawers:concealment_key"
             }
         }
     },

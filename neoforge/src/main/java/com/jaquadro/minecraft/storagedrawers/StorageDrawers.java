@@ -46,7 +46,7 @@ public class StorageDrawers
     public StorageDrawers (ModContainer modContainer, IEventBus modEventBus) {
         ModCommonConfig.INSTANCE.context().init(ModConstants.MOD_ID, ChameleonConfig.Type.COMMON);
         ModClientConfig.INSTANCE.context().init(ModConstants.MOD_ID, ChameleonConfig.Type.CLIENT);
-        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, ((NeoforgeConfig)ModCommonConfig.INSTANCE.context()).neoSpec, "storagedrawers-common.v2.toml");
+        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.LOCAL, ((NeoforgeConfig)ModCommonConfig.INSTANCE.context()).neoSpec, "storagedrawers-common.v2.toml");
         modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.CLIENT, ((NeoforgeConfig)ModClientConfig.INSTANCE.context()).neoSpec);
 
         //modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
@@ -97,7 +97,7 @@ public class StorageDrawers
     //    InterModComms.sendTo("theoneprobe", "getTheOneProbe", () -> new TheOneProbe());
     //}
     private void onModConfigEvent(final ModConfigEvent event) {
-        if (event.getConfig().getType() == ModConfig.Type.COMMON)
+        if (event.getConfig().getType() == ModConfig.Type.LOCAL)
             ModCommonConfig.INSTANCE.setLoaded();
         if (event.getConfig().getType() == ModConfig.Type.CLIENT)
             ModClientConfig.INSTANCE.setLoaded();

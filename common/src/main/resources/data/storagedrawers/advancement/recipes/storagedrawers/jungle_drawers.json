@@ -24,7 +24,7 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "storagedrawers:jungle_full_drawers_1"
+                "recipes": "storagedrawers:jungle_full_drawers_1"
             }
         }
     },

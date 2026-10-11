@@ -44,15 +44,8 @@ import java.util.Objects;
 
 public class BlockController extends HorizontalDirectionalBlock implements INetworked, EntityBlock, IFramedSourceBlock
 {
-    public static final MapCodec<BlockController> CODEC = simpleCodec(BlockController::new);
-
     public BlockController (Properties properties) {
         super(properties);
-    }
-
-    @Override
-    public MapCodec<BlockController> codec() {
-        return CODEC;
     }
 
     @Override
@@ -68,6 +61,16 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
     @Override
     @NotNull
     public InteractionResult useWithoutItem (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
+        return useController(state, level, pos, player, InteractionHand.MAIN_HAND, hit);
+    }
+
+    @Override
+    @NotNull
+    public InteractionResult useItemOn (@NotNull ItemStack item, @NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        return useController(state, level, pos, player, hand, hit);
+    }
+
+    private InteractionResult useController (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!SecurityManager.canInteract(player, InteractionHand.MAIN_HAND, pos))
             return InteractionResult.PASS;
 
@@ -76,7 +79,7 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
         if (blockEntity == null)
             return InteractionResult.FAIL;
 
-        ItemStack item = player.getInventory().getSelectedItem();
+        ItemStack item = player.getItemInHand(hand);
         if (player.getCooldowns().isOnCooldown(item))
             return InteractionResult.FAIL;
 
@@ -95,7 +98,7 @@ public class BlockController extends HorizontalDirectionalBlock implements INetw
 
             if (item.getItem() instanceof ItemUpgradeRemote remote) {
                 item = remote.setBoundController(item, blockEntity);
-                player.getInventory().setItem(player.getInventory().getSelectedSlot(), item);
+                player.setItemInHand(hand, item);
 
                 player.sendOverlayMessage(Component.translatable("message.storagedrawers.updated_remote_binding", pos.getX(), pos.getY(), pos.getZ()));
             }

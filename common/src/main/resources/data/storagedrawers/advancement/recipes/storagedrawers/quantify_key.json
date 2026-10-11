@@ -19,7 +19,7 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "storagedrawers:quantify_key"
+                "recipes": "storagedrawers:quantify_key"
             }
         }
     },

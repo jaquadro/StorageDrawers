@@ -30,10 +30,12 @@ neoForge {
 }
 
 dependencies {
-    // JEI
-    runtimeOnly("mezz.jei:jei-${Versions.minecraft}-neoforge:30.32.0.215")
-    // JADE - Jade-mc26.2-NeoForge-26.2.10 (MC 26.2)
-    implementation("curse.maven:jade-324717:8755115")
+    runtimeOnly("mezz.jei:jei-${Versions.minecraft}-neoforge:31.10.0.63")
+    implementation("curse.maven:jade-324717:9042207")
+
+    //compileOnly("curse.maven:roughly-enough-items-310111:8271756")
+    //compileOnly("curse.maven:architectury-api-419699:8851248")
+    // runtimeOnly("curse.maven:cloth-config-348521:8269700")
 }
 
 tasks.create<TaskPublishCurseForge>("publishCurseForge") {

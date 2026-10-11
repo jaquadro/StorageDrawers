@@ -30,6 +30,7 @@ repositories {
         content {
             includeGroupAndSubgroups("com.blamejared")
             includeGroupAndSubgroups("mezz.jei")
+            includeGroupAndSubgroups("net.mezzdev.config")
             includeGroupAndSubgroups("com.faux")
             includeGroupAndSubgroups("org.openzen")
         }

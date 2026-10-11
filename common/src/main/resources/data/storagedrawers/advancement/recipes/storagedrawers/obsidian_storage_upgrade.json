@@ -19,7 +19,7 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "storagedrawers:obsidian_storage_upgrade"
+                "recipes": "storagedrawers:obsidian_storage_upgrade"
             }
         }
     },

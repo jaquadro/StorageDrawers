@@ -24,7 +24,7 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "storagedrawers:cherry_full_drawers_1"
+                "recipes": "storagedrawers:cherry_full_drawers_1"
             }
         }
     },

@@ -19,7 +19,7 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "storagedrawers:pale_oak_trim"
+                "recipes": "storagedrawers:pale_oak_trim"
             }
         }
     },

@@ -22,7 +22,7 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "storagedrawers:compacting_drawers_3"
+                "recipes": "storagedrawers:compacting_drawers_3"
             }
         }
     },

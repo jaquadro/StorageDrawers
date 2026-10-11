@@ -62,7 +62,8 @@ public abstract class ReplacementBlockPart implements ChameleonBlockModelPart
 
         BakedQuad.MaterialInfo info = quad.materialInfo();
         BakedQuad.MaterialInfo newInfo = new BakedQuad.MaterialInfo(
-            sprite, info.layer(), info.itemRenderType(), info.tintIndex(), info.shade(), info.lightEmission());
+            sprite, info.layer(), info.itemRenderType(), info.itemGlintRenderType(),
+            info.itemGlintSpecialRenderType(), info.tintIndex(), info.shadeDirectionOverride(), info.lightEmission());
 
         return new BakedQuad(quad.position0(), quad.position1(), quad.position2(), quad.position3(),
             uv0, uv1, uv2, uv3,

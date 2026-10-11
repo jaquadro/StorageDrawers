@@ -35,8 +35,6 @@ public class BlockFramingTable extends HorizontalDirectionalBlock implements Ent
 {
     public static final EnumProperty<EnumFramingTablePart> PART = EnumProperty.create("part", EnumFramingTablePart.class);
 
-    public static final MapCodec<BlockFramingTable> CODEC = simpleCodec(BlockFramingTable::new);
-
     protected static final VoxelShape TABLE_TOP = Block.box(0.0D, 14.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape TABLE_BOTTOM_NORTH = Block.box(1.0D, 0.0D, 0.0D, 15.0D, 16.0D, 15.0D);
     protected static final VoxelShape TABLE_BOTTOM_SOUTH = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 16.0D);
@@ -53,10 +51,6 @@ public class BlockFramingTable extends HorizontalDirectionalBlock implements Ent
         this.registerDefaultState(getStateDefinition().any().setValue(PART, EnumFramingTablePart.RIGHT));
     }
 
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec () {
-        return CODEC;
-    }
 
     public static Direction getTableDirection (BlockGetter getter, BlockPos pos) {
         BlockState state = getter.getBlockState(pos);

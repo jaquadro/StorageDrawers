@@ -19,7 +19,7 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "storagedrawers:remote_group_upgrade"
+                "recipes": "storagedrawers:remote_group_upgrade"
             }
         }
     },

@@ -33,15 +33,6 @@ import java.util.Objects;
 
 public class BlockStandardDrawers extends BlockDrawers implements IFramedSourceBlock
 {
-    public static final MapCodec<BlockStandardDrawers> CODEC = RecordCodecBuilder.mapCodec(instance ->
-        instance.group(
-            Codec.INT.fieldOf("drawerCount").forGetter(BlockDrawers::getDrawerCount),
-            Codec.BOOL.fieldOf("halfDepth").forGetter(BlockDrawers::isHalfDepth),
-            Codec.INT.fieldOf("storageUnits").forGetter(BlockDrawers::getStorageUnits),
-            propertiesCodec()
-        ).apply(instance, BlockStandardDrawers::new)
-    );
-
     private String matKey = null;
     private String matNamespace = ModConstants.MOD_ID;
 
@@ -80,11 +71,6 @@ public class BlockStandardDrawers extends BlockDrawers implements IFramedSourceB
 
     public String getNameMatKey () {
         return "block." + matNamespace + ".mat." + matKey;
-    }
-
-    @Override
-    public MapCodec<BlockStandardDrawers> codec() {
-        return CODEC;
     }
 
     @Override

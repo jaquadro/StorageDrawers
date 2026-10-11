@@ -144,7 +144,7 @@ public class ClientKeyringTooltip implements ClientTooltipComponent
             int textWidth = font.width(hoverComponent.getVisualOrderText());
             int textOffset = pX + pW / 2 - 12;
             ClientTooltipComponent tooltip = ClientTooltipComponent.create(hoverComponent.getVisualOrderText());
-            graphics.tooltip(font, List.of(tooltip), textOffset - textWidth / 2, pY - 15, DefaultTooltipPositioner.INSTANCE, item.get(DataComponents.TOOLTIP_STYLE));
+            graphics.tooltip(font, List.of(tooltip), textOffset - textWidth / 2, pY - 15, DefaultTooltipPositioner.INSTANCE, item.get(DataComponents.TOOLTIP_STYLE), true);
         }
 
     }

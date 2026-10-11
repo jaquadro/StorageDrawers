@@ -2,7 +2,7 @@
     "parent": "minecraft:recipes/root",
     "rewards": {
         "recipes": [
-            "storagedrawers:balance_fill_upgrade"
+            "storagedrawers:balanced_fill_upgrade"
         ]
     },
     "criteria": {
@@ -19,7 +19,7 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "storagedrawers:balance_fill_upgrade"
+                "recipes": "storagedrawers:balanced_fill_upgrade"
             }
         }
     },

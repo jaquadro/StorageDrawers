@@ -328,13 +328,16 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         if (getLevel() == null)
             return 0;
 
+        if (!getLevel().isClientSide())
+            updateCache();
+
         boolean dumpInventory = getLevel().getGameTime() - lastClickTime < 10 && player.getUUID().equals(lastClickUUID);
         int count = 0;
 
         if (!dumpInventory) {
             ItemStack currentStack = player.getInventory().getSelectedItem();
             if (!currentStack.isEmpty()) {
-                count = insertItems(currentStack, player);
+                count = insertItems(currentStack, player, true);
                 if (currentStack.getCount() == 0)
                     player.getInventory().setItem(player.getInventory().getSelectedSlot(), ItemStack.EMPTY);
             }
@@ -357,7 +360,11 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     }
 
     protected int insertItems (@NotNull ItemStack stack, Player player) {
-        int remainder = new ProtectedItemRepository(this, player).insertItem(stack, false).getCount();
+        return insertItems(stack, player, false);
+    }
+
+    protected int insertItems (@NotNull ItemStack stack, Player player, boolean allowEmpty) {
+        int remainder = new ProtectedItemRepository(this, player, allowEmpty).insertItem(stack, false).getCount();
         int added = stack.getCount() - remainder;
 
         stack.setCount(remainder);
@@ -1176,15 +1183,21 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
     private class ProtectedItemRepository extends ItemRepository
     {
         private final Player player;
+        private final boolean allowEmpty;
 
         public ProtectedItemRepository (IDrawerGroup group, Player player) {
+            this(group, player, false);
+        }
+
+        public ProtectedItemRepository (IDrawerGroup group, Player player, boolean allowEmpty) {
             super(group);
             this.player = player;
+            this.allowEmpty = allowEmpty;
         }
 
         @Override
         protected boolean hasAccess (IDrawerGroup group, IDrawer drawer) {
-            if (drawer.isEmpty())
+            if (!allowEmpty && drawer.isEmpty())
                 return false;
             if (group instanceof IProtectable)
                 return SecurityManager.hasAccess(player, (IProtectable)group);

@@ -19,7 +19,7 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "storagedrawers:spruce_trim"
+                "recipes": "storagedrawers:spruce_trim"
             }
         }
     },
